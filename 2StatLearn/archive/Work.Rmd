@@ -1,0 +1,116 @@
+---
+title: "In progression"
+author: "Mette Langaas"
+date: "1/4/2018"
+output: html_document
+---
+
+```{r overunderfitM, message=FALSE, warning=FALSE, echo=FALSE}
+library(ggplot2)
+library(ggpubr)
+set.seed(2) # to reproduce
+
+M=100 # repeated samplings,x fixed but new errors
+nord=20
+x = seq(-2, 4, 0.1)
+true_y = x^2
+
+error = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
+ymat = matrix(rep(true_y,M),byrow=T,nrow=M) + error
+
+predarray=array(NA,dim=c(M,length(x),nord))
+
+for (i in 1:M)
+{
+  for (j in 1:nord)
+  {
+    predarray[i,,j]=predict(lm(ymat[i,]~poly(x, j)))
+  }
+}
+# M matrices of size length(x) times nord
+# first, only look at variablity in the M fits and plot M curves where we had 1
+
+# for plotting need to stack the matrices underneath eachother and make new variable "rep"
+stackmat=NULL
+for (i in 1:M) stackmat=rbind(stackmat,cbind(x,rep(i,length(x)),predarray[i,,]))
+dim(stackmat)
+colnames(stackmat)=c("x","rep",paste("poly",1:20,sep=""))
+sdf=as.data.frame(stackmat) #NB have poly1-20 now - but first only use 1,2,20
+# to add true curve using stat_function - easiest solution
+true_x=x
+truefunc=function(x) return(x^2)
+yrange=range(apply(sdf,2,range)[,3:22])
+
+p1=ggplot(data=sdf,aes(x=x,y=poly1,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p1=p1+stat_function(fun=truefunc,lwd=1.5,colour="black")
+p2=ggplot(data=sdf,aes(x=x,y=poly2,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p2=p2+stat_function(fun=truefunc,lwd=1.5,colour="black")
+p10=ggplot(data=sdf,aes(x=x,y=poly10,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p10=p10+stat_function(fun=truefunc,lwd=1.5,colour="black")
+p20=ggplot(data=sdf,aes(x=x,y=poly20,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p20=p20+stat_function(fun=truefunc,lwd=1.5,colour="black")
+ggarrange(p1,p2,p10,p20)
+```
+
+
+
+
+
+MSEtrain=matrix(ncol=length(x),nrow=nord)
+
+meanmat=matrix(ncol=length(x),nrow=nord)
+sdmat=matrix(ncol=length(x),nrow=nord)
+for (j in 1:nord)
+{
+  meanmat[j,]=apply(predarray[,,j],2,mean)
+  sdmat[j,]=apply(predarray[,,j],2,sd)
+}
+# nord times length(x)
+bias2mat=(meanmat-matrix(rep(true_y,nord),byrow=TRUE,nrow=nord))^2
+varmat=sdmat^2
+
+df=data.frame(rep(x,each=nord),rep(1:nord,length(x)),c(bias2mat))
+colnames(df)=c("x","poly","bias2") #suitable for plotting
+
+library(ggplot2)
+ggplot(data=df,aes(x=x,y=bias2,colour=poly))+geom_line()
+# need data frame with variable=poly1:20, x-value and bias or var value
+# that is, length(x) poly1 values, length(x) poly2 values etc
+
+avebias=apply(biasmat,1,mean)
+avesd=apply(sdmat,1,mean)
+avevar=apply(varmat,1,mean)
+plot(1:20,avebias)
+
+
+library(reshape2)
+#https://tgmstat.wordpress.com/2013/10/31/reshape-and-aggregate-data-with-the-r-package-reshape2/
+biasmelt=melt(,id=c("order","x"))
+colnames(biasmelt)=c("variable","sorted","value")
+
+# pointwise bias
+pp=ggplot(data=biasmelt,aes(x=))+
+  geom_line(aes(x=x,y=))
+pp
+  
+plot(x,biasmat[1,],type="n")
+for (j in 1:nord) lines(x,biasmat[j,])
+
+library(ggplot2)
+for (i in 1:M)
+{
+i=1
+  p1 = ggplot(data=data.frame(x=x,y=ymat[i,]), aes(x,y))+geom_point(size=0.7) + geom_line(aes(x=x, y=true_y))
+p1
+p2 = ggplot(data=data.frame(x=x,y=ymat[i,]), aes(x,y))+geom_point(size=0.7)+
+  geom_line(aes(x=x,y=predict(lm(y~x))),col="red")
+p2
+
+p2 = ggplot(data= data, aes(x = x, y=y)) +geom_point(size=0.7) + geom_line(aes(x=x, y=predict(lm(y~x))), col="red")
+p3 =  ggplot(data= data, aes(x = x, y=y)) +geom_point(size=0.7) + geom_line(aes(x=x, y=predict(lm(y~poly(x, 2)))), col="orange")
+p4 =    ggplot(data= data, aes(x = x, y=y)) +geom_point(size=0.7) + geom_line(aes(x=x, y=predict(lm(y~poly(x, 20)))), col="purple")
+
+library(ggpubr)
+ggarrange(p1,p2, p3, p4)
+
+```

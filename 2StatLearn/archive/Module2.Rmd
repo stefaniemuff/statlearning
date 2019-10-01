@@ -1,0 +1,578 @@
+---
+subtitle: "TMA4268 Statistical Learning V2018"
+title: "Module 2: STATISTICAL LEARNING"
+author: "Mette Langaas and Julia Debik, Department of Mathematical Sciences, NTNU"
+date: "week 3 2018 (Version 02.01.2018)"
+output: #3rd letter intentation hierarchy
+  # xaringan::moon_reader:
+  #   lib_dir: libs
+  #   nature:
+  #     highlightStyle: github
+  #     highlightLines: true
+  #     countIncrementalSlides: false
+  #   css: [default, metropolis, metropolis-fonts]
+   prettydoc::html_pretty:
+    theme: tactile
+    highlight: github
+#  beamer_presentation:
+###    incremental: true # or >* for one at a time
+#  slidy_presentation:
+#    font_adjustment: +1  
+#  pdf_document:
+   # toc: true
+   # toc_depth: 2
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Learning material for this module:**  
+* James et al (2013): An Introduction to Statistical Learning. Chapter 2.  
+
+# Aim of the module
+* Introduce relevant notation and terminology.
+
+----
+
+# What is Statistical Learning?
+
+*Statistical learning* is the process of learning from data. By applying statistical methods (or algorithms) on a data set (called the training set), the aim is to draw conclusions about the relations between the variables or to find a predictive function for new observations. Statistical learning plays a key role in many areas of science, finance and industry. 
+
+
+Examples of learning problems where the aim is either prediction or inference.
+
+* Medicine: To identify the risk factors for developing diabetes based on diet, physical activity, family history and body measurements. Here the aim is to make inference of the data, i.e. to find underlying relations between the variables.
+* Handwritten digit recognition: To identify the numbers in a handwritten ZIP code, from a digitized image. This is a classification problem, where the response variable is categorical with classes \{0, 1, 2, ..., 9\} and the task is to correctly predict the class membership.
+![Examples of handwritten digits from U.S. postal envelopes. Image taken from https://web.stanford.edu/~hastie/ElemStatLearnII/](digits.png)
+
+* Medicine: predict whether someone will suffer a heart attack on the basis of demographic, diet and clinical measurements. Here the outcome is binary (<span style="color:#00C0af">yes</span>,<span style="color:#F8766D">no </span>) with both qualitative and quantitative input variables. The figure below illustrates South African heart disease data consisting of 462 observations and 10 variables.
+```{r heart, echo=FALSE, message=FALSE}
+library(ElemStatLearn)
+library(ggplot2)
+library(GGally)
+SAheart$chd = as.factor(SAheart$chd)
+ggpairs(SAheart, ggplot2::aes(color=chd), upper="blank",  lower = list(continuous = wrap("points", alpha = 0.3, size=0.2)))
+```
+
+* Economy: To predict the price of a stock 3 months from now, based on company performance measures and economic data. Here the response variable is qualitative. 
+* Email classification (spam detection): The goal is to build a spam filter. This filter can based on the frequencies of words and characters in emails. The table below show the average percentage of words or characters in an email message, based on 4601 emails of which 1813 were classified as a spam.
+```{r spam, echo=FALSE}
+library(knitr)
+library(kableExtra)
+spam_dataset = read.csv("data.csv",header=FALSE,sep=";")
+spam_names = read.csv("names.csv",header=FALSE,sep=";")
+
+#Set the names of the dataset dataframe:
+names(spam_dataset) <- sapply((1:nrow(spam_names)),function(i) toString(spam_names[i,1]))
+
+#make column y a factor variable for binary classification (spam or non-spam)
+spam_dataset$y <- as.factor(spam_dataset$y)
+
+dsmail = spam_dataset[which(spam_dataset$y==0),]
+dsspam = spam_dataset[which(spam_dataset$y==1),]
+
+means_mail = c(mean(dsmail[,19]), mean(dsmail$word_freq_free), mean(dsmail$word_freq_george),  mean(dsmail[,52]), mean(dsmail[,53]), mean(dsmail$word_freq_edu))
+means_spam = c(mean(dsspam[,19]), mean(dsspam$word_freq_free), mean(dsspam$word_freq_george), mean(dsspam[,52]), mean(dsspam[,53]), mean(dsspam$word_freq_edu))
+means = data.frame(rbind(mail= means_mail, spam= means_spam))
+```
+```{r spamtable}
+kable(means, digits = 2, col.names = c("you", "free", "george", "!", "$", "edu"))
+```
+
+* What makes a Nobel Prize winner? Perseverance, luck, skilled mentors or simply chocolate consumption? An article published in the New England Journal of Medicine have concluded with the following:
+
+> Chocolate consumption enhances cognitive function, which is a sine qua non for winning the Nobel Prize, and it closely correlates  with the number of Nobel laureates in each country. It remains to be determined whether the consumption of chocolate is the  underlying mechanism for the observed association with improved cognitive function.
+
+The figure below shows the correlations between a countries' annual per capita chocolate consumption and the number of Nobel Laureates per 10 million population.
+![](chocolate.jpeg)
+
+You can read the article [here](http://www.nejm.org/doi/full/10.1056/NEJMon1211064) and a informal review of the article [here](https://blogs.scientificamerican.com/the-curious-wavefunction/chocolate-consumption-and-nobel-prizes-a-bizarre-juxtaposition-if-there-ever-was-one/).
+
+
+## Is the aim prediction or inference?
+Suppose we observe a quantitative response $Y$ and $p$ different predictors $X_1, X_2,... , X_p$. We assume that there is a function $f$ that relates the response and the predictor variables: 
+$$ Y = f(X) + \varepsilon.$$
+$\varepsilon \sim \mathcal{N}(0, \sigma^2)$ is a random error term, independent of $X$. There are two main reasons for estimating $f$: prediction and inference.
+
+**Prediction**  
+By using an existing data set the aim is to build a model that as accurately as possible can predict a response given new observations of the covariates:
+$$\hat{Y} = \hat{f}(X).$$
+Here $\hat{f}$ represents the estimated $f$ and $\hat{Y}$ represents the prediction for $Y$. In this setting our estimate of the function $f$ is treated as a black box and is not of high importance. Our focus of interest is the prediction for $Y$, hence prediction accuracy is important.
+
+There are two quantities which influence the accuracy of $\hat{Y}$ as a prediction of $Y$: the reducible and the irreducible error. The reducible error has to do with our estimate $\hat{f}$ of $f$. This error can be reduced by making our estimated function by using the most appropriate statistical learning technique. The irreducible error comes from the error term $\varepsilon$ and cannot be reduced by improving $f$.
+
+**Inference**  
+By using an existing data set the aim is to understand how the response variable is affected by the various covariates. In this setting we will not use our estimated function $\hat{f}$ to make predictions but to understand how $Y$ changes as a function of $X_1, X_2, ..., X_p$. The exact form of $\hat{f}$ is of main interest.
+
+
+
+### The difference between Statistical Learning and Machine Learning
+There is much overlap between statistical learning and machine learning: the common objective is learning from data. Specifically, to find a target function $f$ that best maps input variables $X$ to an output variable $Y$:
+$$ Y = f(X)$$
+This function $f$ will allow us to make a prediction for a future $Y$, given new observations of the input variables $X$'s. Machine learning arose as a subfield of Artificial Intelligence and has generally a greater emphasis on large scale applications and prediction accuracy, the shape and the form of the function $f$ is in itself not interesting. Statistical learning arose as a subfield of Statistics with the main focus on models are their interpretability. 
+
+### Naming convention
+Statistical Learning | Machine Learning
+----- | -----
+model | network, graph, mapping
+fitting | learning
+covariates, inputs, independent variables | features, predictors
+response, output, dependent variable  | output variable, target
+data set | training data
+
+# Variable types and terminology  
+
+Variables can be characterized as either *quantitative* or *qualitative*.   
+
+**Quantitative** variables are variables from a continuous set, they have a numerical value. Examples: a person's weight, a company's income, the age of a building, the temperature outside, the amount of rainfall etc.
+
+**Qualitative** variables are variables from a discrete set, from a set of $K$ different classes/labels/categories. Examples of qualitative variables are: type of fruit \{apples, oranges, bananas, ...\}, a person's gender: \{male, female \}, the age groups in a marathon: \{(below 18), (18-22), (23 - 34), (35 - 39), (40 - 44), ... \}. Qualitative variables which have only two classes are called *binary* variables and are usually coded by 0 (no) and 1 (yes). 
+
+
+### Parametric and Non-parametric Methods
+
+**Parametric Methods**  
+Parametric methods build on an assumption about the form or shape of the function $f$.  
+
+The linear simple linear model is an example of a parametric method. We here assume that the response variable is a linear combination of the covariates
+$$f(X) = \beta_0 + \beta_1 X_1 + ... + \beta_p X_p.$$
+By making this assumption, the task simplifies to finding estimates of the $p+1$ coefficients $\beta_0, \beta_1, .. ,\beta_p$. To do this we use the training data to fit the model, such that $$Y \approx \beta_0 + \beta_1 X_1 + ... + \beta_p X_p.$$ Fitting a parametric models is thus done in two steps:
+
+1. Select a form for the function $f$.  
+2. Estimate the coefficients using the training set.
+
+Advantages:   
+
+  * Simpler to use and easier to understand.  
+  * Requires less training data.
+  * Computationally cheaper.
+  
+Disadvantages:   
+
+  * The function $f$ is constrained to the specified form.
+  * Limited complexity.
+  * The assumed function form of $f$ will in general not match the true function, giving a poor estimate.
+
+**Non-parametric methods**  
+Non-parametric methods seek an estimate of $f$ that gets close to the data points, but without making explicit assumptions about the form of the function $f$. 
+
+The $k$-nearest neighbor algorithm is an example of a non-parametric model. This algorithm predicts a class membership for a new observation by looking at the $k$ nearest neighbors. The predicted class is the most occurring class in the neighborhood. We will discuss the $k$-nearest neighbor algorithm more later in this module.
+
+Advantages:  
+
+  * More flexible: a large number of functional forms can be fitted.
+  * No weak assumptions about the underlying function are made.
+  * Can often give better predictions
+  
+Disadvantages:  
+
+  * More data is required to estimate the mapping function $f$.
+  * Computationally more expensive as more parameters need to be estimated.
+  * Can overfit the data.
+
+
+
+## Regression and classisification
+
+**Regression** predicts a value from a continuous set. For example the task of predicting the profit given the amount of money spend on advertising.
+
+**Classification** predicts the class membership. For example given blood pressure, weight and hip ratio predict if a patient suffers from diabetes (yes/no).
+
+## Supervised and unsupervised learning
+
+**Supervised learning:**   
+One has a data set (training set) consisting of $N$ measurement of the response variable $Y$ and of $p$ covariates $X$: 
+$$(y_1, x_{11}, x_{12}, ..., x_{1p}), (y_2, x_{21}, ..., x_{2p}), ... , (y_N, x_{N1}, x_{N2}, ..., x_{Np}). $$
+On the basis of the training data the aim is to: make accurate predictions for new observations, understand which inputs affect the outputs, and how, and to assess the quality of the predictions and inference. It is called supervised learning because the response variable supervises our analysis.
+
+Examples:  
+
+  * Linear regression
+  * Logistic regression
+  * GAM
+  * Boosting
+  * Classification trees
+  * K-nearest neighbor classifier
+  * Support vector machines
+
+**Unsupervised learning**  
+One has a data set consisting of input measurements, but without labeled responses $y_i$'s. The aim is to find hidden patterns or groupings in the data. There is no correct answer.
+
+Examples:   
+
+  * Clustering
+  * Expectation-maximization algorithm
+
+**Semi-Supervised Learning**  
+One has a data set consisting of a large amount of input data but only some of the data has labeled responses. This situation can for example occur if the measurement of input data is cheap, while the output data is expensive to collect.
+
+
+## Prediction accuracy vs. model interpretability
+
+**Inflexible**, or rigid, methods are methods which have high restrictions on the shape of $f$. 
+
+Examples:  
+
+* Subset selection
+* Lasso
+* Linear regression
+
+**Flexible** methods allow for the shape of $f$ from a wider range. Overfitting might occur. 
+
+Examples:  
+
+* Bagging
+* Boosting
+* Support vector machines
+
+
+The choice of a flexible or inflexible method depends on the goal in mind. If the aim is inference an inflexible model, which is easy to understand, will be preferred. On the other side, if we want to make as accurate predictions as possible, we are not concerned about the shape of $f$. A flexible method can be chosen, at the cost of model interpretability, and we treat $f$ like a black box.
+
+**Overfitting** occurs when the estimated function $f$ is too closely fit to the observed data points. 
+
+**Underfitting** occurs when the estimated function $f$ is too rigid to capture the underlying structure of the data.
+
+------ 
+
+We illustrate this by a toy example. Look at the four figures below. The black line in the first figure shows the function from which we have simulated theoretical observations. The equation of this line is $y = x^2$. The black dots show the "observed" values. These have been simulated by adding some noise to the original equation. 
+
+Now, assume that the black dots are observations to which you want to fit a function without knowing the true relationship.  
+
+* The <span style="color:red">red</span> line shows a linear model of the form $y = a x + b$ fitted to the observations. This line clearly underfits the data. We see that this function is unable to capture that convex nature of the.
+* The <span style="color:orange">orange</span> line shows a quadratic polynomial fit to the data, of the form $y = a x^2 + b x+ c$. We see that this function fits well and looks almost identically as the true function.
+* The <span style="color:purple">purple</span> line shows a polynomial of degree 20 fit to the data, of the form $y = a x^{20} + b x^{19} + ... + tx + u$. We here observe overfitting. The function captures the noise instead of the underlying structure of the data.
+
+
+We will discuss polynomial regression in Module 7.
+
+
+```{r overunderfit, message=FALSE, warning=FALSE, echo=FALSE}
+set.seed(2)
+
+x = seq(-2, 4, 0.1)
+true_y = x^2
+
+error = rnorm(length(x), mean=0, sd=2)
+y = true_y + error
+
+data = data.frame(x, y)
+library(ggplot2)
+p1 = ggplot(data= data, aes(x = x, y=y)) +geom_point(size=0.7) + geom_line(aes(x=x, y=true_y))
+p2 = ggplot(data= data, aes(x = x, y=y)) +geom_point(size=0.7) + geom_line(aes(x=x, y=predict(lm(y~x))), col="red")
+p3 =  ggplot(data= data, aes(x = x, y=y)) +geom_point(size=0.7) + geom_line(aes(x=x, y=predict(lm(y~poly(x, 2)))), col="orange")
+p4 =    ggplot(data= data, aes(x = x, y=y)) +geom_point(size=0.7) + geom_line(aes(x=x, y=predict(lm(y~poly(x, 20)))), col="purple")
+
+library(ggpubr)
+ggarrange(p1,p2, p3, p4)
+
+```
+
+## The Bias-Variance trade-off
+Assume that we have fit a simple linear regression line $Y  = f(X) + \varepsilon$ to our training data, which consist of independent observation pairs $\{x_i, y_i\}$ for $i=1,..,n$. Here $\varepsilon \sim \mathcal{N}(0, \sigma_{\varepsilon}^2)$ is an unobserved random variable that adds noise to the relationship between the response variable and the covariates and is called the random error. The fitted line is denoted by $\hat{f}$. We want to use this function to make a prediction for a new observation $x_0$, and are interested in the error associated with this prediction. The predicted response value is then $\hat{f}(x_0)$. The expected test mean squared error (MSE) for $x_0$ is defined as:
+$$\text{E}[Y - \hat{f}(x_0)]^2.$$
+This expected test MSE can be decomposed into three terms:
+$$\begin{align*}\text{E}[Y - \hat{f}(x_0)]^2 &= \text{E}[Y^2 + \hat{f}(x_0)^2 - 2 Y \hat{f}(x_0)] \\ &= \text{E}[Y^2] + \text{E}[\hat{f}(x_0)^2] - \text{E}[2Y \hat{f}(x_0)] \\ &= \text{Var}[Y] + \text{E}[Y]^2 + \text{Var}[\hat{f}(x_0)] + \text{E}[\hat{f}(x_0)]^2 - 2 \text{E}[Y]\text{E}[\hat{f}(x_0)] \\ &= \text{Var}[Y]+f(x_0)^2+\text{Var}[\hat{f}(x_0)]+\text{E}[\hat{f}(x_0)]^2-2f(x_0)\text{E}[\hat{f}(x_0)] \\ &= \text{Var}[Y]+\text{Var}[\hat{f}(x_0)]+(f(x_0)-\text{E}[\hat{f}(x_0)])^2 \\ &= \text{Var}(\varepsilon) +  \text{Var}[\hat{f}(x_0)]+[\text{Bias}(\hat{f}(x_0))]^2.\end{align*}$$
+The firs term is the irreducible error, $\sigma_{\varepsilon}^2$ and is always present unless we have measurements without error. This term cannot be reduced regardless how well our statistical model fits the data. The second term in this decomposition is the variance of the prediction at $x_0$ or the expected deviation around the mean at $x_0$. If the variance is high, there is large uncertainty associated with the prediction. The third term is the squared bias. The bias gives an estimate of how much the prediction differs from the true mean. If the bias is low the model gives a prediction which is close to the true value.
+
+When fitting a statistical model the aim is often to obtain the most predictive model. There are often many candidate models, and the task is to decide which model to choose.
+
+The observations used to fit the statistical model make up the training set. The training error is the average loss over the training sample. As the complexity (and thus flexibility) of a model increases the model becomes more adaptive to underlying structures and the training error falls. However, the variance increases. This means that new observations will be predicted with a higher uncertainty. Recall the purple line in the toy example above. 
+
+The test error is the prediction error over a test sample. The test sample will have new observations which were not used when fitting the model. One wants the model to capture important relationships between the response variable and the covariates, else we will underfit. Recall the red line in the figure corresponding to the toy example above.
+
+This trade-off in selecting a model with the right amount of complexity/flexibility is the variance-bias trade-off.
+
+We will in Module 8 see how methods as bagging, boosting and random forests can lower the variance while prevailing a low bias.
+
+
+<!-- kewywords:   -->
+
+<!--   * why and how to estimate $f$.   -->
+<!--   * why: prediction vs. inference -->
+  <!-- * how: parametric models vs. non-parametric models -->
+  <!-- * prediction accuracy vs. interpretability -->
+  <!-- * supervised vs. unsupervised -->
+  <!-- * regression vs. classification -->
+  <!-- * quality of fit -->
+  <!-- * bias-variance trade-off -->
+
+
+
+<!-- # Model accuracy -->
+<!-- ```{r} -->
+<!-- library(faraway) -->
+<!-- library(vcdExtra) -->
+<!-- vcdExtra::datasets("faraway") -->
+<!-- ``` -->
+# Classification
+
+Situation: We have training observations $\{(x_1, y_1), ..., (x_n, y_n)\}$ where the response variable $Y$ is qualitative. F.ex. $Y \in \mathcal{C} = \{0, 1, ..., 9\}$ or $Y \in \mathcal{C} = \{dog, cat,... ,horse\}$. 
+
+Goal: To build a classifier $\mathcal{C}(X)$ that assigns a class label from $\mathcal{C}$ to a future unlabeled observation $X$ and to asses the uncertainty in each classification. Sometimes the role of the different predictors may be of main interest.  
+
+The most common measure of the performance of our classifier, is the misclassification error rate.  
+
+The **training error rate** is the proportion of mistakes that are made if we apply our estimate $\hat{f}$ to the training observations and is defined as: $$\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i).$$
+Here I is the identity function which is defined as:
+$$\text{I}(a=\hat{a}) = \begin{cases} 1 \text{ if } a = \hat{a} \\ 0 \text{ else }
+\end{cases}$$
+The indicator function thus only counts the number of times our model has made a wrong classification. The training error rate is the fraction of misclassifications made on our training set. A very low training error rate often implies that the classifier has been overfitted.
+
+The **test error rate** is defined in a similar fashion, but here the fraction of misclassifications is calculated when our model is applied on a test set. This gives a better indication of the true performance of the classifier. 
+
+## Bayes classifier
+Suppose we have a quantitative response value that can be a member in one of $K$ classes $\mathcal{C} = \{c_1, c_2, ..., c_k, ..., c_K\}$. Further, suppose these elements are numbered $1, 2, ..., K$. The probability of that a new observation $x_0$ belongs to class $k$ is 
+$$p_k(x_0) = \text{Pr}(Y=k | X=x_0), \quad k = 1, 2, ... K.$$
+This is the conditional class probability: the probability that $Y=k$ given the observation $x_0$. The Bayes classifier assigns an observation to the most likely class, given its predictor values.  
+
+This is best illustrated by a two-class example. Assume our response value is to classified as belonging to one of the two groups $\{A, B\}$. A new observation $x_0$ will be classified to $A$ if $\text{Pr}(Y=A | X=x_0) > 0.5$ and to class $B$ otherwise.
+
+The Bayes classifier has the smallest error. However, we do never know the conditional distribution of $Y$ given $X$ for real data. Computing the Bayes classifier is thus impossible. $K$-nearest neighbor classifier estimates this conditional distribution and then classifies a new observation according to the estimated probability
+
+## K-nearest neighbor classifier
+The $K$-nearest neighbor classifier (KNN) works in the following way: Given a new observation $x_0$ it searches for the $K$ points in our training data that are closest to it. These points make up the neighborhood of $x_0$, $\mathcal{N}_0$. The point $x_0$ is classified by taking a majority vote of the neighbors. That means that $x_0$ is classified to the most occurring class among its neighbors
+$$\text{Pr}(Y=j | X = x_0) = \frac{1}{K} \sum_{i \in \mathcal{N}_0} I(y_i = j).$$
+
+---------  
+
+We demonstrate the $K$-nearest neighbor classifier for a two-dimensional predictor space, $y_i = f(x_{i1}, x_{i2})$. The figure below shows a plot of 100 observations from two classes $A$ (red dots) and $B$ (green dots). The two classes have been simulated from a bivariate normal distribution with mean vectors $\mu_A  = (1, 1)^T$ and $\mu_B = (3, 3)^T$ and a covariance matrix $\Sigma_A = \Sigma_B = \begin{pmatrix} 2\hspace{2mm}   0 \\ 0 \hspace{2mm} 2 \end{pmatrix}$.
+
+
+```{r knn, message=FALSE}
+library(mvtnorm)
+library(MASS)
+library(ggplot2)
+
+set.seed(9)
+
+Sigma = matrix(c(2, 0, 0, 2), 2, 2)
+
+mu1 = c(1, 1)
+mu2 = c(3, 3)
+
+X1 = mvrnorm(100, mu=mu1, Sigma=Sigma)
+X2 = mvrnorm(100, mu=mu2, Sigma=Sigma)
+
+class = c(rep("A",100), rep("B", 100))
+class = as.factor(class)
+
+df = data.frame(rbind(X1, X2), class)
+
+ggplot(df, aes(x=X1, y=X2, color=class))+geom_point(size=2)
+```
+
+
+Assume we have a new observation $X_0 = (x_{01}, x_{02})^T$ which we want to classify as belonging to the class $A$ or $B$. To illustrate this problem we fit the $K$-nearest neighbor classifier to our simulated data set with $K = 1, 3, 10$ and $150$ and observe what happens.
+
+```{r, echo=FALSE, message=FALSE}
+require(class)
+require(dplyr)
+
+test = expand.grid(x = seq(min(df[,1]-1), max(df[,1]+1), by=0.2), y=seq(min(df[,2]-1), max(df[,2]+1), by=0.2))
+
+
+## k = 1
+classif = knn(df[,1:2], test=test, cl=df[,3], k=1, prob=TRUE)
+prob = attr(classif, "prob")
+
+dataf = bind_rows(mutate(test, prob=prob, class="A", prob_cls=ifelse(classif==class, 1, 0)),
+                  mutate(test, prob=prob, class="B", prob_cls=ifelse(classif==class, 1, 0)))
+
+gg = ggplot(dataf)+geom_point(aes(x=x, y=y, colour=class), data=mutate(test, class=classif), size=0.01) 
+gg = gg + geom_contour(aes(x=x, y=y, z=prob_cls, group=class, color=class), data=dataf, bins=2, size=0.5)
+gg = gg + geom_point(aes(x=x, y=y, col=class), size=2, data=data.frame(x=df[,1], y=df[,2], class=df[,3]))
+gg = gg + ggtitle("k = 1")+xlab("X1")+ylab("X2")
+
+# k = 3
+classif3 = knn(df[,1:2], test=test, cl=df[,3], k=3, prob=TRUE)
+prob3 = attr(classif3, "prob")
+
+dataf3 = bind_rows(mutate(test, prob=prob3, class="A", prob_cls=ifelse(classif3==class, 1, 0)),
+                    mutate(test, prob=prob3, class="B", prob_cls=ifelse(classif3==class, 1, 0)))
+
+gg3 = ggplot(dataf3)+geom_point(aes(x=x, y=y, colour=class), data=mutate(test, class=classif3), size=0.01)
+gg3 = gg3 + geom_contour(aes(x=x, y=y, z=prob_cls, group=class, color=class), data=dataf3, bins=2, size=0.5)
+gg3 = gg3 + geom_point(aes(x=x, y=y, col=class), size=2, data=data.frame(x=df[,1], y=df[,2], class=df[,3]))
+gg3 = gg3 + ggtitle("k = 3")+xlab("X1")+ylab("X2")
+
+## k = 10
+
+classif10 = knn(df[,1:2], test=test, cl=df[,3], k=10, prob=TRUE)
+prob10 = attr(classif10, "prob")
+
+dataf10 = bind_rows(mutate(test, prob=prob10, class="A", prob_cls=ifelse(classif10==class, 1, 0)),
+                  mutate(test, prob=prob10, class="B", prob_cls=ifelse(classif10==class, 1, 0)))
+
+gg10 = ggplot(dataf10)+geom_point(aes(x=x, y=y, colour=class), data=mutate(test, class=classif10), size=0.05)
+gg10 = gg10 + geom_contour(aes(x=x, y=y, z=prob_cls, group=class, color=class), data=dataf10, bins=2, size=0.5)
+gg10 = gg10 + geom_point(aes(x=x, y=y, col=class), size=2, data=data.frame(x=df[,1], y=df[,2], class=df[,3]))
+gg10 = gg10 + ggtitle("k = 10")+xlab("X1")+ylab("X2")
+
+## k = 150
+
+classif150 = knn(df[,1:2], test=test, cl=df[,3], k=150, prob=TRUE)
+prob150 = attr(classif150, "prob")
+
+dataf150 = bind_rows(mutate(test, prob=prob150, class="A", prob_cls=ifelse(classif150==class, 1, 0)),
+                  mutate(test, prob=prob150, class="B", prob_cls=ifelse(classif150==class, 1, 0)))
+
+gg150 = ggplot(dataf150)+geom_point(aes(x=x, y=y, colour=class), data=mutate(test, class=classif150), size=0.05)
+gg150 = gg150 + geom_contour(aes(x=x, y=y, z=prob_cls, group=class, color=class), data=dataf150, bins=2, size=0.5)
+gg150 = gg150 + geom_point(aes(x=x, y=y, col=class), size=2, data=data.frame(x=df[,1], y=df[,2], class=df[,3]))
+gg150 = gg150 + ggtitle("k = 150")+xlab("X1")+ylab("X2")
+
+
+gg
+gg3
+gg10
+gg150
+```
+
+
+In our plots, the small colored dots show the predicted classes for an evenly-spaced grid. The lines show the decision boundaries. If our new observation falls into the region within the red decision boundary, it will be classified as $A$. If it falls into the region within the green decision boundary, it will be classified as $B$.  
+
+--------
+
+We see that the choice of $K$ has a big influence on the result of our classification. By choosing $K=1$ the classification is made according to only the one nearest neighbor. When $K=3$ a majority vote is taken among the three nearest neighbors is taken, and so on. We see that as $K$ gets very large, the decision boundary tends to be a straight line.   
+
+
+To find the optimal value of $K$ the typical procedure is to try different values of $K$ and then test the predictive power of the different classifiers, for example by cross-validation, which will be discussed in module 4.
+```{r knnerror}
+#library(class)
+misclas=numeric(50)
+n = dim(df)[1]
+set.seed(9)
+for(k in 1:50){
+  knn = knn.cv(train = df[,-3], cl=df[,3], k=k)
+  t = table(knn, df[,3])
+  error = (n-sum(diag(t)))/n
+  misclas[k] = error
+}
+
+knn_ds = data.frame(X1 = 1:50, X2 = misclas)
+gge = ggplot(knn_ds, aes(x = X1, y=X2)) + geom_point(color="blue") + geom_line()
+gge = gge + xlab("Number of neighbors K") + ylab("Misclassification error")
+gge = gge + ggtitle("Error rate for KNN with different choices of K")
+gge
+```
+
+
+We see that after trying all choices for $K$ between 1 and 50, we see that a few choices of $K$ gave the smallest misclassification error rate, estimating by leave-one out cross-validation (Leave-one-out cross-validation will be discussed in Module 4). The smallest error rate is equal to 0.165. This means that the classifier makes a misclassification 16.5\% of the time and a correct classification 83.5\½ of the time.
+
+-------- 
+
+This above example showed the bias-variance trade-off in a classification setting. Choosing a value of $K$ amounts to choosing the correct level of flexibility of the classifier. This again is critical to the success of the classifier. A too low value of $K$ will give a very flexible classifier (with high variance and low bias) which will fit the training set too well (it will overfit) and make poor predictions for new observations. Choosing a high value for $K$ makes the classifier loose its flexibility and the classifier will have low variance but high bias.
+
+--------
+
+### The curse of dimensionality
+The nearest neighbor classifier can be quite good if the number of parameters $p$ is small and the number of observations $n$ is large. We need enough close neighbors to make a good classification. The effectiveness of the $K$-nearest neighbor classifier falls quickly when the dimensions get high. This is because the nearest neighbors tend to be far away in high dimensions and the method no longer is local. This is referred to as the curse of dimensional.
+
+# Exercise: 
+1. Describe a real-life application in which classification might be useful. Identify the response and the predictors. Is the goal inference or prediction?
+
+2. Describe a real-life application in which regression might be useful. Identify the response and the predictors. Is the goal inference or prediction?
+
+3. Take a look at Figure 2.9 in the book (p. 31). 
+    a. Will a flexible or rigid method typically have the highest test error?
+    b. Does a small variance imply an overfit or rather an underfit to the data?
+    c. Relate the problem of over-and underfitting to the bias-variance trade-off.
+
+4. Exercise 7 from the book (p.53) slightly modified.
+The table below provides a training data set consisting of seven observations, two predictors and one qualitative response variable.
+
+```{r, echo=FALSE}
+library(knitr)
+library(kableExtra)
+knnframe = data.frame(x1 = c(3, 2, 1, 0, -1, 2, 1), x2 = c(3, 0, 1, 1, 0, 1, 0),  y=c("A", "A", "A", "B", "B", "B", "B"))
+kable(knnframe)
+
+```
+
+We wish to use this data set to make a prediction for $Y$ when $X_1=1, X_2 = 2$ using $K$-nearest neighbors.  
+
+a. Compute the Euclidean distance between each observation and the test point,  $X_1=1, X_2 =2$.
+b. What is our prediction with $K=1$? Why?
+c. What is our prediction with $K=4$? Why?
+d. If the Bayes decision boundary in this problem is highly non-linear, when would we expect the best value for $K$ to be large or small? Why?
+e. Install and load the `ggplot2` library:
+```{r, echo=TRUE, eval=FALSE}
+install.packages(ggplot2)
+library(ggplot2)
+```
+Plot the points in `R` using the function `ggplot`.  
+
+f. Use the function `knn` from the `class` library to make a prediction for the test point using `k=1`. Do you obtain the same result as by hand? 
+g. Use the function `knn` to make a prediction for the test point using `k=4` and `k=7`.
+
+
+# Exercise: Visualization tools in R
+
+
+## Scatter Plot
+```{r scatter, warning=FALSE, message=FALSE}
+library(car)
+library(ggplot2)
+SLID = na.omit(SLID)
+ggplot(SLID, aes(education, wages))+geom_point()+labs(title="Scatterplot")
+
+ggplot(SLID, aes(education, wages)) + geom_point(aes(color = language)) + 
+  scale_x_continuous("Education")+
+  scale_y_continuous("Wages")+ 
+  theme_bw() + labs(title="Scatterplot") + facet_wrap( ~ language)
+```
+
+## Histogram
+```{r hist}
+ggplot(SLID, aes(wages))+geom_histogram(binwidth=2)+labs(title="Histogram")
+```
+
+
+## Box-plot
+```{r boxplot}
+ggplot(SLID, aes(language,wages ))+geom_boxplot(fill="skyblue")+labs(title="Box Plot")
+```
+
+
+## Bar \& Stack bar chart
+
+## Area chart
+```{r}
+ages = cut(SLID$age, breaks=3)
+SLID2 = cbind(SLID, ages)
+ggplot(SLID, aes(x=wages, fill=ages))+geom_area(stat="bin")
+```
+
+
+
+## Heat map
+```{r heat, message=FALSE, warning=FALSE}
+library(reshape)
+head(mtcars) 
+carsdf = data.frame(scale(mtcars))
+carsdf$model = rownames(mtcars)
+cars_melt = melt(carsdf, id.vars="model")
+
+ggplot(cars_melt, aes(x =variable, y = model))+geom_raster(aes(fill=value))+labs(title="Heat Map") + scale_fill_continuous(name="Value")
+
+```
+
+## Correlogram
+
+```{r corrplot, message=FALSE, warning=FALSE}
+library(faraway)
+data(ozone)
+library(corrplot)
+ozonecorr = cor(ozone)
+corrplot(ozonecorr)
+
+library(corrgram)
+corrgram(ozone, upper.panel=panel.conf)
+```
+
+
+
+
+

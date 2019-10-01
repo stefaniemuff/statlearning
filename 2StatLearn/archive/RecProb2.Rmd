@@ -1,0 +1,345 @@
+---
+title: "Solutions Recommended Exercises"
+subtitle: "TMA4268 Statistical Learning V2018. Module 2: STATISTICAL LEARNING"
+author: "Mette Langaas, Julia Debik and Thea Roksvaag, Department of Mathematical Sciences, NTNU"
+date: "19.01.2018"
+output: #3rd letter intentation hierarchy
+#  beamer_presentation:
+###    incremental: true # or >* for one at a time
+#  slidy_presentation:
+#    font_adjustment: +1  
+#   prettydoc::html_pretty:
+#    theme: architect
+#    highlight: github
+# pdf_document:
+#    toc: true
+#    toc_depth: 2
+---
+
+```{r, eval=FALSE,echo=FALSE}
+install.packages("gamlss.data")
+install.packages("tidyverse")
+install.packages("GGally")
+install.packages("Matrix")
+install.packages("ggpubr")
+```
+## Problem 1
+a. Observation 1: $\sqrt{(3-1)^2+(3-2)^2}= \sqrt{5}$  
+Observation 2: $\sqrt{(2-1)^2+(0-2)^2}= \sqrt{5}$  
+Observation 3: $\sqrt{(1-1)^2+(1-2)^2}= 1$  
+Observation 4: $\sqrt{(0-1)^2+(1-2)^2}= \sqrt{2}$  
+Observation 5: $\sqrt{(-1-1)^2+(0-2)^2}= \sqrt{8}$  
+Observation 6: $\sqrt{(2-1)^2+(1-2)^2}= \sqrt{2}$  
+Observation 7: $\sqrt{(1-1)^2+(0-2)^2} = 2$
+b. The closest point is observation 3. This observation belongs to class A hence the predicted class membership for our test observation is A.
+c. The four closest points are observations 3, 7, 4 and 6 with corresponding classes \{A, B, B, B\}. The predited class for our test observation is thus B.
+d. If the Bayes decision boundary is highly non-linear, we would choose a $K$ that is not to big, as the decision boundary becomes approximately linear when $K$ tends to infinity
+e. We start by installing and loading the `ggplot2` packages.
+```{r,warning=FALSE}
+#install.packages(ggplot2)
+library(ggplot2)
+```
+
+We make a data frame with our observations
+```{r}
+knnframe = data.frame(x1 = c(3, 2, 1, 0, -1, 2, 1), x2 = c(3, 0, 1, 1, 0, 1, 0),  y=c("A", "A", "A", "B", "B", "B", "B"))
+knnframe$y = as.factor(knnframe$y)
+```
+We plot the observations unsing the `ggplot` function. We set `color=y` to obtain a colored response.
+```{r}
+ggplot(knnframe, aes(x=x1, y=x2, color=y))+geom_point()
+```
+
+f. 
+```{r}
+#install.packages(class)
+library(class)
+knn(train = knnframe[,1:2], cl = knnframe[,3], test = c(1, 2), k=1)
+```
+
+g. 
+```{r}
+knn(train = knnframe[,1:2], cl = knnframe[,3], test = c(1, 2), k=4)
+```
+
+```{r}
+knn(train = knnframe[,1:2], cl = knnframe[,3], test = c(1, 2), k=7)
+```
+
+#Problem 2#
+
+##a)
+We sample from the model $y=x^2+\epsilon$ where $\epsilon \sim \mathcal{N}(0,2^2)$ and $x\in \{-2,-1.9,-1.8,...,3.8,3.9,4\}$. This means that $y \sim \mathcal{N}(x^2,2^2)$. A total of 100 samples from this model are generated for each of the 61 $x$'s.
+
+See comments in code for further explanations.
+
+```{r,message=F,warning=F}
+library(ggplot2)
+library(ggpubr)
+set.seed(2) # to reproduce
+
+M=100 # repeated samplings, x fixed 
+nord=20 # order of polynoms
+
+
+x = seq(-2, 4, 0.1) #We make a sequence of 61 points, x. These are the points for which we evaluate the function f(x).
+truefunc=function(x) return(x^2) #The true f(x)=x^2. 
+true_y = truefunc(x) #We find f(x) for each element in vector x.
+
+error = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE) #Noise (epsilon) is sampled from a normal distribution and stored in this matrix. Each column corresponds to one value of x.
+ymat = matrix(rep(true_y,M),byrow=T,nrow=M) + error #The 100 samples or the observations are stored in this matrix.
+
+predarray=array(NA,dim=c(M,length(x),nord))
+for (i in 1:M)
+{
+  for (j in 1:nord)
+  {
+    predarray[i,,j]=predict(lm(ymat[i,]~poly(x, j)))
+    #Based on the response y_i and the x_i's, we fit a polynomial model of degre 1,...,20. This means that we assume y_i~Normal(x_i^j,0). 
+  }
+}
+# M matrices of size length(x) times nord
+# first, only look at variablity in the M fits and plot M curves where we had 1.
+
+# for plotting need to stack the matrices underneath eachother and make new variable "rep"
+stackmat=NULL
+for (i in 1:M) stackmat=rbind(stackmat,cbind(x,rep(i,length(x)),predarray[i,,]))
+#dim(stackmat)
+colnames(stackmat)=c("x","rep",paste("poly",1:20,sep=""))
+sdf=as.data.frame(stackmat) #NB have poly1-20 now - but first only use 1,2,20
+# to add true curve using stat_function - easiest solution
+true_x=x
+yrange=range(apply(sdf,2,range)[,3:22])
+p1=ggplot(data=sdf,aes(x=x,y=poly1,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p1=p1+stat_function(fun=truefunc,lwd=1.3,colour="black")+ggtitle("poly1")
+p2=ggplot(data=sdf,aes(x=x,y=poly2,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p2=p2+stat_function(fun=truefunc,lwd=1.3,colour="black")+ggtitle("poly2")
+p10=ggplot(data=sdf,aes(x=x,y=poly10,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p10=p10+stat_function(fun=truefunc,lwd=1.3,colour="black")+ggtitle("poly10")
+p20=ggplot(data=sdf,aes(x=x,y=poly20,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p20=p20+stat_function(fun=truefunc,lwd=1.3,colour="black")+ggtitle("poly20")
+ggarrange(p1,p2,p10,p20)
+```
+
+The upper left plot shows 100 predictions when we assume that $y$ is a linear function of $x$, the upper right plot hows 100 predictions when we assume that $y$ is a quadratic function of $x$, the lower left plot shows 100 predictions when we assume $y$ is a cubic function of $x$ and the lower right plot shows 100 predictions when assuming $y$ is a function of $x^4$.
+
+##b)
+Run the code attached and consider the following plots:
+
+```{r,echo=FALSE}
+set.seed(2) # to reproduce
+
+M=100 # repeated samplings,x fixed but new errors
+nord=20
+x = seq(-2, 4, 0.1)
+truefunc=function(x) return(x^2)
+true_y = truefunc(x)
+
+error = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
+testerror = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
+ymat = matrix(rep(true_y,M),byrow=T,nrow=M) + error
+testymat = matrix(rep(true_y,M),byrow=T,nrow=M) + testerror
+
+predarray=array(NA,dim=c(M,length(x),nord))
+for (i in 1:M)
+{
+  for (j in 1:nord)
+  {
+    predarray[i,,j]=predict(lm(ymat[i,]~poly(x, j)))
+  }
+}  
+trainMSE=matrix(ncol=nord,nrow=M)
+for (i in 1:M) trainMSE[i,]=apply((predarray[i,,]-ymat[i,])^2,2,mean)
+testMSE=matrix(ncol=nord,nrow=M)
+for (i in 1:M) testMSE[i,]=apply((predarray[i,,]-testymat[i,])^2,2,mean)
+
+library(ggplot2)
+library(ggpubr)
+
+# format suitable for plotting 
+stackmat=NULL
+for (i in 1:M) stackmat=rbind(stackmat,cbind(rep(i,nord),1:nord,trainMSE[i,],testMSE[i,]))
+colnames(stackmat)=c("rep","poly","trainMSE","testMSE")
+sdf=as.data.frame(stackmat) 
+yrange=range(sdf[,3:4])
+p1=ggplot(data=sdf[1:nord,],aes(x=poly,y=trainMSE))+scale_y_continuous(limits=yrange)+geom_line()
+pall= ggplot(data=sdf,aes(x=poly,group=rep,y=trainMSE,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+testp1=ggplot(data=sdf[1:nord,],aes(x=poly,y=testMSE))+scale_y_continuous(limits=yrange)+geom_line()
+testpall= ggplot(data=sdf,aes(x=poly,group=rep,y=testMSE,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+ggarrange(p1,pall,testp1,testpall)
+
+library(reshape2)
+df=melt(sdf,id=c("poly","rep"))[,-2]
+colnames(df)[2]="MSEtype"
+ggplot(data=df,aes(x=as.factor(poly),y=value))+geom_boxplot(aes(fill=MSEtype))
+
+trainMSEmean=apply(trainMSE,2,mean)
+testMSEmean=apply(testMSE,2,mean)
+meandf=melt(data.frame(cbind("poly"=1:nord,trainMSEmean,testMSEmean)),id="poly")
+ggplot(data=meandf,aes(x=poly,y=value,colour=variable))+geom_line()
+```
+
+The plots show that the test MSE in general is larger than the train MSE. This is reasonable. The fitted model is fitted based on the training set. Thus, the error will be smaller for the train data than for the test data. Furthermore, the plots show that the difference between the MSE for the test set and the train set increases when the degree of the polynomial increases. When the degree of the polynomial increases, we get a more flexible model. The fitted curve will try to pass through the training data if possible, which typically leads to an overfitted model that performs bad for test data.
+
+##c)
+Run the code and consider the following plots:
+
+```{r,echo=FALSE}
+meanmat=matrix(ncol=length(x),nrow=nord)
+varmat=matrix(ncol=length(x),nrow=nord)
+for (j in 1:nord)
+{
+  meanmat[j,]=apply(predarray[,,j],2,mean) # we now take the mean over the M simulations - to mimic E and Var at each x value and each poly model
+  varmat[j,]=apply(predarray[,,j],2,var)
+}
+# nord times length(x)
+bias2mat=(meanmat-matrix(rep(true_y,nord),byrow=TRUE,nrow=nord))^2 #here the truth is
+
+df=data.frame(rep(x,each=nord),rep(1:nord,length(x)),c(bias2mat),c(varmat),rep(4,prod(dim(varmat)))) #irr is 2^2.
+colnames(df)=c("x","poly","bias2","variance","irreducible error") #suitable for plotting
+df$total=df$bias2+df$variance+df$`irreducible error`
+hdf=melt(df,id=c("x","poly"))
+hdf1=hdf[hdf$poly==1,]
+hdf2=hdf[hdf$poly==2,]
+hdf10=hdf[hdf$poly==10,]
+hdf20=hdf[hdf$poly==20,]
+
+p1=ggplot(data=hdf1,aes(x=x,y=value,colour=variable))+geom_line()+ggtitle("poly1")
+p2=ggplot(data=hdf2,aes(x=x,y=value,colour=variable))+geom_line()+ggtitle("poly2")
+p10=ggplot(data=hdf10,aes(x=x,y=value,colour=variable))+geom_line()+ggtitle("poly10")
+p20=ggplot(data=hdf20,aes(x=x,y=value,colour=variable))+geom_line()+ggtitle("poly20")
+ggarrange(p1,p2,p10,p20)
+```
+
+We see that the variance (green) increases with the complexity of the model. A linear model gives variance close to zero, while a polynomial of degree 20 gives variance close to 1 (larger at the borders). A more complex model is more flexible as it can turn up and down and change direction fast. This leads to larger variance. (Look at the plot in 2a, there is a larger variety of curves you can make when the degree is 20 compared to if the degree is 1.)
+
+Further, we see that the bias is large for poly1, the linear model. The linear model is quite rigid, so if the true underlying model is non-linear, we typically get large deviations between the fitted line and the training data. If we study the first plot, it seems like the fitted line goes through the training data in $x=-1$ and $x=3$ as the bias is close to zero here (this is confirmed by looking at the upper left plot in 2a).
+
+The polynomial models with degree larger than one lead to lower bias. Recall that this is the training bias: The polynomial models will try to pass through the training points if possible, and when the degree of the polynomial is large they are able to do so because they have large flexibility compared to a linear model.
+
+##d)
+To change $f(x)$, replace
+```{r}
+truefunc=function(x) return(x^2)
+```
+by for example 
+```{r}
+truefunc=function(x) return(x^4)
+```
+or
+```{r}
+truefunc=function(x) return(exp(2*x))
+```
+and rerun the code. Study the results.
+
+If you want to set the variance to 1 for example, set $sd=1$ in these parts of the code in 2a and 2b:
+
+```{r
+rnorm(length(x)*M, mean=0, sd=1)
+```
+
+Also change the following part in 2c:
+
+```{r,results="hide"}
+df=data.frame(rep(x,each=nord),rep(1:nord,length(x)),c(bias2mat),c(varmat),rep(1,prod(dim(varmat)))) #irr is 1^2.
+```
+to get correct plots of the irreducible error. Here, $rep(4,prod(dim(varmat)))$ is replaced by $rep(1,prod(dim(varmat)))$.
+
+#Problem 3
+
+##Scatter plot:
+
+```{r,echo=FALSE,message=F,warning=F}
+library(car)
+library(ggplot2)
+SLID = na.omit(SLID)
+ggplot(SLID, aes(education, wages))+geom_point()+labs(title="Scatterplot")
+```
+
+The scatterplot shows that the people with the largest wages often are the people with the longest education. The plot also indicates that the variance increases as a function of education, i.e the expected wage vary less for a random person with 0-5 years of education compared to a person with 20 years of education.
+
+```{r,echo=FALSE,message=F,warning=F}
+ggplot(SLID, aes(education, wages)) + geom_point(aes(color = language)) + 
+  scale_x_continuous("Education")+
+  scale_y_continuous("Wages")+ 
+  theme_bw() + labs(title="Scatterplot") + facet_wrap( ~ language)
+```
+
+From this plot we see that there are more english speaking people in the dataset. In general, the english speaking people have large education (relatively few people with education < 8 years). Among the people who speak other langauges than french and english, there is a larger amount of people with low education.
+
+##Histogram 
+
+```{r,echo=FALSE}
+ggplot(SLID, aes(wages))+geom_histogram(binwidth=2)+labs(title="Histogram")
+```
+
+Shows the distrubiton of wages in the dataset.
+
+##Box-plot
+
+```{r,echo=FALSE}
+ggplot(SLID, aes(language,wages ))+geom_boxplot(fill="skyblue")+labs(title="Box Plot")
+```
+
+The median wage is similar for people speaking english, french and other languages. The $25 \%$ and $75 \%$ percentiles are also similar for the three boxplots. However, there are more outliers among the english speaking people: There are many people with wages that are larger than the upper $95 \%$ percentile.
+
+##All pairs and different plots
+
+```{r,echo=FALSE,message=F,warning=F}
+library(GGally)
+ggpairs(SLID)
+```
+
+This plot gives us an overview of the dataset:
+
+* Correlation between different variables, e.g cor(age,wage)=0.36. 
+* Distribution of wages in the dataset (upper left), education (row 1, column 2) and age (row 3, column 3).
+* Boxplots for different pairs of variables, e.g boxplots for wage as a function of gender (row 1, column 4). We see that males have a median wage that is larger than for the females in the dataset.
+* Histograms showing the distribution of the different covariates, i.e row 4, column 4 shows that there are approximately equally many males and females in the dataset.
+* Scatterplots indicating correlation between variables, e.g scatterplot between wages and education in row 2, column 1.
+
+##Area chart
+```{r,echo=FALSE,message=F,warning=F}
+ages = cut(SLID$age, breaks=3)
+SLID2 = cbind(SLID, ages)
+ggplot(SLID, aes(x=wages, fill=ages))+geom_area(stat="bin")
+```
+
+Compares the distribution of wages for different age groups. Young people (red) tend to have lower wages than older people between 31.7 and 51.3 years (green).
+
+##Heat map 
+```{r,echo=FALSE,results="hide",message=F,warning=F}
+library(reshape)
+head(mtcars) 
+
+carsdf = data.frame(scale(mtcars))
+carsdf$model = rownames(mtcars)
+cars_melt = melt(carsdf, id.vars="model")
+
+```
+
+```{r,echo=FALSE}
+ggplot(cars_melt, aes(x =variable, y = model))+geom_raster(aes(fill=value))+labs(title="Heat Map") + scale_fill_continuous(name="Value")
+```
+
+Visualization of the data. Shows the values of the different covariates (-1 to 3) for the different car models. 
+
+##Correlogram
+
+```{r,echo=FALSE,results="hide",message=F,warning=F}
+install.packages("faraway",repos="http://cran.us.r-project.org")
+install.packages("corrplot",repos="http://cran.us.r-project.org")
+library(faraway)
+data(ozone)
+library(corrplot)
+ozonecorr = cor(ozone)
+```
+
+```{r,echo=FALSE}
+corrplot(ozonecorr)
+```
+
+
+Visualizes the correlation between different variables in the dataset. We can for example observe a large, negative correlation between $ibh$ and $ibt$ and a large, positive correlation between $ibt$ and $O3$.
+
+

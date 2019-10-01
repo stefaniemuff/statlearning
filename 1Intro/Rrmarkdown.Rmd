@@ -1,0 +1,48 @@
+---
+title: "TMA4268 Statistical Learning V2018: MODULE 1: INTRODUCTION TO STATISTICAL LEARNING"
+subtitle: "R Markdown experienced R user"
+author: "Mette Langaas, Department of Mathematical Sciences, NTNU -- with contributions from NN"
+date: "week 2 2018 (Version 11.2017)"
+output: #3rd letter intentation hierarchy
+#  beamer_presentation:
+###    incremental: true # or >* for one at a time
+#  slidy_presentation:
+#    font_adjustment: +1  
+   prettydoc::html_pretty:
+    theme: architect
+    highlight: github
+  # pdf_document:
+#    toc: true
+#    toc_depth: 2
+
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE)
+```
+The module pages (you are reading the Module 1 page now), are written using R Markdown. To work with the module pages you either copy-paste snippets of R code from the module page over in your editor window in Rstudio, or copy the Rmd-version of the module page (1Intro.Rmd) into your Rstudio editor window (then you can edit directly in Rmarkdown document - to make it into your personal copy).
+
+If you choose the latter: To compile the R code we use `knitr` (termed "knit") to produce a html-page you press "knit" in menu of the editor window, but first you need to install libraries: `rmarkdown` and `devtools` (from CRAN) and `prettydoc` (from GitHub). (I have commented out this in the code below, you need to run the install.packages if you have not done that before.) 
+
+# install.packages("rmarkdown")
+# library(rmarkdown)
+# install.packages("devtools")
+# library(devtools)
+# install_github("yixuan/prettydoc")
+# library(prettydoc)
+
+If you want to learn more about the R Markdown (that you may use for the compulsory exercises) this is a good read: 
+
+* <http://r4ds.had.co.nz/r-markdown.html> (Chapter 27: R Markdown from the "R for Data Science" book), and 
+
+* the Rstudio cheat sheet on R Markdown is here: <https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf>.
+
+Then you see that you can make a pdf-file in addition to a html-file (for your reports you may choose either).
+
+# Not use R Markdown, but only R code?
+If you only want to extract the R code from a R Markdown file you may do that using the function `purl` from library `knitr`. To produce a file "1Intro.R" from this "1Intro.Rmd" file:
+
+```{r eval=FALSE, include=TRUE}
+require(knitr)
+purl("https://www.math.ntnu.no/emner/TMA4268/2018v/1Intro.Rmd")
+```
+The file will then be saved in your working directory, that you see with `getwd()`.

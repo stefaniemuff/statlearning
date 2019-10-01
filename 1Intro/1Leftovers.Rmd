@@ -1,0 +1,374 @@
+---
+title: "1Leftovers"
+author: "Julia Debik and Mette Langaas"
+date: "12/29/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+### Example: The SLID data set
+
+The `SLID` data set is available in the `car` package. It cotains data from the 1994 wave of the Canadian Survey of Labour and Income Dynamics, from the province of Ohio. The dimension of the data set is 7425 rows and 5 columns, however the data set contains many missing values.
+
+----
+
+We will here model the composite hourly wage rate from all jobs, `wages`, as a function of four variables:
+
+* `education`: Number of years of schooling.
+* `age` : Age in years.
+* `sex` : A categorical variable with two classes: \{Male, Female\}.
+* `language`: A categorical variable with three classes: \{English, French, Other\}.  
+
+----
+ 
+A scatterplot can let us take a first glance at the data set.  
+
+```{r car,echo = TRUE, results = "hold", tidy = FALSE, fig.height = 4}
+library(car)
+library(ggplot2)
+library(ggpubr)
+p1 = ggplot(SLID, aes(education, wages)) + geom_point(size=0.5) 
+p2 = ggplot(SLID, aes(age, wages)) + geom_point(size=0.5)
+p3 = ggplot(SLID, aes(sex, wages)) + geom_point(size=0.5)
+p4 = ggplot(SLID, aes(language, wages)) + geom_point(size=0.5)
+ggarrange(p1, p2, p3, p4)
+```
+
+We see that there is a relationship between the response variable `wages` and the variables `education`, `sex`, `age` and `languages`.   
+
+A multiple normal linear regression model was fitted to the data set with `wages` as response and all the other variables as covariates.
+```{r carcont}
+lm_wages = lm(wages ~ ., data = SLID)
+summary(lm_wages)
+
+```
+
+
+## Module 4: Classification
+
+Classification is the the approach we take for predicting qualitative responses (recall that a qualitative response is a response that can take on one of many distinct classes). In other words: given a new observation, we want to assign the observation to a class. For that we need a training set containing observations whose class membership is known and a classification rule. We will in this module discuss the classifiers *logistic regression*, *linear and quadratic discriminant analysis* and *K-nearest neighbors*.
+
+
+### Example: Classification of Iris plants
+
+<figure><img src="iris.png" height="250px" width="250px" align="right" /><figcaption>Image taken from: http://blog.kaggle.com/2015/04/22/scikit-learn-video-3-machine-learning-first-steps-with-the-iris-dataset/</figcaption></figure>.
+The `iris` flower data set is a multivariate data set introduced by the British statistician and biologist Ronald Fisher in 1936. The data set contains three plant species \{setosa, virginica, versicolor\} and four features measured for each corresponding sample: `Sepal.Length`, `Sepal.Width`, `Petal.Length` and `Petal.Width`.   
+```{r iris, include=TRUE}
+head(iris)
+```
+
+```{r iriscont, echo=FALSE}
+library(ggplot2)
+library(GGally)
+ggpairs(iris, aes(colour=Species), title="Classification of Iris plants")
+# irisplot = ggplot(data=iris, aes(x = Sepal.Length, y = Sepal.Width)) 
+# irisplot = irisplot + geom_point(aes(color=Species)) 
+# irisplot = irisplot + xlab("Sepal Length") + ylab("Sepal Width")
+# irisplot = irisplot + ggtitle("Classification of Iris plants")
+# irisplot
+```
+
+In this case the aim would be to correctly classify the species of an iris plant, based on the measurement of its sepal length and sepal width. This model will give linear boundaries between groups.
+
+---- 
+
+A competing method is linear discriminant analysis (LDA). This method (also) provides a way in which linear boundaries between groups can be created.
+
+```{r irislda, echo=FALSE}
+library(klaR)
+drawparti(iris$Species, iris$Sepal.Length, iris$Sepal.Width,  prec=301, gs=20,  method="lda", image.colors=c("#F8766D", "#00BA38", "#619CFF"), xlab="Sepal Length", ylab="Sepal Width", print.err=0)
+legend("topright", title="Species", legend=c("setosa", "versicolor", "virginica"), fill=c("#F8766D", "#00BA38", "#619CFF"),  inset=.02 , cex=0.8)
+```
+
+In this plot the small black dots represent correctly classified iris plants, while the red dots represent misclassifications. The big black dots represent the class means.
+
+---- 
+
+Sometimes a more suitable boundary is not linear. Quadratic discriminant analysis (QDA) provides a way in which quadratic boundaries between groups can be created.
+```{r irisqda, echo=FALSE}
+drawparti(iris$Species, iris$Sepal.Length, iris$Sepal.Width, prec=301, gs=20,  method="qda", image.colors=c("#F8766D", "#00BA38", "#619CFF"), print.err=0, xlab="Sepal Length", ylab="Sepal Width")
+legend("topright", legend=c("setosa", "versicolor", "virginica"),title="Species", fill=c("#F8766D", "#00BA38", "#619CFF"),  inset=.02 , cex=0.8)
+
+```
+## Spam filtering - problem and data
+
+* We want distinguish between two types of e-mails: "spam" and "non-spam". 
+* Spam filtering is a _binary classification_ task. 
+* Classification can be made from the probabilities of words occuring in spam email and in legitimate email. 
+    + `word_freq_WORD` : Percentage of words in the e-mail that match `WORD`
+    + `char_freq_CHAR` : Percentage of characters in the e-mail that match `CHAR`   
+    + `capital_run_length_average` : Average length of uninterrupted sequence of capital letters
+    + `capital_run_length_longest` : Length of longest uninterrupted sequence of capital letters
+    + `capital_run_length_total` : Total number of capital letters n the e-mail
+
+---
+
+## Spam filtering - model
+
+```{r spam, echo=FALSE}
+spam_dataset <- read.csv("data.csv",header=FALSE,sep=";")
+spam_names <- read.csv("names.csv",header=FALSE,sep=";")
+
+#Set the names of the dataset dataframe:
+names(spam_dataset) <- sapply((1:nrow(spam_names)),function(i) toString(spam_names[i,1]))
+
+#make column y a factor variable for binary classification (spam or non-spam)
+spam_dataset$y <- as.factor(spam_dataset$y)
+```
+
+* A _logistic regression model_ has been fitted to the spam data set, with all variables as covariates, where the response is a factor variable spam: `y=1`, non-spam:`y=0`.
+
+* We can for example see (next) that 
+    + a high occurance of the words _free_, *business* or *your* might indicate that the email is a spam. 
+    + The same is true for a high occurance of the characters *!* and *$* and a long length of uninterrupted sequence of capital letters. 
+    + On the other hand, a high frequency of the words *report*, *labs* or *telnet* does not indicate a spam mail.
+
+---
+
+## Spam output
+
+```{r spamglm}
+glm_spam = glm(y~., data=spam_dataset, family="binomial")
+summary(glm_spam)
+```
+
+## Module 5: Resampling Methods
+Two of the most commonly used resampling methods are cross-validation and the bootstrap. Cross-validation is often used to choose appropriate values for tuning parameters. Bootstrap is often used to provide a measure of accuracy of a parameter estimate.
+
+### Cross-validation and the choice of neighbours in KNN
+
+A $K$-nearest neighbors classifier (KNN) classifies a test observation $x_0$ by identifying the $K$ points in the training data that are closest to $x_0$. The predicted class for the test observation is then found by a majority vote of its neighbors. That is, $x_0$ is classified to the class which is most common among its neighbors. When using the KNN algorithm, the choice of $K$ is crucial for obtaining an accurate prediction. Cross validation is a great tool to decide for the *best* value of $K$.
+
+-----
+
+In $K$-fold cross-validation the original data set is randomly partitioned into $K$ parts of equal size. $K-1$ of the parts make up the training set, and are used to train a statistical method. The predictive power is then tested on the left-out part, which is the test set. This procedure is repeated $K$ times, with a new part of the original data set left out as a test set, each time.
+
+-----
+
+When wanting to use the KNN classifier on the `iris` data set, we need to decide on the number of neighbors we want to make the comparison to. By trying all values of $K$ from 0 to 50, and comparing the misclassification error rate estimated by Leave-one-out cross-validation, the optimal value for $K$ can be chosen. We look at the procedure in more detail for the choice $K=5$. We fit a KNN classifier to the train which consists of all but the last column of the `iris` data set. The true class labels are in the last colum of the data set and are fed to the `knn` function to the `cl` variable. We print the confusion matrix to see the number of misclassifications by calling the function `table` and passing on the true and predicted classes.
+
+```{r}
+library(class)
+set.seed(100)
+
+knn5 = knn.cv(train = iris[,-5], cl=iris[,5], k=5)
+t = table(knn5, iris[,5])
+t
+knn5_misclas = (150-sum(diag(t)))/150
+knn5_misclas
+```
+
+We see that the correct classifications are found on the diagonal. 50+47+48 = 148 observations out of 150 were correctly classified using our 5-nearest neighbor classifier. The misclassification error rate is 3.33\%. We proceed by trying all values of $K$ from 1 to 50:
+
+```{r}
+misclas=numeric(50)
+for(k in 1:50){
+  knn = knn.cv(train = iris[,-5], cl=iris[,5], k=k)
+  t = table(knn, iris[,5])
+  error = (150-sum(diag(t)))/150
+  misclas[k] = error
+  error
+}
+
+knn_ds = data.frame( x = 1:50, y = misclas)
+ggplot(knn_ds, aes(x = x, y=y)) + geom_point() + xlab("Number of neighbors k") + ylab("Misclassification error") + ggtitle("Error rate for classification of iris plants with varying k") + geom_line()
+```
+
+We see that a choice of $K = 14$ might be a good choice. 
+  
+### Example: Estimating the accuracy of a linear regression model
+
+Recall our multiple linear regression model fit to the `SLID` data set. By fitting a linear regression model using the `lm` function we obtained estimates for the coefficients and their corresponding standard errors. Another way to obtain estimates of the standard errors for the coefficients, is by using bootstrap. A bootstrap sample is a sample of a data set obtained by drawing with replacement. This means that each bootstrap sample is slightly different from the original data set. By fitting a seperate linear regression model to each of the bootstrap samples, we can estimate the standard errors of the estimated coefficients. We will demonstrate it here on the `SLID` data set.
+
+```{r}
+library(boot)
+library(car)
+set.seed(10)
+boot.fn = function(data, index){
+  return(coef(lm(wages~., data=data, subset=index)))
+}
+boot(SLID, boot.fn, 1000)
+```
+
+The standard errors of 1000 bootstrap estimates for the coefficients in the linear model fit to the SLID data set are given in the `std.error` column. For example: the bootstrap estimate for SE($\hat{\beta_0}$) is 0.67509.
+
+## Module 6: Linear Model Selection and Regularization
+
+Recall the standard linear model
+$$Y = \beta_0 + \beta_1 X_1 + ... + \beta_p X_p + \varepsilon$$,
+where the relationship between the response variable $Y$ and a set of variables $X_1, X_2, ..., X_p$. We will in this module discuss how the linear model can be improved, by replacing least squares fitting with alternative fitting procedures. The motivation for this is that alternative fitting procedures can yield better prediction accuracy and model interpretability.
+
+-----
+
+### Example: Subset selection
+
+<!-- ```{r} -->
+<!-- thisds=dget("https://www.math.ntnu.no/emner/TMA4315/2017h/BPtma4267P2.dd") -->
+<!-- lm1=lm(-1/sqrt(SYSBP)~SEX+AGE+CURSMOKE+BMI+TOTCHOL+BPMEDS,data=thisds) -->
+<!-- summary(lm1) -->
+<!-- lm2 = update(lm1, .~.-SEX) -->
+<!-- summary(lm2) -->
+<!-- lm3 = update(lm2, .~.-CURSMOKE) -->
+<!-- summary(lm3) -->
+<!-- ``` -->
+<!-- ```{r} -->
+<!-- library(glmnet) -->
+<!-- library(reshape2) -->
+<!-- x_reg = model.matrix(-1/sqrt(thisds$SYSBP)~., data=thisds)[,-1] -->
+<!-- y_reg = -1/sqrt(thisds$SYSBP) -->
+<!-- grid = 10^seq(10 , -2 , length =100) -->
+<!-- ridge = glmnet(x_reg ,y_reg, alpha =0 , lambda = grid) -->
+<!-- coef_matrix_ridge = t(coef(ridge)) -->
+<!-- betas_ridge = as.data.frame(matrix(coef_matrix_ridge, ncol=7)) -->
+<!-- names(betas_ridge) = rownames(coef(ridge)) -->
+<!-- llambdas_ridge = log(ridge$lambda) -->
+<!-- betas_ridge = cbind(betas_ridge, llambdas_ridge) -->
+<!-- melted_ridge = melt(betas_ridge[,2:8], id.vars="llambdas_ridge") -->
+<!-- ggplot(melted_ridge, aes(y=value, x = llambdas_ridge, colour=variable)) + geom_line() -->
+
+<!-- ``` -->
+
+
+<!-- ```{r} -->
+
+<!-- lasso = glmnet(x_reg ,y_reg, alpha =1 , lambda = grid) -->
+<!-- coef_matrix_lasso = t(coef(lasso)) -->
+<!-- betas_lasso = as.data.frame(matrix(coef_matrix_lasso, ncol=7)) -->
+<!-- names(betas_lasso) = rownames(coef(lasso)) -->
+<!-- llambdas_lasso = log(lasso$lambda) -->
+<!-- betas_lasso = cbind(betas_lasso, llambdas_lasso) -->
+<!-- melted_lasso = melt(betas_lasso[,2:8], id.vars="llambdas_lasso") -->
+<!-- ggplot(melted_lasso, aes(y=value, x = llambdas_lasso, colour=variable)) + geom_line() -->
+<!-- ``` -->
+
+
+
+
+```{r}
+library(ISLR)
+data(Hitters)
+Hitters = na.omit(Hitters)
+lm1 = lm(Salary~., data=Hitters)
+summary(lm1)
+lm2 = update(lm1, .~.-CHmRun)
+summary(lm2)
+lm3 = update(lm2, .~.-Years)
+summary(lm3)
+lm4 = update(lm3, .~.-NewLeagueN)
+```
+```{r}
+library(glmnet)
+library(reshape2)
+
+
+x_reg = model.matrix(Salary~., data=Hitters)[,-1]
+y_reg = Hitters$Salary
+grid = 10^seq(10 , -2 , length =100)
+ridge = glmnet(x_reg ,y_reg, alpha =0 , lambda = grid)
+coef_matrix_ridge = t(coef(ridge))
+betas_ridge = as.data.frame(matrix(coef_matrix_ridge, ncol=20))
+names(betas_ridge) = rownames(coef(ridge))
+llambdas_ridge = log(ridge$lambda)
+betas_ridge = cbind(betas_ridge, llambdas_ridge)
+melted_ridge = melt(betas_ridge[,2:21], id.vars="llambdas_ridge")
+ggplot(melted_ridge, aes(y=value, x = llambdas_ridge, colour=variable)) + geom_line()
+
+```
+
+
+```{r}
+
+lasso = glmnet(x_reg ,y_reg, alpha =1 , lambda = grid)
+coef_matrix_lasso = t(coef(lasso))
+betas_lasso = as.data.frame(matrix(coef_matrix_lasso, ncol=20))
+names(betas_lasso) = rownames(coef(lasso))
+llambdas_lasso = log(lasso$lambda)
+betas_lasso = cbind(betas_lasso, llambdas_lasso)
+melted_lasso = melt(betas_lasso[,2:21], id.vars="llambdas_lasso")
+ggplot(melted_lasso, aes(y=value, x = llambdas_lasso, colour=variable)) + geom_line()
+```
+```{r subsetex}
+library(lubridate)
+marathon_ds = read.csv("marathon_results_2017.csv",header=TRUE)
+names(marathon_ds)
+
+Official.Time = hms(marathon_ds$Official.Time)
+Official.Time = hour(Official.Time)*60*60 + minute(Official.Time)*60 + second(Official.Time)
+
+M.F = as.factor(marathon_ds$M.F)
+Country = as.factor(marathon_ds$Country)
+
+Age = marathon_ds$Age
+
+X5K = hms(marathon_ds$X5K)
+X5K = hour(X5K)*60*60 + minute(X5K)*60 + second(X5K)
+
+X10K = hms(marathon_ds$X10K)
+X10K = hour(X10K)*60*60 + minute(X10K)*60 + second(X10K)
+
+Half = hms(marathon_ds$Half)
+Half = hour(Half)*60*60 + minute(Half)*60 + second(Half)
+
+X30K =  seconds(hms(marathon_ds$X30K))
+X30K = hour(X30K)*60*60+minute(X30K)*60 + second(X30K)
+
+ds_r = data.frame(Official.Time, M.F, Country, Age, X5K, X10K, Half, X30K)
+ds_r = na.omit(ds_r)
+
+lm1 = lm(Official.Time~., data=ds_r)
+lm2  = update(lm1, .~.-Country)
+lm3 = update(lm2, .~.-X10K)
+```
+
+```{r ridgeex}
+
+x_m = model.matrix(Official.Time~.-Country, data=ds_r)[,-1]
+y_m = ds_r$Official.Time
+grid = 10^seq(10 , -2 , length =100)
+ridge_m = glmnet(x_m ,y_m, alpha =0 , lambda = grid)
+coef_matrix_ridge_m = t(coef(ridge_m))
+betas_ridge_m = as.data.frame(matrix(coef_matrix_ridge_m, ncol=7))
+names(betas_ridge_m) = rownames(coef(ridge_m))
+llambdas_ridge_m = log(ridge_m$lambda)
+betas_ridge_m = cbind(betas_ridge_m, llambdas_ridge_m)
+melted_ridge_m = melt(betas_ridge_m[,2:8], id.vars="llambdas_ridge_m")
+ggplot(melted_ridge_m, aes(y=value, x = llambdas_ridge_m, colour=variable)) + geom_line()
+
+```
+
+```{r lassoex}
+lasso_m = glmnet(x_m ,y_m, alpha =1 , lambda = grid)
+coef_matrix_lasso_m = t(coef(lasso_m))
+betas_lasso_m = as.data.frame(matrix(coef_matrix_lasso_m, ncol=7))
+names(betas_lasso_m) = rownames(coef(lasso_m))
+llambdas_lasso_m = log(lasso_m$lambda)
+betas_lasso_m = cbind(betas_lasso_m, llambdas_lasso_m)
+melted_lasso_m = melt(betas_lasso_m[,2:8], id.vars="llambdas_lasso_m")
+ggplot(melted_lasso_m, aes(y=value, x = llambdas_lasso_m, colour=variable)) + geom_line()
+```
+
+----
+
+## Module 7: Moving Beyond Linearity
+
+----
+
+## Module 8: Tree-Based Methods
+Copy from Thea's module
+
+----
+
+## Module 9: Support Vector Machines
+
+----
+
+## Module 10: Unsupervised Learning
+
+----
+
+## Module 11: Neural Networks
+
+----
+

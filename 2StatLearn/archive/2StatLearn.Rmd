@@ -1,0 +1,2342 @@
+---
+subtitle: "TMA4268 Statistical Learning V2020"
+title: "Module 2: STATISTICAL LEARNING"
+author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
+date: "January xx and yy, 2020"
+output:
+  # pdf_document:
+  #   toc: true
+  #   toc_depth: 2
+  #   keep_tex: yes
+  #   fig_caption: yes
+  # html_pretty:
+  #   toc: true
+  #   toc_float: true
+  #   toc_depth: 2
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+    theme: "Singapore"
+    colortheme: "default"
+    font: "serif"
+urlcolor: blue
+header-includes: \usepackage{xcolor}
+
+---
+
+```{r setup, include=FALSE}
+showsolA<-TRUE
+showsolB<-TRUE
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE)
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
+                      cache=TRUE, size="scriptsize")
+
+```
+
+# Introduction
+
+## Aims of the module
+
+* Statistical learning and examples thereof
+* Introduce relevant notation and terminology.
+* Prediction accuracy vs. model interpretability
+* Bias-variance trade-off
+* Classification (a first look):
+    + The Bayes classifier
+    + K nearest neighbour (KNN) classifier
+* The basics of random vectors, covariance matrix and the multivariate normal distribution.
+
+---
+
+## Learning material for this module
+
+* James et al (2013): An Introduction to Statistical Learning. Chapter 2.  
+* Additional material (in this module page) on random variables, covariance matrix and the multivariate normal distribution (known for students who have taken TMA4267 Linear statistical models).
+
+Some of the figures and slides in this presentation are taken (or are inspired) from "An Introduction to Statistical Learning, with applications in R" (Springer, 2013) with permission from the authors: G. James, D. Witten, T. Hastie and R. Tibshirani.
+
+
+
+# What is statistical learning?
+
+*Statistical learning* is the process of learning from data. 
+
+By applying *statistical methods* on a *data set* (called the *training set*), we would like to *draw conclusions* about the relations between the variables (aka _inference_) or to *find a predictive function* (aka _predition_) for new observations. 
+
+Also, we would like to find structures in the data that help us to learn something about the real world.
+
+Statistical learning plays a key role in many areas of science, finance and industry. 
+
+---
+
+##  Variable types
+
+Variables can be characterized as either *quantitative* or *qualitative*. 
+
+
+**Quantitative** variables are variables from a continuous set, they have a numerical value. 
+
+* Examples: a person's weight, a company's income, the age of a building, the temperature outside, the level of precipitation etc.
+
+
+**Qualitative** variables are variables from a discrete set, from a set of $K$ different classes/labels/categories. 
+
+* Examples: type of fruit \{apples, oranges, bananas, ...\}, sex \{male, female, other \}, education level. 
+
+* Qualitative variables which have only two classes are called *binary* variables and are usually coded by 0 (no) and 1 (yes). 
+
+---
+
+# Examples of learning problems
+
+
+* To predict the price of a stock 3 months from now, based on company performance measures and economic data. Here the response variable is quantitative (price). 
+
+* Spam detection for emails.
+
+* To identify the risk factors for Prostate cancer.
+
+* To predict whether someone will suffer from a heart disease, given knowledge about condition, behaviour, age etc.
+
+* To predict whether someone will suffer a heart attack on the basis of demographic, diet and clinical measurements. Here the outcome is binary (<span style="color:#00C0af">yes</span>,<span style="color:#F8766D">no</span>) with both qualitative and quantitative input variables. 
+
+* Predict soemeone's body fat, given BMI, weight, age, etc.
+
+---
+
+South African coronary heart disease data: 462 observations and 10 variables.
+```{r heart, echo=FALSE, message=FALSE,fig.width=8, fig.height=8,out.width='16cm',fig.align = "center"}
+library(ElemStatLearn)
+library(ggplot2)
+library(GGally)
+SAheart$chd = as.factor(SAheart$chd)
+#ggpairs(SAheart, ggplot2::aes(color=chd), upper="blank",  lower = list(continuous = wrap("points", alpha = 0.3, size=0.2)))
+pairs(SAheart,col=as.numeric(SAheart$chd)+2)
+```
+
+---
+
+### Handwritten digit recognition: 
+To identify the numbers in a handwritten ZIP code, from a digitized image. This is a classification problem, where the response variable is categorical with classes \{0, 1, 2, ..., 9\} and the task is to correctly predict the class membership.
+
+![Examples of handwritten digits from U.S. postal envelopes. Image taken from <https://web.stanford.edu/~hastie/ElemStatLearnII/>](digits.png){width=250px,align=center}
+
+
+
+---
+
+### Email classification (spam detection): 
+
+The goal is to build a spam filter. This filter can based on the frequencies of words and characters in emails. The table below show the average percentage of words or characters in an email message, based on 4601 emails of which 1813 were classified as a spam.
+
+```{r spam, echo=FALSE,warning=FALSE}
+spam_dataset = read.csv("data.csv",header=FALSE,sep=";")
+spam_names = read.csv("names.csv",header=FALSE,sep=";")
+
+#Set the names of the dataset dataframe:
+names(spam_dataset) <- sapply((1:nrow(spam_names)),function(i) toString(spam_names[i,1]))
+
+#make column y a factor variable for binary classification (spam or non-spam)
+spam_dataset$y <- as.factor(spam_dataset$y)
+
+dsmail = spam_dataset[which(spam_dataset$y==0),]
+dsspam = spam_dataset[which(spam_dataset$y==1),]
+
+means_mail = c(mean(dsmail[,19]), mean(dsmail$word_freq_free), mean(dsmail$word_freq_george),  mean(dsmail[,52]), mean(dsmail[,53]), mean(dsmail$word_freq_edu))
+means_spam = c(mean(dsspam[,19]), mean(dsspam$word_freq_free), mean(dsspam$word_freq_george), mean(dsspam[,52]), mean(dsspam[,53]), mean(dsspam$word_freq_edu))
+means = data.frame(rbind("not spam"= means_mail, "spam"= means_spam))
+
+#kable(means, digits = 2, col.names = c("you", "free", "george", "!", "$", "edu"),format="html")
+kable(means, digits = 2, col.names = c("you", "free", "george", "!", "$", "edu"))
+```
+
+---
+
+### What makes a Nobel Prize winner? 
+
+Perseverance, luck, skilled mentors or simply chocolate consumption? An article published in the New England Journal of Medicine have concluded with the following:
+
+> Chocolate consumption enhances cognitive function, which is a sine qua non for winning the Nobel Prize, and it closely correlates  with the number of Nobel laureates in each country. It remains to be determined whether the consumption of chocolate is the  underlying mechanism for the observed association with improved cognitive function.
+
+The figure shows the number of Nobel Laureates per 10 million population against countries' annual per capita chocolate consumption.
+
+You can read the article [here](http://www.nejm.org/doi/full/10.1056/NEJMon1211064) and a informal review of the article [here](https://blogs.scientificamerican.com/the-curious-wavefunction/chocolate-consumption-and-nobel-prizes-a-bizarre-juxtaposition-if-there-ever-was-one/). 
+
+---
+
+![Nobel laureates vs. chocolate consumption for different countries](chocolate.jpeg){width=650px,align=center}
+
+---
+
+### Were there common underlying aims and elements of these examples of statistical learning?
+
+* To predict the price of a stock 3 months from now, based on company performance measures and economic data.
+* To identify the risk factors for developing diabetes based on diet, physical activity, family history and body measurements.
+* The goal is to build a spam filter. 
+* To predict whether someone will suffer a heart attack on the basis of demographic, diet and clinical measurements. 
+* To identify the numbers in a handwritten ZIP code, from a digitized image.
+* What makes a Nobel Prize winner? Perseverance, luck, skilled mentors or simply chocolate consumption?
+
+--- 
+
+# The Supervised Learning Problem
+
+\textcolor{blue}{\emph{Starting point}}:
+
+* Outcome measurement $Y$ (also called dependent variable,
+response, target).
+
+* Vector of $p$ predictor measurements *X* (also called inputs,
+regressors, covariates, features, independent variables).
+
+* In the **regression problem**, $Y$ is quantitative (e.g price,
+blood pressure).
+
+* In the **classification problem**, $Y$ takes values in a finite,
+unordered set (survived/died, digit 0-9, cancer class of
+tissue sample).
+
+* We have training data $(x_1, y_1), \ldots , (x_N , y_N )$. These are
+observations (examples, instances) of these measurements.
+
+
+
+
+---
+
+
+## Supervised learning and its objectives
+
+Our data set (training set) consists of $n$ measurement of the response variable $Y$ and of $p$ covariates $x$: 
+$$(y_1, x_{11}, x_{12},\ldots, x_{1p}), (y_2, x_{21},\ldots, x_{2p}), \ldots, (y_n, x_{n1}, x_{n2},\ldots, x_{np}).$$
+$~$
+
+
+On the basis of the \emph{training data} we would like to:
+
+* **Accurately predict** unseen test cases. 
+
+* **Understand** which input affects the outcomes, and how.
+
+* **Assess the quality** of your predictions and inference.
+
+---
+
+Supervised learning examples (we will study):  
+
+  * Linear regression (M3), Logistic regression (M4), Generalized additive models (M7)
+  * Classification trees, bagging, boosting (M8), K-nearest neighbor classifier (M2, M4)
+  * Support vector machines (M9)
+
+---
+
+# The Unsupervised Learning Problem
+
+* There is **no outcome variable** $y$, just a set of predictors (features) $x_i$
+measured on a set of samples.
+
+* Objective is more fuzzy -- find (hidden) patterns or groupings in the data - in order to _gain insight and understanding_. There is no _correct_ answer.
+
+* Difficult to know how well your are doing.
+
+* Different from supervised learning, but can be useful as a
+pre-processing step for supervised learning.
+
+ 
+
+Examples in the course:   
+
+  * Clustering (M10)
+  * Principal component analysis (M10)
+
+---
+
+# Semi-supervised learning 
+
+(Not considered in this course)
+
+* Our data set consists of a input data, and some of the data has labelled responses. 
+
+* This situation can for example occur if the measurement of input data is cheap, while the output data is expensive to collect. 
+
+* Classical solutions (likelihood-based) to this problem exists in statistics (missing at random observations).
+
+--- 
+ 
+# Task
+
+Find examples to explain the difference between supervised and unsupervised learning.
+
+*
+
+*
+
+* 
+
+---
+
+
+# Overall philosophy 
+
+It is important to understand the ideas behind the various
+techniques, in order to know how and when to use them.
+
+* One has to understand the simpler methods first, in order
+to grasp the more sophisticated ones.
+
+* It is important to accurately assess the performance of a
+method, to know how well or how badly it is working
+
+$\rightarrow$ **Simpler methods often perform as well as fancier ones!**
+
+* This is an exciting research area, having important
+applications in science, industry and finance.
+
+* Statistical learning is a fundamental ingredient in the
+training of a modern data scientist.
+
+---
+
+# Statistical Learning vs. Machine Learning
+
+* Machine learning arose as a subfield of Artificial Intelligence.
+
+* Statistical learning arose as a subfield of Statistics.
+
+* There is much overlap — both fields focus on supervised
+and unsupervised problems:
+    + Machine learning has a greater emphasis on large scale
+applications and prediction accuracy.
+    + Statistical learning emphasizes models and their
+interpretability, and precision and uncertainty.
+
+* The distinction has become more and more blurred,
+and there is a great deal of “cross-fertilization”.
+
+* Machine learning has the upper hand in Marketing!
+
+
+---
+
+## Naming convention
+
+Statistical learning | Machine learning
+------------------------------------ | ------------------------------------ 
+model | network, graph, mapping
+fit, estimate | learn
+covariates, inputs, independent variables, predictors | features, predictors
+response, output, dependent variable  | output, target
+data set | training data
+
+Remark: not an exhaustive list, and many terms are used in the same way on both fields.
+
+---
+
+* There is a controversy and some scepticism against ``too fancy'' ML methods. 
+
+* Criticism: ML often re-invents existing methods and names them differently, but often without awareness of existing methods in statistics.
+
+* Almost weekly new literature that delivers comparison. Often, the "simple" statistcal methods "win".
+
+![ML vs statistics controversy](ML_vs_stat.png)
+
+---
+
+
+## What is the aim in statistical learning?
+
+Assume:
+
+* we observe one _quantitative_ response $Y$ and 
+* $p$ different predictors $x_1, x_2,... , x_p$. 
+
+We assume that there is a function $f$ that relates the response and the predictor variables: 
+$$ Y = f(x) + \varepsilon,$$
+where $\varepsilon$ is a random error term with mean 0 and independent of $x$. 
+
+---
+
+# Example 1
+
+![ISLR Figure 2.12](../../ISLR/Figures/Chapter2/2.1.png)
+
+---
+
+# Example 2
+
+![ISLR Figure 2.12](../../ISLR/Figures/Chapter2/2.2.png)
+
+---
+
+There are two main reasons for estimating $f$: **Prediction** and **Inference**.
+
+---
+
+## Prediction
+
+Based on observed data the aim is to build a model that as accurately as possible can predict a response given new observations of the covariates:
+$$\hat{Y} = \hat{f}(x).$$
+Here $\hat{f}$ represents the estimated $f$ and $\hat{Y}$ represents the prediction for $Y$. In this setting our estimate of the function $f$ is treated as a **black box and is not of interest**. Our focus is on the prediction for $Y$, hence prediction accuracy is important.
+
+---
+
+There are two quantities which influence the accuracy of $\hat{Y}$ as a prediction of $Y$: 
+the reducible and the irreducible error. 
+
+* The _reducible error_ has to do with our estimate $\hat{f}$ of $f$. This error can be reduced by using the most _appropriate_ statistical learning technique. 
+* The _irreducible error_ comes from the error term $\varepsilon$ and cannot be reduced by improving $f$. This is related to the unobserved quantities influencing the response and possibly the randomness of the situation.
+
+### Q: If there were a _deterministic_ relationship between the response and a set of predictors, would there then be both reducible and irreducible error?
+
+---
+
+### A: 
+
+If we know all predictors and the (deterministic) connection to the reponse, and there is no random error added, then we will have no irreducible error. If there is a deterministic relationship, but we don't know all predictor values, then the non-observed predictors will give us irreducible error.
+
+So, very seldom (maybe only in synthetic examples?) that there is only reducible error present.
+
+---
+
+## Inference
+
+Based on observed data the aim is to _understand_ how the response variable is affected by the various predictors (covariates). 
+
+In this setting we will not use our estimated function $\hat{f}$ to make predictions but to _understand_ how $Y$ changes as a function of $x_1, x_2, ..., x_p$. 
+
+The _exact form_ of $\hat{f}$ is of _main interest_.
+
+* Which predictors are associated with the response?
+* What is the relationship between the response and each predictor?
+* Can the relationship be linear, or is a more complex model needed?
+
+
+
+---
+
+## Regression and classification
+
+**Regression** predicts a value from a continuous set. 
+
+Example: Predict the profit given the amount of money spend on advertising.
+
+**Classification** predicts the class membership. 
+
+Example: Given blood pressure, weight and hip ratio predict if a patient suffers from diabetes (yes/no).
+
+### Q: 
+Give an example of one regression and one classification problem (practical problem with data set available) that you would like to study in this course.
+
+### A:
+
+See examples in M1 and M2.
+
+
+
+---
+
+# Models and methods
+
+## Parametric Methods
+Parametric methods build on an assumption about the form or shape of the function $f$.  
+
+The multiple linear model (M3) is an example of a parametric method. We here assume that the response variable is a linear combination of the covariates with some added noise 
+$$f(x) = \beta_0 + \beta_1 x_1 + ... + \beta_p x_p+\varepsilon.$$
+By making this assumption, the task simplifies to finding estimates of the $p+1$ coefficients $\beta_0, \beta_1, .. ,\beta_p$. To do this we use the training data to fit the model, such that $$Y \approx \hat{\beta_0} + \hat{\beta_1} x_1 + ... + \hat{\beta_p} x_p.$$ 
+
+---
+
+Fitting a parametric models is thus done in two steps:
+
+1. Select a form for the function $f$.  
+2. Estimate the unknown parameters in $f$ using the training set.
+
+---
+
+## Non-parametric methods 
+
+Non-parametric methods seek an estimate of $f$ that gets close to the data points, but without making explicit assumptions about the form of the function $f$. 
+
+The $K$-nearest neighbour algorithm is an example of a non-parametric model. Used in classification, this algorithm predicts a class membership for a new observation by making a majority vote based on its $K$ nearest neighbours. We will discuss the $K$-nearest neighbour algorithm later in this module.
+
+---
+
+### Q: What are advantages and disadvantages of parametric and non-parametric methods?
+
+Hints: interpretability, amount of data needed, complexity, assumptions made, prediction accuracy, computational complexity, over/under-fit.
+
+<!-- over/under-fit defined below-->
+
+---
+
+### A: Parametric methods
+
+Advantages | Disadvantages
+------------------------------------ | ------------------------------------ 
+Simple to use and easy to understand | The function $f$ is constrained to the specified form.
+Requires little training data | The assumed function form of $f$ will in general not match the true function, potentially giving a poor estimate.
+Computationally cheap| Limited complexity
+  
+---
+
+### A: Non-parametric methods
+
+Advantages | Disadvantages
+------------------------------------ | ------------------------------------ 
+Flexible: a large number of functional forms can be fitted|Can overfit the data
+No strong assumptions about the underlying function are made|Computationally more expensive as more parameters need to be estimated
+Can often give good predictions |Much data is required to estimate (the complex) $f$.
+
+---
+
+# Prediction accuracy vs. interpretability
+(we are warming up to the bias--variance trade--off)
+
+**Inflexible**, or rigid, methods are methods which have strong restrictions on the shape of $f$. 
+
+Examples:  
+
+* Linear regression (M3)
+* Linear discriminant analysis (M4)
+* Subset selection and lasso (M6)
+
+**Flexible** methods have less restriction on the shape of $f$.
+
+Examples:  
+
+* KNN classification (M2, M4), KNN regression, Smoothing splines (M7)
+* Bagging and boosting (M8), support vector machines (M9)
+* Neural networks (M11)
+
+---
+
+The choice of a flexible or inflexible method depends on the goal in mind. 
+
+If the aim is inference an inflexible model, which is easy to understand, will be preferred. On the other side, if we want to make as accurate predictions as possible, we are not concerned about the shape of $f$. A flexible method can be chosen, at the cost of model interpretability, and we treat $f$ like a black box.
+
+**Overfitting** occurs when the estimated function $f$ is too closely fit to the observed data points. 
+
+**Underfitting** occurs when the estimated function $f$ is too rigid to capture the underlying structure of the data.
+
+We illustrate this by a toy example using polynomial regression.
+
+---
+
+## Polynomial regression example
+
+Consider a covariate $x$ observed on a grid on the real line from -2 to 4, equally spaced at 0.1, giving $n=61$ observations.
+
+```{r data, echo=FALSE}
+library(ggplot2)
+library(ggpubr)
+set.seed(2)
+
+x = seq(-2, 4, 0.1)
+true_y = x^2
+
+error = rnorm(length(x), mean=0, sd=2)
+y = true_y + error
+
+data = data.frame(x, y)
+p00=ggplot(data= data, aes(x = x, y=y)) +geom_point(size=0.7) +ggtitle("Data")+theme_minimal()
+
+print(p00)
+```
+
+---
+
+Assume a theoretical relationship between reponse $Y$ and covariate $x$:
+
+$$ Y=x^2 + \varepsilon$$
+Where $\varepsilon$ is called an error (or noise) term, and is simulated to from a normal distribution with mean 0 and standard deviation 2.
+
+We call $Y=x^2$ the _truth_.
+
+The added error is used as a substitue for all the unobserved variables that are not in our equation, but that might influence $Y$. This means that we are not looking at a purely _deterministic_ relationship between $x$ and $Y$, but allow for randomness.
+
+---
+
+```{r truth, echo=FALSE}
+p0 = ggplot(data= data, aes(x = x, y=y)) +geom_point(size=0.7) + geom_line(aes(x=x, y=true_y))+ggtitle("Truth")+theme_minimal()
+print(p0)
+```
+
+---
+
+Next, we want to fit a function to the observations _without_ knowing the true relationship, and we have tried different parametric polynomial functions.
+
+* <span style="color:red">[poly1: upper left]</span>: The <span style="color:red">red</span> line shows a simple linear model of the form $\beta_0+\beta_1 x$ fitted to the observations. This line clearly _underfits_ the data. We see that this function is unable to capture that quadratic nature of the data. 
+* <span style="color:orange">[poly2: upper right]</span>: The <span style="color:orange">orange</span> line shows a quadratic polynomial fit to the data, of the form $\beta_0+\beta_1 x +\beta_2 x^2$. We see that this function fits well and looks almost identically as the true function.
+* <span style="color:pink">[poly10: lower left]</span>: The <span style="color:pink">pink</span> line shows a polynomial of degree 10 fit to the data, of the form $\beta_0+\beta_1 x +\beta_2 x^2+\cdots +\beta_{10}x^{10}$. The function captures the noise instead of the underlying structure of the data. The function _overfits_ the data.
+* <span style="color:purple">[poly20: lower right]</span>: The <span style="color:purple">purple</span> line shows a polynomial of degree 20 fit to the data, of the form $\beta_0+\beta_1 x +\beta_2 x^2+\cdots +\beta_{20}x^{20}$. The function captures the noise instead of the underlying structure of the data. The function _overfits_ the data.
+
+We will discuss polynomial regression in M7.
+
+---
+
+```{r overunderfit,echo=FALSE}
+p1 = ggplot(data= data, aes(x = x, y=y)) +geom_point(size=0.7) + geom_line(aes(x=x, y=predict(lm(y~x))), col="red")+ggtitle("poly1")+theme_minimal()
+p2 = ggplot(data= data, aes(x = x, y=y)) +geom_point(size=0.7) + geom_line(aes(x=x, y=predict(lm(y~poly(x,2)))), col="orange")+ggtitle("poly2")+theme_minimal()
+p3 =  ggplot(data= data, aes(x = x, y=y)) +geom_point(size=0.7) + geom_line(aes(x=x, y=predict(lm(y~poly(x, 10)))), col="pink")+ggtitle("poly10")+theme_minimal()
+p4 =  ggplot(data= data, aes(x = x, y=y)) +geom_point(size=0.7) + geom_line(aes(x=x, y=predict(lm(y~poly(x, 20)))), col="purple")+ggtitle("poly20")+theme_minimal()
+
+ggarrange(p1,p2,p3, p4)
+
+```
+
+---
+
+**Why comparing regressions with different degrees of polynomials?** We will study several methods that includes a parameter controlling the flexibility of the model fit - so generalizations of our example with degrees for the polynomials. The $K$ in K-nearest neighour is such a parameter. We need to know how to choose this flexibility parameter.
+
+---
+
+**Q**: The coloured curves are our estimates for the functional relationship between $x$ and $Y$. We will next work with the following questions.
+
+* Which of the coloured curves does the best job? Rank the curves.
+
+Now, disregard the poly2 orange curve, and only consider the red, pink and puple curves.
+
+* Assume that we collect new data of $Y$ (but with new normally distributed errors added) - and estimate new curves. Which of the coloured curves would _on average_ give the best performance? 
+* What did you here choose to define as "best performance"?
+
+---
+
+```{r overunderfitM, message=FALSE, warning=FALSE, echo=FALSE}
+library(ggplot2)
+library(ggpubr)
+set.seed(2) # to reproduce
+
+M=100 # repeated samplings,x fixed but new errors
+nord=20
+x = seq(-2, 4, 0.1)
+globalx = x
+true_y = x^2
+
+error = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
+ymat = matrix(rep(true_y,M),byrow=T,nrow=M) + error
+
+predarray=array(NA,dim=c(M,length(x),nord))
+for (i in 1:M)
+{
+  for (j in 1:nord)
+  {
+    predarray[i,,j]=predict(lm(ymat[i,]~poly(x,j,raw=TRUE)))
+  }
+}
+# M matrices of size length(x) times nord
+# first, only look at variablity in the M fits and plot M curves where we had 1
+
+# for plotting need to stack the matrices underneath eachother and make new variable "rep"
+stackmat=NULL
+for (i in 1:M) stackmat=rbind(stackmat,cbind(x,rep(i,length(x)),predarray[i,,]))
+#dim(stackmat)
+colnames(stackmat)=c("x","rep",paste("poly",1:20,sep=""))
+sdf=as.data.frame(stackmat) #NB have poly1-20 now - but first only use 1,2,20
+# to add true curve using stat_function - easiest solution
+true_x=x
+truefunc=function(x) return(x^2)
+yrange=range(apply(sdf,2,range)[,3:22])
+```
+
+```{r,addmean,echo=FALSE}
+library(dplyr)
+sdf%>%
+group_by(x)%>%
+summarise(mean=mean(poly1))-> meanpoly1
+sdf%>%
+group_by(x)%>%
+summarise(mean=mean(poly2))-> meanpoly2
+sdf%>%
+group_by(x)%>%
+summarise(mean=mean(poly10))-> meanpoly10
+sdf%>%
+group_by(x)%>%
+summarise(mean=mean(poly20))-> meanpoly20
+#+geom_line(data=meanpoly1,aes(x,mean,col="red"))
+```
+
+```{R plottingM,echo=FALSE}
+p1=ggplot(data=sdf,aes(x=x,y=poly1,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()+theme_minimal()+theme(legend.position="none")
+p1=p1+stat_function(fun=truefunc,lwd=1.3,colour="black")+ggtitle("poly1")
+p2=ggplot(data=sdf,aes(x=x,y=poly2,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()+theme_minimal()+theme(legend.position="none")
+p2=p2+stat_function(fun=truefunc,lwd=1.3,colour="black")+ggtitle("poly2")
+p10=ggplot(data=sdf,aes(x=x,y=poly10,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()+theme_minimal()+theme(legend.position="none")
+p10=p10+stat_function(fun=truefunc,lwd=1.3,colour="black")+ggtitle("poly10")
+p20=ggplot(data=sdf,aes(x=x,y=poly20,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()+theme_minimal()+theme(legend.position="none")
+p20=p20+stat_function(fun=truefunc,lwd=1.3,colour="black")+ggtitle("poly20")
+ggarrange(p1,p2,p10,p20)
+```
+
+Kept x fixed and drew new errors 100 times. The 100 fitted curves shown.  The black line is the true $y=x^2$ curve
+<!--, while the red curves are the averages over the 100 curves.-->
+
+---
+
+## Loss function
+
+We now focus on prediction.
+
+**Q:** How can we measure the _loss_ between a predicted response $\hat{y}_i$ and the observed response $y_i$?
+
+**A:** Possible loss functions are:
+
+* absolute loss (L1 norm): $\mid y_i-\hat{y}_i\mid$
+* quadratic loss (L2 norm): $(y_i-\hat{y}_i)^2$
+* 0/1 loss (categorical $y$): loss=0 if $\hat{y_i}=y_i$ and 1 else
+
+Issues: robustness, stability, mathematical aspect.
+
+We will use quadratic loss now.
+
+---
+
+## Assessing model accuracy - and quality of fit
+
+**Q:** For regression (and classification) in general: will there be _one_ method that dominates all others?
+
+**A:** No method dominates all others over all possible data sets.
+
+* That is why we need to learn about many different methods.
+* For a given data set we need to know how to decide which method produces the _best_ results.
+* How close is the predicted response to the true response value?
+
+---
+
+## Training MSE
+
+In regression, where we assume $Y  = f(x) + \varepsilon$, and 
+$\hat{f}(x_i)$ gives the predicted response at $x_i$, 
+a popular measure is the _training MSE_ (mean squared error): mean of squared differences between prediction and truth for the training data (the same values that were used to estimate $f$):
+$$ \text{MSE}_{\text{train}}=\frac{1}{n}\sum_{i=1}^n (y_i-\hat{f}(x_i))^2$$
+
+But, really - we are _not_ interested in how the method works on the training data (and often we have designed the method to work good on the training data already), we want to know how good the method is when we use it on _previously unseen test data_, that is, data that we may observe in the future.
+
+---
+
+Example: 
+
+* we don't want to predict last weeks stock price, we want to predict the stock price next week.
+* we don't want to predict if a patient in the training data has diabetes, we want to predict if a new patient has diabetes.
+
+---
+
+```{r trainMSE, message=FALSE, warning=FALSE, echo=FALSE}
+library(ggplot2)
+library(ggpubr)
+# starting with predarray
+# M matrices of size length(x) times nord
+# first, only look at variablity in the M fits and plot M curves where we had 1
+trainMSE=matrix(ncol=nord,nrow=M)
+for (i in 1:M) trainMSE[i,]=apply((predarray[i,,]-ymat[i,])^2,2,mean)
+stackmat=NULL
+for (i in 1:M) stackmat=rbind(stackmat,cbind(rep(i,nord),1:nord,trainMSE[i,]))
+colnames(stackmat)=c("rep","poly","trainMSE")
+sdf=as.data.frame(stackmat) #NB have poly1-20 now - but first only use 1,2,20
+yrange=range(sdf[,3])
+
+p1=ggplot(data=sdf[1:nord,],aes(x=poly,y=trainMSE))+scale_y_continuous(limits=yrange)+geom_line()+theme_minimal()
+pall= ggplot(data=sdf,aes(x=poly,group=rep,y=trainMSE,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()+theme_minimal()+theme(legend.position="none")
+ggarrange(p1,pall)
+```
+
+**Q**: Based on the training MSE - which model fits the data the best?
+
+Polynomial example: fitted order 1-20 polynomial when the truth is order 2. Left: one repetition, right: 100 repetitions of the training set.  
+
+
+(But, how was these graphs made? Want to see the R code? You can see the code by looking at the 2StatLearn.Rmd file located at the same place as you found this file.)
+
+---
+
+## Test MSE
+
+Simple solution: we fit (estimate $\hat(f)$) from different models using the training data (maybe my minimizing the training MSE), but we choose the _best_ model using a separate _test set_ - by calculating the _test MSE_ for a set of $n_0$ test observations $(x_{0j},y_{0j})$:
+
+$$ \text{MSE}_{\text{test}}=\frac{1}{n_0}\sum_{j=1}^{n_0} (y_{0j}-\hat{f}(x_{0j}))^2$$
+
+Alternative notation:
+$$\text{Ave}(y_0-\hat{f}(x_0))^2$$
+(taking the average over all available test observations).
+
+---
+
+**Q:** What if we do not have access to test data?
+
+**A:** In Module 5 we will look into using _cross validation_ to mimic the use of a test set.
+
+**Q:** But, can we instead just use the training data MSE to choose a model? A low training error should also give a low test error?
+
+**A:** Sadly no, if we use a flexible model we will look at several cases where a low training error is a sign of overfitting, and will give a high test error. So, the training error is not a good estimator for the test error because it does not properly account for model complexity.
+
+---
+
+```{r traintestMSE, message=FALSE, warning=FALSE, echo=FALSE}
+library(ggplot2)
+library(ggpubr)
+set.seed(2) # to reproduce
+
+M=100 # repeated samplings,x fixed but new errors
+nord=20
+x = seq(-2, 4, 0.1)
+true_y = x^2
+
+error = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
+testerror = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
+ymat = matrix(rep(true_y,M),byrow=T,nrow=M) + error
+testymat = matrix(rep(true_y,M),byrow=T,nrow=M) + testerror
+
+predarray=array(NA,dim=c(M,length(x),nord))
+for (i in 1:M)
+{
+  for (j in 1:nord)
+  {
+    predarray[i,,j]=predict(lm(ymat[i,]~poly(x,j,raw=TRUE)))
+  }
+}  
+trainMSE=matrix(ncol=nord,nrow=M)
+for (i in 1:M) trainMSE[i,]=apply((predarray[i,,]-ymat[i,])^2,2,mean)
+testMSE=matrix(ncol=nord,nrow=M)
+for (i in 1:M) testMSE[i,]=apply((predarray[i,,]-testymat[i,])^2,2,mean)
+stackmat=NULL
+for (i in 1:M) stackmat=rbind(stackmat,cbind(rep(i,nord),1:nord,trainMSE[i,],testMSE[i,]))
+colnames(stackmat)=c("rep","poly","trainMSE","testMSE")
+sdf=as.data.frame(stackmat) 
+yrange=range(sdf[,3:4])
+p1=ggplot(data=sdf[1:nord,],aes(x=poly,y=trainMSE))+scale_y_continuous(limits=yrange)+geom_line()+theme_minimal()+theme(legend.position="none")
+pall= ggplot(data=sdf,aes(x=poly,group=rep,y=trainMSE,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()+theme_minimal()+theme(legend.position="none")
+testp1=ggplot(data=sdf[1:nord,],aes(x=poly,y=testMSE))+scale_y_continuous(limits=yrange)+geom_line()+theme_minimal()
+testpall= ggplot(data=sdf,aes(x=poly,group=rep,y=testMSE,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()+theme_minimal()+theme(legend.position="none")
+ggarrange(testp1,testpall)
+```
+
+Polynomial example: fitted order 1-20 when the truth is order 2.
+Left: one repetition, right: 100 repetitions for the testMSE.
+
+**Q**: Based on the test MSE - which model fits the data the best?
+
+---
+
+```{r,echo=FALSE}
+ggarrange(p1,pall,testp1,testpall)
+```
+
+**A**: If choosing flexibility based on training MSE=poly20 wins, if choose flexibility based on test MSE=poly 2 wins.
+
+Polynomial example: fitted order 1-20 when the truth is order 2.
+Upper: trainMSE, lower: testMSE. Left: one repetition, right: 100 repetitions.
+
+
+---
+
+```{r,echo=FALSE}
+library(reshape2)
+df=melt(sdf,id=c("poly","rep"))[,-2]
+colnames(df)[2]="MSEtype"
+ggplot(data=df,aes(x=as.factor(poly),y=value))+geom_boxplot(aes(fill=MSEtype))+theme_minimal()
+```
+
+Boxplot of the 100 repetitions (polynomial experiment). Observe the U-shaped for the test error.
+
+**Q**: What can you read of the boxplot? Anything new compared to the previous plots?
+
+---
+
+**A**:
+
+Same data as above, but now presented jointly for training and test MSE, to focus on location and variability: 
+
+Boxplot: 
+
+* black line=median, 
+* box from 1 to 3rd quantile, 
+* IQR=inter quartile range= width of box
+* whiskers to min and max, except when more than 1.5 times IQR from box, then marked as outlier with points.
+
+---
+
+```{r,echo=FALSE}
+trainMSEmean=apply(trainMSE,2,mean)
+testMSEmean=apply(testMSE,2,mean)
+trainMSEsd=apply(trainMSE,2,sd)
+testMSEsd=apply(testMSE,2,sd)
+meandf=melt(data.frame(cbind("poly"=1:nord,trainMSEmean,testMSEmean)),id="poly")
+sddf=melt(data.frame(cbind("poly"=1:nord,trainMSEsd,testMSEsd)),id="poly")
+#p1=ggplot(data=df,aes(x=as.factor(poly),y=value,colour=MSEtype))+geom_point()
+#p1+geom_line(aes(x=poly,y=value,colour=variable),meandf)
+pmean=ggplot(data=meandf,aes(x=poly,y=value,colour=variable))+geom_line()+theme_minimal()+ylab("mean")
+#psd=ggplot(data=sddf,aes(x=poly,y=value,colour=variable))+geom_line()+theme_minimal()+ylab("sd")
+#ggarrange(pmean,psd)
+print(pmean)
+```
+
+Mean of 100 repetitions (polynomial example). Observe U-shape. 
+
+**Next: We leave the trainMSE and try to understand what makes up the testMSE curve - two competing properties!**
+
+---
+
+# The Bias-Variance trade-off
+
+Assume that we have fitted a _regression_ curve $Y  = f(x) + \varepsilon$ to our training data, which consist of independent observation pairs $\{x_i, y_i\}$ for $i=1,..,n$. (Yes, only one covariate $x$.)
+
+We assume that $\varepsilon$ is an unobserved random variable that adds noise to the relationship between the response variable and the covariates and is called the random error, and that the random errors have mean zero and constant variance $\sigma^2$ for all values of $x$.
+
+This noise is used as a substitute for all the unobserved variables that is not in our equation, but that influences $Y$. 
+
+Assume that we have used our training data to produce a fitted curve, denoted by $\hat{f}$. 
+
+---
+
+We want to use $\hat{f}$ to make a prediction for a new observation at $x_0$, and are interested in the error associated with this prediction. The predicted response value is then $\hat{f}(x_0)$.
+
+The _expected test mean squared error (MSE) at $x_0$_ is defined as:
+$$\text{E}[Y - \hat{f}(x_0)]^2$$
+
+Remark 1: yes, we could have called the new response $Y_0$ instead of $Y$.  
+Remark 2: compare this to the test MSE for the polynomical example - observe that here we have the _theoretical version_ where we have replaced the average with the mathematical mean.
+
+---
+
+This expected test MSE can be decomposed into three terms 
+$$\text{E}[Y - \hat{f}(x_0)]^2 = \text{E}[Y^2 + \hat{f}(x_0)^2 - 2 Y \hat{f}(x_0)] $$
+$$= \text{E}[Y^2] + \text{E}[\hat{f}(x_0)^2] - \text{E}[2Y \hat{f}(x_0)]$$
+$$= \text{Var}[Y] + \text{E}[Y]^2 + \text{Var}[\hat{f}(x_0)] + \text{E}[\hat{f}(x_0)]^2 - 2 \text{E}[Y]\text{E}[\hat{f}(x_0)] $$
+$$= \text{Var}[Y]+f(x_0)^2+\text{Var}[\hat{f}(x_0)]+\text{E}[\hat{f}(x_0)]^2-2f(x_0)\text{E}[\hat{f}(x_0)]$$
+$$= \text{Var}[Y]+\text{Var}[\hat{f}(x_0)]+(f(x_0)-\text{E}[\hat{f}(x_0)])^2$$
+$$= \text{Var}(\varepsilon) +  \text{Var}[\hat{f}(x_0)]+[\text{Bias}(\hat{f}(x_0))]^2.$$
+
+**Q**: what assumptions have we made in the derivation above?
+
+**A**: classnotes.
+
+---
+
+$$\text{E}[(Y - \hat{f}(x_0))^2]=\cdots=\text{Var}(\varepsilon) +  \text{Var}[\hat{f}(x_0)]+[\text{Bias}(\hat{f}(x_0))]^2$$
+
+* First term: irreducible error, $\text{Var}(\varepsilon)=\sigma^2$ and is always present unless we have measurements without error. This term cannot be reduced regardless how well our statistical model fits the data. 
+* Second term: variance of the prediction at $x_0$ or the expected deviation around the mean at $x_0$. If the variance is high, there is large uncertainty associated with the prediction. 
+* Third term: squared bias. The bias gives an estimate of how much the prediction differs from the true mean. If the bias is low the model gives a prediction which is close to the true value.
+
+
+---
+
+$$\text{E}[(Y - \hat{f}(x_0))^2]=\cdots=\text{Var}(\varepsilon) +  \text{Var}[\hat{f}(x_0)]+[\text{Bias}(\hat{f}(x_0))]^2$$
+
+This is the **expected test MSE**. We can think of this as the average test MSE we would obtain if we repeatedly estimated $f$ using many training sets (as we did in our example), and then tested this estimate at $x_0$. 
+
+So, this is really $\text{E}[(Y - \hat{f}(x_0))^2 \mid X=x_0]$ if we also assume that $X$ is a random variable. 
+
+The **overall expected test MSE** can we then compute by averaging the expected test MSE at $x_0$ over all possible values of $x_0$ (averaging with respect to frequency in test set),
+or mathematically by the law of total expectation $\text{E} \{ \text{E}[(Y - \hat{f}(X))^2 \mid X]\}$ (also sometimes referred to as the law of double expectations).
+
+---
+
+### Polynomial example (cont.)
+
+```{r biasvarianceforx,echo=FALSE}
+meanmat=matrix(ncol=length(x),nrow=nord)
+varmat=matrix(ncol=length(x),nrow=nord)
+for (j in 1:nord)
+{
+  meanmat[j,]=apply(predarray[,,j],2,mean)
+  varmat[j,]=apply(predarray[,,j],2,var)
+}
+# nord times length(x)
+bias2mat=(meanmat-matrix(rep(true_y,nord),byrow=TRUE,nrow=nord))^2
+
+df=data.frame(rep(x,each=nord),rep(1:nord,length(x)),c(bias2mat),c(varmat),rep(4,prod(dim(varmat))))
+colnames(df)=c("x","poly","bias2","variance","irreducible error") #suitable for plotting
+df$total=df$bias2+df$variance+df$`irreducible error`
+hdf=melt(df,id=c("x","poly"))
+hdf1=hdf[hdf$poly==1,]
+hdf2=hdf[hdf$poly==2,]
+hdf10=hdf[hdf$poly==10,]
+hdf20=hdf[hdf$poly==20,]
+
+p1=ggplot(data=hdf1,aes(x=x,y=value,colour=variable))+geom_line()+theme_minimal()+ggtitle("poly1")
+p2=ggplot(data=hdf2,aes(x=x,y=value,colour=variable))+geom_line()+theme_minimal()+ggtitle("poly2")
+p10=ggplot(data=hdf10,aes(x=x,y=value,colour=variable))+geom_line()+theme_minimal()+ggtitle("poly10")
+p20=ggplot(data=hdf20,aes(x=x,y=value,colour=variable))+geom_line()+theme_minimal()+ggtitle("poly20")
+ggarrange(p1,p2,p10,p20)
+```
+
+**Q:** Summarize the most important features of these plots.
+
+For 4 different polynomial models (poly1,2,10 and 20), the squared bias, variance, irreducible error and the total sum. Plots based on 100 simulations for the polynomial example. 
+
+
+---
+
+```{r biasvarianceforpoly,echo=FALSE}
+hdfatxa=hdf[hdf$x==-1,]
+hdfatxb=hdf[hdf$x==0.5,]
+hdfatxc=hdf[hdf$x==2,]
+hdfatxd=hdf[hdf$x==3.5,]
+pa=ggplot(data=hdfatxa,aes(x=poly,y=value,colour=variable))+geom_line()+ggtitle("x0=-1")+theme_minimal()
+pb=ggplot(data=hdfatxb,aes(x=poly,y=value,colour=variable))+geom_line()+ggtitle("x0=0.5")+theme_minimal()
+pc=ggplot(data=hdfatxc,aes(x=poly,y=value,colour=variable))+geom_line()+ggtitle("x0=2")+theme_minimal()
+pd=ggplot(data=hdfatxd,aes(x=poly,y=value,colour=variable))+geom_line()+ggtitle("x0=3.5")+theme_minimal()
+ggarrange(pa,pb,pc,pd)
+```
+
+**Q:** Summarize the most important features of these plots.
+
+At 4 different values for $x_0$, the squared bias, variance, irreducible error and the total sum. Plots based on 100 simulations for the polynomial example. 
+
+
+---
+
+```{r averageoverxs,echo=FALSE}
+hdf%>% group_by(poly,variable)%>% summarise("overall"=mean(value)) -> meandf
+p=ggplot(data=meandf,aes(x=poly,y=overall,colour=variable))+geom_line()+ggtitle("overall")+theme_minimal()
+p
+```
+
+Overall version (averaging over 61 gridpoints of x).
+
+---
+
+### Choosing the best model: observations
+
+When fitting a statistical model the aim is often to obtain the most predictive model. There are often many candidate models, and the task is to decide which model to choose.
+
+* The observations used to fit the statistical model make up the training set. The training error is the average loss over the training sample. 
+* As the complexity (and thus flexibility) of a model increases the model becomes more adaptive to underlying structures and the training error falls. 
+* The test error is the prediction error over a test sample. 
+* The test sample will have new observations which were not used when fitting the model. One wants the model to capture important relationships between the response variable and the covariates, else we will underfit. Recall the red line in the figure corresponding to the toy example above.
+
+---
+
+This trade-off in selecting a model with the right amount of complexity/flexibility is the **variance-bias trade-off**.
+
+To summarize:
+
+* inflexible models (with few parameters to fit) are easy to compute but may lead to a poor fit (high bias)
+* flexible (complex) models may provide more unbiased fits but may overfit the data (high variance)
+* there will be irreducible errors present
+
+We will in Module 6 see that by choosing a biased estimator may be better than an unbiased due to differences in variances, and in Module 8 see how methods as bagging, boosting and random forests can lower the variance while prevailing a low bias.
+
+---
+
+![ISLR Figure 2.12](../../ISLR/Figures/Chapter2/2.12.png)
+
+---
+
+# Classification
+
+(so far, regression setting - but how about model accuracy in classification?)
+
+**Set-up:** Training observations (independent pairs) $\{(x_1, y_1), ..., (x_n, y_n)\}$ where the response variable $Y$ is qualitative. E.g $Y \in \mathcal{C} = \{0, 1, ..., 9\}$ or $Y \in \mathcal{C} = \{dog, cat,... ,horse\}$. 
+
+**Aim: **
+To _build_ a classifier $f(x)$ that assigns a class label from $\mathcal{C}$ to a future unlabelled observation $x$ and to asses the _uncertainty_ in this classification. Sometimes the role of the different predictors may be of main interest.  
+
+**Performance measure:** Most popular is the misclassification error rate (training and test version).
+
+**0/1-loss**: The misclassifications are given the loss 1 and the correct classifications loss 0. (Quadratic loss is not used for classification.)
+
+### Q: Give an example of a classification problem.
+
+---
+
+### A: some examples earlier in this module, and new examples will be added to the class notes.
+
+---
+
+## Synthetic example
+
+* The figure below shows a plot of 100 observations from two classes $A$ (red dots) and $B$ (turquoise dots),
+* simulated from a bivariate normal distribution with mean vectors $\mu_A  = (1, 1)^T$ and $\mu_B = (3, 3)^T$ and a covariance matrix $\Sigma_A = \Sigma_B = \begin{pmatrix} 2\hspace{2mm}   0 \\ 0 \hspace{2mm} 2 \end{pmatrix}$.
+* We want to find a rule to classify a new observation to class $A$ or $B$.
+
+---
+
+```{r knn, message=FALSE,echo=FALSE}
+library(mvtnorm)
+library(MASS)
+library(ggplot2)
+
+set.seed(9)
+
+Sigma = matrix(c(2, 0, 0, 2), 2, 2)
+
+mu1 = c(1, 1)
+mu2 = c(3, 3)
+
+X1 = mvrnorm(100, mu=mu1, Sigma=Sigma)
+X2 = mvrnorm(100, mu=mu2, Sigma=Sigma)
+
+class = c(rep("A",100), rep("B", 100))
+class = as.factor(class)
+
+df = data.frame(rbind(X1, X2), class)
+
+ggplot(df, aes(x=X1, y=X2, color=class))+geom_point(size=2)+theme_minimal()
+```
+
+---
+
+## Training error rate 
+
+the proportion of mistakes that are made if we apply our estimator $\hat{f}$ to the training observations, i.e. $\hat{y}_i=\hat{f}(x_i)$. $$\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i).$$
+Here I is the indicator function (to give our 0/1 loss) which is defined as: $$\text{I}(a\neq\hat{a}) = \begin{cases} 1 \text{ if } a \neq \hat{a} \\ 0 \text{ else } \end{cases}$$
+The indicator function counts the number of times our model has made a wrong classification. The training error rate is the fraction of misclassifications made on our training set. 
+A very low training error rate may imply overfitting.
+
+---
+
+## Test error rate
+
+Here the fraction of misclassifications is calculated when our model is applied on a test set. From what we have learned about regression we can deduce that this gives a better indication of the true performance of the classifier (than the training error).
+$$\text{Ave}(I(y_0\neq \hat{y}_0))$$
+where the average is over all the test observations $(x_0,y_0)$.
+
+We assume that a _good_ classifier is a classifier that has a _low_ test error.
+
+---
+
+## Bayes classifier
+
+Suppose we have a quantitative response value that can be a member in one of $K$ classes $\mathcal{C} = \{c_1, c_2, ..., c_k, ..., c_K\}$. Further, suppose these elements are numbered $1, 2, ..., K$. The probability of that a new observation $x_0$ belongs to class $k$ is 
+$$p_k(x_0) = \text{Pr}(Y=k | X=x_0), \quad k = 1, 2, ... K.$$
+This is the conditional class probability: the probability that $Y=k$ given the observation $x_0$. The _Bayes classifier assigns an observation to the most likely class_, given its predictor values.  
+
+This is best illustrated by a two-class example. Assume our response value is to classified as belonging to one of the two groups $\{A, B\}$. A new observation $x_0$ will be classified to $A$ if $\text{Pr}(Y=A | X=x_0) > 0.5$ and to class $B$ otherwise.
+
+---
+
+**The Bayes classifier** 
+
+* has the _smallest test error rate_. 
+* However, we never (or very seldom) know the conditional distribution of $Y$ given $X$ for real data. Computing the Bayes classifier is thus impossible. 
+* The class boundaries using the Bayes classifier is called the _Bayes decision boundary_.
+* The overall Bayes error rate is given as $$1-\text{E}(\text{max} \text{Pr}(Y=j\mid X))$$ where the expectation is over $X$.
+* The Bayes error rate is comparable to the _irreducible error_ in the regression setting.
+
+Next: $K$-nearest neighbor classifier estimates this conditional distribution and then classifies a new observation based on this estimated probability.
+
+---
+
+## K-nearest neighbour classifier
+
+The $K$-nearest neighbour classifier (KNN) works in the following way: 
+
+* Given a new observation $x_0$ it searches for the $K$ points in our training data that are closest to it (Euclidean distance). 
+* These points make up the neighborhood of $x_0$, $\mathcal{N}_0$. 
+* The point $x_0$ is classified by taking a majority vote of the neighbors. 
+* That means that $x_0$ is classified to the most occurring class among its neighbors
+$$\text{Pr}(Y=j | X = x_0) = \frac{1}{K} \sum_{i \in \mathcal{N}_0} I(y_i = j).$$
+
+---
+
+We return to our synthetic data with $X_1$ and $X_2$ and two classes $A$ and $B$:
+
+* Assume we have a new observation $X_0 = (x_{01}, x_{02})^T$ which we want to classify as belonging to the class $A$ or $B$. 
+* To illustrate this problem we fit the $K$-nearest neighbor classifier to our simulated data set with $K = 1, 3, 10$ and $150$ and observe what happens.
+
+In our plots, the small colored dots show the predicted classes for an evenly-spaced grid. The lines show the decision boundaries. If our new observation falls into the region within the red decision boundary, it will be classified as $A$. If it falls into the region within the green decision boundary, it will be classified as $B$.  
+
+---
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(class)
+library(dplyr)
+library(ggpubr)
+
+test = expand.grid(x = seq(min(df[,1]-1), max(df[,1]+1), by=0.2), y=seq(min(df[,2]-1), max(df[,2]+1), by=0.2))
+
+
+## k = 1
+classif = class::knn(df[,1:2], test=test, cl=df[,3], k=1, prob=TRUE)
+prob = attr(classif, "prob")
+
+dataf = bind_rows(mutate(test, prob=prob, class="A", prob_cls=ifelse(classif==class, 1, 0)),
+                  mutate(test, prob=prob, class="B", prob_cls=ifelse(classif==class, 1, 0)))
+
+gg = ggplot(dataf)+geom_point(aes(x=x, y=y, colour=class), data=mutate(test, class=classif), size=0.01) 
+gg = gg + geom_contour(aes(x=x, y=y, z=prob_cls, group=class, color=class), data=dataf, bins=2,size=0.5)
+gg = gg + geom_point(aes(x=x, y=y, col=class), size=2, data=data.frame(x=df[,1], y=df[,2], class=df[,3]))
+gg = gg + ggtitle("k = 1")+xlab("X1")+ylab("X2")+theme_minimal()
+
+# k = 3
+classif3 = class::knn(df[,1:2], test=test, cl=df[,3], k=3, prob=TRUE)
+prob3 = attr(classif3, "prob")
+
+dataf3 = bind_rows(mutate(test, prob=prob3, class="A", prob_cls=ifelse(classif3==class, 1, 0)),
+                    mutate(test, prob=prob3, class="B", prob_cls=ifelse(classif3==class, 1, 0)))
+
+gg3 = ggplot(dataf3)+geom_point(aes(x=x, y=y, colour=class), data=mutate(test, class=classif3), size=0.01)
+gg3 = gg3 + geom_contour(aes(x=x, y=y, z=prob_cls, group=class, color=class), data=dataf3, bins=2, size=0.5)
+gg3 = gg3 + geom_point(aes(x=x, y=y, col=class), size=2, data=data.frame(x=df[,1], y=df[,2], class=df[,3]))
+gg3 = gg3 + ggtitle("k = 3")+xlab("X1")+ylab("X2")+theme_minimal()
+
+## k = 10
+
+classif10 = class::knn(df[,1:2], test=test, cl=df[,3], k=10, prob=TRUE)
+prob10 = attr(classif10, "prob")
+
+dataf10 = bind_rows(mutate(test, prob=prob10, class="A", prob_cls=ifelse(classif10==class, 1, 0)),
+                  mutate(test, prob=prob10, class="B", prob_cls=ifelse(classif10==class, 1, 0)))
+
+gg10 = ggplot(dataf10)+geom_point(aes(x=x, y=y, colour=class), data=mutate(test, class=classif10), size=0.05)
+gg10 = gg10 + geom_contour(aes(x=x, y=y, z=prob_cls, group=class, color=class), data=dataf10, bins=2, size=0.5)
+gg10 = gg10 + geom_point(aes(x=x, y=y, col=class), size=2, data=data.frame(x=df[,1], y=df[,2], class=df[,3]))
+gg10 = gg10 + ggtitle("k = 10")+xlab("X1")+ylab("X2")+theme_minimal()
+
+## k = 150
+
+classif150 = class::knn(df[,1:2], test=test, cl=df[,3], k=150, prob=TRUE)
+prob150 = attr(classif150, "prob")
+
+dataf150 = bind_rows(mutate(test, prob=prob150, class="A", prob_cls=ifelse(classif150==class, 1, 0)),
+                  mutate(test, prob=prob150, class="B", prob_cls=ifelse(classif150==class, 1, 0)))
+
+gg150 = ggplot(dataf150)+geom_point(aes(x=x, y=y, colour=class), data=mutate(test, class=classif150), size=0.05)
+gg150 = gg150 + geom_contour(aes(x=x, y=y, z=prob_cls, group=class, color=class), data=dataf150, bins=2, size=0.5)
+gg150 = gg150 + geom_point(aes(x=x, y=y, col=class), size=2, data=data.frame(x=df[,1], y=df[,2], class=df[,3]))
+gg150 = gg150 + ggtitle("k = 150")+xlab("X1")+ylab("X2")+theme_minimal()
+
+ggarrange(gg,gg3,gg10,gg150)
+```
+
+---
+
+We see that the choice of $K$ has a big influence on the result of our classification. By choosing $K=1$ the classification is made to the same class as the one nearest neighbor. When $K=3$ a majority vote is taken among the three nearest neighbors, and so on. We see that as $K$ gets very large, the decision boundary tends towards a straight line (which is the Bayes boundary in this set-up).   
+
+To find the optimal value of $K$ the typical procedure is to try different values of $K$ and then test the predictive power of the different classifiers, for example by cross-validation, which will be discussed in M5.
+
+We see that after trying all choices for $K$ between 1 and 50, we see that a few choices of $K$ gave the smallest misclassification error rate, estimating by leave-one out cross-validation (leave-one-out cross-validation will be discussed in M5). The smallest error rate is equal to 0.165. This means that the classifier makes a misclassification 16.5\% of the time and a correct classification 83.5\% of the time.
+
+---
+
+```{r knnerror,echo=FALSE}
+misclas=numeric(50)
+n = dim(df)[1]
+set.seed(9)
+for(k in 1:50){
+  knn = knn.cv(train = df[,-3], cl=df[,3], k=k)
+  t = table(knn, df[,3])
+  error = (n-sum(diag(t)))/n
+  misclas[k] = error
+}
+
+knn_ds = data.frame(X1 = 1:50, X2 = misclas)
+gge = ggplot(knn_ds, aes(x = X1, y=X2)) + geom_point(color="blue") + geom_line()
+gge = gge + xlab("Number of neighbors K") + ylab("Misclassification error")
+gge = gge + ggtitle("Error rate for KNN with different choices of K")+theme_minimal()
+gge
+```
+
+---
+
+This above example showed the bias-variance trade-off in a classification setting. Choosing a value of $K$ amounts to choosing the correct level of flexibility of the classifier. This again is critical to the success of the classifier. A too low value of $K$ will give a very flexible classifier (with high variance and low bias) which will fit the training set too well (it will overfit) and make poor predictions for new observations. Choosing a high value for $K$ makes the classifier loose its flexibility and the classifier will have low variance but high bias.
+
+---
+
+## The curse of dimensionality
+
+The nearest neighbor classifier can be quite good if the number of predictor $p$ is small and the number of observations $n$ is large. We need enough close neighbors to make a good classification. 
+
+The effectiveness of the KNN classifier falls quickly when the dimension of the preditor space is high. This is because the nearest neighbors tend to be far away in high dimensions and the method no longer is local. This is referred to as the _curse of dimensionality_.
+
+---
+
+## What was important in Part A?
+
+* prediction vs. interpretation (inference)
+* supervised vs. unsupervised methods
+* classification vs. regression
+* parametric vs. non-parametric methods
+* flexibility vs. interpretation
+* under- and overfitting
+* quadratic and 0/1 loss functions
+* training and test MSE and misclassification error
+* bias-variance trade off
+* Bayes classifier and KNN-classifier
+
+---
+
+\large
+
+**<a id="PartB">Part B: random vectors, covariance, mvN</a>**
+
+\normalsize
+
+* Random vectors, 
+* the covariance matrix and 
+* the multivariate normal distribution
+
+---
+
+# Random vector
+
+* A random vector $\mathbf{X}_{(p\times 1)}$ is a $p$-dimensional vector of random variables. 
+    + Weight of cork deposits in $p=4$ directions (N, E, S, W).
+    + Rent index in Munich: rent, area, year of construction, location, bath condition, kitchen condition, central heating, district.
+* Joint distribution function: $f(\mathbf{x})$.
+* From joint distribution function to marginal (and conditional distributions).
+$$f_1(x_1)=\int_{-\infty}^{\infty}\cdots \int_{-\infty}^{\infty} f(x_1,x_2,\ldots,x_p)dx_2 \cdots dx_p$$
+* Cumulative distribution (definite integrals!) used to calculate probabilites.
+* Independence: $f(x_1,x_2)=f_1(x_1)\cdot f(x_2)$ and $f(x_1\mid x_2)=f_1(x_1).$
+
+---
+
+## Moments 
+
+The moments are important properties about the distribution of $\mathbf{X}$. We will look at:
+
+* E: Mean of random vector and random matrices.
+* Cov: Covariance matrix.
+* Corr: Correlation matrix.
+* E and Cov of multiple linear combinations.
+
+---
+
+### The Cork deposit data
+
+* Classical multivariate data set from Rao (1948).
+* Weigth of bark deposits of $n=28$ cork trees in $p=4$ directions (N, E, S, W).
+
+```{r, echo=TRUE, eval=TRUE}
+corkds=as.matrix(
+  read.table("https://www.math.ntnu.no/emner/TMA4268/2019v/data/corkMKB.txt")
+  )
+dimnames(corkds)[[2]]=c("N","E","S","W")
+head(corkds)
+```
+
+**Q:** How may we define a random vector and random matrix for cork trees?
+
+---
+
+**A:** Draw a random sample of size $n=28$ from the population of cork trees and observe a $p=4$ dimensional random vector for each tree.
+
+$$\mathbf{X}_{(28 \times 4)}=\left[ \begin{array}{cccc}X_{11} & X_{12} & X_{13}& X_{14}\\ X_{21} & X_{22} & X_{23}& X_{24}\\ X_{31} & X_{32} & X_{33}& X_{34}\\ \vdots & \vdots & \ddots & \vdots\\ X_{28,1} & X_{28,2} & X_{28,3}& X_{28,4}\\ \end{array} \right]$$
+
+---
+
+## Rules for means
+
+* Random vector $\mathbf{X}_{(p\times 1)}$ with mean vector $\mathbf{\mu}_{(p\times 1)}$:
+
+$$\mathbf{X}_{(p\times 1)}=\left[ \begin{array}{c}X_1\\ X_2\\ \vdots\\ X_p\\ \end{array}\right], \text{ and }\mathbf{\mu}_{(p \times 1)}=\text{E}(\mathbf{X})=\left[ \begin{array}{c}\text{E}(X_1)\\ \text{E}(X_2)\\ \vdots\\ \text{E}(X_p)\\ \end{array}\right]$$
+
+Remark: observe that $\text{E}(X_j)$ is calculated from the marginal distribution of $X_j$ and contains no information about dependencies between $X_{j}$ and $X_k$, $k\neq j$.
+
+* Random matrix $\mathbf{X}_{(n\times p)}$ and random matrix $\mathbf{Y}_{(n\times p)}$:
+$$\text{E}(\mathbf{X}+\mathbf{Y})=\text{E}(\mathbf{X})+\text{E}(\mathbf{Y})$$
+
+(Rules of vector addition)
+
+---
+
+* Random matrix $\mathbf{X}_{(n\times p)}$ and conformable constant matrices $\mathbf{A}$ and $\mathbf{B}$:
+$$\text{E}(\mathbf{A}\mathbf{X}\mathbf{B})=\mathbf{A}\text{E}(\mathbf{X})\mathbf{B}$$
+Proof: Look at element $(i,j)$ of $\mathbf{A}\mathbf{X}\mathbf{B}$ 
+$$e_{ij}=\sum_{k=1}^n a_{ik} \sum_{l=1}^p X_{kl}b_{lj}$$
+(where $a_{ik}$ and $b_{lj}$ are elements of $\mathbf{A}$ and $\mathbf{B}$ respectively), and see that $\text{E}(e_{ij})$ is the element $(i,j)$ if $\mathbf{A}\text{E}(\mathbf{X})\mathbf{B}$.
+
+**Q**: what are the univariate analog to this formula - that you studied in your first introductory course in statistics? What do you think happens if we look at $\text{E}(\mathbf{A}\mathbf{X}\mathbf{B})+\mathbf{d}$?
+
+```{r, echo=FALSE, results='asis', eval=showsolB}
+cat("
+**A**: $$\\text{E}(aX+b)=a \\text{E}(X)+b$$
+")
+```
+
+---
+
+## Variance-covariance matrix
+
+**Q:** In the introductory statistics course we define the the covariance $\text{Cov}(X_i,X_j)=\text{E}[(X_i-\mu_i)(X_j-\mu_j)]=\text{E}(X_i \cdot X_j)-\mu_i\mu_j$.
+
+* What is the covariance called when $i=j$? 
+* What does it mean when the covariance is
+    + negative
+    + zero
+    + positive?
+Make a scatter plot to show this.
+
+---
+
+* Consider random vector $\mathbf{X}_{(p\times 1)}$ with mean vector $\mathbf{\mu}_{(p\times 1)}$:
+$$\mathbf{X}_{(p\times 1)} =\left[ \begin{array}{c} X_1\\ X_2\\ \vdots\\ X_p\\ \end{array} \right], \text{ and }\mathbf{\mu}_{(p\times 1)} =\text{E}(\mathbf{X})=\left[ \begin{array}{c} \text{E}(X_1)\\ \text{E}(X_2)\\ \vdots\\ \text{E}(X_p)\\ \end{array}\right]$$
+* Variance-covariance matrix $\Sigma$ (real and symmetric)
+$$\Sigma=\text{Cov}(\mathbf{X})=\text{E}[(\mathbf{X}-\mathbf{\mu})(\mathbf{X}-\mathbf{\mu})^T]= \left[ \begin{array}{cccc} \sigma_{11} & \sigma_{12} & \cdots & \sigma_{1p}\\ \sigma_{12} & \sigma_{22} & \cdots & \sigma_{2p}\\ \vdots & \vdots & \ddots & \vdots\\ \sigma_{1p} & \sigma_{2p} & \cdots & \sigma_{pp}\\ \end{array}  \right]= \text{E}(\mathbf{X}\mathbf{X}^T)-\mathbf{\mu}\mathbf{\mu}^T$$
+* Elements: $\sigma_{ij}=\text{E}[(X_i-\mu_i)(X_j-\mu_j)]=\sigma_{ji}$.
+
+Remark: the matrix $\Sigma$ is called variance, covariance and variance-covariance matrix and denoted both $\text{Var}(\mathbf{X})$ and $\text{Cov}(\mathbf{X})$.
+
+Remark: observe the notation of elements $\sigma_{11}=\sigma_1^2$ is a variance.
+
+---
+
+### Exercise: the variance-covariance matrix
+    
+Let $\mathbf{X}_{4\times 1}$ have variance-covariance matrix
+$$\Sigma= \left[ \begin{array}{cccc} 2&1&0&0\\
+      1&2&0&1\\
+      0&0&2&1\\
+      0&1&1&2\\
+          \end{array}
+          \right].$$
+          
+Explain what this means. 
+
+---
+
+### Correlation matrix
+
+Correlation matrix $\mathbf{\rho}$ (real and symmetric)
+$$\mathbf{\rho}=\left[ \begin{array}{cccc}
+    \frac{\sigma_{11}}{\sqrt{\sigma_{11}\sigma_{11}}} &
+    \frac{\sigma_{12}}{\sqrt{\sigma_{11}\sigma_{22}}} &
+    \cdots &
+    \frac{\sigma_{1p}}{\sqrt{\sigma_{11}\sigma_{pp}}}\\
+    \frac{\sigma_{12}}{\sqrt{\sigma_{11}\sigma_{22}}} &
+    \frac{\sigma_{22}}{\sqrt{\sigma_{22}\sigma_{22}}} &
+    \cdots &
+    \frac{\sigma_{2p}}{\sqrt{\sigma_{22}\sigma_{pp}}}\\
+    \vdots & \vdots & \ddots & \vdots\\
+      \frac{\sigma_{1p}}{\sqrt{\sigma_{11}\sigma_{pp}}} &
+    \frac{\sigma_{2p}}{\sqrt{\sigma_{22}\sigma_{pp}}} &
+    \cdots &
+    \frac{\sigma_{pp}}{\sqrt{\sigma_{pp}\sigma_{pp}}}\\ \end{array}\right]=
+ \left[ \begin{array}{cccc}
+    1 & \rho_{12} & \cdots & \rho_{1p}\\
+    \rho_{12} & 1 & \cdots & \rho_{2p}\\
+    \vdots & \vdots & \ddots & \vdots\\
+    \rho_{1p} & \rho_{2p} & \cdots & 1\\
+\end{array}\right]$$
+
+$$\mathbf{\rho}=(\mathbf{V}^{\frac{1}{2}})^{-1}
+    \Sigma(\mathbf{V}^{\frac{1}{2}})^{-1}, \text{   where    }
+   \mathbf{V}^{\frac{1}{2}}=
+ \left[ \begin{array}{cccc}
+    \sqrt{\sigma_{11}} & 0& \cdots & 0\\
+    0 & \sqrt{\sigma_{22}} & \cdots & 0\\
+    \vdots & \vdots & \ddots & \vdots\\
+    0 & 0 & \cdots & \sqrt{\sigma_{pp}}\\
+\end{array} \right]$$
+
+---
+
+### Exercise: the correlation matrix
+
+Let $\mathbf{X}_{4\times 1}$ have variance-covariance matrix
+$$\Sigma= \left[ \begin{array}{cccc} 2&1&0&0\\
+      1&2&0&1\\
+      0&0&2&1\\
+      0&1&1&2\\
+          \end{array}
+          \right].$$
+          Find the correlation matrix.
+          
+---
+
+**A**: $$\rho=\left[ \begin{array}{cccc} 1&0.5&0&0\\
+      0.5&1&0&0.5\\
+      0&0&1&0.5\\
+      0&0.5&0.5&1\\
+          \end{array}
+          \right]$$
+          
+---
+
+### Linear combinations
+
+Consider a random vector $\mathbf{X}_{(p\times 1)}$ with mean vector
+    $\mathbf{\mu}=\text{E}(\mathbf{X})$ and
+   variance-covariance matrix $\Sigma=\text{Cov}(\mathbf{X})$.
+
+The linear combinations 
+$$\mathbf{Z}=\mathbf{C}\mathbf{X}=\left[ \begin{array}{c} \sum_{j=1}^p c_{1j}X_j\\ \sum_{j=1}^p c_{2j}X_j\\ \vdots \\ \sum_{j=1}^p c_{kj}X_j \end{array} \right]$$ 
+have
+$$\text{E}(\mathbf{Z})=\text{E}(\mathbf{C}\mathbf{X})=\mathbf{C}\mathbf{\mu}$$
+$$\text{Cov}(\mathbf{Z})=\text{Cov}(\mathbf{C}\mathbf{X})=
+   \mathbf{C}\Sigma\mathbf{C}^T$$
+
+[Proof](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/CXproof.pdf)
+
+**Exercise:** Study the proof - what are the most important transitions?
+
+---
+
+### Exercise: Linear combinations
+
+$$\mathbf{X}=\left[ \begin{array}{c} X_N\\
+          X_E\\
+X_S\\
+          X_W\\
+          \end{array}
+          \right], \text{ and }
+          \mathbf{\mu}=\left[
+      \begin{array}{c} \mu_N\\
+          \mu_E\\
+\mu_S\\
+          \mu_W\\
+          \end{array}
+          \right], \text{ and } \Sigma=\left[ \begin{array}{cccc}
+    \sigma_{NN} & \sigma_{NE} & \sigma_{NS} & \sigma_{NW}\\
+    \sigma_{NE} & \sigma_{EE} & \sigma_{ES}& \sigma_{EW}\\
+        \sigma_{NS} & \sigma_{EE} & \sigma_{SS}& \sigma_{SW}\\
+    \sigma_{NW} & \sigma_{EW} & \sigma_{SW} & \sigma_{WW}\\
+\end{array} \right]$$
+
+Scientists would like to compare the following three _contrasts_: N-S, E-W and (E+W)-(N+S),
+and define a new random vector $\mathbf{Y}_{(3\times 1)}=\mathbf{C}_{(3\times 4)} \mathbf{X}_{(4\times 1)}$ giving the three contrasts.
+
+* Write down $\mathbf{C}$.
+* Explain how to find $\text{E}(Y_1)$ and $\text{Cov}(Y_1,Y_3)$.
+* Use R to find the mean vector, covariance matrix and correlations matrix of $\mathbf{Y}$, when the mean vector and covariance matrix for $\mathbf{X}$ is given below.
+
+---
+
+```{r,eval=TRUE,echo=TRUE,results="hold"}
+corkds <- as.matrix(read.table("https://www.math.ntnu.no/emner/TMA4268/2019v/data/corkMKB.txt"))
+dimnames(corkds)[[2]] <- c("N","E","S","W")
+mu=apply(corkds,2,mean)
+mu
+Sigma=var(corkds)
+Sigma
+```
+
+---
+
+### The covariance matrix - more requirements?
+
+Random vector $\mathbf{X}_{(p\times 1)}$ with mean vector $\mathbf{\mu}_{(p\times 1)}$ and covariance matrix
+$$\Sigma=\text{Cov}(\mathbf{X})=\text{E}[(\mathbf{X}-\mathbf{\mu})(\mathbf{X}-\mathbf{\mu})^T]=
+\left[ \begin{array}{cccc}
+    \sigma_{11} & \sigma_{12} & \cdots & \sigma_{1p}\\
+    \sigma_{12} & \sigma_{22} & \cdots & \sigma_{2p}\\
+    \vdots & \vdots & \ddots & \vdots\\
+    \sigma_{1p} & \sigma_{2p} & \cdots & \sigma_{pp}\\
+\end{array} \right]$$
+
+The covariance matrix is by construction symmetric, and it is common to require that the  covariance matrix is positive definite. Why do you think that is?
+
+Hint: What is the definition of a positive definite matrix? Is it possible that the variance of the linear combination $\mathbf{Y}=\mathbf{c}^T\mathbf{X}$ is negative? 
+
+---
+
+## Multiple choice - random vectors
+Choose the correct answer - time limit was 30 seconds for each question! Let's go!
+
+### Mean of sum 
+$\mathbf{X}$ and $\mathbf{Y}$ are two bivariate random vectors with $\text{E}(\mathbf{X})=(1,2)^T$
+and $\text{E}(\mathbf{Y})=(2,0)^T$. What is $\text{E}(\mathbf{X}+\mathbf{Y})$?
+
+* A: $(1.5,1)^T$
+* B: $(3,2)^T$
+* C: $(-1,2)^ T$
+* D: $(1,-2)^T$
+
+---
+
+### Mean of linear combination
+$\mathbf{X}$ is a 2-dimensional random vector with $\text{E}(\mathbf{X})=(2,5)^T$ , and $\mathbf{b}=(0.5, 0.5)^T$ is a constant vector. What is $\text{E}(\mathbf{b}^T\mathbf{X})$?
+
+* A: 3.5
+* B: 7
+* C: 2
+* D: 5 
+
+---
+
+### Covariance
+$\mathbf{X}$ is a $p$-dimensional random vector with mean $\mathbf{\mu}$. Which of the following defines the covariance matrix?
+
+* A: $E[(\mathbf{X}-\mathbf{\mu})^T(\mathbf{X}-\mathbf{\mu})]$ 
+* B: $E[(\mathbf{X}-\mathbf{\mu})(\mathbf{X}-\mathbf{\mu})^T]$ 
+* C: $E[(\mathbf{X}-\mathbf{\mu})(\mathbf{X}-\mathbf{\mu})]$  
+* D: $E[(\mathbf{X}-\mathbf{\mu})^T(\mathbf{X}-\mathbf{\mu})^T]$
+
+---
+
+### Mean of linear combinations
+$\mathbf{X}$ is a $p$-dimensional random vector with mean $\mathbf{\mu}$
+and covariance matrix $\Sigma$. $\mathbf{C}$ is a constant matrix. 
+What is then the mean of the $k$-dimensional random vector $\mathbf{Y}=\mathbf{C}\mathbf{X}$?
+
+* A: $\mathbf{C}\mathbf{\mu}$
+* B: $\mathbf{C}\Sigma$
+* C: $\mathbf{C}\mathbf{\mu}\mathbf{C}^T$
+* D: $\mathbf{C}\Sigma\mathbf{C}^T$
+
+---
+
+### Covariance of linear combinations
+
+$\mathbf{X}$ is a $p$-dimensional random vector with mean $\mathbf{\mu}$
+and covariance matrix $\Sigma$. $\mathbf{C}$ is a constant matrix. 
+What is then the covariance of the $k$-dimensional random vector $\mathbf{Y}=\mathbf{C}\mathbf{X}$?
+
+* A: $\mathbf{C}\mathbf{\mu}$
+* B: $\mathbf{C}\Sigma$
+* C: $\mathbf{C}\mathbf{\mu}\mathbf{C}^T$
+* D: $\mathbf{C}\Sigma\mathbf{C}^T$
+
+---
+
+### Correlation
+$\mathbf{X}$ is a $2$-dimensional random vector with
+covariance matrix 
+\[ \Sigma= \left[\begin{array}{cc}
+          4 & 0.8 \\
+          0.8 & 1\\
+      \end{array}
+    \right]\]
+Then the correlation between the two elements of $\mathbf{X}$ are:
+
+* A: 0.10
+* B: 0.25
+* C: 0.40
+* D: 0.80
+
+---
+
+```{r, echo=FALSE, results='asis', eval=showsolB}
+cat("
+## Answers: 
+BABADC 
+")
+```
+
+---
+
+# The multivariate normal distribution
+
+Why is the mvN so popular?
+
+* Many natural phenomena may be modelled using this distribution (just as in the univariate case).
+* Multivariate version of the central limit theorem- the sample mean will be approximately multivariate normal for large samples.
+* Good interpretability of the covariance.
+* Mathematically tractable.
+* Building block in many models and methods.
+
+
+
+---
+
+<figure><img src="mvN.jpeg" height="350px" align="center" /></figure>
+
+
+See the 3D-printed mvNs in class!
+
+---
+
+## The multivariate normal (mvN) pdf
+
+The random vector $\mathbf{X}_{p\times 1}$ is multivariate normal $N_p$ with mean $\mathbf{\mu}$ and (positive definite) covariate matrix $\Sigma$. The pdf is:
+
+$$f(\mathbf{x})=\frac{1}{(2\pi)^\frac{p}{2}|\Sigma|^\frac{1}{2}} \exp\{-\frac{1}{2}(\mathbf{x}-\mathbf{\mu})^T\Sigma^{-1}(\mathbf{x}-\mathbf{\mu})\}$$
+
+**Q**: 
+
+* How does this compare to the univariate version?
+$$f(x)=\frac{1}{\sqrt{2\pi}\sigma}\exp\{ \frac{1}{2\sigma^2}(x-\mu)^2\}$$
+
+* Why do we need the constant in front of the $\exp$?
+* What is the dimension of the part in $\exp$? (This is a quadratic form, a central topic in TMA4267.)
+
+---
+
+## Six useful properties of the mvN
+
+Let $\mathbf{X}_{(p\times 1)}$ be a random vector from $N_p(\mathbf{\mu},\Sigma)$.
+
+1. The grapical contours of the mvN are ellipsoids (can be shown using spectral decomposition).
+2. Linear combinations of components of $\mathbf{X}$ are (multivariate) normal (can be easily proven using moment generating functions MGF).
+3. All subsets of the components of $\mathbf{X}$ are (multivariate) normal (special case of the above).
+4. Zero covariance implies that the corresponding components are independently distributed (can be proven using MGF).
+
+
+---
+
+All of these are proven in TMA4267 Linear Statistical Models. 
+
+The result 4 is rather useful! If you have a bivariate normal and observed covariance 0, then your variables are independent.
+
+---
+  
+## Contours of multivariate normal distribution
+
+Contours of constant density for the $p$-dimensional normal distribution are ellipsoids defined by $\mathbf{x}$ such that
+$$ (\mathbf{x}-\mathbf{\mu})^T\Sigma^{-1}(\mathbf{x}-\mathbf{\mu})=b $$
+where $b>0$ is a constant.
+
+These ellipsoids are centered at $\mathbf{\mu}$ and have axes $\pm \sqrt{b \lambda_i}\mathbf{e}_i$, where $\Sigma\mathbf{e}_i=\lambda_i \mathbf{e}_i$, for $i=1,...,p$.
+
+Remark: to see this the spectral decomposition of the covariance matrix is useful.
+
+* $(\mathbf{x}-\mathbf{\mu})^T\Sigma^{-1}(\mathbf{x}-\mathbf{\mu})$ is distributed as $\chi^2_p$.
+* The volume inside the ellipsoid of $\mathbf{x}$ values satisfying
+$$ (\mathbf{x}-\mathbf{\mu})^T\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}) \le \chi^2_p(\alpha) $$
+has probability $1-\alpha$.
+
+---
+
+_In M4: Classification the mvN is very important and we will often draw contours of the mvN as ellipses- and this is the reason why we do that. _
+
+**Q**: Take a look at the 3D-printed figures - there you may see that with equal variances we have circles and with unequal variances we have ellipses.
+
+---
+
+## Identify the 3D-printed mvNs
+
+Let $\Sigma=\left[\begin{array}{cc} \sigma_x^2 & \rho\sigma_{x}\sigma_{y}\\\rho\sigma_{x}\sigma_{y}&\sigma_y^2\\ \end{array} \right]$.
+
+The following four 3D-printed figures have been made:
+
+* A: $\sigma_x=1$, $\sigma_y=2$, $\rho=-0.3$
+* B: $\sigma_x=1$, $\sigma_y=1$, $\rho=0$
+* C: $\sigma_x=1$, $\sigma_y=1$, $\rho=0.5$
+* D: $\sigma_x=1$, $\sigma_y=2$, $\rho=0$
+
+The figures have the following colours:
+
+* white
+* purple
+* red
+* black
+
+**Task: match letter and colour - without look at the answer below!** 
+
+---
+
+```{r, echo=FALSE, results='asis', eval=showsolB}
+cat(" Answers: A black, B purple, C red and D white
+")
+```
+
+
+## Multiple choice - multivariate normal
+Choose the correct answer - time limit was 30 seconds for each question! Let's go!
+
+### Multivariate normal pdf
+The probability density function is 
+$(\frac{1}{2\pi})^\frac{p}{2}\det(\Sigma)^{-\frac{1}{2}}\exp\{-\frac{1}{2}Q\}$ where $Q$ is
+
+* A: $(\mathbf{x}-\mathbf{\mu})^T\Sigma^{-1}(\mathbf{x}-\mathbf{\mu})$
+* B: $(\mathbf{x}-\mathbf{\mu})\Sigma(\mathbf{x}-\mathbf{\mu})^T$
+* C: $\Sigma-\mathbf{\mu}$
+
+---
+
+### Trivariate normal pdf
+What graphical form has the solution to $f(\mathbf{x})=$ constant?
+
+* A: Circle
+* B: Parabola
+* C: Ellipsoid
+* D: Bell shape
+
+---
+
+### Multivariate normal distribution
+$\mathbf{X}_p \sim N_p(\mathbf{\mu},\Sigma)$, and 
+$\mathbf{C}$ is a $k \times p$ constant matrix. $\mathbf{Y}=\mathbf{C}\mathbf{X}$ is
+
+* A: Chi-squared with $k$ degrees of freedom
+* B: Multivariate normal with mean $k\mathbf{\mu}$
+* C: Chi-squared with $p$ degrees of freedom
+* D: Multivariate normal with mean $\mathbf{C}\mathbf{\mu}$
+
+---
+
+### Independence
+ Let $\mathbf{X}\sim N_3(\mathbf{\mu},\Sigma)$, with
+$$\Sigma= \left[     
+\begin{array}{ccc} 1&1&0\\
+      1&3&2\\
+      0&2&5\\
+          \end{array}
+          \right].$$
+Which two variables are independent?
+
+* A: $X_1$ and $X_2$
+* B: $X_1$ and $X_3$
+* C: $X_2$ and $X_3$
+* D: None -- but two are uncorrelated.
+
+---
+
+### Constructing independent variables?
+Let $\mathbf{X}\sim N_p(\mathbf{\mu},\Sigma)$. How can I construct a vector of independent standard normal variables from $\mathbf{X}$?
+
+* A: $\Sigma(\mathbf{X}-\mathbf{\mu})$
+* B: $\Sigma^{-1}(\mathbf{X}+\mathbf{\mu})$
+* C: $\Sigma^{-\frac{1}{2}}(\mathbf{X}-\mathbf{\mu})$
+* D: $\Sigma^{\frac{1}{2}}(\mathbf{X}+\mathbf{\mu})$
+
+---
+
+### Conditional distribution: mean
+$\mathbf{X}=\left(\begin{array}{r}X_1 \\X_2 \end{array}\right)$ is a bivariate normal random vector. What is true for the conditional mean of \\$X_2$ given $X_1=x_1$?
+
+* A: Not a function of $x_1$
+* B: A linear function of $x_1$
+* C: A quadratic function of $x_1$
+
+---
+
+### Conditional distribution: variance
+$\mathbf{X}=\left(\begin{array}{r}X_1 \\X_2 \end{array}\right)$ is a bivariate normal random vector. What is true for the conditional variance of $X_2$ given $X_1=x_1$?
+
+* A: Not a function of $x_1$
+* B: A linear function of $x_1$
+* C: A quadratic function of $x_1$
+
+
+---
+
+```{r, echo=FALSE, results='asis', eval=showsolB}
+cat("
+## Answers: 
+ACDBCBA
+")
+```
+
+---
+
+# Plan for the introductory lecture
+
+**First hour with all students:**
+
+14.15: getting to know group members, connecting to the screen, introduction  
+14.15-14.55: work with Problem 2 above, and if time look at Problem 1, Exam 2018 Problem 2, and Problem 3.  
+14.55-15.00: summing up, discussing in plenum.     
+
+15.00-15.15: break, refreshments     
+    
+---
+
+**Second hour: divided content for three types of students**
+
+a) Students who have previously taken TMA4267: 
+     + may continue with Problem 1, Exam 2018 Problem 2 and Problem 3.
+b) Students who have not taken before and will not take TMA4267 now 
+     + move to PartB and work first with random vectors, so covariance matrix and finally multivariate normal. 
+     + Student that have taken TMA4265 (Stocastic processes) might have covered parts of this before, and if they want can do as the students in a).
+c) Students who are currently taking TMA4267 will this week/last week have covered Part A: random vectors and covariance matrix. They will in TMA4267 next cover Part A: multivariate normal distribution. 
+      + They can lood at Part A: random vectors and covariance matrix - as repetition, 
+      + and then look at Part B: multivariate normal as a warm up to TMA4267, 
+      + or may continue with the a) students.
+
+# <a id="RecEx">Recommended exercises</a>
+
+## Problem 1: Reflections and practicals
+
+1. Describe a real-life application in which classification might be useful. Identify the response and the predictors. Is the goal inference or prediction?
+
+2. Describe a real-life application in which regression might be useful. Identify the response and the predictors. Is the goal inference or prediction?
+
+3. Take a look at Figure 2.9 in the book (p. 31). 
+    a. Will a flexible or rigid method typically have the highest test error?
+    b. Does a small variance imply an overfit or rather an underfit to the data?
+    c. Relate the problem of over-and underfitting to the bias-variance trade-off.
+
+4. Exercise 7 from the book (p.53) slightly modified.
+The table below provides a training data set consisting of seven observations, two predictors and one qualitative response variable.
+
+```{r, echo=TRUE,message=FALSE,warning=FALSE,results="as-is"}
+library(kableExtra)
+knnframe = data.frame(x1 = c(3, 2, 1, 0, -1, 2, 1), x2 = c(3, 0, 1, 1, 0, 1, 0),  y=as.factor(c("A", "A", "A", "B", "B", "B", "B")))
+print(knnframe)
+#kable(knnframe,format="html")
+kable(knnframe)
+```
+
+We wish to use this data set to make a prediction for $Y$ when $X_1=1, X_2=2$ using the $K$-nearest neighbors classification method.  
+
+a. Compute the Euclidean distance between each observation and the test point,  $X_1=1,X_2=2$.
+b. What is our prediction with $K=1$? Why?
+c. What is our prediction with $K=4$? Why?
+d. If the Bayes decision boundary in this problem is highly non-linear, when would we expect the best value for $K$ to be large or small? Why?
+e. Install and load the `ggplot2` library:
+```{r, echo=TRUE, eval=FALSE}
+install.packages(ggplot2)
+library(ggplot2)
+```
+Plot the points in `R` using the functions `ggplot`, and `geom_points`.
+
+f. Use the function `knn` from the `class` library to make a prediction for the test point using `k=1`. Do you obtain the same result as by hand? 
+g. Use the function `knn` to make a prediction for the test point using `k=4` and `k=7`.
+
+---
+
+## Problem 2: Core concepts in statistical learning
+
+Remark: This was problem 1 from Compulsory exercise 1 in 2018.
+
+We consider a regression problem, where the true underlying curve is $f(x)=-x+x^2+x^3$ and we are considering $x \in [-3,3]$. 
+
+This non-linear curve is only observed with added noise (either a random phenomenon, or unobservable variables influence the observations), that is, we observe $y=f(x)+\varepsilon$. In our example the error is sampled from $\varepsilon\sim N(0,2^2)$.
+
+![Figure 1](Prob1f1.png)
+
+In real life we are presented with a data set of pairs $(x_i,y_i)$, $i=1,\ldots,n$, and asked to provide a prediction at a value $x$. We will use the method of K nearest neighbour regression to do this here. 
+
+We have a training set of $n=61$ observations $(x_i,y_i)$, $i=1,\ldots,n$. The KNN regression method provides a prediction at a value $x$ by finding the closes $K$ points and calculating the average of the observed $y$ values at these points (Problem 1 at the 2018 TMA4268 exam asked for a precise definition of KNN-regression). 
+
+$$\hat{f}(x_0)=\frac{1}{K}\sum_{i\in \mathcal{N}_0} y_i$$
+
+Given an integer $K$ and a test observation $x_0$, the KNN regression first identifies the $K$ points in the training data that are closest (Euclidean distance) to $x_0$, represented by $\mathcal{N}_0$. It then estimates the regression curve at $x_0$ as the average of the response values for the training observations in $\mathcal{N}_0$.
+
+In addition we have a test set of $n=61$ observations (at the same grid points as for the training set), but now with new observed values $y$. 
+
+We have considered $K=1,\ldots,25$ in the KNN method. Our experiment has been repeated $M=1000$ times (that is, $M$ versions of training and test set). 
+
+## a) Training and test MSE
+
+![Figure 2](Prob1f2.png)
+
+In the Figure 2 (above) you see the result of applying the KNN method with $K=1,2,10,25$ to our training data, repeated for $M$ different training sets (blue lines). The black lines show the true underlying curve. 
+
+* Comment briefly on what you see.
+* Does a high or low value of $K$ give the most flexible fit?
+
+In Figure 3 (below) you see mean-squared errors (mean of squared differences between observed and fitted values) for the training set and for the test set (right panel for one training and one test set, and left panel for $M$). 
+
+* Comment on what you see.
+* What do you think is the "best" choice for K?
+
+Remark: in real life we do not know the true curve, and need to use the test data to decide on model flexibility (choosing $K$).
+
+![Figure 3](Prob1f3.png)
+
+## b) Bias-variance trade-off 
+
+Now we leave the real world situation, and assume we know the truth (this is to focus on bias-variance trade-off). You will not observe these curves in real life - but the understanding of the bias-variance trade-off is a core skill in this course!
+
+In the Figure 4 (below) you see a plot of estimated squared bias, estimated variance, true irreducible error and the sum of these (labelled total) and averaged over all values of $x$
+
+The the squared bias and the variance is calculated based on the predicted values and the "true" values (without the added noise) at each $x$.  
+
+* Explain how that is done. Hint: this is what the $M$ repeated training data sets are used for. 
+* Focus on Figure 4. As the flexibility of the model increases ($K$ decreases), what happens with
+    + the squared bias,  
+    + the variance, and  
+    + the irreducible error?
+* What would you recommend is the optimal value of $K$? Is this in agreement with what you found in a)?
+
+Extra: We have chosen to also plot curves at four values of $x$ - Figure 5 (below). Based on these four curves, that would you recommend is the optimal value of $K$? Is this in agreement with what you found previously (averaged over $x$)?
+
+![Figure 4](Prob1f4.png)
+
+![Figure 5](Prob1f5.png)
+
+---
+
+For completeness the R code used is given next (listed here with `M=100` but `M=1000` was used). You do not need to run the code, this is just if you have questions about how this was done.
+
+\footnotesize
+```{r,eval=FALSE,echo=TRUE}
+library(FNN)
+library(ggplot2)
+library(ggpubr)
+library(reshape2)
+library(dplyr)
+maxK=25
+M=1000 # repeated samplings, x fixed  - examples were run with M=1000
+x = seq(-3, 3, 0.1)
+dfx=data.frame(x=x)
+truefunc=function(x) return(-x+x^2+x^3)
+true_y = truefunc(x)
+
+set.seed(2) # to reproduce
+error = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
+testerror = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
+ymat = matrix(rep(true_y,M),byrow=T,nrow=M) + error
+testymat = matrix(rep(true_y,M),byrow=T,nrow=M) + testerror
+
+ggplot(data=data.frame(x=x,y=ymat[1,]),aes(x,y))+geom_point(col="purple",size=2)+stat_function(fun=truefunc,lwd=1.1,colour="black")+ggtitle("Training data")
+
+predarray=array(NA,dim=c(M,length(x),maxK))
+for (i in 1:M)
+{
+  for (j in 1:maxK)
+  {
+    predarray[i,,j]=knn.reg(train=dfx,test=dfx,y=c(ymat[i,]),k=j)$pred
+  }
+}
+# first - just plot the fitted values - and add the true curve in black
+# M curves and choose k=1,2,10,30 in KNN
+
+# rearranging to get data frame that is useful
+thislwd=1.3
+stackmat=NULL
+for (i in 1:M) stackmat=rbind(stackmat,cbind(x,rep(i,length(x)),predarray[i,,]))
+colnames(stackmat)=c("x","rep",paste("K",1:maxK,sep=""))
+sdf=as.data.frame(stackmat) 
+yrange=range(apply(sdf,2,range)[,3:(maxK+2)])
+# making the four selected plots
+p1=ggplot(data=sdf,aes(x=x,y=K1,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p1=p1+stat_function(fun=truefunc,lwd=thislwd,colour="black")+ggtitle("K1")
+p2=ggplot(data=sdf,aes(x=x,y=K2,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p2=p2+stat_function(fun=truefunc,lwd=thislwd,colour="black")+ggtitle("K2")
+p10=ggplot(data=sdf,aes(x=x,y=K10,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p10=p10+stat_function(fun=truefunc,lwd=thislwd,colour="black")+ggtitle("K10")
+p25=ggplot(data=sdf,aes(x=x,y=K25,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p25=p25+stat_function(fun=truefunc,lwd=thislwd,colour="black")+ggtitle("K30")
+ggarrange(p1,p2,p10,p25)
+
+# calculating trainMSE and testMSE
+trainMSE=matrix(ncol=maxK,nrow=M)
+for (i in 1:M) trainMSE[i,]=apply((predarray[i,,]-ymat[i,])^2,2,mean)
+testMSE=matrix(ncol=maxK,nrow=M)
+for (i in 1:M) testMSE[i,]=apply((predarray[i,,]-testymat[i,])^2,2,mean)
+#rearranging to get data frame that is useful
+stackmat=NULL
+for (i in 1:M) stackmat=rbind(stackmat,cbind(rep(i,maxK),1:maxK,trainMSE[i,],testMSE[i,]))
+colnames(stackmat)=c("rep","K","trainMSE","testMSE")
+sdf=as.data.frame(stackmat) 
+yrange=range(sdf[,3:4])
+# plotting training and test MSE
+p1=ggplot(data=sdf[1:maxK,],aes(x=K,y=trainMSE))+scale_y_continuous(limits=yrange)+geom_line()
+pall= ggplot(data=sdf,aes(x=K,group=rep,y=trainMSE,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+testp1=ggplot(data=sdf[1:maxK,],aes(x=K,y=testMSE))+scale_y_continuous(limits=yrange)+geom_line()
+testpall= ggplot(data=sdf,aes(x=K,group=rep,y=testMSE,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+ggarrange(p1,pall,testp1,testpall)
+
+# calculating bias^2 and variance
+meanmat=matrix(ncol=length(x),nrow=maxK)
+varmat=matrix(ncol=length(x),nrow=maxK)
+for (j in 1:maxK)
+{
+  meanmat[j,]=apply(predarray[,,j],2,mean) # we now take the mean over the M simulations - to mimic E and Var at each x value and each KNN model
+  varmat[j,]=apply(predarray[,,j],2,var)
+}
+bias2mat=(meanmat-matrix(rep(true_y,maxK),byrow=TRUE,nrow=maxK))^2 #here the truth is finally used!
+
+# preparing to plot
+df=data.frame(rep(x,each=maxK),rep(1:maxK,length(x)),c(bias2mat),c(varmat),rep(4,prod(dim(varmat)))) #irr is just 4
+colnames(df)=c("x","K","bias2","variance","irreducible error") #suitable for plotting
+df$total=df$bias2+df$variance+df$`irreducible error`
+hdf=melt(df,id=c("x","K"))
+# averaged over all x - to compare to train and test MSE
+hdfmean=
+  hdf %>%
+  group_by(K,variable) %>%
+  summarise (mean_value=mean(value))
+ggplot(data=hdfmean[hdfmean[,1]<31,],aes(x=K,y=mean_value,colour=variable))+geom_line()+ggtitle("averaged over all x")
+
+# extra: what about different values of x?
+hdfatxa=hdf[hdf$x==-2,]
+hdfatxb=hdf[hdf$x==0,]
+hdfatxc=hdf[hdf$x==1,]
+hdfatxd=hdf[hdf$x==2.5,]
+pa=ggplot(data=hdfatxa,aes(x=K,y=value,colour=variable))+geom_line()+ggtitle("x0=-2")
+pb=ggplot(data=hdfatxb,aes(x=K,y=value,colour=variable))+geom_line()+ggtitle("x0=0")
+pc=ggplot(data=hdfatxc,aes(x=K,y=value,colour=variable))+geom_line()+ggtitle("x0=1")
+pd=ggplot(data=hdfatxd,aes(x=K,y=value,colour=variable))+geom_line()+ggtitle("x0=2.5")
+ggarrange(pa,pb,pc,pd)
+```
+
+\normalsize
+
+## Problem 3: Theory and practice - MSEtrain, MSEtest, and bias-variance
+
+We will now look closely into the simulations and calculations performed for the MSEtrain, MSEtest, and bias-variance trade-off in PartA. 
+
+* The simulations are based on $f(x)=x^2$ and normal noise with mean 0 and standard deviation 2 is added. 
+* $x$ is on a 0.1 grid from -2 to 4 (61 values).
+* Parametric models of different complexity are fitted - poly1-poly20.
+* M=100 simulations are done.
+
+The aim of this problem is to understand:
+
+* trainMSE
+* testMSE
+* bias-variance trade-off
+
+---
+
+###a) Problem set-up
+
+* See the code below. Explain what is done. (You need not understand the code in detail.) Run the code.
+* We will learn more about the `lm` function in M 3 - now just think of this as fitting a polynomial regression and predict gives the fitted curve in our grid points. `predarray` is just a way to save M simulations of 61 gridpoints in x and 20 polynomial models.
+
+```{r, Problem2a,eval=FALSE}
+library(ggplot2)
+library(ggpubr)
+set.seed(2) # to reproduce
+
+M=100 # repeated samplings, x fixed 
+nord=20 # order of polynoms
+
+
+x = seq(-2, 4, 0.1)
+truefunc=function(x) return(x^2)
+true_y = truefunc(x)
+
+error = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
+ymat = matrix(rep(true_y,M),byrow=T,nrow=M) + error
+
+predarray=array(NA,dim=c(M,length(x),nord))
+for (i in 1:M)
+{
+  for (j in 1:nord)
+  {
+    predarray[i,,j]=predict(lm(ymat[i,]~poly(x,j,raw=TRUE)))
+  }
+}
+# M matrices of size length(x) times nord
+# first, only look at variablity in the M fits and plot M curves where we had 1
+
+# for plotting need to stack the matrices underneath eachother and make new variable "rep"
+stackmat=NULL
+for (i in 1:M) stackmat=rbind(stackmat,cbind(x,rep(i,length(x)),predarray[i,,]))
+#dim(stackmat)
+colnames(stackmat)=c("x","rep",paste("poly",1:20,sep=""))
+sdf=as.data.frame(stackmat) #NB have poly1-20 now - but first only use 1,2,20
+# to add true curve using stat_function - easiest solution
+true_x=x
+yrange=range(apply(sdf,2,range)[,3:22])
+p1=ggplot(data=sdf,aes(x=x,y=poly1,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p1=p1+stat_function(fun=truefunc,lwd=1.3,colour="black")+ggtitle("poly1")
+p2=ggplot(data=sdf,aes(x=x,y=poly2,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p2=p2+stat_function(fun=truefunc,lwd=1.3,colour="black")+ggtitle("poly2")
+p10=ggplot(data=sdf,aes(x=x,y=poly10,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p10=p10+stat_function(fun=truefunc,lwd=1.3,colour="black")+ggtitle("poly10")
+p20=ggplot(data=sdf,aes(x=x,y=poly20,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p20=p20+stat_function(fun=truefunc,lwd=1.3,colour="black")+ggtitle("poly20")
+ggarrange(p1,p2,p10,p20)
+```
+
+---
+
+###b) Train and test MSE
+
+* First we produce predictions at each grid point based on our training data (`x` and `ymat`)
+* but we also draw new observations to calculate testMSE - see `testymat`
+* observe how trainMSE and testMSE is calculated
+* run the code
+
+```{r 2btraintestMSE,eval=FALSE}
+set.seed(2) # to reproduce
+
+M=100 # repeated samplings,x fixed but new errors
+nord=20
+x = seq(-2, 4, 0.1)
+truefunc=function(x) return(x^2)
+true_y = truefunc(x)
+
+error = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
+testerror = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
+ymat = matrix(rep(true_y,M),byrow=T,nrow=M) + error
+testymat = matrix(rep(true_y,M),byrow=T,nrow=M) + testerror
+
+predarray=array(NA,dim=c(M,length(x),nord))
+for (i in 1:M)
+{
+  for (j in 1:nord)
+  {
+    predarray[i,,j]=predict(lm(ymat[i,]~poly(x,j,raw=TRUE)))
+  }
+}  
+trainMSE=matrix(ncol=nord,nrow=M)
+for (i in 1:M) trainMSE[i,]=apply((predarray[i,,]-ymat[i,])^2,2,mean)
+testMSE=matrix(ncol=nord,nrow=M)
+for (i in 1:M) testMSE[i,]=apply((predarray[i,,]-testymat[i,])^2,2,mean)
+```
+
+* Then we plot train and testMSE - first for one train + test data set, then for 99 more.
+
+```{r 2btraintestplots,eval=FALSE}
+library(ggplot2)
+library(ggpubr)
+
+# format suitable for plotting 
+stackmat=NULL
+for (i in 1:M) stackmat=rbind(stackmat,cbind(rep(i,nord),1:nord,trainMSE[i,],testMSE[i,]))
+colnames(stackmat)=c("rep","poly","trainMSE","testMSE")
+sdf=as.data.frame(stackmat) 
+yrange=range(sdf[,3:4])
+p1=ggplot(data=sdf[1:nord,],aes(x=poly,y=trainMSE))+scale_y_continuous(limits=yrange)+geom_line()
+pall= ggplot(data=sdf,aes(x=poly,group=rep,y=trainMSE,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+testp1=ggplot(data=sdf[1:nord,],aes(x=poly,y=testMSE))+scale_y_continuous(limits=yrange)+geom_line()
+testpall= ggplot(data=sdf,aes(x=poly,group=rep,y=testMSE,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+ggarrange(p1,pall,testp1,testpall)
+```
+
+* More plots: first boxplot and then mean for train and test MSE
+
+```{r 2btraintestbox,eval=FALSE}
+library(reshape2)
+df=melt(sdf,id=c("poly","rep"))[,-2]
+colnames(df)[2]="MSEtype"
+ggplot(data=df,aes(x=as.factor(poly),y=value))+geom_boxplot(aes(fill=MSEtype))
+```
+
+```{r 2btraintestmean,eval=FALSE}
+trainMSEmean=apply(trainMSE,2,mean)
+testMSEmean=apply(testMSE,2,mean)
+meandf=melt(data.frame(cbind("poly"=1:nord,trainMSEmean,testMSEmean)),id="poly")
+ggplot(data=meandf,aes(x=poly,y=value,colour=variable))+geom_line()
+```
+
+---
+
+###c) Bias and variance - we use the truth!
+
+Finally, we want to see how the expected quadratic loss can be decomposed into 
+
+* irreducible error: $\text{Var}(\varepsilon)=4$
+* squared bias: difference between mean of estimated parametric model chosen and the true underlying curve (`truefunc`)
+* variance: variance of the estimated parametric model
+
+Notice that the test data is not used - only predicted values in each x grid point.
+
+Study and run the code. Explain the plots produced.
+
+```{r 2bbiasvariance,eval=FALSE}
+meanmat=matrix(ncol=length(x),nrow=nord)
+varmat=matrix(ncol=length(x),nrow=nord)
+for (j in 1:nord)
+{
+  meanmat[j,]=apply(predarray[,,j],2,mean) # we now take the mean over the M simulations - to mimic E and Var at each x value and each poly model
+  varmat[j,]=apply(predarray[,,j],2,var)
+}
+# nord times length(x)
+bias2mat=(meanmat-matrix(rep(true_y,nord),byrow=TRUE,nrow=nord))^2 #here the truth is finally used!
+```
+
+* Plotting the polys as a function of x
+
+```{r 2bbiasvariance1, eval=FALSE}
+df=data.frame(rep(x,each=nord),rep(1:nord,length(x)),c(bias2mat),c(varmat),rep(4,prod(dim(varmat)))) #irr is just 1
+colnames(df)=c("x","poly","bias2","variance","irreducible error") #suitable for plotting
+df$total=df$bias2+df$variance+df$`irreducible error`
+hdf=melt(df,id=c("x","poly"))
+hdf1=hdf[hdf$poly==1,]
+hdf2=hdf[hdf$poly==2,]
+hdf10=hdf[hdf$poly==10,]
+hdf20=hdf[hdf$poly==20,]
+
+p1=ggplot(data=hdf1,aes(x=x,y=value,colour=variable))+geom_line()+ggtitle("poly1")
+p2=ggplot(data=hdf2,aes(x=x,y=value,colour=variable))+geom_line()+ggtitle("poly2")
+p10=ggplot(data=hdf10,aes(x=x,y=value,colour=variable))+geom_line()+ggtitle("poly10")
+p20=ggplot(data=hdf20,aes(x=x,y=value,colour=variable))+geom_line()+ggtitle("poly20")
+ggarrange(p1,p2,p10,p20)
+```
+
+* Now plotting effect of more complex model at 4 chosen values of x, compare to Figures in 2.12 on page 36 in ISL (our textbook).
+
+```{r 2bbiasvariance2,echo=TRUE, eval=FALSE}
+hdfatxa=hdf[hdf$x==-1,]
+hdfatxb=hdf[hdf$x==0.5,]
+hdfatxc=hdf[hdf$x==2,]
+hdfatxd=hdf[hdf$x==3.5,]
+pa=ggplot(data=hdfatxa,aes(x=poly,y=value,colour=variable))+geom_line()+ggtitle("x0=-1")
+pb=ggplot(data=hdfatxb,aes(x=poly,y=value,colour=variable))+geom_line()+ggtitle("x0=0.5")
+pc=ggplot(data=hdfatxc,aes(x=poly,y=value,colour=variable))+geom_line()+ggtitle("x0=2")
+pd=ggplot(data=hdfatxd,aes(x=poly,y=value,colour=variable))+geom_line()+ggtitle("x0=3.5")
+ggarrange(pa,pb,pc,pd)
+```
+
+---
+
+###d) Repeat a-c 
+
+* Then try to change the true function `truefunc` to something else - mayby order 3? What does this do the the plots produced? Maybe you then also want to plot poly3?
+* Also try to change the standard deviation of the noise added to the curve (now it is sd=2). What happens if you change this to sd=1 or sd=3?
+* Or, change to the true function that is not a polynomial?
+
+---
+
+# Exam problems
+
+## MCQ-type problems 
+to come
+
+## Exam 2018 Problem 2: And important decomposition in regression
+
+We have a univariate continuous random variable $Y$ and a covariate $x$. Further, we have observed a training set of independent observation pairs $\{x_i, y_i\}$ for $i=1,\ldots,n$.
+
+Assume a regression model 
+$$Y_i  = f(x_i) + \varepsilon_i$$ 
+where $f$ is the true regression function, and $\varepsilon_i$ is an unobserved random variable with mean zero and constant variance $\sigma^2$ (not dependent on the covariate). Using the training set we can find an estimate of the regression function $f$, and we denote this by $\hat{f}$. We want to use $\hat{f}$ to make a prediction for a new observation (not dependent on the observations in the training set) at a covariate value $x_0$. The predicted response value is then $\hat{f}(x_0)$. We are interested in the error associated with this prediction.
+
+**Q5:** Write down the definition of the expected test mean squared error (MSE) at $x_0$.
+
+<!-- The _expected test mean squared error (MSE) at $x_0$_ is defined as: -->
+<!-- $$\text{E}[Y - \hat{f}(x_0)]^2$$ -->
+
+**Q6:** Derive the decomposition of the expected test MSE into three terms.
+
+<!-- Useful rule: $\text{Var}[Y]=\text{E}[Y^2]-\text{E}[Y]^2$. -->
+
+<!-- $$\text{E}[Y - \hat{f}(x_0)]^2 = \text{E}[Y^2 + \hat{f}(x_0)^2 - 2 Y \hat{f}(x_0)] $$ -->
+<!-- $$= \text{E}[Y^2] + \text{E}[\hat{f}(x_0)^2] - \text{E}[2Y \hat{f}(x_0)]$$ -->
+<!-- The new $Y$ is independent of the estimated $\hat{f}(x_0)$. -->
+<!-- $$= \text{Var}[Y] + \text{E}[Y]^2 + \text{Var}[\hat{f}(x_0)] + \text{E}[\hat{f}(x_0)]^2 - 2 \text{E}[Y]\text{E}[\hat{f}(x_0)] $$ -->
+<!-- Now, $\text{E}[Y]=f(x_0)$. -->
+<!-- $$= \text{Var}[Y]+f(x_0)^2+\text{Var}[\hat{f}(x_0)]+\text{E}[\hat{f}(x_0)]^2-2f(x_0)\text{E}[\hat{f}(x_0)]$$ -->
+<!-- $$= \text{Var}[Y]+\text{Var}[\hat{f}(x_0)]+(f(x_0)-\text{E}[\hat{f}(x_0)])^2$$ -->
+<!-- Finally $\text{Var}[Y]=\text{Var}(\varepsilon)=\sigma^2$. -->
+<!-- $$= \text{Var}(\varepsilon) +  \text{Var}[\hat{f}(x_0)]+[\text{Bias}(\hat{f}(x_0))]^2.$$ -->
+<!-- Therefore: -->
+<!-- $$\text{E}[(Y - \hat{f}(x_0))^2]=\text{Var}(\varepsilon) +  \text{Var}[\hat{f}(x_0)]+[\text{Bias}(\hat{f}(x_0))]^2$$ -->
+
+<!-- Common mistakes: Confusion on what is $\text{E}[Y]$, and different definisions of what is the bias. Since the problme said to "derive" points were deducted if the student skipped important steps in the derivation. This derivation had been given on many problem sets during the course. -->
+
+**Q7:** Explain with words how we can interpret the three terms.
+<!-- $$\text{E}[(Y - \hat{f}(x_0))^2]=\text{Var}(\varepsilon) +  \text{Var}[\hat{f}(x_0)]+[\text{Bias}(\hat{f}(x_0))]^2$$ -->
+
+<!-- * First term: irreducible error, $\sigma^2$ and is always present unless we have measurements without error. This term cannot be reduced regardless how well our statistical model fits the data.  -->
+<!-- * Second term: variance of the prediction at $x_0$ or the expected deviation around the mean at $x_0$. If the variance is high, there is large uncertainty associated with the prediction.  -->
+<!-- * Third term: squared bias. The bias gives an estimate of how much the prediction differs from the true mean $f(x_0)$. If the bias is low the model gives a prediction which is close to the true value. -->
+
+Assume that we have a method to estimate the regression function, where this method has a tuning parameter that controls the complexity of the model and that a large value of the tuning parameter gives high model complexity. 
+
+**Q8:** Make a sketch of how the expected test MSE (at $x_0$) and the decomposition into three terms could look as a function of the tuning parameter.
+
+<!-- The figures below are from our textbook and for the expected test MSE averaged over all values of $x_0$, but for a given $x_0$ this might look similar. -->
+
+<!-- ![ISLR Figure 2.12](../ISLR/Chapter2/2.12.png) -->
+
+This decomposition has played a central role in our course.
+
+<!-- Common mistakes: not so many, but some swapped the bias and variance curves. -->
+
+**Q9:** In your opinion, what is the most important implication of this decomposition? Answer with _only one_ sentence.
+
+<!-- A too complex model will give a small bias but high variance-- so we cannot win by overfittng! -->
+
+# <a id="further"> Further reading/resources</a>
+
+* [Videoes on YouTube by the authors of ISL, Chapter 2](https://www.youtube.com/playlist?list=PL5-da3qGB5IDvuFPNoSqheihPOQNJpzyy)
+
+
+# <a id="Rpackages"> R packages</a>
+
+If you want to look at the .Rmd file and `knit` it, you need to first install the following packages (only once).
+
+```{r eval=FALSE,include=TRUE}
+install.packages("knitr")
+install.packages("kableExtra")
+install.packages("rmarkdown")
+install.packages("devtools")
+install.packages("ggplot2")
+install.packages("ggpubr")
+install.packages("dplyr")
+install.packages("reshape2")
+install.packages("ElemStatLearn")
+install.packages("GGally")
+install.packages("class")
+install.packages("mvtnorm")
+install.packages("MASS")
+install.packages("car")
+install.packages("faraway")
+install.packages("reshape")
+```
+
+# Acknowledgements
+
+Thanks to Julia Debik for contributing to this module page.
+

@@ -1,0 +1,1258 @@
+\documentclass[ignorenonframetext,]{beamer}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+\usetheme[]{Singapore}
+\usefonttheme{serif}
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\newif\ifbibliography
+\hypersetup{
+            pdftitle={Module 2, Part 2: Random vectors, covariance, multivariate Normal distribution},
+            pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
+            colorlinks=true,
+            linkcolor=Maroon,
+            citecolor=Blue,
+            urlcolor=blue,
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight0.8\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+
+\AtBeginPart{
+  \let\insertpartnumber\relax
+  \let\partname\relax
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \let\insertsectionnumber\relax
+    \let\sectionname\relax
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \let\insertsubsectionnumber\relax
+  \let\subsectionname\relax
+  \frame{\subsectionpage}
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+\usepackage{xcolor}
+
+\title{Module 2, Part 2: Random vectors, covariance, multivariate Normal
+distribution}
+\subtitle{TMA4268 Statistical Learning V2020}
+\author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
+\date{January xx, 2020}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Overview}
+
+\normalsize
+
+\begin{itemize}
+\item
+  Random vectors,
+\item
+  The covariance and correlation matrix and
+\item
+  The multivariate normal distribution
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Random vector}
+
+\begin{itemize}
+\tightlist
+\item
+  A random vector \(\mathbf{X}_{(p\times 1)}\) is a \(p\)-dimensional
+  vector of random variables.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Weight of cork deposits in \(p=4\) directions (N, E, S, W).
+  \item
+    Rent index in Munich: rent, area, year of construction, location,
+    bath condition, kitchen condition, central heating, district.
+  \end{itemize}
+\item
+  Joint distribution function: \(f(\mathbf{x})\).
+\item
+  From joint distribution function to marginal (and conditional
+  distributions).
+  \[f_1(x_1)=\int_{-\infty}^{\infty}\cdots \int_{-\infty}^{\infty} f(x_1,x_2,\ldots,x_p)dx_2 \cdots dx_p\]
+\item
+  Cumulative distribution (definite integrals!) used to calculate
+  probabilites.
+\item
+  Independence: \(f(x_1,x_2)=f_1(x_1)\cdot f(x_2)\) and
+  \(f(x_1\mid x_2)=f_1(x_1).\)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Moments}
+
+\vspace{2mm}
+
+The moments are important properties about the distribution of
+\(\mathbf{X}\). We will look at:
+
+\begin{itemize}
+\tightlist
+\item
+  E: Mean of random vector and random matrices.
+\item
+  Cov: Covariance matrix.
+\item
+  Corr: Correlation matrix.
+\item
+  E and Cov of multiple linear combinations.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{The Cork deposit data}
+
+\begin{itemize}
+\tightlist
+\item
+  Classical multivariate data set from Rao (1948).
+\item
+  Weigth of bark deposits of \(n=28\) cork trees in \(p=4\) directions
+  (N, E, S, W).
+\end{itemize}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corkds =}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(}\KeywordTok{read.table}\NormalTok{(}\StringTok{"https://www.math.ntnu.no/emner/TMA4268/2019v/data/corkMKB.txt"}\NormalTok{))}
+\KeywordTok{dimnames}\NormalTok{(corkds)[[}\DecValTok{2}\NormalTok{]] =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"N"}\NormalTok{, }\StringTok{"E"}\NormalTok{, }\StringTok{"S"}\NormalTok{, }\StringTok{"W"}\NormalTok{)}
+\KeywordTok{head}\NormalTok{(corkds)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##       N  E  S  W
+## [1,] 72 66 76 77
+## [2,] 60 53 66 63
+## [3,] 56 57 64 58
+## [4,] 41 29 36 38
+## [5,] 32 32 35 36
+## [6,] 30 35 34 26
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{dim}\NormalTok{(corkds)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 28  4
+\end{verbatim}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\item
+  Here we have a random sample of \(n=28\) cork trees from the
+  population and observe a \(p=4\) dimensional random vector for each
+  tree.
+\item
+  This leads us to the definition of random vectors and a random matrix
+  for cork trees:
+\end{itemize}
+
+\[\mathbf{X}_{(28 \times 4)}=\left[ \begin{array}{cccc}X_{11} & X_{12} & X_{13}& X_{14}\\ X_{21} & X_{22} & X_{23}& X_{24}\\ X_{31} & X_{32} & X_{33}& X_{34}\\ \vdots & \vdots & \ddots & \vdots\\ X_{28,1} & X_{28,2} & X_{28,3}& X_{28,4}\\ \end{array} \right]\]
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Rules for means}
+
+\begin{itemize}
+\tightlist
+\item
+  Random vector \(\mathbf{X}_{(p\times 1)}\) with mean vector
+  \(\mathbf{\mu}_{(p\times 1)}\):
+\end{itemize}
+
+\[\mathbf{X}_{(p\times 1)}=\left[ \begin{array}{c}X_1\\ X_2\\ \vdots\\ X_p\\ \end{array}\right], \text{ and }\mathbf{\mu}_{(p \times 1)}=\text{E}(\mathbf{X})=\left[ \begin{array}{c}\text{E}(X_1)\\ \text{E}(X_2)\\ \vdots\\ \text{E}(X_p)\\ \end{array}\right]\]
+
+\(\rightarrow\) Observe that \(\text{E}(X_j)\) is calculated from the
+marginal distribution of \(X_j\) and contains no information about
+dependencies between \(X_{j}\) and \(X_k\), \(k\neq j\).
+
+\begin{itemize}
+\tightlist
+\item
+  Random matrix \(\mathbf{X}_{(n\times p)}\) and random matrix
+  \(\mathbf{Y}_{(n\times p)}\):
+  \[\text{E}(\mathbf{X}+\mathbf{Y})=\text{E}(\mathbf{X})+\text{E}(\mathbf{Y})\]
+\end{itemize}
+
+(Rules of vector addition)
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\tightlist
+\item
+  Random matrix \(\mathbf{X}_{(n\times p)}\) and conformable constant
+  matrices \(\mathbf{A}\) and \(\mathbf{B}\):
+  \[\text{E}(\mathbf{A}\mathbf{X}\mathbf{B})=\mathbf{A}\text{E}(\mathbf{X})\mathbf{B}\]
+  Proof: Look at element \((i,j)\) of \(\mathbf{A}\mathbf{X}\mathbf{B}\)
+  \[e_{ij}=\sum_{k=1}^n a_{ik} \sum_{l=1}^p X_{kl}b_{lj}\] (where
+  \(a_{ik}\) and \(b_{lj}\) are elements of \(\mathbf{A}\) and
+  \(\mathbf{B}\) respectively), and see that \(\text{E}(e_{ij})\) is the
+  element \((i,j)\) if \(\mathbf{A}\text{E}(\mathbf{X})\mathbf{B}\).
+\end{itemize}
+
+\textbf{Q}: what are the univariate analog to this formula - that you
+studied in your first introductory course in statistics? What do you
+think happens if we look at
+\(\text{E}(\mathbf{A}\mathbf{X}\mathbf{B})+\mathbf{d}\)?
+
+\textbf{A}: \[\text{E}(aX+b)=a \text{E}(X)+b\]
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The covariance}
+
+\vspace{2mm}
+
+In the introductory statistics course we defined the covariance
+
+\begin{align*}
+\rho_{ij} & =\text{Cov}(X_i,X_j)  =\text{E}[(X_i-\mu_i)(X_j-\mu_j)] \\
+& =\text{E}(X_i \cdot X_j)-\mu_i\mu_j \ . 
+\end{align*}
+
+\begin{itemize}
+\tightlist
+\item
+  What is the covariance called when \(i=j\)?
+\item
+  What does it mean when the covariance is
+
+  \begin{itemize}
+  \tightlist
+  \item
+    negative
+  \item
+    zero
+  \item
+    positive?
+  \end{itemize}
+\end{itemize}
+
+Make a scatter plot to show this.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Variance-covariance matrix}
+
+\begin{itemize}
+\item
+  Consider random vector \(\mathbf{X}_{(p\times 1)}\) with mean vector
+  \(\mathbf{\mu}_{(p\times 1)}\):
+  \[\mathbf{X}_{(p\times 1)} =\left[ \begin{array}{c} X_1\\ X_2\\ \vdots\\ X_p\\ \end{array} \right], \text{ and }\mathbf{\mu}_{(p\times 1)} =\text{E}(\mathbf{X})=\left[ \begin{array}{c} \text{E}(X_1)\\ \text{E}(X_2)\\ \vdots\\ \text{E}(X_p)\\ \end{array}\right]\]
+\item
+  Variance-covariance matrix \(\mathbf\Sigma\) (real and symmetric)
+
+  \begin{align*}
+  \mathbf\Sigma & =\text{Cov}(\mathbf{X})  
+  =\text{E}[(\mathbf{X}-\mathbf{\mu})(\mathbf{X}-\mathbf{\mu})^T] \\
+  & = \left[ \begin{array}{cccc} \sigma_{11} & \sigma_{12} & \cdots & \sigma_{1p}\\ \sigma_{12} & \sigma_{22} & \cdots & \sigma_{2p}\\ \vdots & \vdots & \ddots & \vdots\\ \sigma_{1p} & \sigma_{2p} & \cdots & \sigma_{pp}\\ \end{array}  \right] 
+   = \text{E}(\mathbf{X}\mathbf{X}^T)-\mathbf{\mu}\mathbf{\mu}^T
+  \end{align*}
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\item
+  The diagonal elements in \(\mathbf\Sigma\),
+  \(\sigma_{ii}=\sigma_i^2\), are variances.
+\item
+  The off-diagonal elements are covariances
+  \(\sigma_{ij}=\text{E}[(X_i-\mu_i)(X_j-\mu_j)]=\sigma_{ji}\).
+\item
+  \(\mathbf\Sigma\) is called variance, covariance and
+  variance-covariance matrix and denoted both \(\text{Var}(\mathbf{X})\)
+  and \(\text{Cov}(\mathbf{X})\).
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Exercise: the variance-covariance matrix}
+
+Let \(\mathbf{X}_{4\times 1}\) have variance-covariance matrix
+\[\mathbf\Sigma= \left[ \begin{array}{cccc} 2&1&0&0\\
+      1&2&0&1\\
+      0&0&2&1\\
+      0&1&1&2\\
+          \end{array}
+          \right].\]
+
+Explain what this means.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Correlation matrix}
+
+\(~\)
+
+Correlation matrix \(\mathbf{\rho}\) (real and symmetric)
+\[\mathbf{\rho}=\left[ \begin{array}{cccc}
+    \frac{\sigma_{11}}{\sqrt{\sigma_{11}\sigma_{11}}} &
+    \frac{\sigma_{12}}{\sqrt{\sigma_{11}\sigma_{22}}} &
+    \cdots &
+    \frac{\sigma_{1p}}{\sqrt{\sigma_{11}\sigma_{pp}}}\\
+    \frac{\sigma_{12}}{\sqrt{\sigma_{11}\sigma_{22}}} &
+    \frac{\sigma_{22}}{\sqrt{\sigma_{22}\sigma_{22}}} &
+    \cdots &
+    \frac{\sigma_{2p}}{\sqrt{\sigma_{22}\sigma_{pp}}}\\
+    \vdots & \vdots & \ddots & \vdots\\
+      \frac{\sigma_{1p}}{\sqrt{\sigma_{11}\sigma_{pp}}} &
+    \frac{\sigma_{2p}}{\sqrt{\sigma_{22}\sigma_{pp}}} &
+    \cdots &
+    \frac{\sigma_{pp}}{\sqrt{\sigma_{pp}\sigma_{pp}}}\\ \end{array}\right]=
+ \left[ \begin{array}{cccc}
+    1 & \rho_{12} & \cdots & \rho_{1p}\\
+    \rho_{12} & 1 & \cdots & \rho_{2p}\\
+    \vdots & \vdots & \ddots & \vdots\\
+    \rho_{1p} & \rho_{2p} & \cdots & 1\\
+\end{array}\right]\]
+
+\[\mathbf{\rho}=(\mathbf{V}^{\frac{1}{2}})^{-1}
+    \mathbf\Sigma(\mathbf{V}^{\frac{1}{2}})^{-1}, \text{   where    }
+   \mathbf{V}^{\frac{1}{2}}=
+ \left[ \begin{array}{cccc}
+    \sqrt{\sigma_{11}} & 0& \cdots & 0\\
+    0 & \sqrt{\sigma_{22}} & \cdots & 0\\
+    \vdots & \vdots & \ddots & \vdots\\
+    0 & 0 & \cdots & \sqrt{\sigma_{pp}}\\
+\end{array} \right]\]
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Exercise: the correlation matrix}
+
+\(~\)
+
+Let \(\mathbf{X}_{4\times 1}\) have variance-covariance matrix
+\[\mathbf\Sigma= \left[ \begin{array}{cccc} 2&1&0&0\\
+      1&2&0&1\\
+      0&0&2&1\\
+      0&1&1&2\\
+          \end{array}
+          \right].\] Find the correlation matrix.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\textbf{A}: \[\rho=\left[ \begin{array}{cccc} 1&0.5&0&0\\
+      0.5&1&0&0.5\\
+      0&0&1&0.5\\
+      0&0.5&0.5&1\\
+          \end{array}
+          \right]\]
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Linear combinations}
+
+\(~\)
+
+Consider a random vector \(\mathbf{X}_{(p\times 1)}\) with mean vector
+\(\mathbf{\mu}=\text{E}(\mathbf{X})\) and variance-covariance matrix
+\(\mathbf\Sigma=\text{Cov}(\mathbf{X})\).
+
+The linear combinations
+\[\mathbf{Z}=\mathbf{C}\mathbf{X}=\left[ \begin{array}{c} \sum_{j=1}^p c_{1j}X_j\\ \sum_{j=1}^p c_{2j}X_j\\ \vdots \\ \sum_{j=1}^p c_{kj}X_j \end{array} \right]\]
+have
+\[\text{E}(\mathbf{Z})=\text{E}(\mathbf{C}\mathbf{X})=\mathbf{C}\mathbf{\mu}\]
+\[\text{Cov}(\mathbf{Z})=\text{Cov}(\mathbf{C}\mathbf{X})=
+   \mathbf{C}\mathbf\Sigma\mathbf{C}^T\]
+
+\href{https://www.math.ntnu.no/emner/TMA4268/2018v/notes/CXproof.pdf}{Proof}
+
+\textbf{Exercise:} Study the proof - what are the most important
+transitions? (todo: study proof in Stahel and perhaps show on board)
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Exercise: Linear combinations}
+
+\[\mathbf{X}=\left[ \begin{array}{c} X_N\\
+          X_E\\
+X_S\\
+          X_W\\
+          \end{array}
+          \right]k
+          \mathbf{\mu}=\left[
+      \begin{array}{c} \mu_N\\
+          \mu_E\\
+\mu_S\\
+          \mu_W\\
+          \end{array}
+          \right], \text{ and } \mathbf\Sigma=\left[ \begin{array}{cccc}
+    \sigma_{NN} & \sigma_{NE} & \sigma_{NS} & \sigma_{NW}\\
+    \sigma_{NE} & \sigma_{EE} & \sigma_{ES}& \sigma_{EW}\\
+        \sigma_{NS} & \sigma_{EE} & \sigma_{SS}& \sigma_{SW}\\
+    \sigma_{NW} & \sigma_{EW} & \sigma_{SW} & \sigma_{WW}\\
+\end{array} \right]\]
+
+Scientists would like to compare the following three \emph{contrasts}:
+N-S, E-W and (E+W)-(N+S), and define a new random vector
+\(\mathbf{Y}_{(3\times 1)}=\mathbf{C}_{(3\times 4)} \mathbf{X}_{(4\times 1)}\)
+giving the three contrasts.
+
+\begin{itemize}
+\tightlist
+\item
+  Write down \(\mathbf{C}\).
+\item
+  Explain how to find \(\text{E}(Y_1)\) and \(\text{Cov}(Y_1,Y_3)\).
+\item
+  Use R to find the mean vector, covariance matrix and correlations
+  matrix of \(\mathbf{Y}\), when the mean vector and covariance matrix
+  for \(\mathbf{X}\) is given below.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corkds <-}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(}\KeywordTok{read.table}\NormalTok{(}\StringTok{"https://www.math.ntnu.no/emner/TMA4268/2019v/data/corkMKB.txt"}\NormalTok{))}
+\KeywordTok{dimnames}\NormalTok{(corkds)[[}\DecValTok{2}\NormalTok{]] <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"N"}\NormalTok{, }\StringTok{"E"}\NormalTok{, }\StringTok{"S"}\NormalTok{, }\StringTok{"W"}\NormalTok{)}
+\NormalTok{mu =}\StringTok{ }\KeywordTok{apply}\NormalTok{(corkds, }\DecValTok{2}\NormalTok{, mean)}
+\NormalTok{mu}
+\NormalTok{Sigma =}\StringTok{ }\KeywordTok{var}\NormalTok{(corkds)}
+\NormalTok{Sigma}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        N        E        S        W 
+## 50.53571 46.17857 49.67857 45.17857 
+##          N        E        S        W
+## N 290.4061 223.7526 288.4378 226.2712
+## E 223.7526 219.9299 229.0595 171.3743
+## S 288.4378 229.0595 350.0040 259.5410
+## W 226.2712 171.3743 259.5410 226.0040
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(C <-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{-1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{-1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{-1}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{byrow =}\NormalTok{ T, }\DataTypeTok{nrow =} \DecValTok{3}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      [,1] [,2] [,3] [,4]
+## [1,]    1    0   -1    0
+## [2,]    0    1    0    1
+## [3,]   -1    1   -1    1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{C }\OperatorTok{%*%}\StringTok{ }\NormalTok{Sigma }\OperatorTok{%*%}\StringTok{ }\KeywordTok{t}\NormalTok{(C)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           [,1]       [,2]       [,3]
+## [1,]  63.53439  -38.57672   21.02116
+## [2,] -38.57672  788.68254 -149.94180
+## [3,]  21.02116 -149.94180  128.71958
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The covariance matrix - more requirements?}
+
+\(~\)
+
+Random vector \(\mathbf{X}_{(p\times 1)}\) with mean vector
+\(\mathbf{\mu}_{(p\times 1)}\) and covariance matrix
+\[\mathbf\Sigma=\text{Cov}(\mathbf{X})=\text{E}[(\mathbf{X}-\mathbf{\mu})(\mathbf{X}-\mathbf{\mu})^T]=
+\left[ \begin{array}{cccc}
+    \sigma_{11} & \sigma_{12} & \cdots & \sigma_{1p}\\
+    \sigma_{12} & \sigma_{22} & \cdots & \sigma_{2p}\\
+    \vdots & \vdots & \ddots & \vdots\\
+    \sigma_{1p} & \sigma_{2p} & \cdots & \sigma_{pp}\\
+\end{array} \right]\]
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\tightlist
+\item
+  The covariance matrix is by construction symmetric, and it is common
+  to require that the covariance matrix is positive semidefinite. This
+  means that, for every vector \(\mathbf{b}\neq \mathbf{0}\)
+\end{itemize}
+
+\[\mathbf{b}^T \mathbf{\Sigma} \mathbf{B} \geq 0 \ .\]
+
+\begin{itemize}
+\tightlist
+\item
+  Why do you think that is?
+\end{itemize}
+
+Hint: Is it possible that the variance of the linear combination
+\(\mathbf{Y}=\mathbf{b}^T\mathbf{X}\) is negative?
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Multiple choice - random vectors}
+
+\vspace{2mm}
+
+Choose the correct answer - time limit was 30 seconds for each question!
+Let's go!
+
+\begin{block}{Question 1: Mean of sum}
+
+\vspace{2mm}
+
+\(\mathbf{X}\) and \(\mathbf{Y}\) are two bivariate random vectors with
+\(\text{E}(\mathbf{X})=(1,2)^T\) and \(\text{E}(\mathbf{Y})=(2,0)^T\).
+What is \(\text{E}(\mathbf{X}+\mathbf{Y})\)?
+
+\begin{itemize}
+\tightlist
+\item
+  A: \((1.5,1)^T\)
+\item
+  B: \((3,2)^T\)
+\item
+  C: \((-1,2)^ T\)
+\item
+  D: \((1,-2)^T\)
+\end{itemize}
+
+\end{block}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Question 2: Mean of linear combination}
+
+\vspace{2mm}
+
+\(\mathbf{X}\) is a 2-dimensional random vector with
+\(\text{E}(\mathbf{X})=(2,5)^T\) , and \(\mathbf{b}=(0.5, 0.5)^T\) is a
+constant vector. What is \(\text{E}(\mathbf{b}^T\mathbf{X})\)?
+
+\begin{itemize}
+\tightlist
+\item
+  A: 3.5
+\item
+  B: 7
+\item
+  C: 2
+\item
+  D: 5
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Question 3: Covariance}
+
+\vspace{2mm}
+
+\(\mathbf{X}\) is a \(p\)-dimensional random vector with mean
+\(\mathbf{\mu}\). Which of the following defines the covariance matrix?
+
+\begin{itemize}
+\tightlist
+\item
+  A: \(E[(\mathbf{X}-\mathbf{\mu})^T(\mathbf{X}-\mathbf{\mu})]\)
+\item
+  B: \(E[(\mathbf{X}-\mathbf{\mu})(\mathbf{X}-\mathbf{\mu})^T]\)
+\item
+  C: \(E[(\mathbf{X}-\mathbf{\mu})(\mathbf{X}-\mathbf{\mu})]\)\\
+\item
+  D: \(E[(\mathbf{X}-\mathbf{\mu})^T(\mathbf{X}-\mathbf{\mu})^T]\)
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Question 4: Mean of linear combinations}
+
+\vspace{2mm}
+
+\(\mathbf{X}\) is a \(p\)-dimensional random vector with mean
+\(\mathbf{\mu}\) and covariance matrix \(\mathbf\Sigma\). \(\mathbf{C}\)
+is a constant matrix. What is then the mean of the \(k\)-dimensional
+random vector \(\mathbf{Y}=\mathbf{C}\mathbf{X}\)?
+
+\begin{itemize}
+\tightlist
+\item
+  A: \(\mathbf{C}\mathbf{\mu}\)
+\item
+  B: \(\mathbf{C}\mathbf\Sigma\)
+\item
+  C: \(\mathbf{C}\mathbf{\mu}\mathbf{C}^T\)
+\item
+  D: \(\mathbf{C}\mathbf\Sigma\mathbf{C}^T\)
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Question 5: Covariance of linear combinations}
+
+\vspace{2mm}
+
+\(\mathbf{X}\) is a \(p\)-dimensional random vector with mean
+\(\mathbf{\mu}\) and covariance matrix \(\mathbf\Sigma\). \(\mathbf{C}\)
+is a constant matrix. What is then the covariance of the
+\(k\)-dimensional random vector \(\mathbf{Y}=\mathbf{C}\mathbf{X}\)?
+
+\begin{itemize}
+\tightlist
+\item
+  A: \(\mathbf{C}\mathbf{\mu}\)
+\item
+  B: \(\mathbf{C}\mathbf\Sigma\)
+\item
+  C: \(\mathbf{C}\mathbf{\mu}\mathbf{C}^T\)
+\item
+  D: \(\mathbf{C}\mathbf\Sigma\mathbf{C}^T\)
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Question 6: Correlation}
+
+\vspace{2mm}
+
+\(\mathbf{X}\) is a \(2\)-dimensional random vector with covariance
+matrix \[ \mathbf\Sigma= \left[\begin{array}{cc}
+          4 & 0.8 \\
+          0.8 & 1\\
+      \end{array}
+    \right]\] Then the correlation between the two elements of
+\(\mathbf{X}\) are:
+
+\begin{itemize}
+\tightlist
+\item
+  A: 0.10
+\item
+  B: 0.25
+\item
+  C: 0.40
+\item
+  D: 0.80
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Answers:}
+
+1B, 2A, 3B, 4A, 5D, 6C
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{The multivariate normal distribution}
+
+\vspace{2mm}
+
+Why is the mvN so popular?
+
+\begin{itemize}
+\tightlist
+\item
+  Many natural phenomena may be modelled using this distribution (just
+  as in the univariate case).
+\item
+  Multivariate version of the central limit theorem- the sample mean
+  will be approximately multivariate normal for large samples.
+\item
+  Good interpretability of the covariance.
+\item
+  Mathematically tractable.
+\item
+  Building block in many models and methods.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\centering
+\includegraphics[width=0.80000\textwidth]{mvN.jpeg}
+
+3D multivariate Normal distributions
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The multivariate normal (mvN) pdf}
+
+\vspace{2mm}
+
+The random vector \(\mathbf{X}_{p\times 1}\) is multivariate normal
+\(N_p\) with mean \(\mathbf{\mu}\) and (positive definite) covariate
+matrix \(\mathbf\Sigma\). The pdf is:
+
+\[f(\mathbf{x})=\frac{1}{(2\pi)^\frac{p}{2}|\mathbf\Sigma|^\frac{1}{2}} \exp\{-\frac{1}{2}(\mathbf{x}-\mathbf{\mu})^T\mathbf\Sigma^{-1}(\mathbf{x}-\mathbf{\mu})\}\]
+
+\textbf{Questions}:
+
+\begin{itemize}
+\item
+  How does this compare to the univariate version?
+  \[f(x)=\frac{1}{\sqrt{2\pi}\sigma}\exp\{ \frac{1}{2\sigma^2}(x-\mu)^2\}\]
+\item
+  Why do we need the constant in front of the \(\exp\)?
+\item
+  What is the dimension of the part in \(\exp\)?
+\item
+  What happens if the determinant \(|\mathbf\Sigma| = 0\)?
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Six useful properties of the mvN}
+
+\vspace{2mm}
+
+Let \(\mathbf{X}_{(p\times 1)}\) be a random vector from
+\(N_p(\mathbf{\mu},\mathbf\Sigma)\).
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  The grapical contours of the mvN are ellipsoids (can be shown using
+  spectral decomposition).
+\item
+  Linear combinations of components of \(\mathbf{X}\) are (multivariate)
+  normal
+\item
+  All subsets of the components of \(\mathbf{X}\) are (multivariate)
+  normal (special case of the above).
+\item
+  Zero covariance implies that the corresponding components are
+  independently distributed (in contrast to general distributions).
+\end{enumerate}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+All of these are proven in TMA4267 Linear Statistical Models.
+
+The result 4 is rather useful! If you have a bivariate normal and
+observed covariance 0, then your variables are independent.
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Contours of multivariate normal distribution}
+
+\vspace{2mm}
+
+\begin{itemize}
+\item
+  Contours of constant density for the \(p\)-dimensional normal
+  distribution are ellipsoids defined by \(\mathbf{x}\) such that
+  \[ (\mathbf{x}-\mathbf{\mu})^T\mathbf\Sigma^{-1}(\mathbf{x}-\mathbf{\mu})=b \]
+  where \(b>0\) is a constant.
+\item
+  These ellipsoids are centered at \(\mathbf{\mu}\) and have axes
+  \(\pm \sqrt{b \lambda_i}\mathbf{e}_i\), where
+  \(\mathbf\Sigma\mathbf{e}_i=\lambda_i \mathbf{e}_i\), for
+  \(i=1,...,p\).
+\item
+  To see this the spectral decomposition of the covariance matrix is
+  useful.
+\item
+  \((\mathbf{x}-\mathbf{\mu})^T\mathbf\Sigma^{-1}(\mathbf{x}-\mathbf{\mu})\)
+  is distributed as \(\chi^2_p\).
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+Note:
+
+\emph{In M4: Classification the mvN is very important and we will often
+draw contours of the mvN as ellipses- and this is the reason why we do
+that. }
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Identify the mvNs from their contours}
+
+\vspace{4mm}
+
+Let
+\(\mathbf\Sigma=\left[\begin{array}{cc} \sigma_x^2 & \rho\sigma_{x}\sigma_{y}\\\rho\sigma_{x}\sigma_{y}&\sigma_y^2\\ \end{array} \right]\).
+
+\vspace{4mm} The following four figure contours have been generated:
+
+\begin{itemize}
+\tightlist
+\item
+  1: \(\sigma_x=1\), \(\sigma_y=2\), \(\rho=-0.3\)
+\item
+  2: \(\sigma_x=1\), \(\sigma_y=1\), \(\rho=0\)
+\item
+  3: \(\sigma_x=1\), \(\sigma_y=1\), \(\rho=0.5\)
+\item
+  4: \(\sigma_x=1\), \(\sigma_y=2\), \(\rho=0\)
+\end{itemize}
+
+\vspace{8mm}
+
+\textbf{Match the distributions to the figures on the next slide.}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{center}\includegraphics[width=0.65\linewidth]{2StatLearn.2_files/figure-beamer/cont-1} \end{center}
+
+Take a look at the contour plots - when are the contours circles, when
+ellipses?
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Multiple choice - multivariate normal}
+
+\vspace{2mm}
+
+Choose the correct answer - time limit was 30 seconds for each question!
+Let's go!
+
+\vspace{2mm}
+
+\begin{block}{Question 1: Multivariate normal pdf}
+
+\vspace{2mm}
+
+The probability density function is
+\((\frac{1}{2\pi})^\frac{p}{2}\det(\mathbf\Sigma)^{-\frac{1}{2}}\exp\{-\frac{1}{2}Q\}\)
+where \(Q\) is
+
+\begin{itemize}
+\tightlist
+\item
+  A:
+  \((\mathbf{x}-\mathbf{\mu})^T\mathbf\Sigma^{-1}(\mathbf{x}-\mathbf{\mu})\)
+\item
+  B:
+  \((\mathbf{x}-\mathbf{\mu})\mathbf\Sigma(\mathbf{x}-\mathbf{\mu})^T\)
+\item
+  C: \(\mathbf\Sigma-\mathbf{\mu}\)
+\end{itemize}
+
+\end{block}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Question 2: Trivariate normal pdf}
+
+\vspace{2mm}
+
+What graphical form has the solution to \(f(\mathbf{x})=\) constant?
+
+\begin{itemize}
+\tightlist
+\item
+  A: Circle
+\item
+  B: Parabola
+\item
+  C: Ellipsoid
+\item
+  D: Bell shape
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Question 3: Multivariate normal distribution}
+
+\vspace{2mm}
+
+\(\mathbf{X}_p \sim N_p(\mathbf{\mu},\mathbf\Sigma)\), and
+\(\mathbf{C}\) is a \(k \times p\) constant matrix.
+\(\mathbf{Y}=\mathbf{C}\mathbf{X}\) is
+
+\begin{itemize}
+\tightlist
+\item
+  A: Chi-squared with \(k\) degrees of freedom
+\item
+  B: Multivariate normal with mean \(k\mathbf{\mu}\)
+\item
+  C: Chi-squared with \(p\) degrees of freedom
+\item
+  D: Multivariate normal with mean \(\mathbf{C}\mathbf{\mu}\)
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Question 4: Independence}
+
+\vspace{2mm}
+
+Let \(\mathbf{X}\sim N_3(\mathbf{\mu},\mathbf\Sigma)\), with
+\[\mathbf\Sigma= \left[     
+\begin{array}{ccc} 1&1&0\\
+      1&3&2\\
+      0&2&5\\
+          \end{array}
+          \right].\] Which two variables are independent?
+
+\begin{itemize}
+\tightlist
+\item
+  A: \(X_1\) and \(X_2\)
+\item
+  B: \(X_1\) and \(X_3\)
+\item
+  C: \(X_2\) and \(X_3\)
+\item
+  D: None -- but two are uncorrelated.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Question 5: Constructing independent variables?}
+
+\vspace{2mm}
+
+Let \(\mathbf{X}\sim N_p(\mathbf{\mu},\mathbf\Sigma)\). How can I
+construct a vector of independent standard normal variables from
+\(\mathbf{X}\)?
+
+\begin{itemize}
+\tightlist
+\item
+  A: \(\mathbf\Sigma(\mathbf{X}-\mathbf{\mu})\)
+\item
+  B: \(\mathbf\Sigma^{-1}(\mathbf{X}+\mathbf{\mu})\)
+\item
+  C: \(\mathbf\Sigma^{-\frac{1}{2}}(\mathbf{X}-\mathbf{\mu})\)
+\item
+  D: \(\mathbf\Sigma^{\frac{1}{2}}(\mathbf{X}+\mathbf{\mu})\)
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Answers:}
+
+1A 2C 3D 4B 5C
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{ Further reading/resources}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://www.youtube.com/playlist?list=PL5-da3qGB5IDvuFPNoSqheihPOQNJpzyy}{Videoes
+  on YouTube by the authors of ISL, Chapter 2}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Session info}
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{devtools}\OperatorTok{::}\KeywordTok{session_info}\NormalTok{()}\OperatorTok{$}\NormalTok{packages}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  package     * version  date       lib source                            
+##  assertthat    0.2.1    2019-03-21 [2] CRAN (R 3.4.4)                    
+##  backports     1.1.4    2019-04-10 [1] CRAN (R 3.6.0)                    
+##  callr         3.2.0    2019-03-15 [2] CRAN (R 3.4.4)                    
+##  cli           1.1.0    2019-03-19 [2] CRAN (R 3.4.4)                    
+##  colorspace    1.4-1    2019-03-18 [1] CRAN (R 3.6.0)                    
+##  crayon        1.3.4    2017-09-16 [2] CRAN (R 3.4.2)                    
+##  desc          1.2.0    2018-05-01 [2] CRAN (R 3.4.4)                    
+##  devtools      2.1.0    2019-07-03 [2] Github (hadley/devtools@4e08802)  
+##  digest        0.6.21   2019-09-20 [1] CRAN (R 3.6.1)                    
+##  dplyr         0.8.3    2019-07-04 [1] CRAN (R 3.6.0)                    
+##  evaluate      0.14     2019-05-28 [1] CRAN (R 3.6.1)                    
+##  formatR       1.7      2019-06-11 [1] CRAN (R 3.6.1)                    
+##  fs            1.3.1    2019-05-06 [1] CRAN (R 3.6.0)                    
+##  ggplot2     * 3.2.1    2019-08-10 [1] CRAN (R 3.6.1)                    
+##  ggpubr      * 0.2      2018-11-15 [2] CRAN (R 3.4.4)                    
+##  glue          1.3.1    2019-03-12 [1] CRAN (R 3.6.0)                    
+##  gtable        0.3.0    2019-03-25 [2] CRAN (R 3.4.4)                    
+##  htmltools     0.3.6    2017-04-28 [1] CRAN (R 3.6.0)                    
+##  knitr       * 1.25     2019-09-18 [1] CRAN (R 3.6.1)                    
+##  lazyeval      0.2.2    2019-03-15 [1] CRAN (R 3.6.0)                    
+##  magrittr    * 1.5      2014-11-22 [2] CRAN (R 3.4.0)                    
+##  MASS        * 7.3-51.4 2019-04-26 [2] CRAN (R 3.6.0)                    
+##  memoise       1.1.0    2017-04-21 [2] CRAN (R 3.4.2)                    
+##  munsell       0.5.0    2018-06-12 [2] CRAN (R 3.4.4)                    
+##  mvtnorm     * 1.0-11   2019-06-19 [1] CRAN (R 3.6.1)                    
+##  pillar        1.4.0    2019-05-11 [2] CRAN (R 3.4.4)                    
+##  pkgbuild      1.0.3    2019-03-20 [2] CRAN (R 3.4.4)                    
+##  pkgconfig     2.0.2    2018-08-16 [2] CRAN (R 3.4.4)                    
+##  pkgload       1.0.2    2018-10-29 [1] CRAN (R 3.6.0)                    
+##  prettyunits   1.0.2    2015-07-13 [2] CRAN (R 3.4.4)                    
+##  processx      3.4.0    2019-07-03 [1] CRAN (R 3.6.0)                    
+##  ps            1.3.0    2018-12-21 [1] CRAN (R 3.6.0)                    
+##  purrr         0.3.2    2019-03-15 [1] CRAN (R 3.6.0)                    
+##  R6            2.4.0    2019-02-14 [2] CRAN (R 3.4.4)                    
+##  Rcpp          1.0.2    2019-07-25 [1] CRAN (R 3.6.1)                    
+##  remotes       2.1.0    2019-06-24 [2] CRAN (R 3.4.4)                    
+##  rlang         0.4.0    2019-06-25 [1] CRAN (R 3.6.0)                    
+##  rmarkdown     1.15.2   2019-09-23 [1] Github (rstudio/rmarkdown@73d0552)
+##  rprojroot     1.3-2    2018-01-03 [2] CRAN (R 3.4.4)                    
+##  rstudioapi    0.10     2019-03-19 [2] CRAN (R 3.4.4)                    
+##  scales        1.0.0    2018-08-09 [1] CRAN (R 3.6.0)                    
+##  sessioninfo   1.1.1    2018-11-05 [2] CRAN (R 3.4.4)                    
+##  stringi       1.4.3    2019-03-12 [1] CRAN (R 3.6.0)                    
+##  stringr       1.4.0    2019-02-10 [2] CRAN (R 3.4.4)                    
+##  testthat      2.1.1    2019-04-23 [1] CRAN (R 3.6.0)                    
+##  tibble        2.1.3    2019-06-06 [1] CRAN (R 3.6.0)                    
+##  tidyselect    0.2.5    2018-10-11 [1] CRAN (R 3.6.0)                    
+##  usethis       1.5.0    2019-04-07 [2] CRAN (R 3.4.4)                    
+##  vctrs         0.2.0    2019-07-05 [1] CRAN (R 3.6.1)                    
+##  withr         2.1.2    2018-03-15 [2] CRAN (R 3.4.4)                    
+##  xfun          0.9      2019-08-21 [1] CRAN (R 3.6.1)                    
+##  yaml          2.2.0    2018-07-25 [2] CRAN (R 3.6.0)                    
+##  zeallot       0.1.0    2018-01-28 [2] CRAN (R 3.4.4)                    
+## 
+## [1] /home/steffi/R/x86_64-pc-linux-gnu-library/3.6
+## [2] /usr/local/lib/R/site-library
+## [3] /usr/lib/R/site-library
+## [4] /usr/lib/R/library
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}{Acknowledgements}
+
+Thanks to Mette Langaas, who developed the first slide set in 2018 and
+2019, and to Julia Debik for contributing to this module.
+
+\end{frame}
+
+\end{document}

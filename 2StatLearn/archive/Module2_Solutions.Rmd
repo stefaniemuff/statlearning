@@ -1,0 +1,52 @@
+---
+title: "Module2 Solutions"
+author: "Julia Debik"
+date: "04.12.2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+## Exercise 4
+a. Observation 1: $\sqrt{(3-1)^2+(3-2)^2}= \sqrt{5}$  
+Observation 2: $\sqrt{(2-1)^2+(0-2)^2}= \sqrt{5}$  
+Observation 3: $\sqrt{(1-1)^2+(1-2)^2}= 1$  
+Observation 4: $\sqrt{(0-1)^2+(1-2)^2}= \sqrt{2}$  
+Observation 5: $\sqrt{(-1-1)^2+(0-2)^2}= \sqrt{8}$  
+Observation 6: $\sqrt{(2-1)^2+(1-2)^2}= \sqrt{2}$  
+Observation 7: $\sqrt{(1-1)^2+(0-2)^2} = 2$
+b. The closest point is observation 3. This observation belongs to class A hence the predicted class membership for our test observation is A.
+c. The four closest points are observations 3, 7, 4 and 6 with corresponding classes \{A, B, B, B\}. The predited class for our test observation is thus B.
+d. If the Bayes decision boundary is highly non-linear, we would choose a $K$ that is not to big, as the decision boundary becomes approximately linear when $K$ tends to infinity
+e. We start by installing and loading the `ggplot2` packages.
+```{r}
+#install.packages(ggplot2)
+library(ggplot2)
+```
+
+We make a data frame with our observations
+```{r}
+knnframe = data.frame(x1 = c(3, 2, 1, 0, -1, 2, 1), x2 = c(3, 0, 1, 1, 0, 1, 0),  y=c("A", "A", "A", "B", "B", "B", "B"))
+knnframe$y = as.factor(knnframe$y)
+```
+We plot the observations unsing the `ggplot` function. We set `color=y` to obtain a colored response.
+```{r}
+ggplot(knnframe, aes(x=x1, y=x2, color=y))+geom_point()
+```
+
+f. 
+```{r}
+#install.packages(class)
+library(class)
+knn(train = knnframe[,1:2], cl = knnframe[,3], test = c(1, 2), k=1)
+```
+
+g. 
+```{r}
+knn(train = knnframe[,1:2], cl = knnframe[,3], test = c(1, 2), k=4)
+```
+
+```{r}
+knn(train = knnframe[,1:2], cl = knnframe[,3], test = c(1, 2), k=7)
+```
