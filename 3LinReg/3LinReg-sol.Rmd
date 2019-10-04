@@ -1,0 +1,519 @@
+---
+title: "Solutions to Recommended Exercises"
+subtitle: "TMA4268 Statistical Learning V2019. Module 3: LINEAR REGRESSION"
+author: "Thea Roksvåg, Ingeborg Hem and Mette Langaas, Department of Mathematical Sciences, NTNU"
+date: "week 4 2019"
+output: #3rd letter intentation hierarchy
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+  pdf_document:
+    toc: true
+    toc_depth: 2
+    keep_tex: yes
+    fig_caption: yes
+editor_options: 
+  chunk_output_type: console
+fig.width: 6.5
+fig.height: 6.5
+   
+---
+
+<!-- rmarkdown::render("3LinReg-sol.Rmd","all",encoding="UTF-8") -->
+<!-- rmarkdown::render("3LinReg-sol.Rmd","html_document",encoding="UTF-8") -->
+<!-- rmarkdown::render("3LinReg-sol.Rmd","pdf_document",encoding="UTF-8") -->
+
+Last changes: (18.01.2019: first version)
+
+# Problem 1
+
+
+The Framingham Heart Study is a study of the etiology (i.e. underlying causes) of cardiovascular
+disease, with participants from the community of Framingham in Massachusetts, USA. 
+For more more information about the Framingham Heart Study visit <https://www.framinghamheartstudy.org/>. The dataset used in here is subset of a teaching version of the Framingham data, used with permission from the Framingham Heart Study.
+
+We will focus on modelling systolic blood pressure using data from n = 2600 
+persons. For each person in the data set we have measurements of the
+seven variables
+
+* `SYSBP` systolic blood pressure,
+* `SEX` 1=male, 2=female,
+* `AGE` age in years at examination,
+* `CURSMOKE` current cigarette smoking at examination: 0=not current smoker, 1= current smoker,
+* `BMI` body mass index,
+* `TOTCHOL` serum total cholesterol, and
+* `BPMEDS` use of anti-hypertensive medication at examination: 0=not currently using, 1=currently using.
+
+A multiple normal linear regression model was fitted to the data set with `-1/sqrt(SYSBP)` as
+response and all the other variables as covariates. 
+
+```{r,echo=TRUE,eval=TRUE}
+library(ggplot2)
+#data = read.table("https://www.math.ntnu.no/emner/TMA4268/2018v/data/SYSBPreg3uid.txt")
+data = read.table("~/WWWemner/TMA4268/2018v/data/SYSBPreg3uid.txt")
+dim(data)
+colnames(data)
+modelA=lm(-1/sqrt(SYSBP) ~ .,data = data)
+summary(modelA)
+```
+
+## a) Understanding model output
+
+We name the model fitted above `modelA`.
+
+* Write down the equation for the fitted `modelA`.
+* Explain (with words and formula) what the following in the `summary`-output means.
+   + `Estimate` - in particular interpretation of `Intercept`
+   + `Std.Error`
+   + `t value`
+   + `Pr(>|t|)`
+   + `Residual standard error`
+   + `F-statistic`
+
+
+
+### Answers:
+
+
+* <span style="color:darkgreen">Model A: 
+$$-1/\sqrt{\text{SYSBP}}=\beta_0 + \beta_1 \text{SEX} + \beta_2 \text{AGE} + \beta_3 \text{CURSMOKE} + \beta_4 \text{BMI} + \beta_5 \text{TOTCHOL} + \beta_6 \text{BPMEDS} + \epsilon$$ with the fitted version
+$$\widehat{1/\sqrt{\text{SYSBP}}}=-0.110 -0.0003 \text{SEX} +0.0002 \text{AGE} -0.0003 \text{CURSMOKE} + 0.0003 \text{BMI} + 0.00001 \text{TOTCHOL} + 0.0055 \text{BPMEDS}$$</span>
+
+* <span style="color:darkgreen">The `Estimate` is the estimated regression coefficients, and are given by $\hat{\beta}=({\bf X}^T{\bf X})^{-1}{\bf X}^T{\bf Y}$. The interpretation of $\hat{\beta}_j$ is that when all other covariates are kept constant and the covariate $x_j$ is increased to from $x_j$ to $x_j+1$ then the response increases by $\hat{\beta}_j$. Example, holding all other variables constant, an increase of BMI from 25 to 26 will increase the response $-1/\sqrt{\text{SYSBP}}$ by $0.00031$. Similarily, for the binary variables, the coefficient estimates represents the change in the response when changing levels of the variable with one unit. For a female, the response will hence be reduced by $0.0003$ compared to a male (with the same values of all the other covariate). For all variables, negative value of the estimates give reduced response when increasing the corresponding variable, while positive estimates give increased response when increasing the corresponding variable.
+The intercept, $\beta_0$ can be found by setting all other coefficients to zero. This involves also setting the covariate SEX to 0 - which has no meaning since SEX is coded as 1 for male and 2 for female.
+</span>
+* <span style="color:darkgreen">The `Std.Error` $\hat{SD}(\hat\beta_j)$ of the estimated coefficients is given by the square root of the diagonal entries of $({\bf X}^T{\bf X})^{-1}\hat{\sigma}^2$, where $\hat{\sigma}=\text{RSS}/(n-p-1)$. Here $n=2600$ and $p=6$.</span>
+* <span style="color:darkgreen">The `t value` is the t-statistic $t = \frac{\hat\beta_j-\beta_j}{\hat{SD}(\hat\beta_j)}$, when we assume that $\beta_j=0$.</span>
+* <span style="color:darkgreen">The `Pr(>|t|)` is the two-sided $p$-value for the null hypothesis $\beta_j=0$. The $p$-value is calculated as the probability of observing a test staistics equal to $|t|$ or larger in absolute value, assuming that the null hypothesis is true. A $p$-value less than 0.05 is considered statistically significant at a 5\% significance level.  </span>
+* <span style="color:darkgreen">The residual standard error is the estimate of the standard deviation of $\epsilon$, and is given by RSS/$(n-p-1)$ where RSS=$\sum_{i=1}^n (y_i-\hat{y}_i)^2$. </span>
+* <span style="color:darkgreen">The `F-statistic` is used test the hypothesis that all regression coefficients are zero, 
+\begin{align*}
+  H_0: & \beta_1 = \beta_2 = \cdots = \beta_p = 0 \quad \text{vs} \\
+  H_1: &\text{at least one $\beta$ is $\neq 0$} \\ 
+\end{align*}
+and is computed by
+\begin{equation*}
+  F = \frac{(TSS-RSS)/p}{RSS/(n-p-1)}
+\end{equation*}
+where $TSS= \sum_{i=1}^n(y_i-\bar y)^2$, $RSS =  \sum_{i=1}^n(y_i-\hat y_i)^2$, $n$ is the number of observations and $p$ is the number of covariates (and $p+1$ the number of estimated regression parameters). If the $p$-value is less than 0.05, we reject the hypothesis that there are no coefficients with effect on the outcome in the model.  
+</span>
+
+
+## b) Model fit
+
+* What is the proportion of variability explained by the fitted `modelA`? Comment.
+* Use diagnostic plots of "fitted values vs. standardized residuals"" and "QQ-plot of standardized residuals" (see code below) to assess the model fit.
+* Now fit a model, call this `modelB`, with `SYSBP` as response, and the same covariates as for `modelA`. Would you prefer to use `modelA` or `modelB` when the aim is to make inference about the systolic blood pressure?
+
+```{r,eval=FALSE}
+# residuls vs fitted
+ggplot(modelA, aes(.fitted, .resid)) + geom_point(pch = 21) + 
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  geom_smooth(se = FALSE, col = "red", size = 0.5, method = "loess") + 
+  labs(x = "Fitted values", y = "Residuals", title = "Fitted values vs. residuals", subtitle = deparse(modelA$call))+
+  theme_minimal()
+
+# qq-plot of residuals
+ggplot(modelA, aes(sample = .stdresid)) +
+  stat_qq(pch = 19) + 
+  geom_abline(intercept = 0, slope = 1, linetype = "dotted") +
+  labs(x = "Theoretical quantiles", y = "Standardized residuals", title = "Normal Q-Q", subtitle = deparse(modelA$call)) +  theme_minimal()
+
+
+# normality test
+library(nortest) 
+ad.test(rstudent(modelA))
+```
+
+### Answers:
+
+* <span style="color:darkgreen">The $R^2$ statistic gives the proportion of variance explained by the model. In this model, the proportion of variability in $Y=-1/\sqrt{\text{SYSBP}}$ explained by the data $X$ is 0.2494. Since the range of $R^2$ is from 0 to 1, where for 1 all the variance in the response is explained by the regression model, we observe a fairly low number and we would have prefered it higher. However, these are medical data with low signal-to-noise ratio.</span>
+* <span style="color:darkgreen">Looking at the diagnostic plots, the model fit looks good. The fitted values vs residuals plot is nice with semingly random spread and the QQ-plot looks nice as the plotted values follows the normal line. In addition, the Anderson-Darling normality test does not reject the hypothesis of normality.</span>
+* <span style="color:darkgreen">For model B, we no longer model $-1/\sqrt{\text{SYSBP}}$, but rather SYSBP. This makes interpreation easier. However, looking at the diagnostic plots, we see that the QQ-plot looks suspicious at the tails, and the Anderson-Darling test rejects the null hypothesis of normal distribution.</span>
+
+```{r,eval=T, include =T}
+
+modelB = lm(SYSBP ~ .,data = data)
+summary(modelB)
+
+library(ggplot2)
+# residuls vs fitted
+ggplot(modelB, aes(.fitted, .resid)) + geom_point(pch = 21) + 
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  geom_smooth(se = FALSE, col = "red", size = 0.5, method = "loess") + 
+  labs(x = "Fitted values", y = "Residuals", title = "Fitted values vs. residuals", subtitle = deparse(modelB$call))+  theme_minimal()
+
+
+# qq-plot of residuals
+ggplot(modelB, aes(sample = .stdresid)) +
+  stat_qq(pch = 19) + 
+  geom_abline(intercept = 0, slope = 1, linetype = "dotted") +
+  labs(x = "Theoretical quantiles", y = "Standardized residuals", title = "Normal Q-Q", subtitle = deparse(modelB$call))+  theme_minimal()
+
+
+# normality test
+library(nortest) 
+ad.test(rstudent(modelB))
+```
+
+## c) Confidence interval and hypothesis test
+
+We use `modelA` and focus on addressing the association between BMI and the response.
+
+* What is the estimate $\hat{\beta}_{\text{BMI}}$ (numerically)?
+* Explain how to interpret the estimated coefficient $\hat{\beta}_{\text{BMI}}$.
+* Construct a 99% confidence interval for $\beta_{\text{BMI}}$ (write out the formula and calculate the interval numerically). Explain what this interval tells you.
+* From this confidence interval, is it possible for you know anything about the value of the $p$-value for the test $H_0: \beta_{\text{BMI}}=0$ vs. $H_1:\beta_{\text{BMI}} \neq 0$? Explain.
+
+### Answers:
+
+* <span style="color:darkgreen"> $\hat\beta = (X^TX)^{-1}X^TY$. From the summary output we find that $\hat{\beta}_{\text{BMI}} = 0.0003$. This is the average increase in $-1/sqrt(SYSBP)$ for a unit increase in BMI. Hence, keeping all other covariates fixed - having a BMI of 24 instead of 23, the value of $-1/sqrt(SYSBP)$ will on average increase with 0.0003.</font>
+* <span style="color:darkgreen">For linear regression where the distribution of the estimated coefficients are assumed to follow a t-distribution, we have that the $(1-\alpha)100$\%-confidence interval is given by
+\begin{align*}
+  \hat \beta \pm t_{\alpha/2, df} SD(\hat\beta)
+\end{align*}
+For $\hat\beta_{BMI}$ the 99\% confidence interval is hence given by
+\begin{align*}
+  [\hat \beta_{BMI} - t_{0.005, n-p-1} SD(\hat\beta_{BMI}), \hat \beta_{BMI} + t_{0.005, n-p-1} SD(\hat\beta_{BMI})] \\
+\end{align*}
+This means that before we have collected the data this interval has a 99% chance of covering the true value of $\beta_{BMI}$. After the interval is made - now this is [0.00023, 0.00038] the the true value is either within the interval or not. But, colleting new data and making 99% CIs, then 99% of these will on average cover the true $\beta_{BMI}$.</font>
+* <span style="color:darkgreen">Since the interval does not cover 0, we know that the p-value is less than 0.01.</font>
+```{r, include = T, eval = T}
+n = dim(data)[1]
+p = dim(data)[2]-1
+betahat=modelA$coefficients[5]
+sdbetahat=summary(modelA)$coeff[5,2]
+UCI = betahat + qt(0.005, df = n-p-1, lower.tail = F)*sdbetahat
+LCI = betahat - qt(0.005, df = n-p-1, lower.tail = F)*sdbetahat
+c(LCI, UCI)
+```
+
+## d) Prediction 
+
+Consider a 56 year old man who is smoking. He is 1.75 meters tall and his weight is 89 kilograms. His serum total cholesterol is 200 mg/dl and he is not using anti-hypertensive medication. 
+```{r,eval=TRUE}
+names(data)
+new=data.frame(SEX=1,AGE=56,CURSMOKE=1,BMI=89/1.75^2,TOTCHOL=200,BPMEDS=0)
+```
+
+* What is your best guess for his `-1/sqrt(SYSBP)`? To get a best guess for his `SYSBP` you may take the inverse function of `-1/sqrt` (this would be a first order Taylor expansion).
+* Construct a 90% prediction interval for his systolic blood pressure `SYSBP`. Comment. Hint: first contruct values on the scale of the response `-1/sqrt(SYSBP)` and then transform the upper and lower limits of the prediction interval.
+* Do you find this prediction interval useful? Comment.
+
+### Answers:
+
+<span style="color:darkgreen"> Find best guess by prediction, and 90% prediction interval.</span>
+
+```{r,eval=T}
+pred = predict(modelA, newdata = new)
+pred
+f.inv = function(x) 1/x^2
+sys = f.inv(pred)
+#pred. interval
+f.ci = predict(modelA, newdata = new, level = 0.9, interval = "prediction")
+f.ci
+sys.ci = f.inv(f.ci)
+sys.ci
+```
+
+This prediction interval is very large and doesn't really tell us much. A person with our characteristics on average has a 90\% chance of having a systolic blood pressure between 108 and 168, and looking at the table given in <http://www.heart.org/HEARTORG/Conditions/HighBloodPressure/KnowYourNumbers/Understanding-Blood-Pressure-Readings_UCM_301764_Article.jsp#.WnLqWOYo_AI>, we sse that this interval covers almost all the levels from normal to high blood pressure. It seems our model is better for inference than prediction.</span>
+
+# Problem 2
+
+##a)
+
+\begin{align}
+E(\hat{\boldsymbol\beta})&=E((X^T X)^{-1}X^T Y)=(X^TX)^{-1}X^T E(Y) =(X^TX)^{-1}X^T E(X \boldsymbol\beta +\epsilon) \\
+&=(X^TX)^{-1}X^T (X \boldsymbol\beta +0)=(X^TX)^{-1}(X^T X) \boldsymbol\beta = I \boldsymbol\beta = \boldsymbol\beta
+\end{align}
+
+\begin{align}
+Cov(\hat{\boldsymbol\beta})&=Cov((X^T X)^{-1}X^T Y)=(X^TX)^{-1}X^T Cov(Y)((X^TX)^{-1}X^T)^T \\
+&=(X^TX)^{-1}X^T \sigma^2  I ((X^TX)^{-1}X^T)^T\\
+&=\sigma^2 (X^TX)^{-1} \\
+\end{align}
+
+We need to assume that $Y$ is multivariate normal. As $\hat{\boldsymbol\beta}$ is a linear transformation of a multivariate normal vector $Y$, $\hat{\boldsymbol\beta}$ is also multivariate normal. 
+
+
+The components of a multivariate normal vector, is univariate normal. This means that $\hat{\beta}_j$ is normally distributed with expected value given by the $\beta_j$ and the variance given by the $j$'th diagonal element of $\sigma^2 (X^T X)^{-1}$.
+
+##b)
+Fix covariates X. \*Collect $Y$, create CI using $\hat{\beta}$ and $\hat{\sigma}$\*, repeat from \* to \* many times. 95 % of the times the CI contains the true $\beta$. Collect $Y$ means simulate it with the true $\beta$ as parameter(s). See also `R` code below.
+
+##c) 
+Same idea. Fix covariates X and $x_0$. \*Collect $Y$, create PI using $\hat{\beta}$ and $\hat{\sigma}$, simulate $Y_0$\*, repeat from \* to \* many times. 95 % of the times the PI contains $Y_0$. Collect $Y$ and $Y_0$ means simulate it with the true $\beta$ as parameter(s). $Y_0$ should not be used to estimate $\beta$ or $\sigma$. See also `R` code below.
+
+##d)
+
+95 % CI for $\mathbf{x}_0^T\mathbf{\beta}$: Same idea as for $\beta_j$. Use that $\mathbf{x}_0^T\hat{\mathbf{\beta}} \sim N(\mathbf{x}_0^T\mathbf{\beta}, \mathbf{x}_0^T$Var$(\hat{\mathbf{\beta}})\mathbf{x}_0)$ and do as for $\beta_j$. Note that $\mathbf{x}_0$ is a vector. 
+The connection between CI for $\mathbf{\beta}$, $\mathbf{x}_0^T\mathbf{\beta}$ and PI for $Y$ at $\mathbf{x}_0$: The first is CI for a parameter, the second is CI for the expected regression line in the point $x_0$ (when you only have one covariate, this may be more intuitive), and the last is the PI for the response $Y_0$. The difference between the two latter is that $Y$ are the observations, and $\mathbf{x}_0^T\mathbf{\beta}$ is the expected value of the observations and hence a function of the model parameters (NOT an observation).
+
+##e) 
+We have a model on the form $Y=X \beta + \epsilon$ where $\epsilon$ is the error. The error of the model is unknown and unobserved, but we can estimate it by what we call the residuals. The residuals are given by the difference between the true response and the predicted value 
+$$\hat{\epsilon}=Y-\hat{Y}=(I-X(X^TX)^{-1}X^T)Y.$$
+
+Properties of raw residuals: Normally distributed with mean 0 and covariance $Cov(\hat{\epsilon})=\sigma^2 (I-X(X^TX)^{-1}X^T).$ This means that the residuals may have different variance (depending on $X$) and may also be correlated.
+
+In a model check, we want to check that our errors are independent, homoscedastic (same variance for each observation) and not dependent on the covariates. As we don't know the true error, we use the residuals as predictors, but as mentioned, the residuals may have different variances and may be correlated. This is why we don't want to use the raw residuals for model check.
+
+To amend our problem we need to try to fix the residuals so that they at least have equal variances. We do that by working with standardized or studentized residuals. 
+
+##f)
+RSS(small) $\geq$ RSS(large) since RSS will be smaller with more covariates explaining the variation (and for a covariate that is completly unrelated to the data it might not be a large change, but the RSS will not increase). $R^2$ is directly related to RSS: $R^2 = 1$ - RSS/TSS, and TSS does not change when the  model changes.
+
+# Problem 3: Munich Rent index
+
+##a)
+
+```{r,warning=FALSE,message=FALSE}
+library(ggplot2)
+library(gamlss.data)
+library(dplyr)
+data("rent99")
+
+rent99$location=as.factor(rent99$location)
+formula1 <- rent ~ area +location + bath + kitchen + cheating
+formula2 <- rentsqm ~ area + location + bath + kitchen + cheating
+
+rent1 <- lm(formula1,data=rent99)
+rent2<-lm(formula2,data=rent99)
+```
+
+Look at the summary
+```{r}
+summary(rent1)
+summary(rent2)
+```
+
+Consider residual plots. We plot standardized residuals against fitted values.
+```{r}
+yhat1=predict(rent1)
+yhat2=predict(rent2)
+
+estand1=rstandard(rent1);
+estand2=rstandard(rent2)
+ 
+ggplot(data.frame(yhat1,estand1),aes(yhat1,estand1))+geom_point(pch=19)+geom_abline(intercept=0,slope=0,col="red")+  theme_minimal()
+
+ggplot(data.frame(yhat2,estand2),aes(yhat2,estand2))+geom_point(pch=19)+geom_abline(intercept=0,slope=0,col="red")+  theme_minimal()
+
+```
+
+We plot the true observations against the fitted values
+```{r}
+ggplot(data.frame(yhat1,rent99),aes(rent99$rent,yhat1))+geom_point(pch=19)+geom_abline(intercept=0,slope=1,col="red")+  theme_minimal()
+
+ggplot(data.frame(yhat2,rent99),aes(rent99$rentsqm,yhat2))+geom_point(pch=19)+geom_abline(intercept=0,slope=1,col="red")+  theme_minimal()
+
+```
+
+Normal Q-Q
+
+```{r}
+ggplot(rent1, aes(sample = .stdresid)) +
+  stat_qq(pch = 19) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dotted") +
+  labs(x = "Theoretical quantiles", y = "Standardized residuals", title = "Normal Q-Q", subtitle = deparse(rent1$call))+  theme_minimal()
+
+
+ggplot(rent2, aes(sample = .stdresid)) +
+  stat_qq(pch = 19) +
+  geom_abline(intercept = 0, slope = 1, linetype = "dotted") +
+  labs(x = "Theoretical quantiles", y = "Standardized residuals", title = "Normal Q-Q", subtitle = deparse(rent2$call))+  theme_minimal()
+
+```
+
+Can't really see that one response is better than the other, so we proceed with $rent$.
+
+##b&c) 
+We consider the summary
+```{r}
+summary(rent1)
+```
+
+The column _estimate_ gives us the $\hat{\beta}$'s. For example if the living area of the house increases qith 1 square meter, the predicted response, net rent per month, increases with $4.5788$ euro. The column std.error gives the standard deviation of the $\hat{\beta}$'s. The remaining columns report the t value (_t value_) with corresponding p-value (_Pr(>|t|)_). The $RSE$, $R^2$, $R_{adj}^2$ and $F$-statistic are also reported as _Residual standard error_, _Multiple R-squared_, _Adjusted R-Squared_ and _F-statistic_ respectively. See module page for definition of these terms.
+
+Interpretation of the intercept: This is the intercept of a average location (location=1). (If location=2, the intercept is -21.9733+39.2602, and if location=3 the intercept is -21.9733+126.0575.)
+
+##d)
+```{r,results="hold"}
+orgfit=lm(rent~area+location+bath+kitchen+cheating,data=rent99)
+summary(orgfit)
+set.seed(1) #to be able to reproduce results
+n=dim(rent99)[1]
+IQ=rnorm(n,100,16)
+fitIQ=lm(rent~area+as.factor(location)+bath+kitchen+cheating+IQ,data=rent99)
+summary(fitIQ)
+
+summary(orgfit)$sigma
+summary(fitIQ)$sigma
+
+summary(orgfit)$r.squared
+summary(fitIQ)$r.squared
+summary(orgfit)$adj.r.squared
+summary(fitIQ)$adj.r.squared
+```
+
+$R^2$ will always increase (or stay the same) if we add a parameter to the model. Thus, we cannot use this alone for model selection. However, the adjusted $R_{adj}^2$ is "punished" based on the number of parameters in the model and will not necessarily increase if we add a covariate to the model.
+
+Sigma (or RSE) is given by $\hat{\sigma}=\sqrt{\frac{1}{n-p-1}RSS}$.
+Multiple R-squared is given by $R^2=1-\frac{RSS}{TSS}=1-\frac{\hat{\sigma}^2 (n-p-1)}{TSS}$.
+
+##e)
+```{r,warning=FALSE,message=FALSE}
+formula <- rent ~ area + location + bath + kitchen + cheating
+rent1 <- lm(formula, data = rent99)#, contrasts = list(location = "contr.sum"))
+
+rent99 <- rent99 %>% mutate(yearc.cat = cut(yearc, breaks = c(-Inf, seq(1920,2000,10)), labels = 10*1:9))
+
+formula <- rent ~ area + location + bath + kitchen + cheating + yearc.cat
+rent2 <- lm(formula, data = rent99)#, contrasts = list(location = "contr.sum"))
+
+rent99 <- rent99 %>% mutate(yearc.cat2 = cut(yearc, breaks = c(-Inf, seq(1920,2000,20)), labels = c(20,40,60,80,00)))
+
+formula <- rent ~ area + location + bath + kitchen + cheating + yearc.cat2
+rent3 <- lm(formula, data = rent99)#,contrasts = list(location = "contr.sum"))
+```
+
+##f)
+
+```{r,warning=FALSE,message=FALSE}
+library(MASS)
+library(leaps)
+best <- regsubsets(model.matrix(rent3)[,-1], y = rent99$rent,method="exhaustive")
+summary(best)
+```
+A selection method is used (you will learn more later). The output shows the best model of each size (1-8 covariates). The best model with one covariate uses only area, the best model with two covariates uses area and yearc.cat20 and so on. 
+```{r}
+summary(best)$cp
+```
+
+Model 8 gives the lowest Mallows Cp and is the preferred model.
+
+#Problem 4: Simulations in R
+
+##a)
+```{r}
+# CI for beta_j
+
+true_beta <- c(3.14, 10, 0.8) # choosing true betas
+true_sd <- 10 # choosing true sd
+set.seed(345); X <- matrix(c(rep(1, 100), runif(100, 2, 5), sample(1:100, 100, replace = TRUE)), 
+            nrow = 100, ncol = 3) # fixing X. set.seed() is used to produce same X every time this code is used
+
+# simulating and fitting models many times
+ci_int <- ci_x1 <- ci_x2 <- 0; nsim <- 1000
+for (i in 1:nsim){
+  y <- rnorm(n = 100, mean = X%*%true_beta, sd = rep(true_sd, 100))
+  mod <- lm(y ~ x1 + x2, data = data.frame(y = y, x1 = X[,2], x2 = X[,3]))
+  ci <- confint(mod)
+  ci_int[i] <- ifelse(true_beta[1] >= ci[1,1] && true_beta[1] <= ci[1,2], 1, 0)
+  ci_x1[i] <- ifelse(true_beta[2] >= ci[2,1] && true_beta[2] <= ci[2,2], 1, 0)
+  ci_x2[i] <- ifelse(true_beta[3] >= ci[3,1] && true_beta[3] <= ci[3,2], 1, 0)
+}
+
+c(mean(ci_int), mean(ci_x1), mean(ci_x2))
+
+```
+
+
+##b)
+```{r}
+# PI for Y_0
+
+true_beta <- c(3.14, 10, 0.8) # choosing true betas
+true_sd <- 10 # choosing true sd
+set.seed(345); 
+X <- matrix(c(rep(1, 100), runif(100, 2, 5), 
+              sample(1:100, 100,replace = TRUE)), nrow = 100, ncol = 3) # fixing X. 
+
+#set.seed() is used to produce same X every time this code is used
+
+x0 <- c(1,3,50)
+
+# simulating and fitting models many times
+pi_y0 <- 0; nsim <- 1000
+for (i in 1:nsim){
+  y <- rnorm(n = 100, mean = X%*%true_beta, sd = rep(true_sd, 100))
+  mod <- lm(y ~ x1 + x2, data = data.frame(y = y, x1 = X[,2], x2 = X[,3]))
+  y0 <- rnorm(n = 1, mean = x0%*%true_beta, sd = true_sd)
+  pi <- predict(mod, newdata = data.frame(x1 = x0[2], x2 = x0[3]), interval = "predict")[,2:3]
+  pi_y0[i] <- ifelse (y0 >= pi[1] && y0 <=pi[2], 1, 0)
+}
+
+mean(pi_y0)
+```
+
+##c)
+```{r}
+library(ggplot2)
+#Homoscedastic error
+n=1000
+x=seq(-3,3,length=n)
+beta0=-1
+beta1=2
+xbeta=beta0+beta1*x
+sigma=1
+e1=rnorm(n,mean=0,sd=sigma)
+y1=xbeta+e1
+ehat1=residuals(lm(y1~x))
+
+#ggplot-solution
+ggplot(data.frame(x=x,y1=y1),aes(x,y1)) +
+  geom_point(pch =19)+geom_abline(slope=beta1,intercept=beta0,col="red")+  theme_minimal()
+
+ggplot(data.frame(x=x,e1=e1),aes(x,e1))+geom_point(pch=19)+geom_hline(yintercept=0,col="red")+  theme_minimal()
+
+```
+
+Correct model: We don't see any pattern in the residual plot. The variance seems to be independent of the covariate $x$. 
+
+```{r}
+#Heteroscedastic errors
+sigma=(0.1+0.3*(x+3))^2
+e2=rnorm(n,0,sd=sigma)
+y2=xbeta+e2
+ehat2=residuals(lm(y2~x))
+
+#ggplot-solution
+ggplot(data.frame(x=x,y2=y2),aes(x,y2)) +
+  geom_point(pch =19)+geom_abline(slope=beta1,intercept=beta0,col="red")+  theme_minimal()
+
+ggplot(data.frame(x=x,e2=e2),aes(x,e2))+geom_point(pch=19)+geom_hline(yintercept=0,col="red")+  theme_minimal()
+
+```
+
+Wrong model: The variance of the residuals increases as a function of $x$.
+
+##d)
+Reduce the sample size to for example $n=10$. Then we see a difference between the standardized and the studentized residuals (red and blue). The expressions for standardized and studentized residuals for an observation $y_i$ are identical, except that the latter estimates $\hat{\sigma}$ without using observation number $i$. When the sample size is large, it typically doesn't matter if we include $y_i$ in the estimation or not. 
+
+```{r}
+n=10
+beta=matrix(c(0,1,1/2,1/3),ncol=1)
+set.seed(123)
+x1=rnorm(n,0,1); x2=rnorm(n,0,2); x3=rnorm(n,0,3)
+X=cbind(rep(1,n),x1,x2,x3)
+y=X%*%beta+rnorm(n,0,2)
+fit=lm(y~x1+x2+x3)
+yhat=predict(fit)
+summary(fit)
+ehat=residuals(fit); estand=rstandard(fit); estud=rstudent(fit)
+
+ggplot(data=data.frame(ehat,yhat,estand,estud),aes(yhat,ehat))+geom_point(pch=19)+geom_point(aes(yhat,estand),col="red")+geom_point(aes(yhat,estud),col="blue",pch=19)+  theme_minimal()
+
+```
+
+# R packages
+
+```{r,eval=FALSE,echo=TRUE}
+install.packages("gamlss.data")
+install.packages("tidyverse")
+install.packages("GGally")
+install.packages("Matrix")
+install.packages("ggpubr")
+install.packages("nortest")
+install.packages("MASS")
+```

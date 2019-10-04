@@ -1,0 +1,312 @@
+---
+subtitle: "TMA4268 Statistical Learning V2020"
+title: "Module 3: Recommended Exercises"
+author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
+date: "January xx, 2020"
+output:
+  pdf_document:
+    toc: true
+    toc_depth: 2
+    keep_tex: yes
+    fig_caption: yes
+---
+
+```{r setup, include=FALSE}
+showsolA<-TRUE
+showsolB<-TRUE
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE)
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
+                      cache=TRUE, size="scriptsize")
+
+```
+
+
+## Problem 1: Compulsory exercise in 2018
+
+There will be a very similar regression problem in the compulsory exercise 1 in 2019!
+
+The Framingham Heart Study is a study of the etiology (i.e. underlying causes) of cardiovascular
+disease, with participants from the community of Framingham in Massachusetts, USA. 
+For more more information about the Framingham Heart Study visit <https://www.framinghamheartstudy.org/>. The dataset used in here is subset of a teaching version of the Framingham data, used with permission from the Framingham Heart Study.
+
+We will focus on modelling systolic blood pressure using data from n = 2600 
+persons. For each person in the data set we have measurements of the
+seven variables
+
+* `SYSBP` systolic blood pressure,
+* `SEX` 1=male, 2=female,
+* `AGE` age in years at examination,
+* `CURSMOKE` current cigarette smoking at examination: 0=not current smoker, 1= current smoker,
+* `BMI` body mass index,
+* `TOTCHOL` serum total cholesterol, and
+* `BPMEDS` use of anti-hypertensive medication at examination: 0=not currently using, 1=currently using.
+
+A multiple normal linear regression model was fitted to the data set with `-1/sqrt(SYSBP)` as
+response and all the other variables as covariates. 
+
+```{r,echo=TRUE,eval=FALSE}
+library(ggplot2)
+data = read.table("https://www.math.ntnu.no/emner/TMA4268/2018v/data/SYSBPreg3uid.txt")
+dim(data)
+colnames(data)
+modelA=lm(-1/sqrt(SYSBP) ~ .,data = data)
+summary(modelA)
+```
+
+## a) Understanding model output 
+
+We name the model fitted above `modelA`.
+
+* Write down the equation for the fitted `modelA`.
+* Explain (with words and formula) what the following in the `summary`-output means.
+   + `Estimate` - in particular interpretation of `Intercept`
+   + `Std.Error`
+   + `t value`
+   + `Pr(>|t|)`
+   + `Residual standard error`
+   + `F-statistic`
+
+## b) Model fit 
+
+* What is the proportion of variability explained by the fitted `modelA`? Comment.
+* Use diagnostic plots of "fitted values vs. standardized residuals"" and "QQ-plot of standardized residuals" (see code below) to assess the model fit.
+* Now fit a model, call this `modelB`, with `SYSBP` as response, and the same covariates as for `modelA`. Would you prefer to use `modelA` or `modelB` when the aim is to make inference about the systolic blood pressure?
+
+```{r,eval=FALSE}
+# residuls vs fitted
+ggplot(modelA, aes(.fitted, .resid)) + geom_point(pch = 21) + 
+  geom_hline(yintercept = 0, linetype = "dashed") + 
+  geom_smooth(se = FALSE, col = "red", size = 0.5, method = "loess") + 
+  labs(x = "Fitted values", y = "Residuals", 
+       title = "Fitted values vs. residuals", subtitle = deparse(modelA$call))
+
+# qq-plot of residuals
+ggplot(modelA, aes(sample = .stdresid)) +
+  stat_qq(pch = 19) + 
+  geom_abline(intercept = 0, slope = 1, linetype = "dotted") +
+  labs(x = "Theoretical quantiles", y = "Standardized residuals", 
+       title = "Normal Q-Q", subtitle = deparse(modelA$call))
+
+```
+
+## c) Confidence interval and hypothesis test 
+
+We use `modelA` and focus on addressing the association between BMI and the response.
+
+* What is the estimate $\hat{\beta}_{\text{BMI}}$ (numerically)?
+* Explain how to interpret the estimated coefficient $\hat{\beta}_{\text{BMI}}$.
+* Construct a 99% confidence interval for $\beta_{\text{BMI}}$ (write out the formula and calculate the interval numerically). Explain what this interval tells you.
+* From this confidence interval, is it possible for you know anything about the value of the $p$-value for the test $H_0: \beta_{\text{BMI}}=0$ vs. $H_1:\beta_{\text{BMI}} \neq 0$? Explain.
+
+## d) Prediction 
+
+Consider a 56 year old man who is smoking. He is 1.75 meters tall and his weight is 89 kilograms. His serum total cholesterol is 200 mg/dl and he is not using anti-hypertensive medication. 
+```{r,eval=FALSE}
+names(data)
+new=data.frame(SEX=1,AGE=56,CURSMOKE=1,BMI=89/1.75^2,TOTCHOL=200,BPMEDS=0)
+```
+
+* What is your best guess for his `-1/sqrt(SYSBP)`? To get a best guess for his `SYSBP` you may take the inverse function of `-1/sqrt`. 
+
+(Comment: Is that allowed - to only do the inverse? Yes, that could be the result of a first order Taylor expansion approximation.)
+
+* Construct a 90% prediction interval for his systolic blood pressure `SYSBP`. Comment. Hint: first contruct values on the scale of the response `-1/sqrt(SYSBP)` and then transform the upper and lower limits of the prediction interval.
+* Do you find this prediction interval useful? Comment.
+
+---
+
+## Problem 2: Theoretical questions
+
+###a)
+A core finding is $\hat{\boldsymbol\beta}$.
+\[ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}\]
+with $\hat{\boldsymbol\beta}\sim N_{p}(\boldsymbol\beta,\sigma^2({\bf X}^T{\bf X})^{-1})$.
+
+* Show that $\hat{\boldsymbol\beta}$ has this distribution with the given mean and covariance matrix. 
+* What do you need to assume to get to this result? 
+* What does this imply for the distribution of the $j$th element of $\hat{\beta}$? 
+* In particular, how can we calculate the variance of $\hat{\beta}_j$?
+
+###b) 
+What is the interpretation of a 95% confidence interval? Hint: repeat experiment (on $Y$), on average how many CIs cover the true $\beta_j$?
+
+###c)
+What is the interpretation of a 95% prediction interval? Hint: repeat experiment (on $Y$) for a given ${\bf x}_0$.
+
+###d)
+Construct a 95% CI for ${\bf x}_0^T \beta$. Explain what is the connections between a CI for $\beta_j$, a CI for ${\bf x}_0^T \beta$ and a PI for $Y$ at ${\bf x}_0$.
+
+###e)
+Explain the difference between _error_ and _residual_.  What are the properties of the raw residuals? Why don't we want to use the raw residuals for model check? What is our solution to this?
+
+###f)
+Consider a multiple linear regression model $A$ and a submodel $B$ (all parameters in $B$ are in $A$ also). We say that $B$ is nested within $A$. Assume that regression parameters are estimated using least squares. Why is then the following true: RSS for model $A$ will always be smaller or equal to RSS for model $B$. And thus, $R^2$ for model $A$ can never be worse than $R^2$ for model B. (See also Problem 3d below.)
+
+---
+
+## Problem 3: Munich Rent index
+
+###a)
+Fit the regression model with first `rent` and then `rentsqm` as response and following covariates: `area`, `location` (dummy variable coding using location2 and location3, just write `as.factor(location)`), `bath`, `kitchen` and `cheating` (central heating).
+
+Look at diagnostic plots for the two fits. Which response do you prefer?
+
+Consentrate on the response-model you choose for the rest of the tasks.
+
+###b) 
+Explain what the parameter estimates mean in practice. In particular, what is the interpretation of the intercept?
+
+###c) 
+Go through the summary printout and explain all parts.
+
+###d) 
+Now we add random noise as a covariance, but simulating the IQ of the landlord of each appartment. Observe that $R^2$ increases (or stays unchanged) and RSS decreases (or stays the same) if we add IQ as covariate, but $R^2_{\text{adj}}$ decreases. What does this tell you about model selection and overfitting?
+
+For the code - what is the connection between `sigma` and RSS?
+
+```{r,results="hold"}
+library(gamlss.data)
+orgfit=lm(rent~area+as.factor(location)+bath+kitchen+cheating,data=rent99)
+summary(orgfit)
+set.seed(1) #to be able to reproduce results
+n=dim(rent99)[1]
+IQ=rnorm(n,100,16)
+fitIQ=lm(rent~area+as.factor(location)+bath+kitchen+cheating+IQ,data=rent99)
+summary(fitIQ)
+
+summary(orgfit)$sigma
+summary(fitIQ)$sigma
+
+summary(orgfit)$r.squared
+summary(fitIQ)$r.squared
+summary(orgfit)$adj.r.squared
+summary(fitIQ)$adj.r.squared
+```
+
+
+###e) 
+We now want to use model selection to arrive at a good model. Start by defining which covariates you want to include and how to code them (use dummy variable coding of `location`). What about year of construction - is that a linear covariate? Maybe you want to make intervals in time instead? Linear or categorical for the time? What about the `district`? We leave that since we have not talked about how to use spatial covariates.
+
+Hint: if you want to test out interval versions of year of construction the function `mutate` (from `dplyr`) is useful:
+```{r, eval=FALSE}
+rent99 <- rent99 %>% mutate(yearc.cat = cut(yearc, breaks = c(-Inf, seq(1920,2000,10)), labels = 10*1:9))
+```
+More on `dplyr`: Tutorial: <http://genomicsclass.github.io/book/pages/dplyr_tutorial.html>
+and Cheat sheet (data wrangling): <https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf> and dplyr in particular: <https://github.com/rstudio/cheatsheets/raw/master/source/pdfs/data-transformation-cheatsheet.pdf>
+
+###f)
+(More on this in Module 6.)
+
+There are many ways to perform model selection for multiple linear regression. One possibility is best subsets, which can be done using the `regsubsets` function from library `leaps`. 
+Assume your "full" model fitted by `lm` is called  `fit`. You may define `x` from `model.matrix(fit)[,-1]` (not including the intercept term), and then run `best=regsubsets(x=model.matrix(fit)[,-1],y=rent99$rent)` and look at `summary(best)`.
+Explain the print-out (with all the stars). Using the Mallows Cp (named `cp` in the list from `summary(best)`) will give the same result at using AIC (which is not available in this function). What is your preferred model?
+Hint: look at the R-code in Problem 2 (Figure 3) from the TMA4267V2017 exam: [pdf](https://www.math.ntnu.no/emner/TMA4267/2017v/Exam/eV2017Enew.pdf), and maybe the solutions for the interpretation [pdf](https://www.math.ntnu.no/emner/TMA4267/2017v/Exam/mergedLFV2017.pdf)
+
+---
+
+## Problem 4: Simulations in R
+
+###a 
+Make R code that shows the interpretation of a 95% CI for $\beta_j$. Hint: Theoretical question a.
+
+###b
+Make R code that shows the interpretation of a 95% PI for a new response at ${\bf x}_0$. Hint: Theoretical question b.
+
+###c. 
+For simple linear regression, simulate at data set with homoscedastic errors and with heteroscedastic errors. Here is a suggestion of one solution - not using `ggplot`. You use `ggplot`. Why this? To see how things looks when the model is correct and wrong.
+
+```{r, eval=FALSE}
+#Homoscedastic errore
+n=1000
+x=seq(-3,3,length=n)
+beta0=-1
+beta1=2
+xbeta=beta0+beta1*x
+sigma=1
+e1=rnorm(n,mean=0,sd=sigma)
+y1=xbeta+e1
+ehat1=residuals(lm(y1~x))
+plot(x,y1,pch=20)
+abline(beta0,beta1,col=1)
+plot(x,e1,pch=20)
+abline(h=0,col=2)
+#Heteroscedastic errors
+sigma=(0.1+0.3*(x+3))^2
+e2=rnorm(n,0,sd=sigma)
+y2=xbeta+e2
+ehat2=residuals(lm(y2~x))
+plot(x,y2,pch=20)
+abline(beta0,beta1,col=2)
+plot(x,e2,pch=20)
+abline(h=0,col=2)
+```
+
+###d. 
+All this fuss about raw, standardized and studentized residuals- does really matter in practice? Below is one example where the raw residuals are rather different from the standardized, but the standardized is identical to the studentized. Can you come up with a simulation model where the standardized and studentized are very different? Hint: what about at smaller sample size?
+
+```{r, eval=FALSE}
+n=1000
+beta=matrix(c(0,1,1/2,1/3),ncol=1)
+set.seed(123)
+x1=rnorm(n,0,1); x2=rnorm(n,0,2); x3=rnorm(n,0,3)
+X=cbind(rep(1,n),x1,x2,x3)
+y=X%*%beta+rnorm(n,0,2)
+fit=lm(y~x1+x2+x3)
+yhat=predict(fit)
+summary(fit)
+ehat=residuals(fit); estand=rstandard(fit); estud=rstudent(fit)
+plot(yhat,ehat,pch=20)
+points(yhat,estand,pch=20,col=2)
+```
+
+---
+
+# <a id="further"> Further reading </a>
+
+* Need details on the simple linear regression: From TMA4240/TMA4245 Statistics we have the thematic page for [Simple linear regression (in Norwegian)](https://wiki.math.ntnu.no/tma4245/tema/begreper/regression).
+* Need more advanced thory: Theoretical version (no simple linear regression) from TMA4315 Generalized linear models H2018: [TMA4315M2: Multiple linear regression](https://www.math.ntnu.no/emner/TMA4315/2018h/2MLR.html)
+* Slightly different presentation (more focus on multivariate normal theory): [Slides and written material from TMA4267](https://www.math.ntnu.no/emner/TMA4267/2017v/TMA4267V2017Part2.pdf)
+* And, same source, but now [Slides and written material from TMA4267 Linear Statistical Models in 2017, Part 3: Hypothesis testing and ANOVA](http://www.math.ntnu.no/emner/TMA4267/2017v/TMA4267V2017Part3.pdf)
+* [Videoes on YouTube by the authors of ISL, Chapter 2](https://www.youtube.com/playlist?list=PL5-da3qGB5IBSSCPANhTgrw82ws7w_or9)
+
+---
+
+# <a id="Rpackages"> R packages</a>
+
+If you want to look at the .Rmd file and `knit` it, you need to first install the following packages (only once).
+
+```{r, eval=FALSE}
+# packages to install before knitting this R Markdown file
+# to knit the Rmd
+install.packages("knitr")
+install.packages("rmarkdown")
+
+# nice tables in Rmd
+install.packages("kableExtra")
+
+# cool layout for the Rmd
+install.packages("prettydoc") # alternative to github
+
+#plotting
+install.packages("ggplot2") # cool plotting
+install.packages("ggpubr") # for many ggplots
+install.packages("GGally") # for ggpairs
+#datasets
+install.packages("ElemStatLearn") # for ozone data set
+install.packages("gamlss.data")#rent index data set here
+#methods
+install.packages("nortest")#test for normality - e.g. Anderson-Darling
+
+install.packages("car") # vif
+library(Matrix)
+install.packages("reshape")
+install.packages("corrplot")
+install.packages("tidyverse")
+```
+
+# Acknowledgements
+
+Thanks to Julia Debik for contributing to this module page.
+
+
