@@ -141,7 +141,7 @@ $$y_i = \beta_0 + \beta_1 x_i\ .$$
 ---
 
 
-But which is the "true"" or "best"" line, if the relationship is not exact?
+But which is the "true" or "best" line, if the relationship is not exact?
 
 
 ```{r motivating3, echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='60%'}
@@ -151,7 +151,7 @@ ggplot(d.bodyfat,aes(x=bmi,y=bodyfat)) + geom_point() + theme_bw() + ylab("body 
 geom_abline(intercept = -36, slope = 2.25, color="blue",    size=0.6) 
 ``` 
 
-**Task:** Estimate the intercept and slope parameters (by "eye"") and write it down (we will look at your answers later).
+**Task:** Estimate the intercept and slope parameters (by "eye") and write it down (we will look at your answers later).
 
 ---
 
@@ -171,10 +171,10 @@ $\Rightarrow$ We need a  **model** that describes the relationship between BMI a
 
 In the linear regression model the dependent variable $Y$ is related to the independent variable $x$ as
 
-$$Y = \beta_0 + \beta_1 x + \varepsilon \ , \qquad \varepsilon \sim \text{N}(0,\sigma^2) \ .$$
+$$Y = \beta_0 + \beta_1 x + \varepsilon \ , \qquad \varepsilon \sim N(0,\sigma^2) \ .$$
 \vspace{2mm}
 
-In this formulation $Y$ is a random variable $Y \sim \text{N}(\beta_0 + \beta_1 x, \sigma^2$) where
+In this formulation $Y$ is a random variable $Y \sim N(\beta_0 + \beta_1 x, \sigma^2$) where
 $$Y \quad= \quad \underbrace{\text{ expected value }}_{\text{E}(Y) = \beta_0 + \beta_1 x} \quad + \quad \underbrace{\text{ error}}_{\varepsilon}  \ .$$
 
 Note:
@@ -189,7 +189,7 @@ Note:
 ## Modeling assumptions
 
 \vspace{4mm}
-The central assumption in linear regression is that $\varepsilon_i \sim \text{N}(0,\sigma^2)$. This implies
+The central assumption in linear regression is that for any pairs ($x_i,Y_i$), the error $\varepsilon_i \sim N(0,\sigma^2)$. This implies
 \vspace{2mm}
 
 a)  The expected value of $\varepsilon_i$ is 0: $\text{E}(\varepsilon_i)=0$.
@@ -208,7 +208,7 @@ e) $\varepsilon_1, \varepsilon_2, \ldots, \varepsilon_n$ are independent of each
 
 ## Visualization of the regression assumptions 
  
-The assumptions about the linear regression model lie in the error term $$\varepsilon \sim \text{N}(0,\sigma^2) \ . $$ 
+The assumptions about the linear regression model lie in the error term $$\varepsilon \sim N(0,\sigma^2) \ . $$ 
 
 \vspace{-2mm}
 \includegraphics[width=11cm]{pictures/regrAssumptions.jpg}
@@ -300,7 +300,7 @@ the least squares estiamtes for simple linear regression are given as
 \hat{\beta}_0 = \bar{y}-\hat{\beta}_1 \bar{x}
 \end{equation}
 and
-\begin{equation}\label{eq:beta0}
+\begin{equation}\label{eq:beta1}
 \hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^n(x_i-\bar{x})^2} \ ,
 \end{equation}
 where 
@@ -358,7 +358,7 @@ ggplot(d.bodyfat,aes(bmi,bodyfat)) + geom_point() + geom_smooth(method='lm',se=F
 
 * How does this relate to the _true_ (population) model? 
 
-* By looking at the spread of the points around the line, can you detec any violations of the modelling assumptions?
+* By looking at the spread of the points around the line, can you detect any violations of the modelling assumptions?
 
 * Finally: **What could the regression line look like if another set of 243 males were used for estimation?**
 
@@ -392,7 +392,7 @@ $\rightarrow$ The logical next question is: what is the distribution of the esti
 \vspace{2mm}
 To obtain an intuition, we generate data points according to model
 
-$$y_i = 4 - 2x_i + \varepsilon_i \ , \quad \varepsilon_i\sim \text{N}(0,0.5^2). $$
+$$y_i = 4 - 2x_i + \varepsilon_i \ , \quad \varepsilon_i\sim N(0,0.5^2). $$
 In each round, we estimate the parameters and store them:
 \tiny
 ```{r simulation,echo=T}
@@ -442,10 +442,10 @@ Note: We will _derive a general version_ of these formulas for multiple linear r
 
 ---
 
-Under the assumption that $\varepsilon \sim \text{N}(0,\sigma^2)$, we have in addition that 
+Under the assumption that $\varepsilon \sim N(0,\sigma^2)$, we have in addition that 
 
 $$
- \hat\alpha \sim \text{N}(\alpha,{\sigma^{2}_{\beta_0}}) \quad \text{and} \quad \hat\beta \sim \text{N}(\beta,{\sigma^{2}_{\beta_1}}) \ .
+ \hat\alpha \sim N(\alpha,{\sigma^{2}_{\beta_0}}) \quad \text{and} \quad \hat\beta \sim N(\beta,{\sigma^{2}_{\beta_1}}) \ .
 $$
 
 This implies that that $\hat\beta_0$ and $\hat\beta_1$ as defined in formulas (1) and (2).
@@ -454,9 +454,12 @@ This implies that that $\hat\beta_0$ and $\hat\beta_1$ as defined in formulas (1
 
 ## Design issue with data collection
 
+\vspace{2mm}
 Recall that
 
-$$\text{SE}(\hat{\beta}_1)^2 = \frac{\sigma^2}{\sum_{i=1}^n (x_i-\bar{x})^2}$$ is only dependent on the _design_ of the $x_i$'s. 
+$$\text{SE}(\hat{\beta}_1)^2 = \frac{\sigma^2}{\sum_{i=1}^n (x_i-\bar{x})^2} \ ,$$ 
+
+thus for a given $\sigma^2$, the standard error is only dependent on the _design_ of the $x_i$'s!
 
 * Would we like the $\text{SE}(\hat{\beta}_1)^2$ large or small? Why?
 * If it is possible for us to choose the $x_i$'s, which strategy should we use to choose them? 
@@ -467,6 +470,7 @@ $$\text{SE}(\hat{\beta}_1)^2 = \frac{\sigma^2}{\sum_{i=1}^n (x_i-\bar{x})^2}$$ i
 
 ---
 
+\small
 ```{r,echo=TRUE,eval=TRUE}
 x1=seq(1:10)
 x2=c(rep(1,5),rep(10,5))
@@ -479,318 +483,496 @@ sd3=sqrt(1/sum((x3-mean(x3))^2))
 print(c(sd1,sd2,sd3))
 ```
 
----
 
-**A**: the second design - all observations at extremes.
-
----
-
-## Residual standard error
-
-Remember - residual sum of squares: $\text{RSS}=\sum_{i=1}^n (Y_i-\hat{\beta}_0-\hat{\beta_1}x_{i})^2$.
-
-The residual standard error, RSE, is given by
-$$\text{RSE}  =\sqrt{\frac{1}{n-2} \text{RSS}} = \sqrt{\frac{1}{n-2}\sum_{i=1}^n (Y_i -\hat{Y}_i)^2}$$
-and is an estimate of $\sigma$, that is, the standard deviation of the error term $\varepsilon$. This is the socalled _restricted maximum likelihood estimator_, and is unbiased.
-
-This is related to the amount the response variables deviate from the estimated regression line. Recall that we will always have observations with noise.
-
-RSE shows the lack of fit of the model to the data. It is measured in units of $Y$, hence is value may be hard to interpret. 
+$\rightarrow$ The second design - all observations at extremes - is best!
 
 ---
 
-If we assume that the simple linear regression is a good model, observation pairs $(x_i,Y_i)$ are independent for $i=1,\ldots,n$ and that $\varepsilon_i\sim N(0,\sigma^2)$ then it can be shown that
+## Residual standard error (RSE)
+\vspace{2mm}
 
-$$\frac{\text{RSE}^2(n-2)}{\sigma^2}= \frac{\sum_{i=1}^n (Y_i -\hat{Y}_i)^2}{\sigma^2}\sim \chi^2_{n-2}$$
+* **Problem**: $\sigma$ is usually no known, but needs to be estimated.
+* Remember: The residual sum of squares is $\text{RSS}=\sum_{i=1}^n (y_i-\hat{\beta}_0-\hat{\beta_1}x_{i})^2$.
 
-### Example continued
+* An estimate of $\sigma$, the residual standard error, RSE, is given by
+$$\hat\sigma = \text{RSE}  =\sqrt{\frac{1}{n-2} \text{RSS}} = \sqrt{\frac{1}{n-2}\sum_{i=1}^n (y_i -\hat{y}_i)^2} \ .$$
 
-In R we can get a summary of our fitted linear model, by calling the `summary` function. In this outprint we see the estimated coefficient values in the first column, and the estimated standard errors in the second column. Thus $\hat{\text{SE}}(\hat{\beta}_0) = 8.6135$ and $\hat{\text{SE}}(\hat{\beta}_1) = 0.1206$.
+* It is related to the amount the response variables deviate from the estimated regression line.
+* So actually we have
+
+$$\hat{\text{SE}}(\hat{\beta}_1)^2 = \frac{{\hat\sigma}^2}{\sum_{i=1}^n (x_i-\bar{x})^2} \ ,$$ 
+but we usually just write ${\text{SE}}(\hat{\beta}_1)^2$ (without the extra hat).
+
 
 ---
+
+
+If the simple linear regression assumptions are fulfilled, that is, $\varepsilon_i\sim N(0,\sigma^2)$ and all $\varepsilon_i$ independent, then it can be shown that
+
+$$\frac{\text{RSE}^2(n-2)}{\sigma^2}= \frac{\sum_{i=1}^n (y_i -\hat{y}_i)^2}{\sigma^2}\sim \chi^2_{n-2}$$
+
+---
+
+The estimated standard errors can be seen using the `summary()` function:
 
 \small
 ```{r}
-summary(r.bodyfat)
+summary(r.bodyfat)$coef
 ```
-\normalsize
+
 
 ---
 
-To illustrate this point further, we fit four models to our Munich rent index data set. Each of the models has been fit using a random sample of a fraction of our observations (1/4). We see how our fitted line changes given a "new" set of observations.
+To illustrate this point further, again fit the bodyfat example, but each time with only half of the data (randomly selected points each time). See how the model fit varies:
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='80%'}
 set.seed(200)
 
-munich.n1 = dim(rent99)[1]
-munich.h = sample(munich.n1, munich.n1/2)
-munich.1hds = rent99[munich.h, ]
-munich.2hds = rent99[-munich.h, ]
-munich.n2 = dim(munich.1hds)[1]
-munich.q = sample(munich.n2, munich.n2/2)
-munich.s1 = munich.1hds[munich.q,]
-munich.s2 = munich.1hds[-munich.q,]
-munich.s3 = munich.2hds[munich.q,]
-munich.s4 = munich.2hds[-munich.q,]
+bodyfat.n1 <- nrow(d.bodyfat)
 
-munich.lm.s1 = lm(rent~area, data=munich.s1)
-munich.lm.s2 = lm(rent~area, data=munich.s2)
-munich.lm.s3 = lm(rent~area, data=munich.s3)
-munich.lm.s4 = lm(rent~area, data=munich.s4)
+lm1 <- lm(bodyfat~bmi, d.bodyfat[sample(bodyfat.n1,bodyfat.n1/2),])
+lm2 <- lm(bodyfat~bmi, d.bodyfat[sample(bodyfat.n1,bodyfat.n1/2),])
+lm3 <- lm(bodyfat~bmi, d.bodyfat[sample(bodyfat.n1,bodyfat.n1/2),])
 
-ggplot(rent99, aes(x=area, y=rent))+geom_point(alpha=0.8, size=0.5)+
-  geom_line(aes(x=area, y=coef(munich.lm.s1)[1]+area*coef(munich.lm.s1)[2]), 
-            col="navy")+ geom_line(aes(x=area, y=coef(munich.lm.s2)[1] + coef(munich.lm.s2)[2]*area), 
-            col="blue")+ geom_line(aes(x=area, y=coef(munich.lm.s3)[1]+coef(munich.lm.s3)[2]*area), 
-            col="purple")+geom_line(aes(x=area, y=coef(munich.lm.s4)[1]+coef(munich.lm.s4)[2]*area), col="red")+theme_minimal()
+ggplot(d.bodyfat, aes(x=bmi, y=bodyfat))+geom_point(alpha=0.8, size=0.5)+
+  geom_line(aes(x=bmi, y=coef(lm1)[1]+bmi*coef(lm1)[2]), 
+            col="navy") +
+   geom_line(aes(x=bmi, y=coef(lm2)[1]+bmi*coef(lm2)[2]), 
+            col="red") +
+  geom_line(aes(x=bmi, y=coef(lm3)[1]+bmi*coef(lm3)[2]), 
+            col="green") +
+  theme_bw()
 ```
+
+---
+
+# Testing and Confidence Intervals 
+After the regression parameters and their uncertainties have been estimated, there are typically two fundamental questions:
+$~$
+
+ 
+1. **"Are the parameters compatible with some specific value?"** 
+ Typically, the question is whether the slope $\beta_1$ might be 0 or not, that is: "Is $x$ an informative predictor or not?"
+ 
+ $\Rightarrow$ This leads to a **statistical test**. 
+
+\vspace{4mm}
+
+2. "Which values of the parameters are compatible with the data?"
+
+ $\Rightarrow$ This leads us to determine  **confidence intervals**.
+
+
+
+---
+
+Let's first go back to the output from the bodyfat example:
+
+\small
+```{r,eval=TRUE,echo=TRUE}
+summary(r.bodyfat)$coef
+```
+
+\normalsize
+Besides the estimate and the standard error (which we discussed before), there is a `t value` and a probability `Pr(>|t|` that we need to understand.
+
+How do these things help us to answer the two questions above?
+
+---
+
+
+## Testing the effect of a covariate 
+
+$~$
+
+Remember: in a statistical test you first need to specify the _null hypothesis_. Here, typically, the null hypothesis is
+
+
+\begin{center}
+\colorbox{lightgray}{\begin{minipage}{6cm}
+\vspace{-2mm}
+$$H_0: \quad \beta_1 =   0  \ .$$
+
+\end{minipage}}
+\end{center}
+
+In words: $H_0$ =   ``There is no relationship between $X$ and $Y$.'' 
+
+\vspace{2mm}
+ 
+* Note 1: However, you might want to test against another null hypothesis, like $\beta_1=c$.
+
+* Note 2: Included in $H_0$ is the assumption that the data follow the simple linear regression model!
+
+\vspace{6mm}
+
+Here, the \emph{alternative hypothesis} is given by
+$~$
+
+\begin{center}
+\colorbox{lightgray}{\begin{minipage}{6cm}
+$$H_A: \quad \beta_1 \neq  0  $$
+\end{minipage}}
+\end{center}
+
+---
+ 
+
+Remember: To carry out a statistical test, we need a _test statistic_. This is some type of **summary statistic** that follows a known distribution under $H_0$. For our purpose, we use the so-called **$T$-statistic**
+
+\begin{center}
+\colorbox{lightgray}{\begin{minipage}{5cm}
+\begin{equation*}\label{eq:beta}
+T=\frac{\hat\beta_1 - 0}{SE(\hat\beta_1)}\ . 
+\end{equation*}
+\end{minipage}}
+\end{center}
+
+
+\vspace{4mm}
+*Note*: If you want to test against another value than $\beta_1=0$, the formula is
+\begin{center}
+\colorbox{lightgray}{\begin{minipage}{5cm}
+\begin{equation*}
+T=\frac{\hat\beta_1 - c}{SE(\hat\beta_1)}
+\end{equation*}
+\end{minipage}}
+\end{center}
+
 
 ---
 
 ## Distribution of parameter estimators
-(We will _derive a general version_ for multiple linear regression.)
+\vspace{2mm}
 
-For $j=0,1$:
+We will _derive a general version_ for multiple linear regression!
 
-* Let $\hat{\beta_j}$ be the least squares estimator for $\beta_j$, and 
-* $\text{Var}(\hat{\beta_j})$ and $\widehat{\text{Var}}(\hat{\beta_j})$ is as given above. 
+Brief recap:
 
-Then $\hat{\beta}_j \sim N(\beta_j,\text{Var}(\hat{\beta}_j))$ and 
-$$T_j =\frac{\hat{\beta}_j-\beta_j}{\sqrt{\widehat{\text{Var}}(\hat{\beta}_j)}} \sim t_{n-2}$$
-The $t$-distribution with $n-2$ degrees of freedom.
+$~$
 
-See [Rintermediate-sol.html](https://wwww.math.ntnu.no/emner/TMA4268/2018v/1Intro/Rintermediate-sol.html) for more on the $t$-distribution in R.
+* Under $H_0$, $T$ has a $t$-distribution with $n-2$ degrees of freedom ($n=$ number of data points; compare to Chapter 8.6 in Walepole et al).
 
-For the slope in the simple linear regression this is shown, together with inference for $\beta_1$, in this [video from TMA4240/TMA4245 Statistics (in Norwegian - but formulas should still be understood in English).](https://mediasite.ntnu.no/Mediasite/Play/2e9a209c58874e75bd47e3c5e0b7b4e81d?catalog=0fce6173-7a98-4db7-84b7-50cba3a3a341)
 
 ---
 
-```{r,tidy=FALSE, echo=FALSE}
-require(ggplot2)
-df=10
-ggplot(data.frame(x=c(-4,4)), aes(x))+ 
-  theme(axis.title.x=element_blank(),axis.title.y=element_blank(),axis.text.x=element_blank(),axis.text.y=element_blank(),axis.ticks = element_blank())+
-  stat_function(fun=function(x) dt(x,df), geom="line", colour="blue")+
-  geom_vline(xintercept=qt(0.975,df),color="red")+
-  geom_vline(xintercept=-qt(0.975,df),color="red")+
-  geom_hline(yintercept=0)+
-  annotate("text",x=qt(0.975,df)+0.6,y=0.03,label="alpha/2",parse=TRUE,size=5)+
-  annotate("text",x=-qt(0.975,df)-0.6,y=0.03,label="alpha/2",parse=TRUE,size=5)+
-  annotate("text",x=0,y=0.03,label="1-alpha",parse=TRUE,size=5)+theme_minimal()
-  
+## Recap: The $t$-distribution
+
+$~$
+
+```{r,echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='80%'}
+
+xx <- data.frame(seq(-4,4,0.01))
+names(xx) <- "xx"
+xx$t1 <- dt(xx$xx,1)
+xx$t3 <- dt(xx$xx,3)
+xx$t10 <- dt(xx$xx,10)
+xx$t30 <- dt(xx$xx,30)
+xx$norm <- dnorm(xx$xx)
+
+plot(xx$xx,xx$t1,lwd=2,type="l",xlab="x",ylab="density",ylim=c(0,0.4))
+lines(xx$xx,xx$t3,add=TRUE,lwd=2,col=2)
+lines(xx$xx,xx$t10,add=TRUE,lwd=2,col=3)
+lines(xx$xx,xx$t30,add=TRUE,lwd=2,col=4)
+lines(xx$xx,xx$norm,add=TRUE,lwd=2,col=5)
+legend("topright",legend=c("df=1","df=3","df=10","df=30","normal"),col=1:5,lwd=2)
+
 ``` 
 
-The figure shows the $t_{10}$ distribution, where the points were the area under the curve to the right and left are  with $\alpha/2=0.025$. 
+\normalsize
+
+* The $t$-distribution has heavier tails than the normal distribution. 
+* For df $\geq 30$ the $t$ and Normal distribution are pretty similar.
+
+---
+
+### Hypothesis tests for bodyfat example
+\vspace{2mm}
+
+So let's again go back to the bodyfat regression output:
+
+
+\small
+```{r}
+summary(r.bodyfat)$coef
+```
+
+\normalsize
+
+**Task**: Use the above formulas to derive the $T$-statistics.
+
+$~$
+
+* The last column contains the *$p$-values* of the tests $\beta_0=0$ and $\beta_1=0$. 
+
+* The $p$-value for `bmi` is very small ($p<0.0001$). **What does this mean?**
+
+<!-- There **very strong evidence** that the BMI is associated with bodyfat.  -->
+
+<!-- It is very unlikely that such a slope $\hat\beta$ would be seen if there was no effect of BMI on body fat. -->
+
+<!-- * Our test statistic for testing $\beta_1=0$ is  -->
+
+<!-- $$t = \frac{\hat\beta_1}{SE(\hat\beta)} = \frac{1.82}{0.11} = 16.79$$ -->
+
+
+<!-- We would in a two-sided setting reject $H_0$ for large values of $\text{abs}(t_0)$. We may rely on calculating a $p$-value.  -->
+
+---
+
+## Recap: Formal definition of the $p$-value
+
+$~$
+
+\colorbox{lightgray}{\begin{minipage}{10cm}
+Formal definition of $p$-value: the probability to observe a data summary (e.g., an average) that is at least as extreme as the one observed, given that the Null Hypothesis is correct.
+\end{minipage}}
+
+\vspace{3mm}
+
+**Example** (normal distribution): Assume the observed test-statistic leads to a $z$-value = -1.96 
+$\Rightarrow$ $\text{P}(|z|\geq 1.96)=0.05$ and $\text{P}(z\leq-1.96)=0.025$ .
+
+\vspace{1mm}
+
+
+```{r pValFig, echo=FALSE, fig.width=8, fig.height=4,fig.align = "center",out.width='100%'}
+par(mfrow=c(1,2))
+
+zz1 <- qnorm(0.025)
+zz2 <- qnorm(0.975)
+zz3 <- qnorm(0.025)
+
+cord.x1 <- c(-4,seq(-4,zz1,0.01),zz1)
+cord.y1 <- c(0,dnorm(seq(-4,zz1,0.01)),0)
+
+cord.x2 <- c(zz2,seq(zz2,4,0.01),4)
+cord.y2 <- c(0,dnorm(seq(zz2,4,0.01)),0)
+
+curve(dnorm(x,0,1),-4,4,ylab="density",main="Two-sided p-value (0.05)",xlab="")
+polygon(cord.x1,cord.y1,col='gray')
+polygon(cord.x2,cord.y2,col='gray')
+text(-3,0.05,labels="2.5%")
+text(3,0.05,labels="2.5%")
+
+cord.x3 <- c(-4,seq(-4,zz3,0.01),zz3)
+cord.y3 <- c(0,dnorm(seq(-4,zz3,0.01)),0)
+
+curve(dnorm(x,0,1),-4,4,ylab="density",main="One-sided p-value (0.025)",xlab="")
+polygon(cord.x3,cord.y3,col='gray')
+text(-3,0.05,labels="2.5%")
+```
+
+---
+
+## Recap: Two types of errors
+
+\vspace{2mm}
+
+In the testing setup, we typically _reject the null hypothesis_ if the $p$-value is small enough. Typical cutoffs for the _significance level_ ($\alpha$) are $5\%$ or $1\%$.
+
+\vspace{2mm}
+
+However, this means we can make two types of errors:
+\vspace{2mm}
+
+* Type I error:
+
+* Type II error:
+
+\vspace{2mm}
+
+---
+
+### Cautionary notes regarding $p$-values:
+
+$~$
+
+* The (mis)use of $p$-values is heavily under critique in the scientific world!!!
+
+
+
+* Simple yes/no decisions do often stand on very wiggly scientific ground!!
+
+\vspace{2mm}
+$~$
+(See reading tasks for this week.)
+
+<!-- * "Reject $H_0$ when $H_0$ is true"="false positives" = "type I error" ="miscarriage of justice". -->
+<!-- These are our _fake news_, which are very important for us to avoid. -->
+
+<!-- * "Fail to reject $H_0$ when $H_1$ is true (and $H_0$ is false)"="false negatives" = "type II error"= "guilty criminal go free". -->
+
 
 ---
 
 ## Confidence intervals
 
+\vspace{2mm}
+
 The $t$-distribution can be used to create confidence intervals for the regression parameters. The lower and upper limits of a 95\% confidence interval for $\beta_j$ are
 $$\hat{\beta}_j \pm t_{\alpha/2,n-2} \cdot\text{SE} (\hat{\beta}_j) \quad j=0, 1.$$
-The interpretation of this confidence is that: (before we have contructed the interval) there is a 95\% chance that the interval 
-will contain the *true* value of $\beta_j$.
+Interpretation of this confidence interval: 
 
-If $n$ is large, the normal approximation to the $t$-distribution can be used (and is used in the textbook).
+* There is a 95\% probability that the interval will contain the *true* value of $\beta_j$.
 
-**Q:** Calculate the confidence intervals for the slope parameter in the `r.bodyfat` model by finding the numbers you need from the `summary` output. Here $t_{0.025,n-2}$=`r round(qt(0.975,3080),3)`.
+* **It is the range of parameter estimates that are *compatible with the data* **.
+
+$~$
+
+$\rightarrow$ If $n$ is large, the normal approximation to the $t$-distribution can be used (and is used in the textbook).
 
 ---
 
-We can find confidence intervals in `R` using the `confint` function on `lm` object:
+Doing this for the bodfat example ``by hand'' is not hard. We have $241 (=243-2)$ degrees of freedom:
+
 ```{r}
-confint(r.bodyfat)
+coefs <- summary(r.bodyfat)$coef
+beta <- coefs[2,1]
+sdbeta <- coefs[2,2] 
+beta + c(-1,1) * qt(0.975,241) * sdbeta 
 ```
 
-Remark: the argument `level=0.99` will give a 99% CI.  
-
-Based on the joint distribution of the intercept and slope it is possible to find the distribution for the linear predictor $\hat{\beta}_0+\hat{\beta}_1 x$, and then confidence intervals for $\beta_0+\beta_1 x$. 
-
 ---
 
-```{r, echo=FALSE}
-library(ggpubr)
-munich4.lm = lm(rent~area, data=rent99[1:100,])
-const=qt(0.975,98)
-munich4.beta0.min = coef(munich4.lm)[1]-const*64.285
-munich4.beta0.max = coef(munich4.lm)[1]+const*64.285
-
-munich4.beta1.min = coef(munich4.lm)[2]-const*1.310
-munich4.beta1.max = coef(munich4.lm)[2]+const*1.310
-
-p1=ggplot(rent99, aes(x=area, y=rent))+geom_point(size=0.7)+
-  geom_smooth(method=lm, se=TRUE)+theme_minimal()
-p2=ggplot(rent99[sample(1:dim(rent99)[1],100),], aes(x=area, y=rent))+geom_point(size=0.7)+
-  geom_smooth(method=lm, se=TRUE)+theme_minimal()
-ggarrange(p1,p2)
-#geom_line(aes(x=area, y=munich4.beta0.min+munich4.beta1.max*area ),col="red")+
-#  geom_line(aes(x=area, y=munich4.beta0.max+munich4.beta1.min*area), col="red")
-  
+Even easier: directly ask R to give you the CIs.
+```{r }
+confint(r.bodyfat,level=c(0.95))
 ```
 
-The figures show the fitted line and the confidence interval for the (true) regression line based on all (left) and the first 100 observations (right) in the Munich rent index data. Observe the effect of the sample size on the with of the CIs.
+
+**Interpretation:** for an increase in the bmi by one index point, roughly 1.82 percentage points more bodyfat are expected, and all true values for $\beta_1$ between 1.61 and 2.03 are compatible with the observed data.
 
 ---
 
-## Single hypothesis testing set-up
+## Confidence and prediction ranges
 
-In single hypothesis testing we are interesting in testing one null hypothesis against an alternative hypothesis. In linear regression the hypothesis is often about a regression parameter $\beta_j$:
-$$H_0: \beta_j=0 \text{ vs. } H_1: \beta_j\neq 0$$
+$~$ 
 
-<!-- Remark: we implicitly say that our test is done given that the other variables are present in the model, that is, the other $\beta_i$s ($j\neq i$) are not zero. -->
+* Based on the joint distribution of the intercept and slope it is possible to find the distribution for the linear predictor $\hat{\beta}_0+\hat{\beta}_1 x$, and then confidence intervals for $\beta_0+\beta_1 x$. 
 
-### Two types of errors:
+$\rightarrow$ **Confidence range**
 
-* "Reject $H_0$ when $H_0$ is true"="false positives" = "type I error" ="miscarriage of justice".
-These are our _fake news_, which are very important for us to avoid.
+$~$
 
-* "Fail to reject $H_0$ when $H_1$ is true (and $H_0$ is false)"="false negatives" = "type II error"= "guilty criminal go free".
 
----
+* Accounting for the fact that we also have an error in the equation $\varepsilon$, we can also find the distribution of future observations.
 
-We choose to reject $H_0$ at some significance level $\alpha$ if the $p$-value of the test (see below) is smaller than the chosen significance level.
-We say that : Type I error is "controlled" at significance level $\alpha$, which means that the probability of miscarriage of justice (Type I error) does not exceed $\alpha$.
+$\rightarrow$ **Prediction range**
 
-**Q**: Draw a 2 by 2 table showing the connection between 
-
-* "truth" ($H_0$ true or $H_0$ false) - rows in the table, and 
-* "action" (reject $H_0$ and accept $H_0$) - columns in the table,
-
-and place the two types of errors in the correct position within the table. 
-
-What else should be written in the last two cells?
 
 ---
 
-### Hypothesis test on $\beta_j$ (t-test)
-
-In linear regression models our test statistic for testing $H_0: \beta_j=0$ is 
-$$T_0=\frac{\hat{\beta}_j-0}{\sqrt{c_{jj}}\hat{\sigma}}\sim t_{n-2}$$
-where $c_{jj}\hat{\sigma}^2=\widehat{\text{Var}}(\hat{\beta}_j)$.
-
-Inserted observed values (and estimates) we have $t_0$.
-
-We would in a two-sided setting reject $H_0$ for large values of $\text{abs}(t_0)$. We may rely on calculating a $p$-value. 
+Todo ev say more about confidence and prediction ranges, or put this into exercise class.
 
 ---
 
-### The p-value
+# Model accuracy
 
-A p-value is a test statistic satisfying $0 \leq p({\bf Y}) \leq 1$ for every vector of observations ${\bf Y}$. 
+Measured by
 
-* Small values give evidence that $H_1$ is true. 
 
-* In single hypothesis testing, if the p-value is less than the chosen significance level (chosen upper limit for the probability of committing a type I error), then we reject the null hypothesis, $H_0$. The chosen significance level is often referred to as $\alpha$.
+1. The **residual standard error (RSE)**, which provides an **absolute measure** of _lack of fit_ (see above).
 
-* A p-value is _valid_ if
-$$ P(p({\bf Y}) \leq \alpha) \leq \alpha$$
-for all $\alpha$, $0 \leq \alpha \leq 1$, whenever $H_0$ is true, that is, if the $p$-value is valid, rejection on the basis of the $p$-value ensures that the probability of type I error does not exceed $\alpha$.
+\vspace{2mm}
 
-* If $P(p({\bf Y}) \leq \alpha) = \alpha$ for all $\alpha$, $0 \leq \alpha \leq 1$, the $p$-value is called an _exact_ p-value.  
+2. The **coefficient of determination $R^2$**, which measures the proportion of $y$'s variance explained by the model (between 0 and 1), is a **relative measure** of _lack of fit_:
 
----
+$$R^2 = \frac{\text{TSS}-\text{RSS}}{\text{TSS}}= 1-\frac{\text{RSS}}{\text{TSS}}=1-\frac{\sum_{i=1}^n(y_i-\hat{y}_i)^2}{\sum_{i=1}^n(y_i-\bar{y}_i)^2}, $$ 
 
-In our linear regression we use the $t$-distibution to calculate p-values for our two-sided test situation $H_0: \beta_j=0$ vs. $H_1: \beta_j \neq 0$. Assume we have observed that our test statistic $T_0$ takes the numerical value $t_0$. Since the $t$-distribution is symmetric around $0$ we have
+where $$\text{TSS} = \sum_{i=1}^n (y_i - \bar{y})^2$$ is the _total sum of squares_, proportional to the estimated variance of the response variable.
 
-$$p\text{-value}=P(T_0>\text{abs}(t_0))+P(T_0<-\text{abs}(t_0))=2\cdot P(T_0>\text{abs}(t_0)).$$
-
-We reject $H_0$ if our calculated $p$-value is below our chosen signficance level. We often choose as significance level $\alpha=0.05$.
 
 ---
 
-**Q:** Comment on the $p$-values listed in the summary output from fitting the simple linear regression of `area` and `rent`. Then, pinpoint $\hat{\sigma}=\text{RSE}$. Where are the entries in the output that you do not (yet) know what is?
+### $R^2$ in the bodyfat example
 
-\footnotesize
-```{r,echo=FALSE}
-summary(lm(rent~area,data=rent99))
+```{r}
+summary(r.bodyfat)$r.squared
 ```
-\normalsize
 
----
 
-## Model accuracy
+Compare this to the squared correlation between the two variables: 
+ 
+```{r}
+cor(d.bodyfat$bodyfat,d.bodyfat$bmi)^2
+```
 
-### Coefficient of determination, $R^2$
 
-The total sum of squares is defined as $$\text{TSS} = \sum_{i=1}^n (y_i - \bar{y})^2,$$ and is proportional to the estimated variance of the response variable.
-
-The $R^2$ statisitic is the fraction of variance explained by the model and is given by
-$$R^2 = \frac{\text{TSS}-\text{RSS}}{TSS}= 1-\frac{\text{RSS}}{\text{TSS}}=1-\frac{\sum_{i=1}^n(y_i-\hat{y}_i)^2}{\sum_{i=1}^n(y_i-\bar{y}_i)^2}.$$ 
-The value is between 0 and 1, and we want an as high $R^2$ statistic as possible. This statistic is independent of the scale of $Y$.
-
----
-
-For a simple linear regression model the squared correlation $r^2$ is equal to $R^2$.
-
-**Q**: Look back at the `summary` outprint for the `r.bodyfat` model. What is the value of the $R^2$ statistic? Based on this value, would you conclude that this model gives a good fit to the data?
+\colorbox{lightgray}{\begin{minipage}{10cm}
+$\rightarrow$ In simple linear regression, $R^2$ is the squared correlation between the independent and the dependent variable.
+\end{minipage}}
 
 ---
 
 # Multiple Linear Regression
 
-Back to the Munich rent index data, but now we want to include more than one covariate. Suggestions?
+Remember that the bodyfat dataset contained much more information than only bmi and bodyfat:
 
-* `rent`: the net rent per month (in Euro).
-* `rentsqm`: the net rent per month per square meter (in Euro).
-* `area`: Living area in square meters.
-* `yearc`: year of construction.
-* `location`: quality of location: a factor indicating whether the location is average location, 1, good location, 2, and top location, 3.
-* `bath`: quality of bathroom: a a factor indicating whether the bath facilities are standard, 0, or premium, 1.
-* `kitchen`: Quality of kitchen: 0 standard 1 premium.
-* `cheating`: central heating: a factor 0 without central heating, 1 with central heating.
-* `district`: District in Munich.
+* `bodyfat`: % of body fat.
+* `age`: age of the person.
+* `weight`: body weighth.
+* `height`: body height.
+* `bmi`: bmi.
+* `abdomen`:  circumference of abdomen.
+* `hip`: circumference of hip.
 
 ---
 
 
 ## Model
+$~$
 
-We assume, for observation $i$:
-$$Y_i= \beta_0 + \beta_{1}  x_{i1} + \beta_2 x_{i2} + ... + \beta_p x_{ip} + \varepsilon_i,$$ where $i=1,2,...,n$. 
+We assume 
+\begin{equation}
+Y = \beta_0 + \beta_{1}  X_1 + \beta_2 X_1 + ... + \beta_p X_p + \varepsilon \ ,
+\end{equation}
 
-Here: what is $x_{ij}$? 
+where $X_j$ is the $j$th predictor and $\beta_j$ the respective regression coeffficient.
 
-The model can be written in matrix form:
-$${\bf Y}={\bf X} \boldsymbol{\beta}+{\boldsymbol{\varepsilon}}.$$ 
+$~$
 
-**Q**: write out in detail the dimension!
+Assume we have $n$ sampling units $(x_{1i},\ldots,x_{pi}, y_i)$, $1\leq i \leq n$, such that each represent an instance of equation (3), we can use the data matrix 
+
+$${\bf{X}} = \left[\begin{matrix} 1 & x_{11} & ... & x_{1p} \\
+1 & x_{21} & ... & x_{2p} \\
+\vdots  & ... & ... & \vdots \\
+1 & x_{n1} & ... & x_{np} \\
+\end{matrix}\right]$$
+
+to write the model in matrix form:
+$${\bf Y}={\bf {X}} \boldsymbol{\beta}+{\boldsymbol{\varepsilon}} \ , \quad {\boldsymbol{\varepsilon}} \sim N(\bf{0}, \sigma^2 \mathbf{I})$$ 
 
 ---
 
 ## Notation
+$~$
 
-${\bf Y}: (n \times 1)$ vector of responses [e.g. one of the following: rent, weight of baby, ph of lake, volume of tree]
+* ${\bf Y}: (n \times 1)$ vector of responses [e.g. one of the following: rent, weight of baby, ph of lake, volume of tree]
 
-${\bf X}: (n \times (p+1))$ design matrix [e.g. location of flat, gestation age of baby, chemical measurement of the lake, height of tree], and ${\bf x}_i^T$ is a $(p+1)$-dimensional row row vector for observation $i$.
+* ${\bf X}: (n \times (p+1))$ design matrix [e.g. location of flat, gestation age of baby, chemical measurement of the lake, height of tree], and ${\bf x}_i^T$ is a $(p+1)$-dimensional row row vector for observation $i$.
 
-${\boldsymbol \beta}: ((p+1) \times 1)$ vector of regression parameters (intercept included)
+* ${\boldsymbol \beta}: ((p+1) \times 1)$ vector of regression parameters $(\beta_0,\beta_1,\ldots,\beta_p)^\top$.
 
-${\boldsymbol \varepsilon}: (n\times 1)$ vector of random errors.
+* ${\boldsymbol \varepsilon}: (n\times 1)$ vector of random errors.
 
-We assume that pairs $({\bf x}_i^T,y_i)$ $(i=1,...,n)$ are measured from sampling units. That is, the observation pair $({\bf x}_1^T,y_1)$ is independent from $({\bf x}_2^T,y_2)$.
+* We assume that pairs $({\bf x}_i^T,y_i)$ $(i=1,...,n)$ are measured from _independent_ sampling units. 
+
+$~$
 
 Remark: other books, including the book in TMA4267 and TMA4315 define $p$ to include the intercept. This may lead to some confusion about $p$ or $p+1$ in formulas...
 
----
-
-
-### Example continued
-
-Assume that we have `rent` as response and `area` and `bath` as covariates. 
-
-* What is ${\bf Y}$, ${\bf X}$, $\boldsymbol{\beta}$ and $\boldsymbol{\varepsilon}$?
-* Which of these are known/unknown, observed/unobserved?
-
-Remember: $n=3802$ and `bath=0` gives standard quality and `bath=1` premium and the model is
-$${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon}.$$ 
 
 ---
+
+## Design matrix in R
 
 \small
 ```{r}
-fit=lm(rent~area+bath,data=rent99)
-head(model.matrix(fit))
-head(rent99$rent)
+r.bodyfat=lm(bodyfat ~  bmi + age ,data=d.bodyfat)
+head(model.matrix(r.bodyfat))
+head(d.bodyfat$bmi)
+head(d.bodyfat$age)
 ```
 \normalsize
 
@@ -802,44 +984,39 @@ ${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon}$
 and 
 $\boldsymbol\varepsilon\sim N_n({\bf 0},\sigma^2 {\bf I})$.
 
+\vspace{4mm}
+
 **Q:** 
 
-* Find the mean $\text{E}(\bf Y)$ and 
-* the covariance matrix $\text{Cov}(\bf Y)$.
+* What is the mean $\text{E}(\bf Y)$?
+
+* The covariance matrix $\text{Cov}(\bf Y)$ given $\bf{X}$?
+
 * What is then the distribution of $\bf Y$?
 
 ---
 
 **A**:
-$$ {\bf Y} \sim N_{n}({\bf X} {\boldsymbol\beta},\sigma^2 {\bf I})$$
+<!-- $$ {\bf Y} \sim N_{n}({\bf X} {\boldsymbol\beta},\sigma^2 {\bf I})$$ -->
 
 ---
+ 
 
-\large
+## Another data set
 
-**<a id="PartB">Part B: Multiple linear regression - continued!</a>**
+<!-- ### Munich rent index (as in Part A) -->
 
-\normalsize
+<!-- Munich, 1999: 3082 observations on 9 variables. -->
 
-# Multiple linear regression (continued)
-
-## Data sets
-
-### Munich rent index (as in Part A)
-
-Munich, 1999: 3082 observations on 9 variables.
-
-* `rent`: the net rent per month (in Euro).
-* `rentsqm`: the net rent per month per square meter (in Euro).
-* `area`: Living area in square meters.
-* `yearc`: year of construction.
-* `location`: quality of location: a factor indicating whether the location is average location, 1, good location, 2, and top location, 3.
-* `bath`: quality of bathroom: a a factor indicating whether the bath facilities are standard, 0, or premium, 1.
-* `kitchen`: Quality of kitchen: 0 standard 1 premium.
-* `cheating`: central heating: a factor 0 without central heating, 1 with central heating.
-* `district`: District in Munich.
-
----
+<!-- * `rent`: the net rent per month (in Euro). -->
+<!-- * `rentsqm`: the net rent per month per square meter (in Euro). -->
+<!-- * `area`: Living area in square meters. -->
+<!-- * `yearc`: year of construction. -->
+<!-- * `location`: quality of location: a factor indicating whether the location is average location, 1, good location, 2, and top location, 3. -->
+<!-- * `bath`: quality of bathroom: a a factor indicating whether the bath facilities are standard, 0, or premium, 1. -->
+<!-- * `kitchen`: Quality of kitchen: 0 standard 1 premium. -->
+<!-- * `cheating`: central heating: a factor 0 without central heating, 1 with central heating. -->
+<!-- * `district`: District in Munich. -->
 
 ### Ozone
 
@@ -866,30 +1043,6 @@ ozone.lm = lm(ozone~temperature+wind+radiation, data=ozone)
 ```
 
 ---
-
-<!-- ## Plan for part B -->
-
-<!-- * So far: simple linear regression - and multiple linear regression - model, estimators -->
-<!-- * Statistical inference  -->
-<!--     + estimators and properties -->
-<!--     + confidence intervals and hypothesis tests -->
-<!--     + significance of regression: F-test -->
-<!--     + prediction and prediction intervals  -->
-<!-- * Model assessement and selection -->
-<!--     + $R^2$ -->
-<!--     + subset selection  -->
-<!--     + diagnostic plots - studentized residuals and leverages -->
-
-<!-- --- -->
-
-<!-- * Extensions and challenges (self study) -->
-<!--     + qualitative predictors: dummy coding (needed) -->
-<!--     + non-additivity: including interactions (useful) -->
-<!--     + projection matrices and geometry of least squares (optional) -->
-<!-- * Important results in MLR -->
-<!-- * Summing up with team Kahoot! -->
-
-<!-- --- -->
 
 
 ## Classical linear model
@@ -1266,12 +1419,12 @@ predict(fit,newdata=newobs,interval="prediction",type="response")
 
 ### Details in the derivation of the PI
 
-We start to look at the difference between the unobserved response $Y_0$ (for a given covariate vector ${\bf x}_0$) and the point prediction $\hat{Y}_0$, $Y_0-\hat{Y}_0$.
+We start to look at the difference between the unobserved response $Y_0$ (for a given covariate vector ${\bf x}_0$) and the point prediction $\hat{y}_0$, $Y_0-\hat{y}_0$.
 
 First, we assume that the unobserved response at covariate ${\bf x}_0$ is independent of our previous observations and follows the same distibution, that is
 $Y_0 \sim N({\bf x}_0^T \beta,\sigma^2)$. Further,
 
-$$\hat{Y}_0={\bf x}_0^T \hat{\beta} \sim N({\bf x}_0^T \beta,\sigma^2 {\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0).$$
+$$\hat{y}_0={\bf x}_0^T \hat{\beta} \sim N({\bf x}_0^T \beta,\sigma^2 {\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0).$$
 
 Then, for $Y_0-{\bf x}_0^T \hat{\beta}$ we have
 
@@ -1788,32 +1941,7 @@ ggplot(ozone)+geom_line(aes(y=interceptlow+slopelow*wind, x = wind), col="blue")
 
 \normalsize
 
----
-
-## Nonlinearity
-
-We may extend the linear model to handle non-linear relationships by using polynomial regression - as we did in Module 2 in our bias-variance trade-off example.
-
-More on non-linearity in Module 7.
-
----
-
-## Optional: Projection matrices
-
-First, we define predictions as $\hat{\bf Y}={\bf X}\hat{\beta}$, and inserted the ML (and LS) estimate we get $\hat{\bf Y}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T{\bf Y}$.
-
-We define the projection matrix
-$$  {\bf H}={\bf X}({\bf X}^T{\bf X})^{-1} {\bf X}^T$$
-called the _hat matrix_. This simplifies the notation for the predictions,
-$$\hat{\bf Y}={\bf H}{\bf Y}$$ so the hat matrix is putting the hat on the response ${\bf Y}$.
-
-In addition we define residuals as
-\begin{align*}
-{\bf e}&={\bf Y}-\hat{\bf Y} \\
-{\bf e}&={\bf Y}-{\bf HY}=({\bf I-H}){\bf Y}\\
-\end{align*}
-so we have a second projection matrix
-$$ {\bf I-H}={\bf I}-{\bf X}({\bf X}^T{\bf X})^{-1} {\bf X}^T $$
+ 
 
 ---
 
