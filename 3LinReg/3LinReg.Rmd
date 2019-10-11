@@ -94,6 +94,7 @@ library(ggplot2)
 path <- "data/"
 d.bodyfat <- read.table(paste(path,"bodyfat.clean.txt",sep=""),header=T)
 d.bodyfat <- d.bodyfat[,c("bodyfat","age","gewicht","hoehe","bmi","neck","abdomen","hip")]
+names(d.bodyfat) <- c("bodyfat","age","weight","height","bmi","neck","abdomen","hip")
 
 par(mfrow=c(1,4))
 plot(bodyfat ~ bmi,d.bodyfat,xlab="bmi", ylab="bodyfat (y)")
@@ -811,7 +812,7 @@ $~$
 \vspace{2mm}
 
 The $t$-distribution can be used to create confidence intervals for the regression parameters. The lower and upper limits of a 95\% confidence interval for $\beta_j$ are
-$$\hat{\beta}_j \pm t_{\alpha/2,n-2} \cdot\text{SE} (\hat{\beta}_j) \quad j=0, 1.$$
+$$\hat{\beta}_j \pm t_{1-\alpha/2,n-2} \cdot\text{SE} (\hat{\beta}_j) \quad j=0, 1.$$
 Interpretation of this confidence interval: 
 
 * There is a 95\% probability that the interval will contain the *true* value of $\beta_j$.
@@ -880,7 +881,7 @@ Measured by
 
 $$R^2 = \frac{\text{TSS}-\text{RSS}}{\text{TSS}}= 1-\frac{\text{RSS}}{\text{TSS}}=1-\frac{\sum_{i=1}^n(y_i-\hat{y}_i)^2}{\sum_{i=1}^n(y_i-\bar{y}_i)^2}, $$ 
 
-where $$\text{TSS} = \sum_{i=1}^n (y_i - \bar{y})^2$$ is the _total sum of squares_, proportional to the estimated variance of the response variable.
+where $$\text{TSS} = \sum_{i=1}^n (y_i - \bar{y})^2$$ is the _total sum of squares_, a measure for the toal variability in $Y$. 
 
 
 ---
@@ -941,7 +942,7 @@ $${\bf{X}} = \left[\begin{matrix} 1 & x_{11} & ... & x_{1p} \\
 \end{matrix}\right]$$
 
 to write the model in matrix form:
-$${\bf Y}={\bf {X}} \boldsymbol{\beta}+{\boldsymbol{\varepsilon}} \ , \quad {\boldsymbol{\varepsilon}} \sim N(\bf{0}, \sigma^2 \mathbf{I})$$ 
+$${\bf Y}={\bf {X}} \boldsymbol{\beta}+{\boldsymbol{\varepsilon}} $$ 
 
 ---
 
@@ -950,7 +951,7 @@ $~$
 
 * ${\bf Y}: (n \times 1)$ vector of responses [e.g. one of the following: rent, weight of baby, ph of lake, volume of tree]
 
-* ${\bf X}: (n \times (p+1))$ design matrix [e.g. location of flat, gestation age of baby, chemical measurement of the lake, height of tree], and ${\bf x}_i^T$ is a $(p+1)$-dimensional row row vector for observation $i$.
+* ${\bf X}: (n \times (p+1))$ design matrix, and ${\bf x}_i^T$ is a $(p+1)$-dimensional row row vector for observation $i$.
 
 * ${\boldsymbol \beta}: ((p+1) \times 1)$ vector of regression parameters $(\beta_0,\beta_1,\ldots,\beta_p)^\top$.
 
@@ -961,6 +962,28 @@ $~$
 $~$
 
 Remark: other books, including the book in TMA4267 and TMA4315 define $p$ to include the intercept. This may lead to some confusion about $p$ or $p+1$ in formulas...
+
+
+---
+
+
+## Classical linear model
+
+$${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon}$$
+
+Assumptions:
+
+1. $\text{E}(\boldsymbol{\varepsilon})=\bf{0}$.
+2. $\text{Cov}(\boldsymbol{\varepsilon})=\text{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\bf{I}$.
+3. The design matrix has full rank, $\text{rank}({\bf X})=p+1$. (We assume $n>>(p+1)$.)
+
+The classical _normal_ linear regression model is obtained if additionally
+
+4. $\boldsymbol\varepsilon\sim N_n({\bf 0},\sigma^2 {\bf I})$ holds. Here $N_n$ denotes the $n$-dimensional multivarate normal distribution.
+
+
+
+<!-- The interpretation of the coefficients $\beta_j$ is now as following: holding all other covariates fixed, what is the average effect on $Y$ of a one-unit increase in the $j$th covariate. -->
 
 
 ---
@@ -979,10 +1002,12 @@ head(d.bodyfat$age)
 ---
 
 ## Distribution of the response vector
+
+$~$
+
 Assume that 
-${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon}$
-and 
-$\boldsymbol\varepsilon\sim N_n({\bf 0},\sigma^2 {\bf I})$.
+
+$${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon} \ , \quad \boldsymbol\varepsilon\sim N_n({\bf 0},\sigma^2 {\bf I}) \ . $$
 
 \vspace{4mm}
 
@@ -999,10 +1024,123 @@ $\boldsymbol\varepsilon\sim N_n({\bf 0},\sigma^2 {\bf I})$.
 **A**:
 <!-- $$ {\bf Y} \sim N_{n}({\bf X} {\boldsymbol\beta},\sigma^2 {\bf I})$$ -->
 
+
+
+
+---
+
+
+## Parameter estimation
+
+$~$
+
+In multiple linear regression parameters in $\beta$ are estimated with maximum likelihood and least squares. These two methods give the same estimator when we assume the normal linear regression model. 
+
+$~$
+
+**Least squares and maximum likelihood estimator for ${\boldsymbol \beta}$:**
+$$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
+
+---
+
+The estimator is found by minimizing the RSS for a multiple linear regression model:
+$$\begin{aligned} \text{RSS} &=\sum_{i=1}^n (y_i - \hat y_i)^2 = \sum_{i=1}^n (y_i - \hat \beta_0 - \hat \beta_1 x_{i1} - \hat \beta_2 x_{i2} -...-\hat \beta_p x_{ip} )^2 \\
+&= \sum_{i=1}^n (y_i-{\bf x}_i^T \boldsymbol \beta)^2=({\bf Y}-{\bf X}\hat{\boldsymbol{\beta}})^T({\bf Y}-{\bf X}\hat{\boldsymbol{\beta}})\end{aligned}$$
+The estimator is found by solving the system of $(p+1)$ equations
+
+$$\frac{\partial \text{RSS}}{\partial \boldsymbol \beta}={\bf 0} \ .$$ 
+
+$\rightarrow$ Derivation on the board.
+
+<!-- see [LeastSquaresMLR.pdf](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/LeastSquaresMLR.pdf) for a derivation (from TMA4267V2017). -->
+
+
+
+---
+
+## Example continued
+
+\tiny
+```{r,echo=showsolB}
+r.bodyfat3  <- lm(bodyfat ~  bmi + age + neck + hip +abdomen,data=d.bodyfat)
+summary(r.bodyfat3)
+```
+\normalsize
+
+---
+
+Reproduce the values under `Estimate` by calculating without the use of `lm`.
+
+```{r}
+X=model.matrix(r.bodyfat3 )
+Y=d.bodyfat$bodyfat
+betahat=solve(t(X)%*%X)%*%t(X)%*%Y
+print(betahat)
+```
+
+---
+
+## Distribution of the regression parameter estimator
+
+1. We assumed alassical _normal_ linear regression model with
+${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon}$ and 
+$\boldsymbol\varepsilon\sim N_n({\bf 0},\sigma^2 {\bf I})$, with full-rank matrix $\bf{X}$, leading to 
+$$ {\bf Y} \sim N_{n}(\bf X \boldsymbol \beta,\sigma^2 {\bf I}) \ .$$
+2. Then we "found" that an estimator for ${\bf \beta}$ is
+$$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}.$$
+<!-- 3. From Module 2: Part B: $\mathbf{Y}_{(n\times 1)}$ with mean vector -->
+<!--     $\mathbf{\mu}$ and variance-covariance matrix $\Sigma$, then $\mathbf{Z}=\mathbf{C}\mathbf{Y}$ -->
+<!-- has $\text{E}(\mathbf{Z})=\mathbf{C}\mathbf{\mu}$ and $\text{Cov}(\mathbf{Z})= -->
+<!--    \mathbf{C}\Sigma\mathbf{C}^T$. -->
+<!-- 4. Also Module 2: Part B: If ${\bf Y}$ is multivariate normal, then also $\mathbf{C}\mathbf{Y}$ is multivariate normal.  -->
+
+$~$
+
+**What are**
+
+* The mean $\text{E}(\hat{\boldsymbol\beta})$?
+* The covariance matrix $\text{Cov}(\hat{\boldsymbol\beta})$?
+* The distribution of $\hat{\boldsymbol\beta}$?
+
+
+---
+
+## Distribution of the regression parameter estimator (summary)
+
+$$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
+
+This can be written as $\hat{\boldsymbol\beta}={\bf C}{\bf Y}$ where 
+
+* ${\bf C}=({\bf X}^T{\bf X})^{-1} {\bf X}^T$
+* ${\bf Y} \sim N_{n}({\bf X} {\boldsymbol\beta},\sigma^2 {\bf I})$. 
+
+
+Therefore:
+
+* $\text{E}(\hat{\boldsymbol\beta})={\bf C}\text{E}({\bf Y})=({\bf X}^T{\bf X})^{-1} {\bf X}^T{\bf X} {\boldsymbol\beta}={\boldsymbol\beta}$.
+* $\text{Cov}(\hat{\boldsymbol\beta})={\bf C}\text{Cov}({\bf Y}){\bf C}^T=({\bf X}^T{\bf X})^{-1} {\bf X}^T \sigma^2 {\bf I}(({\bf X}^T{\bf X})^{-1} {\bf X}^T)^T =({\bf X}^T{\bf X})^{-1} \sigma^2$.
+* $\hat{\boldsymbol\beta}$ is multivariate normal $(p+1)$ dimensions.
+
+So: $\hat{\beta}\sim N_{p+1}(\boldsymbol{\beta},\sigma^2({\bf X}^T{\bf X})^{-1})$.
+
+<!-- [](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/PropertiesBetahatMLR.pdf) for a derivation. -->
+(Todo: Use PropertiesBetahatMLR.pdf for a derivation)
+
+
+---
+
+How does this compare to simple linear regression? Not so easy to see a connection!
+
+$$\hat{\beta}_0 = \bar{Y}-\hat{\beta}_1 \bar{x} \text{ and } \hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(Y_i-\bar{Y})}{\sum_{i=1}^n(x_i-\bar{x})^2},$$
+
+$$ \hat\beta=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
+
+Often we use centered data (and also scaled) to ease interpretation. 
+
 ---
  
 
-## Another data set
+## Another data set: Ozone
 
 <!-- ### Munich rent index (as in Part A) -->
 
@@ -1018,122 +1156,30 @@ $\boldsymbol\varepsilon\sim N_n({\bf 0},\sigma^2 {\bf I})$.
 <!-- * `cheating`: central heating: a factor 0 without central heating, 1 with central heating. -->
 <!-- * `district`: District in Munich. -->
 
-### Ozone
+$~$
 
 New York, 1973: 111 observations of
 
-* `ozone` : ozone concentration (ppm)
+* `ozone` : ozone concentration (ppm); **response variable**
 * `radiation` : solar radiation (langleys)
 * `temperature` : daily maximum temperature (F)
 * `wind` : wind speed (mph)
 
-`ozone` as our response variable and `temperature`, `wind` and `radiation as covariates.
 
-First 6 observations in data set printed.
+\small
+```{r,echo=TRUE,eval=TRUE,messages=FALSE,warnings=FALSE,error=FALSE,results="hold"}
+library(ElemStatLearn)
+data(ozone)
+head(ozone)
+```
 
 ---
 
-```{r,echo=FALSE,eval=TRUE,messages=FALSE,warnings=FALSE,error=FALSE,results="hold"}
-library(ElemStatLearn)
-library(knitr)
-library(kableExtra)
-data(ozone)
-print(head(ozone))
+\scriptsize
+```{r,echo=TRUE,eval=TRUE,messages=FALSE,warnings=FALSE,error=FALSE,results="hold"}
 ozone.lm = lm(ozone~temperature+wind+radiation, data=ozone)
 ```
 
----
-
-
-## Classical linear model
-
-${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon}$
-
-Assumptions:
-
-1. $\text{E}(\boldsymbol{\varepsilon})=\bf{0}$.
-2. $\text{Cov}(\boldsymbol{\varepsilon})=\text{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\bf{I}$.
-3. The design matrix has full rank, $\text{rank}({\bf X})=p+1$. (We assume $n>>(p+1)$.)
-
-The classical _normal_ linear regression model is obtained if additionally
-
-4. $\boldsymbol\varepsilon\sim N_n({\bf 0},\sigma^2 {\bf I})$ holds. Here $N_n$ denotes the $n$-dimensional multivarate normal distribution.
-
-For random covariates these assumptions are to be understood conditionally on ${\bf X}$.
-
-The interpretation of the coefficients $\beta_j$ is now as following: holding all other covariates fixed, what is the average effect on $Y$ of a one-unit increase in the $j$th covariate.
-
----
-
-
-## Parameter estimation
-
-In multiple linear regression parameters in $\beta$ are estimated with maximum likelihood and least squares. These two methods give the same estimator when we assume the normal linear regression model. 
-
-**Least squares and maximum likelihood estimator for ${\bf \beta}$:**
-$$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
-
----
-
-The estimator is found by minimizing the RSS for a multiple linear regression model:
-$$\begin{aligned} \text{RSS} &=\sum_{i=1}^n (y_i - \hat y_i)^2 = \sum_{i=1}^n (y_i - \hat \beta_0 - \hat \beta_1 x_{i1} - \hat \beta_2 x_{i2} -...-\hat \beta_p x_{ip} )^2 \\
-&= \sum_{i=1}^n (y_i-{\bf x}_i^T \boldsymbol \beta)^2=({\bf Y}-{\bf X}\hat{\boldsymbol{\beta}})^T({\bf Y}-{\bf X}\hat{\boldsymbol{\beta}})\end{aligned}$$
-The estimator is found by solving the system of (p+1) equation :$\frac{\partial \text{RSS}}{\partial \boldsymbol \beta}={\bf 0}$, see [LeastSquaresMLR.pdf](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/LeastSquaresMLR.pdf) for a derivation (from TMA4267V2017).
-
----
-
-### Example continued
-
-Write down the model and explain what the values under `Estimate` mean in practice.
-
----
-
-\footnotesize
-```{r,echo=showsolB}
-munich3.lm=lm(rentsqm~area+yearc+location+bath+kitchen+cheating,data=rent99)
-summary(munich3.lm)
-```
-\normalsize
-
----
-
-Reproduce the values under `Estimate` by calculating without the use of `lm`.
-
-```{r}
-X=model.matrix(rentsqm~area+yearc+location+bath+kitchen+cheating,data=rent99)
-Y=rent99$rentsqm
-betahat=solve(t(X)%*%X)%*%t(X)%*%Y
-print(betahat)
-```
-
----
-
-## Distribution of the regression parameter estimator
-
-1. We assumed that 
-${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon}$ and 
-$\boldsymbol\varepsilon\sim N_n({\bf 0},\sigma^2 {\bf I})$, leading to 
-$$ {\bf Y} \sim N_{n}(\bf X \boldsymbol \beta,\sigma^2 {\bf I}).$$
-2. Then we "found" that an estimator for ${\bf \beta}$ is
-$$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}.$$
-3. From Module 2: Part B: $\mathbf{Y}_{(n\times 1)}$ with mean vector
-    $\mathbf{\mu}$ and variance-covariance matrix $\Sigma$, then $\mathbf{Z}=\mathbf{C}\mathbf{Y}$
-has $\text{E}(\mathbf{Z})=\mathbf{C}\mathbf{\mu}$ and $\text{Cov}(\mathbf{Z})=
-   \mathbf{C}\Sigma\mathbf{C}^T$.
-4. Also Module 2: Part B: If ${\bf Y}$ is multivariate normal, then also $\mathbf{C}\mathbf{Y}$ is multivariate normal. 
-
-**Q:**
-
-* Find the mean $\text{E}(\hat{\boldsymbol\beta})$ and the covariance matrix $\text{Cov}(\hat{\boldsymbol\beta})$ by yourself.
-* What is then the distribution of $\hat{\boldsymbol\beta}$?
-
----
-
-
-## Model and parameter estimator (summing up)
-
-Model: $${\bf Y}=\bf X \boldsymbol{\beta}+{\boldsymbol{\varepsilon}}$$
-with full rank design matrix ${\bf X}$. 
 
 \small
 ```{r}
@@ -1142,62 +1188,198 @@ head(ozone$ozone)
 ```
 \normalsize
 
----
 
-Classical _normal_ linear regression model when
-$$\boldsymbol{\varepsilon}\sim N_n({\bf 0},\sigma^2{\bf I}).$$
-
-In Part A we found that :
-$$ {\bf Y} \sim N_{n}({\bf X} {\boldsymbol\beta},\sigma^2 {\bf I})$$
-
-Parameter of interest is $\boldsymbol{\beta}$ and $\sigma^2$ is a nuisance (=parameter not of interest). 
-
-Using the least squares (and maximum likelihood) method the estimator for $\boldsymbol\beta$ is
-$$ \hat\beta=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
 
 ---
 
-How does this compare to simple linear regression? Not so easy to see a connection!
-
-$$\hat{\beta}_0 = \bar{Y}-\hat{\beta}_1 \bar{x} \text{ and } \hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(Y_i-\bar{Y})}{\sum_{i=1}^n(x_i-\bar{x})^2},$$
-
-$$ \hat\beta=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
-
-Often we use centered data (and also scaled) to ease interpretation. In design of experiments often orthogonal columns of the design matrix is chosen to get ${\bf X}^T{\bf X}$ to be diagonal, which leads to easier interpretation and identifiability.
-
----
-
-## Distribution of the regression parameter estimator (summing up)
-
-$$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
-
-This can be written as $\hat{\boldsymbol\beta}={\bf C}{\bf Y}$ where 
-
-* ${\bf C}=({\bf X}^T{\bf X})^{-1} {\bf X}^T$
-* ${\bf Y} \sim N_{n}({\bf X} {\boldsymbol\beta},\sigma^2 {\bf I})$. 
-
-Therefore
-
-* $\hat{\boldsymbol\beta}$ is multivariate normal (p+1) dimensions, with
-* $\text{E}(\hat{\boldsymbol\beta})={\bf C}\text{E}({\bf Y})=({\bf X}^T{\bf X})^{-1} {\bf X}^T{\bf X} {\boldsymbol\beta}={\boldsymbol\beta}$
-* $\text{Cov}(\hat{\boldsymbol\beta})={\bf C}\text{Cov}({\bf Y}){\bf C}^T=({\bf X}^T{\bf X})^{-1} {\bf X}^T \sigma^2 {\bf I}(({\bf X}^T{\bf X})^{-1} {\bf X}^T)^T =({\bf X}^T{\bf X})^{-1} \sigma^2$.
-
-So: $\hat{\beta}\sim N_{p+1}(\boldsymbol{\beta},\sigma^2({\bf X}^T{\bf X})^{-1})$.
-
-[PropertiesBetahatMLR.pdf](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/PropertiesBetahatMLR.pdf) for a derivation.
-
----
-
-$\hat{\beta}\sim N_{p+1}(\boldsymbol{\beta},\sigma^2({\bf X}^T{\bf X})^{-1})$.
 
 \footnotesize
 ```{r}
-coefficients(ozone.lm)
-vcov(ozone.lm)
+summary(ozone.lm)
 ```
 \normalsize
 
-**Q:** Explain what all these numbers are!
+---
+
+Remember:
+$\hat{\beta}\sim N_{p+1}(\boldsymbol{\beta},\sigma^2({\bf X}^T{\bf X})^{-1})$. The covariance matrix can be obtained as follows:
+
+\footnotesize
+```{r}
+vcov(ozone.lm)
+```
+
+---
+
+# Four important questions
+
+1. Is at least one of the predictors $X_1, \ldots, X_p$ useful in predicting the response?
+
+2. Do all the predictors help to explain $Y$, or is only a subset of predictors useful?
+
+3. How well does the model fit the data?
+
+4. Given a set of predictor variables, what reaposne value should we predict, and how accurate is our prediction?
+
+---
+
+## 1. Relationship between predictors and response?
+
+$~$
+
+Question is whether we could as well omit all predictor variables at the same time, that is
+\begin{center}
+$$H_0: \beta_1=\beta_2=\ldots=\beta_p=0 $$
+
+vs. 
+$$H_1: \text{at least one } \beta_j \text{ is non-zero.}$$
+\end{center}
+
+---
+
+\vspace{4mm}
+To answer this, we need the $F$-statistic
+
+$$F = \frac{(\text{TSS}-\text{RSS})/p}{\text{RSS}/(n-p-1)} \sim F_{p,(n-p-1)}\ ,$$
+
+where total sum of squares $\text{TSS}=\sum_i(y_i-\bar{y})^2$, and residual sum of squares $\text{RSS}=\sum_i(y_i-\hat{y}_i)^2$. Under the Normal regression assumptions, $F$ follows an $F_{p,(n-p-1)}$ distribution (ref to Walepole book).
+
+* If $H_0$ is true, $F$ is expected to be 1.
+
+* Otherwise, we expect that the numerator is larger than the denominator (because the regression then explains a lot of variation) and thus $F$ is greater than 1. For an observed value $f_0$, the $p$-value is given as
+$$p =P(F_{p,n-p-1}> f_0) \ .$$
+
+---
+
+Checking the $F$-value in the `R` output:
+
+\scriptsize
+```{r}
+summary(r.bodyfat)
+```
+
+Conclusion?
+
+---
+
+## More complex hypotheses
+
+$~$
+
+Sometimes we don't want to test if all $\beta$'s to zero at the same time, but only a subset $1,\ldots , q$:
+
+$$ H_0: \beta_1=\beta_2=\cdots= \beta_q =0 \text{ vs. } H_1: \text{at least one different from zero}.$$
+
+Again, the $F$-test can be used, but now $F$ is calculated like
+
+$$F=\frac{(\text{RSS$_0$-RSS})/(q)}{\text{RSS}/(n-p-1)} \sim F_{q,n-p-1} \ ,$$
+
+where
+ 
+* Large model: RSS with $p+1$ regression parameters
+* Small model: RSS$_0$ with $q+1$ regression parameters
+
+
+
+---
+
+## Example in R
+
+* **Question:** Do `weight` and `height` explain something of `bodyfat`, on top of the variables `bmi` and `age`?
+
+* Fit both models and use the `anova()` function to carry out the $F$-test:
+
+\footnotesize
+```{r}
+r.bodyfat.large=lm(bodyfat ~  bmi + age ,data=d.bodyfat)
+r.bodyfat.small=lm(bodyfat ~  bmi + age + weight + height, data=d.bodyfat)
+anova(r.bodyfat.large,r.bodyfat.small)
+```
+\normalsize
+
+---
+
+## Inference about a single predictor $\beta_j$ 
+
+$~$
+
+A special case is
+
+$$H_0: \beta_j=0 \text{ vs } H_1: \beta_j\neq 0$$
+
+* Nothing new: We did it for simple linear regression!
+
+* However, now the $F$-statistic becomes
+
+$$F=\frac{(\text{RSS$_0$-RSS})/(p-1)}{\text{RSS}/(n-p-1)} \sim F_{1,n-p-1} \ ,$$
+
+and you know (see e.g. Walepole et al p. xy (todo)) that 
+
+$$F_{1,n-p-1} = t^2_{n-p-1} \ ,$$
+thus we can use a $T$-statistics with $(n-p-1)$ degrees of freedom to get the $p$-value.
+
+<!-- $$ T_j=\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}\sim t_{n-p-1}$$ -->
+
+<!-- Again, $c_{jj}$ is diagonal element corresponding to $\hat{\beta}_j$ of $({\bf X}^T{\bf X})^{-1}$. -->
+
+---
+
+Going back again:
+
+\footnotesize
+```{r}
+summary(r.bodyfat)$coef
+```
+\normalsize
+
+However:
+
+* Only checking the individual $p$-values is dangerous. Why?  $\rightarrow$ e.g., multiple testing problem.
+
+* Not possible if $n>p$ $\rightarrow$ need other approaches (see e.g., Module 6).
+
+
+---
+
+## Inference about $\beta_j$: confidence interval
+
+$~$
+
+Using that 
+
+$$ T_j=\frac{\hat{\beta}_j-\beta_j}{\text{SE}(\hat\beta)}\sim t_{n-p-1} \ ,$$
+
+we can create confidence intervals for $\beta_j$ in the same manner as we did for simple linear regression. For the typical confidence level $\alpha=0.05$ we have
+
+$$\hat{\beta}_j \pm t_{0.975,n-p-2} \cdot\text{SE} (\hat{\beta}_j)  \ .$$
+
+
+---
+
+\footnotesize
+```{r}
+confint(r.bodyfat)
+```
+\normalsize
+
+
+---
+
+## 2. Deciding on important variables
+
+Only a few words, with reference to Module 6.
+
+---
+
+## 3. Model Fit
+
+
+
+
+---
+
+## 4. Predictions
+
 
 ---
 
@@ -1242,126 +1424,6 @@ corrplot(cov2cor(vcov(fitoz)),cex.lab=0.7);
 ```
 \normalsize
 
----
-
-## Inference about $\beta_j$: confidence interval
-$$\hat{\beta}\sim N_{p+1}(\boldsymbol{\beta},\sigma^2({\bf X}^T{\bf X})^{-1})$$
-
-Statistic for inference about $\beta_j$, $c_{jj}$ is diagonal element corresponding to $\hat{\beta}_j$ of $({\bf X}^T{\bf X})^{-1}$.
-$$ T_j=\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}\sim t_{n-p-1}$$
-$$ P(\hat{\beta}_j-t_{\alpha/2,n-p-1}\sqrt{c_{jj}}\hat{\sigma}
-\le \beta_j \le \hat{\beta}_j+t_{\alpha/2,n-p-1}\sqrt{c_{jj}}\hat{\sigma})=1-\alpha$$
-
-A $(1-\alpha)$% CI for $\beta_j$ is when we insert numerical values for the upper and lower limits: $[\hat{\beta}_j-t_{\alpha/2,n-p-1}\sqrt{c_{jj}}\hat{\sigma},\hat{\beta}_j+t_{\alpha/2,n-p-1}\sqrt{c_{jj}}\hat{\sigma}]$.
-
-When we work with _large samples_ then $n-p-1$ becomes large and the $t$ distribution goes to a normal distribution, so we may use the standard normal in place of the $t_{n-p-1}$. This is in done in our textbook.
-
----
-
-\footnotesize
-```{r}
-fitoz=lm(ozone~temperature+wind+radiation, data=ozone)
-confint(fitoz)
-```
-\normalsize
-
----
-
-## Inference about $\beta_j$: hypothesis tests
-$$H_0: \beta_j=0 \text{ vs } H_1: \beta_j\neq 0$$
-
-Nothing new: using $t$-tests based on
-$$ T_j=\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}\sim t_{n-p-1}$$
-
-Again, $c_{jj}$ is diagonal element corresponding to $\hat{\beta}_j$ of $({\bf X}^T{\bf X})^{-1}$.
-
----
-
-\footnotesize
-```{r}
-fitoz=lm(ozone~temperature+wind+radiation, data=ozone); summary(fitoz)
-```
-\normalsize
-
----
-
-**Q:**
-
-1. Where is hypothesis testing performed here, and which are the hypotheses rejected at level $0.01$?
-2. Will the test statistics and $p$-values change if we change the regression model?
-3. What is the relationship between performing an hypothesis test and constructing a CI interval?
-
-**A:**
-
-1. Column named `t value` gives numerical value for the t-statistic and column `*Pr(>|t|)` gives $p$-value for the two-sided test.
-2. Yes. Unless our design matrix has orthogonal columns.
-3. If a $(1-\alpha)$ 100% CI covers the hypothsized value (here 0) then this is a sensible value for the parameter it can be shown that then the $p$-value will be larger than $\alpha$. And, if a $(1-\alpha)$ 100% CI does not cover the hypothsized value (here 0) then this is not a sensible value for the parameter it can be shown that then the $p$-value will be smaller than $\alpha$.
-
----
-
-## More complex hypotheses
-
-Consider the hypotheses:
-$$ H_0: \beta_1=\beta_2=\cdots= \beta_k =0 \text{ vs. } H_1: \text{at least one different from zero}.$$
-
-This means we test a set of regression parameters is different from 0. 
-
-This is used to
-
-* let $k=p$ and test if any parameters are different from 0 - this is called to _test if the regression is significant_.
-* to compare two models - one where a the subset of the coefficients are omitted.
-
-To do this $F$-tests are used.
-
----
-
-### Is the regression significant?
-
-$$ H_0: \beta_1=\beta_2=\cdots= \beta_p =0 \text{ vs. } H_1: \text{at least one different from zero}.$$
-
-F-statistic
-
-$$F=\frac{(\text{TSS-RSS})/p}{\text{RSS}/(n-p-1)} \sim F_{p,n-p-1}$$
-
-When $H_0$ is false we expect that the numerator is larger than the denominator and thus $F$ is greater than 1. A $p$ value is calculated from the upper tail of the $F$-distribution
-
-We find $\text{p-value}=P(F_{p,n-p-1}>f_0)$, where $f_0$ is the numerical value of $F$ inserted RSS, TSS from the data.
-
----
-
-\footnotesize
-```{r}
-fitoz=lm(ozone~temperature+wind+radiation, data=ozone); summary(fitoz)
-```
-\normalsize
-
----
-
-### Tested a subset by comparing two nested models
-
-* Large model: RSS with $p+1$ regression parameters
-* Small model: RSS$_0$ with $q+1$ regression parameters
-
-$H_0:$ the additional $p-q$ coefficients in the large model are all zero vs. $H_1$: at least one different from zero.
-
-
-$$F=\frac{(\text{RSS$_0$-RSS})/(p-q)}{\text{RSS}/(n-p-1)} \sim F_{p-q,n-p-1}$$
-
-When $H_0$ is false we expect that the numerator is larger than the denominator and thus $F$ is greater than 1. A $p$ value is calculated from the upper tail of the $F$-distribution
-
-We find $\text{p-value}=P(F_{p-q,n-p-1}>f_0)$, where $f_0$ is the numerical value of $F$ inserted RSS, TSS from the data.
-
-In R we perform the test by fitting the two models `fit.large` and `fit.small` and use `anova(fit.small,fit.large).
-
----
-
-\footnotesize
-```{r}
-fit.large=lm(ozone~temperature+wind+radiation, data=ozone)
-fit.small=lm(ozone~temperature, data=ozone)
-anova(fit.small,fit.large)
-```
-\normalsize
 
 ---
 
@@ -1476,6 +1538,10 @@ If we consider two models with the same model complexity then RSS can be used to
 
 But, if we want to compare models with different model complexity we need to look at other measures of quality for the regression.
 
+$~$
+
+**$\rightarrow$ Model selection is a major point in Module 6.**
+
 ---
 
 ### $R^2$ adjusted 
@@ -1483,68 +1549,7 @@ But, if we want to compare models with different model complexity we need to loo
 $$R^2_{\text{adj}}=1-\frac{\frac{RSS}{n-p-1}}{\frac{TSS}{n-1}}=1-\frac{n-1}{n-p-1}(1-R^2)$$
 Choose the model with the _largest_ $R^2_{\text{adj}}$.
 
----
 
-### AIC Akaike information criterion
-
-AIC is one of the most widely used criteria, and is designed for likelihood-based inference.
-Let $l(\hat{\beta}_M,\tilde{\sigma}^2)$ be the maximum of the log-likelihood of the data inserted the maximum likelihood estimates for the regression parameters. Further, let $\lvert M \rvert$ be the number of estimated regression parameters in our model (and then we add 1 for the estimated variance).
-$$\text{AIC} =-2 \cdot l(\hat{\beta}_M,\tilde{\sigma}^2)+2(\lvert M\rvert +1)$$
-
-Choose the model with the minimum AIC.
-
----
-
-For a normal regression model:
-$$\text{AIC} \propto n\ln(\tilde{\sigma}^2)+2(\lvert M\rvert +1)+C$$
-where C is a function of $n$ (will be the same for two models for the same data set).
-
-The likelihood - for the normal linear regression model:
-$$l(\hat{\boldsymbol\beta},{\tilde{\sigma}^2})=\text{ln}(L(\hat{\boldsymbol\beta},{\sigma^2}))=-\frac{n}{2}\text{ln}(2\pi)-\frac{n}{2}\text{ln}\tilde{\sigma}^2-\frac{1}{2\tilde{\sigma}^2} ({\bf y}-{\bf X}\hat{\boldsymbol\beta})^T({\bf y}-
-{\bf X}\hat{\boldsymbol\beta})$$
-
-Remark that $\tilde{\sigma}^2=\text{RSS}/n$ - our ML estimator, so that the first term in the AIC is just a function of the RSS.
-
-Remark: for us here we have $2(\lvert M\rvert +1)=2(p+2)$
-
----
-
-### BIC  Bayesian information criterion.
-
-The BIC is also based on the likelihood (see notation above).
-$$\text{BIC} =-2 \cdot l(\hat{\beta}_M,\tilde{\sigma}^2)+\ln(n)\cdot (\lvert M\rvert +1)$$
-
-For a normal regression model:
-$$ \text{BIC} \propto n\ln(\tilde{\sigma}^2)+\ln(n)(\lvert M\rvert +1)$$
-Choose the model with the minimum BIC.
-
-AIC and BIC are motivated in very different ways, but the final result for the normal regression model is very similar.
-BIC has a larger penalty than AIC ($\log(n)$ vs. $2$), and will often give a smaller model (=more parsimonious models) than AIC.
-In general we would not like a model that is too complex.
-
-Remark: for us here we have $\ln(n)\cdot (\lvert M\rvert +1)=\ln(n)\cdot (p+2)$
-
----
-
-## Subset selection procedures
-
-Given a full multiple linear regression model the case is often that not all of the covariates are of equal importance for predicting the response. Some of the covariates could be removed from the model without affecting the fit. At the same time one would gain a more interpretable model with fewer parameters. We will here shortly discuss three subset selction procedures. These will be discussed in greater detail in Module 6.
-
-**Forward selection**
-The forward selection procedure stars with the null model (no covariates, only $\beta_0$). In a step-wise procedure, additional covariates are added one at a time. The inclusion of the covariate is based on a quality of fit measure (f.ex. $R^2_{\text{adj}}$ or AIC) and the covariate giving the greatest improve of the fit is added to the model at each step.
-
----
-
-**Backward selection**
-The backward selection has the opposite procedure: Here the starting point is the full multiple linear regression model (with all covariates included). At each step of the procedure, one covariate is removed from the model. The removal of this covariate is based on a quality of fit measure, where the covariate corresponding to the smallest decrease in the fit is removed at each step.
-
-**Mixed selection**
-Combine forward and backward.
-
-**All subset selection**
-All subset selection is a procedure where all possible combination of covariates are tested. This approach is efficient but computationally expensive.
-
-Model selection is a major point in Module 6.
 
 ---
 
@@ -1847,7 +1852,6 @@ We start by fitting a multiple linear regression model to the data, with `ozone`
 
 ```{r,echo=FALSE,eval=TRUE,messages=FALSE,warnings=FALSE,error=FALSE,results="hold"}
 library(ElemStatLearn)
-library(knitr)
 library(kableExtra)
 data(ozone)
 print(head(ozone))
