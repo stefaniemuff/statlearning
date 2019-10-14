@@ -13,6 +13,7 @@ output:
     colortheme: "default"
     font: "serif"
 urlcolor: blue
+bibliography: refs.bib
 #header-includes: \usepackage{xcolor}
 
 ---
@@ -652,7 +653,7 @@ Brief recap:
 
 $~$
 
-* Under $H_0$, $T$ has a $t$-distribution with $n-2$ degrees of freedom ($n=$ number of data points; compare to Chapter 8.6 in Walepole et al).
+* Under $H_0$, $T$ has a $t$-distribution with $n-2$ degrees of freedom ($n=$ number of data points; compare to Chapter 8.6 in [@walepole.etal]).
 
 
 ---
@@ -811,9 +812,11 @@ $~$
 
 \vspace{2mm}
 
-The $t$-distribution can be used to create confidence intervals for the regression parameters. The lower and upper limits of a 95\% confidence interval for $\beta_j$ are
-$$\hat{\beta}_j \pm t_{1-\alpha/2,n-2} \cdot\text{SE} (\hat{\beta}_j) \quad j=0, 1.$$
-Interpretation of this confidence interval: 
+* Confidence intervals (CIs) are a much more informative way to report results than $p$-values!
+
+* The $t$-distribution\footnote{If $n$ is large, the normal approximation to the $t$-distribution can be used (and is used in the textbook).} can be used to create confidence intervals for the regression parameters. The lower and upper limits of a 95\% confidence interval for $\beta_j$ are
+$$\hat{\beta}_j \pm t_{(1-\alpha/2),n-2} \cdot\text{SE} (\hat{\beta}_j) \quad j=0, 1.$$
+* Interpretation of this confidence interval: 
 
 * There is a 95\% probability that the interval will contain the *true* value of $\beta_j$.
 
@@ -821,7 +824,7 @@ Interpretation of this confidence interval:
 
 $~$
 
-$\rightarrow$ If $n$ is large, the normal approximation to the $t$-distribution can be used (and is used in the textbook).
+
 
 ---
 
@@ -1017,7 +1020,7 @@ $${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon} \ , \quad \boldsymbol\var
 
 * The covariance matrix $\text{Cov}(\bf Y)$ given $\bf{X}$?
 
-* What is then the distribution of $\bf Y$?
+* Thus what is the distribution of $\bf Y$?
 
 ---
 
@@ -1242,7 +1245,7 @@ To answer this, we need the $F$-statistic
 
 $$F = \frac{(\text{TSS}-\text{RSS})/p}{\text{RSS}/(n-p-1)} \sim F_{p,(n-p-1)}\ ,$$
 
-where total sum of squares $\text{TSS}=\sum_i(y_i-\bar{y})^2$, and residual sum of squares $\text{RSS}=\sum_i(y_i-\hat{y}_i)^2$. Under the Normal regression assumptions, $F$ follows an $F_{p,(n-p-1)}$ distribution (ref to Walepole book).
+where total sum of squares $\text{TSS}=\sum_i(y_i-\bar{y})^2$, and residual sum of squares $\text{RSS}=\sum_i(y_i-\hat{y}_i)^2$. Under the Normal regression assumptions, $F$ follows an $F_{p,(n-p-1)}$ distribution (see [@walepole.etal], Chapter 8.7).
 
 * If $H_0$ is true, $F$ is expected to be 1.
 
@@ -1266,9 +1269,14 @@ Conclusion?
 
 $~$
 
-Sometimes we don't want to test if all $\beta$'s to zero at the same time, but only a subset $1,\ldots , q$:
+Sometimes we don't want to test if all $\beta$'s are zero at the same time, but only a subset $1,\ldots , q$:
 
-$$ H_0: \beta_1=\beta_2=\cdots= \beta_q =0 \text{ vs. } H_1: \text{at least one different from zero}.$$
+\begin{center}
+\colorbox{lightgray}{\begin{minipage}{11cm}
+\vspace{-2mm}
+$$ H_0: \beta_1=\beta_2=\cdots= \beta_q =0 \text{  vs.  } H_1: \text{at least one different from zero}.$$
+\end{minipage}}
+\end{center}
 
 Again, the $F$-test can be used, but now $F$ is calculated like
 
@@ -1305,15 +1313,20 @@ $~$
 
 A special case is
 
-$$H_0: \beta_j=0 \text{ vs } H_1: \beta_j\neq 0$$
+\begin{center}
+\colorbox{lightgray}{\begin{minipage}{7cm}
+
+$$H_0: \beta_j=0 \; \text{ vs. } \; H_1: \beta_j\neq 0$$
+\end{minipage}}
+\end{center}
 
 * Nothing new: We did it for simple linear regression!
 
 * However, now the $F$-statistic becomes
 
 $$F=\frac{(\text{RSS$_0$-RSS})/(p-1)}{\text{RSS}/(n-p-1)} \sim F_{1,n-p-1} \ ,$$
-
-and you know (see e.g. Walepole et al p. xy (todo)) that 
+$~$
+and it is known that
 
 $$F_{1,n-p-1} = t^2_{n-p-1} \ ,$$
 thus we can use a $T$-statistics with $(n-p-1)$ degrees of freedom to get the $p$-value.
@@ -1334,7 +1347,8 @@ summary(r.bodyfat)$coef
 
 However:
 
-* Only checking the individual $p$-values is dangerous. Why?  $\rightarrow$ e.g., multiple testing problem.
+* Only checking the individual $p$-values is dangerous. **Why?**  
+<!-- $\rightarrow$ e.g., multiple testing problem. -->
 
 * Not possible if $n>p$ $\rightarrow$ need other approaches (see e.g., Module 6).
 
@@ -1345,11 +1359,13 @@ However:
 
 $~$
 
-Using that 
+* Using that 
+$$ T_j=\frac{\hat{\beta}_j-\beta_j}{\text{SE}(\hat\beta_j)}\sim t_{n-p-1} \ ,$$
+we can create confidence intervals for $\beta_j$ in the same manner as we did for simple linear regression. 
 
-$$ T_j=\frac{\hat{\beta}_j-\beta_j}{\text{SE}(\hat\beta)}\sim t_{n-p-1} \ ,$$
+$~$
 
-we can create confidence intervals for $\beta_j$ in the same manner as we did for simple linear regression. For the typical confidence level $\alpha=0.05$ we have
+* For example, when using the typical confidence level $\alpha=0.05$ we have
 
 $$\hat{\beta}_j \pm t_{0.975,n-p-2} \cdot\text{SE} (\hat{\beta}_j)  \ .$$
 
@@ -1367,187 +1383,255 @@ confint(r.bodyfat)
 
 ## 2. Deciding on important variables
 
-Only a few words, with reference to Module 6.
+$~$
+
+Overarching question: 
+
+\begin{center}
+ \textcolor{blue}{\bf Which model is the best?}
+\end{center}
+
+But:
+
+* Not clear what _best_ means $\rightarrow$ we need an objective criterion, like AIC, BIC, Mallows $C_p$, adjusted $R^2$.
+
+* There are usually **many** possible models. For $p$ predictors, we can build $2^p$ different models.
+
+* **Cautionary note**: Model selection can also lead to biased parameters estimates. 
+
+$~$
+
+$\rightarrow$ This topic is the focus of Module 6.
 
 ---
 
 ## 3. Model Fit
 
+$~$
+
+We can again look at the two measures from simple linear regression:
+
+* An absolute measure of lack of fit is again given by the estimate of $\sigma$, the residual standard error (RSE)
+
+$$\hat\sigma = \text{RSE}= \sqrt{ \frac{ \text{RSS}}{n-p-1}} \ . $$
 
 
-
----
-
-## 4. Predictions
-
-
----
-
-## Estimator for $\sigma^2$ 
-
-$$\begin{aligned} \text{RSS} &=\sum_{i=1}^n (y_i - \hat y_i)^2 = \sum_{i=1}^n (y_i - \hat \beta_0 - \hat \beta_1 x_{i1} - \hat \beta_2 x_{i2} -...-\hat \beta_p x_{ip} )^2 \\
-&= \sum_{i=1}^n (y_i-{\bf x}_i^T \hat{\boldsymbol \beta})^2=({\bf Y}-{\bf X}\hat{\boldsymbol{\beta}})^T({\bf Y}-{\bf X}\hat{\boldsymbol{\beta}})\end{aligned}$$
-
-Restricted maximum likelihood estimator for ${\bf \sigma}^2$:
-\[ \hat{\sigma}^2=\frac{1}{n-p-1}({\bf Y}-{\bf X}\hat{\boldsymbol\beta})^T({\bf Y}-{\bf X}\hat{\boldsymbol\beta})=\frac{\text{RSS}}{n-p-1}\]
-with $\frac{(n-p-1)\hat{\sigma}^2}{\sigma^2} \sim \chi^2_{n-p-1}$.
+* $R^2$ is again the fraction of variance explained (no change from simple linear regression)
+$$R^2 = \frac{\text{TSS}-\text{RSS}}{\text{TSS}}= 1-\frac{\text{RSS}}{\text{TSS}}=1-\frac{\sum_{i=1}^n(y_i-\hat{y}_i)^2}{\sum_{i=1}^n(y_i-\bar{y}_i)^2} \ .$$ 
+Simply speaking: "The higher $R^2$, the better."
 
 ---
 
-## Distribution of regression parameters (contd.)
-
-$\hat{\beta}\sim N_{p+1}(\boldsymbol{\beta},\sigma^2({\bf X}^T{\bf X})^{-1})$.
-
-* unbiased
-* covariance matrix dependent on the design (and $\sigma^2$)
-
-Multicollinearity: columns in design matrix (that is, the covariates) are correlated, which may lead to difficulty in "identifying" the effect of each covariate on the response, and thus large variances (and covariances) for the elements of $\hat{\boldsymbol\beta}$.
-
-The _variance inflation factor (VIF)_ is the ratio of the variance of $\hat{\beta}_j$ when fitting a model with the chosen covariates divided by the variance of $\hat{\beta}_j$ in a simple linear regression. 
-
-* VIF=1: absence of collinearity
-* VIF exceeding 5 or 10 might be problematic. 
-* Solution: drop a covariate (that do not add much since it is correlated with other covariates).
-
----
-
-\small
-```{r,echo=c(5,6,7,8),out.width="45%"}
-library(corrplot)
-library(gamlss.data)
-library(ElemStatLearn)
-library(car)
-oz1=as.data.frame(apply(ozone,2,scale,scale=FALSE))
-fitoz=lm(ozone~temperature+wind+radiation, data=oz1)
-vif(fitoz)
-corrplot(cov2cor(vcov(fitoz)),cex.lab=0.7);
-```
-\normalsize
-
-
----
-
-## Prediction intervals 
-
-Once we have estimated the coeffients $\hat\beta_0$, $\hat\beta_1$,.., $\hat\beta_p$, we can make a prediction for a response value $Y_0$ for a new observation $\mathbf x_0 = (x_1, x_2, ..., x_p)$ as before:
-
-$$\hat Y_0 = \hat \beta_0 + \hat \beta_1 x_1 + \hat \beta_2 x_2 + ... + \hat \beta_p x_p ={\bf x}_0^T \hat{\boldsymbol\beta}.$$
-This is an intuitive point estimate.
-
-Remember, one aim for regression was to "construct a model to predict the response from a set of (one or several) explanatory variables- more or less black box".
-
-To assess the uncertainty in this prediction we present a prediction interval for the $Y_0$.
-
----
-
-After some work (see "details on the derivation" below):
-
-$P({\bf x}_0^T \hat{\beta}-t_{\alpha/2,n-p-1}\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0} \le Y_0 \le {\bf x}_0^T \hat{\beta}+t_{\alpha/2,n-p-1}\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0})=1-\alpha$
-
-A $(1-\alpha)$% PI for $Y_0$ is when we insert numerical values for the upper and lower limits: $[{\bf x}_0^T \hat{\beta}-t_{\alpha/2,n-p-1}\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}, {\bf x}_0^T \hat{\beta}+t_{\alpha/2,n-p-1}\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}]$.
-
----
-
-PIs can be found in R using `predict` on an `lm` object, but make sure that `newdata` is a `data.frame` with the same names as the original data. 
-
-**Example: Using the Munich rent index data**
-
-We want to predict the rent - with PI - for an appartment with area 50, location 2 ("good"), nice bath and kitchen and with central heating.
-
-
----
-
-\footnotesize
-```{r}
-library(gamlss.data)
-fit=lm(rent~area+location+bath+kitchen+cheating,data=gamlss.data::rent99)
-newobs=gamlss.data::rent99[1,]
-newobs[1,]=c(NA,NA,50,NA,2,1,1,1,NA)
-predict(fit,newdata=newobs,interval="prediction",type="response")
-```
-\normalsize
-
-**Q** 
-
-1. When is a prediction interval of interest? 
-
-**A:** Always? Gives useful information in addition to a point prediction.
-
-2. Explain the result from `predict` above.
-
-**A:** Fit is point prediction, lwr is lower and upr is upper limit of the 95% PI (default with 95, and `level=0.99` gives 99).
-
----
-
-### Details in the derivation of the PI
-
-We start to look at the difference between the unobserved response $Y_0$ (for a given covariate vector ${\bf x}_0$) and the point prediction $\hat{y}_0$, $Y_0-\hat{y}_0$.
-
-First, we assume that the unobserved response at covariate ${\bf x}_0$ is independent of our previous observations and follows the same distibution, that is
-$Y_0 \sim N({\bf x}_0^T \beta,\sigma^2)$. Further,
-
-$$\hat{y}_0={\bf x}_0^T \hat{\beta} \sim N({\bf x}_0^T \beta,\sigma^2 {\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0).$$
-
-Then, for $Y_0-{\bf x}_0^T \hat{\beta}$ we have
-
-$\text{E}(Y_0-{\bf x}_0^T \hat{\beta})=0 \text{ and } \text{Var}(Y_0-{\bf x}_0^T \hat{\beta})=\text{Var}(Y_0)+\text{Var}({\bf x}_0^T \hat{\beta})=\sigma^2+\sigma^2{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0$
-
-so that
-$$Y_0-{\bf x}_0^T \hat{\beta}\sim N(0,\sigma^2 (1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0)) $$
-
----
-
-Inserting our REML-estimate for $\sigma^2$ gives
-
-$$T=\frac{Y_0-{\bf x}_0^T \hat{\beta}}{\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}}\sim t_{n-p-1}.$$
-
-Then, we start with
-$$ P(-t_{\alpha/2,n-p-1}\le \frac{Y_0-{\bf x}_0^T \hat{\beta}}{\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0}} \le t_{\alpha/2,n-p-1})=1-\alpha$$
-and solve so that $Y_0$ is in the middle, which gives
-
-$P({\bf x}_0^T \hat{\beta}-t_{\alpha/2,n-p-1}\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0} \le Y_0 \le {\bf x}_0^T \hat{\beta}+t_{\alpha/2,n-p-1}\hat{\sigma}\sqrt{1+{\bf x}_0^T({\bf X}^T{\bf X})^{-1}{\bf x}_0})=1-\alpha$
-
----
-
-## Coefficient of determination, $R^2$
-
-no change from simple linear regression.
-
-$$R^2 = \frac{\text{TSS}-\text{RSS}}{\text{TSS}}= 1-\frac{\text{RSS}}{\text{TSS}}=1-\frac{\sum_{i=1}^n(y_i-\hat{y}_i)^2}{\sum_{i=1}^n(y_i-\bar{y}_i)^2}.$$ 
-
-1. The interpretation of this coefficient is that the closer it is to 1 the better the fit to the data. If $R^2=1$ then all residuals are zero - that is, perfect fit to the data.
-
-2. In a simple linear regression the $R^2$ equals the squared correlation coefficient between the response and the predictor. In multiple linear regression $R^2$ is the squared correlation coefficient between the observed and predicted response.
-
----
-
-3. If we have two models M1 and M2, where model M2 is a submodel of model M1, then
-$$ R^2_{M_1}\ge R^2_{M_2}.$$
-This can be explained from the fact that $\text{RSS}_{M_1}\le \text{RSS}_{M_2}$.
-(More in the Recommended exercises.)
-
----
-
-## Model assessment and selection
-
-### Quality measures
-
-To assess the quality of the regression we can report the $R^2$ coefficient of determination. However, since adding covariates to the linear regression can not make the RSS larger, this means that adding covariates can not make the $R^2$ smaller. This means that RSS and $R^2$ are only useful measures for comparing models with the same number of regression parameters estimated.
-
-If we consider two models with the same model complexity then RSS can be used to choose between (or compare) these models.
-
-But, if we want to compare models with different model complexity we need to look at other measures of quality for the regression.
+### However: Caveat with $R^2$
 
 $~$
 
-**$\rightarrow$ Model selection is a major point in Module 6.**
+Let us look at the $R^2$s from the three bodyfat models
+
+(model 1: $y\sim bmi$; model 2: $y\sim bmi + age$; 
+
+model 3: $y\sim bmi + age + neck + hip + abdomen$): 
+
+\tiny
+```{r, echo=F}
+r.bodyfatM1 <- lm(bodyfat ~ bmi , d.bodyfat)
+r.bodyfatM2 <- lm(bodyfat ~ bmi  + age, d.bodyfat)
+r.bodyfatM3 <- lm(bodyfat ~ bmi  + age + neck + hip + abdomen, d.bodyfat)
+```
+
+```{r}
+summary(r.bodyfatM1)$r.squared
+summary(r.bodyfatM2)$r.squared
+summary(r.bodyfatM3)$r.squared
+```
+
+\normalsize
+The models explain 54%, 58% and 72% of the total variability of $y$. 
+
+It thus _seems_ that larger models are ``better''. However, $R^2$ does always increase when new variables are included, but this does not mean that the model is more reasonable. 
+
 
 ---
 
-### $R^2$ adjusted 
+## Adjusted $R^2$
 
-$$R^2_{\text{adj}}=1-\frac{\frac{RSS}{n-p-1}}{\frac{TSS}{n-1}}=1-\frac{n-1}{n-p-1}(1-R^2)$$
-Choose the model with the _largest_ $R^2_{\text{adj}}$.
+$~$
+
+When the sample size $n$ is small with respect to the number of variables $m$ included in the model, an _adjusted_ $R^2$ gives a better ("fairer") estimation of the actual variability that is explained by the covariates:
+
+\begin{equation*}
+R^2_a = 1-(1-R^2 )\frac{n-1}{n-m-1}
+\end{equation*}
+
+$~$
+
+$R^2_a$ **penalizes for adding more variables** if they do not really improve the model!
+
+$~$
+
+$\rightarrow$ $R_a$ may decrease when a new variable is added.
+
+
+---
+
+## 3.1 Model fit -- broader sense
+
+We will look at model validation / model checking later.
+
+
+---
+
+## 4. Predictions: Two questions
+ 
+ 
+
+1. **Which other regression lines are compatible with the observed data?**
+
+We can use $\hat\beta_0, \ldots , \hat\beta_p$ to estimate the _least squares plane_
+$$\hat{Y} = \hat\beta_0 + \hat\beta_1 X_1 + \ldots + \hat\beta_p X_p $$
+ as an approximation of $f(X) = \beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p.$
+This leads to the \textcolor{red}{confidence interval}. 
+
+\vspace{4mm}
+
+2. **Where do future observations with a given $x$ coordinate lie?**
+
+
+Even if we could predict $\hat{Y}=f(X)$, the _true_ value $Y$ varies around $\hat{Y}$. We can compute a \textcolor{red}{prediction interval} for new observations $Y$.
+
+
+---
+
+
+```{r, echo=F}
+r.bodyfat=lm(bodyfat ~  bmi ,data=d.bodyfat)
+```
+
+```{r,echo=FALSE, fig.width=5, fig.height=5,fig.align = "center",out.width='50%'}
+t.range <- range(d.bodyfat$bmi)
+t.xwerte <- seq(t.range[1]-1,t.range[2]+1,by=1)
+t.vert <- predict(r.bodyfat,se.fit=T,newdata=data.frame(bmi=t.xwerte),
+interval ="confidence")$fit
+t.vorh <- predict(r.bodyfat,se.fit=T,newdata=data.frame(bmi=t.xwerte),
+interval ="prediction")$fit
+plot(d.bodyfat$bmi,d.bodyfat$bodyfat,main="",xlab="BMI",ylab="bodyfat",xlim=range(t.xwerte),ylim=c(-5,50),cex=0.8)
+abline(r.bodyfat,lwd=2)
+lines(x=t.xwerte,y=t.vert[,2],lty=8,lwd=2,col=2)
+lines(x=t.xwerte,y=t.vert[,3],lty=8,lwd=2,col=2)
+lines(x=t.xwerte,y=t.vorh[,2],lty=8,lwd=2,col=4)
+lines(x=t.xwerte,y=t.vorh[,3],lty=8,lwd=2,col=4)
+legend("bottomright", c("confidence range (95%)", "prediction range (95%)"),
+lty=8, cex=1,col=c(2,4),lwd=2)
+```
+
+
+Note: The prediction range is much broader than the confidence range. Why?
+
+---
+
+### Calculation of the confidence range
+
+$~$ 
+
+Given a realization of $X_1, \ldots ,X_p$, say $x_1^{(0)}, \ldots x_p^{(0)}$. The question is:  
+
+$~$ 
+
+\colorbox{lightgray}{\begin{minipage}{10cm}
+Where does $\hat y_0 = \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}$ lie with a certain confidence (i.e., 95\%)?
+\end{minipage}} 
+
+$~$ 
+
+This question is not trivial, because $\hat\beta_0, \ldots \hat\beta_p$ are estimates from the data and contain uncertainty. 
+
+$~$ 
+
+<!-- The details of the calculation are given in Stahel 2.4b.  -->
+
+<!-- %(Idea: $\hat y_0 \pm q\cdot se^{(\hat{y}_0)}$.) \\[6mm] -->
+
+\colorbox{lightgray}{\begin{minipage}{10cm}
+
+Plotting the confidence interval around all $\hat Y_0$ values one obtains the {\bf confidence range} or {\bf confidence band for the expected values} of $Y$.
+\end{minipage}} 
+
+\vspace{4mm}
+
+$\rightarrow$ For the confidence range, only the uncertainty in the estimates $\hat\beta_0, \ldots \hat\beta_p$ matters.
+
+
+
+---
+
+
+### Calculation of the prediction interval
+
+$~$ 
+
+Given a new value of $X_1, \ldots, X_p$, say $x_1^{(0)}, \ldots x_p^{(0)}$. The question is:  
+
+$~$ 
+
+\colorbox{lightgray}{\begin{minipage}{10cm}
+Where does a {\bf future observation} lie with a certain confidence (i.e., 95\%)?
+\end{minipage}} 
+
+\vspace{4mm} 
+
+To answer this question, we have to \textcolor{red}{consider not only the uncertainty in the predicted value} $\hat y_0 =  \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}$, but also the \textcolor{red}{irreducible error} $\varepsilon_i \sim N(0,\sigma^2)$.  
+
+
+\vspace{4mm}
+
+$\rightarrow$ The *prediction interval is always wider than the confidence range*.
+
+
+---
+
+Confidence and prediction intervals can be found in R using `predict` on an `lm` object (make sure that `newdata` is a `data.frame` with the same names as the original data). 
+
+
+\footnotesize
+```{r}
+fit=lm(bodyfat ~ bmi + age + abdomen,data=d.bodyfat)
+newobs=d.bodyfat[1,]
+predict(fit,newdata=newobs,interval="confidence",type="response")
+predict(fit,newdata=newobs,interval="prediction",type="response")
+```
+
+
+Difference between `interval="confidence"` and `interval="prediction"`?
+
+Todo: Make an exercise about this!
+
+---
+
+## Predictions: Model bias
+
+$~$
+
+Finally, we need to keep in mind that the model we work with is only an _approximation of the reality_. In fact,
+
+\vspace{4mm}
+
+In 2014, David Hand wrote:
+
+\vspace{4mm}
+
+\begin{quote}
+In general, when building statistical models, we must
+not forget that the aim is to understand something about
+the real world. Or predict, choose an action, make
+a decision, summarize evidence, and so on, but always
+about the real world, not an abstract mathematical
+world: our models are not the reality -- a point well
+made by George Box in his often-cited remark that
+``all models are wrong, but some are useful''.
+\end{quote}
+
+[@box1979]
+
 
 
 
@@ -1555,41 +1639,221 @@ Choose the model with the _largest_ $R^2_{\text{adj}}$.
 
 ## Challenges - for model fit
 
+
 1. Non-linearity of data
 2. Correlation of error terms
 3. Non-constant variance of error terms
-4. Normality of error terms
+4. Non-Normality of error terms
 5. Outliers
 6. High leverage points
 7. Collinearity
 
 ---
 
-## Diagnostic plots
+### Recap of modelling assumptions in linear regression
 
-### Plotting residuals - and what to do when assumptions are violated?
+$~$
 
-1. Plot the residuals against the predicted values, $\hat{y}_i$.
-   + Dependence of the residuals on the predicted value: wrong regression model?
-   + Nonconstant variance: transformation or weighted least squares is needed?
-2. Plot the residuals, against predictor variable or functions of predictor variables. Trend suggest that transformation of the predictors or more terms are needed in the regression.
+To make valid inference from our model, we must check if our model assumptions are fulfilled! 
+
+$~$
+
+The assumption in linear regression is that the residuals follow a $N(0,\sigma^2)$ distribution, implying that :
+
+$~$
+
+\colorbox{lightgray}{\begin{minipage}{10cm}
+1. The expected value of $\varepsilon_i$ is 0: $\text{E}(\varepsilon_i)=0$. 
+
+$~$
+
+2. All $\varepsilon_i$ have the same variance: $\text{Var}(\varepsilon_i)=\sigma^2$.  
+
+$~$
+
+3. The $\varepsilon_i$ are normally distributed. 
+
+$~$
+
+4. The $\varepsilon_i$ are independent of each other.
+\end{minipage}}
 
 ---
 
-3. Assessing normality of errors: QQ-plots and histograms of residuals. As an additional aid a test for normality can be used, but must be interpreted with caution since for small sample sizes the test is not very powerful and for large sample sizes even very small deviances from normality will be labelled as significant.
-4. Plot the residuals versus time or collection order (if possible). Look for dependence or autocorrelation.
+## Model checking tool I: Tukey-Anscombe diagram
 
-Residuals can be used to check model assumptions, and also to _discover outliers_.
+$~$
+
+The \textcolor{red}{Tukey-Anscombe} diagram plots the residuals against the fitted values. For the bodyfat data it looks like this:
+
+```{r,echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='50%'}
+library(ggfortify)
+autoplot(r.bodyfat,smooth.colour=NA)[1] 
+```
+This plot is ideal to check if assumptions 1. and 2. (and partially 4.) are met. Here, this seems fine.
+
 
 ---
 
-### Different types of residuals
+## Model checking tool II: The QQ-diagram
+$~$
+
+To check assumption 3., the quantiles of the observed distribution are plotted against the quantiles of the respective theoretical (normal) distribution:
+
+ 
+```{r,echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='50%'}
+autoplot(r.bodyfat,smooth.colour=NA)[2] 
+```
+ 
+If the points lie approximately on a straight line, the data is fairly normally distributed. This is often ``tested'' by eye, and needs some experience.
+
+
+---
+
+# Todo: Move this to exercises!
+## How do I know if a QQ-plot looks ``good''?
+
+There is **no quantitative rule** to answer this question, experience is needed. However, you can gain this experience from simulations. To this end, generate the same number of data points of a normally distributed variable and compare to your plot. 
+
+Example: Generate 59 points $\varepsilon_i \sim N(0,1)$ each time:
+
+
+```{r,echo=FALSE, fig.width=6, fig.height=3,fig.align = "center",out.width='80%'}
+set.seed(390457)
+par(mfrow=c(2,3),mar=c(4,4,1,1))
+for (ii in 1:6){
+  ss <- rnorm(59)
+  qqnorm(ss,main="")
+  qqline(ss,xlab="")
+}
+```
+
+
+---
+
+## Model checking tool III: The scale-location plot
+
+$~$
+
+The scale-location plot is particularly suited to check the assumption of equal variances (homoscedasticity; assumption 2.).
+
+$~$
+
+The idea is to plot the square root of the (standardized) residuals $\sqrt{|R_i|}$ against the fitted values $\hat{y_i}$. There should be *no trend*:
+ 
+```{r,echo=FALSE, fig.width=4, fig.height=4,fig.align = "center",out.width='50%'}
+autoplot(r.bodyfat,which=3) + theme_bw()
+```
+
+
+
+---
+
+## Model checking tool IV: The leverage plot
+
+$~$
+
+* Mainly useful to determine outliers.
+
+$~$
+
+* To understand the leverage plot, we need to introduce the idea of the **leverage**.
+
+$~$
+
+* In simple regression, the leverage of individual $i$ is defined as $H_{ii} = (1/n) + (x_i-\overline{x})^2 \sum(x_i-\overline{x})^2$. 
+
+\vspace{7mm}
+
+**Q:** When are leverages expected to be large/small?
+
+$~$
+
+---
+
+**Illustration**:
+Data points with $x_i$ values far from the mean have a stronger leverage effect than when $x_i\approx \overline{x}$:
+
+```{r,echo=FALSE, fig.width=6, fig.height=2,fig.align = "center",out.width='90%'}
+set.seed(37489)
+par(mfrow=c(1,3),mar=c(4,4,1,1))
+x <- sort(rnorm(18))
+y <- 2*x + rnorm(18,0,0.4)
+plot(y~x)
+abline(lm(y~x))
+y1 <- y
+y1[18] <- y[18] -5
+plot(y1~x,col=c(rep(1,17),2))
+abline(lm(y~x))
+abline(lm(y1~x),col=2,lty=2)
+y2 <- y
+y2[9] <- y2[9] + 4
+plot(y2~x,col=c(rep(1,8),2,rep(1,9)))
+abline(lm(y~x))
+abline(lm(y2~x),col=2,lty=2)
+```
+
+The outlier in the middle plot ``pulls'' the regression line in its direction and biases the slope.
+
+$~$
+
+\href{http://students.brown.edu/seeing-theory/regression-analysis/index.html}{Click here} to do it manually!
+
+---
+
+
+In the leverage plot, (standardized) residuals $\tilde{R_i}$ are plotted against the leverage $H_{ii}$ (still for the bodyfat):
+ 
+ 
+```{r,echo=FALSE, fig.width=4, fig.height=4,fig.align = "center",out.width='50%'}
+autoplot(r.bodyfat,which=5)
+```
+ 
+
+
+
+**Critical ranges** are the top and bottom right corners!!
+
+---
+
+### Leverages in multiple regression
+
+\vspace{3mm}
+
+* Leverage is defined as the diagonal elements of the hat matrix, i.e., the leverage of the $i$-th data point is $h_{ii}$ on the diagonal of $\mathbf{H = X(X^TX)^{-1}X^T}$. 
+
+* A large leverage indicated that the observation ($i$) has a large influence on the estimation results, and that the covariate values ($\bf{x}_i$) are unusual.
+
+
+
+<!-- ### Cook's distance -->
+
+<!-- Cook's distance is the Euclidean distance between the ${\hat{y}}$ (the fitted values) and ${\hat{y}}_{(i)}$ (the fitted values calculated when the $i$-th observation is omitted from the regression). This is then a measure on how much the model is influences by observation $i$. The distance is scaled, and a rule of thumb is to examine observations with Cook's distance larger than 1, and give some attention to those with Cook's distance above 0.5. -->
+
+<!-- Cook's distance is shown with dashed lines when you use the `plot.lm()` function on a `lm` object. -->
+
+
+<!-- --- -->
+
+<!-- ```{r,echo=FALSE, fig.width=4, fig.height=4,fig.align = "center",out.width='50%'} -->
+<!-- plot(r.bodyfat) -->
+<!-- ``` -->
+
+---
+
+### Different types of residuals?
+
+$~$
 
 If can be shown that the vector of residuals, ${\bf e}=(e_1,e_2,\ldots,e_n)$ have a normal (singular) distribution with mean $\text{E}({\bf e})={\bf 0}$ and covariance matrix $\text{Cov}({\bf e})=\sigma^2({\bf I}-{\bf H})$ where ${\bf H}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T$.
 
+$~$
+
 This means that the residuals (possibly) have different variance, and may also be correlated.
 
-**Q:** How can we say that the residuals can have different variance and may be correlated? Why is that a problem?
+$~$
+
+**Q:** Why is that a problem?
 
 ---
 
@@ -1619,356 +1883,117 @@ In R you can get the studentized residuals from an `lm`-object (named `fit`) by 
 
 ### Diagnostic plots in `R`
 
-More information on the plots here: <http://data.library.virginia.edu/diagnostic-plots/> and <http://ggplot2.tidyverse.org/reference/fortify.lm.html>
+Todo: This must be part of the exercises.
 
-```{r echo = FALSE}
-library(ggplot2)
-```
+Idea: Use `autoplot()` from the `ggfortify` package in R to plot the diagnostic plots.
 
-You can use the function `fortify.lm` in `ggplot2` to create a dataframe from an `lm`-object, which `ggplot` uses automatically when given a `lm`-object. This can be used to plot diagnostic plots.
+<!-- More information on the plots here: <http://data.library.virginia.edu/diagnostic-plots/> and <http://ggplot2.tidyverse.org/reference/fortify.lm.html> -->
 
----
+<!-- ```{r echo = FALSE} -->
+<!-- library(ggplot2) -->
+<!-- ``` -->
 
-For simplicity we use the Munch rent index with `rent` as response and only `area` as the only covariate. (You may change the model to a more complex one, and rerun the code chunks.)
-
-\footnotesize
-```{r tidy = TRUE, echo=showsolB}
-fit <- lm(rent ~ area, data=rent99) # Run a regression analysis
-format(head(fortify(fit)), digits = 4L)
-# to show what fortify implicitly does in ggplot
-# for more information ggplot2::fortify.lm
-```
-\normalsize
 
 ---
 
-#### Residuals vs fitted values
+### Collinearity
 
-A plot with the fitted values of the model on the x-axis and the residuals on the y-axis shows if the residuals have non-linear patterns. The plot can be used to test the assumption of a linear relationship between the response and the covariates. If the residuals are spread around a horizontal line with no distinct patterns, it is a good indication on no non-linear relationships, and a good model.
+In brief, collinearity refers to the situation when two or more predictors are correlated, thus encode (partially) for the same information.
 
-Does this look like a good plot for this data set?
+$~$
 
----
+**Problems:**
 
-\footnotesize
-```{r tidy = TRUE,echo=showsolB}
-ggplot(fit, aes(.fitted, .stdresid)) +
-  geom_point(pch = 21) +
-  geom_hline(yintercept = 0, linetype = "dashed") +
-  geom_smooth(se = FALSE, col = "red", size = 0.5, method = "loess") +
-  labs(x = "Fitted values", y = "Standardized residuals", title = "Fitted values vs standardized residuals", subtitle = deparse(fit$call))+theme_minimal()
+* Reduces the accuracy of the estimated coefficients $\hat\beta_j$ (large SE!).
 
-```
-\normalsize
+* Consequently, reduces power in finding effects ($p$-values become larger).
 
----
+**Solutions:**
 
-**A**: Ok linear assumption, but not constant spread.
+* Detect it by calculating the _variance inflation factor_ (VIF).
 
----
+* Remove the problematic variable.
 
-#### Normal Q-Q
+* Or combine the collinear variables into a single new one.
 
-This plot shows if the residuals are Gaussian (normally) distributed. If they follow a straigt line it is an indication that they are, and else they are probably not.
+$~$
 
-\footnotesize
-```{r tidy = TRUE,echo=showsolB}
-ggplot(fit, aes(sample = .stdresid)) +
-  stat_qq(pch = 19) +
-  geom_abline(intercept = 0, slope = 1, linetype = "dotted") +
-  labs(x = "Theoretical quantiles", y = "Standardized residuals", title = "Normal Q-Q", subtitle = deparse(fit$call))+theme_minimal()
-library(nortest)
-ad.test(rstudent(fit))
-```
-\normalsize
-
----
-
-**A**: Not normal.
-
----
-
-#### Scale-location
-
-This is also called spread-location plot. It shows if the residuals are spread equally along the ranges of predictors. Can be used to check the assumption of equal variance (homoscedasticity). A good plot is one with a horizontal line with randomly spread points.
-
-Is this plot good for your data?
-
----
-
-\footnotesize
-```{r}
-ggplot(fit, aes(.fitted, sqrt(abs(.stdresid)))) +
-  geom_point() +
-  geom_smooth(se = FALSE, col = "red", size = 0.5, method = "loess") +
-  labs(x = "Fitted values", y = expression(sqrt("Standardized residuals")), title = "Scale-location", subtitle = deparse(fit$call))+theme_minimal()
-
-```
-\normalsize
-
----
-
-**A**: Confirms our observation of not constant variance.
-
----
-
-#### Residual vs Leverage
-
-This plot can reveal influential outliers. Not all outliers are influential in linear regression; even though data have extreme values, they might not be influential to determine the regression line (the results don't differ much if they are removed from the data set). These influential outliers can be seen as observations that does not get along with the trend in the majority of the observations. In `plot.lm`, dashed lines are used to indicate the Cook's distance, instead of using the size of the dots as is done here.
-
----
-
-Cook's distance is the Euclidean distance between the $\mathbf{\hat{y}}$ (the fitted values) and $\mathbf{\hat{y}}_{(i)}$ (the fitted values calculated when the $i$-th observation is omitted from the regression). This is then a measure on how much the model is influences by observation $i$. The distance is scaled, and a rule of thumb is to examine observations with Cook's distance larger than 1, and give some attention to those with Cook's distance above 0.5.
-
-Leverage is defined as the diagonal elements of the hat matrix, i.e., the leverage of the $i$-th data point is $h_{ii}$ on the diagonal of $\mathbf{H = X(X^TX)^{-1}X^T}$. A large leverage indicated that the observation ($i$) has a large influence on the estimation results, and that the covariate values ($\mathbf{x}_i$) are unusual.
-
----
-
-\footnotesize
-```{r, tidy = TRUE,echo=showsolB}
-ggplot(fit, aes(.hat, .stdresid)) +
-  geom_smooth(se = FALSE, col = "red", size = 0.5, method = "loess") +
-  geom_point(aes(size = .cooksd)) +
-  scale_size_continuous("Cook's dist.") +
-  labs(x = "Leverage", y = "Standardized residuals", title = "Residuals vs Leverage", subtitle = deparse(fit$call))+theme_minimal()
-```
-\normalsize
-
----
-
-**A**:Some observations does not fit our model, but if we fit a more complex model this may change.
-
----
-
-# Extensions and challenges in multiple regression
-The section is a self study section, where the dummy variable part is the most important and will be used in this course.
-
-## Qualitative covariates
-
-See [Rob Tibshirani explains - from ca 9 minutes](https://www.youtube.com/watch?v=3T6RXmIHbJ4&index=4&list=PL5-da3qGB5IBSSCPANhTgrw82ws7w_or9)
-
-Qualitative predictors can be included in a linear regression model by introducing dummy variables
-
-**Example**: consider our `rent` dataset with `rent` as response, and continuous covariate `area` and categorical covariate `location`. Let the `location` be a factor with levels `average, good, top`.
-
-\footnotesize
-
-```{r,results="hide"}
-library(gamlss.data)
-library(dplyr)
-library(GGally)
-
-ds=dplyr::select(rent99,location,area,rent)
-levels(ds$location)
-# change to meaningful names
-levels(ds$location)=c("average","good","top")
-ggpairs(ds)
-```
-\normalsize
-
-**Q**: comment on what you see in the `ggpairs` plot.
-
----
-
-Categorical covariates may either be ordered or unordered. We will only consider unordered categories here.
-In general, we could like to estimate regression coefficients for all levels for the categorical covariates. However, if we want to include an intercept in our model we can only include codings for one less variable than the number of levels we have - or else our design matrix will not have full rank.
-
-**Q**: Assume you have a categorical variable with three levels. Check for yourself that making a design matrix with one intercept and three columns with dummy (0-1) variable coding will result in a matrix that is singular.
-
----
-
-\footnotesize
-```{r}
-# make "wrong" dummy variable coding with 3 columns
-n=length(ds$location)
-X=cbind(rep(1,n),ds$area,rep(0,n),rep(0,n),rep(0,n))
-X[ds$location=="average",3]=1
-X[ds$location=="good",4]=1
-X[ds$location=="top",5]=1
-X[c(1,3,69),]
-require(Matrix)
-dim(X)
-rankMatrix(X)
-```
-\normalsize
-
----
-
-This is why we need to instead work with different ways of coding categorical variables. One solution is to not include an intercept in the model, but that is often not what we want. We will look at two other solutions - one where we decide on a reference category (that we not include in the coding, and therefore is kind of included in the intercept - this is called "treatment coding") and one where we require that the the sum of the coeffisients are zero (called "effect coding"). This mainly effects how we interpret parameter estimates and communicate our findings to the world. We will here restrict our discussion to "treatment coding".
-
----
-
-If we fit a regression model with `lm` to the data with `rent` as response and `area` and `location` as covariates, a model matrix is made - and how to handle the categorical variable is either specified the call to `lm` in `contrasts=list(location="contr.treatment")` (or to model.matrix) or globally for all categorical variables with `options(contrasts=c("contr.treatment","contr.poly"))`- where first element give choice for unordered factor (then treatment contrast is default) and second for ordered (and then this polynomial contrast is default). We will only work with unordered factors now.
-
----
-
-### Dummy variable coding
-
-This is the default coding. The reference level is automatically chosen as the "lowest" level (sorted alphabetically). For our example this means that the reference category for location is "average".
-
-$$x_{i \text{locationgood}} = \begin{cases} 1 \text{ if } i \text{ -th location}=\text{"good"} \\ 0 \text{ if } i \text{ -th location }\neq\text{ "good"} \end{cases}$$
-$$x_{i \text{locationtop}} = \begin{cases} 1 \text{ if } i \text{ -th location}=\text{"top"} \\ 0 \text{ if } i \text{ -th location }\neq\text{ "top"} \end{cases}$$
-$$\begin{aligned} y_i &= \beta_0 + \beta_1 x_{i \text{area}} + \beta_2 x_{i \text{locationgood}}+\beta_3 x_{i \text{locationtop}} + \varepsilon_i\\\\ &= \begin{cases} \beta_0 + \beta_1 x_{i \text{area}}+ \beta_2 + \varepsilon_i  &\text{ if } i \text{ -th location}=\text{"good"}  \\ \beta_0 + \beta_1 x_{i \text{area}}+ \beta_3 + \varepsilon_i &\text{ if } i \text{ -th location}=\text{"top"} \\ \beta_0 + \varepsilon_i &\text{ if } i \text{ -th location}=\text{"average"}\end{cases}\end{aligned}$$
-
-If we instead wanted "good" to be reference category we could relevel the factor.
-
----
-
-```{r}
-X1=model.matrix(~area+location,data=ds)
-X1[c(1,3,69),]
-ds$locationRELEVEL=relevel(ds$location,ref="good")
-X2=model.matrix(~area+locationRELEVEL,data=ds)
-X2[c(1,3,69),]
-```
-
-So, what does this mean in practice? Model 1 has `average` as reference category and model 2 `good`.
-
----
-
-```{r}
-fit1=lm(rent~area+location,data=ds,contrasts = list(location="contr.treatment"))
-summary(fit1)
-fit2=lm(rent~area+locationRELEVEL,data=ds,contrasts = list(locationRELEVEL="contr.treatment"))
-summary(fit2)
-```
-
-**Q**: Comment on the print-out. How do we interpret the intercept estimate?
-
----
-
-## Interactions
-
-See [Trevor Hastie explains](https://www.youtube.com/watch?v=IFzVxLv0TKQ&list=PL5-da3qGB5IBSSCPANhTgrw82ws7w_or9&index=5) 
-
-To illustrate how interactions between covariates can be included we use the `ozone` data set from the `ElemStatLearn` library. This data set is measurements from 1973 in New York and contains 111 observations of the following variables:
-
-* `ozone` : ozone concentration (ppm)
-* `radiation` : solar radiation (langleys)
-* `temperature` : daily maximum temperature (F)
-* `wind` : wind speed (mph)
-
-We start by fitting a multiple linear regression model to the data, with `ozone` as our response variable and `temperature` and `wind` as covariates.
-
-```{r,echo=FALSE,eval=TRUE,messages=FALSE,warnings=FALSE,error=FALSE,results="hold"}
-library(ElemStatLearn)
-library(kableExtra)
-data(ozone)
-print(head(ozone))
-ozone.lm = lm(ozone~temperature+wind, data=ozone)
-```
-
----
-
-\small
-```{r,echo=FALSE,eval=TRUE,messages=FALSE,warnings=FALSE,error=FALSE,results="hold"}
-summary(ozone.lm)
-```
-\normalsize
-
----
-
-The model can be written as:
-$$Y = \beta_0 + \beta_1 x_t + \beta_2 x_w + \varepsilon$$
-In this model we have assumed that increasing the value of one covariate is independent of the other covariates. For example: by increasing the `temperature` by one-unit always increases the response value by $\beta_2 \approx 1.651$, regardless of the value of `wind`.
-
----
-
-However, one might think that the covariate `wind` (wind speed) might act differently upon `ozone` for different values of `temperature` and vice verse.
-$$\begin{aligned} Y &= \beta_0 +  \beta_1 x_t + \beta_2 x_w + \beta_3\cdot(x_t  \cdot x_w) +\varepsilon \\ &= \beta_0 +  (\beta_1 + \beta_3 x_w) \cdot x_t + \beta_2 x_w + \varepsilon \\ &= \beta_0 + \beta_1 x_t + (\beta_2 + \beta_3 x_t) \cdot x_w + \varepsilon \end{aligned}.$$
-We fit this model in `R`. An interaction term can be included in the model using the `*` symbol.
-
-**Q:** Look at the `summary` below. Is this a better model than without the interaction term? It the term significant?
-
----
-
-\footnotesize
-```{r}
-ozone.int = lm(ozone~temperature+wind+ temperature*wind, data=ozone)
-summary(ozone.int)
-```
-\normalsize
-
----
-
-Below we see that the interaction term is highly significant. The $p$-value is very small, so that there is strong evidence that $\beta_3 \neq 0$. Furthermore, $R^2_{\text{adj}}$ has increased, indicating that more of the variability in the data has been explained by the model (than without the interaction).
+**Todo:** Read in the course book p.99-102 (self-study).
 
 
 ---
 
-*Interpretation of the interaction term:*
+# Other considerations in the regression model
 
-* If we now increase the `temperature` by $10^{\circ}$ F, the increase in `wind` speed will be $$(\hat \beta_1+\hat \beta_3 \cdot x_w) \cdot 10 = (4.0 -0.22 \cdot x_w) \cdot 10 = 40-2.2 x_w \text{ units}.$$
+1. Qualitative predictors ($X_j$): 
+    + Binary covariate (e.g., male/female, smoker/non-smoker) 
+    + Categorical covariate (e.g., black/white/green)?
 
-* If we increase the `wind` speed by 10 mph, the increase in `temperature` will be $$(\hat \beta_2 + \hat \beta_3 \cdot x_t) \cdot 10 = (14 -0.22 \cdot x_t) \cdot 10 = 140-2.2 x_t \text{ units}.$$
+\vspace{4mm}
 
----
+2. Extensions of the linear model
+    + Interactions
+    + Non-linear terms
 
-**The hierarchical principle**
 
-It is possible that the interaction term is higly significant, but the main effects are not.
-
-In our `ozone.int` model above: the main effects are `temperature` and `wind`. The hierarchical principle states that if we include an interaction term in our model, the main effects are also to be included, even if they are not significant. This means that if the coefficients $\hat \beta_1$ or $\hat \beta_2$ would be insignificant, while the coefficient $\hat \beta_3$ is significant, $\hat \beta_1$ and $\hat \beta_2$ should still be included in the model.
-
-There reasons for this is that a model with interaction terms, but without the main effects is hard to interpret.
 
 ---
 
-## Interactions between qualitative (discrete) and quantitative (continuous) covariates
 
-We create a new variable `temp.cat` which is a `temperature` as a qualitative covariate with two levels and fit the model:
-$$\begin{aligned}y&=\beta_0 + \beta_1 x_w + \begin{cases} \beta_2 + \beta_3  x_w  &\text{ if temperature="low"}\\ 0 &\text{ if temperature = "high"}\end{cases} \\\\ &= \begin{cases} (\beta_0 + \beta_2) + (\beta_1 + \beta_3) \cdot x_w &\text{ if temperature="low"}\\ \beta_0 + \beta_1 x_w &\text{ if temperature="high""} \end{cases} \end{aligned}$$
+## Binary predictors
+
+$~$
+
+So far, the covariates $x$ were always continuous.  
+\vspace{2mm}
+
+In reality, there are no restrictions assumed with respect to the $X$ variables 
+\vspace{2mm}
+
+One very frequent data type are **binary** variables, that is, variables that can only attain values 0 or 1. 
+\vspace{4mm}
+
+\colorbox{lightgray}{\begin{minipage}{10cm}
+If the binary variable $x$ is the only variable in the model $Y_i = \beta_0 + \beta_1 x_i + \varepsilon_i$, the model has only two predicted outcomes (plus error):
+
+\begin{equation*}
+Y_i = \left\{ 
+\begin{array}{ll}
+ \beta_0  + \varepsilon_i \quad &\text{if } x_i=0 \ , \\
+ \beta_0 + \beta_1 + \varepsilon_i \quad &\text{if } x_i =1 \ .\\
+\end{array}
+\right .
+\end{equation*}
+\end{minipage}}
+
 
 ---
 
-\footnotesize
-```{r,echo=showsolB}
-temp.cat = ifelse(ozone$temperature < mean(ozone$temperature), "low", "high")
-ozone2 = cbind(ozone, temp.cat)
-print(head(ozone2))
-ozone.int2 = lm(ozone~wind + temp.cat+ temp.cat*wind, data=ozone2)
-summary(ozone.int2)
-```
-\normalsize
-
----
-
-\footnotesize
-
-```{r,echo=showsolB}
-interceptlow = coef(ozone.int2)[1]+coef(ozone.int2)[3]
-slopelow = coef(ozone.int2)[2]+coef(ozone.int2)[4]
-intercepthigh = coef(ozone.int2)[1]
-slopehigh = coef(ozone.int2)[2]
-ggplot(ozone)+geom_line(aes(y=interceptlow+slopelow*wind, x = wind), col="blue")+geom_line(aes(y=intercepthigh+slopehigh*wind, x=wind), col="red")+ylab("ozone")+theme_minimal()
-```
-
-\normalsize
-
+## Qualitative predictors with more than 2 levels
  
 
----
+<!-- --- -->
 
-# Important results in multiple linear regression 
+<!-- # Important results in multiple linear regression  -->
 
-* Linear regression assumes a linear relationship between the response variable and the covariates.
-* Simple linear regression has only one covariate and has the form $Y = \beta_0 + \beta_1 X + \varepsilon$.
-* Muliple linear regression has $p$ covariates and has the form $Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_p X_p + \varepsilon$.
-* Quantitative (categorical) covariates can be included using dummy variables.
-* Correlations among the covariates can mask each others effects in the linear model.
-* Parameter estimates can be obtained by minimizing the least squares (RSS) or by maximum likelihood estimation.
-* We can calculate the standard errors of the parameter estimates, and use this to obtain confidence intervals.
-* We can test the hypothesis of $H_0 : \beta_j = 0$ against $H_1: \beta_j \neq 0$ by a t-test.
-* We use the $F$-statistic to test if at least one of the covariates are useful.
+<!-- * Linear regression assumes a linear relationship between the response variable and the covariates. -->
+<!-- * Simple linear regression has only one covariate and has the form $Y = \beta_0 + \beta_1 X + \varepsilon$. -->
+<!-- * Muliple linear regression has $p$ covariates and has the form $Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_p X_p + \varepsilon$. -->
+<!-- * Quantitative (categorical) covariates can be included using dummy variables. -->
+<!-- * Correlations among the covariates can mask each others effects in the linear model. -->
+<!-- * Parameter estimates can be obtained by minimizing the least squares (RSS) or by maximum likelihood estimation. -->
+<!-- * We can calculate the standard errors of the parameter estimates, and use this to obtain confidence intervals. -->
+<!-- * We can test the hypothesis of $H_0 : \beta_j = 0$ against $H_1: \beta_j \neq 0$ by a t-test. -->
+<!-- * We use the $F$-statistic to test if at least one of the covariates are useful. -->
 
----
+<!-- --- -->
 
-* Not only additive effects: Interactions between covariates can be included in the model (also between qualitative and quantitative covariates).
-* Transformations of the response variable or of a covariate can be useful if the relationship is not linear. A linear model can then be fit to the transformed variables.
+<!-- * Not only additive effects: Interactions between covariates can be included in the model (also between qualitative and quantitative covariates). -->
+<!-- * Transformations of the response variable or of a covariate can be useful if the relationship is not linear. A linear model can then be fit to the transformed variables. -->
 
-* The overall accuracy of the model can be evaluated by calculating the $R^2$ statistic, AIC score and by using diagnostic plots.
-* Model selection can not be based on RSS or $R^2$.
-* Multiple linear regression might require subset selection if the number of covariates is high.
+<!-- * The overall accuracy of the model can be evaluated by calculating the $R^2$ statistic, AIC score and by using diagnostic plots. -->
+<!-- * Model selection can not be based on RSS or $R^2$. -->
+<!-- * Multiple linear regression might require subset selection if the number of covariates is high. -->
 
 
 ---
@@ -2020,4 +2045,7 @@ install.packages("tidyverse")
 
 Thanks to Julia Debik for contributing to this module page.
 
+---
+
+# References
 
