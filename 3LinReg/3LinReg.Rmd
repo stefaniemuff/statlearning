@@ -46,13 +46,6 @@ We need more statistical theory than is presented in the textbook, which you fin
 
 Todo
     
----
-
-* Extensions and challenges (self study)
-    + qualitative predictors: dummy coding (needed)
-    + non-additivity: including interactions (useful)
-* Important results in MLR
-* Summing up with team Kahoot! (if time permits!)
  
 ---
 
@@ -1944,10 +1937,10 @@ $~$
 
 $~$
 
-So far, the covariates $x$ were always continuous.  
+So far, the covariates $X$ were always continuous.  
 \vspace{2mm}
 
-In reality, there are no restrictions assumed with respect to the $X$ variables 
+In reality, there are no restrictions assumed with respect to the $X$ variables. 
 \vspace{2mm}
 
 One very frequent data type are **binary** variables, that is, variables that can only attain values 0 or 1. 
@@ -1966,84 +1959,360 @@ Y_i = \left\{
 \end{equation*}
 \end{minipage}}
 
+**Example**: Credit card data analysis in Section 3.3.1 in the ISLR book.
+
 
 ---
 
 ## Qualitative predictors with more than 2 levels
+
+$~$
  
+More generally, a covariate may indicate a **category**, for instance the species of an animal or a plant. This type of covariate is called a **factor**. The trick: convert a factor variable $X$ with $k$ levels (for instance 3 species) into $k$ dummy variables $X_j$ with 
+\vspace{2mm}
 
-<!-- --- -->
+\colorbox{lightgray}{\begin{minipage}{10cm}
+\vspace{-0mm}
+\begin{equation*}
+x_{ij} = \left\{ 
+\begin{array} {ll}
+1, & \text{if the $i$th observation belongs to group $j$}.\\
+0, & \text{otherwise.}
+\end{array}\right.
+\end{equation*}
+\end{minipage}}
 
-<!-- # Important results in multiple linear regression  -->
+\vspace{4mm}
 
-<!-- * Linear regression assumes a linear relationship between the response variable and the covariates. -->
-<!-- * Simple linear regression has only one covariate and has the form $Y = \beta_0 + \beta_1 X + \varepsilon$. -->
-<!-- * Muliple linear regression has $p$ covariates and has the form $Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_p X_p + \varepsilon$. -->
-<!-- * Quantitative (categorical) covariates can be included using dummy variables. -->
-<!-- * Correlations among the covariates can mask each others effects in the linear model. -->
-<!-- * Parameter estimates can be obtained by minimizing the least squares (RSS) or by maximum likelihood estimation. -->
-<!-- * We can calculate the standard errors of the parameter estimates, and use this to obtain confidence intervals. -->
-<!-- * We can test the hypothesis of $H_0 : \beta_j = 0$ against $H_1: \beta_j \neq 0$ by a t-test. -->
-<!-- * We use the $F$-statistic to test if at least one of the covariates are useful. -->
+Each of the covariates $x_1,\ldots, x_k$ can then be included as a binary variable in the model
+\begin{equation*}
+y_i = \beta_0 + \beta_1 x_1 + \ldots + \beta_k x_k + \varepsilon_i \ .
+\end{equation*}
 
-<!-- --- -->
+\vspace{6mm}
+However:  this model is \textcolor{red}{not identifiable}.\footnote{What does that mean? I could add a constant to $\beta_1, \beta_2, ...\beta_k$ and subtract it from $\beta_0$, and the model would fit equally well to the data, so it cannot be decided which set of the parameters is best.}
 
-<!-- * Not only additive effects: Interactions between covariates can be included in the model (also between qualitative and quantitative covariates). -->
-<!-- * Transformations of the response variable or of a covariate can be useful if the relationship is not linear. A linear model can then be fit to the transformed variables. -->
+---
 
-<!-- * The overall accuracy of the model can be evaluated by calculating the $R^2$ statistic, AIC score and by using diagnostic plots. -->
-<!-- * Model selection can not be based on RSS or $R^2$. -->
-<!-- * Multiple linear regression might require subset selection if the number of covariates is high. -->
+**Solution:** One of the $k$ categories must be selected as a _reference category_ and is _not included in the model_. Typically: the first category is the reference, thus $\beta_1=0$.
+
+\vspace{2mm}
+
+
+The model thus discriminates between the factor levels, such that (assuming $\beta_1=0$)
+
+\begin{equation*}
+y_i = \left\{
+\begin{array}{ll}
+\beta_0 + \varepsilon, & \text{if $x_{i1}=1$ }\\
+\beta_0 + \beta_2 + \varepsilon, & \text{if $x_{i2}=1$ }\\
+...\\
+\beta_0 + \beta_k + \varepsilon, & \text{if $x_{ik}=1$ } \ .
+\end{array}\right.
+\end{equation*} 
+
+---
+
+## !!Important to remember!!
+\textcolor{gray}{(Common aspect that leads to confusion!)}
+
+\vspace{10mm}
+
+Please note that \textcolor{red}{a factor covariate with $k$ factor levels requires $k-1$ parameters!}
+\vspace{2mm}
+
+$\rightarrow$ The \textcolor{red}{degrees of freedom} of the model are also reduced by $k-1$.
+
+
+---
+
+## Example
+
+$~$
+
+We are now using the `Credit` dataset from the `ISLR` library.
+
+\scriptsize
+```{r, echo=T}
+library(ISLR)
+data(Credit)
+head(Credit)
+```
+
+\normalsize
+Question: Do the Balances differ for different Ethnicities?
+
+
+---
+
+In R, a factor covariate can be used in the same way as a continuous predictor:
+
+\scriptsize
+```{r, echo=T}
+r.lm <- lm(Balance ~ Ethnicity, data=Credit)
+summary(r.lm)
+```
+
+\normalsize
+Interpretation? Do the ethnicities really differ? Check also the $F$-test in the last line of the summary output.
+
+---
+
+## The "reference category"
+\vspace{2mm}
+In the above example we do not see a result for the `EthnicityAfrican American`. Why?
+
+* `African American` is chosen to be the reference category.
+* The results for `EthnicityAsian` and `EthnicityCaucasian` are **differences** with respect to the reference cateogry.
+* R chooses the reference category in alphabetic order! This is sometimes not a relevant category. 
+* You can change the reference category:
+
+\scriptsize
+```{r, echo=T}
+library(dplyr)
+Credit <-  mutate(Credit,Ethnicity = relevel(Ethnicity,ref="Caucasian"))
+r.lm <- lm(Balance ~ Ethnicity, data=Credit)
+summary(r.lm)$coef
+```
+
+\small
+Note: The differences are now with respect to the Caucasian category -- the model is however exactly the same!
+
+---
+
+## Testing for a categorical predictor
+
+\vspace{2mm}
+
+**Question**: Is a qualitative predictor needed in the model?
+
+\vspace{2mm}
+
+For a predictor with more than two levels (like Ethnicity above), the Null Hypothesis is whether
+
+$$\beta_1 = \ldots = \beta_{k-1}=0$$
+at the same time. 
+
+\vspace{2mm}
+
+$\rightarrow$ We again need the $F$-test\footnote{remember that the $F$-test is a generalization of the $t$-test!}, as **always when we test for more than one $\beta_j=0$ _simultaneously_**!
+
+\vspace{2mm}
+In R, this is done by the `anova()` function:
+
+\scriptsize
+```{r, echo=T}
+anova(r.lm)
+```
+
+---
+
+## Interactions: Removing the additivity assumption
+\vspace{2mm}
+
+We again look at the `Credit` dataset. We want to model the `Balance` as a function of `Income` and wheter the person is a student or not.
+
+\vspace{2mm}
+
+The model is given as 
+$$\text{Balance}_i = \beta_0 + \beta_1 \cdot \text{Income}_i + \beta_2 \cdot \text{Student}_i + \varepsilon_i \ ,$$
+where `Student` is a binary variable. Thus we have a model that looks like
+\begin{equation*}
+\text{Balance}_i = \left\{ 
+\begin{array}{ll}
+\beta_0 + \beta_2 + \beta_1 \cdot \text{Income}_i  + \varepsilon_i \ ,  & \text{if $i$ is a student,}\\
+\beta_0 + \qquad \; \beta_1 \cdot \text{Income}_i  + \varepsilon_i  & \text{otherwise.}
+\end{array}
+\right.
+\end{equation*}
+
+
+In R, we simply add `Student` to the model:
+\scriptsize
+```{r, echo=T}
+r.lm <- lm(Balance ~ Income + Student, Credit)
+```
+
+\normalsize
+
+**Caveat:** This model assumes that students and non-students have the same slope for `Income`. Realistic?
+
+---
+
+Let's look at the graphs:
+
+![ISLR Figure 3.7](../../ISLR/Figures/Chapter3/3.7.png)
+
+$\rightarrow$ We want a model that allows for different slopes!
+
+---
+
+## Interaction terms
+\vspace{2mm}
+
+We formulate a new model that includes the interaction term $(\text{Income}\cdot \text{Student})$:
+
+$$\text{Balance}_i = \beta_0 + \beta_1 \cdot \text{Income}_i + \beta_2 \cdot \text{Student}_i + \beta_3 \cdot \text{Income}_i \cdot \text{Student}_i  + \varepsilon_i \ ,$$
+
+Thus we have a model that allows for different intercept _and_ slope for the two groups:
+
+\begin{equation*}
+\text{Balance}_i = \left\{ 
+\begin{array}{ll}
+\beta_0 + \beta_2 + (\beta_1 + \beta_3) \cdot \text{Income}_i  + \varepsilon_i \ ,  & \text{if $i$ is a student,}\\
+\beta_0 + \qquad \; \beta_1 \cdot \text{Income}_i  + \varepsilon_i  & \text{otherwise.}
+\end{array}
+\right.
+\end{equation*}
+
+
+---
+
+In R, this is again quite simple:
+
+\scriptsize
+```{r, echo=T}
+r.lm <- lm(Balance ~ Income * Student, Credit)
+summary(r.lm)$coef
+```
+
+\normalsize
+
+**Interpretation:**
+
+We allow the model to depend on the binary variable `Student`, such that
+
+For a student: $\hat{y} =$ `r round(summary(r.lm)$coef[1,1],1)` +  `r round(summary(r.lm)$coef[3,1],1)` + (`r round(summary(r.lm)$coef[2,1],1)` + `r format(summary(r.lm)$coef[4,1],1,1,1)`) $\cdot$ Income 
+
+For a non-Student: $\hat{y} =$ `r round(summary(r.lm)$coef[1,1],1)`  + (`r round(summary(r.lm)$coef[2,1],1)`) $\cdot$ Income 
+
+\vspace{2mm}
+
+**Question:** Is the interaction relevant here?
+
+---
+
+Of course, we can include interactions also between
+
+* two continuous variables.
+* a categorical variable with more than 2 levels and a continuous variable.
+
+\vspace{4mm}
+
+$\rightarrow$ See exercises! (Todo)
+
+---
+
+
+## Non-linear terms
+\vspace{2mm}
+
+**Linear regression is even more powerful!**
+\vspace{2mm}
+
+We have seen that it is possible to include continuous, binary or factorial covariates in a regression model.
+
+\vspace{2mm}
+
+\colorbox{lightgray}{\begin{minipage}{10cm}
+Even \textcolor{red}{transformations} of covariates can be included in (almost) any form. For instance the square of a variable $X^2$.
+
+\begin{equation*}
+y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \varepsilon_i \ , 
+\end{equation*}
+which leads to a {\bf quadratic} or {\bf polynomial} regression (if higher order terms are used).
+\end{minipage}}
+
+\vspace{4mm}
+
+Other common transformations are: 
+
+* $\log$ 
+* $\sqrt{..}$
+* $\sin$, $\cos$,
+
+
+--- 
+
+How can a \emph{quadratic} regression be a \emph{linear regression}??
+
+\vspace{4mm}
+
+**Note**:
+
+The word _linear_ refers to the \textcolor{red}{linearity in the coefficients}, and not on a linear relationship between $Y$ and $X_1, \ldots , X_p$!
+
+
+\vspace{4mm}
+
+**Question**: When would we need such a regression? Well, sometimes the world is not linear. In particular, if 
+
+* there is a theoretical/biological/medical reason to believe in a non-linear relationship, or
+* the residual analysis indicates that there are non-linear associations in the
+data,
+
+it can sometimes help to use transformations of a variable $X$. 
+
+\vspace{2mm}
+
+\scriptsize
+$\rightarrow$ In the later modules, we will discuss other more advanced non-linear
+approaches for addressing this issue.
+
 
 
 ---
 
 # <a id="further"> Further reading </a>
 
-* Need details on the simple linear regression: From TMA4240/TMA4245 Statistics we have the thematic page for [Simple linear regression (in Norwegian)](https://wiki.math.ntnu.no/tma4245/tema/begreper/regression).
-* Need more advanced thory: Theoretical version (no simple linear regression) from TMA4315 Generalized linear models H2018: [TMA4315M2: Multiple linear regression](https://www.math.ntnu.no/emner/TMA4315/2018h/2MLR.html)
-* Slightly different presentation (more focus on multivariate normal theory): [Slides and written material from TMA4267](https://www.math.ntnu.no/emner/TMA4267/2017v/TMA4267V2017Part2.pdf)
-* And, same source, but now [Slides and written material from TMA4267 Linear Statistical Models in 2017, Part 3: Hypothesis testing and ANOVA](http://www.math.ntnu.no/emner/TMA4267/2017v/TMA4267V2017Part3.pdf)
-* [Videoes on YouTube by the authors of ISL, Chapter 2](https://www.youtube.com/playlist?list=PL5-da3qGB5IBSSCPANhTgrw82ws7w_or9)
+
+* [Videoes on YouTube by the authors of ISL, Chapter 3](https://www.youtube.com/playlist?list=PL5-da3qGB5IBSSCPANhTgrw82ws7w_or9)
+
+<!-- --- -->
+
+<!-- # <a id="Rpackages"> R packages</a> -->
+
+<!-- If you want to look at the .Rmd file and `knit` it, you need to first install the following packages (only once). -->
+
+<!-- ```{r, eval=FALSE} -->
+<!-- # packages to install before knitting this R Markdown file -->
+<!-- # to knit the Rmd -->
+<!-- install.packages("knitr") -->
+<!-- install.packages("rmarkdown") -->
+
+<!-- # nice tables in Rmd -->
+<!-- install.packages("kableExtra") -->
+
+<!-- # cool layout for the Rmd -->
+<!-- install.packages("prettydoc") # alternative to github -->
+
+<!-- #plotting -->
+<!-- install.packages("ggplot2") # cool plotting -->
+<!-- install.packages("ggpubr") # for many ggplots -->
+<!-- install.packages("GGally") # for ggpairs -->
+<!-- #datasets -->
+<!-- install.packages("ElemStatLearn") # for ozone data set -->
+<!-- install.packages("gamlss.data")#rent index data set here -->
+<!-- #methods -->
+<!-- install.packages("nortest")#test for normality - e.g. Anderson-Darling -->
+
+<!-- install.packages("car") # vif -->
+<!-- library(Matrix) -->
+<!-- install.packages("reshape") -->
+<!-- install.packages("corrplot") -->
+<!-- install.packages("tidyverse") -->
+<!-- ``` -->
+
 
 ---
 
-# <a id="Rpackages"> R packages</a>
+Team Kahoot?
 
-If you want to look at the .Rmd file and `knit` it, you need to first install the following packages (only once).
-
-```{r, eval=FALSE}
-# packages to install before knitting this R Markdown file
-# to knit the Rmd
-install.packages("knitr")
-install.packages("rmarkdown")
-
-# nice tables in Rmd
-install.packages("kableExtra")
-
-# cool layout for the Rmd
-install.packages("prettydoc") # alternative to github
-
-#plotting
-install.packages("ggplot2") # cool plotting
-install.packages("ggpubr") # for many ggplots
-install.packages("GGally") # for ggpairs
-#datasets
-install.packages("ElemStatLearn") # for ozone data set
-install.packages("gamlss.data")#rent index data set here
-#methods
-install.packages("nortest")#test for normality - e.g. Anderson-Darling
-
-install.packages("car") # vif
-library(Matrix)
-install.packages("reshape")
-install.packages("corrplot")
-install.packages("tidyverse")
-```
+---
 
 # Acknowledgements
 
-Thanks to Julia Debik for contributing to this module page.
+I thank Mette Langaas and Julia Debik, whose slides I modified and adapted to get this set of slides.
 
 ---
 
