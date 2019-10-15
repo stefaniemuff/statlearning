@@ -1,0 +1,693 @@
+---
+subtitle: "TMA4268 Statistical Learning V2019"
+title: "Solutions to Recommended Exercises in Module 4: CLASSIFICATION"
+author: "Julia Debik, Martina Hall and Mette Langaas, Department of Mathematical Sciences, NTNU"
+date: "week 5 2019"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+  pdf_document:
+    toc: true
+    toc_depth: 2
+    keep_tex: yes
+    fig_caption: yes
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<!-- rmarkdown::render("4Classif-sol.Rmd","all",encoding="UTF-8") -->
+
+
+## Theoretical exercises
+
+### Bank notes and LDA
+Here we have measures of the length and the diagonal of an image part of $n_G = 500$ genuine bank notes and $n_F = 500$ false bank notes, with the following mean and covarince matrices,
+$$
+  \mu_G = \bar{\bf x}_G=\left[     \begin{array}{c} 214.97 \\ 141.52  \end{array} \right]
+\text{ and }
+   \hat{\boldsymbol \Sigma}_G=\left[     \begin{array}{cc} 0.1502 & 0.0055 \\ 0.0055 & 0.1998 
+\end{array} \right]
+$$
+$$
+   \mu_F = \bar{\bf x}_F= \left[     \begin{array}{c} 214.82 \\ 139.45  \end{array} \right]
+\text{ and }
+   \hat{\boldsymbol \Sigma}_F= \left[     \begin{array}{cc} 0.1240 & 0.0116 \\ 0.0116 & 0.3112 
+\end{array} \right]
+$$
+**a.**
+Assuming the observations $x_G$ and $x_F$ are independent observations from normal distribution with the same covariance matrix $\boldsymbol \Sigma = \boldsymbol \Sigma_G = \boldsymbol \Sigma_F$, and all observations are independent of each other, we can find the estimated pooled covariance matrix as
+\begin{align*}
+  \hat{\boldsymbol \Sigma} &= \frac{(n_G - 1)\hat{\boldsymbol \Sigma}_G + (n_f - 1)\hat{\boldsymbol \Sigma}_F}{n_g + n_F - 2} \\
+  &= \left[     \begin{array}{cc} 0.13710 & 0.00855 \\ 0.00855 & 0.25550 
+\end{array} \right]
+\end{align*}
+
+### b) 
+For LDA we assume that the class conditional distributions are normal (Gaussian) and that all of the classes have the same covariance matrix.
+Assuming the same covariance matrix for both classes (G and F), we classify the new observation, $x_0$ based on which of the discriminant functions that are the largest,
+$$\delta_k(x) = {\bf x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_k - \frac{1}{2}\boldsymbol\mu_k^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_k + \log \pi_k.$$
+
+We have not been given any information of the prior probabilites - but we would believe that the probability of a fake bank note is much smaller than the probability of a genuine bank note.
+
+However, since our training data is 50% fake and genuine, we might use that to estimate prior probabilites, $\hat{\pi}_G =\hat{\pi}_F =\frac{n_F}{n} = 0.5.$ Inserting the pooled covariance matrix and the estimated mean values, we have that
+$$\delta_G({\bf x_0}) = {\bf x_0}^T \hat{\boldsymbol{\Sigma}}^{-1}\boldsymbol\mu_G - \frac{1}{2}\boldsymbol\mu_G^T \hat{\boldsymbol{\Sigma}}^{-1}\boldsymbol\mu_G + \log \pi_G.$$
+and 
+$$\delta_F({\bf x_0}) = {\bf x_0}^T \hat{\boldsymbol{\Sigma}}^{-1}\boldsymbol\mu_F - \frac{1}{2}\boldsymbol\mu_F^T \hat{\boldsymbol{\Sigma}}^{-1}\boldsymbol\mu_F + \log \pi_F.$$
+
+Alternatively: The rule would be to classify to $G$ if $\delta_G({\bf x})-\delta_F({\bf x})>0$, which can be written
+$${\bf x_0}^T \hat{\boldsymbol{\Sigma}}^{-1}(\boldsymbol\mu_G -\boldsymbol\mu_F)- \frac{1}{2}\boldsymbol\mu_G^T \hat{\boldsymbol{\Sigma}}^{-1}\boldsymbol\mu_G +frac{1}{2}\boldsymbol\mu_F^T \hat{\boldsymbol{\Sigma}}^{-1}\boldsymbol\mu_F+ (\log \pi_G -\log \pi_F)>0$$
+
+
+### c) 
+With ${\bf x_0} = [214.0, 140.4]^T$ and using the formula given in the exercise, $\hat{\boldsymbol{\Sigma}}^{-1} = \left[ \begin{array}{cc} 7.31 & -0.24 \\ -0.24 & 3.92 
+\end{array} \right]$. Inserting these into the formulas, we have that 
+$$\delta_G({\bf x_0}) = \left[ 214 \text{  } 140.4  \right]
+\left[ \begin{array}{cc} 7.31 & -0.24 \\ -0.24 & 3.92 
+\end{array} \right]
+\left[     \begin{array}{c} 214.97 \\ 141.52  \end{array} \right] - \frac{1}{2}
+\left[ 214.97 \text{  } 141.52 \right] \
+\left[ \begin{array}{cc} 7.31 & -0.24 \\ -0.24 & 3.92 
+\end{array} \right]
+\left[     \begin{array}{c} 214.97 \\ 141.52  \end{array} \right] \ - \log 2 = 198667.1$$
+
+and 
+$$\delta_F({\bf x_0}) = \left[ 214 \text{  } 140.4  \right]
+\left[ \begin{array}{cc} 7.31 & -0.24 \\ -0.24 & 3.92 
+\end{array} \right]
+\left[     \begin{array}{c} 214.82 \\ 139.42  \end{array} \right] - \frac{1}{2}
+\left[ 214.82 \text{  } 139.42 \right] \
+\left[ \begin{array}{cc} 7.31 & -0.24 \\ -0.24 & 3.92 
+\end{array} \right]
+\left[     \begin{array}{c} 214.82 \\ 139.42  \end{array} \right] \ - \log 2 = 198668.3$$
+Since $\delta_F({\bf x_0})$ is larger than $\delta_G({\bf x_0})$, the classify the bank note as fake!
+
+### Exercise 4.7.9
+**a.** Recall that the odds ratio is defined as $$\text{odds} = \frac{p(x)}{1-p(x)},$$ where $p(X) = P(Y=\text{default} | X=x)$. We know that the odds ratio is equal to 0.37. We thus solve for $p(x)$:
+$$\begin{align*} \frac{p(x)}{1-p(x)} &= 0.37 \\ p(x) &= 0.37 (1-p(x)) \\ p(x) &= \frac{0.37}{1.37} = 0.270 \end{align*} $$
+**b.** For an individual we are given that $P(Y= \text{default}| X=x) = 0.16$. We are asked to find the odds that she will default. We can calculate this by inserting the probability of default into the formula for the odds ratio: $$\frac{p(x)}{1-p(x)} = \frac{0.16}{1-0.16} = 0.190$$ 
+
+
+### Exercise 4.7.6
+**a.** We have that $X_1$ = hours studied = 40 and $X_2$ = undergrad GPA = 3.5. The formula for the predicted probability is $$\begin{align*}p(Y = A | X_1 = 40, X_2 = 3.5) &= \frac{\exp(\hat{\beta}_0 + \hat{\beta}_1 x_1 + \hat{\beta}_2 x_2)}{1 + \exp(\hat{\beta}_0 + \hat{\beta}_1 x_1 + \hat{\beta}_2 x_2)} \\ &= \frac{\exp(-6 + 0.05 \cdot 40 + 1 \cdot 3.5)}{1 + \exp(-6 + 0.05 \cdot 40 + 1 \cdot 3.5)}\\ &\approx 0.0378 \end{align*}$$  
+**b.** We know that $x_2$ = 3.5, and need to solve $\hat{p}(Y = A | x_1, x_2 = 3.5) = 0.5$ for $x_1$.
+$$\begin{align*} 0.5 &= \frac{\exp(-6+0.05 x_1 + 3.5)}{1+\exp(-6+0.05 x_1 + 3.5)} \\ 0.5 (1+\exp(-2.5+0.05x_1)) &=\exp(-2.5+0.05x_1) \\ 0.5 &= (1-0.5) \exp(-2.5+0.05x_1)\\ \log(1) &= -2.5+ 0.05x_1 \\ x_1 &= 50 \text{hours}  \end{align*}$$
+
+### Sensitivity, specificity, ROC and AUC
+
+**a.**
+
+We start by denoting the number of true diseased as $P$ and the number of true non-diseased as $N$, and we have that $n = P+N$. We count the ones with predicted probability of disease $p(x)>0.5$, and denote the count $P^*$ and the count for the ones with $p(x)\leq0.5$ as $N^*$. Then, we can make the confusion table
+
+```{r, echo=FALSE, warning=FALSE}
+library(knitr)
+#library(kableExtra)
+
+row1 = c("", " Predicted non-diseased -", "Predicted diseased +","Total")
+row2 = c("True non-diseased -", "TN","FP","N")
+row3 = c("True diseased +", "FN","TP", "P")
+row4 = c("Total", "N$^*$", "P$^*$","n")
+kable(rbind(row1, row2, row3,row4), row.names=FALSE)
+
+```
+
+where TN (true negative) is the number of predicted non-diseased that are actually non-diseased, FP (false positive) is the number of predicted diseased that are actually non-diseased, FN (false negative) is the number of predicted non-diseased that are actually diseased and TP (true positive) is the number of predicted diseased that are actually diseased. Using the confusion table, we can calculate the sensitivity and spesificity where
+$$
+Sens = \frac{\text{True positive}}{\text{Actual positive}} = \frac{TP}{P}
+$$
+and 
+$$
+Spes = \frac{\text{True negative}}{\text{Actual negative}} = \frac{TN}{N}
+$$
+
+**b.**
+
+In the ROC-curve we plot the sensitivity against 1-spesificity for all possible thresholds of the probability. To construct the ROC-curve we would have to calculate the sensitivity and spesificity for different values of the cutoff $p(x)>cut$. Using a threshold of 0.5, you say that if a new person has a probability of 0.51 of having the disease, he is classified as diseased. Another person with a probability of 0.49 would then be classified as non-diseased. Because of this difficulty, the ROC-curve and the area under the ROC-curve are useful tools as they consider all possible thresholds for the cutoff. 
+
+**c.**
+
+The AUC is the area under the ROC-curve and gives the overall performance of the test for all possible thresholds. A AUC value of 1 means a perfect fit for all possible thresholds, while a AUC of 0.5 corresponds to the classifyer that performs no better than chance. Hence, a classification method $p(x)$ giving 0.6 and another $q(x)$ giving 0.7, we would prefer $q(x)$ as it has the highest AUC value.
+
+
+## Data analysis in R
+
+### Exercise 4.7.10
+**a.** Install the `ISLR` package and load the `ggplot2` and `GGally` libraries.
+```{r,error=FALSE,warning=FALSE}
+# install.packages("ISLR")
+library(ISLR)
+library(ggplot2)
+library(GGally)
+```
+Now make a summary of the `Weekly` data set using the `summary` function and pairwise plots of the variables using the `ggpairs` function:
+```{r, warning=FALSE, message=FALSE}
+attach(Weekly)
+summary(Weekly)
+ggpairs(Weekly, ggplot2::aes(color=Direction), lower = list(continuous = wrap("points", alpha = 0.3, size=0.2)))
+```
+
+We can observe that the variables `Year` and `Volume` are highly correlated and it might look like the `Volume` increases quadratically with increasing `Year`. No other clear patterns is observed.
+
+**b.** We fit a logistic regression model using the `glm` function and specifying that we want to fit a binomial function by giving `function="binomial"` as an argument. 
+```{r}
+glm.Weekly = glm(Direction ~ Lag1 + Lag2 + Lag3 + Lag4 + Lag5 + Volume, family="binomial")
+summary(glm.Weekly)
+```
+
+Only `Lag2` appears to be a significant predictor.
+
+**c.** We use our fitted model to calculate the probabilities for `Direction="Up"` for the response variable and compare the predictions with the true classes of the response variable. To find the confusion matrix, the function `table` can be used. 
+```{r}
+glm.probs_Weekly = predict(glm.Weekly, type="response")
+glm.preds_Weekly = ifelse(glm.probs_Weekly > 0.5, "Up", "Down")
+table(glm.preds_Weekly, Direction)
+```
+
+We see that this classifier makes bad predictions. The fraction of correct predictions is $$\frac{54+557}{1089} = 0.561. $$ From the confusion matrix we also see that the classifier does a good job predicting when the market goes `Up`, but a poor job predicting the market goes `Down`.  
+
+**d.**  We start by dividing the `Weekly` data set into a train and a test set, where the training set consists of all observations in the period from 1990 to 2008, while the test set consists of the observations from the period 2009 to 2010. We then fit a logistic regression model to the training data set, make predictions for the test set, and calculate the confusion matrix.
+```{r}
+
+Weekly_trainID = (Year < 2009)
+Weekly_train = Weekly[Weekly_trainID,]
+Weekly_test = Weekly[!Weekly_trainID,]
+
+glm.Weekly2 = glm(Direction~Lag2, family="binomial", data=Weekly_train)
+glm.Weekly2_prob = predict(glm.Weekly2, newdata=Weekly_test, type="response")
+glm.Weekly2_pred = ifelse(glm.Weekly2_prob > 0.5, "Up", "Down")
+table(glm.Weekly2_pred, Weekly_test$Direction)
+```
+
+The fraction of correct predictions on the test set is $$\frac{9+56}{104} = 0.625.$$
+
+**e.** The `lda` function is available in the `MASS` library, thus we need to start by loading the library. We proceed by fitting a LDA model to the training set. We then use this model to make predictions for the test set and then compare the predicted and true classes using the confusion matrix.
+```{r}
+library(MASS)
+lda.Weekly = lda(Direction~Lag2, data=Weekly_train)
+lda.Weekly_pred = predict(lda.Weekly, newdata=Weekly_test)$class
+table(lda.Weekly_pred, Weekly_test$Direction)
+```
+
+The fraction of correct classifications is $$\frac{9+56}{104} = 0.625.$$
+
+**g.** We follow the same procedure and test an QDA classifier on the data:
+```{r}
+qda.Weekly = qda(Direction~Lag2, data=Weekly_train)
+qda.Weekly_pred = predict(qda.Weekly, newdata=Weekly_test)$class
+table(qda.Weekly_pred, Weekly_test$Direction)
+```
+
+The fraction of correct classifications is now $$\frac{0+61}{104} = 0.587.$$
+
+**h.** The KNN classifier is implemented in the `knn` function of the `class` library. This function requires some preparation of the data, as it does not accept a formula as a function argument.
+
+```{r}
+library(class)
+knn.train = as.matrix(Weekly_train$Lag2)
+knn.test = as.matrix(Weekly_test$Lag2)
+
+knn1.Weekly = class::knn(train = knn.train, test = knn.test, cl = Weekly_train$Direction, k=1)
+table(knn1.Weekly, Weekly_test$Direction)
+```
+
+The fraction of correct classifications for the KNN classifier is $$\frac{21+31}{104}=0.510$$
+
+**h.** The logistic regression model and the LDA classifier provided the highest fractions of correct classifications on this data.
+
+**i.**
+No solution provided here.
+
+### Exercise 4.7.11 
+**a.** Let's look at the data
+```{r, message=FALSE, warning=FALSE}
+attach(Auto)
+head(Auto)
+```
+
+We create a the binary variable `mpg01` using the `median` and `ifelse` function. We continue by making a data frame, where the original `mpg` variable is replaced by the `mpg01` variable, and where all other covariates, except the `name`, are included.
+```{r, message=FALSE, warning=FALSE}
+mpg.median = median(Auto$mpg)
+mpg01 = ifelse(Auto$mpg > mpg.median, 1, 0)
+auto = data.frame(mpg01 = mpg01, Auto[,2:8])
+head(auto)
+```
+
+**b.** 
+We can explore the correlations in the data set graphically using the `corrplot` library. The size of the circle indicates the absolute value of the correlation, while the color indicates whether the correlation is positive (blue) or negative (red). 
+```{r, message=FALSE, warning=FALSE}
+# install.packages(corrplot)
+library(corrplot)
+auto.cor = cor(auto)
+corrplot(auto.cor,  tl.col="black")
+```
+
+The response variable `mpg01` has the highest correlation with the variables `cylinders`, `displacement`, `horsepower`and `weight`. All of these correlations are negative. We also see that the covariates are highly correlated with each other.
+
+Pairwise scatter plots of the variables can be made using the `ggpairs` function from the `GGally` library.
+```{r, message=FALSE, warning=FALSE}
+auto$mpg01 = as.factor(auto$mpg01)
+ggpairs(auto, ggplot2::aes(color=mpg01), lower = list(continuous = wrap("points", alpha = 0.3, size=0.2)), upper="blank")
+```
+
+The variables `cylinders`, `displacement`, `horsepower` and `weight` have a high influence on the response value. There is no visible pattern between the variables `acceleration` and `year` and the response variable.
+
+Boxplots of the variables
+```{r, message=FALSE, warning=FALSE}
+# install.packages(reshape2)
+require(reshape2)
+auto.melt= melt(auto, id.var="mpg01" )
+ggplot(data = auto.melt, aes(x=variable, y=value)) + geom_boxplot(aes(fill=mpg01)) + facet_wrap( ~ variable, scales="free")
+```
+
+
+**c.**
+We split the data randomly into a training set and a test set of equal size by using the function `sample`. We set a seed so that the results are reproducible.
+
+```{r}
+set.seed(100)
+n = dim(auto)[1]
+auto.trainID = sample(1:n, size = n/2)
+auto.train = auto[auto.trainID, ]
+auto.test = auto[-auto.trainID, ]
+```
+
+
+**d.** 
+```{r}
+auto.lda = lda(mpg01~cylinders+displacement+horsepower+weight, data=auto.train)
+auto.lda.pred = predict(auto.lda, newdata=auto.test)$class
+# Test error
+mean(auto.lda.pred != auto.test$mpg01)
+```
+
+**e.** 
+```{r}
+auto.qda = lda(mpg01~cylinders+displacement+horsepower+weight, data=auto.train)
+auto.qda.pred = predict(auto.qda, newdata=auto.test)$class
+# Test error
+mean(auto.qda.pred != auto.test$mpg01)
+```
+
+**f.**
+```{r}
+auto.glm = glm(mpg01~cylinders+displacement+horsepower+weight, data=auto.train, family="binomial")
+auto.glm.prob = predict(auto.glm, newdata=auto.test, type="response")
+auto.glm.pred = ifelse(auto.glm.prob > 0.5, 1, 0)
+# Test error
+mean(auto.glm.pred != auto.test$mpg01)
+```
+
+**g.** We test the performance of the KNN classifier, by trying all values of $K$ from 0 to 50.
+```{r}
+auto.knn.train = as.matrix(auto.train[,2:8])
+auto.knn.test = as.matrix(auto.test[,2:8])
+
+K = 50
+auto.knn.error = rep(NA, K)
+
+for(k in 1:K){
+  auto.knn.pred = class::knn(train = auto.knn.train, test = auto.knn.test, cl=auto.train$mpg01, k = k)
+  auto.knn.error[k] = mean(auto.knn.pred != auto.test$mpg01)
+}
+
+knn.error.df = data.frame(k=1:K, error = auto.knn.error)
+ggplot(knn.error.df, aes(x=k, y=error))+geom_point(col="blue")+geom_line(linetype="dotted")
+
+knn.min = min(auto.knn.error)
+# Test error
+knn.min
+which(auto.knn.error == knn.min)
+```
+
+### Sensitivity, specificity, ROC and AUC
+
+**a.** 
+```{r, message=FALSE, warning=FALSE}
+#install.packages("DAAG")
+library(DAAG)
+attach(frogs)
+```
+**b.** 
+
+```{r}
+glm.fit = glm(pres.abs~distance + NoOfPools + meanmin, data=frogs, family="binomial")
+summary(glm.fit)
+```
+
+**c.** 
+
+```{r}
+glm.fit.pred = ifelse(fitted.values(glm.fit)>0.5, 1, 0)
+table(glm.fit.pred, frogs$pres.abs)
+```
+ii. The training error can be calculated by counting the misclassification rate.
+$$\text{Error}_\text{train} = \frac{29+19}{212} \approx 0.23 $$
+The training error among the present is
+$$\text{Error}_\text{present} = \frac{29}{114+29} \approx 0.20 $$
+and the training error among the absent is
+$$\text{Error}_\text{absent} = \frac{19}{19+50} \approx 0.28 $$
+
+
+iii.
+```{r, message=FALSE}
+library(pROC)
+full.roc = roc(frogs$pres.abs, fitted.values(glm.fit))
+auc(full.roc)
+ggroc(full.roc)
+```
+
+
+**c.**
+```{r,message=FALSE}
+library(class)
+lfit = lda(pres.abs~distance + NoOfPools + meanmin, data=frogs)
+lpredClass=predict(object=lfit)$class
+table(lpredClass, frogs$pres.abs)
+```
+ii. The training error can be calculated by counting the misclassification rate.
+$$\text{Error}_\text{train} = \frac{41+22}{212} \approx 0.30 $$
+The training error among the present is
+$$\text{Error}_\text{present} = \frac{41}{111+41} \approx 0.27 $$
+and the training error among the absent is
+$$\text{Error}_\text{absent} = \frac{22}{22+38} \approx 0.37 $$
+
+
+iii.
+```{r, message=FALSE}
+library(pROC)
+lpred=predict(object=lfit)$posterior[,1]
+lres=roc(response=frogs$pres.abs,predictor=lpred)
+auc(lres)
+ggroc(lres)
+```
+
+
+**d.**
+Using the same data for training and testing the model will always give better (or sometimes the same) predicted values than using a seperate data set for testing. The model is fitted so that they will give the best prediction on these data! Hence, the ROC curve and AUC values we get here will be the best possible we can get for this model, and it would be more realistic to evaluate the ROC-curve and AUC value for a test set.
+
+## Compulsory exercise 1 2018
+### Problem 3 - Classification 
+
+In this problem, we use a `wine` dataset of chemical measurement of two variables, `Color_intensity` and `Alcalinity_of_ash`, on 130 wines from two cultivars in a region in Italy. 
+
+The data set is a subset of a data set from <https://archive.ics.uci.edu/ml/datasets/Wine>, see that page for information of the source of the data.
+
+Below you find code to read the data, plot the data and to divide the data into a training set and a test set. To get your own unique division please change the seed (where it says `set.seed(4268)` you change 4268 to your favorite number).
+
+```{r,warning=FALSE,results="hold",message=FALSE,error=FALSE}
+library(ggplot2)
+library(GGally)
+library(class)
+library(MASS)
+library(pROC)
+wine=read.csv("https://www.math.ntnu.no/emner/TMA4268/2018v/data/Comp1Wine.csv",sep=" ")
+wine$class=as.factor(wine$class-1) # to get 0 and 1 (not 1 and 2)
+colnames(wine)=c("y","x1","x2")
+ggpairs(wine, ggplot2::aes(color=y))
+
+n=dim(wine)[1]
+set.seed(4268) #to get the same order if you rerun
+ord = sample(1:n) #shuffle, without replacement 
+test = wine[ord[1:(n/2)],] # first half is test, second train - could have been opposite
+train = wine[ord[((n/2)+1):n],]
+```
+
+In our data the two classes are named `y` and coded $Y=0$ and $Y=1$, and we name $x_1$= `Alcalinity_of_ash`=`x1` and $x_2$=`Color_intensity`=`x2`.
+
+### a) Logistic regression 
+We assume a logistic regression model for observation $i$, $i=1,\ldots,n$:
+$$
+P(Y_i = 1| {\bf X}={\bf x}_i) = p_i = \frac{e^{\beta_0 + \beta_1x_{i1} + \beta_2 x_{i2}}}{ 1+ e^{\beta_0 + \beta_1x_{i1} + \beta_2x_{i2}}}
+$$
+
+* Use this expression to show that logit$(p_i)=\log(\frac{p_i}{1-p_i})$ is a linear function in $x_1$ and $x_2..
+* Fit a logistic regression model with model formula `y~x1+x2` to the training set.
+* Give an interpretation of $\hat{\beta}_1$ and $\hat{\beta}_2$.
+* We use the rule to classify to class 1 for an observation with covariates ${\bf x}$ if $\hat{P}(Y=1\mid {\bf x})>0.5$. Write down the formula for the class boundary between the classes. What type of boundary is this?
+* Make a plot with the training observations and the class boundary. Hint: in `ggplot` points are added with `geom_point` and a line with `geom_abline(slope=b, intercept=a)` where $a$ and $b$ comes from your class boundary, and title with `ggtitle`.
+* Use the `summary` output to _manually_ derive the predicted probability $\hat{P}(Y=1\mid x_1=17, x_2=3)$. What is the interpretation of this value?
+* Compute predicted probabilites for all observations in the test set.
+* Make the confusion table for the test set when using 0.5 as cutoff for the probabilities. Calculate the sensitivity and specificity on the test set. How would you evaluate the performance of this classification?
+
+### Answers:
+
+* <span style="color:darkgreen"> 
+\begin{align*}
+ \log\big( \frac{p_i}{1-p_i} \big) &= \log \Big( \frac{\frac{e^{\beta_0 + \beta_1x_1+ \beta_2x_2}}{1+e^{\beta_0 + \beta_1x_1+ \beta_2x_2}}}{1- \frac{e^{\beta_0 + \beta_1x_1+ \beta_2x_2}}{1+ e^{\beta_0 + \beta_1x_1+ \beta_2x_2}}} \Big) = \log \big(\frac{\frac{e^{\beta_0 + \beta_1x_1+ \beta_2x_2}}{1+ e^{\beta_0 + \beta_1x_1+ \beta_2x_2}}}{\frac{1}{1+ e^{\beta_0 + \beta_1x_1+ \beta_2x_2}}} \big) \\
+ &= \log(e^{\beta_0 + \beta_1x_1+ \beta_2x_2}) = \beta_0 + \beta_1x_1+ \beta_2x_2 \\
+\end{align*}
+</span>
+```{r, include = TRUE, eval=TRUE}
+fit = glm(y~x1+x2, data = train, family = "binomial")
+summary(fit)
+```
+* <span style="color:darkgreen"> $\hat{\beta}_1$ is the estimated coefficient for `x1` with a value 0.1332. This means that the odds of begin a wine of class 2 is multiplied by $\exp(\hat\beta_1)=1.14$ if `x1` increases by one unit.
+Further, $\hat{\beta}_2$ is the estimated coefficient for `x2` with value -2.34, which is interpreted as the odds of begin a wine of class 2 is multiplied by $\exp(\hat\beta_2)=0.097$ if `x2` increases by one unit.
+</span>
+* <span style="color:darkgreen"> The class boundary is where there is equal probability of both classes, $p_i = 0.5$. Using the logit functon, we find that $\frac{p_i}{1-p_i} = \exp(\beta_0 + \beta_1 x_1 + \beta_2x_2)$. With $p_i = 0.5$, the class boundary is given by $1 = \exp(\beta_0 + \beta_1 x_1 + \beta_2x_2)$ and hence $0 = \beta_0 + \beta_1 x_1 + \beta_2x_2$, and $x_2=-\frac{\beta_0}{\beta_2}-\frac{\beta_1}{\beta_2}x_1$. The class boundary is a straight line and can easily be added to the scatter plot below.</span>
+
+```{r, include = T, eval=T}
+betas = fit$coefficients
+slope = -betas[2]/betas[3]
+intercept = -betas[1]/betas[3]
+
+g1 = ggplot(data=train,aes(x=x1, y=x2, colour=y)) + geom_point(pch = 1)
+g1 + geom_point(data = test, pch = 3) + geom_abline(slope=slope,intercept=intercept)
+```
+
+```{r, include = T, eval=T}
+x=c(1,17,3)
+p = exp(fit$coefficients%*%x)/(1+exp(fit$coefficients%*%x))
+p
+```
+For a wine with `x1` of 17 and  `x2` of 3, there is a 93% probability that the wine is of class 1.
+
+```{r, include=TRUE, eval=TRUE}
+pred = predict.glm(fit, newdata = test, type = "response")
+predglm = predict.glm(fit, newdata = test, type = "response")
+testclass=ifelse(predglm > 0.5, 1, 0)
+t = table(test$y, testclass)
+t
+
+n = length(test$y)
+error = (n-sum(diag(t)))/n
+error
+library(caret)
+confusionMatrix(as.factor(testclass),reference=as.factor(test$y),positive="1")
+```
+* <span style="color:darkgreen"> 10 misclassifications equally divided over both wines, and a error rate pf 0.15. I would say that this classification works pretty well. The sensitivity is $30/35=0.86$ (true class 1), and the specificity is $25/30=0.83$ (true class 0). This is given that we define class 1 as the "positive class" - if we do differently the sensitivity and specificity will be swapped. For a disease situation it is "easy" to choose the disease as coded as the "postive", but for our wine example - we may use either 0 or 1 as positive. So, if  you got sensitivity and specificity swapped - that is ok.
+</span>
+
+### b) K-nearest neighbor classifier 
+To decide the class of an new observation, the KNN classifier uses the nearest neighbours in the following way,
+$$
+P(Y=1|X=x_0) = \frac{1}{K}\sum_{i\in \mathcal{N_0}}I(y_i=j).
+$$
+
+* Explain this expression does, and what the different elements are.
+* Use KNN with $K=3$ to classify the wines in the test set. 
+* Make the confusion table for the test set when using 0.5 as cutoff. Calculate the sensitivity and specificity on the test set. How would you evaluate the performance of this classification? 
+* Repeat with $K=9$. Which of these two choices of $K$ would you prefer and why? Why don't we just choose $K$ as high or as low as possible? 
+
+### Answers:
+
+* <span style="color:darkgreen"> Given an integer $K$ and a test observation $x_0$, the KNN classifier first identifies the $K$ points in the training data that are closest to $x_0$, represented by $\mathcal{N_0}$. It then estimates the conditional probability for class $j$ as the fraction of points in $\mathcal{N_0}$ whose response values equal $j$. </span>
+
+```{r, include=TRUE, eval=TRUE}
+KNN3 = class::knn(train = train[,-1], test = test[,-1], k = 3, cl = train$y, prob = F)
+t3 = table(test$y, KNN3)
+t3
+apply(t3,1,sum)
+n = length(test$y)
+error = (n-sum(diag(t3)))/n
+error
+KNN3probwinning = attributes(class::knn(train = train[,-1], test = test[,-1], k = 3, cl = train$y, prob = TRUE))$prob
+KNN3prob <- ifelse(KNN3 == "0", 1-KNN3probwinning, KNN3probwinning)
+#cbind(KNN3prob,KNN3,KNN3probwinning) to check that this is correct
+KNN3roc=roc(response=test$y,predictor=KNN3prob)
+cbind(KNN3roc$threshold, KNN3roc$sens, KNN3roc$specificities)
+```
+
+* <span style="color:darkgreen"> KNN3:
+This gives a rather good result with a misclassification rate of 0.12. Since we have only three neighbours to base the classification on the only possible values for the probability of class 2 is 0, 0.33, 0.67 and 1. For a cut-off of 0.5 the sensitivity is 32/35=0.91 and the specificity is 25/30=0.83.
+</span>
+
+
+```{r, include=TRUE, eval=TRUE}
+KNN9= class::knn(train = train[,-1], test = test[,-1], k = 9, cl = train$y, prob = F)
+t9 = table(test$y, KNN9)
+t9
+error = (n-sum(diag(t9)))/n
+error
+KNN9probwinning = attributes(class::knn(train = train[,-1], test = test[,-1], k = 9, cl = train$y, prob = TRUE))$prob
+KNN9prob <- ifelse(KNN9 == "0", 1-KNN9probwinning, KNN9probwinning)
+KNN9roc=roc(response=test$y,predictor=KNN9prob)
+cbind(KNN9roc$threshold, KNN9roc$sens, KNN9roc$specificities)
+table(KNN3,KNN9)
+```
+
+* <span style="color:darkgreen"> KNN9
+For $K=9$ the misclassification rate when using 0.5 as cut-off is 0.15, so higher than for $K=3$, but similar to logistic regression. 
+The classifications made by $K=3$ and $K=9$ are not that different, 27+34=61 common classifications. But, since $K=3$ have the lowest misclassification rate we might prefer that, however for $K=3$ we may have strange boundary effects.</span>
+
+* <span style="color:darkgreen"> If we choose $K=1$ that might lead to a too flexible class boundary, and with $K=n$ this might be too inflexible.
+</span>
+
+
+### c) LDA (& QDA) 
+In linear discriminant analysis, with $K$ classes, we assign a class to a new observation based on the posterior probability 
+
+$$P(Y=k | {\bf X}={\bf x}) = \frac{\pi_k f_k({\bf x})}{\sum_{l=1}^K \pi_l f_l({\bf x})},$$
+where 
+$$f_k({\bf x}) = \frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}e^{-\frac{1}{2}({\bf x}-\boldsymbol{\mu_k})^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol{\mu_k})}.$$
+
+* Explain what is $\pi_k$, $\boldsymbol{\mu}_k$, $\boldsymbol{\Sigma}$ and $f_k(x)$ in our `wine` problem.
+* How can we estimate $\pi_k$, $\boldsymbol{\mu}_k$ and $\boldsymbol{\Sigma}$? Compute estimates for these quantities based on the training set.
+
+In a two class problem ($K=2$) the decision boundary for LDA between class 0 and class 1 is where $x$ satisfies
+$$
+P(Y=0 | {\bf X}={\bf x}) = P(Y=1 | {\bf X}={\bf x}).
+$$
+
+* Show that we can express this as 
+\begin{align}
+\delta_0({\bf x}) &= \delta_1({\bf x}),
+\end{align}
+where
+\begin{align}
+\delta_k({\bf x}) &= {\bf x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_k - \frac{1}{2}\boldsymbol{\mu}_k^T \boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_k + \log \pi_k; \quad k\in\{0,1\}.
+\end{align}
+* Perform LDA on the training data (using R).
+* We use the rule to classify to class 1 for an observation with covariates ${\bf x}$ if $\hat{P}(Y=1\mid {\bf x})>0.5$. Write down the formula for the class boundary between the classes.
+* Make a plot with the training observations and the class boundary. Add the test observations to the plot (different markings). Hint: in `ggplot` points are added with `geom_points` and a line with `geom_abline(slope=b, intercept=a)` where $a$ and $b$ comes from your class boundary.
+* Make the confusion table for the test set when using 0.5 as cut-off. Calculate the sensitivity and specificity on the test set. How would you evaluate the performance of this classification? 
+* If you where to perform QDA instead of LDA, what would be the most important difference between the QDA and LDA philosophy?
+
+### Answers:
+
+* <span style="color:darkgreen"> Here $\pi_k$ is the prior probability that a randomly chosen observation comes from the $k$th class.
+We assume that the observations of class $k$ comes from a multivariate normal distribution $f_k(x)$, where $\boldsymbol{\mu}_k$ is the mean of the $k$th class and $\Sigma$ is the variance.</span>
+* <span style="color:darkgreen">We estimate these in the following way:
+\begin{align*}
+  \hat{\pi}_k &= n_k/n \\
+  \hat{\mu}_k &= \frac{1}{n_k}\sum_{i: y_i=k}x_i \\ 
+\hat{\boldsymbol{\Sigma}}_k&=\frac{1}{n_k-1}\sum_{i:y_i=k} ({\bf X}_i-\hat{\boldsymbol{\mu}}_k ) ({\bf X}_i-\hat{\boldsymbol{\mu}}_k)^T\\
+\hat{\boldsymbol{\Sigma}}&= \sum_{k=1}^K \frac{n_k - 1}{n - K} \cdot \hat{\boldsymbol{\Sigma}}_k.
+\end{align*}
+
+For the training dataset we have that
+
+```{r}
+n=dim(train)[1]
+train0 = train[which(train$y==0),2:3]
+train1 = train[which(train$y==1),2:3]
+print("pi0 and pi1")
+pi0=dim(train0)[1]/n; pi1=dim(train1)[1]/n
+c(pi0,pi1)
+print("mu")
+mu0=apply(train0,2,mean)
+mu1=apply(train1,2,mean)
+mu0
+mu1
+print("Sigma")
+Sigma=((dim(train0)[1]-1)*var(train0)+(dim(train1)[1]-1)*var(train1))/(n-2)
+Sigma
+```
+</span>
+
+* <span style="color:darkgreen"> Show $\delta$:
+\begin{align*}
+ P(Y=0 | X={\bf x}) &= P(Y=1 | X={\bf x}) \\ \frac{\pi_0f_0(x)}{\pi_0f_0(x)+\pi_1f_1(x)} &= \frac{\pi_1f_0(1)}{\pi_0f_0(x)+\pi_1f_1(x)} \\
+\pi_0 f_0({\bf x}) &= \pi_1 f_1({\bf x}) \\
+\pi_0\frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}
+e^{\frac{1}{2}({\bf x}-\boldsymbol{\mu_0})^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol{\mu_0})} &=
+\pi_1\frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}e^{\frac{1}{2}({\bf x}-\boldsymbol{\mu_1})^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol{\mu_1})} \\
+\log(\pi_0) -\frac{1}{2}({\bf x}-\boldsymbol{\mu}_0)^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol{\mu}_0) &= \log(\pi_1) -\frac{1}{2}({\bf x}-\boldsymbol{\mu}_1)^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol{\mu}_1) \\
+\log(\pi_0)  -\frac{1}{2}x^T\boldsymbol{\Sigma}^{-1}{\bf x} + {\bf x}^T\boldsymbol{\Sigma}^{-1}\mu_0 - \frac{1}{2}\mu_0^T\boldsymbol{\Sigma}^{-1}\mu_0 &= \log(\pi_1)  -\frac{1}{2}{\bf x}^T\boldsymbol{\Sigma}^{-1}{\bf x} + {\bf x}^T\boldsymbol{\Sigma}^{-1}\mu_1 - \frac{1}{2}\mu_1^T\boldsymbol{\Sigma}^{-1}\mu_1 \\
+\log(\pi_0) + {\bf x}^T\boldsymbol{\Sigma}^{-1}\mu_0 - \frac{1}{2}\mu_0^T\boldsymbol{\Sigma}^{-1}\mu_0 &= \log(\pi_1) + {\bf x}^T\boldsymbol{\Sigma}^{-1}\mu_1 - \frac{1}{2}\mu_1^T\boldsymbol{\Sigma}^{-1}\mu_1\\ \delta_0({\bf x}) &= \delta_1({\bf x}) \\
+\end{align*}
+</span>
+* <span style="color:darkgreen"> LDA in R, and draw class boundary (green). Have added also logistic regression boundary (dark blue).</span>
+```{r}
+ltrain=lda(y~x1+x2,data=train)
+a=solve(Sigma)%*%(mu0-mu1)
+c=-0.5*t(mu0)%*%solve(Sigma)%*%mu0+0.5*t(mu1)%*%solve(Sigma)%*%mu1+log(pi0)-log(pi1)
+interceptL = -c/a[2]
+slopeL = -a[1]/a[2]
+
+g1 = ggplot(data=train,aes(x=x1, y=x2, colour=y)) + geom_point(pch = 1)
+g1 + geom_point(data = test, pch = 3) + geom_abline(slope=slope,intercept=intercept,colour="green")+ geom_abline(slope=slopeL,intercept=interceptL,colour="darkblue")
+
+```
+
+* <span style="color:darkgreen"> Formula for LDA class boundary (0.5 cut-off):
+$\delta_0({\bf x}) = \delta_1({\bf x})$, and thus $\delta_0({\bf x})- \delta_1({\bf x})=0$.
+$$\log(\pi_0) + {\bf x}^T\boldsymbol{\Sigma}^{-1}\mu_0 - \frac{1}{2}\mu_0^T\boldsymbol{\Sigma}^{-1}\mu_0  -\log(\pi_1) - {\bf x}^T\boldsymbol{\Sigma}^{-1}\mu_1 + \frac{1}{2}\mu_1^T\boldsymbol{\Sigma}^{-1}\mu_1 =0$$
+$${\bf x}^T\boldsymbol{\Sigma}^{-1}(\mu_0-\mu_1) - \frac{1}{2}\mu_0^T\boldsymbol{\Sigma}^{-1}\mu_0 + \frac{1}{2}\mu_1^T\boldsymbol{\Sigma}^{-1}\mu_1 + \log(\pi_0)-\log(\pi_1)=0$$
+Letting all the terms except the first be noted $c$, then $c$ is found in the R printout above.
+The equation is then of the form
+$ax_1+bx_2+c=0$, so $x_2=-c/b -a/b x_1$, as calculated above. This gave
+```{r}
+interceptL
+slopeL
+```
+</span>
+
+* <span style="color:darkgreen"> Confusion table, with misclassification rate 5+6/65=0.17, sensitivity 30/35=0.86 and specificity 24/30=0.8.
+</span>
+
+* <span style="color:darkgreen">If we went from LDA to QDA we would allow the classes to have differen covariance matrices. This would give nonlinear (quadratic) class boundaries. It is not clear if that would be a good choice. </span>
+
+```{r}
+ltrain=lda(y~x1+x2,data=train)
+lpred=predict(object = ltrain, newdata = test)$posterior[,2]
+lroc=roc(response=test$y,lpred)
+testclass=ifelse(lpred > 0.5, 1, 0)
+t = table(test$y, testclass)
+t
+
+n = length(test$y)
+error = (n-sum(diag(t)))/n
+error
+
+```
+
+### d) Compare classifiers 
+* Compare your results from the different classification methods (logistic regression, your preferred KNN, LDA) based on the 0.5 cut-off on posterior probability classification rule. Which method would you prefer?
+* Explain what an ROC curve is and why that is useful. Would your preference (to which method is the best for our data) change if a different cut-off was chosen?  Answer this by producing ROC-curves for the three methods on the test set. Also calculate AUC. Hint: use function `res=roc(response=test$y,predictor)` in `library(pROC)` where the predictor is a vector with your predicted posterior probabilites for the test set, and then `plot(res)` and `auc(res)`.
+
+```{r}
+glmroc=roc(response=test$y,predictor=predglm)
+plot(glmroc)# logistic solid line
+print("logistic regression")
+auc(glmroc)
+KNN3roc=roc(response=test$y,predictor=KNN3prob) #see above for code
+plot(KNN3roc,add=TRUE,lty=2) # KNN3 dashed
+print("KNN3")
+auc(KNN3roc)
+ltrain=lda(y~x1+x2,data=train)
+lpred=predict(object = ltrain, newdata = test)$posterior[,1]
+lroc=roc(response=test$y,lpred)
+plot(lroc,add=TRUE,lty=3) # LDA dotted
+print("LDA")
+auc(lroc)
+```
+
+<span style="color:darkgreen">
+Best method wrt AUC: LDA, but not very different from logistic regression, while 3KNN is best wrt misclassification rate on test set. 
+</span>
+
+<span style="color:darkgreen">
+In the ROC-curve we plot the sensitivity and 1- spesificity against each other for all possible thresholds of the probability for class 1. To construct the ROC-curve we would have to calculate the sensitivity and spesificity for different values of the cutoff $p(x)>cut$. Using a threshold of 0.5, you say that if a new person has a probability of 0.51 of having the disease, he is classified as diseased. Another person with a probability of 0.49 would then be classified as non-diseased. The ROC-curve and the area under the ROC-curve are useful tools as they consider all possible thresholds for the cutoff. 
+</span>
+
+<span style="color:darkgreen">
+The AUC is the area under the ROC-curve and gives the overall performance of the test for all possible thresholds. An AUC value of 1 means a perfect fit for all possible thresholds, while a AUC of 0.5 corresponds to the classifier that performs no better than chance. Hence, a classification method $p(x)$ giving 0.6 and another $q(x)$ giving 0.7, we would prefer $q(x)$ as it has the highest AUC value - in general - unless there is a specific reason for only wanting to consider one specific value for the cut.off.
+</span>
+
+
