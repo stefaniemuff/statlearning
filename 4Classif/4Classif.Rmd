@@ -35,6 +35,8 @@ whichformat="html"
 
 We need more statistical theory than is presented in the textbook, which you find in this module page.
 
+\vspace{2mm}
+
 Some of the figures and slides in this presentation are taken (or are inspired) from “An Introduction to Statistical Learning, with applications in R” (Springer, 2013) with permission from the authors: G. James, D. Witten, T. Hastie and R. Tibshirani.
 
 <!-- --- -->
@@ -127,36 +129,9 @@ Some of the figures and slides in this presentation are taken (or are inspired) 
 
 <!-- Discrimination: also focus on describing the class boundaries using _discriminant functions_. -->
 
----
-
-## Three methods for classification
-
-$~$ 
-
-* $K$-nearest neighbours / Bayes classification
-
-* Logistic regression
-
-* Linear and quadratic discriminant analysis
 
 
 
-
----
-
-### Example: Which type of iris species?
-
-The `iris` flower data set was introduced by the British statistician and biologist Ronald Fisher in 1936. 
-
-* Three plant species \{setosa, virginica, versicolor\} (50 observation of each), and 
-* four features: `Sepal.Length`, `Sepal.Width`, `Petal.Length` and `Petal.Width`.   
-
-```{r iris_pic, echo=FALSE, fig.cap="Iris plant with sepal and petal leaves", out.width = "30%"}
-knitr::include_graphics("iris.png")
-```
-
-\scriptsize
-<http://blog.kaggle.com/2015/04/22/scikit-learn-video-3-machine-learning-first-steps-with-the-iris-dataset/>
 
 <!-- --- -->
 
@@ -166,50 +141,544 @@ knitr::include_graphics("iris.png")
 <!-- * classification with the allocation and the assignment of observations to predefined classes.  -->
 <!-- * The two tasks are closely related and often overlap.   -->
 
+---
+
+### Example: The credit card data
+
+The `Default` dataset is available from the ISLR package. 
+
+\vspace{2mm}
+{\bf Aim}: to predic whether an individual will default on his or her credit card payment, given the annual income and credit card balance. 
+
+\textcolor{orange}{Orange: default=yes}, \textcolor{blue}{blue: default=no}.
+
+\vspace{0mm}
+ \centering
+![ISLR Figure 3.7](../../ISLR/Figures/Chapter4/4.1a.png){width=50%}
+ 
 
 
 ---
 
+## General classification setup
 
+$~$
 
 **Set-up:** Training observations $\{(x_1, y_1), ..., (x_n, y_n)\}$ where the response variable $Y$ is categorical, e.g $Y \in \mathcal{C} = \{0, 1, ..., 9\}$ or $Y \in \mathcal{C} = \{dog, cat,... ,horse\}$. 
 
+$~$
+
 **Aim: **
-To _build_ a classifier $f(x)$ that assigns a class label from $\mathcal{C}$ to a future unlabelled observation $x$ and to asses the _uncertainty_ in this classification. 
+To _build_ a classifier $f(X)$ that assigns a class label from $\mathcal{C}$ to a future unlabelled observation $x$ and to asses the _uncertainty_ in this classification. 
 
-**Performance measure:** Most popular is the misclassification error rate (training and test version)..
+$~$
+
+**Performance measure:** Most popular is the misclassification error rate (training and test version).
+
+---
+
+### Training error
+
+* **Training error rate**:
+The proportion of mistakes that are made if we apply our estimator $\hat{f}$ to the training observations, i.e. $\hat{y}_i=\hat{f}(x_i)$ 
+$$\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i) \ ,$$
+with indicator function I, which is defined as: 
+
+$$\text{I}(a\neq\hat{a}) = \begin{cases} 1 \text{ if } a \neq \hat{a} \ , \\ 
+0 \text{ else. } \end{cases}$$
+
+* The indicator function counts the number of times our model has made a wrong classification. The training error rate is the fraction of misclassifications made on our training set. 
+
+* A very low training error rate may imply overfitting.
+
+---
+
+### Test error
+
+* **Test error rate**: The fraction of misclassifications when our model is applied on a test set
+$$\text{Ave}(I(y_0\neq \hat{y}_0)) \ ,$$
+where the average is over all the test observations $(x_0,y_0)$.
+
+* Again, this gives a better indication of the true performance of the classifier (than the training error).
+
+* We assume that a _good_ classifier is a classifier that has a _low_ test error.
+
+
+---
+
+## What are the methods?
+
+$~$ 
+
+**Three methods for classification** are discussed here:
+
+
+
+* Logistic regression
+
+* Linear and quadratic discriminant analysis
+
+* $K$-nearest neighbours
+
+
+---
+
+## Linear regression for binary classification?
+
+Suppose we have a binary outcome, for example whether a credit card user defaults $Y =$ `yes` or `no`, given covariates $X$ to predict $Y$. We could use _dummy encoding_ for $Y$ like
+
+$$Y = \left\{ \begin{array}{ll}
+0 & \text{if } \texttt{no} \ , \\
+1 & \text{if } \texttt{yes} \ .
+\end{array} \right.$$
+Can we simply perform a linear regression of $Y$ on $X$ and
+classify as `yes` if $\hat{Y}> 0.5$? 
+
+* In this case of a binary outcome, linear regression does a
+good job as a classifier, and is equivalent to linear
+discriminant analysis which we discuss later.
+
+* Since in the population $\text{E}(Y \mid X = x) = \text{Pr}(Y = 1 \mid X = x)$,
+we might think that regression is perfect for this task.
+
+* However, linear regression might produce probabilities less
+than zero or bigger than one. 
+
+$\rightarrow$ We need to use **logistic regression**.
+
+
+--- 
+
+### Linear vs. logistic regression
+
+$~$
+
+Let's anticipate a bit, to see why linear regression does not so well. We estimate the probability that someone defaults, given the credit card balance as predictor:
+\vspace{2mm}
+
+![ISLR Figure 3.7](../../ISLR/Figures/Chapter4/4.2.png)
+
+
+---
+
+## Linear regression for categorical classification?
+
+$~$
+
+What when there are more than two possible outcomes? For example, a medical diagnosis $Y$, given predictors $X$ can be categorized as
+
+$~$
+
+$$Y = \left\{ \begin{array}{ll}
+1 & \text{if } \texttt{stroke} \ , \\
+2 & \text{if } \texttt{drug overdose} \ , \\
+3 & \text{if } \texttt{epileptic seizure} \ .
+\end{array} \right.$$
+
+$~$
+
+This suggests an ordering, but this is artificial.
+
+$~$
+
+* Linear and logistic regression are not appropriate here.
+* We need _Multiclass logistic regression_ and _Discriminant Analysis_. 
 
 
 
 ---
 
-## Bayes classifier
+### However:
 
-* The _Bayes classifier assigns an observation to the most likely class_, given its predictor values.  
 
-* Suppose we have a quantitative response value that can be a member in one of $K$ classes $\mathcal{C} = \{c_1, c_2, ..., c_k, ..., c_K\}$. Further, suppose these elements are numbered $1, 2, ..., K$. The probability of that a new observation $x_0$ belongs to class $k$ is 
-$$p_k(x_0) = \text{Pr}(Y=k | X=x_0), \quad k = 1, 2, ... K.$$
-This is the conditional class probability: the probability that $Y=k$ given the observation $x_0$. 
+* It is still possible to use linear regression for classification problems with two classes. It is actually not even a bad idea, and works well under some conditions. If the conditional class densities are (multivariate) normal with equal covariance matrices then this linear regression (with 0 and 1 response) will in fact give the same classification as linear discriminatn analysis (LDA). 
 
-* Two-class example for two groups $\{A, B\}$. A new observation $x_0$ will be classified to $A$ if $\text{Pr}(Y=A | X=x_0) > 0.5$ and to class $B$ otherwise.
+* For categorical outcomes with more than two level, it requires some extra work (multivariate $Y$ due to the dummy variable coding). 
+
+* We leave linear regression for now.
+
+
+* For two classes _binary regression_, in particular _logistic regression_, is very popular - and is up next.
 
 ---
 
-Given a continuous random vector $X$ and categorical random variable $Y$, how do we get $\text{Pr}(Y=k | X=x_0)$?
 
+# Logistic regression 
+
+* In logistic regression we consider a classification problem with two classes.
+
+
+* Assume that $Y$ is coded ($\mathcal{C} = \{1, 0\}$ or \{success, failure\}), and we focus on success $(Y=1)$. 
+
+* We may assume that $Y_i$ follows a **Bernoulli distribution** with probability of success $p_i$.
+
+$$Y_i = \begin{cases} 1 \text{ with probability } p_i, \\ 0 \text{ with probability } 1-p_i. \end{cases}$$
+
+* We need a clever way to _link_ our covariates $X_1, \ldots, X_p$ with this probability $p_i$. Aim: want to relate the _linear predictor_
+$$\eta_i = \beta_0 + \beta_1 x_{i1} + \ldots + \beta_p x_{ip}$$ 
+to $P(X)=P(Y=1 \mid X)$. How?
+
+---
+
+* The idea is to use a so-called _link-function_ to link $p_i = P(X_i)$ with the linear predictor. 
+
+* In logistic regression, we use the _logistic link function_
 
 \begin{center}
 \colorbox{lightgray}{\begin{minipage}{10cm}
-{\bf Bayes theorem}
-\begin{align*}
-P(Y=k \mid X= x) &= 
-\frac{P({\bf X}={\bf x} \cap Y=k)}{f({\bf x})}\\
-&= \frac{ f_k(x) \pi_k}{\sum_{l=1}^K  f_l(x) \pi_l}
-\end{align*}
+\begin{equation}
+\log\left( \frac{p_i}{1-p_i} \right) = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \ldots + \beta_p x_{ip} \ .
+\end{equation}
 \end{minipage}}
 \end{center}
 
-Here $f_k(x) = P(X=x \mid Y=k)$ is the pdf for $X$ in class $k$ and $\pi_k = P(Y=k)$ is the prior probability for class $k$. 
+* **Q:** What is the rationale behind this? Other transformations that bring the linear predictor into a $0$ to $1$ range?
+
+
+---
+
+### Logistic regression with one covariate
+
+* Equation (1) can be rearranged and solved for $p_i$. Let's look at this for only one covariate: 
+
+$$ p_i= \frac{e^{\beta_0+\beta_1 x_i}}{1 + e^{\beta_0 + \beta_1 x_i}}.$$
+
+* **Important:** These values $p_i$ will always lie in the interval between 0 and 1, with an S-shaped curve. 
+
+* The parameter $\beta_1$ determines the rate of increase or decrease of the S-shaped curve, and the sign indicates whether the curve ascends or descends. 
+
+
+
+---
+
+### Example: `Default` credit card data
+\vspace{2mm}
+
+* The parameters are estimated using the method of maximum likelihood - we will look at that soon.
+
+* Let's first do it! In R, this works with the `glm()` function, where we specify `family="binomial"`. 
+
+\vspace{2mm}
+
+\scriptsize
+```{r, echo=T}
+Default$default <- as.numeric(Default$default)-1
+glm_default = glm(default~balance, data=Default, family="binomial")
+
+summary(glm_default)$coef
+```
+
+---
+
+Plotting the fitted line (in blue):
+
+```{r defaultglm, echo=FALSE, fig.width=5, fig.height=3,fig.align = "center",out.width='70%'}
+
+glm_alpha = coef(glm_default)[1]
+glm_beta = coef(glm_default)[2]
+
+ggglm = ggplot(Default, aes(x=balance, y=default))+geom_point() + 
+  geom_line(aes(x=balance, y=exp(glm_alpha+glm_beta*balance)/
+                  (1+exp(glm_alpha+glm_beta*balance))), col="blue")
+
+
+ggglm
+```
+
+Default data: here $\hat{\beta}_0=$ `r round(glm_alpha,2)` and $\hat{\beta}_1=$ `r round(glm_beta,3)`.
+
+
+---
+
+### Estimating the regression coefficients with ML
+
+* The coefficients $\beta_0, \beta_1, \ldots$ are estimated with _maximum likelihood_ (ML).
+
+* We assume that pairs of covariates and responses  $\{{\bf x}_i, y_i\}$ are measured independently of each other. Given $n$ such observation pairs, the likelihood function of a logistic regression model can be written as:
+$$L(\boldsymbol{\beta}) = \prod_{i=1}^n L_i(\boldsymbol{\beta}) = \prod_{i=1}^n f(y_i; \boldsymbol{\beta}) = \prod_{i=1}^n (p_i)^{y_i}(1-p_i)^{1-y_i},$$
+where $\boldsymbol{\beta} = (\beta_0, \beta_1, \beta_2, \ldots, \beta_p)^T$ enters into $p_i$
+
+$$p_i= \frac{\exp(\beta_0+\beta_1 x_{i1}+\cdots + \beta_p x_{ip})}{1 + \exp(\beta_0 + \beta_1 x_{i1}+\cdots+\beta_p x_{ip})} \ .$$
+
+---
+
+* The maximum likelihood estimates are found by maximizing the likelihood.
+
+* To make the math easier, we usually work with the log-likelihood (the log is a monotone transform, thus it will give the same result as maximizing the likelihood).
+
+\vspace{-4mm}
+
+\begin{align*} \log(L(\boldsymbol{\beta}))&=l(\boldsymbol{\beta}) =\sum_{i=1}^n \Big ( y_i \log p_i + (1-y_i) \log(1 - p_i )\Big ) \\ &= \sum_{i=1}^n \Big ( y_i \log \Big (\frac{p_i}{1-p_i} \Big) + \log(1-p_i) \Big ) \\
+&= \sum_{i=1}^n \Big (y_i (\beta_0 + \beta_1 x_{i1}+\cdots + \beta_p x_{ip}) - \log(1 + e^{\beta_0 + \beta_1 x_{i1}+\cdots + \beta_p x_{ip}} \Big ).\end{align*}
+
+---
+
+* To maximize the log-likelihood function we find the $r+1$ partial derivatives, and set equal to 0. 
+
+* This gives us a set of $p+1$ non-linear equations in the $\beta$s.
+
+* This set of equations does not have a closed form solution.
+
+* The equation system is therefore solved numerically using the _Newton-Raphson algorithm_ (or Fisher Scoring).
+
+
+---
+
+### Qualitative interpretation of the coefficients  
+
+$~$
+
+Let's again look at the regression output:
+
+\scriptsize
+```{r, echo=T}
+summary(glm_default)$coef
+```
+
+
+\normalsize
+
+* The $z$-statistic is equal to $\frac{\hat\beta}{SE(\hat\beta)}$, and is approximately $N(0,1)$ distributed\footnote{With this knowledge we can construct confidence intervals and test hypotheses about the $\beta$s, with the aim to understand which covariate(s) contribute to our posterior probabilites and classification.}
+
+* The $p$-value is $\text{Pr}(|Z| > |z|)$ for a $Z\sim N(0,1)$ random variable
+
+* `Balance` seems an important predictor for `Default` (yes/no), with a higher balance leading to a higher probability of defaulting ($\beta_1>0$).
+
+---
+
+### Quantitative interpretation of the coefficients  
+
+\vspace{2mm}
+Remember from equation (1) that
+
+\begin{equation*}
+\log\left( \frac{p_i}{1-p_i} \right) = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \ldots + \beta_p x_{ip} \ ,
+\end{equation*}
+
+thus
+
+\begin{equation*}
+ \frac{p_i}{1-p_i} = e^{\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \ldots + \beta_p x_{ip}} = e^\eta_i \ .
+\end{equation*}
+
+\vspace{2mm}
+
+The quantity $p_i/(1-p_i)$ is called the _\textcolor{red}{odds}_. Odds represent _\textcolor{red}{chances}_ (e.g. in betting).
+
+$~$
+
+1. You think your football team will win tonight with a probability $p=80\%$. What is the odds that it will win?
+
+2. The odds for the best horse in a race is $9:1$. What is the probability that this horse will win?
+
+
+
+---
+
+### Why is the odds relevant? 
+
+\vspace{2mm}
+Let's again rearrange the _odds_ in the logistic regression model:
+
+\begin{align*}
+ \frac{p_i}{1-p_i} = \text{odds}(Y_i=1 \mid X=x)  & = \frac{\text{P}(Y_i=1 \mid X=x)}{\text{P}(Y_i=0 \mid X = x)} \\
+ &= \exp(\beta_0) \cdot \exp(\beta_1 x_{i1}) \cdot \ldots \cdot  \exp(\beta_p x_{ip}) \ .
+ \end{align*}
+
+$~$
+<!-- \begin{align*} -->
+<!-- \eta_i&= \beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_p x_{ip}\\ -->
+<!-- p_i&= \frac{\exp(\eta_i)}{1+\exp(\eta_i)}\\ -->
+<!-- \eta_i&=\ln(\frac{p_i}{1-p_i})\\ -->
+<!-- \ln(\frac{p_i}{1-p_i})&=\beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_p x_{ip}\\ -->
+<!-- \frac{p_i}{1-p_i}=&\frac{P(Y_i=1|{\bf x}_i)}{P(Y_i=0|{\bf x}_i)}=\exp(\beta_0)\cdot \exp(\beta_1 x_{i1})\cdots\exp(\beta_p x_{ip}) -->
+<!-- \end{align*} -->
+
+$\rightarrow$ We have a _multiplicative model_ for the odds - which can help us to interpret our $\beta$s.
+
+---
+
+### The odds ratio
+
+$~$
+
+To understand the effect of a regression coefficient $\beta_j$, let's see what happens if we increase $x_{ij}$ to $x_{ij}+1$, while all other covariates are kept fixed.
+
+\vspace{2mm}
+Using simple algebra and the formula on the previous slide, you will see that
+
+\begin{equation}
+\frac{\text{odds}(Y_i=1 \mid X_{j} = x_{ij} + 1)}{\text{odds}(Y_i=1 \mid X_j = x_{ij})} = \exp(\beta_j)  \ .
+\end{equation}
+
+\vspace{2mm}
+
+\begin{center}
+\colorbox{lightgray}{\begin{minipage}{11cm}
+{\bf Interpretation}: 
+By increasing covariate $x_{ij}$ by one unit, we change the odds ratio for $Y_i=1$ by a factor $\exp(\beta_j)$.
+\end{minipage}}
+\end{center}
+
+\begin{center}
+\colorbox{lightgray}{\begin{minipage}{11cm}
+{\bf Moreover}:
+Taking the log on equation (2), it follows that $\beta_j$ can be interpreted as a {\bf log odds-ratio}.
+\end{minipage}}
+\end{center}
+
+---
+
+Let's now fit the logistic regression model for `default`, given `balance` and `income` as predictors:
+
+\scriptsize
+```{r, echo=T}
+glm_default2 = glm(default~balance + income, data=Default, family="binomial")
+
+summary(glm_default2)$coef
+```
+
+\normalsize
+
+* What happens with the odds-ratio when `income` increases by 10'000 dollars?
+
+<!-- $\rightarrow$ The odds ratio to default increases by a factor $\exp(10000\cdot \beta_{\text{income}})=$ `r round(exp(summary(glm_default2)$coef[3,1]*10000),2)` -->
+
+* What happens with the odds-ratio when `balance` increases by 100 dollars?
+
+<!-- $\rightarrow$ The odds ratio to default increases by a factor $\exp(100 \cdot \beta_{\text{balance}})=$ `r round(exp(summary(glm_default2)$coef[2,1]*1000),2)` -->
+
+
+
+
+---
+
+## Predictions
+
+Let's catch up. Why were we doing all this in the first place?
+
+* We fit a (simple) logistic regression model to our data set, and 
+* get parameter estimates $\hat{\beta}_0$ and $\hat{\beta}_1$. 
+* We want to use this model to make a prediction when given a new observation $x_0$. 
+
+$$\hat{p}(x_0) = \frac{e^{\hat{\beta}_0 + \hat{\beta}_1 x_0}}{1+e^{\hat{\beta}_0 + \hat{\beta}_1 x_0}} $$
+
+This $\hat{p}(x_0)$ is the estimated probability that the new observation $x_0$ belongs to the class defined by $Y=1$.
+
+In the case of qualitative covariates, a dummy variable needs to be introduced. This is done in a similar fashion as for linear regression. 
+
+---
+
+## Want to learn more (theory) about logistic regression?
+
+In TMA4315 Generalized linear models we spent 3 weeks with binary regression - mainly logistic regression. The focus there was on all parts of the regression (not classification) with a mathematical focus on estimation, inference, model fit. 
+
+
+
+---
+
+## Example: South African heart disease data set
+
+In this example we use the `SAhert` data set from the `ElemStatLearn` package. This is a retrospective sample of males in a heart-disease high-risk region in South Africa. It consists of 462 observations on the 10 variables. All subjects are male in the age range 15-64. There are 160 cases (individuals who have suffered from a conorary heart disease) and 302 controls (individuals who have not suffered from a conorary heart disease).    
+
+---
+
+The response value (`chd`) and covariates
+
+* `chd` : conorary heart disease \{yes, no\} coded by the numbers \{1, 0\}
+* `sbp` : systolic blood pressure  
+* `tobacco` : cumulative tobacco (kg)  
+* `ldl` : low density lipoprotein cholesterol
+* `adiposity` : a numeric vector
+* `famhist` : family history of heart disease. Categorical variable with two levels: \{Absent, Present\}.
+* `typea` : type-A behavior
+* `obesity` : a numerical value
+* `alcohol` : current alcohol consumption
+* `age` : age at onset
+
+The goal is to identify important risk factors. We start by loading and looking at the data:
+
+---
+
+\footnotesize
+```{r,echo=showsolB}
+library(ElemStatLearn)
+library(knitr)
+library(kableExtra)
+heartds = SAheart
+heartds$chd = as.factor(heartds$chd)
+kable(head(heartds),format=whichformat)
+```
+\normalsize
+
+---
+
+In order to investigate the data further, we use the `ggpairs` function from the `GGally` library, to make scatter plots of the covariates. The coloring is done according to the response variable, where green represents a case $Y=1$ and red represents a control $Y=0$.
+
+---
+
+```{r, warning=FALSE, message=FALSE,echo=showsolB,eval=FALSE}
+library(ggplot2)
+library(GGally)
+ggpairs(heartds, ggplot2::aes(color=chd), #upper="blank",  
+        lower = list(continuous = wrap("points", alpha = 0.3, size=0.2)))
+```
+
+---
+
+We now fit a (multiple) logistic regression model using the `glm` function and the full data set. In order to fit a logistic model, the `family` argument must be set equal to `="binomial"`. The `summary` function prints out the estimates of the coefficients, their standard errors and z-values. As for a linear regression model, the significant coefficients are indicated by stars where the significant codes are included in the `R` outprint.
+
+---
+
+\footnotesize
+
+```{r}
+glm_heart = glm(chd~., data=heartds, family="binomial")
+summary(glm_heart)
+```
+\normalsize
+
+---
+
+```{r,echo=FALSE}
+library(knitr)
+library(kableExtra)
+dff=data.frame(cbind(coef(glm_heart),exp(coef(glm_heart))))
+colnames(dff)= c("Estimated coeffs", "exp(estimated coeffs)")
+kable(dff,digits = 3,format=whichformat)
+
+```
+
+How did we find the coefficients and what does the second column mean?
+
+---
+
+## Multinomial logistic regression
+
+The logistic regression model can be generalized for a response variable with more than two classes. Assume we have a response variable with $K$ possible classes and $r$ covariates. The probability that $Y$ belongs to class $k$, given an observation vector $\mathbf{x} = (x_1, x_2, \dots, x_r)^T$ is (usually) modelled by:
+
+$$\ln \frac{P(Y = k | \mathbf{x})}{P(Y = K | \mathbf{x})}= \beta_{0k} + \beta_{1k} x_1 + \cdots + \beta_{rk} x_r.$$
+
+The multinomial logistic regression model is implemented in the `glmnet` or `VGAM` package in `R`.
+
+We will not discuss this further since LDA is more popular (than logistic regression) in the multi-class setting. And, as we shall see soon - they are not that different.
+
+
+
+---
+
+
+## Bayes classifier
+
+
+* Suppose we have a quantitative response value that can be a member in one of $K$ classes $\mathcal{C} = \{c_1, c_2,\ldots, c_K\}$. Further, suppose these elements are numbered $1, 2, ..., K$. The probability that a new observation $x_0$ belongs to class $k$ is\footnote{This is the conditional probability: the probability that $Y=k$ given the observation $x_0$.}
+$$p_k(x_0) = \text{Pr}(Y=k | X=x_0), \quad k = 1, 2, ... K \ .$$
+
+* The _Bayes classifier assigns an observation to the most likely class_, given its predictor values.  
+
+
+* **Example** for two groups $\{A, B\}$. A new observation $x_0$ will be classified to $A$ if $\text{Pr}(Y=A | X=x_0) > 0.5$ and to class $B$ otherwise.
+
 
 ---
 
@@ -223,7 +692,7 @@ Here $f_k(x) = P(X=x \mid Y=k)$ is the pdf for $X$ in class $k$ and $\pi_k = P(Y
 
 * The Bayes error rate is comparable to the _irreducible error_ in the regression setting.
 
-* Caveat: we never (or very seldom) know the conditional distribution of $Y$ given $X$ for real data 
+* **Caveat**: we never (or very seldom) know the conditional distribution of $Y$ given $X$ for real data 
 
 $\rightarrow$
 The $K$-nearest neighbor classifier estimates this conditional distribution and then classifies a new observation based on this estimated probability.
@@ -384,9 +853,19 @@ gge
 
 ## Bias-variance trade-off in a classification setting
 
+\vspace{2mm}
+Remember the bias-variance trade-off that we discussed in Module 2. 
+\vspace{2mm}
+
+Considerations:
+\vspace{2mm}
+
 * A too low value of $K$ will give a very flexible classifier (with high variance and low bias) which will fit the training set too well (it will overfit) and make poor predictions for new observations. 
 
 * Choosing a high value for $K$ makes the classifier loose its flexibility and the classifier will have low variance but high bias.
+
+
+\vspace{2mm}
 
 $\rightarrow$ Critical to the success of the classifier to choose the correct level of flexibility ($K$).
 
@@ -400,6 +879,25 @@ $\rightarrow$ Critical to the success of the classifier to choose the correct le
 * The effectiveness of the KNN classifier falls quickly when the dimension of the preditor space is high. 
 
 * Why? Because the nearest neighbors tend to be far away in high dimensions and the method no longer is local. This is referred to as the _curse of dimensionality_.
+
+
+---
+
+Given a continuous random vector $X$ and categorical random variable $Y$, how do we get $\text{Pr}(Y=k | X=x_0)$?
+
+
+\begin{center}
+\colorbox{lightgray}{\begin{minipage}{10cm}
+{\bf Bayes theorem}
+\begin{align*}
+p_k(X) = P(Y=k \mid X= x) &= 
+\frac{P({\bf X}={\bf x} \cap Y=k)}{f({\bf x})}\\
+&= \frac{ f_k(x) \pi_k}{\sum_{l=1}^K  f_l(x) \pi_l}
+\end{align*}
+\end{minipage}}
+\end{center}
+
+Here $f_k(x) = P(X=x \mid Y=k)$ is the pdf for $X$ in class $k$ and $\pi_k = P(Y=k)$ is the prior probability for class $k$. 
 
 
 ---
@@ -750,6 +1248,22 @@ The original naive Bayes used univariate normal marginal distributions, but gene
 Instead of estimating a full covariance matrix, only the diagonal elements are estimated.
 
 This method often produces good results, even though the joint pdf is not the product of the marginal pdf. This might be because we are not focussing on estimation of class pdfs, but class boundaries.
+
+---
+
+### Example: Which type of iris species?
+
+The `iris` flower data set was introduced by the British statistician and biologist Ronald Fisher in 1936. 
+
+* Three plant species \{setosa, virginica, versicolor\} (50 observation of each), and 
+* four features: `Sepal.Length`, `Sepal.Width`, `Petal.Length` and `Petal.Width`.   
+
+```{r iris_pic, echo=FALSE, fig.cap="Iris plant with sepal and petal leaves", out.width = "30%"}
+knitr::include_graphics("iris.png")
+```
+
+\scriptsize
+<http://blog.kaggle.com/2015/04/22/scikit-learn-video-3-machine-learning-first-steps-with-the-iris-dataset/>
 
 ---
 
@@ -1118,387 +1632,9 @@ Focus now is on _diagnostic paradigm_ = we estimates $P(Y=k \mid X=x)$ and class
 
 But first, what about linear regression $Y$ on ${\bf x}$ to make a classification?
 
----
 
-## Using linear regression on a classification problem
 
-**Example 1:** This example uses the `Default` data set from the `ISLR` package. Suppose we want to predict if a new customer will `default` or not based on his/her `balance` or `income`. We try to model this using a simple linear regression and a binary response variable:
-$$Y = \begin{cases} 1 \quad \text{ if default = "Yes"} \\ 0 \quad \text{ if default = "No"} \end{cases}.$$ 
-It would be tempting to do the classification according to the rule: classify as *yes* if $\hat{Y}>0.5$, else as *no*.
 
----
-
-```{r default lm, echo=FALSE, message=FALSE}
-library(ISLR)
-library(ggplot2)
-library(ggpubr)
-library(knitr)
-library(kableExtra)
-data(Default)
-
-kable(head(Default),format=whichformat)
-```
-
----
-
-```{r,echo=FALSE}
-
-Default$default = ifelse(Default$default == "Yes", 1, 0)
-
-lm1_default = lm(default~balance, data=Default)
-lm1_alpha = coef(lm1_default)[1]
-lm1_beta = coef(lm1_default)[2]
-
-lm2_default = lm(default~income, data=Default)
-lm2_alpha = coef(lm2_default)[1]
-lm2_beta = coef(lm2_default)[2]
-
-gglm1 = ggplot(Default, aes(x=balance, y=default))+geom_point() +
-  geom_line(aes(x=balance, y=lm1_alpha + lm1_beta*balance), col="red")
-gglm2 = ggplot(Default, aes(x=income, y=default))+geom_point() + 
-  geom_line(aes(x=income, y=lm2_alpha + lm1_beta*income), col="orange")
-ggarrange(gglm1,gglm2)
-```
-
----
-
-The above plots shows `default` as a function of `balance` and `default` as a function of `income` with corresponding fitted linear regression lines (red for `x=balance` and orange for `x=income`). Notice that linear regression in this case produces predictions that are smaller than zero or bigger than one, this it is hard to interpret these as probabilities.
-
-It is still possible to use linear regression for classification problems with two classes. It turns out that - if the conditional class densities are (multivariate) normal with equal covariance matrices then this linear regression (with 0 and 1 response) will in fact give the same classification as LDA. See e.g. Ripley (1995), Section 3.2.
-
----
-
-**Using linear regression on a classification problem?**
-
-**Example 2: **
-Suppose we want to classify a film. We have defined three classes: \{ drama, comedy, science-fiction\}. We could try to model this using linear regression and the following coding:
-$$Y = \begin{cases} 1 \quad \text{if drama}, \\ 2 \quad \text{if comedy}, \\ 3 \quad \text{if science-fiction}.\end{cases}$$
-However, this coding implies an ordering of the variables and that the difference between the classes is equal. There is in general no natural way to code a quantitative variable with more than two classes such that it can be used with linear regression.
-
----
-
-So, using linear regression to solve a classification problem seems hard with more than two classes - as done here. But, it turns out that using a dummy variable conding for the classes, it is possible to produce the same result as LDA (also with many classes). This is the starting point for _flexible discriminant analysis_.
-
-Linear regression to do classification is not a bad idea, but requires some extra work (multivariate Y due to the dummy variable coding). Therefore we leave linear regression for now.
-
-For two classes _binary regression_, in particular _logistic regression_, is very popular - and is up next.
-
----
-
-# Logistic regression 
-
-In logistic regression we consider a classification problem with two classes.
-
-## The model
-
-Assume that $Y$ is coded ($\mathcal{C} = \{1, 0\}$ or \{success, failure\}), and we focus on success. We may assume that $Y_i$ follows a Bernoulli distribution with probability of success $p_i$.
-
-$$Y_i = \begin{cases} 1 \text{ with probability } p_i, \\ 0 \text{ with probability } 1-p_i. \end{cases}$$
-
-In logistic regression we _link_ together our covariates ${\bf x}_i$ with this probability $p_i$ using a _logistic function_.
-
----
-
-In the case of one covariate, the logistic function has the form:
-$$ p_i= \frac{e^{\beta_0+\beta_1 x_i}}{1 + e^{\beta_0 + \beta_1 x_i}}.$$
-
-This function is S-shaped, and ranges between 0 and 1 (so the $p_i$ is between 0 and 1). The parameter $\beta_1$ determines the rate of increase or decrease of the S-shaped curve, and the sign indicates whether the curve ascends or descends. 
-
-**Q:** Where did that come from? There are other transforms that takes a linear predictor and transforms into the range 0 to 1. 
-
----
-
-Logistic regression ensures that the estimated probabilities lie in the interval between 0 and 1. This is illustrated in the figure below. The blue line shows the fitted line when performing logistic regression on `default` as a function of `balance`.
-
-The parameters are estimated using the method of maximum likelihood - we will look at that soon, but first we look at how to interpret the estimated parameters.
-
----
-
-### Example estimated $\beta$ and logistic curve
-
-```{r defaultglm, echo=FALSE}
-glm_default = glm(default~balance, data=Default, family="binomial")
-glm_alpha = coef(glm_default)[1]
-glm_beta = coef(glm_default)[2]
-
-ggglm = ggplot(Default, aes(x=balance, y=default))+geom_point() + 
-  geom_line(aes(x=balance, y=exp(glm_alpha+glm_beta*balance)/
-                  (1+exp(glm_alpha+glm_beta*balance))), col="blue")
-
-
-ggglm
-```
-
-Default data: here $\hat{\beta}_0=$ `r round(glm_alpha,2)` and $\hat{\beta}_1=$ `r round(glm_beta,3)`.
-
----
-
-Observe effect of intercept and slope term:
-
-$$p_i= \frac{e^{\beta_0+\beta_1 x_i}}{1 + e^{\beta_0 + \beta_1 x_i}}$$
-
-Solid lines: $\beta_0=0$ and $\beta_1$ is $0.8$ (blue), $1$ (red) and $2$ (orange). Dashed lines $\beta_0=1$.
-
-```{r,echo=showsolB,fig.height=6}
-library(ggplot2)
-ggplot(data.frame(x=c(-6,5)), aes(x))+
-  xlab(expression(x))+ 
-  ylab(expression(mu))+
-    stat_function(fun=function(x) exp(x)/(1+exp(x)), geom="line", colour="red")+
-    stat_function(fun=function(x) exp(2*x)/(1+exp(2*x)), geom="line", colour="orange")+
-          stat_function(fun=function(x) exp(0.8*x)/(1+exp(0.8*x)), geom="line", colour="blue")+
-    stat_function(fun=function(x) exp(1+x)/(1+exp(1+x)), geom="line", colour="red",linetype="dashed")+
-    stat_function(fun=function(x) exp(1+2*x)/(1+exp(1+2*x)), geom="line", colour="orange",linetype="dashed")+
-          stat_function(fun=function(x) exp(1+0.8*x)/(1+exp(1+0.8*x)), geom="line", colour="blue",linetype="dashed")+
-  scale_colour_manual("0+k x",values = c("red", "orange","blue"),labels=c("1","2","0.8"))
-
-```
-
----
-
-## The odds and the odds ratio
-
-For the logistic regression it is hard to give a simple interpretation regression coefficients $\beta$, because an increase in $x_1$ by one unit does not give the same increase (decrease) in the probability $p_i$ for all values of $x_1$. But, looking at odds - it is simpler to explain what the $\beta$s mean.
-
-For a probability $p_i$ the ratio $\frac{p_i}{1-p_1}$ is called the _odds_. 
-
-If $p_i=\frac{1}{2}$ then the odds is $1$, and if $p_i=\frac{1}{4}$ then the odds is $\frac{1}{3}$. We may make a table for probability vs. odds in R:
-```{r,echo=showsolB}
-library(knitr)
-library(kableExtra)
-p=seq(0.1,0.9,0.1)
-odds=p/(1-p)
-kable(t(data.frame(p,odds)),digits=c(2,2),format=whichformat)
-```
-
-Odds may be seen to be a better scale than probability to represent chance, and is used in betting. In addition, odds are unbounded above. 
-
----
-
-**Why is the odds relevant?**
-
-(Since $p$ is used for probability we use $r$ for number of covariates now.)
-
-Let us assume that we have $r$ covariates, and we use $\eta_i$ (linear predictor) to help with our notation.
-\begin{align*}
-\eta_i&= \beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_r x_{ir}\\
-p_i&= \frac{\exp(\eta_i)}{1+\exp(\eta_i)}\\
-\eta_i&=\ln(\frac{p_i}{1-p_i})\\
-\ln(\frac{p_i}{1-p_i})&=\beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_r x_{ir}\\
-\frac{p_i}{1-p_i}=&\frac{P(Y_i=1|{\bf x}_i)}{P(Y_i=0|{\bf x}_i)}=\exp(\beta_0)\cdot \exp(\beta_1 x_{i1})\cdots\exp(\beta_r x_{ir})
-\end{align*}
-We have a _multiplicative model_ for the odds - which can help us to interpret our $\beta$s.
-
-In addition we see that the _logit_ of $p_i$, $\ln(\frac{p_i}{1-p_i})$, is linear in the $\beta$s (and in the $x$'s).
-
----
-
-**So, what if we increase $x_{1i}$ to $x_{1i}+1$?**
-
-If the covariate $x_{1i}$ increases by one unit (while all other covariates are kept fixed) then the odds is multiplied by $\exp(\beta_1)$:
-
-\begin{align*}
-\frac{P(Y_i=1\mid x_{i1}+1)}{P(Y_i=0)\mid x_{i1}+1)}&=\exp(\beta_0)\cdot \exp(\beta_1 (x_{i1}+1))\exp(\beta_2 (x_{i2}))\cdots\exp(\beta_r x_{ir})\\
-&=\exp(\beta_0)\cdot \exp(\beta_1 x_{i1})\exp(\beta_1)\exp(\beta_2 x_{i2})\cdots\exp(\beta_r x_{ir})\\
-&=\frac{P(Y_i=1\mid x_{i1})}{P(Y_i=0\mid x_{i1})}\cdot \exp(\beta_1)\\
-\end{align*}
-
-This means that if $x_{i1}$ increases by $1$ then: if $\beta_1<0$ we get a decrease in the odds, if $\beta_1=0$ no change, and if $\beta_1>0$ we have an increase.
-Here $\exp(\beta_1)$ is easier to interpret than $\beta_1$.
-
----
-
-### Default-example
-
-Default as response and student, balance and income as covariates
-
-Result: $$\frac{P(Y_i=1\mid x_{i1}+1)}{P(Y_i=0)\mid x_{i1}+1)}=\frac{P(Y_i=1\mid x_{i1})}{P(Y_i=0\mid x_{i1})}\cdot \exp(\beta_1)$$
-
-What is done below? Explain what the effect of `student` gives.
-
-\footnotesize
-```{r,results="hold"}
-colnames(Default)
-fit=glm(default~student+balance+income,family="binomial",data=Default)
-coef(fit)
-round(exp(coef(fit)),3)
-```
-\normalsize
-
----
-
-## Maximum likelihood estimation
-
-We assume that pairs of covariates and responses  $\{x_i, y_i\}$ are measured independently of each other. Given $n$ such observation pairs, the likelihood function of a logistic regression model can be written as:
-$$L(\boldsymbol{\beta}) = \prod_{i=1}^n L_i(\boldsymbol{\beta}) = \prod_{i=1}^n f(y_i; \boldsymbol{\beta}) = \prod_{i=1}^n (p_i)^{y_i}(1-p_i)^{1-y_i},$$
-where $\boldsymbol{\beta} = (\beta_0, \beta_1, \beta_2, \ldots, \beta_r)^T$ enters into $p_i$.
-
-$$p_i= \frac{\exp(\beta_0+\beta_1 x_{i1}+\cdots + \beta_p x_{ir})}{1 + \exp(\beta_0 + \beta_1 x_{i1}+\cdots+\beta_r x_{ir})}$$
-
----
-
-The maximum likelihood estimates are found by maximizing the likelihood, and since the log is a monotone transform (and maximizing the log-likelihood will give the same result as maximizing the likelihood) we usually work with the log-likelihood (because this makes the maths easier).
-
-
-\begin{align*} \ln(L(\boldsymbol{\beta}))&=l(\boldsymbol{\beta}) =\sum_{i=1}^n \Big ( y_i \log p_i + (1-y_i) \log(1 - p_i )\Big ) \\ &= \sum_{i=1}^n \Big ( y_i \log \Big (\frac{p_i}{1-p_i} \Big) + \log(1-p_i) \Big ) \\
-&= \sum_{i=1}^n \Big (y_i (\beta_0 + \beta_1 x_{i1}+\cdots + \beta_r x_{ir}) - \log(1 + e^{\beta_0 + \beta_1 x_{i1}+\cdots + \beta_p x_{ir}} \Big ).\end{align*}
-
----
-
-* To maximize the log-likelihood function we find the $r+1$ partial derivatives, and set equal til 0. 
-* This gives us a set of $r+1$ non-linear equations in the $\beta$s.
-* This set of equations does not have a closed form solution.
-* These equations are therefore solved numerically. The _Newton-Raphson algorithm_ (or Fisher Scoring) is used.
-
----
-
-<!-- ### Default-example -->
-<!-- Default as response and student, balance and income as covariate. -->
-\footnotesize
-```{r,results="hold",echo=showsolB}
-fit=glm(default~student+balance+income,family="binomial",data=Default)
-summary(fit)
-```
-\normalsize
-
----
-
-## Inference
-
-We may construct confidence intervals and test hypotheses about the $\beta$s, with the aim to understand which covariate that contributes to our posterior probabilites and classification.
-
-This is done by assuming that each $\hat{\beta}_j$ is approximately normally distributed with mean $\beta_j$ and variance $\hat{\text{Var}}(\hat{\beta}_j)$ (related to the negative of the inverse of the expected Hessian of the loglikelihood function).
-
----
-
-## The Akaike Information Criterion (AIC) for model selection
-
-The AIC score is given by:
-$$AIC = 2 \cdot (r+1) -2 \cdot \text{loglik},$$
-where $r+1$ is the number of model parameters. The loglik is the maximized log-likelihood $l(\hat{\boldsymbol{\beta}})$ and $\hat{\boldsymbol{\beta}}$ is the maximum-likelihood estimate of the parameter-vector $\boldsymbol{\beta} = (\beta_0, \beta_1, ..., \beta_{r})^T$. The role of $r+1$ is to penalize models with many parameters as a high number of parameters may lead to overfitting.
-The AIC value can be used to choose between candidate logistic regression models, where the model with the lowest AIC value is the one expected to give the best fit. 
-
-More about the AIC in Module 6.
-
----
-
-## Predictions
-
-* We fit a (simple) logistic regression model to our data set, and 
-* get parameter estimates $\hat{\beta}_0$ and $\hat{\beta}_1$. 
-* We want to use this model to make a prediction when given a new observation $x_0$. 
-
-$$\hat{p}(x_0) = \frac{e^{\hat{\beta}_0 + \hat{\beta}_1 x_0}}{1+e^{\hat{\beta}_0 + \hat{\beta}_1 x_0}} $$
-
-This $\hat{p}(x_0)$ is the estimated probability that the new observation $x_0$ belongs to the class defined by $Y=1$.
-
-In the case of qualitative covariates, a dummy variable needs to be introduced. This is done in a similar fashion as for linear regression. 
-
----
-
-## Want to learn more (theory) about logistic regression?
-
-In TMA4315 Generalized linear models we spent 3 weeks with binary regression - mainly logistic regression. The focus there was on all parts of the regression (not classification) with a mathematical focus on estimation, inference, model fit. 
-
----
-
-<!-- ## Multiple logistic regression -->
-
-<!-- The logistic regression model easily generalizes to the case of predicting a binary response with multiple covariates. Assume we have an observation vector $\mathbf{X}$, which consists of observations from $p$ covariates:  -->
-<!-- $$\mathbf{X} = (X_1, X_2, \dots, X_p)^T.$$ -->
-<!-- A multiple logistic regression is defined through the following link function -->
-<!-- $$\eta(\mathbf{X}) = \beta_0 + \beta_1 X_1 + \beta_2 X_2, \dots, \beta_p X_p.$$ -->
-<!-- We insert this link function into the logistic function, and obtain the probabilities as before: -->
-<!-- $$p (\mathbf{X}) = \frac{e^{\beta_0 + \beta_1 X + \dots + \beta_p X_p}}{1 +e^{\beta_0 + \beta_1 X + \dots + \beta_p X_p}}. $$ -->
-<!-- As in the case of simple logistic regression, we use maximum likelihood to obtain parameter estimates. -->
-
-<!-- --- -->
-
-## Example: South African heart disease data set
-
-In this example we use the `SAhert` data set from the `ElemStatLearn` package. This is a retrospective sample of males in a heart-disease high-risk region in South Africa. It consists of 462 observations on the 10 variables. All subjects are male in the age range 15-64. There are 160 cases (individuals who have suffered from a conorary heart disease) and 302 controls (individuals who have not suffered from a conorary heart disease).    
-
----
-
-The response value (`chd`) and covariates
-
-* `chd` : conorary heart disease \{yes, no\} coded by the numbers \{1, 0\}
-* `sbp` : systolic blood pressure  
-* `tobacco` : cumulative tobacco (kg)  
-* `ldl` : low density lipoprotein cholesterol
-* `adiposity` : a numeric vector
-* `famhist` : family history of heart disease. Categorical variable with two levels: \{Absent, Present\}.
-* `typea` : type-A behavior
-* `obesity` : a numerical value
-* `alcohol` : current alcohol consumption
-* `age` : age at onset
-
-The goal is to identify important risk factors. We start by loading and looking at the data:
-
----
-
-\footnotesize
-```{r,echo=showsolB}
-library(ElemStatLearn)
-library(knitr)
-library(kableExtra)
-heartds = SAheart
-heartds$chd = as.factor(heartds$chd)
-kable(head(heartds),format=whichformat)
-```
-\normalsize
-
----
-
-In order to investigate the data further, we use the `ggpairs` function from the `GGally` library, to make scatter plots of the covariates. The coloring is done according to the response variable, where green represents a case $Y=1$ and red represents a control $Y=0$.
-
----
-
-```{r, warning=FALSE, message=FALSE,echo=showsolB,eval=FALSE}
-library(ggplot2)
-library(GGally)
-ggpairs(heartds, ggplot2::aes(color=chd), #upper="blank",  
-        lower = list(continuous = wrap("points", alpha = 0.3, size=0.2)))
-```
-
----
-
-We now fit a (multiple) logistic regression model using the `glm` function and the full data set. In order to fit a logistic model, the `family` argument must be set equal to `="binomial"`. The `summary` function prints out the estimates of the coefficients, their standard errors and z-values. As for a linear regression model, the significant coefficients are indicated by stars where the significant codes are included in the `R` outprint.
-
----
-
-\footnotesize
-
-```{r}
-glm_heart = glm(chd~., data=heartds, family="binomial")
-summary(glm_heart)
-```
-\normalsize
-
----
-
-```{r,echo=FALSE}
-library(knitr)
-library(kableExtra)
-dff=data.frame(cbind(coef(glm_heart),exp(coef(glm_heart))))
-colnames(dff)= c("Estimated coeffs", "exp(estimated coeffs)")
-kable(dff,digits = 3,format=whichformat)
-
-```
-
-How did we find the coefficients and what does the second column mean?
-
----
-
-## Multinomial logistic regression
-
-The logistic regression model can be generalized for a response variable with more than two classes. Assume we have a response variable with $K$ possible classes and $r$ covariates. The probability that $Y$ belongs to class $k$, given an observation vector $\mathbf{x} = (x_1, x_2, \dots, x_r)^T$ is (usually) modelled by:
-
-$$\ln \frac{P(Y = k | \mathbf{x})}{P(Y = K | \mathbf{x})}= \beta_{0k} + \beta_{1k} x_1 + \cdots + \beta_{rk} x_r.$$
-
-The multinomial logistic regression model is implemented in the `glmnet` or `VGAM` package in `R`.
-
-We will not discuss this further since LDA is more popular (than logistic regression) in the multi-class setting. And, as we shall see soon - they are not that different.
 
 ---
 
