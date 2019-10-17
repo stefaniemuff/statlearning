@@ -24,7 +24,7 @@ library(knitr)
 opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE)
 knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
                       cache=TRUE, size="scriptsize")
-whichformat="html"
+whichformat="latex"
 ```
 
 # Introduction
@@ -362,6 +362,7 @@ $$ p_i= \frac{e^{\beta_0+\beta_1 x_i}}{1 + e^{\beta_0 + \beta_1 x_i}}.$$
 
 \scriptsize
 ```{r, echo=T}
+library(ISLR)
 Default$default <- as.numeric(Default$default)-1
 glm_default = glm(default~balance, data=Default, family="binomial")
 
@@ -373,7 +374,7 @@ summary(glm_default)$coef
 Plotting the fitted line (in blue):
 
 ```{r defaultglm, echo=FALSE, fig.width=5, fig.height=3,fig.align = "center",out.width='70%'}
-
+library(ggplot2)
 glm_alpha = coef(glm_default)[1]
 glm_beta = coef(glm_default)[2]
 
@@ -529,16 +530,18 @@ Taking the log on equation (2), it follows that $\beta_j$ can be interpreted as 
 
 ---
 
-Let's now fit the logistic regression model for `default`, given `balance` and `income` as predictors:
+Let's now fit the logistic regression model for `default`, given `balance`, `income` and the binary variable `student` as predictors:
 
 \scriptsize
 ```{r, echo=T}
-glm_default2 = glm(default~balance + income, data=Default, family="binomial")
+glm_default2 = glm(default~balance + income + student, data=Default, family="binomial")
 
 summary(glm_default2)$coef
 ```
 
 \normalsize
+
+**Questions:**
 
 * What happens with the odds-ratio when `income` increases by 10'000 dollars?
 
@@ -550,28 +553,45 @@ summary(glm_default2)$coef
 
 
 
-
 ---
 
 ## Predictions
 
+\vspace{2mm}
+
 Let's catch up. Why were we doing all this in the first place?
 
-* We fit a (simple) logistic regression model to our data set, and 
-* get parameter estimates $\hat{\beta}_0$ and $\hat{\beta}_1$. 
-* We want to use this model to make a prediction when given a new observation $x_0$. 
+\vspace{2mm}
 
-$$\hat{p}(x_0) = \frac{e^{\hat{\beta}_0 + \hat{\beta}_1 x_0}}{1+e^{\hat{\beta}_0 + \hat{\beta}_1 x_0}} $$
+**Answer:** We wanted to build a model that **predict probabilities of categories**, _given_ certain covariates $X$.
 
-This $\hat{p}(x_0)$ is the estimated probability that the new observation $x_0$ belongs to the class defined by $Y=1$.
+\vspace{4mm}
+ 
+* For given parameter estimates $\hat\beta_0, \hat\beta_1, \ldots \hat\beta_p$ and a new observation ${\bf x}_0$, we can estimate the probability $\hat{p}({\bf x}_0)$ that the new observation belongs to the class defined by $Y=1$
 
-In the case of qualitative covariates, a dummy variable needs to be introduced. This is done in a similar fashion as for linear regression. 
+$$\hat{p}({\bf x}_0) = \frac{e^{\hat{\eta}_0}}{1+e^{\hat{\eta}_0}} \ , $$
+
+with linear predictor
+$$\hat\eta_0 = \hat\beta_0 + \hat\beta_1 x_{01} + \ldots \hat\beta_p x_{0p} \ .$$
+
+In the case of qualitative covariates, a dummy variable needs to be introduced. This is done as for linear regression. 
+
 
 ---
 
-## Want to learn more (theory) about logistic regression?
+So in the `Default` example, we can predict the probability that someone defaults. 
 
-In TMA4315 Generalized linear models we spent 3 weeks with binary regression - mainly logistic regression. The focus there was on all parts of the regression (not classification) with a mathematical focus on estimation, inference, model fit. 
+For example: "What is the estimated probability that a student defaults with a balance of 2000, and an income of 40000?"
+
+$$\hat{p}(X) = \frac{e^{\beta_0 + 2000 \cdot \beta_1 + 40000 \cdot \beta_2 + 1 \cdot \beta_3}}{ 1+  e^{\beta_0 + 2000 \cdot \beta_1 + 40000 \cdot \beta_2 + 1 \cdot \beta_3}} = 0.5196$$
+\vspace{6mm}
+
+Using R:
+\tiny
+```{r}
+eta <- summary(glm_default2)$coef[,1] %*% c(1,2000,40000,1)
+exp(eta)/(1+exp(eta))
+```
 
 
 
@@ -579,7 +599,15 @@ In TMA4315 Generalized linear models we spent 3 weeks with binary regression - m
 
 ## Example: South African heart disease data set
 
-In this example we use the `SAhert` data set from the `ElemStatLearn` package. This is a retrospective sample of males in a heart-disease high-risk region in South Africa. It consists of 462 observations on the 10 variables. All subjects are male in the age range 15-64. There are 160 cases (individuals who have suffered from a conorary heart disease) and 302 controls (individuals who have not suffered from a conorary heart disease).    
+\vspace{2mm}
+
+* `SAhert` data set from the `ElemStatLearn` package, a retrospective sample of males in a heart-disease high-risk region in South Africa. 
+
+* 462 observations on 10 variables. 
+
+* All subjects are male in the age range 15-64. 
+
+* 160 cases (individuals who have suffered from a conorary heart disease) and 302 controls (individuals who have not suffered from a conorary heart disease).    
 
 ---
 
@@ -589,9 +617,7 @@ The response value (`chd`) and covariates
 * `sbp` : systolic blood pressure  
 * `tobacco` : cumulative tobacco (kg)  
 * `ldl` : low density lipoprotein cholesterol
-* `adiposity` : a numeric vector
 * `famhist` : family history of heart disease. Categorical variable with two levels: \{Absent, Present\}.
-* `typea` : type-A behavior
 * `obesity` : a numerical value
 * `alcohol` : current alcohol consumption
 * `age` : age at onset
@@ -603,53 +629,51 @@ The goal is to identify important risk factors. We start by loading and looking 
 \footnotesize
 ```{r,echo=showsolB}
 library(ElemStatLearn)
-library(knitr)
-library(kableExtra)
-heartds = SAheart
-heartds$chd = as.factor(heartds$chd)
-kable(head(heartds),format=whichformat)
+
+d.heart <- SAheart
+d.heart$chd <- as.factor(d.heart$chd)
+d.heart <- d.heart[,c("sbp","tobacco","ldl","famhist","obesity","alcohol","age","chd")]
+head(d.heart)
 ```
 \normalsize
 
----
 
-In order to investigate the data further, we use the `ggpairs` function from the `GGally` library, to make scatter plots of the covariates. The coloring is done according to the response variable, where green represents a case $Y=1$ and red represents a control $Y=0$.
 
 ---
 
-```{r, warning=FALSE, message=FALSE,echo=showsolB,eval=FALSE}
-library(ggplot2)
-library(GGally)
-ggpairs(heartds, ggplot2::aes(color=chd), #upper="blank",  
-        lower = list(continuous = wrap("points", alpha = 0.3, size=0.2)))
+`pairs()` plot with $Y=1$ (case) in green and $Y=0$ (control) in blue:
+
+```{r ggpairs_heart, message=FALSE,echo=FALSE, fig.width=6,fig.height=6,fig.align="center",out.width='100%'}
+pairs(d.heart[,-c(8)],col=ifelse(d.heart$chd==0,"green","blue"))
 ```
 
----
-
-We now fit a (multiple) logistic regression model using the `glm` function and the full data set. In order to fit a logistic model, the `family` argument must be set equal to `="binomial"`. The `summary` function prints out the estimates of the coefficients, their standard errors and z-values. As for a linear regression model, the significant coefficients are indicated by stars where the significant codes are included in the `R` outprint.
 
 ---
 
-\footnotesize
+Fitting the model using all predictors in R:
+
+\tiny
 
 ```{r}
-glm_heart = glm(chd~., data=heartds, family="binomial")
+glm_heart = glm(chd~., data=d.heart, family="binomial")
 summary(glm_heart)
 ```
-\normalsize
 
 ---
 
-```{r,echo=FALSE}
-library(knitr)
-library(kableExtra)
-dff=data.frame(cbind(coef(glm_heart),exp(coef(glm_heart))))
-colnames(dff)= c("Estimated coeffs", "exp(estimated coeffs)")
-kable(dff,digits = 3,format=whichformat)
+* What are important predictors for CHD?
 
-```
+* How would you now calculate $\hat{p}(X)$ that someone will develop CHD, given covariates $X$?
 
-How did we find the coefficients and what does the second column mean?
+
+---
+
+## Want to learn more (theory) about logistic regression?
+
+* In TMA4315 Generalized linear models there are 3 weeks with binary regression - mainly logistic regression. 
+
+* The focus there is on all parts of the regression (not classification) with a mathematical focus on estimation, inference, model fit. 
+
 
 ---
 
@@ -1644,15 +1668,12 @@ But first, what about linear regression $Y$ on ${\bf x}$ to make a classificatio
 In a two class problem - assume the classes are labelled "-" (non disease) and "+" (disease). In a population setting we define the following event and associated number of observations.
 
 ```{r, echo=FALSE, warning=FALSE}
-library(knitr)
-library(kableExtra)
-
 row1 = c("", "Predicted -", "Predicted +","Total")
 row2 = c("True -", "True Negative TN", "False Positive FP","N")
 row3 = c("True +", "False Negative FN", "True Positive TP","P")
 row4 = c("Total", "N*", "P*"," ")
-kable(rbind(row1, row2, row3,row4), row.names=FALSE,format=whichformat,booktabs=TRUE)
-#print(rbind(row1, row2, row3,row4))
+#kable(rbind(row1, row2, row3,row4), row.names=FALSE,format=whichformat,booktabs=TRUE)
+print(rbind(row1, row2, row3,row4))
 ```
 ---
 
@@ -1673,8 +1694,8 @@ row3 = c("True positive rate", "TP/P", "1-Type II error, power, sensitivity, rec
 row4=c("Positive predictive value (PPV)","TP/P*","Precision, 1-false discovery proportion")
 row5=c("Negative predictive value (NPV)","TN/N*","")
 
-kable(rbind(row1, row2, row3,row4,row5), row.names=FALSE,format=whichformat,booktabs=TRUE)
-#print(rbind(row1, row2, row3,row4,row5))
+#kable(rbind(row1, row2, row3,row4,row5), row.names=FALSE,format=whichformat,booktabs=TRUE)
+print(rbind(row1, row2, row3,row4,row5))
 
 ```
 
@@ -1687,9 +1708,10 @@ kable(rbind(row1, row2, row3,row4,row5), row.names=FALSE,format=whichformat,book
 We want to evaluate our multiple logistic model for the `SAheart` data set. In order to investigate the training error and the test error, we divide the original data set, randomly, into two samples of equal size.
 ```{r}
 set.seed(20)
-train_ID = sample(1:nrow(heartds), nrow(heartds)/2)
-train_SA = heartds[train_ID, ]
-test_SA = heartds[-train_ID, ]
+d.heart <- SAheart
+train_ID = sample(1:nrow(d.heart), nrow(d.heart)/2)
+train_SA = d.heart[train_ID, ]
+test_SA = d.heart[-train_ID, ]
 ```
 
 ---
@@ -1732,7 +1754,7 @@ pred_SA = ifelse(probs_SA > 0.5, 1, 0)
 
 predictions_SA = data.frame(probs_SA, pred_SA, test_SA[,10])
 colnames(predictions_SA) = c("Estim. prob. of Y=1","Predicted class","True class")
-kable(head(predictions_SA),format=whichformat,booktabs=TRUE)
+head(predictions_SA)
 ```
 
 ---
