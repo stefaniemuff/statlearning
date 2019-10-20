@@ -53,30 +53,9 @@ Some of the figures and slides in this presentation are taken (or are inspired) 
 
 ---
 
-## Topics in this module
+## Topics in this module (todo)
 
-**Part A: Introduction to classification, and modelling class densities **
 
-* Aim of this module
-* What is classification and what is discrimination?
-* Loss function and the Bayes classifier 
-* Modelling class densities
-    + Linear discriminant analysis
-    + Quadratic discriminant analysis
-    + Naive Bayes (optional)
-* Modelling posterior probabilities
-    + KNN-classifier
-
----
-
-**Part B: Modelling posterior probabilites, ROC/AUC and comparisions **
-
-* Modelling posterior probabilities (cont.)
-    + Linear regression for classification problems
-    + Logistic regression
-* Sensitivity, specificity, ROC and AUC
-* Comparisons
-* Extensions
 
 ---
 
@@ -175,33 +154,6 @@ $~$
 
 **Performance measure:** Most popular is the misclassification error rate (training and test version).
 
----
-
-### Training error
-
-* **Training error rate**:
-The proportion of mistakes that are made if we apply our estimator $\hat{f}$ to the training observations, i.e. $\hat{y}_i=\hat{f}(x_i)$ 
-$$\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i) \ ,$$
-with indicator function I, which is defined as: 
-
-$$\text{I}(a\neq\hat{a}) = \begin{cases} 1 \text{ if } a \neq \hat{a} \ , \\ 
-0 \text{ else. } \end{cases}$$
-
-* The indicator function counts the number of times our model has made a wrong classification. The training error rate is the fraction of misclassifications made on our training set. 
-
-* A very low training error rate may imply overfitting.
-
----
-
-### Test error
-
-* **Test error rate**: The fraction of misclassifications when our model is applied on a test set
-$$\text{Ave}(I(y_0\neq \hat{y}_0)) \ ,$$
-where the average is over all the test observations $(x_0,y_0)$.
-
-* Again, this gives a better indication of the true performance of the classifier (than the training error).
-
-* We assume that a _good_ classifier is a classifier that has a _low_ test error.
 
 
 ---
@@ -216,9 +168,11 @@ $~$
 
 * Logistic regression
 
+* $K$-nearest neighbours
+
 * Linear and quadratic discriminant analysis
 
-* $K$-nearest neighbours
+
 
 
 ---
@@ -314,13 +268,18 @@ $~$
 
 $$Y_i = \begin{cases} 1 \text{ with probability } p_i, \\ 0 \text{ with probability } 1-p_i. \end{cases}$$
 
-* We need a clever way to _link_ our covariates $X_1, \ldots, X_p$ with this probability $p_i$. Aim: want to relate the _linear predictor_
-$$\eta_i = \beta_0 + \beta_1 x_{i1} + \ldots + \beta_p x_{ip}$$ 
-to $P(X)=P(Y=1 \mid X)$. How?
+* **Aim**: For covariates $(X_1,\ldots,X_p)$, we want to estimate $p_i = \text{Pr}(Y_i=1 \mid X_1,\ldots,X_p)$.
 
 ---
 
-* The idea is to use a so-called _link-function_ to link $p_i = P(X_i)$ with the linear predictor. 
+
+* We need a clever way to _link_ our covariates $X_1, \ldots, X_p$ with this probability $p_i$. Aim: want to relate the _linear predictor_
+$$\eta_i = \beta_0 + \beta_1 x_{i1} + \ldots + \beta_p x_{ip}$$ 
+to $p_i$. How?
+
+
+
+* The idea is to use a so-called _link-function_ to link $p_i$ to the linear predictor. 
 
 * In logistic regression, we use the _logistic link function_
 
@@ -459,7 +418,7 @@ Remember from equation (1) that
 thus
 
 \begin{equation*}
- \frac{p_i}{1-p_i} = e^{\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \ldots + \beta_p x_{ip}} = e^\eta_i \ .
+ \frac{p_i}{1-p_i} = e^{\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \ldots + \beta_p x_{ip}} = e^{\eta_i} \ .
 \end{equation*}
 
 \vspace{2mm}
@@ -492,7 +451,7 @@ $~$
 <!-- p_i&= \frac{\exp(\eta_i)}{1+\exp(\eta_i)}\\ -->
 <!-- \eta_i&=\ln(\frac{p_i}{1-p_i})\\ -->
 <!-- \ln(\frac{p_i}{1-p_i})&=\beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_p x_{ip}\\ -->
-<!-- \frac{p_i}{1-p_i}=&\frac{P(Y_i=1|{\bf x}_i)}{P(Y_i=0|{\bf x}_i)}=\exp(\beta_0)\cdot \exp(\beta_1 x_{i1})\cdots\exp(\beta_p x_{ip}) -->
+<!-- \frac{p_i}{1-p_i}=&\frac{\text{Pr}(Y_i=1|{\bf x}_i)}{\text{Pr}(Y_i=0|{\bf x}_i)}=\exp(\beta_0)\cdot \exp(\beta_1 x_{i1})\cdots\exp(\beta_p x_{ip}) -->
 <!-- \end{align*} -->
 
 $\rightarrow$ We have a _multiplicative model_ for the odds - which can help us to interpret our $\beta$s.
@@ -563,7 +522,7 @@ Let's catch up. Why were we doing all this in the first place?
 
 \vspace{2mm}
 
-**Answer:** We wanted to build a model that **predict probabilities of categories**, _given_ certain covariates $X$.
+**Answer:** We wanted to build a model that **predict probabilities of categories** $Y$, _given_ certain covariates $X_1, \ldots, X_p$.
 
 \vspace{4mm}
  
@@ -592,8 +551,6 @@ Using R:
 eta <- summary(glm_default2)$coef[,1] %*% c(1,2000,40000,1)
 exp(eta)/(1+exp(eta))
 ```
-
-
 
 ---
 
@@ -666,40 +623,40 @@ summary(glm_heart)
 * How would you now calculate $\hat{p}(X)$ that someone will develop CHD, given covariates $X$?
 
 
----
 
-## Want to learn more (theory) about logistic regression?
-
-* In TMA4315 Generalized linear models there are 3 weeks with binary regression - mainly logistic regression. 
-
-* The focus there is on all parts of the regression (not classification) with a mathematical focus on estimation, inference, model fit. 
 
 
 ---
 
 ## Multinomial logistic regression
 
-The logistic regression model can be generalized for a response variable with more than two classes. Assume we have a response variable with $K$ possible classes and $r$ covariates. The probability that $Y$ belongs to class $k$, given an observation vector $\mathbf{x} = (x_1, x_2, \dots, x_r)^T$ is (usually) modelled by:
+* Generalization of the logistic regression model to a response variable with more than two ($K$) possible classes. 
 
-$$\ln \frac{P(Y = k | \mathbf{x})}{P(Y = K | \mathbf{x})}= \beta_{0k} + \beta_{1k} x_1 + \cdots + \beta_{rk} x_r.$$
+* The probability that $Y$ belongs to class $k$, given an observation vector $\mathbf{x} = (x_1, x_2, \dots, x_p)^T$ is (usually) modelled by:
+$$\log \frac{\text{Pr}(Y = k | \mathbf{x})}{\text{Pr}(Y = K | \mathbf{x})}= \beta_{0k} + \beta_{1k} x_1 + \cdots + \beta_{pk} x_p ,$$
+where $K$ is chosen as the _reference category_ (arbitrary). We would thus (jointly) estimate $K-1$ sets of regression parameters.
 
-The multinomial logistic regression model is implemented in the `glmnet` or `VGAM` package in `R`.
+* The multinomial logistic regression model is implemented in the `glmnet` or `VGAM` package in `R`.
 
-We will not discuss this further since LDA is more popular (than logistic regression) in the multi-class setting. And, as we shall see soon - they are not that different.
-
+* We will not discuss this further since LDA is more popular (than logistic regression) in the multi-class setting. And, as we shall see soon - they are not that different.
 
 
 ---
 
-
 ## Bayes classifier
 
+* We were going for classification, but now estimated $\hat{p}(X)=\text{Pr}(Y \mid X)$ using logistic regression. Idea: probability can be used for classification.
 
-* Suppose we have a quantitative response value that can be a member in one of $K$ classes $\mathcal{C} = \{c_1, c_2,\ldots, c_K\}$. Further, suppose these elements are numbered $1, 2, ..., K$. The probability that a new observation $x_0$ belongs to class $k$ is\footnote{This is the conditional probability: the probability that $Y=k$ given the observation $x_0$.}
+\vspace{1mm}
+
+* For $K$ classes $\mathcal{C} = \{c_1, c_2,\ldots, c_K\}$, with elements numbered as $1, 2, ..., K$, the probability that a new observation $x_0$ belongs to class $k$ is\footnote{This is the conditional probability: the probability that $Y=k$ given the observation $x_0$.}
 $$p_k(x_0) = \text{Pr}(Y=k | X=x_0), \quad k = 1, 2, ... K \ .$$
+
+\vspace{1mm}
 
 * The _Bayes classifier assigns an observation to the most likely class_, given its predictor values.  
 
+\vspace{1mm}
 
 * **Example** for two groups $\{A, B\}$. A new observation $x_0$ will be classified to $A$ if $\text{Pr}(Y=A | X=x_0) > 0.5$ and to class $B$ otherwise.
 
@@ -712,18 +669,87 @@ $$p_k(x_0) = \text{Pr}(Y=k | X=x_0), \quad k = 1, 2, ... K \ .$$
 
 * The class boundaries using the Bayes classifier is called the _Bayes decision boundary_.
 
-* The overall Bayes error rate is given as $$1-\text{E}(\text{max} \text{Pr}(Y=j\mid X))$$ where the expectation is over $X$.
+* The overall Bayes error rate is given as $$1-\text{E}(\max_j \text{Pr}(Y=j\mid X))$$ where the expectation is over $X$.
 
 * The Bayes error rate is comparable to the _irreducible error_ in the regression setting.
 
-* **Caveat**: we never (or very seldom) know the conditional distribution of $Y$ given $X$ for real data 
+---
 
-$\rightarrow$
-The $K$-nearest neighbor classifier estimates this conditional distribution and then classifies a new observation based on this estimated probability.
+### What is test error?
+
+\vspace{2mm}
+
+To understand what test error means, we need to understand the _training error_ first.
 
 ---
 
-## K-nearest neighbour classifier
+### Training error
+
+* **Training error rate**:
+The proportion of mistakes that are made if we apply our estimator $\hat{f}$ to the training observations, i.e. $\hat{y}_i=\hat{f}(x_i)$ 
+$$\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i) \ ,$$
+with indicator function I, which is defined as: 
+
+$$\text{I}(a\neq\hat{a}) = \begin{cases} 1 \text{ if } a \neq \hat{a} \ , \\ 
+0 \text{ else. } \end{cases}$$
+
+* The indicator function counts the number of times our model has made a wrong classification. The training error rate is the fraction of misclassifications made on our training set. 
+
+* A very low training error rate may imply overfitting.
+
+---
+
+### Test error
+
+* **Test error rate**: The fraction of misclassifications when our model is applied on a test set
+$$\text{Ave}(I(y_0\neq \hat{y}_0)) \ ,$$
+where the average is over all the test observations $(x_0,y_0)$.
+
+* Again, this gives a better indication of the true performance of the classifier (than the training error).
+
+* We assume that a _good_ classifier is a classifier that has a _low_ test error.
+
+---
+
+## Training error rate 
+
+* the proportion of mistakes that are made if we apply classifier $\hat{f}$ to the training observations, i.e. $\hat{y}_i=\hat{f}(x_i)$. 
+$$\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i), $$ 
+where  I is the indicator function (to give our 0/1 loss) which is defined as: $$\text{I}(a\neq\hat{a}) = \begin{cases} 1 \text{ if } a \neq \hat{a} \\ 0 \text{ else } \end{cases}$$
+
+* The indicator function counts the number of times our model has made a wrong classification. The training error rate is the fraction of misclassifications made on our training set. 
+
+* A very low training error rate may imply overfitting.
+
+---
+
+## Test error rate
+
+* Here the fraction of misclassifications is calculated when our model is applied on a test set. From what we have learned about regression we can deduct that this gives a better indication of the true performance of the classifier (than the training error)
+$$\text{Ave}(I(y_0\neq \hat{y}_0)) \ ,$$
+where the average is over all the test observations $(x_0,y_0)$.
+
+* We assume that a _good_ classifier is a classifier that has a _low_ test error.
+
+---
+
+## The K-nearest neighbour (KNN) classifier
+
+\vspace{2mm}
+
+* Caveat: We usually don't know the conditional distribution of $Y$ given $X$ for real data.
+
+\vspace{2mm}
+
+* We have discussed how to do it with logistic regression (for two categories).
+
+\vspace{2mm}
+
+* The $K$-nearest neighbor (KNN) classifier estimates this conditional distribution and chooses the most likely cateogry (Bayes classifier).\footnote{Attention!! $K$ refers to the number of neighbours used for the classifier, and \emph{not} to the number of classes!! The latter is assumed known.} 
+
+
+
+---
 
 \vspace{2mm}
 The $K$-nearest neighbour classifier (KNN) works in the following way: 
@@ -731,8 +757,8 @@ The $K$-nearest neighbour classifier (KNN) works in the following way:
 * Given a new observation $x_0$ it searches for the $K$ points in our training data that are closest to it (Euclidean distance). 
 * These points make up the neighborhood of $x_0$, $\mathcal{N}_0$. 
 * The point $x_0$ is classified by taking a majority vote of the neighbors. 
-* That means that $x_0$ is classified to the most occurring class among its neighbors
-$$\text{Pr}(Y=j | X = x_0) = \frac{1}{K} \sum_{i \in \mathcal{N}_0} I(y_i = j).$$
+* That means that $x_0$ is classified to the most occurring class among its neighbors ("majority vote")
+$$\text{Pr}(Y=j | X = x_0) = \frac{1}{K} \sum_{i \in \mathcal{N}_0} I(y_i = j)\ .$$
 
 ---
 
@@ -855,21 +881,21 @@ ggarrange(gg,gg3,gg10,gg150)
 
 ---
 
-```{r knnerror1,echo=FALSE,fig.width=7,fig.height=4,fig.align="center"}
-misclas=numeric(50)
+```{r knnerror1,echo=FALSE,fig.width=6,fig.height=4,fig.align="center",out.width="90%"}
+misclas=numeric(60)
 n = dim(df)[1]
 set.seed(9)
-for(k in 1:50){
+for(k in 1:60){
   knn = knn.cv(train = df[,-3], cl=df[,3], k=k)
   t = table(knn, df[,3])
   error = (n-sum(diag(t)))/n
   misclas[k] = error
 }
 
-knn_ds = data.frame(X1 = 1:50, X2 = misclas)
+knn_ds = data.frame(X1 = 1:60, X2 = misclas)
 gge = ggplot(knn_ds, aes(x = X1, y=X2)) + geom_point(color="blue") + geom_line()
-gge = gge + xlab("Number of neighbors K") + ylab("Misclassification error")
-gge = gge + ggtitle("Error rate for KNN with different choices of K")+theme_minimal()
+gge = gge + xlab("Number of neighbors K") + ylab("Test error")
+gge = gge + ggtitle("Cross-validated test error rate for KNN")+theme_minimal()
 gge
 ```
 
@@ -905,100 +931,97 @@ $\rightarrow$ Critical to the success of the classifier to choose the correct le
 * Why? Because the nearest neighbors tend to be far away in high dimensions and the method no longer is local. This is referred to as the _curse of dimensionality_.
 
 
+
 ---
 
-Given a continuous random vector $X$ and categorical random variable $Y$, how do we get $\text{Pr}(Y=k | X=x_0)$?
+# Bayes decision rule - two paradigms
+\vspace{1mm}
+
+Two approaches to estimate $\text{Pr}(Y=k \mid X=x)$:
+\vspace{1mm}
+
+## **Diagnostic paradigm**
+
+This is what we did so far: The focus was  _directly_ estimating the posterior distribution for the classes $$\text{Pr}(Y=k \mid X=x)\ .$$ 
+ **Examples:**
+    Logistic regression. 
+    KNN classification.
+
+\vspace{2mm}
+
+## **Sampling paradigm** 
+
+* The focus is on estimating the prior probabilities $\pi_k=\text{Pr}(Y=k)$ for the classes and the class conditional distributions $f_k(x)=\text{Pr}(X=x \mid Y=k)$. 
+* We classify to the class with the maximal product $\pi_k f_k(x)$. In this paradigm, we need to model the pdf for each class. 
+* Popular: the multivariate normal distribution!
+
+---
+
+Given a continuous $X$ and categorical $Y$, and 
+
+* the probability  _\textcolor{red}{density}_ function $f_k(x) = \text{Pr}(X=x \mid Y=k)$ for $X$ in class $k$.
+* the  _\textcolor{red}{prior}_ proability for class $k$ $\pi_k = \text{Pr}(Y=k)$ is the prior probability.
+
+How do we get $\text{Pr}(Y=k | X=x_0)$?
 
 
 \begin{center}
 \colorbox{lightgray}{\begin{minipage}{10cm}
 {\bf Bayes theorem}
 \begin{align*}
-p_k(X) = P(Y=k \mid X= x) &= 
-\frac{P({\bf X}={\bf x} \cap Y=k)}{f({\bf x})}\\
-&= \frac{ f_k(x) \pi_k}{\sum_{l=1}^K  f_l(x) \pi_l}
+p_k(X) = \text{Pr}(Y=k \mid X= x) &= 
+\frac{\text{Pr}({\bf X}={\bf x} \cap Y=k)}{f({\bf x})}\\
+&= \frac{ f_k(x) \pi_k}{\sum_{l=1}^K  f_l(x) \pi_l}  
 \end{align*}
 \end{minipage}}
 \end{center}
 
-Here $f_k(x) = P(X=x \mid Y=k)$ is the pdf for $X$ in class $k$ and $\pi_k = P(Y=k)$ is the prior probability for class $k$. 
+
+---
+
+
+# Discriminant Analysis
+
+\vspace{2mm}
+Discriminant analysis is relying on the _sampling paradigm_.
+
+\vspace{2mm}
+
+* The approach is to model the distribution of $X$ in each of
+the classes separately, and then use Bayes theorem to flip things
+around and obtain $\text{Pr}(Y \mid X)$.
+
+* When we use normal (Gaussian) distributions for each class,
+this leads to linear or quadratic discriminant analysis.
+
+* However, this approach is quite general, and other distributions
+can be used as well. We will focus on normal distributions.
+
+
 
 
 ---
 
-## Synthetic example: what is the Bayes error?
+## Classification to the highest density
 
-Suppose we have observations coming from two classes: \{<span style="color: #006400">green</span>, <span style="color:#FF8C00">orange</span>\}, where 
-$$X_{\text{green}}\sim \mathcal{N}(-2, 1.5^2) \text{ and }
-X_{\text{orange}}\sim \mathcal{N}(2, 1.5^2) $$
-and that the probability of observing each class is equal.
+\vspace{2mm}
 
-* Where is the Bayes decision boundary here?
-* How can we calculate the Bayes error rate (intuitively- see the graph)?
-* What would you estimate the Bayes error rate to be?
-* What if someone constructs a classifier and it has a lower error rate than the Bayes error rate - is this possible?
+Suppose we have observations coming from two classes:
 
----
+ \{\textcolor{green}{green}, \textcolor{orange}{orange}\}
 
-```{r, echo=FALSE, message=FALSE}
-library(ggplot2)
-library(ggpubr)
-x = seq(-6, 6, by = 0.01)
-n = length(x)
-y1 = dnorm(x, mean = -2, sd=1.5)
-y2 = dnorm(x, mean= 2, sd=1.5)
-
-XY = data.frame(x, y1, y2)
-ggplot(XY)+geom_line(aes(x=x, y=0.5*y1), col="darkgreen")+geom_line(aes(x=x, y=0.5*y2), col="orange")+ annotate("text", x = 1.7, y = 0.175, parse=TRUE, label = as.character(expression(paste(pi[1], "=", pi[2], "=", 0.5))))+labs(y=NULL, title=expression(pi[k]*f[k](x)))
-
-```
-
----
-
-```{r,echo=FALSE}
-taildnorm=function(x,upper,lower,mean,sd,faktor)
-{ 
-  res=faktor*dnorm(x,mean=mean,sd=sd)
-  res[x<lower]=0
-  res[x>upper]=0
-  return(res)
-}
-
-gg=ggplot(XY)+geom_line(aes(x=x, y=0.5*y1), col="darkgreen")+geom_line(aes(x=x, y=0.5*y2), col="orange")+geom_vline(xintercept=0, linetype="dashed")+ annotate("text", x = 1.7, y = 0.175, parse=TRUE, label = as.character(expression(paste(pi[1], "=", pi[2], "=", 0.5))))+labs(y=NULL, title=expression(pi[k]*f[k](x)))
-gg+stat_function(fun=taildnorm,geom='area',fill="lightgreen",alpha=0.5,args=list(upper=6,lower=0,mean=-2,sd=1.5,faktor=0.5))+stat_function(fun=taildnorm,geom='area',fill="orange",alpha=0.5,args=list(upper=0,lower=-6,mean=2,sd=1.5,faktor=0.5))
-```
-
-Bayes error: `round(0.5*2*pnorm(0,mean=2,sd=1.5),2)`=`r round(0.5*2*pnorm(0,mean=2,sd=1.5),2)`
-
----
-
-## Bayes decision rule - two paradigms
-
-The most popular approach to classication is to use the Bayes decision rule with the 0/1 loss function= classify to the class with the largest $P(Y=k\mid X=x_0)$.
-
-Two approaches:
-
-* The **diagnostic paradigm**: We focus on _directly_ estimating the posterior distribution for the classes $P(Y=k \mid X=x)$.
-
-* The **sampling paradigm**: There focus is on estimating the prior probabilities $\pi_k$ for the classes and the class conditional distributions $f_k(x)$. We classify to the class with the maximal product $\pi_k f_k(x)$.
-
-We _first_ look at the sampling paradigm - and then we need to model the pdf for each class. Popular: the multivariate normal distribution!
-
----
-
-## Univariate normal class distributions - the role of the prior
-
-Suppose (again) we have observations coming from two classes: \{<span style="color: #006400">green</span>, <span style="color:#FF8C00">orange</span>\}, where 
 $$X_{\text{green}}\sim \mathcal{N}(-2, 1.5^2) \text{ and }
 X_{\text{orange}}\sim \mathcal{N}(2, 1.5^2) $$
 
-In the figure below we have specified the prior probabilities to be equal, $\pi_1 = \pi_2 = 0.5$ and have plotted $\pi_k f_k(x)$ for the two classes. 
+* Assume probabilities to be equal, $\pi_1 = \pi_2 = 0.5$.
 
-The decision boundary is where the point of intersection of the two lines is, because here $\pi_1 f_1(x)=\pi_2 f_2(x)$. Thus all points to left of the decision boundary will be classified as green and similarly, all points to the right of the decision boundary will be classified as orange. 
+
 
 ---
 
-```{r, echo=FALSE, message=FALSE}
+We plot $\pi_k f_k(x)$ for the two classes:
+
+```{r gauss1, echo=FALSE, fig.width=5, fig.height=3.5,fig.align = "center",out.width='70%'}
 library(ggplot2)
 library(ggpubr)
 x = seq(-6, 6, by = 0.01)
@@ -1011,54 +1034,145 @@ ggplot(XY)+geom_line(aes(x=x, y=0.5*y1), col="darkgreen")+geom_line(aes(x=x, y=0
 
 ```
 
+The decision boundary is where the point of intersection of the two lines is, because here $\pi_1 f_1(x)=\pi_2 f_2(x)$. Thus all points to left of the decision boundary will be classified as green and similarly, all points to the right of the decision boundary will be classified as orange. 
+
 ---
 
-We now specify different priors, such that $\pi_1 = 0.3$ and $\pi_2 = 0.7$. We see that this has affected the decision boundary, which now has shifted to the left.
+We now specify different priors, such that $\pi_1 = 0.3$ and $\pi_2 = 0.7$. We see that this has affected the decision boundary, which now has shifted to the left:
 
-```{r, message=FALSE, echo=FALSE}
+```{r gauss2, echo=FALSE, fig.width=5, fig.height=3.5,fig.align = "center",out.width='70%'}
 ggplot(XY)+geom_line(aes(x=x, y=0.3*y1), col="darkgreen")+geom_line(aes(x=x, y=0.7*y2),col="orange")+geom_vline(xintercept=-0.45, linetype="dashed") +annotate("text", x = -2, y = 0.2, parse=TRUE, label =as.character(expression(pi[1] == 0.3)))+annotate("text", x=1, y=0.2, parse=TRUE, label=as.character(expression(pi[2]==0.7)))+labs(y=NULL, title=expression(pi[k]*f[k](x)))
 
 ```
 
----
-
-# Linear and quadratic discriminant analysis
-
-## Linear discriminant analysis (LDA)
-
-Using Linear discriminant analysis we assume the class conditional distributions are normal (Gaussian).
-
-### Univariate (p=1)
-
-The univariate normal pdf
-$$f(x) = \frac{1}{\sqrt{2\pi}\sigma} e^{-\frac{1}{2}\big(\frac{x-\mu}{\sigma}\big)^2},$$
-has parameters $\mu$ (mean) and $\sigma$ (standard deviation).
-
-Assume that we observe $K$ classes, where each class conditional distribution is normal, where the classes have mean $\mu_k$ and standard deviation $\sigma_k$:
-$$f_k(x) = \frac{1}{\sqrt{2\pi}\sigma_k} e^{-\frac{1}{2}\big(\frac{x-\mu_k}{\sigma_k}\big)^2}$$
-With LDA we assume that all of the classes have the _same standard deviation_ $\sigma_k = \sigma$.
-
-In addition we have prior class probabilites $\pi_k=P(Y=k)$, so that $\sum_{k=1}^K \pi_k=1$.
 
 ---
 
-We can insert the expression for each class distribution into Bayes formula to obtain the posterior probability $p_k(x) = P(Y = k | X = x)$:
-$$p_k(x) = \frac{f_k({\bf x}) \pi_k}{f({\bf x})}=\frac{\pi_k \frac{1}{\sqrt{2\pi}\sigma} e^{-\frac{1}{2}\big(\frac{x-\mu_k}{\sigma}\big)^2}}{\sum_{l=1}^K \pi_l \frac{1}{\sqrt{2\pi}\sigma} e^{-\frac{1}{2}\big(\frac{x-\mu_l}{\sigma}\big)^2}} $$
+
+### Why discriminant analysis?
+
+* When the classes are well-separated, the parameter
+estimates for the logistic regression model are surprisingly
+unstable. Linear discriminant analysis does not suffer from
+this problem.
+
+* If $n$ is small and the distribution of the predictors $X$ is
+approximately normal in each of the classes, the linear
+discriminant model is again more stable than the logistic
+regression model.
+
+* Linear discriminant analysis is popular when we have more
+than two response classes, because it also provides
+low-dimensional views of the data.
+
+
+---
+
+# Linear discriminant analysis (LDA) when $p=1$
+
+
+* Assume there is only one predictor $X$ ($p=1$).
+
+* Class conditional distributions $f_k(X)$ are assumed normal (Gaussian) for $k=1,\ldots,K$, that is
+$$f_k(x) = \frac{1}{\sqrt{2\pi}\sigma_k} e^{-\frac{1}{2}\big(\frac{x-\mu_k}{\sigma_k}\big)^2} $$
+has parameters $\mu_k$ (mean) and $\sigma_k$ (standard deviation).
+
+
+* With LDA we assume that all of the classes have the _same standard deviation_ $\sigma_k = \sigma$.
+
+* In addition we have prior class probabilites $\pi_k=\text{Pr}(Y=k)$, so that $\sum_{k=1}^K \pi_k=1$.
+
+---
+
+We can insert the expression for each class distribution into Bayes formula to obtain the posterior probability $p_k(x) = \text{Pr}(Y = k | X = x)$
+$$p_k(x) = \frac{f_k({\bf x}) \pi_k}{f({\bf x})}=\frac{\pi_k \frac{1}{\sqrt{2\pi}\sigma} e^{-\frac{1}{2}\big(\frac{x-\mu_k}{\sigma}\big)^2}}{\sum_{l=1}^K \pi_l \frac{1}{\sqrt{2\pi}\sigma} e^{-\frac{1}{2}\big(\frac{x-\mu_l}{\sigma}\big)^2}} \ .$$
 
 Our rule is to classify to the class for which $p_k(x)$ is largest. 
 
-It can be shown that this is equivalent to assigning $x$ to the class with the largest *discriminant score* $\delta_k(x)$:
+---
+
+
+Taking logs, and discarding terms that do not
+depend on $k$, we see that this is equivalent to assigning $x$ to the
+class with the largest *discriminant score* $\delta_k(x)$:
+
 $$\delta_k(x) = x\cdot \frac{\mu_k}{\sigma^2} - \frac{\mu_k^2}{2 \sigma^2}+\log(\pi_k).$$
-This decision boundaries between the classes are *linear* in $x$. 
+
+* This decision boundaries between the classes are *linear* in $x$. 
+
+* For $K=2$ classes and $\pi_1=\pi_2$, the decision boundary is at
+
+$$x = \frac{\mu_1+ \mu_2}{2} \ .$$
+
+(Show this by setting $\delta_1(x)=\delta_2(x)$ and resolving for $x$.)
+
+---
+
+### Back to our example
 
 
-**Q:** So, what do we need to use this result in practice?
+$$X_{\text{green}}\sim \mathcal{N}(-2, 1.5^2) \text{ and }
+X_{\text{orange}}\sim \mathcal{N}(2, 1.5^2) $$
+
+```{r gauss3, echo=FALSE, fig.width=4, fig.height=3,fig.align = "center",out.width='60%'}
+library(ggplot2)
+library(ggpubr)
+x = seq(-6, 6, by = 0.01)
+n = length(x)
+y1 = dnorm(x, mean = -2, sd=1.5)
+y2 = dnorm(x, mean= 2, sd=1.5)
+
+XY = data.frame(x, y1, y2)
+ggplot(XY)+geom_line(aes(x=x, y=0.5*y1), col="darkgreen")+geom_line(aes(x=x, y=0.5*y2), col="orange")+geom_vline(xintercept=0, linetype="dashed")+ annotate("text", x = 1.7, y = 0.175, parse=TRUE, label = as.character(expression(paste(pi[1], "=", pi[2], "=", 0.5))))+labs(y=NULL)
+```
+
+
+
+* Where is the decision boundary? 
+
+* How can we calculate the error rate?
+
+* Is it possible to construct a classifier and it has a lower error rate than the Bayes error rate?
+
+---
+
+```{r gauss4, echo=FALSE, fig.width=4, fig.height=3,fig.align = "center",out.width='60%'}
+taildnorm=function(x,upper,lower,mean,sd,faktor)
+{ 
+  res=faktor*dnorm(x,mean=mean,sd=sd)
+  res[x<lower]=0
+  res[x>upper]=0
+  return(res)
+}
+
+gg=ggplot(XY)+geom_line(aes(x=x, y=0.5*y1), col="darkgreen")+geom_line(aes(x=x, y=0.5*y2), col="orange")+geom_vline(xintercept=0, linetype="dashed")+ annotate("text", x = 1.7, y = 0.175, parse=TRUE, label = as.character(expression(paste(pi[1], "=", pi[2], "=", 0.5))))+labs(y=NULL)
+gg+stat_function(fun=taildnorm,geom='area',fill="lightgreen",alpha=0.5,args=list(upper=6,lower=0,mean=-2,sd=1.5,faktor=0.5))+stat_function(fun=taildnorm,geom='area',fill="orange",alpha=0.5,args=list(upper=0,lower=-6,mean=2,sd=1.5,faktor=0.5))
+```
+
+* The Bayes decision boundary is at $x=0$, and we would make a (Bayes) error of `round(2*0.5*pnorm(0,2,1.5))`=`r round(2*0.5*pnorm(0,2,1.5),2)`.
+
+* The Bayes classifier has the lowest test error rate.
+
+
+
+
+---
+
+\vspace{2mm}
+
+In the above example we knew the true distributions $p_k(X)$ and the priors $\pi_k$. But typically we don't know these parameters, we only have the training data.
+
+Idea: we simply estimate the parameters and plug them into the rule.
+
+
 
 ---
 
 ## Parameter estimators
 
-In real life situations we will not know the prior probabilities, the class mean or standard deviation=need parameter estimators.
+\vspace{2mm}
+
+
 
 * Prior probability for class $k$ is  (often) estimated by taking the fraction of observations $n_k$ (out of $n$) coming from class $k$: $\hat{\pi}_k = \frac{n_k}{n}.$
 
@@ -1069,23 +1183,15 @@ $$\hat{\mu}_k = \frac{1}{n_k}\sum_{i:y_i=k} x_i.$$
 $$\hat{\sigma}^2=\frac{1}{n-K}\sum_{k=1}^K \sum_{i: y_i=k} (x_i-\hat{\mu}_k)^2 = \sum_{k=1}^K \frac{n_k - 1}{n - K} \cdot \hat{\sigma}_k^2.$$
 $\hat{\sigma}_k$: estimated standard deviation of all observations from class $k$.
 
----
 
-## How would the estimation affect our misclassification rate?
-
-If $\mu_1=-2$, $\mu_2=2$, $\sigma=1.5$, $\pi_1=\pi_2=0.5$ we found that the class boundary is at 0 and the Bayes error is `round(2*0.5*pnorm(0,2,1.5))`=`r round(2*0.5*pnorm(0,2,1.5),2)`.
-
-But, in a real life situation 
-
-* we estimate the class boundary
-* and we do not know the true distribution for the classes.
-
-How can we then estimate the goodness of our estimator?
+**How can we then estimate the goodness of our estimator?**
 
 ---
 
 1. Use the training set to estimate parameters and class boundary:
 2. Use the test set to estimate misclassification rate.
+
+Simulate data and use training data to estimate $\mu_k$ and $\hat\sigma^2$:
 
 \footnotesize
 ```{r}
@@ -1094,48 +1200,49 @@ n1train=rbinom(1,n,pi1);n2train=n-n1train
 n1test=rbinom(1,n,pi1);n2test=n-n1test
 train1=rnorm(n1train,mu1,sigma);train2=rnorm(n2train,mu2,sigma)
 test1=rnorm(n1test,mu1,sigma);test2=rnorm(n2test,mu2,sigma)
-sigma2.1=var(train1);sigma2.2=var(train2)
-estsigma2=((n1train-1)*sigma2.1+(n2train-1)*sigma2.2)/(n-2)
+var2.1=var(train1);var2.2=var(train2)
+var.pool=((n1train-1)*var2.1+(n2train-1)*var2.2)/(n-2)
+```
 
+---
+
+Then set
+
+$$\hat\delta_1(x) = \hat\delta_2(x)$$
+
+and resolve for $x$ to obtain a decision rule (boundary). 
+
+\vspace{2mm}
+Todo: Verify that the following code will give you the training and test error rates:
+
+\scriptsize
+
+```{r}
 rule=0.5*(mean(train1)+mean(train2))+
-  estsigma2*(log(n2train/n)-log(n1train/n))/(mean(train1)-mean(train2))
+  var.pool*(log(n2train/n)-log(n1train/n))/(mean(train1)-mean(train2))
 
 c((sum(train1>rule)+sum(train2<rule))/n, (sum(test1>rule)+sum(test2<rule))/n)
 ```
 \normalsize
 
----
 
-
-## Training error rate 
-
-the proportion of mistakes that are made if we apply classifier $\hat{f}$ to the training observations, i.e. $\hat{y}_i=\hat{f}(x_i)$. $$\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i).$$
-Here I is the indicator function (to give our 0/1 loss) which is defined as: $$\text{I}(a\neq\hat{a}) = \begin{cases} 1 \text{ if } a \neq \hat{a} \\ 0 \text{ else } \end{cases}$$
-The indicator function counts the number of times our model has made a wrong classification. The training error rate is the fraction of misclassifications made on our training set. 
-
-A very low training error rate may imply overfitting.
-
----
-
-## Test error rate
-
-Here the fraction of misclassifications is calculated when our model is applied on a test set. From what we have learned about regression we can deduct that this gives a better indication of the true performance of the classifier (than the training error).
-$$\text{Ave}(I(y_0\neq \hat{y}_0))$$
-where the average is over all the test observations $(x_0,y_0)$.
-
-We assume that a _good_ classifier is a classifier that has a _low_ test error.
+This is a rather good performance, compared to the minimal Bayes error rate. But keep in mind that we LDA classifier relies on the Normal assumption, and that $\sigma_k=\sigma$ for all classes is assumed.
 
 ---
 
 ## The confusion matrix
 
-The confusion matrix is a table that can show the performance of classifier, given that the true values are known. 
+\vspace{2mm}
 
-We can make a confusion matrix from the training or test set, but will in most cases do so for the test set only.
+* The confusion matrix is a table that can show the performance of classifier, given that the true values are known. 
 
-The rows represent the true classes, while the columns represent the predicted classes. Inside the table we have counts (just labelled "correct" and "wrong" below - but should be numbers).
-The sum of the diagonal is the total number of correct classifications. The sum of all elements off the diagonal is the total number of misclassifications.
+* We can make a confusion matrix from the training or test set, but will in most cases do so for the test set only.
 
+* The rows represent the true classes, while the columns represent the predicted classes. Inside the table we have counts (just labelled "correct" and "wrong" below - but should be numbers).
+
+* The sum of the diagonal is the total number of correct classifications. The sum of all elements off the diagonal is the total number of misclassifications.
+
+\begin{center}
 ```{r, echo=FALSE, warning=FALSE}
 library(knitr)
 library(kableExtra)
@@ -1149,7 +1256,7 @@ row5 = c("True K", "wrong", "wrong","...", "correct")
 
 kable(rbind(row1, row2, row3,row4,row5), format=whichformat,row.names=FALSE)
 ```
-
+\end{center}
 
 ---
 
@@ -1174,7 +1281,7 @@ $$\delta_k(x) = {\bf x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_k - \frac{1}{2}
 
 Some details on the derivation of the discriminant function - when $K=2$ classes, and the classes are denoted $0$ and $1$
 
-$$P(Y=0 | X={\bf x}) = P(Y=1 | X={\bf x})$$
+$$\text{Pr}(Y=0 | X={\bf x}) = \text{Pr}(Y=1 | X={\bf x})$$
 $$\frac{\pi_0f_0(x)}{\pi_0f_0(x)+\pi_1f_1(x)} = \frac{\pi_1f_0(1)}{\pi_0f_0(x)+\pi_1f_1(x)} $$
 $$\pi_0 f_0({\bf x}) = \pi_1 f_1({\bf x})$$
 $$\pi_0\frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}
@@ -1501,13 +1608,13 @@ discriminants.
 
 Remember: 
 
-* The **diagnostic paradigm**: We focus on _directly_ estimating the posterior distribution for the classes $P(Y=k \mid X=x)$.
+* The **diagnostic paradigm**: We focus on _directly_ estimating the posterior distribution for the classes $\text{Pr}(Y=k \mid X=x)$.
 
 * The **sampling paradigm**: There focus is on estimating the prior probabilities for the classes and the class conditional distributions. We classify to the class with the maximal product $\pi_k f_k(x)$.
 
 Now we move to the _diagnostic paradigm_ and the $K$-nearest neighbor classifier.
 
-The $K$-nearest neighbour classifier estimates $P(Y=k \mid X=x)$ and classifies a new observation based on this estimated probability
+The $K$-nearest neighbour classifier estimates $\text{Pr}(Y=k \mid X=x)$ and classifies a new observation based on this estimated probability
 
 ---
 
@@ -1515,7 +1622,7 @@ The $K$-nearest neighbour classifier estimates $P(Y=k \mid X=x)$ and classifies 
 
 Consider a two-class example, and equal class prior probabilites. 
 
-A new observation $x_0$ will be classified to $A$ if $P(Y=A | X=x_0) > 0.5$ and to class $B$ otherwise.
+A new observation $x_0$ will be classified to $A$ if $\text{Pr}(Y=A | X=x_0) > 0.5$ and to class $B$ otherwise.
 
 * The figure below shows a plot of 100 observations from two classes $A$ (red dots) and $B$ (turquoise dots),
 * simulated from a bivariate normal distribution with mean vectors $\mu_A  = (1, 1)^T$ and $\mu_B = (3, 3)^T$ and a covariance matrix $\Sigma_A = \Sigma_B = \begin{pmatrix} 2\hspace{2mm}   0 \\ 0 \hspace{2mm} 2 \end{pmatrix}$.
@@ -1640,7 +1747,7 @@ The test set is used to evaluate the classification rule.
 ### Bayes classifier
 
 * Assume that we know or can estimate the probability that a new observation $x_0$ belongs to class $k$:
-$$p_k(x_0) = P(Y=k | X=x_0), \quad k = 1, 2, ... K.$$
+$$p_k(x_0) = \text{Pr}(Y=k | X=x_0), \quad k = 1, 2, ... K.$$
 This is the probability that $Y=k$ given the observation $x_0$. The _Bayes classifier assigns an observation to the most likely class_, given its predictor values.  
 
 ---
@@ -1650,9 +1757,9 @@ This is the probability that $Y=k$ given the observation $x_0$. The _Bayes class
 * The **sampling paradigm**: There focus is on estimating the prior probabilities for the classes and the class conditional distributions. We classify to the class with the maximal product $\pi_k f_k(x)$. We have looked
 at LDA (multivariate normal densities with equal covariance matrices) and QDA (ditto, but each class has it's own covariance matrix).
 
-* The **diagnostic paradigm**: We focus on _directly_ estimating the posterior distribution for the classes $P(Y=k \mid X=x)$. We have looked at the KNN-classifier in Part A.
+* The **diagnostic paradigm**: We focus on _directly_ estimating the posterior distribution for the classes $\text{Pr}(Y=k \mid X=x)$. We have looked at the KNN-classifier in Part A.
 
-Focus now is on _diagnostic paradigm_ = we estimates $P(Y=k \mid X=x)$ and classify a new observation based on this estimated probability.
+Focus now is on _diagnostic paradigm_ = we estimates $\text{Pr}(Y=k \mid X=x)$ and classify a new observation based on this estimated probability.
 
 But first, what about linear regression $Y$ on ${\bf x}$ to make a classification?
 
@@ -1841,7 +1948,7 @@ Compulsory Exercise 1, Problem 3a.
 
 ---
 
-\begin{align*}\log \frac{P(Y=0 |  X = x)}{P(Y=1 | X=x)} &= \log \frac{\pi_0}{\pi_1} + \log \frac{f_0(x)}{f_1(x)} \\ &= \log \frac{\pi_0}{\pi_1} -\frac{1}{2 \sigma^2}(x-\mu_0)^2 + \frac{1}{2 \sigma^2}(x-\mu_1)^2 \\ &= \log \frac{\pi_0}{\pi_1} - \frac{1}{2 \sigma^2} (x^2 - 2 x \mu_0 + \mu_0^2 - x^2 + 2 x \mu_1 - \mu_1^2) \\ &= \log \frac{\pi_0}{\pi_1} -\frac{1}{2 \sigma^2}(\mu_0^2 - \mu_1^2)+\frac{1}{\sigma^2}(\mu_0 - \mu_1) x \\ &= \alpha_0 + \alpha_1 x \end{align*}
+\begin{align*}\log \frac{\text{Pr}(Y=0 |  X = x)}{\text{Pr}(Y=1 | X=x)} &= \log \frac{\pi_0}{\pi_1} + \log \frac{f_0(x)}{f_1(x)} \\ &= \log \frac{\pi_0}{\pi_1} -\frac{1}{2 \sigma^2}(x-\mu_0)^2 + \frac{1}{2 \sigma^2}(x-\mu_1)^2 \\ &= \log \frac{\pi_0}{\pi_1} - \frac{1}{2 \sigma^2} (x^2 - 2 x \mu_0 + \mu_0^2 - x^2 + 2 x \mu_1 - \mu_1^2) \\ &= \log \frac{\pi_0}{\pi_1} -\frac{1}{2 \sigma^2}(\mu_0^2 - \mu_1^2)+\frac{1}{\sigma^2}(\mu_0 - \mu_1) x \\ &= \alpha_0 + \alpha_1 x \end{align*}
 
 The two methods can thus be written in the same form (linear in parameters and in $x$). The difference is in *how* the parameters $(\alpha_0,\alpha_1,\beta_0,\beta_1)$ are estimated.
 
@@ -1849,7 +1956,7 @@ The two methods can thus be written in the same form (linear in parameters and i
 
 ### LDA vs logistic regression
 
-* Logistic regression uses the diagnostic paradigm, and models the posterior distribution $P(Y=1|{\bf x})$.
+* Logistic regression uses the diagnostic paradigm, and models the posterior distribution $\text{Pr}(Y=1|{\bf x})$.
 * Linear discriminant analysis models the class conditional densities $f_k({\bf x})$.
 * The results are usually quite similar, but 
     + LDA is "more available" in the multi-class setting
@@ -1880,6 +1987,15 @@ The two methods can thus be written in the same form (linear in parameters and i
 
 * More on logistic regression from TMA4315 Generalized linear models H2018: [TMA4315M3: Binary regression](https://www.math.ntnu.no/emner/TMA4315/2018h/3BinReg.html)
 * [Videoes on YouTube by the authors of ISL, Chapter 4](https://www.youtube.com/playlist?list=PL5-da3qGB5IC4vaDba5ClatUmFppXLAhE)
+
+
+---
+
+## Want to learn more (theory) about logistic regression?
+
+* In TMA4315 Generalized linear models there are 3 weeks with binary regression - mainly logistic regression. 
+
+* The focus there is on all parts of the regression (not classification) with a mathematical focus on estimation, inference, model fit. 
 
 ---
 
