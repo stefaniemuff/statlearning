@@ -13,6 +13,7 @@ output:
     colortheme: "default"
     font: "serif"
 urlcolor: blue
+bibliography: refs.bib
 #header-includes: \usepackage{xcolor}
 
 ---
@@ -649,9 +650,9 @@ where $K$ is chosen as the _reference category_ (arbitrary). We would thus (join
 
 \vspace{1mm}
 
-* For $K$ classes $\mathcal{C} = \{c_1, c_2,\ldots, c_K\}$, with elements numbered as $1, 2, ..., K$, the probability that a new observation $x_0$ belongs to class $k$ is\footnote{This is the conditional probability: the probability that $Y=k$ given the observation $x_0$.}
+* Assume that we know or can estimate the probability that a new observation $x_0$ belongs to class $k$, for $K$ classes $\mathcal{C} = \{c_1, c_2,\ldots, c_K\}$, with elements numbered as $1, 2, ..., K$
 $$p_k(x_0) = \text{Pr}(Y=k | X=x_0), \quad k = 1, 2, ... K \ .$$
-
+This is the probability that $Y=k$ given the observation $x_0$. 
 \vspace{1mm}
 
 * The _Bayes classifier assigns an observation to the most likely class_, given its predictor values.  
@@ -679,7 +680,32 @@ $$p_k(x_0) = \text{Pr}(Y=k | X=x_0), \quad k = 1, 2, ... K \ .$$
 
 \vspace{2mm}
 
-To understand what test error means, we need to understand the _training error_ first.
+To understand what test error means, we need to understand the terms
+
+* _Training set_
+* _Test set_
+* _Training error_ 
+* _Test error_
+
+
+
+---
+
+ 
+
+**Training set:** observations (independent pairs) $\{(x_1, y_1), ..., (x_n, y_n)\}$ where the response variable $Y$ is _qualitative_ and labelled $1, 2, ..., K$.
+
+The training set is used to construct the classification rule (by estimating parameters in class densities or posterior probabilites).
+
+\vspace{2mm}
+
+**Test set:** observations (independent pairs), same format as the training set.
+
+The test set is used to evaluate the classification rule.
+
+\vspace{2mm}
+
+**Loss function:** The misclassifications are given the loss 1 and the correct classifications loss 0 - this is called _0/1-loss_. 
 
 ---
 
@@ -709,27 +735,7 @@ where the average is over all the test observations $(x_0,y_0)$.
 
 * We assume that a _good_ classifier is a classifier that has a _low_ test error.
 
----
 
-## Training error rate 
-
-* the proportion of mistakes that are made if we apply classifier $\hat{f}$ to the training observations, i.e. $\hat{y}_i=\hat{f}(x_i)$. 
-$$\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i), $$ 
-where  I is the indicator function (to give our 0/1 loss) which is defined as: $$\text{I}(a\neq\hat{a}) = \begin{cases} 1 \text{ if } a \neq \hat{a} \\ 0 \text{ else } \end{cases}$$
-
-* The indicator function counts the number of times our model has made a wrong classification. The training error rate is the fraction of misclassifications made on our training set. 
-
-* A very low training error rate may imply overfitting.
-
----
-
-## Test error rate
-
-* Here the fraction of misclassifications is calculated when our model is applied on a test set. From what we have learned about regression we can deduct that this gives a better indication of the true performance of the classifier (than the training error)
-$$\text{Ave}(I(y_0\neq \hat{y}_0)) \ ,$$
-where the average is over all the test observations $(x_0,y_0)$.
-
-* We assume that a _good_ classifier is a classifier that has a _low_ test error.
 
 ---
 
@@ -882,17 +888,17 @@ ggarrange(gg,gg3,gg10,gg150)
 ---
 
 ```{r knnerror1,echo=FALSE,fig.width=6,fig.height=4,fig.align="center",out.width="90%"}
-misclas=numeric(60)
+misclas=numeric(50)
 n = dim(df)[1]
 set.seed(9)
-for(k in 1:60){
+for(k in 1:50){
   knn = knn.cv(train = df[,-3], cl=df[,3], k=k)
   t = table(knn, df[,3])
   error = (n-sum(diag(t)))/n
   misclas[k] = error
 }
 
-knn_ds = data.frame(X1 = 1:60, X2 = misclas)
+knn_ds = data.frame(X1 = 1:50, X2 = misclas)
 gge = ggplot(knn_ds, aes(x = X1, y=X2)) + geom_point(color="blue") + geom_line()
 gge = gge + xlab("Number of neighbors K") + ylab("Test error")
 gge = gge + ggtitle("Cross-validated test error rate for KNN")+theme_minimal()
@@ -1267,15 +1273,27 @@ We will soon come back to the special case of two classes - where we may think o
 
 ---
 
-### Multivariate LDA (p>1)
+### Multivariate LDA ($p>1$)
 
-Linear discriminant analysis can be generalized to situations when $p>1$ covariates are used. The decision boundaries are still linear.
+\vspace{2mm}
 
-The multivariate normal distribution function:
+* So far: Only one variable $X$ ($p=1$) as predictor for $Y$.
+
+* LDA can be generalized to situations when $p>1$ covariates are used. The decision boundaries are still linear.
+
+* The multivariate normal distribution function:
 $$f(x) = \frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}\exp({-\frac{1}{2}({\bf x}-\boldsymbol\mu)^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol\mu)})$$
 
-This gives the following expression for the discriminant function:
+\centering
+![ISLR Figure 4.5](../../ISLR/Figures/Chapter4/4.5.png){width=70%}
+ 
+
+---
+
+* This gives the following expression for the discriminant function:
 $$\delta_k(x) = {\bf x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_k - \frac{1}{2}\boldsymbol\mu_k^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_k + \log \pi_k.$$
+
+* Note: $\delta_k(x) = c_{k0} + c_{k1}x_1 + \ldots + c_{kp}x_p$ is a linear function in $(x_1,\ldots ,x_p)$.
 
 ---
 
@@ -1286,16 +1304,76 @@ $$\frac{\pi_0f_0(x)}{\pi_0f_0(x)+\pi_1f_1(x)} = \frac{\pi_1f_0(1)}{\pi_0f_0(x)+\
 $$\pi_0 f_0({\bf x}) = \pi_1 f_1({\bf x})$$
 $$\pi_0\frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}
 e^{\frac{1}{2}({\bf x}-\boldsymbol{\mu}_0)^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol{\mu}_0)} =  \pi_1\frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}e^{\frac{1}{2}({\bf x}-\boldsymbol{\mu}_1)^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol{\mu}_1)} $$
-$$log(\pi_0) -\frac{1}{2}({\bf x}-\boldsymbol{\mu}_0)^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol{\mu}_0) = log(\pi_1) -\frac{1}{2}({\bf x}-\boldsymbol{\mu}_1)^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol{\mu}_1) $$
-$$log(\pi_0)  -\frac{1}{2}x^T\boldsymbol{\Sigma}^{-1}{\bf x} + {\bf x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 - \frac{1}{2}\boldsymbol{\mu}_0^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 = log(\pi_1)  -\frac{1}{2}{\bf x}^T\boldsymbol{\Sigma}^{-1}{\bf x} + {\bf x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 - \frac{1}{2}\boldsymbol{\mu}_1^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 $$
-$$log(\pi_0) + {\bf x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 - \frac{1}{2}\boldsymbol{\mu}_0^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 = log(\pi_1) + {\bf x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 - \frac{1}{2}\mu_1^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1$$
+$$\log(\pi_0) -\frac{1}{2}({\bf x}-\boldsymbol{\mu}_0)^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol{\mu}_0) = 
+\log(\pi_1) -\frac{1}{2}({\bf x}-\boldsymbol{\mu}_1)^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol{\mu}_1) $$
+$$\log(\pi_0)  -\frac{1}{2}{\bf x}^T\boldsymbol{\Sigma}^{-1}{\bf x} + {\bf x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 - \frac{1}{2}\boldsymbol{\mu}_0^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 = \log(\pi_1)  -\frac{1}{2}{\bf x}^T\boldsymbol{\Sigma}^{-1}{\bf x} + {\bf x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 - \frac{1}{2}\boldsymbol{\mu}_1^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 $$
+$$\log(\pi_0) + {\bf x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 - \frac{1}{2}\boldsymbol{\mu}_0^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 = 
+\log(\pi_1) + {\bf x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 - \frac{1}{2}\mu_1^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1$$
 $$\delta_0({\bf x}) = \delta_1({\bf x}) $$
+
+
+---
+
+## Back to our synthetic example
+
+* Consider again our simulateion from a bivariate normal distribution with mean vectors $\mu_A  = (1, 1)^T$, $\mu_B = (3, 3)^T$, and covariance matrix $\Sigma_A = \Sigma_B = \begin{pmatrix} 2\hspace{2mm}   0 \\ 0 \hspace{2mm} 2 \end{pmatrix}$.  
+
+* Aim: Use LDA to classify a new observation $x_0$ to class $A$ or $B$.
+
+
+```{r synthAB2, echo=FALSE, fig.width=6, fig.height=5,fig.align = "center",out.width='60%'}
+library(mvtnorm)
+library(MASS)
+library(ggplot2)
+
+set.seed(9)
+
+Sigma = matrix(c(2, 0, 0, 2), 2, 2)
+
+mu1 = c(1, 1)
+mu2 = c(3, 3)
+
+X1 = mvrnorm(100, mu=mu1, Sigma=Sigma)
+X2 = mvrnorm(100, mu=mu2, Sigma=Sigma)
+
+class = c(rep("A",100), rep("B", 100))
+class = as.factor(class)
+
+df = data.frame(rbind(X1, X2), class)
+
+ggplot(df, aes(x=X1, y=X2, color=class))+geom_point(size=3)+geom_abline(slope=-1,intercept=4)
+```
+
+---
+
+* Since the truth is known here we can calculate the Bayes boundary and the Bayes error. 
+
+* Since we have bivariate normal class distributions with common covariance matrix, the optimal boundary is given by LDA, with boundary given at $\delta_A({\bf x})=\delta_B({\bf x})$.
+
+<!-- where $\delta_A({\bf x})= {\bf x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A - \frac{1}{2}\boldsymbol\mu_A^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A + \log \pi_A$, and for $\delta_B({\bf x})$ with $\boldsymbol\mu_B$. -->
+
+$${\bf x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A - \frac{1}{2}\boldsymbol\mu_A^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A + \log \pi_A={\bf x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_B - \frac{1}{2}\boldsymbol\mu_B^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_B + \log \pi_B$$
+
+$${\bf x}^T\boldsymbol{\Sigma}^{-1}(\boldsymbol\mu_A -\boldsymbol\mu_B)-\frac{1}{2}\boldsymbol\mu_A^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A +\frac{1}{2}\boldsymbol\mu_B^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_B +\log \pi_A-\log \pi_B=0$$
+
+Inserting numerical values gives $-x_1-x_2+4=0$, thus a boundary with functional form $$x_2=4-x_1 \ .$$
+
+<!-- ```{r} -->
+<!-- muA=matrix(c(1,1),ncol=1) -->
+<!-- muB=matrix(c(3,3),ncol=1) -->
+<!-- sigmainv=diag(2)/2 -->
+<!-- sigmainv%*%(muA-muB) -->
+<!-- -0.5*t(muA)%*%sigmainv%*%muA+0.5*t(muB)%*%sigmainv%*%muB+log(0.5)-log(0.5) -->
+<!-- ``` -->
+
+<!-- The Bayes error can then be found by calculation of areas for the two class densities on the wrong side of the boundary, or by simulating many test data and counting misclassifications rates. -->
+
 
 ---
 
 **Estimators for p>1:**
 
-* Prior probability for class $k$ (unchanged from p=1): $\hat{\pi}_k = \frac{n_k}{n}.$
+* Prior probability for class $k$ (unchanged from $p=1$): $\hat{\pi}_k = \frac{n_k}{n}.$
 
 * The mean value for class $k$ is simply the sample mean of all observations from class $k$ (but now these are vectors):
 $$\hat{\boldsymbol{\mu}}_k = \frac{1}{n_k}\sum_{i:y_i=k} {\bf X}_i.$$
@@ -1308,38 +1386,54 @@ $$\hat{\boldsymbol{\Sigma}}= \sum_{k=1}^K \frac{n_k - 1}{n - K} \cdot \hat{\bold
 
 Optional: [Proof that the estimator $\hat{\boldsymbol{\Sigma}}_k$ is unbiased for each class (from TMA4267)](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/ProofMeanS.pdf). Proof for pooled version not provided.
 
+
+
 ---
 
 ## Posterior probabilites 
 
+\vspace{2mm}
+
 Sometimes the probability that an observation comes from a class $k$ is more interesting than the actual classification itself. These class probabilities can be estimated from the priors and class conditional distributions, or from the discriminant functions:
-\begin{align*}\hat{P}(Y=k | X=x)&=
+\begin{align*}\hat{P}(Y=k | X=\boldsymbol{x})&=
 \frac{\hat{\pi}_k \cdot \frac{1}{(2 \pi)^{p/2}|\hat{\boldsymbol{\Sigma}}|^{1/2}} \exp(-\frac{1}{2}
-({\bf x}-\hat{\boldsymbol\mu}_k)^T \hat{\boldsymbol{\Sigma}}^{-1}
-({\bf x}-\hat{\boldsymbol\mu}_k))}
+(\boldsymbol{x}-\hat{\boldsymbol\mu}_k)^T \hat{\boldsymbol{\Sigma}}^{-1}
+(\boldsymbol{x}-\hat{\boldsymbol\mu}_k))}
 {\sum_{l=1}^K \hat{\pi}_l 
 \frac{1}{(2 \pi)^{p/2}|\hat{\boldsymbol{\Sigma}}|^{1/2}}
 \exp(-\frac{1}{2}
-({\bf x}-\hat{\boldsymbol\mu}_l)^T 
+(\boldsymbol{x}-\hat{\boldsymbol\mu}_l)^T 
 \hat{\boldsymbol{\Sigma}}^{-1}
-({\bf x}-\hat{\boldsymbol\mu}_l))}\\
+(\boldsymbol{x}-\hat{\boldsymbol\mu}_l))}\\
 &=
-\frac{e^{\hat{\delta}_k(x)}}{\sum_{l=1}^K e^{\hat{\delta}_l(x)}}.\end{align*}
+\frac{e^{\hat{\delta}_k(\boldsymbol{x})}}{\sum_{l=1}^K e^{\hat{\delta}_l(\boldsymbol{x})}}.\end{align*}
 
 ---
 
 ## Quadratic Discriminant Analysis (QDA)
-In quadratic discriminant analysis we assume that the distributions of the classes is multivariate normal (Gaussian), but with covariance matrix $\boldsymbol{\Sigma}_k$ for each class.  
 
-The discriminant functions are now given by:
-\begin{align*} \delta_k(x) &= -\frac{1}{2}(x-\mu_k)^T \boldsymbol{\Sigma}_k^{-1}(x-\mu_k)-\frac{1}{2}\log |\boldsymbol{\Sigma}_k| + \log \pi_k \\ &= -\frac{1}{2} x^T \boldsymbol{\Sigma}_k^{-1}x + x^T \boldsymbol{\Sigma}_k^{-1}\mu_k - \frac{1}{2} \mu_k^T \boldsymbol{\Sigma}_k^{-1}\mu_k - \frac{1}{2}\log |\boldsymbol{\Sigma}_k | + \log \pi_k.\end{align*} 
-These decision boundaries are *quadratic* functions of $x$.
+* In LDA we assumed that $\boldsymbol{\Sigma}_k  = \boldsymbol{\Sigma}$ for all classes.
+
+* In QDA we allow different covariance matrices $\boldsymbol{\Sigma}_k$ for each class, while the predictors are still multivariate Gaussian
+
+$$X \sim N(\boldsymbol{\mu}_k, \boldsymbol{\Sigma}_k) \ .$$
+
+* The discriminant functions are now given by:
+\begin{align*} \delta_k({\boldsymbol x}) &= -\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu}_k)^T \boldsymbol{\Sigma}_k^{-1}({\boldsymbol x}-\boldsymbol{\mu}_k)-\frac{1}{2}\log |\boldsymbol{\Sigma}_k| + \log \pi_k \\ 
+&= -\frac{1}{2} {\boldsymbol x}^T \boldsymbol{\Sigma}_k^{-1}{\boldsymbol x} + {\boldsymbol x}^T \boldsymbol{\Sigma}_k^{-1}\boldsymbol{\mu}_k - \frac{1}{2} \boldsymbol{\mu}_k^T \boldsymbol{\Sigma}_k^{-1}\boldsymbol{\mu}_k - \frac{1}{2}\log |\boldsymbol{\Sigma}_k | + \log \pi_k.
+\end{align*} 
+
+* These decision boundaries are *quadratic* functions of ${\boldsymbol x}$.
 
 ---
 
 ## LDA vs QDA
 
-In QDA we are allowed for the covariance matrices to be different for the classes, but for LDA they are assumed to be the same, so QDA is more flexible than LDA.
+\vspace{2mm}
+
+QDA is more flexible than LDA, as it allows for group-specific covariance matrices. 
+
+\vspace{4mm}
 
 **Q:**
 
@@ -1366,23 +1460,20 @@ Therefore, LDA is less flexible than QDA and might therefore have much less vari
 
 ---
 
-## Naive Bayes (optional)
+## LDA vs QDA -- Illustration
 
-This is method that is popular when $p$ is large.
+Bayes (purple dashed), LDA (black dotted) and QDA (green solid) decision boundaries for the cases where $\boldsymbol{\Sigma}_1 = \boldsymbol{\Sigma}_2$ (left) and $\boldsymbol{\Sigma}_1 \neq \boldsymbol{\Sigma}_2$ (right).
 
-In Naive Bayes (Idiot's Bayes) we assume that each class density is the product of marginal densities - i.e. inputs are conditionally independent in each class.
-$$f_k(x)=\prod_{j=1}^p f_{kj}(x_j)$$
-This is generally not true, but it simplifies the estimation dramatically.
+\centering
+![ISLR Figure 4.9](../../ISLR/Figures/Chapter4/4.9.png){width=100%}
 
-The original naive Bayes used univariate normal marginal distributions, but generalizations can be made.
 
-Instead of estimating a full covariance matrix, only the diagonal elements are estimated.
-
-This method often produces good results, even though the joint pdf is not the product of the marginal pdf. This might be because we are not focussing on estimation of class pdfs, but class boundaries.
 
 ---
 
 ### Example: Which type of iris species?
+
+\vspace{2mm}
 
 The `iris` flower data set was introduced by the British statistician and biologist Ronald Fisher in 1936. 
 
@@ -1400,20 +1491,25 @@ knitr::include_graphics("iris.png")
 
 ## Example: Classification of iris plants
 
+\vspace{2mm}
+
 We will use `sepal width` and `sepal length` to build a classificator, here 50 observations from each class available.
 
+\scriptsize
 ```{r irisex, echo=showsolA, warning=FALSE, message=FALSE}
 attach(iris)
 library(class)
 library(MASS)
 library(ggplot2)
 library(dplyr)
-kable(head(iris),format=whichformat)
+head(iris)
 ```
 
 ---
 
-```{r,echo=showsolA}
+
+
+```{r iris1, echo=FALSE, fig.width=5.5, fig.height=4,fig.align = "center",out.width='100%'}
 iris0_plot = ggplot(iris, aes(x=Sepal.Width, y=Sepal.Length, 
                               color=Species))+geom_point(size=2.5)
 iris0_plot
@@ -1423,31 +1519,17 @@ iris0_plot
 
 ### Iris: LDA
 
-```{r,echo=TRUE,eval=TRUE}
-# reporting on parameter estimates
+\scriptsize
 
-grS=cbind(iris[iris$Species=="setosa",1:2])
-grVe=cbind(iris[iris$Species=="versicolor",1:2])
-grVi=cbind(iris[iris$Species=="virginica",1:2])
-nk=dim(grS)[1]
-apply(grS,2,mean)
-cS=cov(grS)
-apply(grVe,2,mean)
-cVe=cov(grVe)
-apply(grVi,2,mean)
-cVi=cov(grVi)
-C=(nk-1)*(cS+cVe+cVi)/(dim(iris)[1]-3)
-C
-eigen(C)
+```{r, echo=T}
+iris_lda = lda(Species~Sepal.Length+Sepal.Width, data=iris, prior=c(1,1,1)/3)
 ```
 
----
-
-```{r irislda, echo=FALSE,message=FALSE, warning=FALSE}
+```{r iris2, echo=FALSE, fig.width=5, fig.height=3.5,fig.align = "center",out.width='80%'}
 testgrid = expand.grid(Sepal.Length = seq(min(iris[,1]-0.2), max(iris[,1]+0.2), 
               by=0.05), Sepal.Width = seq(min(iris[,2]-0.2), max(iris[,2]+0.2), 
               by=0.05))
-iris_lda = lda(Species~Sepal.Length+Sepal.Width, data=iris, prior=c(1,1,1)/3)
+
 res = predict(object = iris_lda, newdata = testgrid)
 Species_lda = res$class
 postprobs=res$posterior
@@ -1456,7 +1538,7 @@ iris_lda_df = bind_rows(mutate(testgrid, Species_lda))
 iris_lda_df$Species_lda = as.factor(iris_lda_df$Species_lda)
 
 irislda_plot = iris0_plot + geom_point(aes(x = Sepal.Width, y=Sepal.Length, 
-                            colour=Species_lda), data=iris_lda_df, size=0.8)
+                            colour=Species_lda), data=iris_lda_df, size=0.5)
 irislda_plot
 ```
 
@@ -1465,8 +1547,14 @@ irislda_plot
 
 ### Iris: QDA
 
-```{r irisqda, echo=FALSE,message=FALSE, warning=FALSE}
+\scriptsize
+
+```{r, echo=T}
 iris_qda = qda(Species~Sepal.Length + Sepal.Width, data=iris, prior=c(1,1,1)/3)
+```
+
+```{r iris3, echo=FALSE, fig.width=5, fig.height=3.5,fig.align = "center",out.width='80%'}
+
 Species_qda = predict(object = iris_qda, newdata = testgrid)$class
 
 iris_qda_df = bind_rows(mutate(testgrid, Species_qda))
@@ -1475,7 +1563,7 @@ iris_qda_df$Species_qda = as.factor(iris_qda_df$Species_qda)
 gridprobs=
 
 irisqda_plot = iris0_plot + geom_point(aes(x = Sepal.Width, y=Sepal.Length, 
-                            colour=Species_qda), data=iris_qda_df, size=0.8)
+                            colour=Species_qda), data=iris_qda_df, size=0.5)
 irisqda_plot
 ```
 
@@ -1483,7 +1571,11 @@ irisqda_plot
 
 ### Iris: compare LDA and QDA
 
+\vspace{2mm}
+
 We now want to compare the predictive performance of our two classifiers. We do this by dividing the original `iris` data set, randomly, into train and test samples of equal size:
+
+\scriptsize
 
 ```{r iriserror, echo=TRUE,message=FALSE, warning=FALSE}
 set.seed(1)
@@ -1491,280 +1583,277 @@ train = sample(1:150, 75)
 
 iris_train = iris[train, ]
 iris_test = iris[-train, ]
+```
 
+\normalsize
+
+Run LDA and QDA on the same (!!) training set:
+
+\scriptsize
+
+```{r}
 iris_lda2 = lda(Species~Sepal.Length + Sepal.Width, 
+                data=iris_train, 
+                prior=c(1,1,1)/3)
+ 
+iris_qda2 = qda(Species~Sepal.Length + Sepal.Width, 
                 data=iris_train, 
                 prior=c(1,1,1)/3)
 ```
 
+
 ---
 
+LDA training error: $\frac{14}{75} =0.19$
+
+\scriptsize
+
+
 ```{r}
-# Training error
 table(predict(iris_lda2, newdata=iris_train)$class, 
       iris_train$Species)
-# Test error
+```
+
+\normalsize
+
+\vspace{2mm}
+
+
+LDA test error:  $\frac{19}{75} =0.26.$
+
+\scriptsize
+
+```{r}
 iris_lda2_predict = predict(iris_lda2, newdata=iris_test)
 table(iris_lda2_predict$class, iris$Species[-train])
 
 ```
 
----
-
-The LDA classifier has a training error rate of 15/75, that is 20 \%. When tested on a new set it correctly classified 24+13+23 times and misclassified 15 times. This gives a misclassification rate of
-$$\text{Test error}_\text{LDA}  = \frac{15}{75} =0.2.$$
-
-Using a different division into training and test set will give (small) changes to these numbers.
 
 ---
 
-## Iris: training and test error for QDA
+QDA training error: $\frac{13}{75} =0.17$.
 
-```{r iriserror2, message=FALSE, warning=FALSE}
-iris_qda2 = qda(Species~Sepal.Length + Sepal.Width, data=iris_train, 
-                prior=c(1,1,1)/3)
-```
+\scriptsize
 
-Important: use the same division into training and test set for methods we want to compare.
-
----
 
 ```{r}
-# Training error
 table(predict(iris_qda2, newdata=iris_train)$class, iris_train$Species)
-# Test error
+```
+
+\normalsize
+
+\vspace{2mm}
+
+
+QDA test error:  $\frac{24}{75}=0.32$.
+
+\scriptsize
+
+```{r}
 iris_qda2_predict = predict(iris_qda2, newdata=iris_test)
 table(iris_qda2_predict$class, iris$Species[-train])
 ```
 
 ---
 
-The QDA classifier has a training error rate of $16\%$. When tested on a new set, the misclassification error rate was
-$$\text{Test error}_\text{QDA}  = \frac{18}{75}=.24$$
 
-The LDA classifier has given the smallest test error for classifying iris plants based on sepal width and sepal length for our test set and should be preferred in this case.
+
+**Result**: The LDA classifier has given the smallest test error for classifying iris plants based on sepal width and sepal length for our test set and should be preferred in this case.
+
+\vspace{2mm}
+
+But:
 
 1. Would another division of the data into training and test set give the same conclusion (that LDA is better than QDA for this data set)? (A: Not necessarily, but probably.)
+    + We will look into other choice than dividing into one training and one test set in Module 5 (crossvalidation).
 
-We will look into other choice than dividing into one training and one test set in Module 5 (crossvalidation).
+\vspace{2mm}
 
 2. What about the other two covariates? Would adding them to the model (4 covariates) give a better classification rule? (A: Probably. Try if you want.)
 
----
+<!-- --- -->
 
-## Fishers idea (Optional)
+<!-- ## Fishers idea (Optional) -->
 
-In 1936 R. A. Fisher developed LDA. 
+<!-- In 1936 R. A. Fisher developed LDA.  -->
 
-* His aim was to find a linear combination of the explanatory variables which _maximized the ratio of its between class to within class variance_.
-* In this way the observations are transformed so that they are separated as much as possible.
-* His approach has the advantage that it is suited for visual inspection
-and graphical description , it ``separates'' the populations.
+<!-- * His aim was to find a linear combination of the explanatory variables which _maximized the ratio of its between class to within class variance_. -->
+<!-- * In this way the observations are transformed so that they are separated as much as possible. -->
+<!-- * His approach has the advantage that it is suited for visual inspection -->
+<!-- and graphical description, it ``separates'' the populations. -->
 
-Let the between-class variance be denoted
-$\boldsymbol{B}=\sum_{m=1}^{M}(\boldsymbol{\mu}_{m}-
-\bar{\boldsymbol{\mu}})(\boldsymbol{\mu}_{m}-\bar{\boldsymbol{\mu}})^{T}$, where
-$\boldsymbol{\mu}_{m}$ denotes the mean of class $\omega_{m}$ and $\bar{\boldsymbol{\mu}}$ the overall
-mean. 
+<!-- Let the between-class variance be denoted -->
+<!-- $\boldsymbol{B}=\sum_{m=1}^{M}(\boldsymbol{\mu}_{m}- -->
+<!-- \bar{\boldsymbol{\mu}})(\boldsymbol{\mu}_{m}-\bar{\boldsymbol{\mu}})^{T}$, where -->
+<!-- $\boldsymbol{\mu}_{m}$ denotes the mean of class $\omega_{m}$ and $\bar{\boldsymbol{\mu}}$ the overall -->
+<!-- mean.  -->
 
-The within-class variance is assumed equal for all classes and is
-denoted $\boldsymbol{\Sigma}$ ($\boldsymbol{\Sigma}$ is assumed to have full rank).
+<!-- The within-class variance is assumed equal for all classes and is -->
+<!-- denoted $\boldsymbol{\Sigma}$ ($\boldsymbol{\Sigma}$ is assumed to have full rank). -->
 
----
+<!-- --- -->
 
-The linear combination $\boldsymbol{l}^{T}\boldsymbol{X}$ that maximize 
-${\boldsymbol{l}^{T}\boldsymbol{B}\boldsymbol{l}}/{\boldsymbol{l}^{T}\boldsymbol{\Sigma}\boldsymbol{l}}$ under the
-constraint that $\boldsymbol{l}^{T}\boldsymbol{\Sigma}\boldsymbol{l}=1$ is found to be the scaled
-eigenvectors of $\boldsymbol{\Sigma}^{-1}\boldsymbol{B}$ corresponding to the nonzero
-eigenvalues of $\boldsymbol{\Sigma}^{-1}\boldsymbol{B}$.
-The eigenvector corresponding to
-the largest eigenvalue defines the first discriminant
-$\boldsymbol{l}_{1}^{T}\boldsymbol{X}$. The second linear discriminant
-$\boldsymbol{l}_{2}^{T}\boldsymbol{X}$ is constructed from 
-the eigenvector corresponding to the second
-largest eigenvalue and so on. (We also have
-$Cov(\boldsymbol{l}_{j}^{T}\boldsymbol{X},\boldsymbol{l}_{i}^{T}\boldsymbol{X})=0$ for $i \ne j$ and
-$Var(\boldsymbol{l}_{j}^{T}\boldsymbol{X})=1$.) 
+<!-- The linear combination $\boldsymbol{l}^{T}\boldsymbol{X}$ that maximize  -->
+<!-- ${\boldsymbol{l}^{T}\boldsymbol{B}\boldsymbol{l}}/{\boldsymbol{l}^{T}\boldsymbol{\Sigma}\boldsymbol{l}}$ under the -->
+<!-- constraint that $\boldsymbol{l}^{T}\boldsymbol{\Sigma}\boldsymbol{l}=1$ is found to be the scaled -->
+<!-- eigenvectors of $\boldsymbol{\Sigma}^{-1}\boldsymbol{B}$ corresponding to the nonzero -->
+<!-- eigenvalues of $\boldsymbol{\Sigma}^{-1}\boldsymbol{B}$. -->
+<!-- The eigenvector corresponding to -->
+<!-- the largest eigenvalue defines the first discriminant -->
+<!-- $\boldsymbol{l}_{1}^{T}\boldsymbol{X}$. The second linear discriminant -->
+<!-- $\boldsymbol{l}_{2}^{T}\boldsymbol{X}$ is constructed from  -->
+<!-- the eigenvector corresponding to the second -->
+<!-- largest eigenvalue and so on. (We also have -->
+<!-- $Cov(\boldsymbol{l}_{j}^{T}\boldsymbol{X},\boldsymbol{l}_{i}^{T}\boldsymbol{X})=0$ for $i \ne j$ and -->
+<!-- $Var(\boldsymbol{l}_{j}^{T}\boldsymbol{X})=1$.)  -->
 
----
+<!-- --- -->
 
-The number of linear discriminants
-equals the number of nonzero eigenvalues. Observations are assigned to the class of the
-nearest (Euclidean distance) class mean in the discriminant
-space. 
+<!-- The number of linear discriminants -->
+<!-- equals the number of nonzero eigenvalues. Observations are assigned to the class of the -->
+<!-- nearest (Euclidean distance) class mean in the discriminant -->
+<!-- space.  -->
 
-This equals classification to the nearest Mahalanobis distance
-population mean in the input space. Again, the parameters
-$\boldsymbol{\mu}_{i}$ and $\boldsymbol{\Sigma}$ and the between-class variance
-$\boldsymbol{B}$ are usually unavailable. Replacing
-the parameters by estimates from the training set leads to Fisher's
-sample linear 
-discriminants. 
- 
----
+<!-- This equals classification to the nearest Mahalanobis distance -->
+<!-- population mean in the input space. Again, the parameters -->
+<!-- $\boldsymbol{\mu}_{i}$ and $\boldsymbol{\Sigma}$ and the between-class variance -->
+<!-- $\boldsymbol{B}$ are usually unavailable. Replacing -->
+<!-- the parameters by estimates from the training set leads to Fisher's -->
+<!-- sample linear  -->
+<!-- discriminants.  -->
 
-
-# Diagnostic paradigm
-
-Remember: 
-
-* The **diagnostic paradigm**: We focus on _directly_ estimating the posterior distribution for the classes $\text{Pr}(Y=k \mid X=x)$.
-
-* The **sampling paradigm**: There focus is on estimating the prior probabilities for the classes and the class conditional distributions. We classify to the class with the maximal product $\pi_k f_k(x)$.
-
-Now we move to the _diagnostic paradigm_ and the $K$-nearest neighbor classifier.
-
-The $K$-nearest neighbour classifier estimates $\text{Pr}(Y=k \mid X=x)$ and classifies a new observation based on this estimated probability
 
 ---
 
-## Synthetic example for KNN classification
+## Different forms of discriminant analysis
 
-Consider a two-class example, and equal class prior probabilites. 
+* LDA
 
-A new observation $x_0$ will be classified to $A$ if $\text{Pr}(Y=A | X=x_0) > 0.5$ and to class $B$ otherwise.
+* QDA
 
-* The figure below shows a plot of 100 observations from two classes $A$ (red dots) and $B$ (turquoise dots),
-* simulated from a bivariate normal distribution with mean vectors $\mu_A  = (1, 1)^T$ and $\mu_B = (3, 3)^T$ and a covariance matrix $\Sigma_A = \Sigma_B = \begin{pmatrix} 2\hspace{2mm}   0 \\ 0 \hspace{2mm} 2 \end{pmatrix}$.
-* We want to find a rule to classify a new observation to class $A$ or $B$.
+* Naive Bayes ("Idiot's Bayes"): Assume that each class density is the product of marginal densities - i.e. inputs are conditionally independent in each class
+$$f_k(x)=\prod_{j=1}^p f_{kj}(x_j) \ .$$
+This is generally not true, but it simplifies the estimation dramatically.
 
----
-
-```{r synthAB, echo=FALSE}
-library(mvtnorm)
-library(MASS)
-library(ggplot2)
-
-set.seed(9)
-
-Sigma = matrix(c(2, 0, 0, 2), 2, 2)
-
-mu1 = c(1, 1)
-mu2 = c(3, 3)
-
-X1 = mvrnorm(100, mu=mu1, Sigma=Sigma)
-X2 = mvrnorm(100, mu=mu2, Sigma=Sigma)
-
-class = c(rep("A",100), rep("B", 100))
-class = as.factor(class)
-
-df = data.frame(rbind(X1, X2), class)
-
-ggplot(df, aes(x=X1, y=X2, color=class))+geom_point(size=3)+geom_abline(slope=-1,intercept=4)
-```
+* Other forms by proposing specific density models for
+$f_k(x)$, including nonparametric approaches.
 
 ---
 
-**Remark:** since the truth is known here we can calculate the Bayes boundary and the Bayes error. 
 
-Since we have bivariate normal class distributions with common covariance matrix, the optimal boundary is given by LDA. The boundary will be at $\delta_A({\bf x})=\delta_B({\bf x})$, where $\delta_A({\bf x})= {\bf x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A - \frac{1}{2}\boldsymbol\mu_A^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A + \log \pi_A$, and for $\delta_B({\bf x})$ with $\boldsymbol\mu_B$.
+## Naive Bayes 
 
-$${\bf x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A - \frac{1}{2}\boldsymbol\mu_A^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A + \log \pi_A={\bf x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_B - \frac{1}{2}\boldsymbol\mu_B^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_B + \log \pi_B$$
+* Naive Bayes is method that is popular when $p$ is large.
 
-$${\bf x}^T\boldsymbol{\Sigma}^{-1}(\boldsymbol\mu_A -\boldsymbol\mu_B)-\frac{1}{2}\boldsymbol\mu_A^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A +\frac{1}{2}\boldsymbol\mu_B^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_B +\log \pi_A-\log \pi_B=0$$
 
-Inserting numerical values gives:
-$-x_1-x_2+4=0$, and boundary $x_2=4-x_1$.
+* The _original naive Bayes_: univariate normal marginal distributions. Consequently
+$$\delta_k (x) \propto \log \left[ \pi_i \prod_{j=1}^p f_{kj}(x_j) \right] = - \frac{1}{2} \sum_{j=1}^p \frac{(x_j - \mu_{kj})^2}{\sigma_{kj}^2} + \log(\pi_k) \ , $$
+thus $\boldsymbol{\Sigma}_k$ is assumed diagonal, and only the diagonal elements are estimated.
 
-```{r}
-muA=matrix(c(1,1),ncol=1)
-muB=matrix(c(3,3),ncol=1)
-sigmainv=diag(2)/2
-sigmainv%*%(muA-muB)
--0.5*t(muA)%*%sigmainv%*%muA+0.5*t(muB)%*%sigmainv%*%muB+log(0.5)-log(0.5)
-```
+* Arbitraty generalizations can be made. For example, mixed features (qualitative and quantitative predictors).
 
-The Bayes error can then be found by calculation of areas for the two class densities on the wrong side of the boundary, or by simulating many test data and counting misclassifications rates.
+* This method often produces good results, even though the joint pdf is not the product of the marginal pdf. This might be because we are not focussing on estimation of class pdfs, but class boundaries.
+
+
+--- 
+
+## Summary of Classification Methods
+
+* Logistic regression
+
+* Linear discriminant analysis
+
+* Quadratic discriminant analysis
+
+* Naive Bayes
+
+* KNN
+
+\vspace{2mm}
 
 ---
 
-# K-nearest neighbour classifier
+# Which classification method is the best?
 
-(warning: K is not the number of classes, but neighbours...)
+## Advantages of discriminant analysis
 
-The $K$-nearest neighbour classifier (KNN) works in the following way: 
+* Discriminant analysis is more stable than logistic regression when the classes are well-separated.
+* Discriminant analysis is more stable than logistic regression if the number of observations $n$ is small and the distribution of the predictors $X$ is approximately (multivariate) normal.
 
-* Given a new observation $x_0$ it searches for the $K$ points in our training data that are closest to it. 
-* These points make up the neighborhood of $x_0$, $\mathcal{N}_0$. 
-* The point $x_0$ is classified by taking a majority vote of the neighbors. 
-* This means that KNN estimate the posterior class probability as:
-$$\hat{P}(Y=j | X = x_0) = \frac{1}{K} \sum_{i \in \mathcal{N}_0} I(y_i = j).$$
+---
+
+## Linearity
+
+\vspace{2mm}
+
+Assume a binary classification problem with one covariate. 
+
+* Recall that logistic regression can be written:
+$$\log \Big ( \frac{p(x)}{1-p(x)}\Big ) = \beta_0 + \beta_1 x.$$
+
+* For a two-class problem, one can show that for LDA
+$$\log\left(\frac{p_1(x)}{1-p_1(x)}\right) = \log\left(\frac{p_1(x)}{p_2(x)}\right) = c_0 + c_1 x_1 \ ,$$
+thus the same linear form.
+The difference is in how the parameters are estimated.
+
 
 
 
 ---
 
-# What did we cover today - and what is left?
+### LDA vs logistic regression
 
-* What is classification and discrimination?
-* What is the Bayes classifier and the Bayes risk?
-* What is the sampling paradigm and what is modelled then?
-* Linear discriminant analysis: model, method, results.
-* Quadratic discriminant analysis: model, method, results.
-* Naive Bayes - when and why?
-* That is the diagnostic paradigm and what is modelled then?
-* KNN - majority vote or estimate posterior class probability?
+* Logistic regression uses the conditional likelihood based on
+$\text{Pr}(Y \mid X)$.
 
-Part B: more on methods that model and estimate the posterior class probabilites.
+* LDA uses the full likelihood based on $\text{Pr}(X,Y)$.
 
----
+* Despite these differences, in practice the results are often
+very similar\footnote{logistic regression can also fit quadratic boundaries
+like QDA, by explicitly including quadratic terms in the model.}, but
 
+    + LDA is "more available" in the multi-class setting
+    + if the class conditional distributions are multivariate normal then LDA (or QDA) is preferred
+    + if the class conditional distributions are far from multivariate normal then logistic regression is preferred
+    + in medicine for two-class problems logistic regression is often preferred (for interpretability) and (always) together with ROC and AUC (for model comparison).
+    
+### and KNN?
 
-
-# So far - and moving on
-
-\large
-
-**<a id="PartB">Part B: Modelling posterior probabilites, ROC/AUC and comparisons</a>**
-
-\normalsize
-
-## What to remember from Part A?
-
-### Aim: Discrimination and classification
-
-Today - data from:
-
-* Default: will a new customer `default` or not based on his/her status (`student` or not), `balance` and `income`?
-* South African heart disease data set: classify to coronary heart disease or not, based on 9 covariates.
+* KNN is used when the class boundaries are non-linear.
 
 ---
 
-### Notation
+# So: Which classification method is the best?
 
-**Training set:** observations (independent pairs) $\{(x_1, y_1), ..., (x_n, y_n)\}$ where the response variable $Y$ is _qualitative_ and labelled $1, 2, ..., K$.
+\vspace{2mm}
 
-The training set is used to construct the classification rule (by estimating parameters in class densities or posterior probabilites).
+The answer is: **it depends!**
 
-**Test set:** observations (independent pairs), same format as the training set.
+* Logistic regression is very popular for classification,
+especially when $K = 2$.
 
-The test set is used to evaluate the classification rule.
+* LDA is useful when $n$ is small, or the classes are well
+separated, and Gaussian assumptions are reasonable. Also
+when $K > 2$.
 
-**Loss function:**: The misclassifications are given the loss 1 and the correct classifications loss 0 - this is called _0/1-loss_. 
+* Naive Bayes is useful when $p$ is very large.
+
+* KNN is completely different, as it makes no assumptions about the decision boundary nor the distribution of the variables (nonparametric). It is expected to work better than LDA and logistic regression when boundary is very non-linear.
+
+\vspace{2mm}
+Please read Section 4.5 of our coursebook [@james.etal].
+
+
+
 
 ---
 
-### Bayes classifier
-
-* Assume that we know or can estimate the probability that a new observation $x_0$ belongs to class $k$:
-$$p_k(x_0) = \text{Pr}(Y=k | X=x_0), \quad k = 1, 2, ... K.$$
-This is the probability that $Y=k$ given the observation $x_0$. The _Bayes classifier assigns an observation to the most likely class_, given its predictor values.  
-
----
-
-### Two paradigms
-
-* The **sampling paradigm**: There focus is on estimating the prior probabilities for the classes and the class conditional distributions. We classify to the class with the maximal product $\pi_k f_k(x)$. We have looked
-at LDA (multivariate normal densities with equal covariance matrices) and QDA (ditto, but each class has it's own covariance matrix).
-
-* The **diagnostic paradigm**: We focus on _directly_ estimating the posterior distribution for the classes $\text{Pr}(Y=k \mid X=x)$. We have looked at the KNN-classifier in Part A.
-
-Focus now is on _diagnostic paradigm_ = we estimates $\text{Pr}(Y=k \mid X=x)$ and classify a new observation based on this estimated probability.
-
-But first, what about linear regression $Y$ on ${\bf x}$ to make a classification?
+\vspace{2mm}
+Todo: Include exercise(s) that compares LDA, QDA, logreg and KNN!
 
 
-
+Compulsory Exercise 1, Problem 3a.
 
 
 ---
@@ -1924,49 +2013,7 @@ Observe that the value `r sens` (on y-axis) and `r spec` (on x-axis) is on our R
 
 The ROC-curve is made up of all possible cut-offs and their associated sensitivity and specificity.
 
----
 
-# Which classification method is the best?
-
-## Advantages of discriminant analysis
-
-* Discriminant analysis is more stable than logistic regression when the classes are well-separated.
-* Discriminant analysis is more stable than logistic regression if the number of observations $n$ is small and the distribution of the predictors ${\bf X}$ is approximately (multivariate) normal.
-
----
-
-## Linearity
-
-Assume a binary classification problem with one covariate. Recall that logistic regression can be written:
-$$\log \Big ( \frac{p(x)}{1-p(x)}\Big ) = \beta_0 + \beta_1 x.$$
-
-For LDA we have that $p_0(x)$ is the probability that the observation $x$ belongs to class 0, while $p_1(x)=1-p_0(x)$ is the probability that it belongs to class 1. 
-
-Observe that this show that our class boundary is linear. 
-
-Compulsory Exercise 1, Problem 3a.
-
----
-
-\begin{align*}\log \frac{\text{Pr}(Y=0 |  X = x)}{\text{Pr}(Y=1 | X=x)} &= \log \frac{\pi_0}{\pi_1} + \log \frac{f_0(x)}{f_1(x)} \\ &= \log \frac{\pi_0}{\pi_1} -\frac{1}{2 \sigma^2}(x-\mu_0)^2 + \frac{1}{2 \sigma^2}(x-\mu_1)^2 \\ &= \log \frac{\pi_0}{\pi_1} - \frac{1}{2 \sigma^2} (x^2 - 2 x \mu_0 + \mu_0^2 - x^2 + 2 x \mu_1 - \mu_1^2) \\ &= \log \frac{\pi_0}{\pi_1} -\frac{1}{2 \sigma^2}(\mu_0^2 - \mu_1^2)+\frac{1}{\sigma^2}(\mu_0 - \mu_1) x \\ &= \alpha_0 + \alpha_1 x \end{align*}
-
-The two methods can thus be written in the same form (linear in parameters and in $x$). The difference is in *how* the parameters $(\alpha_0,\alpha_1,\beta_0,\beta_1)$ are estimated.
-
----
-
-### LDA vs logistic regression
-
-* Logistic regression uses the diagnostic paradigm, and models the posterior distribution $\text{Pr}(Y=1|{\bf x})$.
-* Linear discriminant analysis models the class conditional densities $f_k({\bf x})$.
-* The results are usually quite similar, but 
-    + LDA is "more available" in the multi-class setting
-    + if the class conditional distributions are multivariate normal then LDA (or QDA) is preferred
-    + if the class conditional distributions are far from multivariate normal then logistic regression is preferred
-    + in medicine for two-class problems logistic regression is often preferred (for interpretability) and (always) together with ROC and AUC (for model comparison).
-    
-### and KNN?
-
-* KNN is used when the class boundaries are non-linear.
 
 ---
 
