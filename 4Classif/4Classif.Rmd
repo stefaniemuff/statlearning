@@ -14,7 +14,7 @@ output:
     font: "serif"
 urlcolor: blue
 bibliography: refs.bib
-#header-includes: \usepackage{xcolor}
+header-includes: \usepackage{multirow}
 
 ---
 
@@ -56,27 +56,17 @@ Some of the figures and slides in this presentation are taken (or are inspired) 
 
 ## Topics in this module (todo)
 
+* What is classification and discrimination?
+* What is the Bayes classifier and the Bayes risk?
+* What is the sampling paradigm and what is modelled then?
+* Linear discriminant analysis: model, method, results.
+* Quadratic discriminant analysis: model, method, results.
+* Naive Bayes - when and why?
+* That is the diagnostic paradigm and what is modelled then?
+* KNN - majority vote or estimate posterior class probability?
 
 
 ---
-
-<!-- \Large -->
-
-<!-- **<a id="PartA">Part A</a> ** -->
-<!-- \normalsize -->
-
-<!-- ## What will you learn? -->
-
-<!-- * What is classification and discrimination? -->
-<!-- * What is the Bayes classifier and the Bayes risk? -->
-<!-- * What is the sampling paradigm and what is modelled then? -->
-<!-- * Linear discriminant analysis: model, method, results. -->
-<!-- * Quadratic discriminant analysis: model, method, results. -->
-<!-- * Naive Bayes - when and why? -->
-<!-- * That is the diagnostic paradigm and what is modelled then? -->
-<!-- * KNN - majority vote or estimate posterior class probability? -->
-
-<!-- --- -->
 
 # What is classification?
 \vspace{2mm}
@@ -323,6 +313,7 @@ $$ p_i= \frac{e^{\beta_0+\beta_1 x_i}}{1 + e^{\beta_0 + \beta_1 x_i}}.$$
 \scriptsize
 ```{r, echo=T}
 library(ISLR)
+data(Default)
 Default$default <- as.numeric(Default$default)-1
 glm_default = glm(default~balance, data=Default, family="binomial")
 
@@ -1240,7 +1231,7 @@ This is a rather good performance, compared to the minimal Bayes error rate. But
 
 \vspace{2mm}
 
-* The confusion matrix is a table that can show the performance of classifier, given that the true values are known. 
+* The confusion matrix is a table that can show the performance of a classifier, given that the true values are known. 
 
 * We can make a confusion matrix from the training or test set, but will in most cases do so for the test set only.
 
@@ -1321,7 +1312,7 @@ $$\delta_0({\bf x}) = \delta_1({\bf x}) $$
 * Aim: Use LDA to classify a new observation $x_0$ to class $A$ or $B$.
 
 
-```{r synthAB2, echo=FALSE, fig.width=6, fig.height=5,fig.align = "center",out.width='60%'}
+```{r synthAB2, echo=FALSE, fig.width=6, fig.height=4.5,fig.align = "center",out.width='60%'}
 library(mvtnorm)
 library(MASS)
 library(ggplot2)
@@ -1341,7 +1332,7 @@ class = as.factor(class)
 
 df = data.frame(rbind(X1, X2), class)
 
-ggplot(df, aes(x=X1, y=X2, color=class))+geom_point(size=3)+geom_abline(slope=-1,intercept=4)
+ggplot(df, aes(x=X1, y=X2, color=class))+geom_point(size=3) 
 ```
 
 ---
@@ -1368,6 +1359,20 @@ Inserting numerical values gives $-x_1-x_2+4=0$, thus a boundary with functional
 
 <!-- The Bayes error can then be found by calculation of areas for the two class densities on the wrong side of the boundary, or by simulating many test data and counting misclassifications rates. -->
 
+---
+
+## Confusion matrix for the synthetic example
+
+\vspace{2mm}
+
+We can use the Bayes boundary
+
+```{r}
+r.pred <- ifelse(df$X2<4-df$X1,"A","B")
+table(real=df$class, r.pred) 
+```
+
+However, again, the Bayes boundary is usually not known, and we must estimate it from the data.
 
 ---
 
@@ -1387,6 +1392,46 @@ $$\hat{\boldsymbol{\Sigma}}= \sum_{k=1}^K \frac{n_k - 1}{n - K} \cdot \hat{\bold
 Optional: [Proof that the estimator $\hat{\boldsymbol{\Sigma}}_k$ is unbiased for each class (from TMA4267)](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/ProofMeanS.pdf). Proof for pooled version not provided.
 
 
+
+---
+
+
+## Analysing the synthetic example with `lda()`  
+
+\vspace{2mm}
+
+To obtain parameters estimates and an estimated decision boundary, we can use the `lda()` function in R.
+
+
+```{r}
+r.lda <- lda(class ~ X1 + X2, df)
+r.pred <- predict(r.lda, df)$class
+table(real=df$class, predicted = r.pred)  
+```
+
+Note: The training error is smaller than for the Bayes boundary. Why?
+
+---
+
+### Comparison of the Bayes with the estimated boundary
+
+\vspace{2mm}
+
+Solid line: Bayes boundary
+
+Dashed line: Estimated boundary
+
+```{r synthAB3, echo=FALSE, fig.width=6, fig.height=4.5,fig.align = "center",out.width='60%'}
+t.beta <- r.lda$scaling
+m.df <- colMeans(df[,1:2])
+
+t.alpha <- -t(t.beta)%*%m.df
+koeff <- -c(t.alpha,t.beta[1])/t.beta[2]
+
+ggplot(df, aes(x=X1, y=X2, color=class))+geom_point(size=3) + 
+  geom_abline(intercept=4, slope=-1) +
+  geom_abline(intercept=koeff[1],slope=koeff[2],lty=2) 
+```
 
 ---
 
@@ -1659,7 +1704,7 @@ table(iris_qda2_predict$class, iris$Species[-train])
 
 
 
-**Result**: The LDA classifier has given the smallest test error for classifying iris plants based on sepal width and sepal length for our test set and should be preferred in this case.
+**Result**: The LDA classifier has given the smallest test error\footnote{Note that the training error is of much less interest; it could be low due to \emph{overfitting} only.} for classifying iris plants based on sepal width and sepal length for our test set and should be preferred in this case.
 
 \vspace{2mm}
 
@@ -1859,52 +1904,46 @@ Compulsory Exercise 1, Problem 3a.
 ---
 
 
-# Confusion matrix, sensitivity, specificity
+# Two-class problems: sensitivity, specificity
 
-In a two class problem - assume the classes are labelled "-" (non disease) and "+" (disease). In a population setting we define the following event and associated number of observations.
+* Problems with only two classes (binary classifiers) have a special status, e.g. in medicine or biology.
 
-```{r, echo=FALSE, warning=FALSE}
-row1 = c("", "Predicted -", "Predicted +","Total")
-row2 = c("True -", "True Negative TN", "False Positive FP","N")
-row3 = c("True +", "False Negative FN", "True Positive TP","P")
-row4 = c("Total", "N*", "P*"," ")
-#kable(rbind(row1, row2, row3,row4), row.names=FALSE,format=whichformat,booktabs=TRUE)
-print(rbind(row1, row2, row3,row4))
-```
----
+* Assume the classes ($Y$) are labelled "-" (non disease, or $Y=0$) and "+" (disease, or $Y=1$), and that a diagnostic test is used to predict $Y$ given $X=x$.
 
-**Sensitivity** is the proportion of correctly classified positive observations: $\frac{\# \text{True Positive}}{\# \text{Condition Positive}}=\frac{\text{TP}}{\text{P}}$. 
+* **Sensitivity** is the proportion of correctly classified positive observations: 
+$$\frac{\# \text{True Positive}}{\# \text{Condition Positive}}=\frac{\text{TP}}{\text{P}} \ .$$ 
 
-**Specificity** is the proportion of correctly classified negative observations: $\frac{\# \text{True Negative}}{\# \text{Condition Negative}}=\frac{\text{TN}}{\text{N}}$.
-
-We would like that a classification rule (or a diagnostic test) have both a high sensitivity and a high specificity.
+* **Specificity** is the proportion of correctly classified negative observations: 
+$$\frac{\# \text{True Negative}}{\# \text{Condition Negative}}=\frac{\text{TN}}{\text{N}} \ .$$
 
 ---
 
-Other useful quantities:
+* We would like that a classification rule (or a diagnostic test) have both a high sensitivity and a high specificity.
+* However, in an imperfect test (i.e., an imperfect predictor) one usually comes at the cost of the other.
 
-```{r, echo=FALSE, warning=FALSE}
-row1 = c("Name", "Definition", "Synonyms")
-row2 = c("False positive rate", "FP/N", "Type I error, 1-specificity")
-row3 = c("True positive rate", "TP/P", "1-Type II error, power, sensitivity, recall")
-row4=c("Positive predictive value (PPV)","TP/P*","Precision, 1-false discovery proportion")
-row5=c("Negative predictive value (NPV)","TN/N*","")
 
-#kable(rbind(row1, row2, row3,row4,row5), row.names=FALSE,format=whichformat,booktabs=TRUE)
-print(rbind(row1, row2, row3,row4,row5))
-
-```
-
-(These two tables are tables 4.6 and 4.7 in our ISL-textbook.)
+$2 \times 2$ table shows data from a simple diagnostic study:
+\begin{center}
+\begin{tabular}{ll|c|c|c}
+& & \multicolumn{2}{c}{\emph{Predicted}} \\
+& & $Y=0$ & $Y=1$ \\ 
+\hline
+\multirow{2}{*}{\emph{True}} & $Y=0$ & True negative ($TN$) & False positive ($FN$) & $N$\\
+ & $Y=1$ & False negative ($FP$) & True positive ($TP$) & $P$\\
+\hline
+& & $N^\star$ & $P^\star$ & $Tot$ 
+\end{tabular}
+\end{center}
 
 ---
 
 ## Example Continued: South African heart disease
 
 We want to evaluate our multiple logistic model for the `SAheart` data set. In order to investigate the training error and the test error, we divide the original data set, randomly, into two samples of equal size.
+
+\small
 ```{r}
 set.seed(20)
-d.heart <- SAheart
 train_ID = sample(1:nrow(d.heart), nrow(d.heart)/2)
 train_SA = d.heart[train_ID, ]
 test_SA = d.heart[-train_ID, ]
@@ -1914,7 +1953,7 @@ test_SA = d.heart[-train_ID, ]
 
 We now fit a logistic regression model, using the training set only:
 
-\footnotesize
+\scriptsize
 
 ```{r,echo=showsolB}
 glm_SA = glm(chd~. , data=train_SA, family="binomial")
@@ -1924,31 +1963,37 @@ summary(glm_SA)
 
 ---
 
-By comparing this outprint with the corresponding outprint above, we see that the estimated coefficients slightly differ. This is because a different data set has been used to fit the model. We previously used the full data set.  
+* **Aim**: To estimate the probability of a `chd` event for the observations in the test set. 
 
-We want to estimate the probability of a `chd` event for the observations in the test set. To do this we can insert the estimated coefficient into the logistic equation, remembering that `famhist` is a categorical covariate, modeled by a dummy variable: 
+* To do this we can insert the estimated coefficient into the logistic equation, remembering that `famhist` is a categorical covariate, modeled by a dummy variable: 
 $$x_\text{famhist} = \begin{cases} 1, \quad \text{ if Present}, \\ 0, \quad \text{ if Absent}.\end{cases}$$
-The estimated probability  of $Y=1$ if `famhist = "Present"`, given a vector $\mathbf{X}$ of covariate observations is:
-$$\hat{p}(\mathbf{X}) =\frac{e^{-7.43 + 0.01 x_{\text{sbp}} + 0.09 x_{\text{tobacco}} + 0.16 x_\text{ldh} + 0.01 x_\text{adiposity}+1.04 \cdot 1 + 0.04 x_\text{typea}-0.04 x_\text{obesity}-0.005 x_\text{alcohol} +0.05 x_{\text{age}}}}{1+e^{-7.43 + 0.01 x_{\text{sbp}} + 0.09 x_{\text{tobacco}} + 0.16 x_\text{ldh} + 0.01 x_\text{adiposity}+1.04 \cdot 1 + 0.04 x_\text{typea}-0.04 x_\text{obesity}-0.005 x_\text{alcohol} +0.05 x_{\text{age}}}} .$$
-Whereas, if `famhist = "Absent"` the estimated probability is:
-$$\hat{p}(\mathbf{X}) =\frac{e^{-7.43 + 0.01 x_{\text{sbp}} + 0.09 x_{\text{tobacco}} + 0.16 x_\text{ldh} + 0.01 x_\text{adiposity}+1.04 \cdot 0 + 0.04 x_\text{typea}-0.04 x_\text{obesity}-0.005 x_\text{alcohol} +0.05 x_{\text{age}}}}{1+e^{-7.43 + 0.01 x_{\text{sbp}} + 0.09 x_{\text{tobacco}} + 0.16 x_\text{ldh} + 0.01 x_\text{adiposity}+1.04 \cdot 0 + 0.04 x_\text{typea}-0.04 x_\text{obesity}-0.005 x_\text{alcohol} +0.05 x_{\text{age}}}} .$$
+
+* The estimated probability  of $Y=1$ if `famhist = "Present"`, given a vector $\mathbf{X}$ of covariate observations is:
+$$\hat{p}(\mathbf{X}) =\frac{e^\eta}{1+e^\eta} ,$$
+with $\eta=\beta_0 + \beta_1 x_{\text{sbp}} + \beta_2 x_{\text{tobacco}} + \beta_3 x_\text{ldh} + \beta_4 \cdot x_{famhist} +  \beta_5 x_\text{obesity} + \beta_6 x_\text{alcohol} + \beta_7 x_{\text{age}}$.
+
+ 
 
 ---
 
 The `predict` function does these calculations for us. When specifying `type="response"` the function returns the probabilities for $Y=1$.
+
+\scriptsize
 ```{r}
 probs_SA = predict(glm_SA, newdata=test_SA, type="response")
 ```
+
+\normalsize
 
 From these probabilities we can obtain classifications, by specifying a threshold value. We have here chosen a threshold value of 0.5. By using the `ifelse` function we specify that all probabilities larger than 0.5 are to be classified as 1, while the remaining probabilities are to be classified as 0.
 
 ---
 
-
+\scriptsize
 ```{r}
 pred_SA = ifelse(probs_SA > 0.5, 1, 0)
 
-predictions_SA = data.frame(probs_SA, pred_SA, test_SA[,10])
+predictions_SA = data.frame(probs_SA, pred_SA, test_SA[,"chd"])
 colnames(predictions_SA) = c("Estim. prob. of Y=1","Predicted class","True class")
 head(predictions_SA)
 ```
@@ -1957,32 +2002,40 @@ head(predictions_SA)
 
 We can now use the confusion matrix to count the number of misclassifications. The below confusion matrix is calculated using the test set and comparing the predicted classes with the true classes.
 ```{r}
-table(pred_SA, SAheart[-train_ID,10])
+table(predicted=pred_SA, true=d.heart[-train_ID,"chd"])
 ```
-The logistic model has correctly classified 130+40 times, and misclassified 24+37 times. The misclassification test error rate is thus:
-$$\text{Test error} = \frac{24+37}{231} \approx 0.264$$
+The logistic model has correctly classified 118+41 times, and misclassified 27+45 times. The misclassification test error rate is thus:
+$$\text{Test error} = \frac{27+45}{27+45+118+41} \approx 0.31$$
 
 ---
 
 The training error can be calculated in a similar fashion, but now we use the fitted model to make prediction for the training set. 
+
+\scriptsize
 ```{r}
 SA_train_prob = glm_SA$fitted.values
 SA_train_pred = ifelse(SA_train_prob>0.5, 1, 0)
-conf_train = table(SA_train_pred, SAheart[train_ID, 10])
+conf_train = table(SA_train_pred, d.heart[train_ID, "chd"])
 misclas_train = (231-sum(diag(conf_train)))/231
 misclas_train
 ```
-The train misclassification error rate is $\approx 25.1\%$.
+
+\normalsize
+The train misclassification error rate is $\approx 23.8\%$.
 
 ---
 
 ## ROC curves and AUC
 
-The receiver operating characteristics (ROC) curve gives a graphical display of the sensitivity against specificity, as the threshold value (cut-off on probability of success or disease) is moved over the range of all possible values. An ideal classifier will give a ROC curve which hugs the top left corner, while a straight line represents a classifier with a random guess of the outcome. 
+\vspace{2mm}
 
-The **AUC** score is the area under the AUC curve. It ranges between the values 0 and 1, where a higher value indicates a better classifier. 
-<!-- An AUC score equal to 1 would imply that all observations are correctly classified.  -->
-The AUC score is useful for comparing the performance of different classifiers, as all possible threshold values are taken into account.
+* The receiver operating characteristics (ROC) curve gives a graphical display of the sensitivity against (1-specificity), as the threshold value (cut-off on probability of success or disease) is moved over the range of all possible values. 
+
+* An ideal classifier will give a ROC curve which hugs the top left corner (sensitivity = specificity = 1), while a straight line represents a classifier with a random guess of the outcome. 
+
+* The **AUC** score is the area under the AUC curve. It ranges between the values 0 and 1, where a higher value indicates a better classifier. 
+
+* The AUC score is useful for comparing the performance of different classifiers, as all possible threshold values are taken into account.
 
 ---
 
@@ -1990,26 +2043,31 @@ The AUC score is useful for comparing the performance of different classifiers, 
 
 In order to see how our model performs for different threshold values, we can plot a ROC curve:
 
-```{r, message=FALSE, warning=FALSE,echo=showsolB}
+\scriptsize
+```{r roc, echo=FALSE, fig.width=5, fig.height=4.5,fig.align = "center",out.width='80%'}
 library(pROC)
-SA_roc = roc(SAheart[-train_ID, 10], probs_SA, legacy.axes=TRUE)
-ggroc(SA_roc)+ggtitle("ROC curve")+ 
-  annotate("text", x = 0.25, y = 0.30, label = "AUC = 0.7762")
+SA_roc = roc(d.heart[-train_ID, "chd"], probs_SA, legacy.axes=TRUE)
+ggroc(SA_roc, legacy.axes=TRUE)+ggtitle("ROC curve")+ 
+  annotate("text", x = 0.25, y = 0.30, label = "AUC = 0.7762") + 
+  geom_segment(aes(x = 0, xend = 1, y = 0, yend = 1), color="grey", linetype="dashed")
 
 ```
 
 ---
 
 To check where in the plot we find the default cut-off on 0.5, we need to calculate sensitivity and specificity for this cut-off:
+
+\scriptsize
 ```{r}
-res=table(pred_SA, SAheart[-train_ID,10])
+res=table(pred_SA, d.heart[-train_ID,"chd"])
 sens=res[2,2]/sum(res[2,])
 spec=res[1,1]/sum(res[1,])
 sens
 spec
 ```
 
-Observe that the value `r sens` (on y-axis) and `r spec` (on x-axis) is on our ROC curve.
+\normalsize
+Observe that the value `r format(sens,3,3,3)` (on $y$-axis) and `r format(1-spec,3,3,3)` (1-specificity on $x$-axis) is on our ROC curve.
 
 The ROC-curve is made up of all possible cut-offs and their associated sensitivity and specificity.
 
@@ -2044,39 +2102,13 @@ The ROC-curve is made up of all possible cut-offs and their associated sensitivi
 
 * The focus there is on all parts of the regression (not classification) with a mathematical focus on estimation, inference, model fit. 
 
+
 ---
-
-# <a id="Rpackages"> R packages</a>
-
-```{r, eval=FALSE}
-# packages to install before knitting this R Markdown file
-# to knit the Rmd
-install.packages("knitr")
-install.packages("rmarkdown")
-# nice tables in Rmd
-install.packages("kableExtra")
-# cool layout for the Rmd
-#plotting
-install.packages("ggplot2") # cool plotting
-install.packages("ggpubr") # for many ggplots
-install.packages("GGally") # for ggpairs
-#datasets
-install.packages("ElemStatLearn") 
-install.packages("ISLR")
-#data manipulations
-install.packages("dplyr")
-install.packages("reshape")
-# classificaton
-install.packages("class")
-install.packages("pROC")
-# div statistics
-install.packages("MASS")
-install.packages("mvtnorm")
-install.packages("DAAG")
-```
 
 # Acknowledgements
 
-Thanks to Julia Debik for contributing to this module page.
+I thank Mette Langaas and Julia Debik, whose slides I modified and adapted to get this set of slides.
 
+---
 
+# References

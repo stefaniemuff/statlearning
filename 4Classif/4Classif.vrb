@@ -1,30 +1,36 @@
-\frametitle{ R packages}
+
+To check where in the plot we find the default cut-off on 0.5, we need
+to calculate sensitivity and specificity for this cut-off:
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# packages to install before knitting this R Markdown file to knit}
-\CommentTok{# the Rmd}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"knitr"}\NormalTok{)}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"rmarkdown"}\NormalTok{)}
-\CommentTok{# nice tables in Rmd}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"kableExtra"}\NormalTok{)}
-\CommentTok{# cool layout for the Rmd plotting}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"ggplot2"}\NormalTok{)  }\CommentTok{# cool plotting}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"ggpubr"}\NormalTok{)  }\CommentTok{# for many ggplots}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"GGally"}\NormalTok{)  }\CommentTok{# for ggpairs}
-\CommentTok{# datasets}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"ElemStatLearn"}\NormalTok{)}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"ISLR"}\NormalTok{)}
-\CommentTok{# data manipulations}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"dplyr"}\NormalTok{)}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"reshape"}\NormalTok{)}
-\CommentTok{# classificaton}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"class"}\NormalTok{)}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"pROC"}\NormalTok{)}
-\CommentTok{# div statistics}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"MASS"}\NormalTok{)}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"mvtnorm"}\NormalTok{)}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"DAAG"}\NormalTok{)}
+\NormalTok{res =}\StringTok{ }\KeywordTok{table}\NormalTok{(pred_SA, d.heart[}\OperatorTok{-}\NormalTok{train_ID, }\StringTok{"chd"}\NormalTok{])}
+\NormalTok{sens =}\StringTok{ }\NormalTok{res[}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{]}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(res[}\DecValTok{2}\NormalTok{, ])}
+\NormalTok{spec =}\StringTok{ }\NormalTok{res[}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{]}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(res[}\DecValTok{1}\NormalTok{, ])}
+\NormalTok{sens}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{verbatim}
+## [1] 0.6029412
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{spec}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.7239264
+\end{verbatim}
+
+\normalsize
+Observe that the value 0.603 (on \(y\)-axis) and 0.276 (1-specificity on
+\(x\)-axis) is on our ROC curve.
+
+The ROC-curve is made up of all possible cut-offs and their associated
+sensitivity and specificity.
 

@@ -24,12 +24,6 @@ urlcolor: blue
 header-includes: \usepackage{xcolor}
 ---
 
-<!-- rmarkdown::render("1Intro/1Intro.Rmd","all",encoding="UTF-8") -->
-<!-- rmarkdown::render("1Intro/1Intro.Rmd","html_document",encoding="UTF-8") -->
-<!-- rmarkdown::render("1Intro/1Intro.Rmd","pdf_document",encoding="UTF-8") -->
-<!-- rmarkdown::render("1Intro/1Intro.Rmd","beamer_presentation",encoding="UTF-8") -->
-
-<!-- Last changes: (09.01: added link to Rplots)-->
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
@@ -148,7 +142,8 @@ using data from science, technology, industry, economy/finance, ...
 
 ---
 
-```{r CVDread, eval=TRUE,echo=FALSE,message=FALSE}
+
+```{r CVDread, eval=TRUE, echo=FALSE, fig.width=7, fig.height=6,fig.align = "center",out.width='100%'}
 #this data set is not publicly available
 thisds=dget("https://www.math.ntnu.no/emner/TMA4315/2017h/data/BPtma4267P2.dd")
 #dim(thisds)
@@ -192,7 +187,7 @@ summary(modelB)$r.squared;summary(modelB)$adj.r.squared
 
 ---
 
-\scriptsize
+\tiny
 ```{r CVDanalyse2, eval=TRUE,include=TRUE,message=FALSE,results="hold"}
 summary(modelB)
 ```
@@ -213,6 +208,7 @@ The data set contains **three plant species** \{setosa, virginica, versicolor\} 
 knitr::include_graphics("iris.png")
 ```
 
+\tiny
 <http://blog.kaggle.com/2015/04/22/scikit-learn-video-3-machine-learning-first-steps-with-the-iris-dataset/>
 
 ---
@@ -288,7 +284,7 @@ knitr::include_graphics("heatmap.png")
 ```
 
 
-
+\tiny
 More:
 <https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2585023/>
 
@@ -340,7 +336,18 @@ More:
 
 ## Course content
 
-Statistical learning, multiple linear regression, classification, resampling methods, model selection/regularization, non-linearity, support vector machines, tree-based methods, unsupervised methods, neural nets.
+\vspace{2mm}
+
+* Statistical learning
+* Multiple linear regression
+* Classification
+* Resampling methods
+* Model selection/regularization
+* Non-linearity
+* Support vector machines
+* Tree-based methods
+* Unsupervised methods
+* Neural nets
 
 ---
 
@@ -955,15 +962,8 @@ To see solutions added to the files, add -sol to filename to get
 
 * Questions on R: ask the course staff, colleagues, and [stackoverflow](https://stackoverflow.com/).
 
-# R packages
 
-If you want to look at the .Rmd file and `knit` it, you need to first install the following packages (only once).
-
-```{r eval=FALSE,include=TRUE}
-install.packages("ggplot2")
-install.packages("klaR")
-install.packages("GGally")
-```
+---
 
 # Acknowledgements
 
