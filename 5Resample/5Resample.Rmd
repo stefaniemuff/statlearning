@@ -1,0 +1,965 @@
+---
+subtitle: "TMA4268 Statistical Learning V2020"
+title: "Module 5: Resampling"
+author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
+date: "February xx, 2020"
+fontsize: 10pt
+output:
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+    theme: "Singapore"
+    colortheme: "default"
+    font: "serif"
+urlcolor: blue
+bibliography: refs.bib
+header-includes: \usepackage{multirow}
+
+---
+
+```{r setup, include=FALSE}
+showsolA<-TRUE
+showsolB<-TRUE
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE)
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
+                      cache=TRUE, size="scriptsize")
+whichformat="latex"
+```
+
+# Introduction
+
+## Learning material for this module
+
+* James et al (2013): An Introduction to Statistical Learning. Chapter 5.
+* [Classnotes 04.02.2019](https://www.math.ntnu.no/emner/TMA4268/2019v/notes/M5L1notes.pdf) 
+
+Additional material for the interested reader: Chapter 7 (in particular 7.10) in Friedman et al (2001): Elements of Statistical learning.
+
+\vspace{2mm}
+
+Some of the figures and slides in this presentation are taken (or are inspired) from “An Introduction to Statistical Learning, with applications in R” (Springer, 2013) with permission from the authors: G. James, D. Witten, T. Hastie and R. Tibshirani.
+
+---
+
+## What will you learn?
+
+* What is model assessment and model selection?
+* Ideal solution in a data rich situation.
+* Cross-validation and what is best: 
+    + validation set 
+    + leave-one-out cross-validation (LOOCV) 
+    + $k$-fold CV 
+
+* Bootstrapping - how and why.
+* Summing up
+* The plan for the interactive lesson.
+
+---
+
+# Performance of a learning method
+
+Our models are "good" when they can generalize $\rightarrow$ We want a learning method to perform well on new data. 
+
+Why?
+
+* Prediction capacity on independent test data
+* Inference and understanding the true pattern (in contrast to overfitting)
+
+This is important both for 
+
+**Model selection**
+
+Estimate the _performance_ of different models (often different order of complexity within one model class) to _choose the best model_.
+
+**Model assessment**
+
+Estimating the performance (prediction error) of the final model, on new data.
+
+---
+
+## Training vs Test Error
+
+\vspace{2mm}
+
+Recall:
+
+* The _test error_ is the average error that results from using a
+statistical learning method to predict the response on a new
+observation, one that was not used in training the method.
+
+* The _training error_ can be easily calculated by
+applying the statistical learning method to the observations
+used in its training.
+
+* The training error rate often is quite different from the
+test error rate.
+
+* **The training error can
+dramatically underestimate the test error**.
+
+---
+
+\centering
+![Training vs test error](training_test.png){width=80%}
+
+
+---
+
+## Loss functions 
+
+\vspace{2mm}
+
+In order to define how we measure error, we must first decide for a **loss function**. Here we use:
+
+\vspace{2mm}
+
+* _\textcolor{red}{Mean squared error}_ (quadratic loss) for regression problems (continuous outcomes) $Y_i=f({\boldsymbol x}_i)+\varepsilon_i$, $i=1,\ldots, n$:  
+
+$$\text{MSE}=\frac{1}{n}\sum_{i=1}^n (y_i-\hat{f}({\boldsymbol x}_i))^2 \ .$$
+
+* _\textcolor{red}{Misclassification rate}_ (0/1 loss) for classification problems where we classify to the class with the highest probability $P(Y=j\mid {\boldsymbol x}_0)$ for $j=1,\ldots,K$:
+$$\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i) \ .$$ 
+
+---
+
+### Example (from recommended exercises 2)
+
+We aim to do _model selection_ in KNN-regression, where true curve is
+$f(x)=-x+x^2+x^3$ with $x \in [-3,3]$. $n=61$ for the training data.
+
+\vspace{2mm}
+
+\centering
+![Regression problem: training data and true regression curve](Prob1f1.png){width=50%}
+
+
+
+
+---
+
+# Remember: The bias-variance trade-off
+
+
+For KNN: $K$ small = high complexity; $K$ large = low complexity. 
+
+<!-- <figure><img src="Probl1fig4negK.png" height="250px" width="250px" align="right" /><figcaption>Regression problem: bias-variance traceoff</figure> -->
+\centering
+![Regression problem: bias-variance traceoff](Prob1f4.png){width=85%}
+
+
+
+
+
+---
+
+### The challenge
+
+\vspace{2mm}
+
+* In the above examples we knew the truth, so we could assess training and test error.
+
+* In reality this is of course not the case.
+
+* We need approaches that work with real data!
+
+---
+
+##The data-rich situation (often unrealistic)
+
+\vspace{2mm}
+If we had a large amount of data we could divide our data into three parts:
+
+* **Training set**: to fit the model
+* **Validation set**: to select the best model (_model selection_)
+* **Test set**: to assess how well the model fits on new independent data (_model assessment_)
+
+
+\vspace{2mm}
+
+**Q**: Before we had just training and test. Why do we need the additional validation set?
+
+**A**: We have not discussed model selection before.
+
+**Q**: Why can't we just use the training set for training, and then the test set both for model selection and for model evaluation?
+
+**A**: We will be too optimistic if we report the error on the test set when we have already used the test set to choose the best model.
+
+
+---
+
+* If you have a lot of data -- great --  then you do not need Module 5. 
+
+* But, this is very seldom the case -- so we will study other solutions based on efficient sample reuse with _resampling_ data.
+
+* An alternative strategy for model selection (using methods penalizing model complexity, e.g. AIC or lasso) is covered in Module 6.
+
+We will look at _cross-validation_ and the _bootstrap_.
+
+---
+
+# Cross-validation (CV)
+
+Consider the following "model selection" situation: We assume that test data is available (and has been put aside), and we want to use the rest of our data to both fit the data and to find the best model.
+
+This can be done by:
+
+* the validation set approach (not strictly a _cross_-validation approach)
+* leave one out cross-validation (LOOCV)
+* $k$-fold cross-validation (CV), typically $k=5$ or $10$
+
+
+We will also discuss that there is a "right and a wrong way" to to CV
+
+* selection bias - all elements of a model selection strategy need to be within the CV-loop
+
+
+
+
+
+---
+
+## The validation set approach  
+
+\vspace{2mm}
+
+* Consider the case when you have a data set consisting of $n$ observations. 
+
+* To fit a model and to evaluate its predictive performance you randomly divide the data set into two parts ($n/2$ sample size each): 
+
+    + a _training set_ (to fit the model) and 
+    + a _validation set_ (to make predictions of the response variable for the observations in the validation set)
+
+\vspace{4mm}
+
+Remember: The focus is on model selection (finding the model that performs "best", that is, with lowest test error).
+
+
+---
+
+### Example of validation set approach
+\vspace{2mm}
+
+Auto data set (library `ISLR`): predict `mpg` (miles pr gallon) using polynomial function of `horsepower` (of engine), $n=392$. What do you see?
+ 
+
+```{r auto, echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='70%'}
+library(ISLR)
+library(ggplot2)
+library(ggpubr)
+library(reshape2)
+set.seed(123)
+n=dim(Auto)[1]
+
+testMSEmat=matrix(ncol=11,nrow=10)
+for (newsample in 1:11)
+{
+  trainid=sample(n,n/2)
+  for (polydeg in 1:10)
+  {
+    lm.fit=lm(mpg~poly(horsepower,polydeg),data=Auto,subset=trainid)
+    lm.pred=predict(lm.fit,Auto)[-trainid]
+    testMSEmat[polydeg,newsample]=mean((Auto$mpg[-trainid]-lm.pred)^2)
+  }
+}
+yrange=c(15,28)
+
+plotdf=data.frame("testMSE"=testMSEmat[,1],"degree"=1:10)
+g0=ggplot(plotdf,aes(x=degree))+geom_line(y=testMSEmat[,1])+scale_y_continuous(limits = yrange)+scale_x_continuous(breaks=1:10)+labs(y="Validation set", x="Degree of polynomial")
+g0+theme_minimal()
+```
+
+---
+
+
+But what if we select another split into two parts? Let's do this for many splits:
+
+```{r auto2, echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='70%'}
+cols=rainbow(10)
+g1=g0+geom_line(aes(x=1:10,y=testMSEmat[,2]),colour=cols[1])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,3]),colour=cols[2])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,4]),colour=cols[3])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,5]),colour=cols[4])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,6]),colour=cols[5])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,7]),colour=cols[6])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,8]),colour=cols[7])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,9]),colour=cols[8])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,10]),colour=cols[9])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,11]),colour=cols[10]) +labs(y="Validation set", x="Degree of polynomial") + theme_minimal()
+g1
+g1valid=g1
+#ggarrange(g0,g1)
+```
+
+$\rightarrow$ No consensus which model really gives the lowest validation set MSE.
+
+---
+
+### Drawbacks with the validation set approach
+
+\vspace{2mm}
+
+* High variability of validation set error due to dependency on the set of observation included in the training and validation set
+
+
+* Smaller sample size for model fit, as only half of the observations are in the training set. Therefore, the validation set error may tend to overestimate the error rate on new observations for a model that is fit on the full data set (the more data, the lower the error).
+
+---
+
+Better ideas?
+
+---
+
+## Leave-one-out cross-validation (LOOCV)
+
+Leave-one-out cross-validation (LOOCV) addresses the limitations of the validation set approach.
+
+\vspace{2mm}
+
+**Idea:**
+
+* Only **one observation at a time** is left out and makes up the new observations (test set). 
+* The remaining $n-1$ observations make up the training set. 
+* The procedure of model fitting is repeated $n$ times, such that each of the $n$ observations is left out once. In each step, we calculate the MSE as
+
+$$\text{MSE}_i=(y_i-\hat{y}_i)^2 \ .$$
+
+* The **total prediction error** is the mean across these $n$ models
+
+
+
+$$\text{CV}_{n}=\frac{1}{n}\sum_{i=1}^n \text{MSE}_i \ .$$
+
+---
+
+### Regression example: LOOCV
+
+<!-- ![LOOCV](loocv.png) -->
+
+```{r auto_loocv, echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='70%'}
+library(ISLR)
+library(boot)
+library(ggplot2)
+set.seed(123)
+n=dim(Auto)[1]
+testMSEvec=NULL
+start=Sys.time()
+for (polydeg in 1:10)
+  {
+    glm.fit=glm(mpg~poly(horsepower,polydeg),data=Auto)
+    glm.cv1=cv.glm(Auto, glm.fit,K=n)
+    testMSEvec=c(testMSEvec,glm.cv1$delta[1])
+}
+stopp=Sys.time()
+yrange=c(15,28)
+plotdf=data.frame("testMSE"=testMSEvec,"degree"=1:10)
+g0=ggplot(plotdf,aes(x=degree,y=testMSE))+geom_line()+geom_point()+scale_y_continuous(limits = yrange)+scale_x_continuous(breaks=1:10)+labs(y="LOOCV")
+g0+theme_minimal()
+```
+
+---
+
+\tiny
+```{r,echo=TRUE,eval=FALSE}
+library(ISLR) #for Auto data set
+library(boot) #for cv.glm
+library(ggplot2) #for plotting
+set.seed(123)
+n=dim(Auto)[1]
+testMSEvec=NULL
+start=Sys.time()
+for (polydeg in 1:10)
+  {
+    glm.fit=glm(mpg~poly(horsepower,polydeg),data=Auto)
+    glm.cv1=cv.glm(Auto, glm.fit,K=n)
+    testMSEvec=c(testMSEvec,glm.cv1$delta[1])
+}
+stopp=Sys.time()
+yrange=c(15,28)
+plotdf=data.frame("testMSE"=testMSEvec,"degree"=1:10)
+g0=ggplot(plotdf,aes(x=degree,y=testMSE))+geom_line()+geom_point()+scale_y_continuous(limits = yrange)+scale_x_continuous(breaks=1:10)+labs(y="LOOCV")
+g0+theme_minimal()
+```
+\normalsize
+
+---
+
+### Issues with leave-one-out cross-validation
+
+\vspace{1mm}
+
+* Pros: 
+    + No randomness in training/validation splits!
+    + Little bias, since nearly the whole data set used for training (compared to half for validation set approach).
+    
+* Cons: 
+    + Expensive to implement -- need to fit $n$ different models.
+    + High variance since: two training sets only differ by one observation - which makes estimates from each fold highly correlated and this can lead to that their average can have high variance$^\star$.
+
+\tiny
+$^\star$ Recall that
+$$\text{Var}(\sum_{i=1}^na_iX_i+b)=\sum_{i=1}^n\sum_{j=1}^n a_ia_j\text{Cov}(X_i,X_j)$$
+$$=\sum_{i=1}^na_i^2\text{Var}(X_i)+2\sum_{i=2}^n \sum_{j=1}^{i-1}
+a_ia_j\text{Cov}(X_i,X_j).$$ 
+
+---
+
+### LOOCV for multiple linear regression
+
+\vspace{2mm}
+
+There is a nice shortcut for LOOCV in the case of linear regression:
+
+$$ \text{CV}_{n}=\frac{1}{n}\sum_{i=1}^n \left( \frac{y_i-\hat{y}_i}{1-h_{ii}} \right) ^2 \ ,$$
+
+where $h_i$ is the $i$th diagonal element (leverage) of the hat matrix ${\bf H}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T$, and $\hat{y}_i$ is the $i$th fitted value from the original least squares fit.
+
+\vspace{2mm}
+
+$\rightarrow$ Need to fit the model only once!
+
+
+---
+
+## $k$-fold cross-validation
+
+$~$
+
+To address the drawbacks of LOOCV, we can leave out not just one single observation in each iteration, but $1/k$-th of all data.
+
+$~$
+
+**Procedure:**
+
+* Split the data into $k$ (more or less) equal parts.
+* Use $k-1$ parts to fit and the $k$th part to validate.
+* Do this $k$ times and leave out another part in each round.
+
+The MSE is then estimated in each of the $k$ iterations ($\text{MSE}_1,\ldots,\text{MSE}_k$), and the the $k$-fold CV is
+
+$$\text{CV}_k = \frac1k \sum_{i=1}^k \text{MSE}_i \ .$$
+
+
+---
+
+**Comparison of LOOCV and $k$-fold CV**:
+
+\centering
+LOOCV: 
+
+![ISLR Figure 5.3](../../ISLR/Figures/Chapter5/5.3.png){width=70%}
+
+$k$-fold: 
+
+![ISLR Figure 5.5](../../ISLR/Figures/Chapter5/5.5.png){width=70%}
+
+
+<!-- See class notes for drawing. -->
+
+---
+
+### Formally
+
+* Indices of observations - divided into $k$ folds: $C_1, C_2, \ldots, C_k$.
+* $n_k$ elements in each fold, if $n$ is a multiple of $k$ then $n_k=n/k$.
+
+$$\text{MSE}_k=\frac{1}{n_k}\sum_{i\in C_k}(y_i-\hat{y}_i)^2$$
+where $\hat{y}_i$ is the fit for observation $i$ obtained from the data with part $k$ removed. 
+
+$$\text{CV}_{k}=\frac{1}{n} \sum_{j=1}^k n_j \text{MSE}_j$$
+
+Observe: setting $k=n$ gives LOOCV.
+
+---
+
+### Regression example: $5$ and $10$-fold cross-validation
+
+```{r auto_510fold, echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='70%'}
+library(ISLR)
+library(boot)
+library(ggplot2)
+set.seed(123)
+n=dim(Auto)[1]
+testMSEvec5=NULL
+testMSEvec10=NULL
+start=Sys.time()
+for (polydeg in 1:10)
+  {
+    glm.fit=glm(mpg~poly(horsepower,polydeg),data=Auto)
+    glm.cv5=cv.glm(Auto, glm.fit,K=5)
+    glm.cv10=cv.glm(Auto, glm.fit,K=10)
+    testMSEvec5=c(testMSEvec5,glm.cv5$delta[1])
+    testMSEvec10=c(testMSEvec10,glm.cv10$delta[1])
+}
+stopp=Sys.time()
+yrange=c(15,28)
+plotdf=data.frame("testMSE5"=testMSEvec5,"degree"=1:10)
+g0=ggplot(plotdf,aes(x=degree,y=testMSE5))+geom_line()+geom_point()+scale_y_continuous(limits = yrange)+scale_x_continuous(breaks=1:10)+labs(y="CV")+ggtitle("5 and 10 fold CV")
+g0+geom_line(aes(y=testMSEvec10),colour="red")+geom_point(aes(y=testMSEvec10),colour="red")+ggtitle("5 fold (black), 10 fold (red)")+theme_minimal()
+```
+
+---
+
+\tiny
+
+```{r,echo=TRUE,eval=FALSE}
+library(ISLR)
+library(boot)
+library(ggplot2)
+set.seed(123)
+n=dim(Auto)[1]
+testMSEvec5=NULL
+testMSEvec10=NULL
+start=Sys.time()
+for (polydeg in 1:10)
+  {
+    glm.fit=glm(mpg~poly(horsepower,polydeg),data=Auto)
+    glm.cv5=cv.glm(Auto, glm.fit,K=5)
+    glm.cv10=cv.glm(Auto, glm.fit,K=10)
+    testMSEvec5=c(testMSEvec5,glm.cv5$delta[1])
+    testMSEvec10=c(testMSEvec10,glm.cv10$delta[1])
+}
+stopp=Sys.time()
+yrange=c(15,28)
+plotdf=data.frame("testMSE5"=testMSEvec5,"degree"=1:10)
+g0=ggplot(plotdf,aes(x=degree,y=testMSE5))+geom_line()+geom_point()+scale_y_continuous(limits = yrange)+scale_x_continuous(breaks=1:10)+labs(y="CV")+ggtitle("5 and 10 fold CV")
+g0+geom_line(aes(y=testMSEvec10),colour="red")+geom_point(aes(y=testMSEvec10),colour="red")+ggtitle("5 fold (black), 10 fold (red)")+theme_minimal()
+```
+\normalsize
+
+---
+
+10 reruns (different splits) of the 10-CV method - to see variability:
+
+```{r auto_510fold_10, echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='70%'}
+library(ISLR)
+library(boot)
+library(ggplot2)
+set.seed(123)
+n=dim(Auto)[1]
+start=Sys.time()
+testMSEmat=matrix(ncol=11,nrow=10)
+
+for (polydeg in 1:10)
+  {
+    glm.fit=glm(mpg~poly(horsepower,polydeg),data=Auto)
+    for (newsample in 1:11)
+    {
+        glm.cv10=cv.glm(Auto, glm.fit,K=10)
+      testMSEmat[polydeg,newsample]=glm.cv10$delta[1]
+    }
+}
+
+stopp=Sys.time()
+yrange=c(15,28)
+
+plotdf=data.frame("testMSE"=testMSEmat[,1],"degree"=1:10)
+g0=ggplot(plotdf,aes(x=degree))+geom_line(y=testMSEmat[,1])+scale_y_continuous(limits = yrange)+scale_x_continuous(breaks=1:10)+labs(y="CV10")
+#g0
+
+cols=rainbow(10)
+g1=g0+geom_line(aes(x=1:10,y=testMSEmat[,2]),colour=cols[1])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,3]),colour=cols[2])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,4]),colour=cols[3])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,5]),colour=cols[4])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,6]),colour=cols[5])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,7]),colour=cols[6])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,8]),colour=cols[7])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,9]),colour=cols[8])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,10]),colour=cols[9])
+g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,11]),colour=cols[10])
+g1+theme_minimal()
+#ggarrange(g0,g1)
+```
+
+---
+
+### Issues with $k$-fold cross-validation
+
+\vspace{2mm}
+
+1. As for the validation set, the result may vary according to how the folds are made, but the variation is in general lower than for the validation set approach.
+
+2. Computational issues: less work with $k=5$ or 10 than LOOCV.
+
+3. The training set is $(k-1)/k$ of the original data set - the estimate of the prediction error is biased upwards.
+
+4. This bias is the smallest when $k=n$ (LOOCV), but we know that LOOCV has high variance.
+
+5. Therefore, often $k=5$ or $k=10$ is used as a compromise.
+
+---
+
+### Choosing the best model
+
+\vspace{2mm}
+
+* Remember that we _randomly divide_ the data into $k$ folds and then perform the CV for all possible model that we want to choose between.
+
+* We have not directly indicated that there is a model parameter (maybe $K$ in KNN or the degree of the polynomial), say $\theta$, involved to calculate $\text{CV}_j$, $j=1,\ldots, k$
+
+$~$
+
+**Smallest CV-error:**
+
+* Based on the CV-plot we may choose the model with the smallest ${\text{CV}_k}$ as our best model (with corresponding $\theta$).
+* We then fit this model using the whole data set (not the test part, that is still kept away), and evaluate the performance on the test set.
+
+---
+
+**One standard error rule:**
+
+Denote by $\text{MSE}_j(\theta)$, $j=1,\ldots, k$ the $k$ parts of the MSE that together give the $\text{CV}_k$.
+
+We can compute the sample standard deviation (standard error) of all $\text{MSE}_j(\theta)$, $j=1,\ldots, k$ 
+$$\hat{\text{SE}}(\text{CV}_k(\theta))= \sqrt{\sum_{j=1}^k (\text{MSE}_j(\theta) - \overline{\text{MSE}}(\theta))/(k-1)} \, $$
+
+for each value of the complexity parameter $\theta$.
+
+<!-- and then use $\text{SE}(\theta)=\text{SD}(\theta)/\sqrt{k}$ as the standard deviation of $\text{CV}_k$. -->
+
+
+The _one standard error rule_ is to choose the simplest model (_e.g._, with lowest polynomial degree) within one standard error of the minimal error.
+
+<!-- , that is, we move $\theta$ in the direction of simplicity until it ceases to be true that  -->
+
+<!-- $$\text{CV}(\theta)\le \text{CV}(\hat{\theta})+ \hat{\text{SE}}(\text{CV}_k(\hat\theta)) \ .$$ -->
+
+<!-- This will be the simplest model whose error is within one standard error of the minimal error. -->
+
+
+---
+
+### $k$-fold cross-validation in classification
+
+\vspace{3mm}
+
+What do we need to change from our regression set-up?
+
+\vspace{3mm}
+
+* For LOOCV $\hat{y}_i$ is the fit for observation $i$ obtained from the data with observations $i$ removed, and ${\text{Err}_i}=I(y_i\neq \hat{y}_i)$ . LOOCV is then 
+$$\text{CV}_{n}=\frac{1}{n} \sum_{i=1}^n {\text{Err}_i}$$
+
+
+* The $k$-fold CV is defined analogously.
+
+
+---
+
+### Can we use CV for model assessment?
+
+Assume that we have a method where we not need to perform model selection (maybe this is done using the methods from Module 6, that is AIC or lasso), but want to perform model assessment based on all our data.
+
+Then we can use CV with all data (then the validation part is really the test part) and report on the model performance using the validation parts of the data as above.
+
+### Can we use CV both for model selection and model assessment?
+
+Then you can use two layers of CV - also called _nested CV_. See drawing in class.
+
+
+---
+
+## The right and the wrong way to do cross-validation
+
+[ISL book slides, page 17](https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/cv_boot.pdf): model assessment.
+
+* We have a two-class problem and would like to use a simple classification method, however, 
+* we have many possible predictors $p=5000$ and not so big sample size $n=50$.
+
+We use this strategy to produce a classifier:
+
+1. We calculate the correlation between the class label and each of the $p$ predictors, and choose the $d=25$ predictors that have the highest (absolute value) correlation with the class label. (We need to have $d<n$ to fit the logistic regression uniquely.)
+2. Then we fit our classifier (here: logistic regression) using only the $d=25$ predictors.
+
+How can we use cross-validation to produce an estimate of the performance of this classifier? 
+
+**Q**: Can we apply cross-validation only to step 2? Why or why not?
+
+---
+
+Can we apply cross-validation only to step 2?
+
+**A:** No, step 1 is part of the training procedure (the class labels are used) and must be part of the CV to give an honest estimate of the performance of the classifier. 
+
+* Wrong: Apply cross-validation in step 2.
+* Right: Apply cross-validation to steps 1 and 2.
+
+We will see in the Recommended Exercises that doing the wrong thing can give a misclassification error approximately 0 - even if the "true" rate is 50%.
+
+---
+
+### Selection bias in gene extraction on the basis of microarray gene-expression data
+
+Article by [Christophe Ambroise and Geoffrey J. McLachlan, PNAS 2002](http://www.pnas.org/content/99/10/6562): Direct quotation from the abstract of the article follows.
+
+* In the context of cancer diagnosis and treatment, we consider the
+problem of constructing an accurate prediction rule on the basis of
+a relatively small number of tumor tissue samples of known type
+containing the expression data on very many (possibly thousands)
+genes. 
+* Recently, results have been presented in the literature
+suggesting that it is possible to construct a prediction rule from
+only a few genes such that it has a negligible prediction error rate.
+* However, in these results the test error or the leave-one-out
+cross-validated error is calculated without allowance for the selection
+bias. 
+
+---
+
+* There is no allowance because the rule is either tested
+on tissue samples that were used in the first instance to select the
+genes being used in the rule or because the cross-validation of the
+rule is not external to the selection process; that is, gene selection
+is not performed in training the rule at each stage of the crossvalidation
+process.
+* We describe how in practice the selection bias
+can be assessed and corrected for by either performing a crossvalidation
+or applying the bootstrap external to the selection
+process. 
+* We recommend using 10-fold rather than leave-one-out
+cross-validation, and concerning the bootstrap, we suggest using
+the so-called .632 bootstrap error estimate designed to handle
+overfitted prediction rules. 
+* Using two published data sets, we
+demonstrate that when correction is made for the selection bias,
+the cross-validated error is no longer zero for a subset of only a few
+genes.
+
+---
+
+
+
+
+# The Bootstrap
+
+* flexible and powerful statistical tool that
+can be used to quantify _uncertainty_ associated with an estimator or statistical learning method
+* we will look at getting an estimate for the standard error of a sample median and of a regression coefficient
+* in Module 8 - bootstrapping is the core of the _ensemble method_ referred to at _bagging_=bootstrap aggregation,
+* in TMA4300 Computation statistics - a lot more theory on the bootstrap.
+
+---
+
+The inventor: Bradley Efron in 1979 - [see interview](https://www.youtube.com/watch?v=6l9V1sINzhE).
+
+The name? _To pull oneself up by one's bootstraps_ from "The Surprising
+Adventures of Baron Munchausen" by Rudolph Erich
+Raspe:
+
+_The Baron had fallen to the bottom of a deep lake. Just
+when it looked like all was lost, he thought to pick himself
+up by his own bootstraps._
+
+**Idea: Use the data itself to get more information about a statistic (an estimator).**
+
+
+<!-- ## Example: The mean $\bar{X}$ -->
+
+<!-- Assume we have univariate random variables  $X_1, X_2, \ldots, X_n$, with some common mean $\mu$ and variance $\sigma^2$. -->
+
+<!-- We can then form the average: $\bar{X}=\frac{1}{n} \sum_{i=1}^n X_i$, which we often use as an estimator for $\mu$. -->
+
+<!-- If we want to estimate $\sigma^2$, a popular estimator is $S^2=\frac{1}{n-1}\sum_{i=1}^n (X_i-\bar{X})^2$, -->
+
+<!-- If the observations are _independent_ (and identically distributed) we know that the variance of $\bar{X}$ is given by $\text{Var}(\bar{X})=\frac{\sigma^2}{n}$,  -->
+<!-- which we may estimate as $\widehat{\text{Var}}(\bar{X})=\frac{S^2}{n}$.  -->
+
+<!-- To form a confidence interval for $\mu$ we need to assume a distribution for the $X_i$s. If we assume that the $X_i$s are independent and normal $N(\mu,\sigma^2)$  and can get a 95% confidence interval from -->
+
+<!-- $$ \bar{X}\pm t_{0.025,n-1}\frac{S}{\sqrt{n}}$$ -->
+
+---
+
+## Example: the standard deviation of the sample median?
+
+Assume that we observe a random sample $X_1, X_2, \ldots, X_n$ from an unknown probability distribution $f$. We are interesting in saying something about the population median, and to do that we calculate the sample median $\tilde{X}$. But, how accurate is $\tilde{X}$ as an estimator?
+
+The bootstrap was introduced as a computer-based method to estimate the standard deviation of an estimator, for example our estimator $\tilde{X}$.
+
+But, before we look at the bootstrap method, first we assume that we know $F$ and can sample from $F$, and use simulations to answer our question.
+
+---
+
+```{r,eval=TRUE, echo=TRUE}
+set.seed(123)
+n=101
+B=1000
+estimator=rep(NA,B)
+for (b in 1:B)
+{
+  xs=rnorm(n)
+  estimator[b]=median(xs)
+}
+sd(estimator)
+# approximation for large samples 
+# (sd of median of standard normal)
+1.253*1/sqrt(n)
+```
+
+---
+
+```{r}
+ggplot(data=data.frame(x=estimator),aes(x=x))+
+  geom_density()
+```
+
+---
+
+## Moving from simulation to bootstrapping
+
+The bootstrap method is using the observed data to estimate the _empirical distribution_ $\hat{f}$, that is each observed value of $x$ is given probability $1/n$.
+
+A _bootstrap sample_ $X^*_1,X^*_2,\ldots, X^*_n$ is a random sample drawn from $\hat{f}$.
+
+A simple way to obtain the bootstrap sample is to _draw with replacement from $X_1, X_2, \ldots, X_n$_.
+
+This means that our bootstrap sample consists of $n$ members of $X_1, X_2, \ldots, X_n$ - some appearing 0 times, some 1, some 2, etc.
+
+
+---
+
+```{r, eval=TRUE, echo=TRUE}
+set.seed(123)
+n=101
+original=rnorm(n)
+median(original)
+boot1=sample(x=original,size=n,replace=TRUE)
+table(table(boot1))
+# how many observations have not been selected in our boot1 sample?
+n-sum(table(table(boot1)))
+median(boot1)
+```
+
+---
+
+## The bootstrap algorithm for estimating standard errors
+
+1. $B$ bootstrap samples: drawn with replacement from the original data 
+
+2. Evaluate statistic: on each of the $B$ bootstrap samples to get $\tilde{X}^*_b$ for the $b$th bootstrap sample.
+
+3. Estimate squared standard error by:
+$$\frac{1}{B-1}\sum_{b=1}^B (\tilde{X}^*_b-\frac{1}{B}\sum_{b=1}^B \tilde{X}^*_b)^2$$
+
+
+---
+
+### with for-loop in R
+
+```{r, eval=TRUE, echo=TRUE}
+set.seed(123)
+n=101
+original=rnorm(n)
+median(original)
+B=1000
+estimator=rep(NA,B)
+for (b in 1:B)
+  {
+  thisboot=sample(x=original,size=n,replace=TRUE)
+  estimator[b]=median(thisboot)
+}
+sd(estimator)
+```
+
+---
+
+```{r}
+ggplot(data=data.frame(x=estimator),aes(x=x))+
+  geom_density()
+
+```
+
+---
+
+### using built in `boot` function from library  `boot`
+
+```{r, eval=TRUE, echo=TRUE}
+library(boot)
+set.seed(123)
+n=101
+original=rnorm(n)
+median(original)
+summary(original)
+```
+
+---
+
+```{r}
+boot.median=function(data,index) return(median(data[index]))
+B=1000
+boot(original,boot.median,R=B)
+```
+
+---
+
+## With or without replacement?
+
+In bootstrapping we sample _with replacement_ from our observations.
+
+**Q:** What if we instead sample _without replacement_?
+
+**A:** Then we would always get the same sample - given that the order of the sample points is not important for our estimator.
+
+(In permutation testing we sample without replacement to get samples under the null hypothesis - a separate field of research.)
+
+---
+
+### Example: multiple linear regression 
+
+We assume, for observation $i$:
+$$Y_i= \beta_0 + \beta_{1}  x_{i1} + \beta_2 x_{i2} + ... + \beta_p x_{ip} + \varepsilon_i,$$ where $i=1,2,...,n$. The model can be written in matrix form:
+$${\bf Y}={\bf X} \boldsymbol{\beta}+{\boldsymbol{\varepsilon}}.$$
+
+The least squares estimator: $\hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$
+has $\text{Cov}(\boldsymbol\beta)=\sigma^2({\bf X}^T{\bf X})^{-1}$.
+
+We will in the recommended exercises look at how to use bootstrapping to estimate the covariance of the estimator. Why is that "needed" if we already know the mathematical formula for the standard deviation? Answer: not needed - but OK to look at an example?
+
+We will not do this here - but our bootstrap samples can also be used to make confidence intervals for the regression coefficients or prediction intervals for new observations. This means that we do not have to rely on assuming that the error terms are normally distributed!
+
+---
+
+## Bagging 
+
+Bagging is a special case of _ensemble methods_.
+
+In Module 8 we will look at bagging, which is built on bootstrapping the the fact that it is possible to reduce the variance of a prediction by taking the average of many model fits.
+
+* Assume that we have $B$ different predictors $X_1, X_2, \ldots, X_B$. We have built them on $B$ different bootstrap samples.
+* All are predictors for some parameter $\mu$ and that all have some unknown variance $\sigma^2$. 
+* We then decide that we want to use all the predictors together - equally weighted - and make
+$\bar{X}=\frac{1}{n} \sum_{i=1}^n X_i$, which we often use to predict $\mu$.
+
+---
+
+We can therefore obtain a new model (our average of the individual models) that has a smaller variance than each of the individual model because
+
+$$\text{Var}(\bar{X})=\frac{\sigma^2}{n}$$
+
+Since this averaged predictor has smaller variance than each of the predictors we would assum that this is a more accurate prediction. However, the interpretation of this bagged prediction might be harder then for the separate predictors.
+
+Models that have poor prediction ability (as we may see can happen with regression and classification trees) might benefit greatly from bagging. More in Module 8.
+
+
+---
+
+# Summing up
+
+## Take home messages
+
+* Use $k=5$ or $10$ fold cross-validation for model selection or assessment.
+* Use bootstrapping to estimate the standard deviation of an estimator, and understand how it is performed before module 8 on trees.
+
+
+---
+
+# Further reading
+
+* [Videoes on YouTube by the authors of ISL, Chapter 5](https://www.youtube.com/playlist?list=PL5-da3qGB5IA6E6ZNXu7dp89_uv8yocmf), and corresponding [slides](https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/cv_boot.pdf)
+* [Solutions to exercises in the book, chapter 5](https://rstudio-pubs-static.s3.amazonaws.com/65561_43c0eaaa8565414eae333b47038f716c.html)
+
+
+
+

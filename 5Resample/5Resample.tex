@@ -1,0 +1,1473 @@
+\documentclass[10pt,ignorenonframetext,]{beamer}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+\usetheme[]{Singapore}
+\usefonttheme{serif}
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\newif\ifbibliography
+\hypersetup{
+            pdftitle={Module 5: Resampling},
+            pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
+            colorlinks=true,
+            linkcolor=Maroon,
+            citecolor=Blue,
+            urlcolor=blue,
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight0.8\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+
+\AtBeginPart{
+  \let\insertpartnumber\relax
+  \let\partname\relax
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \let\insertsectionnumber\relax
+    \let\sectionname\relax
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \let\insertsubsectionnumber\relax
+  \let\subsectionname\relax
+  \frame{\subsectionpage}
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+\usepackage{multirow}
+
+\title{Module 5: Resampling}
+\subtitle{TMA4268 Statistical Learning V2020}
+\author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
+\date{February xx, 2020}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Introduction}
+
+\begin{block}{Learning material for this module}
+
+\begin{itemize}
+\tightlist
+\item
+  James et al (2013): An Introduction to Statistical Learning. Chapter
+  5.
+\item
+  \href{https://www.math.ntnu.no/emner/TMA4268/2019v/notes/M5L1notes.pdf}{Classnotes
+  04.02.2019}
+\end{itemize}
+
+Additional material for the interested reader: Chapter 7 (in particular
+7.10) in Friedman et al (2001): Elements of Statistical learning.
+
+\vspace{2mm}
+
+Some of the figures and slides in this presentation are taken (or are
+inspired) from ``An Introduction to Statistical Learning, with
+applications in R'' (Springer, 2013) with permission from the authors:
+G. James, D. Witten, T. Hastie and R. Tibshirani.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{What will you learn?}
+
+\begin{itemize}
+\tightlist
+\item
+  What is model assessment and model selection?
+\item
+  Ideal solution in a data rich situation.
+\item
+  Cross-validation and what is best:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    validation set
+  \item
+    leave-one-out cross-validation (LOOCV)
+  \item
+    \(k\)-fold CV
+  \end{itemize}
+\item
+  Bootstrapping - how and why.
+\item
+  Summing up
+\item
+  The plan for the interactive lesson.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Performance of a learning method}
+
+Our models are ``good'' when they can generalize \(\rightarrow\) We want
+a learning method to perform well on new data.
+
+Why?
+
+\begin{itemize}
+\tightlist
+\item
+  Prediction capacity on independent test data
+\item
+  Inference and understanding the true pattern (in contrast to
+  overfitting)
+\end{itemize}
+
+This is important both for
+
+\textbf{Model selection}
+
+Estimate the \emph{performance} of different models (often different
+order of complexity within one model class) to \emph{choose the best
+model}.
+
+\textbf{Model assessment}
+
+Estimating the performance (prediction error) of the final model, on new
+data.
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Training vs Test Error}
+
+\vspace{2mm}
+
+Recall:
+
+\begin{itemize}
+\item
+  The \emph{test error} is the average error that results from using a
+  statistical learning method to predict the response on a new
+  observation, one that was not used in training the method.
+\item
+  The \emph{training error} can be easily calculated by applying the
+  statistical learning method to the observations used in its training.
+\item
+  The training error rate often is quite different from the test error
+  rate.
+\item
+  \textbf{The training error can dramatically underestimate the test
+  error}.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\centering
+\includegraphics[width=0.80000\textwidth]{training_test.png}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Loss functions}
+
+\vspace{2mm}
+
+In order to define how we measure error, we must first decide for a
+\textbf{loss function}. Here we use:
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{\textcolor{red}{Mean squared error}} (quadratic loss) for
+  regression problems (continuous outcomes)
+  \(Y_i=f({\boldsymbol x}_i)+\varepsilon_i\), \(i=1,\ldots, n\):
+\end{itemize}
+
+\[\text{MSE}=\frac{1}{n}\sum_{i=1}^n (y_i-\hat{f}({\boldsymbol x}_i))^2 \ .\]
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{\textcolor{red}{Misclassification rate}} (0/1 loss) for
+  classification problems where we classify to the class with the
+  highest probability \(P(Y=j\mid {\boldsymbol x}_0)\) for
+  \(j=1,\ldots,K\):
+  \[\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i) \ .\]
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Example (from recommended exercises 2)}
+
+We aim to do \emph{model selection} in KNN-regression, where true curve
+is \(f(x)=-x+x^2+x^3\) with \(x \in [-3,3]\). \(n=61\) for the training
+data.
+
+\vspace{2mm}
+
+\centering
+\includegraphics[width=0.50000\textwidth]{Prob1f1.png}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Remember: The bias-variance trade-off}
+
+For KNN: \(K\) small = high complexity; \(K\) large = low complexity.
+
+\centering
+\includegraphics[width=0.85000\textwidth]{Prob1f4.png}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The challenge}
+
+\vspace{2mm}
+
+\begin{itemize}
+\item
+  In the above examples we knew the truth, so we could assess training
+  and test error.
+\item
+  In reality this is of course not the case.
+\item
+  We need approaches that work with real data!
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The data-rich situation (often unrealistic)}
+
+\vspace{2mm} If we had a large amount of data we could divide our data
+into three parts:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Training set}: to fit the model
+\item
+  \textbf{Validation set}: to select the best model (\emph{model
+  selection})
+\item
+  \textbf{Test set}: to assess how well the model fits on new
+  independent data (\emph{model assessment})
+\end{itemize}
+
+\vspace{2mm}
+
+\textbf{Q}: Before we had just training and test. Why do we need the
+additional validation set?
+
+\textbf{A}: We have not discussed model selection before.
+
+\textbf{Q}: Why can't we just use the training set for training, and
+then the test set both for model selection and for model evaluation?
+
+\textbf{A}: We will be too optimistic if we report the error on the test
+set when we have already used the test set to choose the best model.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\item
+  If you have a lot of data -- great -- then you do not need Module 5.
+\item
+  But, this is very seldom the case -- so we will study other solutions
+  based on efficient sample reuse with \emph{resampling} data.
+\item
+  An alternative strategy for model selection (using methods penalizing
+  model complexity, e.g.~AIC or lasso) is covered in Module 6.
+\end{itemize}
+
+We will look at \emph{cross-validation} and the \emph{bootstrap}.
+
+\end{frame}
+
+\begin{frame}{Cross-validation (CV)}
+
+Consider the following ``model selection'' situation: We assume that
+test data is available (and has been put aside), and we want to use the
+rest of our data to both fit the data and to find the best model.
+
+This can be done by:
+
+\begin{itemize}
+\tightlist
+\item
+  the validation set approach (not strictly a \emph{cross}-validation
+  approach)
+\item
+  leave one out cross-validation (LOOCV)
+\item
+  \(k\)-fold cross-validation (CV), typically \(k=5\) or \(10\)
+\end{itemize}
+
+We will also discuss that there is a ``right and a wrong way'' to to CV
+
+\begin{itemize}
+\tightlist
+\item
+  selection bias - all elements of a model selection strategy need to be
+  within the CV-loop
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The validation set approach}
+
+\vspace{2mm}
+
+\begin{itemize}
+\item
+  Consider the case when you have a data set consisting of \(n\)
+  observations.
+\item
+  To fit a model and to evaluate its predictive performance you randomly
+  divide the data set into two parts (\(n/2\) sample size each):
+
+  \begin{itemize}
+  \tightlist
+  \item
+    a \emph{training set} (to fit the model) and
+  \item
+    a \emph{validation set} (to make predictions of the response
+    variable for the observations in the validation set)
+  \end{itemize}
+\end{itemize}
+
+\vspace{4mm}
+
+Remember: The focus is on model selection (finding the model that
+performs ``best'', that is, with lowest test error).
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Example of validation set approach}
+
+\vspace{2mm}
+
+Auto data set (library \texttt{ISLR}): predict \texttt{mpg} (miles pr
+gallon) using polynomial function of \texttt{horsepower} (of engine),
+\(n=392\). What do you see?
+
+\begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/auto-1} \end{center}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+But what if we select another split into two parts? Let's do this for
+many splits:
+
+\begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/auto2-1} \end{center}
+
+\(\rightarrow\) No consensus which model really gives the lowest
+validation set MSE.
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Drawbacks with the validation set approach}
+
+\vspace{2mm}
+
+\begin{itemize}
+\item
+  High variability of validation set error due to dependency on the set
+  of observation included in the training and validation set
+\item
+  Smaller sample size for model fit, as only half of the observations
+  are in the training set. Therefore, the validation set error may tend
+  to overestimate the error rate on new observations for a model that is
+  fit on the full data set (the more data, the lower the error).
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+Better ideas?
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Leave-one-out cross-validation (LOOCV)}
+
+Leave-one-out cross-validation (LOOCV) addresses the limitations of the
+validation set approach.
+
+\vspace{2mm}
+
+\textbf{Idea:}
+
+\begin{itemize}
+\tightlist
+\item
+  Only \textbf{one observation at a time} is left out and makes up the
+  new observations (test set).
+\item
+  The remaining \(n-1\) observations make up the training set.
+\item
+  The procedure of model fitting is repeated \(n\) times, such that each
+  of the \(n\) observations is left out once. In each step, we calculate
+  the MSE as
+\end{itemize}
+
+\[\text{MSE}_i=(y_i-\hat{y}_i)^2 \ .\]
+
+\begin{itemize}
+\tightlist
+\item
+  The \textbf{total prediction error} is the mean across these \(n\)
+  models
+\end{itemize}
+
+\[\text{CV}_{n}=\frac{1}{n}\sum_{i=1}^n \text{MSE}_i \ .\]
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Regression example: LOOCV}
+
+\begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/auto_loocv-1} \end{center}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ISLR)  }\CommentTok{#for Auto data set}
+\KeywordTok{library}\NormalTok{(boot)  }\CommentTok{#for cv.glm}
+\KeywordTok{library}\NormalTok{(ggplot2)  }\CommentTok{#for plotting}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{n =}\StringTok{ }\KeywordTok{dim}\NormalTok{(Auto)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{testMSEvec =}\StringTok{ }\OtherTok{NULL}
+\NormalTok{start =}\StringTok{ }\KeywordTok{Sys.time}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{ (polydeg }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{) \{}
+\NormalTok{    glm.fit =}\StringTok{ }\KeywordTok{glm}\NormalTok{(mpg }\OperatorTok{~}\StringTok{ }\KeywordTok{poly}\NormalTok{(horsepower, polydeg), }\DataTypeTok{data =}\NormalTok{ Auto)}
+\NormalTok{    glm.cv1 =}\StringTok{ }\KeywordTok{cv.glm}\NormalTok{(Auto, glm.fit, }\DataTypeTok{K =}\NormalTok{ n)}
+\NormalTok{    testMSEvec =}\StringTok{ }\KeywordTok{c}\NormalTok{(testMSEvec, glm.cv1}\OperatorTok{$}\NormalTok{delta[}\DecValTok{1}\NormalTok{])}
+\NormalTok{\}}
+\NormalTok{stopp =}\StringTok{ }\KeywordTok{Sys.time}\NormalTok{()}
+\NormalTok{yrange =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{15}\NormalTok{, }\DecValTok{28}\NormalTok{)}
+\NormalTok{plotdf =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{testMSE =}\NormalTok{ testMSEvec, }\DataTypeTok{degree =} \DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{)}
+\NormalTok{g0 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(plotdf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ degree, }\DataTypeTok{y =}\NormalTok{ testMSE)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_continuous}\NormalTok{(}\DataTypeTok{breaks =} \DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \StringTok{"LOOCV"}\NormalTok{)}
+\NormalTok{g0 }\OperatorTok{+}\StringTok{ }\KeywordTok{theme_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\normalsize
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Issues with leave-one-out cross-validation}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Pros:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    No randomness in training/validation splits!
+  \item
+    Little bias, since nearly the whole data set used for training
+    (compared to half for validation set approach).
+  \end{itemize}
+\item
+  Cons:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Expensive to implement -- need to fit \(n\) different models.
+  \item
+    High variance since: two training sets only differ by one
+    observation - which makes estimates from each fold highly correlated
+    and this can lead to that their average can have high
+    variance\(^\star\).
+  \end{itemize}
+\end{itemize}
+
+\tiny
+\(^\star\) Recall that
+\[\text{Var}(\sum_{i=1}^na_iX_i+b)=\sum_{i=1}^n\sum_{j=1}^n a_ia_j\text{Cov}(X_i,X_j)\]
+\[=\sum_{i=1}^na_i^2\text{Var}(X_i)+2\sum_{i=2}^n \sum_{j=1}^{i-1}
+a_ia_j\text{Cov}(X_i,X_j).\]
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{LOOCV for multiple linear regression}
+
+\vspace{2mm}
+
+There is a nice shortcut for LOOCV in the case of linear regression:
+
+\[ \text{CV}_{n}=\frac{1}{n}\sum_{i=1}^n \left( \frac{y_i-\hat{y}_i}{1-h_{ii}} \right) ^2 \ ,\]
+
+where \(h_i\) is the \(i\)th diagonal element (leverage) of the hat
+matrix \({\bf H}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T\), and
+\(\hat{y}_i\) is the \(i\)th fitted value from the original least
+squares fit.
+
+\vspace{2mm}
+
+\(\rightarrow\) Need to fit the model only once!
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{\(k\)-fold cross-validation}
+
+\(~\)
+
+To address the drawbacks of LOOCV, we can leave out not just one single
+observation in each iteration, but \(1/k\)-th of all data.
+
+\(~\)
+
+\textbf{Procedure:}
+
+\begin{itemize}
+\tightlist
+\item
+  Split the data into \(k\) (more or less) equal parts.
+\item
+  Use \(k-1\) parts to fit and the \(k\)th part to validate.
+\item
+  Do this \(k\) times and leave out another part in each round.
+\end{itemize}
+
+The MSE is then estimated in each of the \(k\) iterations
+(\(\text{MSE}_1,\ldots,\text{MSE}_k\)), and the the \(k\)-fold CV is
+
+\[\text{CV}_k = \frac1k \sum_{i=1}^k \text{MSE}_i \ .\]
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\textbf{Comparison of LOOCV and \(k\)-fold CV}:
+
+\centering
+LOOCV:
+
+\includegraphics[width=0.70000\textwidth]{../../ISLR/Figures/Chapter5/5.3.png}
+
+\(k\)-fold:
+
+\includegraphics[width=0.70000\textwidth]{../../ISLR/Figures/Chapter5/5.5.png}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Formally}
+
+\begin{itemize}
+\tightlist
+\item
+  Indices of observations - divided into \(k\) folds:
+  \(C_1, C_2, \ldots, C_k\).
+\item
+  \(n_k\) elements in each fold, if \(n\) is a multiple of \(k\) then
+  \(n_k=n/k\).
+\end{itemize}
+
+\[\text{MSE}_k=\frac{1}{n_k}\sum_{i\in C_k}(y_i-\hat{y}_i)^2\] where
+\(\hat{y}_i\) is the fit for observation \(i\) obtained from the data
+with part \(k\) removed.
+
+\[\text{CV}_{k}=\frac{1}{n} \sum_{j=1}^k n_j \text{MSE}_j\]
+
+Observe: setting \(k=n\) gives LOOCV.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Regression example: \(5\) and \(10\)-fold
+cross-validation}
+
+\begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/auto_510fold-1} \end{center}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ISLR)}
+\KeywordTok{library}\NormalTok{(boot)}
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{n =}\StringTok{ }\KeywordTok{dim}\NormalTok{(Auto)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{testMSEvec5 =}\StringTok{ }\OtherTok{NULL}
+\NormalTok{testMSEvec10 =}\StringTok{ }\OtherTok{NULL}
+\NormalTok{start =}\StringTok{ }\KeywordTok{Sys.time}\NormalTok{()}
+\ControlFlowTok{for}\NormalTok{ (polydeg }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{) \{}
+\NormalTok{    glm.fit =}\StringTok{ }\KeywordTok{glm}\NormalTok{(mpg }\OperatorTok{~}\StringTok{ }\KeywordTok{poly}\NormalTok{(horsepower, polydeg), }\DataTypeTok{data =}\NormalTok{ Auto)}
+\NormalTok{    glm.cv5 =}\StringTok{ }\KeywordTok{cv.glm}\NormalTok{(Auto, glm.fit, }\DataTypeTok{K =} \DecValTok{5}\NormalTok{)}
+\NormalTok{    glm.cv10 =}\StringTok{ }\KeywordTok{cv.glm}\NormalTok{(Auto, glm.fit, }\DataTypeTok{K =} \DecValTok{10}\NormalTok{)}
+\NormalTok{    testMSEvec5 =}\StringTok{ }\KeywordTok{c}\NormalTok{(testMSEvec5, glm.cv5}\OperatorTok{$}\NormalTok{delta[}\DecValTok{1}\NormalTok{])}
+\NormalTok{    testMSEvec10 =}\StringTok{ }\KeywordTok{c}\NormalTok{(testMSEvec10, glm.cv10}\OperatorTok{$}\NormalTok{delta[}\DecValTok{1}\NormalTok{])}
+\NormalTok{\}}
+\NormalTok{stopp =}\StringTok{ }\KeywordTok{Sys.time}\NormalTok{()}
+\NormalTok{yrange =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{15}\NormalTok{, }\DecValTok{28}\NormalTok{)}
+\NormalTok{plotdf =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{testMSE5 =}\NormalTok{ testMSEvec5, }\DataTypeTok{degree =} \DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{)}
+\NormalTok{g0 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(plotdf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ degree, }\DataTypeTok{y =}\NormalTok{ testMSE5)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{() }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_x_continuous}\NormalTok{(}\DataTypeTok{breaks =} \DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{y =} \StringTok{"CV"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"5 and 10 fold CV"}\NormalTok{)}
+\NormalTok{g0 }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ testMSEvec10), }\DataTypeTok{colour =} \StringTok{"red"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ testMSEvec10), }
+    \DataTypeTok{colour =} \StringTok{"red"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"5 fold (black), 10 fold (red)"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{theme_minimal}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\normalsize
+
+\end{frame}
+
+\begin{frame}
+
+10 reruns (different splits) of the 10-CV method - to see variability:
+
+\begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/auto_510fold_10-1} \end{center}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Issues with \(k\)-fold cross-validation}
+
+\vspace{2mm}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  As for the validation set, the result may vary according to how the
+  folds are made, but the variation is in general lower than for the
+  validation set approach.
+\item
+  Computational issues: less work with \(k=5\) or 10 than LOOCV.
+\item
+  The training set is \((k-1)/k\) of the original data set - the
+  estimate of the prediction error is biased upwards.
+\item
+  This bias is the smallest when \(k=n\) (LOOCV), but we know that LOOCV
+  has high variance.
+\item
+  Therefore, often \(k=5\) or \(k=10\) is used as a compromise.
+\end{enumerate}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Choosing the best model}
+
+\vspace{2mm}
+
+\begin{itemize}
+\item
+  Remember that we \emph{randomly divide} the data into \(k\) folds and
+  then perform the CV for all possible model that we want to choose
+  between.
+\item
+  We have not directly indicated that there is a model parameter (maybe
+  \(K\) in KNN or the degree of the polynomial), say \(\theta\),
+  involved to calculate \(\text{CV}_j\), \(j=1,\ldots, k\)
+\end{itemize}
+
+\(~\)
+
+\textbf{Smallest CV-error:}
+
+\begin{itemize}
+\tightlist
+\item
+  Based on the CV-plot we may choose the model with the smallest
+  \({\text{CV}_k}\) as our best model (with corresponding \(\theta\)).
+\item
+  We then fit this model using the whole data set (not the test part,
+  that is still kept away), and evaluate the performance on the test
+  set.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\textbf{One standard error rule:}
+
+Denote by \(\text{MSE}_j(\theta)\), \(j=1,\ldots, k\) the \(k\) parts of
+the MSE that together give the \(\text{CV}_k\).
+
+We can compute the sample standard deviation (standard error) of all
+\(\text{MSE}_j(\theta)\), \(j=1,\ldots, k\)
+\[\hat{\text{SE}}(\text{CV}_k(\theta))= \sqrt{\sum_{j=1}^k (\text{MSE}_j(\theta) - \overline{\text{MSE}}(\theta))/(k-1)} \, \]
+
+for each value of the complexity parameter \(\theta\).
+
+The \emph{one standard error rule} is to choose the simplest model
+(\emph{e.g.}, with lowest polynomial degree) within one standard error
+of the minimal error.
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{\(k\)-fold cross-validation in classification}
+
+\vspace{3mm}
+
+What do we need to change from our regression set-up?
+
+\vspace{3mm}
+
+\begin{itemize}
+\item
+  For LOOCV \(\hat{y}_i\) is the fit for observation \(i\) obtained from
+  the data with observations \(i\) removed, and
+  \({\text{Err}_i}=I(y_i\neq \hat{y}_i)\) . LOOCV is then
+  \[\text{CV}_{n}=\frac{1}{n} \sum_{i=1}^n {\text{Err}_i}\]
+\item
+  The \(k\)-fold CV is defined analogously.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Can we use CV for model assessment?}
+
+Assume that we have a method where we not need to perform model
+selection (maybe this is done using the methods from Module 6, that is
+AIC or lasso), but want to perform model assessment based on all our
+data.
+
+Then we can use CV with all data (then the validation part is really the
+test part) and report on the model performance using the validation
+parts of the data as above.
+
+\end{block}
+
+\begin{block}{Can we use CV both for model selection and model
+assessment?}
+
+Then you can use two layers of CV - also called \emph{nested CV}. See
+drawing in class.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The right and the wrong way to do cross-validation}
+
+\href{https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/cv_boot.pdf}{ISL
+book slides, page 17}: model assessment.
+
+\begin{itemize}
+\tightlist
+\item
+  We have a two-class problem and would like to use a simple
+  classification method, however,
+\item
+  we have many possible predictors \(p=5000\) and not so big sample size
+  \(n=50\).
+\end{itemize}
+
+We use this strategy to produce a classifier:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  We calculate the correlation between the class label and each of the
+  \(p\) predictors, and choose the \(d=25\) predictors that have the
+  highest (absolute value) correlation with the class label. (We need to
+  have \(d<n\) to fit the logistic regression uniquely.)
+\item
+  Then we fit our classifier (here: logistic regression) using only the
+  \(d=25\) predictors.
+\end{enumerate}
+
+How can we use cross-validation to produce an estimate of the
+performance of this classifier?
+
+\textbf{Q}: Can we apply cross-validation only to step 2? Why or why
+not?
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+Can we apply cross-validation only to step 2?
+
+\textbf{A:} No, step 1 is part of the training procedure (the class
+labels are used) and must be part of the CV to give an honest estimate
+of the performance of the classifier.
+
+\begin{itemize}
+\tightlist
+\item
+  Wrong: Apply cross-validation in step 2.
+\item
+  Right: Apply cross-validation to steps 1 and 2.
+\end{itemize}
+
+We will see in the Recommended Exercises that doing the wrong thing can
+give a misclassification error approximately 0 - even if the ``true''
+rate is 50\%.
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Selection bias in gene extraction on the basis of
+microarray gene-expression data}
+
+Article by \href{http://www.pnas.org/content/99/10/6562}{Christophe
+Ambroise and Geoffrey J. McLachlan, PNAS 2002}: Direct quotation from
+the abstract of the article follows.
+
+\begin{itemize}
+\tightlist
+\item
+  In the context of cancer diagnosis and treatment, we consider the
+  problem of constructing an accurate prediction rule on the basis of a
+  relatively small number of tumor tissue samples of known type
+  containing the expression data on very many (possibly thousands)
+  genes.
+\item
+  Recently, results have been presented in the literature suggesting
+  that it is possible to construct a prediction rule from only a few
+  genes such that it has a negligible prediction error rate.
+\item
+  However, in these results the test error or the leave-one-out
+  cross-validated error is calculated without allowance for the
+  selection bias.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\tightlist
+\item
+  There is no allowance because the rule is either tested on tissue
+  samples that were used in the first instance to select the genes being
+  used in the rule or because the cross-validation of the rule is not
+  external to the selection process; that is, gene selection is not
+  performed in training the rule at each stage of the crossvalidation
+  process.
+\item
+  We describe how in practice the selection bias can be assessed and
+  corrected for by either performing a crossvalidation or applying the
+  bootstrap external to the selection process.
+\item
+  We recommend using 10-fold rather than leave-one-out cross-validation,
+  and concerning the bootstrap, we suggest using the so-called .632
+  bootstrap error estimate designed to handle overfitted prediction
+  rules.
+\item
+  Using two published data sets, we demonstrate that when correction is
+  made for the selection bias, the cross-validated error is no longer
+  zero for a subset of only a few genes.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{The Bootstrap}
+
+\begin{itemize}
+\tightlist
+\item
+  flexible and powerful statistical tool that can be used to quantify
+  \emph{uncertainty} associated with an estimator or statistical
+  learning method
+\item
+  we will look at getting an estimate for the standard error of a sample
+  median and of a regression coefficient
+\item
+  in Module 8 - bootstrapping is the core of the \emph{ensemble method}
+  referred to at \emph{bagging}=bootstrap aggregation,
+\item
+  in TMA4300 Computation statistics - a lot more theory on the
+  bootstrap.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+The inventor: Bradley Efron in 1979 -
+\href{https://www.youtube.com/watch?v=6l9V1sINzhE}{see interview}.
+
+The name? \emph{To pull oneself up by one's bootstraps} from ``The
+Surprising Adventures of Baron Munchausen'' by Rudolph Erich Raspe:
+
+\emph{The Baron had fallen to the bottom of a deep lake. Just when it
+looked like all was lost, he thought to pick himself up by his own
+bootstraps.}
+
+\textbf{Idea: Use the data itself to get more information about a
+statistic (an estimator).}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Example: the standard deviation of the sample median?}
+
+Assume that we observe a random sample \(X_1, X_2, \ldots, X_n\) from an
+unknown probability distribution \(f\). We are interesting in saying
+something about the population median, and to do that we calculate the
+sample median \(\tilde{X}\). But, how accurate is \(\tilde{X}\) as an
+estimator?
+
+The bootstrap was introduced as a computer-based method to estimate the
+standard deviation of an estimator, for example our estimator
+\(\tilde{X}\).
+
+But, before we look at the bootstrap method, first we assume that we
+know \(F\) and can sample from \(F\), and use simulations to answer our
+question.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{n =}\StringTok{ }\DecValTok{101}
+\NormalTok{B =}\StringTok{ }\DecValTok{1000}
+\NormalTok{estimator =}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\OtherTok{NA}\NormalTok{, B)}
+\ControlFlowTok{for}\NormalTok{ (b }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{B) \{}
+\NormalTok{    xs =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(n)}
+\NormalTok{    estimator[b] =}\StringTok{ }\KeywordTok{median}\NormalTok{(xs)}
+\NormalTok{\}}
+\KeywordTok{sd}\NormalTok{(estimator)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1259035
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# approximation for large samples (sd of median of standard normal)}
+\FloatTok{1.253} \OperatorTok{*}\StringTok{ }\DecValTok{1}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{(n)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1246782
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ estimator), }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_density}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{5Resample_files/figure-beamer/unnamed-chunk-4-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Moving from simulation to bootstrapping}
+
+The bootstrap method is using the observed data to estimate the
+\emph{empirical distribution} \(\hat{f}\), that is each observed value
+of \(x\) is given probability \(1/n\).
+
+A \emph{bootstrap sample} \(X^*_1,X^*_2,\ldots, X^*_n\) is a random
+sample drawn from \(\hat{f}\).
+
+A simple way to obtain the bootstrap sample is to \emph{draw with
+replacement from \(X_1, X_2, \ldots, X_n\)}.
+
+This means that our bootstrap sample consists of \(n\) members of
+\(X_1, X_2, \ldots, X_n\) - some appearing 0 times, some 1, some 2, etc.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{n =}\StringTok{ }\DecValTok{101}
+\NormalTok{original =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(n)}
+\KeywordTok{median}\NormalTok{(original)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.05300423
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{boot1 =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ original, }\DataTypeTok{size =}\NormalTok{ n, }\DataTypeTok{replace =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{table}\NormalTok{(}\KeywordTok{table}\NormalTok{(boot1))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+##  1  2  3  4 
+## 34 22  5  2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# how many observations have not been selected in our boot1 sample?}
+\NormalTok{n }\OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{table}\NormalTok{(}\KeywordTok{table}\NormalTok{(boot1)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 38
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{median}\NormalTok{(boot1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] -0.02854676
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The bootstrap algorithm for estimating standard errors}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \(B\) bootstrap samples: drawn with replacement from the original data
+\item
+  Evaluate statistic: on each of the \(B\) bootstrap samples to get
+  \(\tilde{X}^*_b\) for the \(b\)th bootstrap sample.
+\item
+  Estimate squared standard error by:
+  \[\frac{1}{B-1}\sum_{b=1}^B (\tilde{X}^*_b-\frac{1}{B}\sum_{b=1}^B \tilde{X}^*_b)^2\]
+\end{enumerate}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{with for-loop in R}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{n =}\StringTok{ }\DecValTok{101}
+\NormalTok{original =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(n)}
+\KeywordTok{median}\NormalTok{(original)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.05300423
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{B =}\StringTok{ }\DecValTok{1000}
+\NormalTok{estimator =}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\OtherTok{NA}\NormalTok{, B)}
+\ControlFlowTok{for}\NormalTok{ (b }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{B) \{}
+\NormalTok{    thisboot =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ original, }\DataTypeTok{size =}\NormalTok{ n, }\DataTypeTok{replace =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{    estimator[b] =}\StringTok{ }\KeywordTok{median}\NormalTok{(thisboot)}
+\NormalTok{\}}
+\KeywordTok{sd}\NormalTok{(estimator)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.1365448
+\end{verbatim}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ estimator), }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_density}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{5Resample_files/figure-beamer/unnamed-chunk-7-1.pdf}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{using built in \texttt{boot} function from library
+\texttt{boot}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(boot)}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{n =}\StringTok{ }\DecValTok{101}
+\NormalTok{original =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(n)}
+\KeywordTok{median}\NormalTok{(original)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 0.05300423
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(original)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+## -2.30917 -0.50232  0.05300  0.08248  0.68864  2.18733
+\end{verbatim}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{boot.median =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(data, index) }\KeywordTok{return}\NormalTok{(}\KeywordTok{median}\NormalTok{(data[index]))}
+\NormalTok{B =}\StringTok{ }\DecValTok{1000}
+\KeywordTok{boot}\NormalTok{(original, boot.median, }\DataTypeTok{R =}\NormalTok{ B)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## ORDINARY NONPARAMETRIC BOOTSTRAP
+## 
+## 
+## Call:
+## boot(data = original, statistic = boot.median, R = B)
+## 
+## 
+## Bootstrap Statistics :
+##       original      bias    std. error
+## t1* 0.05300423 -0.01577692   0.1290482
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{With or without replacement?}
+
+In bootstrapping we sample \emph{with replacement} from our
+observations.
+
+\textbf{Q:} What if we instead sample \emph{without replacement}?
+
+\textbf{A:} Then we would always get the same sample - given that the
+order of the sample points is not important for our estimator.
+
+(In permutation testing we sample without replacement to get samples
+under the null hypothesis - a separate field of research.)
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Example: multiple linear regression}
+
+We assume, for observation \(i\):
+\[Y_i= \beta_0 + \beta_{1}  x_{i1} + \beta_2 x_{i2} + ... + \beta_p x_{ip} + \varepsilon_i,\]
+where \(i=1,2,...,n\). The model can be written in matrix form:
+\[{\bf Y}={\bf X} \boldsymbol{\beta}+{\boldsymbol{\varepsilon}}.\]
+
+The least squares estimator:
+\(\hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}\) has
+\(\text{Cov}(\boldsymbol\beta)=\sigma^2({\bf X}^T{\bf X})^{-1}\).
+
+We will in the recommended exercises look at how to use bootstrapping to
+estimate the covariance of the estimator. Why is that ``needed'' if we
+already know the mathematical formula for the standard deviation?
+Answer: not needed - but OK to look at an example?
+
+We will not do this here - but our bootstrap samples can also be used to
+make confidence intervals for the regression coefficients or prediction
+intervals for new observations. This means that we do not have to rely
+on assuming that the error terms are normally distributed!
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Bagging}
+
+Bagging is a special case of \emph{ensemble methods}.
+
+In Module 8 we will look at bagging, which is built on bootstrapping the
+the fact that it is possible to reduce the variance of a prediction by
+taking the average of many model fits.
+
+\begin{itemize}
+\tightlist
+\item
+  Assume that we have \(B\) different predictors
+  \(X_1, X_2, \ldots, X_B\). We have built them on \(B\) different
+  bootstrap samples.
+\item
+  All are predictors for some parameter \(\mu\) and that all have some
+  unknown variance \(\sigma^2\).
+\item
+  We then decide that we want to use all the predictors together -
+  equally weighted - and make \(\bar{X}=\frac{1}{n} \sum_{i=1}^n X_i\),
+  which we often use to predict \(\mu\).
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+We can therefore obtain a new model (our average of the individual
+models) that has a smaller variance than each of the individual model
+because
+
+\[\text{Var}(\bar{X})=\frac{\sigma^2}{n}\]
+
+Since this averaged predictor has smaller variance than each of the
+predictors we would assum that this is a more accurate prediction.
+However, the interpretation of this bagged prediction might be harder
+then for the separate predictors.
+
+Models that have poor prediction ability (as we may see can happen with
+regression and classification trees) might benefit greatly from bagging.
+More in Module 8.
+
+\end{frame}
+
+\begin{frame}{Summing up}
+
+\begin{block}{Take home messages}
+
+\begin{itemize}
+\tightlist
+\item
+  Use \(k=5\) or \(10\) fold cross-validation for model selection or
+  assessment.
+\item
+  Use bootstrapping to estimate the standard deviation of an estimator,
+  and understand how it is performed before module 8 on trees.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Further reading}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://www.youtube.com/playlist?list=PL5-da3qGB5IA6E6ZNXu7dp89_uv8yocmf}{Videoes
+  on YouTube by the authors of ISL, Chapter 5}, and corresponding
+  \href{https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/cv_boot.pdf}{slides}
+\item
+  \href{https://rstudio-pubs-static.s3.amazonaws.com/65561_43c0eaaa8565414eae333b47038f716c.html}{Solutions
+  to exercises in the book, chapter 5}
+\end{itemize}
+
+\end{frame}
+
+\end{document}
