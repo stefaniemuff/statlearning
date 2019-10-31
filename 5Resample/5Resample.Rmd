@@ -615,7 +615,7 @@ Denote by $\text{MSE}_j(\theta)$, $j=1,\ldots, k$ the $k$ parts of the MSE that 
 We can compute the sample standard deviation (standard error) of all $\text{MSE}_j(\theta)$, $j=1,\ldots, k$ 
 $$\hat{\text{SE}}(\text{CV}_k(\theta))= \sqrt{\sum_{j=1}^k (\text{MSE}_j(\theta) - \overline{\text{MSE}}(\theta))/(k-1)} \, $$
 
-for each value of the complexity parameter $\theta$.
+for each value of the complexity parameter $\theta$.\footnote{Strictly speaking, this estimate is not quite valid. Why?}
 
 <!-- and then use $\text{SE}(\theta)=\text{SD}(\theta)/\sqrt{k}$ as the standard deviation of $\text{CV}_k$. -->
 
@@ -649,14 +649,20 @@ $$\text{CV}_{n}=\frac{1}{n} \sum_{i=1}^n {\text{Err}_i}$$
 ---
 
 ### Can we use CV for model assessment?
+\vspace{2mm}
 
-Assume that we have a method where we not need to perform model selection (maybe this is done using the methods from Module 6, that is AIC or lasso), but want to perform model assessment based on all our data.
+* Assume that we have a method where we not need to perform model selection (maybe using the methods from Module 6), but want to perform model assessment based on all our data.
 
-Then we can use CV with all data (then the validation part is really the test part) and report on the model performance using the validation parts of the data as above.
+* Then we can use CV with all data (then the validation part is really the test part) and report on the model performance using the validation parts of the data as above.
+
+\vspace{2mm}
 
 ### Can we use CV both for model selection and model assessment?
+\vspace{2mm}
 
-Then you can use two layers of CV - also called _nested CV_. See drawing in class.
+* Not really: using the test set for both model selection and estimation tends to overfit the test data, and the bias will be underestimated.  
+
+* Solution: you can use two layers of CV - also called _nested CV_. See drawing in class.
 
 
 ---
@@ -675,57 +681,58 @@ We use this strategy to produce a classifier:
 
 How can we use cross-validation to produce an estimate of the performance of this classifier? 
 
-**Q**: Can we apply cross-validation only to step 2? Why or why not?
+
 
 ---
 
-Can we apply cross-validation only to step 2?
+**Q**: Can we apply cross-validation only to step 2? Why (not)?
 
-**A:** No, step 1 is part of the training procedure (the class labels are used) and must be part of the CV to give an honest estimate of the performance of the classifier. 
+**A:** No, **step 1 is part of the training procedure** (the class labels have already been used) and must be part of the CV to give an honest estimate of the performance of the classifier. 
+
+$~$
 
 * Wrong: Apply cross-validation in step 2.
 * Right: Apply cross-validation to steps 1 and 2.
 
-We will see in the Recommended Exercises that doing the wrong thing can give a misclassification error approximately 0 - even if the "true" rate is 50%.
+$~$
+
+Note: We will see in the Recommended Exercises that doing the wrong thing can give a misclassification error approximately 0 - even if the "true" rate is 50%. (todo: check)
 
 ---
 
 ### Selection bias in gene extraction on the basis of microarray gene-expression data
 
-Article by [Christophe Ambroise and Geoffrey J. McLachlan, PNAS 2002](http://www.pnas.org/content/99/10/6562): Direct quotation from the abstract of the article follows.
+\vspace{2mm}
+
+Article by [Christophe Ambroise and Geoffrey J. McLachlan, PNAS 2002](http://www.pnas.org/content/99/10/6562).
+
+
+\centering
+![Training vs test error](pnas.png){width=105%}
+
+
+
+
+---
+
 
 * In the context of cancer diagnosis and treatment, we consider the
 problem of constructing an accurate prediction rule on the basis of
 a relatively small number of tumor tissue samples of known type
 containing the expression data on very many (possibly thousands)
 genes. 
+
 * Recently, results have been presented in the literature
 suggesting that it is possible to construct a prediction rule from
 only a few genes such that it has a negligible prediction error rate.
+
 * However, in these results the test error or the leave-one-out
 cross-validated error is calculated without allowance for the selection
 bias. 
 
----
+\vspace{2mm}
+See also this nice [anecdote at about 7min 15 in the video](https://www.youtube.com/watch?v=S06JpVoNaA0).
 
-* There is no allowance because the rule is either tested
-on tissue samples that were used in the first instance to select the
-genes being used in the rule or because the cross-validation of the
-rule is not external to the selection process; that is, gene selection
-is not performed in training the rule at each stage of the crossvalidation
-process.
-* We describe how in practice the selection bias
-can be assessed and corrected for by either performing a crossvalidation
-or applying the bootstrap external to the selection
-process. 
-* We recommend using 10-fold rather than leave-one-out
-cross-validation, and concerning the bootstrap, we suggest using
-the so-called .632 bootstrap error estimate designed to handle
-overfitted prediction rules. 
-* Using two published data sets, we
-demonstrate that when correction is made for the selection bias,
-the cross-validated error is no longer zero for a subset of only a few
-genes.
 
 ---
 
@@ -734,26 +741,35 @@ genes.
 
 # The Bootstrap
 
-* flexible and powerful statistical tool that
-can be used to quantify _uncertainty_ associated with an estimator or statistical learning method
-* we will look at getting an estimate for the standard error of a sample median and of a regression coefficient
-* in Module 8 - bootstrapping is the core of the _ensemble method_ referred to at _bagging_=bootstrap aggregation,
-* in TMA4300 Computation statistics - a lot more theory on the bootstrap.
+\vspace{2mm}
+
+* Flexible and powerful statistical tool that
+can be used to quantify _uncertainty_ associated with an estimator or statistical learning method.
+
+\vspace{2mm}
+
+* Very popular to obtain standard errors or confidence intervals for a coefficient, when parametric theory does not provide it.
+
+\vspace{2mm}
+
+* We will look at getting an estimate for the standard error of a sample median and of a regression coefficient.
+
 
 ---
 
-The inventor: Bradley Efron in 1979 - [see interview](https://www.youtube.com/watch?v=6l9V1sINzhE).
+* The inventor: Bradley Efron in 1979 - [see interview](https://www.youtube.com/watch?v=6l9V1sINzhE).
 
-The name? _To pull oneself up by one's bootstraps_ from "The Surprising
-Adventures of Baron Munchausen" by Rudolph Erich
-Raspe:
+* The name? _To pull oneself up by one's bootstraps_ from "The Surprising
+Adventures of Baron Munchausen" by Rudolph Erich Raspe:
 
 _The Baron had fallen to the bottom of a deep lake. Just
 when it looked like all was lost, he thought to pick himself
 up by his own bootstraps._
 
-**Idea: Use the data itself to get more information about a statistic (an estimator).**
 
+* **Idea: Use the data itself to get more information about a statistic (an estimator).**
+
+<!-- --- -->
 
 <!-- ## Example: The mean $\bar{X}$ -->
 
@@ -763,8 +779,8 @@ up by his own bootstraps._
 
 <!-- If we want to estimate $\sigma^2$, a popular estimator is $S^2=\frac{1}{n-1}\sum_{i=1}^n (X_i-\bar{X})^2$, -->
 
-<!-- If the observations are _independent_ (and identically distributed) we know that the variance of $\bar{X}$ is given by $\text{Var}(\bar{X})=\frac{\sigma^2}{n}$,  -->
-<!-- which we may estimate as $\widehat{\text{Var}}(\bar{X})=\frac{S^2}{n}$.  -->
+<!-- If the observations are _independent_ (and identically distributed) we know that the variance of $\bar{X}$ is given by $\text{Var}(\bar{X})=\frac{\sigma^2}{n}$, -->
+<!-- which we may estimate as $\widehat{\text{Var}}(\bar{X})=\frac{S^2}{n}$. -->
 
 <!-- To form a confidence interval for $\mu$ we need to assume a distribution for the $X_i$s. If we assume that the $X_i$s are independent and normal $N(\mu,\sigma^2)$  and can get a 95% confidence interval from -->
 
@@ -774,14 +790,21 @@ up by his own bootstraps._
 
 ## Example: the standard deviation of the sample median?
 
-Assume that we observe a random sample $X_1, X_2, \ldots, X_n$ from an unknown probability distribution $f$. We are interesting in saying something about the population median, and to do that we calculate the sample median $\tilde{X}$. But, how accurate is $\tilde{X}$ as an estimator?
+\vspace{2mm}
 
-The bootstrap was introduced as a computer-based method to estimate the standard deviation of an estimator, for example our estimator $\tilde{X}$.
+* Assume that we observe a random sample $X_1, X_2, \ldots, X_n$ from an unknown probability distribution $f$. We are interesting in saying something about the population median, and to do that we calculate the sample median $\tilde{X}$. But, how accurate is $\tilde{X}$ as an estimator?
 
-But, before we look at the bootstrap method, first we assume that we know $F$ and can sample from $F$, and use simulations to answer our question.
+* If we would know our distiribution $F$, we could sample from $F$, and use simulations to answer our question.
+
+* However, without knowledge of the distribution, we cannot calculate the standard deviation of our estimator, thus $\text{SD}(\tilde{X})$.
+
+* That's where the bootstrap method comes into play.
 
 ---
 
+Let's first assume we would know $f$, for example $X\sim N(0,1)$. Then we can repeatedly take samples and calculate the standard deviation of all medians to obtain an estimate:
+
+\small
 ```{r,eval=TRUE, echo=TRUE}
 set.seed(123)
 n=101
@@ -793,33 +816,32 @@ for (b in 1:B)
   estimator[b]=median(xs)
 }
 sd(estimator)
-# approximation for large samples 
-# (sd of median of standard normal)
-1.253*1/sqrt(n)
 ```
 
 ---
 
-```{r}
+```{r boot1, echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='70%'}
 ggplot(data=data.frame(x=estimator),aes(x=x))+
   geom_density()
 ```
 
 ---
 
-## Moving from simulation to bootstrapping
+## Moving from simulation to bootstrapping ($f$ unknown)
 
-The bootstrap method is using the observed data to estimate the _empirical distribution_ $\hat{f}$, that is each observed value of $x$ is given probability $1/n$.
+\vspace{2mm}
 
-A _bootstrap sample_ $X^*_1,X^*_2,\ldots, X^*_n$ is a random sample drawn from $\hat{f}$.
+* The bootstrap method is using the observed data to estimate the _empirical distribution_ $\hat{f}$, that is each observed value of $x$ is given probability $1/n$.
 
-A simple way to obtain the bootstrap sample is to _draw with replacement from $X_1, X_2, \ldots, X_n$_.
+* A _bootstrap sample_ $X^*_1,X^*_2,\ldots, X^*_n$ is a random sample drawn from $\hat{f}$.
 
-This means that our bootstrap sample consists of $n$ members of $X_1, X_2, \ldots, X_n$ - some appearing 0 times, some 1, some 2, etc.
+* A simple way to obtain the bootstrap sample is to _draw with replacement from $X_1, X_2, \ldots, X_n$_.
 
+* **Note**: Our bootstrap sample consists of $n$ members of $X_1, X_2, \ldots, X_n$ - some appearing more than once, other not appearing at all.
 
 ---
 
+\small
 ```{r, eval=TRUE, echo=TRUE}
 set.seed(123)
 n=101
@@ -827,8 +849,8 @@ original=rnorm(n)
 median(original)
 boot1=sample(x=original,size=n,replace=TRUE)
 table(table(boot1))
-# how many observations have not been selected in our boot1 sample?
-n-sum(table(table(boot1)))
+
+
 median(boot1)
 ```
 
@@ -836,17 +858,24 @@ median(boot1)
 
 ## The bootstrap algorithm for estimating standard errors
 
-1. $B$ bootstrap samples: drawn with replacement from the original data 
+\vspace{2mm}
+
+1. Drawing $B$ bootstrap samples: drawn with replacement from the original data 
+
+\vspace{1mm}
 
 2. Evaluate statistic: on each of the $B$ bootstrap samples to get $\tilde{X}^*_b$ for the $b$th bootstrap sample.
 
-3. Estimate squared standard error by:
-$$\frac{1}{B-1}\sum_{b=1}^B (\tilde{X}^*_b-\frac{1}{B}\sum_{b=1}^B \tilde{X}^*_b)^2$$
+\vspace{1mm}
+
+3. Estimate squared standard error by
+$$\frac{1}{B-1}\sum_{b=1}^B (\tilde{X}^*_b-\frac{1}{B}\sum_{b=1}^B \tilde{X}^*_b)^2 \ ,$$
+which is the empirical standard deviation from the $B$ estimates  $\tilde{X}^*_b$, $b=1,\ldots,B$.
 
 
 ---
 
-### with for-loop in R
+### With a for-loop in R
 
 ```{r, eval=TRUE, echo=TRUE}
 set.seed(123)
@@ -865,7 +894,9 @@ sd(estimator)
 
 ---
 
-```{r}
+The distribution of the 1000 sampled estimates:
+
+```{r boot2, echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='70%'}
 ggplot(data=data.frame(x=estimator),aes(x=x))+
   geom_density()
 
@@ -873,7 +904,7 @@ ggplot(data=data.frame(x=estimator),aes(x=x))+
 
 ---
 
-### using built in `boot` function from library  `boot`
+### Alternative: the built-in `boot` function from library  `boot`
 
 ```{r, eval=TRUE, echo=TRUE}
 library(boot)
@@ -896,13 +927,21 @@ boot(original,boot.median,R=B)
 
 ## With or without replacement?
 
+\vspace{2mm}
+
 In bootstrapping we sample _with replacement_ from our observations.
+
+\vspace{4mm}
 
 **Q:** What if we instead sample _without replacement_?
 
+\vspace{2mm}
+
 **A:** Then we would always get the same sample - given that the order of the sample points is not important for our estimator.
 
-(In permutation testing we sample without replacement to get samples under the null hypothesis - a separate field of research.)
+\vspace{4mm}
+
+(Sidenote: In permutation testing we sample without replacement to get samples under the null hypothesis - a separate field of research.)
 
 ---
 
@@ -915,32 +954,48 @@ $${\bf Y}={\bf X} \boldsymbol{\beta}+{\boldsymbol{\varepsilon}}.$$
 The least squares estimator: $\hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$
 has $\text{Cov}(\boldsymbol\beta)=\sigma^2({\bf X}^T{\bf X})^{-1}$.
 
-We will in the recommended exercises look at how to use bootstrapping to estimate the covariance of the estimator. Why is that "needed" if we already know the mathematical formula for the standard deviation? Answer: not needed - but OK to look at an example?
+In the recommended exercises we will look at how to use bootstrapping to estimate the covariance of the estimator.\footnote{
+Why is that "needed" if we already know the mathematical formula for the standard deviation? Answer: not needed - but OK to look at an example}
 
-We will not do this here - but our bootstrap samples can also be used to make confidence intervals for the regression coefficients or prediction intervals for new observations. This means that we do not have to rely on assuming that the error terms are normally distributed!
+\vspace{2mm}
+\normalsize
 
----
-
-## Bagging 
-
-Bagging is a special case of _ensemble methods_.
-
-In Module 8 we will look at bagging, which is built on bootstrapping the the fact that it is possible to reduce the variance of a prediction by taking the average of many model fits.
-
-* Assume that we have $B$ different predictors $X_1, X_2, \ldots, X_B$. We have built them on $B$ different bootstrap samples.
-* All are predictors for some parameter $\mu$ and that all have some unknown variance $\sigma^2$. 
-* We then decide that we want to use all the predictors together - equally weighted - and make
-$\bar{X}=\frac{1}{n} \sum_{i=1}^n X_i$, which we often use to predict $\mu$.
+Moreover: Our bootstrap samples can also be used to make confidence intervals for the regression coefficients or prediction intervals for new observations. This means that we do not have to rely on assuming that the error terms are normally distributed!
 
 ---
 
-We can therefore obtain a new model (our average of the individual models) that has a smaller variance than each of the individual model because
+## A related method: Bagging 
 
-$$\text{Var}(\bar{X})=\frac{\sigma^2}{n}$$
+\vspace{2mm}
 
-Since this averaged predictor has smaller variance than each of the predictors we would assum that this is a more accurate prediction. However, the interpretation of this bagged prediction might be harder then for the separate predictors.
+Bagging (_bootstrap aggregation_) is a special case of _ensemble methods_.
 
-Models that have poor prediction ability (as we may see can happen with regression and classification trees) might benefit greatly from bagging. More in Module 8.
+\vspace{2mm}
+
+* In Module 8 we will look at bagging, which is built on bootstrapping and the fact that it is possible to reduce the variance of a prediction by taking the average of many model fits.
+
+* Particularly useful for estimation methods with large variances (like regression trees).
+
+* Idea: 
+      + Draw $B$ bootstrap samples from your data and train the method for each sample $b$ in order to get $\hat{f}^{\star b}(x)$.
+      + To obtain a prediction, average over all predictions to obtain 
+      $$\hat{f}_{bag}(x) = \frac{1}{B} \sum_{b=1}^B \hat{f}^{\star b}(x) \ .$$
+
+
+
+
+--- 
+
+* Like this, we obtain a new model that has a smaller variance than each of the individual model. If the bootstrap samples were independent (which they are of course not), the variance (thus prediction error) would be reduced by
+
+$$\text{Var}(\bar{X})=\frac{\sigma^2}{B} \ .$$
+\vspace{2mm}
+
+* In reality, the variance reduction is less. For a pairwise correlation $\rho$ we would have $\rho\sigma^2 + \frac{1-\rho}{B}\sigma^2$.
+
+\vspace{2mm}
+
+* Models that have poor prediction ability (as we may see can happen with regression and classification trees) might benefit greatly from bagging. More in Module 8.
 
 
 ---
@@ -950,7 +1005,7 @@ Models that have poor prediction ability (as we may see can happen with regressi
 ## Take home messages
 
 * Use $k=5$ or $10$ fold cross-validation for model selection or assessment.
-* Use bootstrapping to estimate the standard deviation of an estimator, and understand how it is performed before module 8 on trees.
+* Use bootstrapping to estimate the standard deviation of an estimator, and understand how it is performed.
 
 
 ---

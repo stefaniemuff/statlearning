@@ -52,23 +52,25 @@ You may work alone, in pairs or larger groups - lecturer and TA will supervise.
 
 ## Problem 1: Explain how $k$-fold cross-validation is implemented 
 
-* draw a figure, 
-* specify algorithmically what is done,
-* and in particular how the "results" from each fold are aggregated,
-* relate to one example from regression (maybe is complexity wrt polynomials of increasing degree in multiple linear regression or $K$ in KNN-regression?)
-* relate to one example from classification (maybe is complexity wrt polynomials of increasing degree in logistic regression or $K$ in KNN-classification?)
+a) Draw a figure 
+
+b) Specify algorithmically what is done, and in particular how the "results" from each fold are aggregated
+
+c) Relate to one example from regression. Ideas are the complexity w.r.t. polynomials of increasing degree in multiple linear regression, or $K$ in KNN-regression.
+
+d) Relate to one example from classification. Ideas are the complexity w.r.t. polynomials of increasing degree in logistic regression, or $K$ in KNN-classification?)
 
 Hint: the words "loss function", "fold", "training", "validation" are central.
 
 ---
 
-## Problem 2: What are the advantages and disadvantages of $k$-fold cross-validation 
+## Problem 2: Advantages and disadvantages of $k$-fold Cross-Validation
 
-relative to
+What are the advantages and disadvantages of $k$-fold cross-validation relative to
 
-* the validation set approach
-* leave one out cross-validation (LOOCV)
-* what are recommended values for $k$, and why?
+a) The validation set approach
+b) Leave one out cross-validation (LOOCV)
+c) What are recommended values for $k$, and why?
     
 Hint: the words "bias", "variance" and "computational complexity" should be included.
 
@@ -78,11 +80,26 @@ Hint: the words "bias", "variance" and "computational complexity" should be incl
 
 The task here is to devise an algorithm to "prove" that the wrong way is wrong and that the right way is right. 
 
-a. What are the steps of such an algorithm? Write down a suggestion. Hint: how do you generate data for predictors and class labels, how do you do the classification task, where is the CV in the correct way and wrong way inserted into your algorithm? Can you make a schematic drawing of the right and the wrong way? Hint: [ISL book slides, page 20+21](https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/cv_boot.pdf) - but you can do better?
+a) What are the steps of such an algorithm? Write down a suggestion. Hint: How do you generate data for predictors and class labels, how do you do the classification task, where is the CV in the correct way and wrong way inserted into your algorithm? Can you make a schematic drawing of the right and the wrong way? Hint: [ISL book slides, page 20+21](https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/cv_boot.pdf) - but you can do better?
 
----
 
-b. One possible version of this is presented in the R-code below. Go through the code and explain what is done in each step, then run the code and observe if the results are in agreement with what you expected. Make changes to the R-code if you want to test out different strategies.
+
+b) We are now doing a simulation to illustrate the selection bias problem in CV, when it is applied the wrong way. Here is what we are (conceptually) going to do:
+
+Generate data
+
+* Simulate high dimensional data ($p=5000$ predictors) from independent or correlated normal variables, but with few samples ($n=50$).
+
+* Randomly assign a class labels (here only 2) - so the truth is that the misclassification rate can not get very small. What is the theoretical misclassification rate (for this random set)?
+
+Classification task:
+
+* We choose a few ($d=25$) of the predictors (how? we just select those with the highest correlation to the outcome).
+* Perform a classification rule (here: logistic empirical Bayes) on these predictors.
+* Then, we do CV ($k=5$) on only $d$ =wrong way, or $c+d$=right way. 
+* Report misclassification errors for both situations.
+
+One possible version of this is presented in the R-code below. Go through the code and explain what is done in each step, then run the code and observe if the results are in agreement with what you expected. Make changes to the R-code if you want to test out different strategies.
 
 ```{r,eval=FALSE}
 library(boot)
@@ -154,19 +171,8 @@ table(ys[reorder],validclass)
 1-sum(diag(table(ys[reorder],validclass)))/n
 ```
 
-<!-- Here is one possibility to start from: -->
 
-<!-- Generate data -->
-<!-- a. Simulate high dimensional data (e.g. $p=500$? from independent or correlated normal variables) but with few samples (e.g. $n=50$).  -->
-<!-- b. Randomly assign a class labels (how many classes? maybe only 2 to start with) - so the truth is that the misclassification rate can not get very small. What is the theoretical misclassification rate (for this random set)? -->
-
-<!-- Classification task: -->
-<!-- c. Decide on a way to choose a few of the predictors and  -->
-<!-- d. perform a classification rule (logistic, LDA, naive Bayes?) on these predictors.  -->
-
-<!-- Then, do CV ($k=5$?) on only d =wrong way, or c+d=right way. Report misclassification errors for both situations. -->
-
----
+<!-- --- -->
 
 <!-- **Problem 4**: Trying out different versions of cross-validation with R.  -->
 
@@ -212,9 +218,9 @@ mean(res)
 
 ---
 
-## Problem 2: Estimate standard deviation with bootstrapping
+## Problem 2: Estimate standard deviation and confidence intervals with bootstrapping
 
-Explain with words and an algorithm how you would proceed to use bootstrapping to estimate the standard deviation of one of the regression parameters in multiple linear regression. Comment on which assumptions you make for your regression model.
+Explain with words and an algorithm how you would proceed to use bootstrapping to estimate the standard deviation and the 95% confidence interval of one of the regression parameters in multiple linear regression. Comment on which assumptions you make for your regression model.
 
 ## Problem 3: Implement problem 2
 
@@ -229,6 +235,10 @@ SLID.lm = glm(wages~., data = SLID)
 summary(SLID.lm)$coeff[3,2]
 ```
 
+Todo: Bootstrap the CI, and compare to 
+```{r, eval=FALSE}
+confint(SLID.lm)
+```
 
 ---
 
