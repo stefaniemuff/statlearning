@@ -207,7 +207,7 @@ The classification tree made from a training set of 850 randomly drawn observati
 ```{r injury1, echo=FALSE, fig.width=7, fig.height=6,fig.align = "center",out.width='70%'}
 library(tree)
 headtree=tree(brain.injury~.,headInjury2,subset=train)
-plot(headtree, type="uniform",pretty=1)
+plot(headtree, type="uniform")
 text(headtree,pretty=1)
 ```
 
@@ -290,36 +290,51 @@ $$
 
 where $\hat{y}_{R_j}$ is the mean response for the training observations in region $j$. The mean $\hat{y}_{R_j}$ is also the predicted value for a new observations that falls into region $j$. 
 
-To do this we need to consider every partition of the predictor space, and compute the RSS for each partition. An exhaustive search over possible splits is _computationally infeasible_!
+To do this we need to consider every partition of the predictor space, and compute the RSS for each partition.
+
+**But**: An exhaustive search over possible splits is _computationally infeasible_! In fact, constructing optimal binary decision tress is an NP-complete problem [@hyafilrivest1976].
 
 ---
 
-Ripley (1996, p 216): Two types of optimality. a) Optimality of the partitioning of the predictor space : only feasible for small dimensions. b) Given partitioning of predictor space, how to represent this by a tree in the best possible way (=minimal expected number of tests) is a NP-complete problem.
+<!-- Ripley (1996, p 216): Two types of optimality. a) Optimality of the partitioning of the predictor space : only feasible for small dimensions. b)  -->
 
-A _greedy_ approach is taken (aka top-down) - called _recursive binary splitting._
 
----
 
-##<a id="recbin">Recursive binary splitting</a>##
 
-We start at the top of the tree and divide the predictor space into two regions, $R_1$ and $R_2$ by making a decision rule for one of the predictors $x_1, x_2,...,x_p$. If we define the two regions by $R_1(j,s)=\{x|x_j<s\}$ and $R_2(j,s)=\{x|x_j\geq s\}$, it means that we need to find the (predictor) $j$ and (splitting point) $s$ that minimize
 
-$$\sum_{i: x_i \in R_1(j,s)}(y_i-\hat{y}_{R_1})^2+\sum_{i: x_i \in R_2(j,s)}(y_i -\hat{y}_{R_2})^2,$$
+## Recursive binary splitting 
 
+\vspace{2mm}
+
+* A _greedy_ approach is taken (aka top-down) - called _recursive binary splitting._
+
+* We start at the top of the tree and divide the predictor space into two regions, $R_1$ and $R_2$ by making a decision rule for one of the predictors $x_1, x_2,...,x_p$. If we define the two regions by $R_1(j,s)=\{x \mid x_j<s\}$ and $R_2(j,s)=\{x \mid x_j\geq s\}$, it means that we need to find the (predictor) $j$ and (splitting point) $s$ that minimize
+$$\sum_{i: x_i \in R_1(j,s)}(y_i-\hat{y}_{R_1})^2+\sum_{i: x_i \in R_2(j,s)}(y_i -\hat{y}_{R_2})^2 \ ,$$
 where $\hat{y}_{R_1}$ and $\hat{y}_{R_2}$ are the mean responses for the training observations in $R_1(j,s)$ and $R_2(j,s)$ respectively. This way we get the two first branches in our decision tree.
 
 ---
 
 * We repeat the process to make branches further down in the tree. 
-* For every iteration we let each single split depend on _only one of the predictors_, giving us two new branches. 
-* This is done _successively_ and in each step we choose the split that gives the best split at that particular step, i.e the split that gives the smallest RSS. 
-* We don't consider splits that further down the tree might give a tree with a lower overall RSS.
 
-We continue splitting the predictor space until we reach some _stopping criterion_. For example we stop when a region contains less than 10 observations or when the reduction in the RSS is smaller than a specified limit.
+* For every iteration we let each single split depend on _only one of the predictors_, giving us two new branches. 
+
+* This is done _successively_ and in each step we choose the split that gives the _\textcolor{red}{best split at that particular step}_, _i.e.,_ the split that gives the smallest RSS. 
+
+* Continue splitting the predictor space until we reach some _stopping criterion_. For example we stop when a region contains less than 10 observations or when the reduction in the RSS is smaller than a specified limit.
+
+
+\vspace{1mm}
+
+
+**Q**: Why is this algorithm called _greedy_?
+
+<!-- **A**: The winner takes it all, and don't consider splits that further down the tree might give a tree with a lower overall RSS. -->
 
 ---
 
 ## Regression tree: ozone example
+
+\vspace{2mm}
 
 Consider the `ozone` data set from the `ElemStatLearn` library. The data set consists of 111 observations on the following variables:
 
@@ -328,79 +343,76 @@ Consider the `ozone` data set from the `ElemStatLearn` library. The data set con
 * `temperature` : the daily maximum temperature in degrees F
 * `wind` : wind speed in mph
 
-Suppose we want to get an estimate of the ozone concentration based on the measurement of wind speed and the daily maximum temperature.
-
----
-
-
 ```{r, echo=FALSE}
 library(ElemStatLearn)
 library(RColorBrewer)
-library(knitr)
-library(kableExtra)
 myozone=ElemStatLearn::ozone
 colnames(myozone)=c("ozone","radi","temp","wind")
-#data(ozone)
-kable(head(myozone),format=whichformat)
-
 ```
 
-We can fit a regression tree to the data, with `ozone` as our response variable and `temperature` and `wind` as predictors (not including radiation to make this easier to see). This gives us the following regression tree.
+```{r, echo=TRUE}
+head(myozone)
+```
+
+---
+
+Suppose we want to get an estimate of the ozone concentration based on the measurement of wind speed and the daily maximum temperature.
+
+
+
+$\rightarrow$ We can fit a regression tree to the data, with `ozone` as our response variable and `temperature` and `wind` as predictors (not including radiation to make this easier to see). This gives us the following regression tree.
 
 ---
 
 \footnotesize
-```{r,echo=c(2:4,7)}
+```{r,echo=c(2:5,7)}
 set.seed(200)
 ozone.trainID = sample(1:111, 75)
 ozone.train = myozone[ozone.trainID, ]
 ozone.test = myozone[-ozone.trainID,]
-
-par(pty="s")
 ozone.tree = tree(ozone~temp+wind, data=ozone.train)
+```
+
+```{r ozone1, echo=FALSE, fig.width=7, fig.height=6,fig.align = "center",out.width='60%'}
+#par(pty="s")
 plot(ozone.tree,type="uniform")
 text(ozone.tree)
 ```
 
-```{r}
-summary(ozone.tree)
-```
-\normalsize
+<!-- --- -->
+
+<!-- \footnotesize -->
+
+<!-- ```{r} -->
+<!-- summary(ozone.tree) -->
+<!-- ``` -->
+<!-- \normalsize -->
 
 ---
 
-We see that `temperature` is the "most important"" predictor for predicting the ozone concentration. 
+* We see that `temperature` is the "most important" predictor for predicting the ozone concentration. 
 Observe that we can split on the same variable several times.
 
-----
+* Focus on the regions $R_j$, $j=1,\ldots, J$. What is $J$ here? Answer: $J=6$ (= the number of leaf nodes).
 
-Now, we focus on the regions $R_j$, $j=1,\ldots, J$. What is $J$ here? Answer: $J=6$ (= the number of leaf nodes).
+\vspace{2mm}
+Below we see the partition of the `ozone` data set given in the `ozone.tree`, where 
 
-Below we see the partition of the `ozone` data set given in the `ozone.tree`, where the ozone levels have been color-coded, where a darker color corresponds to a higher ozone concentration. 
-Each rectangle corresponds to one leaf node. Each number corresponding to a leaf node has been found by taking an average of all observations (in the training set) in the corresponding region (rectangle). Each line corresponds to an internal node, a binary partition of the predictor space.
+* the ozone levels have been color-coded, where a darker color corresponds to a higher ozone concentration. 
+* each rectangle corresponds to one leaf node. 
+* each number corresponding to a leaf node has been found by taking an average of all observations (in the training set) in the corresponding region (rectangle). 
+* each partition line corresponds to one internal node of a binary partition.
 
----
 
-```{r,echo=showsol}
-par(pty="s")
-#o.class = cut(myozone$ozone, breaks= 7)
-o.class = cut(ozone.train$ozone, breaks= 7)
-col.oz = brewer.pal(9, "BuGn")
-palette(col.oz[3:9]) 
-par(mar=c(5.1, 4.1, 2.1, 8.1), xpd=TRUE)
-plot(wind~temp, col=o.class, data=ozone.train, pch=20)
-partition.tree(ozone.tree, add=TRUE)
-legend('topright', inset=c(-0.4,0.2), 
-       title="Ozone", legend = levels(o.class), 
-       col=col.oz[3:9], pch=20, box.col=NA)
-
-```
 
 ---
 
 ```{r, eval=TRUE,echo=FALSE}
 # to make two figures next to eachother
 par(mfrow=c(1,2),pty="s")
+o.class = cut(ozone.train$ozone, breaks= 7)
+col.oz = brewer.pal(9, "BuGn")
+palette(col.oz[3:9])
 plot(ozone.tree,type="uniform")
 text(ozone.tree,cex=0.8)
 plot(wind~temp, col=o.class, data=ozone.train, pch=20)
