@@ -23,7 +23,7 @@ showsolA<-TRUE
 showsolB<-TRUE
 showsol<-TRUE
 library(knitr)
-opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=65),tidy=TRUE)
 knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
                       cache=TRUE, size="scriptsize")
 whichformat="latex"
@@ -306,7 +306,7 @@ To do this we need to consider every partition of the predictor space, and compu
 
 \vspace{2mm}
 
-* A _greedy_ approach is taken (aka top-down) - called _recursive binary splitting._
+* A _greedy_ approach is taken (aka top-down) - called _recursive binary splitting._ The idea is to find a split that minimizes RSS at each step.
 
 * We start at the top of the tree and divide the predictor space into two regions, $R_1$ and $R_2$ by making a decision rule for one of the predictors $x_1, x_2,...,x_p$. If we define the two regions by $R_1(j,s)=\{x \mid x_j<s\}$ and $R_2(j,s)=\{x \mid x_j\geq s\}$, it means that we need to find the (predictor) $j$ and (splitting point) $s$ that minimize
 $$\sum_{i: x_i \in R_1(j,s)}(y_i-\hat{y}_{R_1})^2+\sum_{i: x_i \in R_2(j,s)}(y_i -\hat{y}_{R_2})^2 \ ,$$
@@ -365,13 +365,16 @@ $\rightarrow$ We can fit a regression tree to the data, with `ozone` as our resp
 ---
 
 \footnotesize
-```{r,echo=c(2:5,7)}
-set.seed(200)
+```{r,echo=c(2:6,7)}
+set.seed(300)
 ozone.trainID = sample(1:111, 75)
 ozone.train = myozone[ozone.trainID, ]
 ozone.test = myozone[-ozone.trainID,]
+# use the default settings in the tree function:
 ozone.tree = tree(ozone~temp+wind, data=ozone.train)
 ```
+
+
 
 ```{r ozone1, echo=FALSE, fig.width=7, fig.height=6,fig.align = "center",out.width='60%'}
 #par(pty="s")
@@ -379,14 +382,6 @@ plot(ozone.tree,type="uniform")
 text(ozone.tree)
 ```
 
-<!-- --- -->
-
-<!-- \footnotesize -->
-
-<!-- ```{r} -->
-<!-- summary(ozone.tree) -->
-<!-- ``` -->
-<!-- \normalsize -->
 
 ---
 
@@ -417,12 +412,10 @@ plot(ozone.tree,type="uniform")
 text(ozone.tree,cex=0.8)
 plot(wind~temp, col=o.class, data=ozone.train, pch=20)
 partition.tree(ozone.tree, add=TRUE,cex=0.8)
-#legend('topright', inset=c(-0.4,0.2), 
-#       title="Ozone", legend = levels(o.class), 
-#       col=col.oz[3:9], pch=20, box.col=NA)
 ```
 
-**Q:**
+
+**Q**:
 
 * Explain the connection between the tree and the region plot.
 * Why is recursive binary splitting classified as a greedy algorithm?
@@ -433,64 +426,192 @@ partition.tree(ozone.tree, add=TRUE,cex=0.8)
 
 **A:** 
 
-* Each leaft node correspons to one region with prediction $\hat{y}_{R_j}$
+* Each leaf node correspons to one region with prediction $\hat{y}_{R_j}$, and each internal note corresponds to a vertical or a horizontal line.
 * Recursive splitting does not necessarily give the optimal global solution, but will give the best solution at each split (given what is done previously). 
 * If the true connection between the response onzone and temperature and wind was so that splits should have been made on the diagonal of the temperature and wind space, that would take many splits on each of temperature and wind to produce. (See more below where we ask the same question for the classification setting.)
 * Yes, we may have different effect of wind for different values of temperature.
 
 ---
 
+## R: function `tree` in library `tree`
+
+\vspace{2mm}
+
+* R package `tree` by Brian D. Ripley [@tree2019].
+
+* You get information about the function when you type `?tree` into the `R` console.
+
+* Note: The default choice for a function to minimize is the deviance, and for normal data (as we may assume for regression), the deviance is proportional to the RSS.
+
+<!-- --- -->
+
+<!-- * Tree growth is limited to a depth of 31 by the use of integers to label nodes. -->
+
+<!-- * Factor predictor variables can have up to 32 levels. This limit is imposed for ease of labelling, but since their use in a classification tree with three or more levels in a response involves a search over $2^{(k-1)} - 1$ groupings for $k$ levels, the practical limit is much less. -->
+
+* A competing R function is `rpart`, explained in <https://cran.r-project.org/web/packages/rpart/vignettes/longintro.pdf>
+
+
+---
+
+### Stopping criterion
+\vspace{2mm}
+
+* When building the tree, we can (in principle) split until each leaf corresponds to one data point.
+* Usually we use a less stringent stopping criterion, like the minimal number of nodes per region and/or the minimum reduction in the RSS.
+
+* For example, the default in `tree()`: is given by `mincut=5, minsize=10, mindev=0.01`, thus a minimal size of 5 nodes and the minimal reduction in deviance (RSS) equal to 0.01. 
+* We could make the ozone tree much deeper by decreasing the minimal size of a region and chanding the minimum reduction in RSS:
+
+\scriptsize
+```{r, results="asis"}
+ozone.tree2 = tree(ozone~temp+wind, 
+                  data=ozone.train, 
+                  control = tree.control(75, mincut = 2, minsize = 4, mindev = 0.001)
+                  )
+```
+
+---
+
+With the above command, the tree would become very fine. Overfitting?
+
+```{r ozone2, echo=FALSE, fig.width=7, fig.height=6,fig.align = "center",out.width='70%'}
+plot(ozone.tree2)
+text(ozone.tree2,cex=0.8)
+```
+
+
+---
+
+
+
 ## Tree performance
 
-To test the predictive performance of our regression tree, we have randomly divided our observations into a test and a training set (here 1/3 test).
+\vspace{2mm}
+
+To test the predictive performance of our regression tree, we have randomly divided our observations into a test and a training set (here 1/3 test). For the two trees (the shallow and the deep one from above), we get the following test MSEs:
 
 ```{r}
 ozone.pred = predict(ozone.tree, newdata=ozone.test)
 ozone.MSE = mean((ozone.pred-ozone.test$ozone)^2)
 ozone.MSE
+
+ozone.pred2 = predict(ozone.tree2, newdata=ozone.test)
+ozone.MSE2 = mean((ozone.pred2-ozone.test$ozone)^2)
+ozone.MSE2
 ```
 
----
+\vspace{1mm}
 
-## R: function `tree` in library `tree`
-by Brian D. Ripley: Fit a Classification or Regression Tree
-
-Description: A tree is grown by binary recursive partitioning using the response in the specified formula and choosing splits from the terms of the right-hand-side.
-
-tree(formula, data, weights, subset,
-     na.action = na.pass, control = tree.control(nobs, ...),
-     method = "recursive.partition",
-     split = c("deviance", "gini"),
-     model = FALSE, x = FALSE, y = TRUE, wts = TRUE, ...)
-    
----
-
-* Details: A tree is grown by binary recursive partitioning using the response in the specified formula and choosing splits from the terms of the right-hand-side. Numeric variables are divided into X < a and X > a; the levels of an unordered factor are divided into two non-empty groups. The split which maximizes the reduction in impurity is chosen, the data set split and the process repeated. Splitting continues until the terminal nodes are too small or too few to be split.
-* A numerical response gives regression while a factor response gives classifiation.
-* The default choice for a function to minimize is the deviance, and for normal data (as we may assume for regression), the deviance is proportional to the RSS. For the interested reader, this is the connection between the deviance and the RSS for regression <https://www.math.ntnu.no/emner/TMA4315/2018h/2MLR.html#deviance>
+**How do we know if our tree performs good, or if there would be trees with a better predictive performance?**
 
 ---
 
-* Tree growth is limited to a depth of 31 by the use of integers to label nodes.
-* Factor predictor variables can have up to 32 levels. This limit is imposed for ease of labelling, but since their use in a classification tree with three or more levels in a response involves a search over 2^(k-1) - 1 groupings for k levels, the practical limit is much less.
 
-A competing R function is `rpart`, explained in <https://cran.r-project.org/web/packages/rpart/vignettes/longintro.pdf>
+# Pruning 
+
+* If we have a data set with many predictors or choose a stringent stopping criterion, we may fit a (too) large tree. Thus, the number of observations from the training set that falls into some of the regions $R_j$ may be small $\rightarrow$ _\textcolor{red}{overfitting}_? 
+
+
+* A smaller tree with fewer splits leads to fewer regions $R_1, \ldots, R_J$ with more observations. This might lead to lower variance and better interpretation at the cost of a little bias.
+
+* One possible alternative to the process described above is to grow the tree only so long as the decrease in the RSS due to each split exceeds some (high) threshold.
+
+* This strategy will result in smaller trees, but is too short-sighted: a seemingly worthless split early on in the tree might be followed by a very good split — that is, a split that leads to a large reduction in RSS later on.
+
 
 ---
 
-## Classification trees (binary or categorical outcome)
-remember the minor head injury example?
+## Cost complexity pruning 
 
-Let $K$ be the number of classes for the response.
+* Better idea: to grow a very large tree $T_0$, and then _\textcolor{red}{prune}_ it back in order to obtain a subtree
 
-Building a decision tree in this setting is similar to building a regression tree for a quantitative response, but there are two main differences: _the prediction and the splitting criterion_
+
+* _\textcolor{red}{Cost complexity pruning}_ is used for this: We try to find a subtree $T\subset T_0$ that (for a given value of $\alpha$) minimizes
+$$
+C_{\alpha}(T)=Q(T)+\alpha |T|,
+$$
+where $Q(T)$ is our cost function, $|T|$ is the number of terminal nodes in tree $T$. The parameter $\alpha$ is then a parameter penalizing the number of terminal nodes, ensuring that the tree does not get too many branches. 
+
+
+* For regression trees we choose 
+$$Q(T)=\sum_{m=1}^{|T|}\sum_{x_i\in R_m}(y_i - \hat{y}_{R_m})^2 \ ,$$ 
+and adapted cost functions for classification trees (the entropy (deviance), Gini or misclassification rate, see below).
+
+
+
+---
+
+* Given a value of $\alpha$ we get a pruned tree (note: the same pruned tree within a small range of $\alpha$).
+
+* For $\alpha=0$ we get $T_0$ and as $\alpha$ increases we get smaller and smaller trees.
+
+
+So, which value of $\alpha$ is best?
+
+* We can use $k$-fold cross-validation to find out!
+
+* Importantly, by increasing $\alpha$, branches get pruned in a _hierarchical (nested) fashion_.
+
+
+
+Please study this [note from Bo Lindqvist in MA8701 in 2017 - Advanced topics in Statistical Learning and Inference](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/CART1MA87012017BoLindqvist.pdf) for an example of how we perform cost complexity pruning in detail. Alterntively, this method, with proofs, are given in @Ripley, Section 7.2.
+
+
+---
+
+### Pruning the ozone tree
+
+Let us start with the tree with many leafes, and then prune it with 5-fold CV. We can then plot the CV error as a function of tree size (instead of $\alpha$ -- why?):
+
+```{r ozone.cv, echo=FALSE, fig.width=6, fig.height=5,fig.align = "center",out.width='60%'}
+set.seed(563)
+ozone.tree <- tree(ozone~temp+wind, 
+                  data=ozone.train, 
+                  control = tree.control(nrow(myozone), mincut = 2, minsize = 4, mindev = 0.001)
+                  )
+cv.ozone <- cv.tree(ozone.tree,K=5)
+plot(cv.ozone$dev ~  cv.ozone$size,type= "b", lwd=2, col="red", xlab="Tree Size", ylab="Deviance")
+```
+
+Interestingly, it seems like a tree with 5 leafes performs best - which corresponds to the original choice.
+
+<!-- --- -->
+
+<!-- If we have a large dataset with many explanatory variables and terminal nodes, we can also prune the tree if we want to create a simpler tree and increase the interpretability of the model. -->
+
+<!-- In the [classification tree](classtree2) (grown with deviance) we saw that we got several unnecessary splits. This is also something that can be avoided by pruning.  -->
+
+<!-- In the [classification tree](classtree3) (grown with Gini index) there were 78 leaves - maybe we want a more easy interpretable tree? -->
+
+<!-- But, there are many possible pruned versions of our full tree. Can we investigate all of these? -->
+
+
+
+---
+
+# Classification trees (binary or categorical outcome)
+
+\vspace{2mm}
+
+* Remember the minor head injury example: Binary outcome (disease yes/no).
+
+\vspace{1mm}
+
+* Now allow for $K\geq 2$ number of classes for the response.
+
+\vspace{1mm}
+
+* Building a decision tree in this setting is similar to building a regression tree for a quantitative response, but there are two main differences: _the prediction_ and _the splitting criterion_.
 
 ---
 
 **1) The prediction:**   
 
 * In the regression case we use the mean value of the responses in $R_j$ as a prediction for an observation that falls into region $R_j$. 
-* For the classification case however, we have two possibilities: 
+
+* For the _\textcolor{red}{classification case}_, however, we have two possibilities: 
+
     * Majority vote: Predict that the observation belongs to the most commonly occurring class of the training observations in $R_j$.  
     * Estimate the probability that an observation $x_i$ belongs to a class $k$, $\hat{p}_{jk}(x_i)$, and then classify according to a threshold value. This estimated probability is the proportion of class $k$ training observations in region $R_j$, with $n_{jk}$ observations. Region $j$ has $N_j$ observations. 
     $$\hat{p}_{jk} = \frac{1}{N_j} \sum_{i:x_i \in R_j} I(y_i = k)=\frac{n_{jk}}{N_j}.$$ 
@@ -499,24 +620,31 @@ Building a decision tree in this setting is similar to building a regression tre
 
 **2) The splitting criterion:**  We do not use RSS as a splitting criterion for a qualitative variable. Instead we can use some _measure of impurity_ of the node. For leaf node $j$ and class $k=1,\ldots, K$:
 
-Gini index:
+* **Gini index**:
 $$
-G=\sum_{k=1}^K \hat{p}_{jk}(1-\hat{p}_{jk}),
+G=\sum_{k=1}^K \hat{p}_{jk}(1-\hat{p}_{jk}) \ ,
 $$
+which is small if all of the $\hat{p}_{jk}$'s are close to 0 or 1.
 
-Cross entropy:
+\vspace{1mm}
+
+* **Cross entropy**:
 $$
-D=-\sum_{k=1}^K \hat{p}_{jk}log\hat{p}_{jk}
+D=-\sum_{k=1}^K \hat{p}_{jk}\log\hat{p}_{jk} \ .
 $$
-Here $\hat{p}_{jk}$ is the proportion of training observation in region $j$ that are from class $k$. Remark: the deviance is a scaled version of the cross entropy. $-2\sum_{k=1}^K n_{jk} log\hat{p}_{jk}$ where $\hat{p}_{jk}=\frac{n_{jk}}{N_j}$
+Here $\hat{p}_{jk}$ is the proportion of training observation in region $j$ that are from class $k$. 
+
+
 
 When making a split in our classification tree, we want to minimize the Gini index or the cross-entropy.
 
 ---
 
-**Q**: Why these splitting criteria? Measure of impurity? How? See classnotes.
+Why don't we just minimize the misclassification error $$E= 1- \max_k{\hat{p}_{jk}} \ ?$$
 
-```{r,echo=FALSE}
+**A**: The Gini index and Entropy are _measure of impurity_. Moreover, they are differentiable (preferred for numerical optimization!).
+
+```{r purity, echo=FALSE, fig.width=6, fig.height=5,fig.align = "center",out.width='70%'}
 p=seq(0.001,0.999,length=1000)
 gini=2*p*(1-p)
 ent=-p*log(p)-(1-p)*log(1-p)
@@ -529,7 +657,7 @@ legend(0.3,0.2,legend=c("misclassification","cross-entropy","Gini"),fill=c("blac
 
 ---
 
-### Minor head injury - continued 
+### Minor head injury - split with cross-entropy
 
 \footnotesize
 ```{r}
@@ -541,24 +669,25 @@ summary(tree.HIClass)
 
 \normalsize
 
-Deviance=$-2 \sum_{j}\sum_{k}n_{jk}log(\hat{p}_{jk})$ for all nodes $j$ and classes $k$.
-(Formula on page 255 of @MASS.)
+<!-- Deviance=$-2 \sum_{j}\sum_{k}n_{jk}\log(\hat{p}_{jk})$ for all nodes $j$ and classes $k$. -->
+<!-- (Formula on page 255 of @MASS.) -->
+
+Remark: the deviance is a scaled version of the cross entropy: $-2\sum_{k=1}^K n_{jk} \log\hat{p}_{jk}$ where $\hat{p}_{jk}=\frac{n_{jk}}{N_j}$, thus `split="deviance"` implies that we split according to the entropy criterion.
 
 ---
 
-```{r,echo=showsol}
+```{r headInjury, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='70%'}
 plot(tree.HIClass,type="proportional")
 text(tree.HIClass,pretty=1)
 ```
 
-Length of branches are now proportional to the decrease in impurity.
+Note: With `type="proportional" `, the length of branches are now proportional to the decrease in impurity.
 
 ---
 
-### Minor head injury - with Gini index 
+### Minor head injury - split with Gini index
 
 \footnotesize
-
 ```{r}
 tree.HIClassG=tree(brain.injury~.,headInjury2,
                   subset=train,split="gini")
@@ -569,7 +698,8 @@ summary(tree.HIClassG)
 
 ---
 
-```{r}
+\footnotesize
+```{r headInjury2, echo=TRUE, fig.width=8, fig.height=6,fig.align = "center",out.width='85%'}
 tree.HIClassG=tree(brain.injury~.,headInjury2,
                   subset=train,split="gini")
 plot(tree.HIClassG)
@@ -581,7 +711,7 @@ text(tree.HIClassG,pretty=1)
 
 We also use the classification tree to predict the status of the patients in the test set (the one grown with deviance)
 
-\footnotesize
+\tiny
 
 ```{r}
 library(caret)
@@ -589,19 +719,19 @@ tree.pred=predict(tree.HIClass,headInjury2[test,],type="class")
 confusionMatrix(tree.pred,reference=headInjury2[test,]$brain.injury)
 ```
 
-\normalsize
+ 
 
 ---
 
 And for the Gini-grown tree
 
-\footnotesize
+\tiny
 ```{r}
 tree.predG=predict(tree.HIClassG,headInjury2[test,],type="class")
 confusionMatrix(tree.predG,reference=headInjury2[test,]$brain.injury)
 ```
 
-\normalsize
+
 
 ---
 
@@ -619,49 +749,7 @@ confusionMatrix(tree.predG,reference=headInjury2[test,]$brain.injury)
 * What about a rectangular boundary (figure above)?
 * Study the above confusion matrices. One type of mistake is more severe than the other. Discuss if it is possible to change the algorithm in order to decrease the number of severe mistakes.
 
----
 
-# Pruning 
-
-Imagine that we have a data set with many predictors, and that we fit a large tree. Then, the number of observations from the training set that falls into some of the regions $R_j$ may be small, and we may be concerned that we have overfitted the training data.
-
-$Pruning$ is a technique for solving this problem. 
-
-By $pruning$ the tree we reduce the size or depth of the decision tree. When we reduce the number of terminal nodes and regions $R_1,...,R_J$, each region will probably contain more observations. This way we reduce the probability of overfitting, and we may get better predictions for test data. 
-
----
-
-If we have a large dataset with many explanatory variables and terminal nodes, we can also prune the tree if we want to create a simpler tree and increase the interpretability of the model.
-
-In the [classification tree](classtree2) (grown with deviance) we saw that we got several unnecessary splits. This is also something that can be avoided by pruning. 
-
-In the [classification tree](classtree3) (grown with Gini index) there were 78 leaves - maybe we want a more easy interpretable tree?
-
-But, there are many possible pruned versions of our full tree. Can we investigate all of these?
-
----
-
-## Cost complexity pruning 
-
-
-We can prune the tree by using a algorithm called *cost complexity pruning*. We first build a large tree $T_0$ by recursive binary splitting. Then we try to find a subtree $T\subset T_0$ that (for a given value of $\alpha$) minimizes
-
-$$
-C_{\alpha}(T)=Q(T)+\alpha |T|,
-$$
-where $Q(T)$ is our cost function, $|T|$ is the number of terminal nodes in tree $T$. The parameter $\alpha$ is then a parameter penalizing the number of terminal nodes, ensuring that the tree does not get too many branches. 
-
-We proceed by repeating the the process for the best subtree $T$, and this way we get a sequence of smaller of smaller subtrees where each tree is the best subtree of the previous tree.
-
-For regression trees we choose $Q(T)=\sum_{m=1}^{|T|}\sum_{x_i\in R_m}(y_i - \hat{y}_{R_m})^2$, and or classification trees the entropy (deviance), Gini or misclassification rate.
-
----
-
-Given a value of $\alpha$ we get a pruned tree (but the same pruned tree for ranges of $\alpha$).
-
-For $\alpha=0$ we get $T_0$ and as $\alpha$ increases we get smaller and smaller trees.
-
-Please study this [note from Bo Lindqvist in MA8701 in 2017 - Advanced topics in Statistical Learning and Inference](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/CART1MA87012017BoLindqvist.pdf) for an example of how we perform cost complexity pruning in detail. Alterntively, this method, with proofs, are given in @Ripley, Section 7.2.
 
 ---
 

@@ -411,23 +411,23 @@ right.
 ## node), split, n, deviance, yval, (yprob)
 ##       * denotes terminal node
 ## 
-##  1) root 850 819.300 0 ( 0.81294 0.18706 )  
-##    2) GCS.15: 0 711 520.500 0 ( 0.88045 0.11955 )  
-##      4) bskullf: 0 663 398.100 0 ( 0.91101 0.08899 )  
-##        8) risk: 0 487 203.000 0 ( 0.94661 0.05339 )  
-##         16) age < 68.5 445 131.200 0 ( 0.96629 0.03371 ) *
-##         17) age > 68.5 42  48.300 0 ( 0.73810 0.26190 ) *
-##        9) risk: 1 176 169.900 0 ( 0.81250 0.18750 ) *
-##      5) bskullf: 1 48  66.210 1 ( 0.45833 0.54167 )  
-##       10) age < 42.5 13  11.160 0 ( 0.84615 0.15385 ) *
-##       11) age > 42.5 35  43.570 1 ( 0.31429 0.68571 ) *
-##    3) GCS.15: 1 139 192.100 1 ( 0.46763 0.53237 )  
-##      6) GCS.13: 0 121 167.300 0 ( 0.52893 0.47107 )  
-##       12) risk: 0 78 100.600 0 ( 0.65385 0.34615 )  
-##         24) age < 66.5 66  77.350 0 ( 0.72727 0.27273 ) *
-##         25) age > 66.5 12  13.500 1 ( 0.25000 0.75000 ) *
-##       13) risk: 1 43  52.700 1 ( 0.30233 0.69767 ) *
-##      7) GCS.13: 1 18   7.724 1 ( 0.05556 0.94444 ) *
+##  1) root 850 819.00 0 ( 0.8129 0.1871 )  
+##    2) GCS.15: 0 711 520.00 0 ( 0.8805 0.1195 )  
+##      4) bskullf: 0 663 398.00 0 ( 0.9110 0.0890 )  
+##        8) risk: 0 487 203.00 0 ( 0.9466 0.0534 )  
+##         16) age < 68.5 445 131.00 0 ( 0.9663 0.0337 ) *
+##         17) age > 68.5 42  48.30 0 ( 0.7381 0.2619 ) *
+##        9) risk: 1 176 170.00 0 ( 0.8125 0.1875 ) *
+##      5) bskullf: 1 48  66.20 1 ( 0.4583 0.5417 )  
+##       10) age < 42.5 13  11.20 0 ( 0.8462 0.1538 ) *
+##       11) age > 42.5 35  43.60 1 ( 0.3143 0.6857 ) *
+##    3) GCS.15: 1 139 192.00 1 ( 0.4676 0.5324 )  
+##      6) GCS.13: 0 121 167.00 0 ( 0.5289 0.4711 )  
+##       12) risk: 0 78 101.00 0 ( 0.6538 0.3462 )  
+##         24) age < 66.5 66  77.30 0 ( 0.7273 0.2727 ) *
+##         25) age > 66.5 12  13.50 1 ( 0.2500 0.7500 ) *
+##       13) risk: 1 43  52.70 1 ( 0.3023 0.6977 ) *
+##      7) GCS.13: 1 18   7.72 1 ( 0.0556 0.9444 ) *
 \end{verbatim}
 
 \normalsize
@@ -543,21 +543,11 @@ observations in region \(j\). The mean \(\hat{y}_{R_j}\) is also the
 predicted value for a new observations that falls into region \(j\).
 
 To do this we need to consider every partition of the predictor space,
-and compute the RSS for each partition. An exhaustive search over
-possible splits is \emph{computationally infeasible}!
+and compute the RSS for each partition.
 
-\end{frame}
-
-\begin{frame}
-
-Ripley (1996, p 216): Two types of optimality. a) Optimality of the
-partitioning of the predictor space : only feasible for small
-dimensions. b) Given partitioning of predictor space, how to represent
-this by a tree in the best possible way (=minimal expected number of
-tests) is a NP-complete problem.
-
-A \emph{greedy} approach is taken (aka top-down) - called
-\emph{recursive binary splitting.}
+\textbf{But}: An exhaustive search over possible splits is
+\emph{computationally infeasible}! In fact, constructing optimal binary
+decision tress is an NP-complete problem (Hyafil and Rivest 1976).
 
 \end{frame}
 
@@ -565,18 +555,26 @@ A \emph{greedy} approach is taken (aka top-down) - called
 
 \begin{block}{Recursive binary splitting}
 
-We start at the top of the tree and divide the predictor space into two
-regions, \(R_1\) and \(R_2\) by making a decision rule for one of the
-predictors \(x_1, x_2,...,x_p\). If we define the two regions by
-\(R_1(j,s)=\{x|x_j<s\}\) and \(R_2(j,s)=\{x|x_j\geq s\}\), it means that
-we need to find the (predictor) \(j\) and (splitting point) \(s\) that
-minimize
+\vspace{2mm}
 
-\[\sum_{i: x_i \in R_1(j,s)}(y_i-\hat{y}_{R_1})^2+\sum_{i: x_i \in R_2(j,s)}(y_i -\hat{y}_{R_2})^2,\]
-
-where \(\hat{y}_{R_1}\) and \(\hat{y}_{R_2}\) are the mean responses for
-the training observations in \(R_1(j,s)\) and \(R_2(j,s)\) respectively.
-This way we get the two first branches in our decision tree.
+\begin{itemize}
+\item
+  A \emph{greedy} approach is taken (aka top-down) - called
+  \emph{recursive binary splitting.} The idea is to find a split that
+  minimizes RSS at each step.
+\item
+  We start at the top of the tree and divide the predictor space into
+  two regions, \(R_1\) and \(R_2\) by making a decision rule for one of
+  the predictors \(x_1, x_2,...,x_p\). If we define the two regions by
+  \(R_1(j,s)=\{x \mid x_j<s\}\) and \(R_2(j,s)=\{x \mid x_j\geq s\}\),
+  it means that we need to find the (predictor) \(j\) and (splitting
+  point) \(s\) that minimize
+  \[\sum_{i: x_i \in R_1(j,s)}(y_i-\hat{y}_{R_1})^2+\sum_{i: x_i \in R_2(j,s)}(y_i -\hat{y}_{R_2})^2 \ ,\]
+  where \(\hat{y}_{R_1}\) and \(\hat{y}_{R_2}\) are the mean responses
+  for the training observations in \(R_1(j,s)\) and \(R_2(j,s)\)
+  respectively. This way we get the two first branches in our decision
+  tree.
+\end{itemize}
 
 \end{block}
 
@@ -585,7 +583,6 @@ This way we get the two first branches in our decision tree.
 \begin{frame}
 
 \begin{itemize}
-\tightlist
 \item
   We repeat the process to make branches further down in the tree.
 \item
@@ -593,23 +590,27 @@ This way we get the two first branches in our decision tree.
   of the predictors}, giving us two new branches.
 \item
   This is done \emph{successively} and in each step we choose the split
-  that gives the best split at that particular step, i.e the split that
-  gives the smallest RSS.
+  that gives the
+  \emph{\textcolor{red}{best split at that particular step}},
+  \emph{i.e.,} the split that gives the smallest RSS.
 \item
-  We don't consider splits that further down the tree might give a tree
-  with a lower overall RSS.
+  Continue splitting the predictor space until we reach some
+  \emph{stopping criterion}. For example we stop when a region contains
+  less than 10 observations or when the reduction in the RSS is smaller
+  than a specified limit.
 \end{itemize}
 
-We continue splitting the predictor space until we reach some
-\emph{stopping criterion}. For example we stop when a region contains
-less than 10 observations or when the reduction in the RSS is smaller
-than a specified limit.
+\vspace{1mm}
+
+\textbf{Q}: Why is this algorithm called \emph{greedy}?
 
 \end{frame}
 
 \begin{frame}[fragile]
 
 \begin{block}{Regression tree: ozone example}
+
+\vspace{2mm}
 
 Consider the \texttt{ozone} data set from the \texttt{ElemStatLearn}
 library. The data set consists of 111 observations on the following
@@ -627,8 +628,21 @@ variables:
   \texttt{wind} : wind speed in mph
 \end{itemize}
 
-Suppose we want to get an estimate of the ozone concentration based on
-the measurement of wind speed and the daily maximum temperature.
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(myozone)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   ozone radi temp wind
+## 1    41  190   67  7.4
+## 2    36  118   72  8.0
+## 3    12  149   74 12.6
+## 4    18  313   62 11.5
+## 5    23  299   65  8.6
+## 6    19   99   59 13.8
+\end{verbatim}
 
 \end{block}
 
@@ -636,28 +650,13 @@ the measurement of wind speed and the daily maximum temperature.
 
 \begin{frame}[fragile]
 
-\begin{tabular}{r|r|r|r}
-\hline
-ozone & radi & temp & wind\\
-\hline
-41 & 190 & 67 & 7.4\\
-\hline
-36 & 118 & 72 & 8.0\\
-\hline
-12 & 149 & 74 & 12.6\\
-\hline
-18 & 313 & 62 & 11.5\\
-\hline
-23 & 299 & 65 & 8.6\\
-\hline
-19 & 99 & 59 & 13.8\\
-\hline
-\end{tabular}
+Suppose we want to get an estimate of the ozone concentration based on
+the measurement of wind speed and the daily maximum temperature.
 
-We can fit a regression tree to the data, with \texttt{ozone} as our
-response variable and \texttt{temperature} and \texttt{wind} as
-predictors (not including radiation to make this easier to see). This
-gives us the following regression tree.
+\(\rightarrow\) We can fit a regression tree to the data, with
+\texttt{ozone} as our response variable and \texttt{temperature} and
+\texttt{wind} as predictors (not including radiation to make this easier
+to see). This gives us the following regression tree.
 
 \end{frame}
 
@@ -670,83 +669,53 @@ gives us the following regression tree.
 \NormalTok{ozone.trainID =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{111}\NormalTok{, }\DecValTok{75}\NormalTok{)}
 \NormalTok{ozone.train =}\StringTok{ }\NormalTok{myozone[ozone.trainID, ]}
 \NormalTok{ozone.test =}\StringTok{ }\NormalTok{myozone[}\OperatorTok{-}\NormalTok{ozone.trainID, ]}
+\CommentTok{# use the default settings in the tree function:}
 \NormalTok{ozone.tree =}\StringTok{ }\KeywordTok{tree}\NormalTok{(ozone }\OperatorTok{~}\StringTok{ }\NormalTok{temp }\OperatorTok{+}\StringTok{ }\NormalTok{wind, }\DataTypeTok{data =}\NormalTok{ ozone.train)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-4-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(ozone.tree)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 
-## Regression tree:
-## tree(formula = ozone ~ temp + wind, data = ozone.train)
-## Number of terminal nodes:  6 
-## Residual mean deviance:  286.5 = 19770 / 69 
-## Distribution of residuals:
-##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -35.670  -9.333  -1.500   0.000   5.194  60.890
-\end{verbatim}
-
-\normalsize
+\begin{center}\includegraphics[width=0.6\linewidth]{8Trees_files/figure-beamer/ozone1-1} \end{center}
 
 \end{frame}
 
 \begin{frame}[fragile]
 
-We see that \texttt{temperature} is the ``most important''" predictor
-for predicting the ozone concentration. Observe that we can split on the
-same variable several times.
+\begin{itemize}
+\item
+  We see that \texttt{temperature} is the ``most important'' predictor
+  for predicting the ozone concentration. Observe that we can split on
+  the same variable several times.
+\item
+  Focus on the regions \(R_j\), \(j=1,\ldots, J\). What is \(J\) here?
+  Answer: \(J=6\) (= the number of leaf nodes).
+\end{itemize}
 
-\end{frame}
+\vspace{2mm} Below we see the partition of the \texttt{ozone} data set
+given in the \texttt{ozone.tree}, where
 
-\begin{frame}[fragile]
-
-Now, we focus on the regions \(R_j\), \(j=1,\ldots, J\). What is \(J\)
-here? Answer: \(J=6\) (= the number of leaf nodes).
-
-Below we see the partition of the \texttt{ozone} data set given in the
-\texttt{ozone.tree}, where the ozone levels have been color-coded, where
-a darker color corresponds to a higher ozone concentration. Each
-rectangle corresponds to one leaf node. Each number corresponding to a
-leaf node has been found by taking an average of all observations (in
-the training set) in the corresponding region (rectangle). Each line
-corresponds to an internal node, a binary partition of the predictor
-space.
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{par}\NormalTok{(}\DataTypeTok{pty =} \StringTok{"s"}\NormalTok{)}
-\CommentTok{# o.class = cut(myozone$ozone, breaks= 7)}
-\NormalTok{o.class =}\StringTok{ }\KeywordTok{cut}\NormalTok{(ozone.train}\OperatorTok{$}\NormalTok{ozone, }\DataTypeTok{breaks =} \DecValTok{7}\NormalTok{)}
-\NormalTok{col.oz =}\StringTok{ }\KeywordTok{brewer.pal}\NormalTok{(}\DecValTok{9}\NormalTok{, }\StringTok{"BuGn"}\NormalTok{)}
-\KeywordTok{palette}\NormalTok{(col.oz[}\DecValTok{3}\OperatorTok{:}\DecValTok{9}\NormalTok{])}
-\KeywordTok{par}\NormalTok{(}\DataTypeTok{mar =} \KeywordTok{c}\NormalTok{(}\FloatTok{5.1}\NormalTok{, }\FloatTok{4.1}\NormalTok{, }\FloatTok{2.1}\NormalTok{, }\FloatTok{8.1}\NormalTok{), }\DataTypeTok{xpd =} \OtherTok{TRUE}\NormalTok{)}
-\KeywordTok{plot}\NormalTok{(wind }\OperatorTok{~}\StringTok{ }\NormalTok{temp, }\DataTypeTok{col =}\NormalTok{ o.class, }\DataTypeTok{data =}\NormalTok{ ozone.train, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{)}
-\KeywordTok{partition.tree}\NormalTok{(ozone.tree, }\DataTypeTok{add =} \OtherTok{TRUE}\NormalTok{)}
-\KeywordTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\DataTypeTok{inset =} \KeywordTok{c}\NormalTok{(}\OperatorTok{-}\FloatTok{0.4}\NormalTok{, }\FloatTok{0.2}\NormalTok{), }\DataTypeTok{title =} \StringTok{"Ozone"}\NormalTok{, }\DataTypeTok{legend =} \KeywordTok{levels}\NormalTok{(o.class), }
-    \DataTypeTok{col =}\NormalTok{ col.oz[}\DecValTok{3}\OperatorTok{:}\DecValTok{9}\NormalTok{], }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{, }\DataTypeTok{box.col =} \OtherTok{NA}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-6-1.pdf}
+\begin{itemize}
+\tightlist
+\item
+  the ozone levels have been color-coded, where a darker color
+  corresponds to a higher ozone concentration.
+\item
+  each rectangle corresponds to one leaf node.
+\item
+  each number corresponding to a leaf node has been found by taking an
+  average of all observations (in the training set) in the corresponding
+  region (rectangle).
+\item
+  each partition line corresponds to one internal node of a binary
+  partition.
+\end{itemize}
 
 \end{frame}
 
 \begin{frame}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-7-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-6-1.pdf}
 
-\textbf{Q:}
+\textbf{Q}:
 
 \begin{itemize}
 \tightlist
@@ -770,8 +739,9 @@ space.
 \begin{itemize}
 \tightlist
 \item
-  Each leaft node correspons to one region with prediction
-  \(\hat{y}_{R_j}\)
+  Each leaf node correspons to one region with prediction
+  \(\hat{y}_{R_j}\), and each internal note corresponds to a vertical or
+  a horizontal line.
 \item
   Recursive splitting does not necessarily give the optimal global
   solution, but will give the best solution at each split (given what is
@@ -791,11 +761,86 @@ space.
 
 \begin{frame}[fragile]
 
+\begin{block}{R: function \texttt{tree} in library \texttt{tree}}
+
+\vspace{2mm}
+
+\begin{itemize}
+\item
+  R package \texttt{tree} by Brian D. Ripley (B. Ripley 2019).
+\item
+  You get information about the function when you type \texttt{?tree}
+  into the \texttt{R} console.
+\item
+  Note: The default choice for a function to minimize is the deviance,
+  and for normal data (as we may assume for regression), the deviance is
+  proportional to the RSS.
+\end{itemize}
+
+\begin{itemize}
+\tightlist
+\item
+  A competing R function is \texttt{rpart}, explained in
+  \url{https://cran.r-project.org/web/packages/rpart/vignettes/longintro.pdf}
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Stopping criterion}
+
+\vspace{2mm}
+
+\begin{itemize}
+\item
+  When building the tree, we can (in principle) split until each leaf
+  corresponds to one data point.
+\item
+  Usually we use a less stringent stopping criterion, like the minimal
+  number of nodes per region and/or the minimum reduction in the RSS.
+\item
+  For example, the default in \texttt{tree()}: is given by
+  \texttt{mincut=5,\ minsize=10,\ mindev=0.01}, thus a minimal size of 5
+  nodes and the minimal reduction in deviance (RSS) equal to 0.01.
+\item
+  We could make the ozone tree much deeper by decreasing the minimal
+  size of a region and chanding the minimum reduction in RSS:
+\end{itemize}
+
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ozone.tree2 =}\StringTok{ }\KeywordTok{tree}\NormalTok{(ozone }\OperatorTok{~}\StringTok{ }\NormalTok{temp }\OperatorTok{+}\StringTok{ }\NormalTok{wind, }\DataTypeTok{data =}\NormalTok{ ozone.train, }\DataTypeTok{control =} \KeywordTok{tree.control}\NormalTok{(}\DecValTok{75}\NormalTok{, }
+    \DataTypeTok{mincut =} \DecValTok{2}\NormalTok{, }\DataTypeTok{minsize =} \DecValTok{4}\NormalTok{, }\DataTypeTok{mindev =} \FloatTok{0.001}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+With the above command, the tree would become very fine. Overfitting?
+
+\begin{center}\includegraphics[width=0.7\linewidth]{8Trees_files/figure-beamer/ozone2-1} \end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
 \begin{block}{Tree performance}
+
+\vspace{2mm}
 
 To test the predictive performance of our regression tree, we have
 randomly divided our observations into a test and a training set (here
-1/3 test).
+1/3 test). For the two trees (the shallow and the deep one from above),
+we get the following test MSEs:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -806,27 +851,79 @@ randomly divided our observations into a test and a training set (here
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 770.9684
+## [1] 384.491
 \end{verbatim}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ozone.pred2 =}\StringTok{ }\KeywordTok{predict}\NormalTok{(ozone.tree2, }\DataTypeTok{newdata =}\NormalTok{ ozone.test)}
+\NormalTok{ozone.MSE2 =}\StringTok{ }\KeywordTok{mean}\NormalTok{((ozone.pred2 }\OperatorTok{-}\StringTok{ }\NormalTok{ozone.test}\OperatorTok{$}\NormalTok{ozone)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{ozone.MSE2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 491.266
+\end{verbatim}
+
+\vspace{1mm}
+
+\textbf{How do we know if our tree performs good, or if there would be
+trees with a better predictive performance?}
+
 \end{block}
 
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}{Pruning}
 
-\begin{block}{R: function \texttt{tree} in library \texttt{tree}}
+\begin{itemize}
+\item
+  If we have a data set with many predictors or choose a stringent
+  stopping criterion, we may fit a (too) large tree. Thus, the number of
+  observations from the training set that falls into some of the regions
+  \(R_j\) may be small \(\rightarrow\)
+  \emph{\textcolor{red}{overfitting}}?
+\item
+  A smaller tree with fewer splits leads to fewer regions
+  \(R_1, \ldots, R_J\) with more observations. This might lead to lower
+  variance and better interpretation at the cost of a little bias.
+\item
+  One possible alternative to the process described above is to grow the
+  tree only so long as the decrease in the RSS due to each split exceeds
+  some (high) threshold.
+\item
+  This strategy will result in smaller trees, but is too short-sighted:
+  a seemingly worthless split early on in the tree might be followed by
+  a very good split --- that is, a split that leads to a large reduction
+  in RSS later on.
+\end{itemize}
 
-by Brian D. Ripley: Fit a Classification or Regression Tree
+\end{frame}
 
-Description: A tree is grown by binary recursive partitioning using the
-response in the specified formula and choosing splits from the terms of
-the right-hand-side.
+\begin{frame}
 
-tree(formula, data, weights, subset, na.action = na.pass, control =
-tree.control(nobs, \ldots{}), method = ``recursive.partition'', split =
-c(``deviance'', ``gini''), model = FALSE, x = FALSE, y = TRUE, wts =
-TRUE, \ldots{})
+\begin{block}{Cost complexity pruning}
+
+\begin{itemize}
+\item
+  Better idea: to grow a very large tree \(T_0\), and then
+  \emph{\textcolor{red}{prune}} it back in order to obtain a subtree
+\item
+  \emph{\textcolor{red}{Cost complexity pruning}} is used for this: We
+  try to find a subtree \(T\subset T_0\) that (for a given value of
+  \(\alpha\)) minimizes \[
+  C_{\alpha}(T)=Q(T)+\alpha |T|,
+  \] where \(Q(T)\) is our cost function, \(|T|\) is the number of
+  terminal nodes in tree \(T\). The parameter \(\alpha\) is then a
+  parameter penalizing the number of terminal nodes, ensuring that the
+  tree does not get too many branches.
+\item
+  For regression trees we choose
+  \[Q(T)=\sum_{m=1}^{|T|}\sum_{x_i\in R_m}(y_i - \hat{y}_{R_m})^2 \ ,\]
+  and adapted cost functions for classification trees (the entropy
+  (deviance), Gini or misclassification rate, see below).
+\end{itemize}
 
 \end{block}
 
@@ -835,62 +932,78 @@ TRUE, \ldots{})
 \begin{frame}
 
 \begin{itemize}
-\tightlist
 \item
-  Details: A tree is grown by binary recursive partitioning using the
-  response in the specified formula and choosing splits from the terms
-  of the right-hand-side. Numeric variables are divided into X
-  \textless{} a and X \textgreater{} a; the levels of an unordered
-  factor are divided into two non-empty groups. The split which
-  maximizes the reduction in impurity is chosen, the data set split and
-  the process repeated. Splitting continues until the terminal nodes are
-  too small or too few to be split.
+  Given a value of \(\alpha\) we get a pruned tree (note: the same
+  pruned tree within a small range of \(\alpha\)).
 \item
-  A numerical response gives regression while a factor response gives
-  classifiation.
-\item
-  The default choice for a function to minimize is the deviance, and for
-  normal data (as we may assume for regression), the deviance is
-  proportional to the RSS. For the interested reader, this is the
-  connection between the deviance and the RSS for regression
-  \url{https://www.math.ntnu.no/emner/TMA4315/2018h/2MLR.html\#deviance}
+  For \(\alpha=0\) we get \(T_0\) and as \(\alpha\) increases we get
+  smaller and smaller trees.
 \end{itemize}
 
-\end{frame}
-
-\begin{frame}[fragile]
+So, which value of \(\alpha\) is best?
 
 \begin{itemize}
-\tightlist
 \item
-  Tree growth is limited to a depth of 31 by the use of integers to
-  label nodes.
+  We can use \(k\)-fold cross-validation to find out!
 \item
-  Factor predictor variables can have up to 32 levels. This limit is
-  imposed for ease of labelling, but since their use in a classification
-  tree with three or more levels in a response involves a search over
-  2\^{}(k-1) - 1 groupings for k levels, the practical limit is much
-  less.
+  Importantly, by increasing \(\alpha\), branches get pruned in a
+  \emph{hierarchical (nested) fashion}.
 \end{itemize}
 
-A competing R function is \texttt{rpart}, explained in
-\url{https://cran.r-project.org/web/packages/rpart/vignettes/longintro.pdf}
+Please study this
+\href{https://www.math.ntnu.no/emner/TMA4268/2018v/notes/CART1MA87012017BoLindqvist.pdf}{note
+from Bo Lindqvist in MA8701 in 2017 - Advanced topics in Statistical
+Learning and Inference} for an example of how we perform cost complexity
+pruning in detail. Alterntively, this method, with proofs, are given in
+B. D. Ripley (1996), Section 7.2.
 
 \end{frame}
 
 \begin{frame}
 
-\begin{block}{Classification trees (binary or categorical outcome)}
+\begin{block}{Pruning the ozone tree}
 
-remember the minor head injury example?
+Let us start with the tree with many leafes, and then prune it with
+5-fold CV. We can then plot the CV error as a function of tree size
+(instead of \(\alpha\) -- why?):
 
-Let \(K\) be the number of classes for the response.
+\begin{center}\includegraphics[width=0.6\linewidth]{8Trees_files/figure-beamer/ozone.cv-1} \end{center}
 
-Building a decision tree in this setting is similar to building a
-regression tree for a quantitative response, but there are two main
-differences: \emph{the prediction and the splitting criterion}
+Interestingly, it seems like a tree with 5 leafes performs best - which
+corresponds to the original choice.
 
 \end{block}
+
+\end{frame}
+
+\begin{frame}{Classification trees (binary or categorical outcome)}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Remember the minor head injury example: Binary outcome (disease
+  yes/no).
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Now allow for \(K\geq 2\) number of classes for the response.
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Building a decision tree in this setting is similar to building a
+  regression tree for a quantitative response, but there are two main
+  differences: \emph{the prediction} and \emph{the splitting criterion}.
+\end{itemize}
 
 \end{frame}
 
@@ -899,13 +1012,13 @@ differences: \emph{the prediction and the splitting criterion}
 \textbf{1) The prediction:}
 
 \begin{itemize}
-\tightlist
 \item
   In the regression case we use the mean value of the responses in
   \(R_j\) as a prediction for an observation that falls into region
   \(R_j\).
 \item
-  For the classification case however, we have two possibilities:
+  For the \emph{\textcolor{red}{classification case}}, however, we have
+  two possibilities:
 
   \begin{itemize}
   \tightlist
@@ -931,16 +1044,25 @@ criterion for a qualitative variable. Instead we can use some
 \emph{measure of impurity} of the node. For leaf node \(j\) and class
 \(k=1,\ldots, K\):
 
-Gini index: \[
-G=\sum_{k=1}^K \hat{p}_{jk}(1-\hat{p}_{jk}),
-\]
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Gini index}: \[
+  G=\sum_{k=1}^K \hat{p}_{jk}(1-\hat{p}_{jk}) \ ,
+  \] which is small if all of the \(\hat{p}_{jk}\)'s are close to 0 or
+  1.
+\end{itemize}
 
-Cross entropy: \[
-D=-\sum_{k=1}^K \hat{p}_{jk}log\hat{p}_{jk}
-\] Here \(\hat{p}_{jk}\) is the proportion of training observation in
-region \(j\) that are from class \(k\). Remark: the deviance is a scaled
-version of the cross entropy. \(-2\sum_{k=1}^K n_{jk} log\hat{p}_{jk}\)
-where \(\hat{p}_{jk}=\frac{n_{jk}}{N_j}\)
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Cross entropy}: \[
+  D=-\sum_{k=1}^K \hat{p}_{jk}\log\hat{p}_{jk} \ .
+  \] Here \(\hat{p}_{jk}\) is the proportion of training observation in
+  region \(j\) that are from class \(k\).
+\end{itemize}
 
 When making a split in our classification tree, we want to minimize the
 Gini index or the cross-entropy.
@@ -949,16 +1071,20 @@ Gini index or the cross-entropy.
 
 \begin{frame}
 
-\textbf{Q}: Why these splitting criteria? Measure of impurity? How? See
-classnotes.
+Why don't we just minimize the misclassification error
+\[E= 1- \max_k{\hat{p}_{jk}} \ ?\]
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-9-1.pdf}
+\textbf{A}: The Gini index and Entropy are \emph{measure of impurity}.
+Moreover, they are differentiable (preferred for numerical
+optimization!).
+
+\begin{center}\includegraphics[width=0.7\linewidth]{8Trees_files/figure-beamer/purity-1} \end{center}
 
 \end{frame}
 
 \begin{frame}[fragile]
 
-\begin{block}{Minor head injury - continued}
+\begin{block}{Minor head injury - split with cross-entropy}
 
 \footnotesize
 
@@ -984,8 +1110,10 @@ classnotes.
 
 \normalsize
 
-Deviance=\(-2 \sum_{j}\sum_{k}n_{jk}log(\hat{p}_{jk})\) for all nodes
-\(j\) and classes \(k\). (Formula on page 255 of ({\textbf{???}}).)
+Remark: the deviance is a scaled version of the cross entropy:
+\(-2\sum_{k=1}^K n_{jk} \log\hat{p}_{jk}\) where
+\(\hat{p}_{jk}=\frac{n_{jk}}{N_j}\), thus \texttt{split="deviance"}
+implies that we split according to the entropy criterion.
 
 \end{block}
 
@@ -1000,21 +1128,23 @@ Deviance=\(-2 \sum_{j}\sum_{k}n_{jk}log(\hat{p}_{jk})\) for all nodes
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-11-1.pdf}
+\begin{center}\includegraphics[width=0.7\linewidth]{8Trees_files/figure-beamer/headInjury-1} \end{center}
 
-Length of branches are now proportional to the decrease in impurity.
+Note: With \texttt{type="proportional"}, the length of branches are now
+proportional to the decrease in impurity.
 
 \end{frame}
 
 \begin{frame}[fragile]
 
-\begin{block}{Minor head injury - with Gini index}
+\begin{block}{Minor head injury - split with Gini index}
 
 \footnotesize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tree.HIClassG =}\StringTok{ }\KeywordTok{tree}\NormalTok{(brain.injury }\OperatorTok{~}\StringTok{ }\NormalTok{., headInjury2, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{split =} \StringTok{"gini"}\NormalTok{)}
+\NormalTok{tree.HIClassG =}\StringTok{ }\KeywordTok{tree}\NormalTok{(brain.injury }\OperatorTok{~}\StringTok{ }\NormalTok{., headInjury2, }\DataTypeTok{subset =}\NormalTok{ train, }
+    \DataTypeTok{split =} \StringTok{"gini"}\NormalTok{)}
 \KeywordTok{summary}\NormalTok{(tree.HIClassG)}
 \end{Highlighting}
 \end{Shaded}
@@ -1040,15 +1170,18 @@ Length of branches are now proportional to the decrease in impurity.
 
 \begin{frame}[fragile]
 
+\footnotesize
+
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tree.HIClassG =}\StringTok{ }\KeywordTok{tree}\NormalTok{(brain.injury }\OperatorTok{~}\StringTok{ }\NormalTok{., headInjury2, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{split =} \StringTok{"gini"}\NormalTok{)}
+\NormalTok{tree.HIClassG =}\StringTok{ }\KeywordTok{tree}\NormalTok{(brain.injury }\OperatorTok{~}\StringTok{ }\NormalTok{., headInjury2, }\DataTypeTok{subset =}\NormalTok{ train, }
+    \DataTypeTok{split =} \StringTok{"gini"}\NormalTok{)}
 \KeywordTok{plot}\NormalTok{(tree.HIClassG)}
 \KeywordTok{text}\NormalTok{(tree.HIClassG, }\DataTypeTok{pretty =} \DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-13-1.pdf}
+\begin{center}\includegraphics[width=0.85\linewidth]{8Trees_files/figure-beamer/headInjury2-1} \end{center}
 
 \end{frame}
 
@@ -1057,7 +1190,7 @@ Length of branches are now proportional to the decrease in impurity.
 We also use the classification tree to predict the status of the
 patients in the test set (the one grown with deviance)
 
-\footnotesize
+\tiny
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1097,15 +1230,13 @@ patients in the test set (the one grown with deviance)
 ## 
 \end{verbatim}
 
-\normalsize
-
 \end{frame}
 
 \begin{frame}[fragile]
 
 And for the Gini-grown tree
 
-\footnotesize
+\tiny
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1143,8 +1274,6 @@ And for the Gini-grown tree
 ##        'Positive' Class : 0               
 ## 
 \end{verbatim}
-
-\normalsize
 
 \end{frame}
 
@@ -1185,87 +1314,6 @@ And for the Gini-grown tree
   than the other. Discuss if it is possible to change the algorithm in
   order to decrease the number of severe mistakes.
 \end{itemize}
-
-\end{frame}
-
-\begin{frame}{Pruning}
-
-Imagine that we have a data set with many predictors, and that we fit a
-large tree. Then, the number of observations from the training set that
-falls into some of the regions \(R_j\) may be small, and we may be
-concerned that we have overfitted the training data.
-
-\(Pruning\) is a technique for solving this problem.
-
-By \(pruning\) the tree we reduce the size or depth of the decision
-tree. When we reduce the number of terminal nodes and regions
-\(R_1,...,R_J\), each region will probably contain more observations.
-This way we reduce the probability of overfitting, and we may get better
-predictions for test data.
-
-\end{frame}
-
-\begin{frame}
-
-If we have a large dataset with many explanatory variables and terminal
-nodes, we can also prune the tree if we want to create a simpler tree
-and increase the interpretability of the model.
-
-In the \href{classtree2}{classification tree} (grown with deviance) we
-saw that we got several unnecessary splits. This is also something that
-can be avoided by pruning.
-
-In the \href{classtree3}{classification tree} (grown with Gini index)
-there were 78 leaves - maybe we want a more easy interpretable tree?
-
-But, there are many possible pruned versions of our full tree. Can we
-investigate all of these?
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Cost complexity pruning}
-
-We can prune the tree by using a algorithm called \emph{cost complexity
-pruning}. We first build a large tree \(T_0\) by recursive binary
-splitting. Then we try to find a subtree \(T\subset T_0\) that (for a
-given value of \(\alpha\)) minimizes
-
-\[
-C_{\alpha}(T)=Q(T)+\alpha |T|,
-\] where \(Q(T)\) is our cost function, \(|T|\) is the number of
-terminal nodes in tree \(T\). The parameter \(\alpha\) is then a
-parameter penalizing the number of terminal nodes, ensuring that the
-tree does not get too many branches.
-
-We proceed by repeating the the process for the best subtree \(T\), and
-this way we get a sequence of smaller of smaller subtrees where each
-tree is the best subtree of the previous tree.
-
-For regression trees we choose
-\(Q(T)=\sum_{m=1}^{|T|}\sum_{x_i\in R_m}(y_i - \hat{y}_{R_m})^2\), and
-or classification trees the entropy (deviance), Gini or
-misclassification rate.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-Given a value of \(\alpha\) we get a pruned tree (but the same pruned
-tree for ranges of \(\alpha\)).
-
-For \(\alpha=0\) we get \(T_0\) and as \(\alpha\) increases we get
-smaller and smaller trees.
-
-Please study this
-\href{https://www.math.ntnu.no/emner/TMA4268/2018v/notes/CART1MA87012017BoLindqvist.pdf}{note
-from Bo Lindqvist in MA8701 in 2017 - Advanced topics in Statistical
-Learning and Inference} for an example of how we perform cost complexity
-pruning in detail. Alterntively, this method, with proofs, are given in
-({\textbf{???}}), Section 7.2.
 
 \end{frame}
 
@@ -1332,7 +1380,7 @@ We continue using the \href{classtree2}{classification tree}.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-16-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-13-1.pdf}
 
 \end{block}
 
@@ -1393,7 +1441,7 @@ to this value:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-19-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-16-1.pdf}
 
 We see that the new tree doesn't have any unnecessary splits, and we
 have a simple and interpretable decision tree. How is the predictive
@@ -1467,7 +1515,7 @@ The same repeated for the Gini-grown tree - comment on what is done.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-21-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-18-1.pdf}
 
 \end{frame}
 
@@ -1683,7 +1731,7 @@ fit our full classification tree (deviance grown).
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-23-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-20-1.pdf}
 
 \end{frame}
 
@@ -2072,7 +2120,7 @@ with \texttt{type=2}.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-27-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-24-1.pdf}
 
 \end{frame}
 
@@ -2122,7 +2170,7 @@ with \texttt{type=1}.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-28-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-25-1.pdf}
 
 \end{frame}
 
@@ -2136,7 +2184,7 @@ The two types together: do they agree?
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-29-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-26-1.pdf}
 
 \end{frame}
 
@@ -2335,7 +2383,7 @@ each predictor.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-33-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-30-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2343,7 +2391,7 @@ each predictor.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-33-2.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-30-2.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2351,7 +2399,7 @@ each predictor.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-33-3.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-30-3.pdf}
 
 As expected \emph{GCS.15.2hours} is a strong predictor along with
 \emph{basal.skull.facture} and \emph{age}. This means that most of the
@@ -2367,7 +2415,8 @@ Variable importance plot for bagging:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# borrowed from https://gist.github.com/ramhiser/6dec3067f087627a7a85}
+\CommentTok{# borrowed from}
+\CommentTok{# https://gist.github.com/ramhiser/6dec3067f087627a7a85}
 \KeywordTok{library}\NormalTok{(dplyr)}
 \KeywordTok{library}\NormalTok{(ggplot2)}
 \CommentTok{# library(ggpubr)}
@@ -2385,14 +2434,15 @@ Variable importance plot for bagging:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# Extracts variable importance (Mean Decrease in Gini Index) Sorts by}
-\CommentTok{# variable importance and relevels factors to match ordering}
+\CommentTok{# Extracts variable importance (Mean Decrease in Gini Index) Sorts}
+\CommentTok{# by variable importance and relevels factors to match ordering}
 \NormalTok{var_importance <-}\StringTok{ }\KeywordTok{data_frame}\NormalTok{(}\DataTypeTok{variable =} \KeywordTok{setdiff}\NormalTok{(}\KeywordTok{colnames}\NormalTok{(iris), }\StringTok{"Species"}\NormalTok{), }
     \DataTypeTok{importance =} \KeywordTok{as.vector}\NormalTok{(}\KeywordTok{importance}\NormalTok{(rf_out)))}
 \NormalTok{var_importance <-}\StringTok{ }\KeywordTok{arrange}\NormalTok{(var_importance, }\KeywordTok{desc}\NormalTok{(importance))}
 \NormalTok{var_importance}\OperatorTok{$}\NormalTok{variable <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(var_importance}\OperatorTok{$}\NormalTok{variable, }\DataTypeTok{levels =}\NormalTok{ var_importance}\OperatorTok{$}\NormalTok{variable)}
 
-\NormalTok{p <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(var_importance, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ variable, }\DataTypeTok{weight =}\NormalTok{ importance, }\DataTypeTok{fill =}\NormalTok{ variable))}
+\NormalTok{p <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(var_importance, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ variable, }\DataTypeTok{weight =}\NormalTok{ importance, }
+    \DataTypeTok{fill =}\NormalTok{ variable))}
 \NormalTok{p <-}\StringTok{ }\NormalTok{p }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_bar}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Variable Importance from Random Forest Fit"}\NormalTok{)}
 \NormalTok{p <-}\StringTok{ }\NormalTok{p }\OperatorTok{+}\StringTok{ }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Demographic Attribute"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Variable Importance (Mean Decrease in Gini Index)"}\NormalTok{)}
 \NormalTok{p <-}\StringTok{ }\NormalTok{p }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_fill_discrete}\NormalTok{(}\DataTypeTok{name =} \StringTok{"Variable Name"}\NormalTok{)}
@@ -2403,7 +2453,7 @@ Variable importance plot for bagging:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-34-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-31-1.pdf}
 
 \end{frame}
 
@@ -2415,7 +2465,8 @@ Variable importance plot for random forest:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# borrowed from https://gist.github.com/ramhiser/6dec3067f087627a7a85}
+\CommentTok{# borrowed from}
+\CommentTok{# https://gist.github.com/ramhiser/6dec3067f087627a7a85}
 
 \NormalTok{rf_out =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(Species }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ iris)}
 \NormalTok{rf_out}\OperatorTok{$}\NormalTok{confusion}
@@ -2436,7 +2487,8 @@ Variable importance plot for random forest:
 \NormalTok{var_importance <-}\StringTok{ }\KeywordTok{arrange}\NormalTok{(var_importance, }\KeywordTok{desc}\NormalTok{(importance))}
 \NormalTok{var_importance}\OperatorTok{$}\NormalTok{variable <-}\StringTok{ }\KeywordTok{factor}\NormalTok{(var_importance}\OperatorTok{$}\NormalTok{variable, }\DataTypeTok{levels =}\NormalTok{ var_importance}\OperatorTok{$}\NormalTok{variable)}
 
-\NormalTok{pp <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(var_importance, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ variable, }\DataTypeTok{weight =}\NormalTok{ importance, }\DataTypeTok{fill =}\NormalTok{ variable))}
+\NormalTok{pp <-}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(var_importance, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ variable, }\DataTypeTok{weight =}\NormalTok{ importance, }
+    \DataTypeTok{fill =}\NormalTok{ variable))}
 \NormalTok{pp <-}\StringTok{ }\NormalTok{pp }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_bar}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Variable Importance from Random Forest Fit"}\NormalTok{)}
 \NormalTok{pp <-}\StringTok{ }\NormalTok{pp }\OperatorTok{+}\StringTok{ }\KeywordTok{xlab}\NormalTok{(}\StringTok{"Demographic Attribute"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{ylab}\NormalTok{(}\StringTok{"Variable Importance (Mean Decrease in Gini Index)"}\NormalTok{)}
 \NormalTok{pp <-}\StringTok{ }\NormalTok{pp }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_fill_discrete}\NormalTok{(}\DataTypeTok{name =} \StringTok{"Variable Name"}\NormalTok{)}
@@ -2447,7 +2499,7 @@ Variable importance plot for random forest:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-35-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-32-1.pdf}
 
 \end{frame}
 
@@ -2626,7 +2678,7 @@ Section 8.3.4.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-37-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-34-1.pdf}
 
 \end{block}
 
@@ -2643,7 +2695,7 @@ Section 8.3.4.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-38-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-35-1.pdf}
 
 Most complex tree selected.
 
@@ -2665,7 +2717,7 @@ Just to show pruning (even if most complex tree was selected).
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-39-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-36-1.pdf}
 
 \end{block}
 
@@ -2684,7 +2736,7 @@ Just to show pruning (even if most complex tree was selected).
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-40-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-37-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2708,8 +2760,8 @@ Just to show pruning (even if most complex tree was selected).
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(randomForest)}
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{bag.boston =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Boston, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{mtry =} \DecValTok{13}\NormalTok{, }
-    \DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{bag.boston =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Boston, }\DataTypeTok{subset =}\NormalTok{ train, }
+    \DataTypeTok{mtry =} \DecValTok{13}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
 \NormalTok{bag.boston}
 \end{Highlighting}
 \end{Shaded}
@@ -2736,7 +2788,7 @@ Plotting predicted test values vs true values.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-42-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-39-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2761,8 +2813,8 @@ Error rate on test set for bagging
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{rf.boston =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Boston, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{mtry =} \DecValTok{6}\NormalTok{, }
-    \DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{rf.boston =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Boston, }\DataTypeTok{subset =}\NormalTok{ train, }
+    \DataTypeTok{mtry =} \DecValTok{6}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
 \NormalTok{yhat.rf =}\StringTok{ }\KeywordTok{predict}\NormalTok{(rf.boston, }\DataTypeTok{newdata =}\NormalTok{ Boston[}\OperatorTok{-}\NormalTok{train, ])}
 \KeywordTok{mean}\NormalTok{((yhat.rf }\OperatorTok{-}\StringTok{ }\NormalTok{boston.test)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
 \end{Highlighting}
@@ -2801,7 +2853,7 @@ Error rate on test set for bagging
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-44-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-41-1.pdf}
 
 \end{block}
 
@@ -2853,7 +2905,7 @@ Error rate on test set for bagging
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-46-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-43-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2861,7 +2913,7 @@ Error rate on test set for bagging
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-46-2.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-43-2.pdf}
 
 \end{frame}
 
@@ -2908,7 +2960,7 @@ find the beste \(\lambda\) over a grid.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-48-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-45-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3093,9 +3145,10 @@ set description}
 \CommentTok{# read data, divide into train and test}
 \NormalTok{germancredit =}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\StringTok{"http://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.data"}\NormalTok{)}
 \KeywordTok{colnames}\NormalTok{(germancredit) =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"checkaccount"}\NormalTok{, }\StringTok{"duration"}\NormalTok{, }\StringTok{"credithistory"}\NormalTok{, }
-    \StringTok{"purpose"}\NormalTok{, }\StringTok{"amount"}\NormalTok{, }\StringTok{"saving"}\NormalTok{, }\StringTok{"presentjob"}\NormalTok{, }\StringTok{"installmentrate"}\NormalTok{, }\StringTok{"sexstatus"}\NormalTok{, }
-    \StringTok{"otherdebtor"}\NormalTok{, }\StringTok{"resident"}\NormalTok{, }\StringTok{"property"}\NormalTok{, }\StringTok{"age"}\NormalTok{, }\StringTok{"otherinstall"}\NormalTok{, }\StringTok{"housing"}\NormalTok{, }
-    \StringTok{"ncredits"}\NormalTok{, }\StringTok{"job"}\NormalTok{, }\StringTok{"npeople"}\NormalTok{, }\StringTok{"telephone"}\NormalTok{, }\StringTok{"foreign"}\NormalTok{, }\StringTok{"response"}\NormalTok{)}
+    \StringTok{"purpose"}\NormalTok{, }\StringTok{"amount"}\NormalTok{, }\StringTok{"saving"}\NormalTok{, }\StringTok{"presentjob"}\NormalTok{, }\StringTok{"installmentrate"}\NormalTok{, }
+    \StringTok{"sexstatus"}\NormalTok{, }\StringTok{"otherdebtor"}\NormalTok{, }\StringTok{"resident"}\NormalTok{, }\StringTok{"property"}\NormalTok{, }\StringTok{"age"}\NormalTok{, }\StringTok{"otherinstall"}\NormalTok{, }
+    \StringTok{"housing"}\NormalTok{, }\StringTok{"ncredits"}\NormalTok{, }\StringTok{"job"}\NormalTok{, }\StringTok{"npeople"}\NormalTok{, }\StringTok{"telephone"}\NormalTok{, }\StringTok{"foreign"}\NormalTok{, }
+    \StringTok{"response"}\NormalTok{)}
 \NormalTok{germancredit}\OperatorTok{$}\NormalTok{response =}\StringTok{ }\KeywordTok{as.factor}\NormalTok{(germancredit}\OperatorTok{$}\NormalTok{response)  }\CommentTok{#2=bad}
 \KeywordTok{table}\NormalTok{(germancredit}\OperatorTok{$}\NormalTok{response)}
 \end{Highlighting}
@@ -3187,7 +3240,8 @@ therefore not address that in this problem set.
 \KeywordTok{print}\NormalTok{(testres)}
 \DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(testres}\OperatorTok{$}\NormalTok{table))}\OperatorTok{/}\NormalTok{(}\KeywordTok{sum}\NormalTok{(testres}\OperatorTok{$}\NormalTok{table))}
 \NormalTok{predfulltree =}\StringTok{ }\KeywordTok{predict}\NormalTok{(fulltree, germancredit.test, }\DataTypeTok{type =} \StringTok{"vector"}\NormalTok{)}
-\NormalTok{testfullroc =}\StringTok{ }\KeywordTok{roc}\NormalTok{(germancredit.test}\OperatorTok{$}\NormalTok{response }\OperatorTok{==}\StringTok{ "2"}\NormalTok{, predfulltree[, }\DecValTok{2}\NormalTok{])}
+\NormalTok{testfullroc =}\StringTok{ }\KeywordTok{roc}\NormalTok{(germancredit.test}\OperatorTok{$}\NormalTok{response }\OperatorTok{==}\StringTok{ "2"}\NormalTok{, predfulltree[, }
+    \DecValTok{2}\NormalTok{])}
 \KeywordTok{auc}\NormalTok{(testfullroc)}
 \KeywordTok{plot}\NormalTok{(testfullroc)}
 \end{Highlighting}
@@ -3212,7 +3266,8 @@ Run the code and study the output.
 \CommentTok{# prune the full tree}
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
 \NormalTok{fullcv =}\StringTok{ }\KeywordTok{cv.tree}\NormalTok{(fulltree, }\DataTypeTok{FUN =}\NormalTok{ prune.misclass, }\DataTypeTok{K =} \DecValTok{5}\NormalTok{)}
-\KeywordTok{plot}\NormalTok{(fullcv}\OperatorTok{$}\NormalTok{size, fullcv}\OperatorTok{$}\NormalTok{dev, }\DataTypeTok{type =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{xlab =} \StringTok{"Terminal nodes"}\NormalTok{, }\DataTypeTok{ylab =} \StringTok{"misclassifications"}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(fullcv}\OperatorTok{$}\NormalTok{size, fullcv}\OperatorTok{$}\NormalTok{dev, }\DataTypeTok{type =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{xlab =} \StringTok{"Terminal nodes"}\NormalTok{, }
+    \DataTypeTok{ylab =} \StringTok{"misclassifications"}\NormalTok{)}
 \KeywordTok{print}\NormalTok{(fullcv)}
 \NormalTok{prunesize =}\StringTok{ }\NormalTok{fullcv}\OperatorTok{$}\NormalTok{size[}\KeywordTok{which.min}\NormalTok{(fullcv}\OperatorTok{$}\NormalTok{dev)]}
 \NormalTok{prunetree =}\StringTok{ }\KeywordTok{prune.misclass}\NormalTok{(fulltree, }\DataTypeTok{best =}\NormalTok{ prunesize)}
@@ -3387,10 +3442,23 @@ modified to get this set of slides. In addition, Mette Langaas and Julia
 Debik have contributed to the original version.
 
 \hypertarget{refs}{}
+\hypertarget{ref-hyafilrivest1976}{}
+Hyafil, L., and R.L. Rivest. 1976. ``Constructing Optimal Binary
+Decision Trees Is Np-Complete.'' \emph{Information Processing Letters}
+5: 15--17.
+
 \hypertarget{ref-james.etal}{}
 James, G., D. Witten, T. Hastie, and R. Tibshirani. 2013. \emph{An
 Introduction to Statistical Learning with Applications in R}. New York:
 Springer.
+
+\hypertarget{ref-tree2019}{}
+Ripley, Brian. 2019. \emph{Tree: Classification and Regression Trees}.
+\url{https://CRAN.R-project.org/package=tree}.
+
+\hypertarget{ref-Ripley}{}
+Ripley, Brian D. 1996. \emph{Pattern Recognicion and Neural Networks}.
+Cambridge University Press.
 
 \end{frame}
 
