@@ -96,7 +96,7 @@ In two dimensions (for two variables) a three-region partition may look like thi
 
 The series of splitting rules can be visualized with a _regression tree_.
 
-The following tree (which corresponds to the split in the previous slide) has three _leaves_ (terminal nodes), and two _internal nodes_:
+The following tree (which corresponds to the split in the previous slide) has three _leafs_ (terminal nodes), and two _internal nodes_:
 
 $~$
 
@@ -241,9 +241,9 @@ print(headtree)
 
 **Advantages**:
 
-* Decisions trees are easier to interpret than many of the classification (and regression) methods that we have studied so far.
+* Decision trees are easier to interpret than many of the classification (and regression) methods that we have studied so far.
 
-* Decisions trees provide an easy way to visualize the data for non-statisticians.
+* Decision trees provide an easy way to visualize the data for non-statisticians.
 
 ---
 
@@ -549,13 +549,33 @@ and adapted cost functions for classification trees (the entropy (deviance), Gin
 
 So, which value of $\alpha$ is best?
 
-* We can use $k$-fold cross-validation to find out!
+* We can use $K$-fold cross-validation to find out!
 
 * Importantly, by increasing $\alpha$, branches get pruned in a _hierarchical (nested) fashion_.
 
 
 
 Please study this [note from Bo Lindqvist in MA8701 in 2017 - Advanced topics in Statistical Learning and Inference](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/CART1MA87012017BoLindqvist.pdf) for an example of how we perform cost complexity pruning in detail. Alterntively, this method, with proofs, are given in @Ripley, Section 7.2.
+
+
+---
+
+## Building a regression  tree: Algorithm 8.1
+
+1. Use recursive binary splitting to grow a large tree on the training
+data, stopping only when each terminal node has fewer than some
+minimum number of observations.
+
+2. Apply cost complexity pruning to the large tree in order to obtain a
+sequence of best subtrees, as a function of $\alpha$.
+
+3. Use $K$-fold cross-validation to choose $\alpha$. That is, divide the training
+observations into $k$ folds. For each $k = 1,\ldots, K$:
+      + Repeat Steps 1 and 2 on all but the $k$th fold of the training data.
+      + Evaluate the mean squared prediction error on the data in the left-out $k$th fold, as a function of $\alpha$.
+      + Average the results for each value of $\alpha$, and pick $\alpha$ to minimize the average error.
+      
+4. Return the subtree from Step 2 that corresponds to the chosen value of $\alpha$.
 
 
 ---
@@ -582,7 +602,7 @@ Interestingly, it seems like a tree with 5 leafes performs best - which correspo
 
 <!-- In the [classification tree](classtree2) (grown with deviance) we saw that we got several unnecessary splits. This is also something that can be avoided by pruning.  -->
 
-<!-- In the [classification tree](classtree3) (grown with Gini index) there were 78 leaves - maybe we want a more easy interpretable tree? -->
+<!-- In the [classification tree](classtree3) (grown with Gini index) there were 78 leafs - maybe we want a more easy interpretable tree? -->
 
 <!-- But, there are many possible pruned versions of our full tree. Can we investigate all of these? -->
 
@@ -642,9 +662,23 @@ When making a split in our classification tree, we want to minimize the Gini ind
 
 Why don't we just minimize the misclassification error $$E= 1- \max_k{\hat{p}_{jk}} \ ?$$
 
-**A**: The Gini index and Entropy are _measure of impurity_. Moreover, they are differentiable (preferred for numerical optimization!).
+**A**: 
 
-```{r purity, echo=FALSE, fig.width=6, fig.height=5,fig.align = "center",out.width='70%'}
+* The Gini index and Entropy are _measure of impurity_. They are more sensitive to changes in the node probabilities. 
+
+* Example for two classes: Assume we have two classes with 400 nodes each, written as $(400,400)$. Now we can choose between two splits:
+    + Split 1: (100,300) and (300,100)  
+    + Split 2: (200,400) and (200,0).
+
+Both splits result in 25% misclassification. Which of these splits is better? Probably the second one, because it produces a pure node.
+
+
+
+---
+
+* Moreover, The Gini index and Entropy are differentiable (preferred for numerical optimization!)
+
+```{r purity, echo=FALSE, fig.width=6, fig.height=5,fig.align = "center",out.width='60%'}
 p=seq(0.001,0.999,length=1000)
 gini=2*p*(1-p)
 ent=-p*log(p)-(1-p)*log(1-p)
@@ -659,12 +693,18 @@ legend(0.3,0.2,legend=c("misclassification","cross-entropy","Gini"),fill=c("blac
 
 ### Minor head injury - split with cross-entropy
 
-\footnotesize
+\vspace{1mm}
+
+We use the 850 training samples to get a tree using cross-entropy (deviance):
+
+
+\scriptsize
 ```{r}
 tree.HIClass=tree(brain.injury~.,
                   data=headInjury2,
                   subset=train,split="deviance")
 summary(tree.HIClass)
+
 ```
 
 \normalsize
@@ -672,118 +712,131 @@ summary(tree.HIClass)
 <!-- Deviance=$-2 \sum_{j}\sum_{k}n_{jk}\log(\hat{p}_{jk})$ for all nodes $j$ and classes $k$. -->
 <!-- (Formula on page 255 of @MASS.) -->
 
-Remark: the deviance is a scaled version of the cross entropy: $-2\sum_{k=1}^K n_{jk} \log\hat{p}_{jk}$ where $\hat{p}_{jk}=\frac{n_{jk}}{N_j}$, thus `split="deviance"` implies that we split according to the entropy criterion.
+\small
+\vspace{1mm}
+**Remark**: the deviance is a scaled version of the cross entropy: 
+$$-2\sum_{k=1}^K n_{jk} \log\hat{p}_{jk}\ , \text{where} \quad   \hat{p}_{jk}=\frac{n_{jk}}{N_j}\ , $$ thus `split="deviance"` implies that we split according to the entropy criterion.
 
 ---
 
-```{r headInjury, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='70%'}
+
+\scriptsize
+```{r headInjury, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='50%'}
 plot(tree.HIClass,type="proportional")
 text(tree.HIClass,pretty=1)
 ```
 
-Note: With `type="proportional" `, the length of branches are now proportional to the decrease in impurity.
+\normalsize
+
+* With `type="proportional" `, the length of branches are now proportional to the decrease in impurity.
+
+* The classification tree has two terminal nodes with factor "0" originating from the same branch. Why do we get this "unnecessary" split? (Hint: Node purity)
 
 ---
 
 ### Minor head injury - split with Gini index
 
-\footnotesize
+\vspace{1mm}
+The same analysis with the Gini index:
+
+\scriptsize
 ```{r}
 tree.HIClassG=tree(brain.injury~.,headInjury2,
                   subset=train,split="gini")
 summary(tree.HIClassG)
 ```
 
-\normalsize
+
 
 ---
 
-\footnotesize
-```{r headInjury2, echo=TRUE, fig.width=8, fig.height=6,fig.align = "center",out.width='85%'}
-tree.HIClassG=tree(brain.injury~.,headInjury2,
-                  subset=train,split="gini")
-plot(tree.HIClassG)
+\scriptsize
+```{r headInjury2, echo=TRUE, fig.width=8, fig.height=6,fig.align = "center",out.width='70%'}
+plot(tree.HIClassG,type="proportional")
 text(tree.HIClassG,pretty=1)
 ```
 
+\normalsize
+
+This is a very bushy tree!
 
 ---
 
-We also use the classification tree to predict the status of the patients in the test set (the one grown with deviance)
+### Checking predictions
+\vspace{2mm}
 
+We also use the classification tree to predict the status of the patients in the test set. 
+
+\vspace{2mm}
+
+With deviance: 
 \tiny
 
 ```{r}
 library(caret)
 tree.pred=predict(tree.HIClass,headInjury2[test,],type="class")
-confusionMatrix(tree.pred,reference=headInjury2[test,]$brain.injury)
+confusionMatrix(tree.pred,reference=headInjury2[test,]$brain.injury)$table
 ```
 
- 
+\normalsize
 
----
-
-And for the Gini-grown tree
+With the Gini-index:
 
 \tiny
+
 ```{r}
 tree.predG=predict(tree.HIClassG,headInjury2[test,],type="class")
-confusionMatrix(tree.predG,reference=headInjury2[test,]$brain.injury)
+confusionMatrix(tree.predG,reference=headInjury2[test,]$brain.injury)$table
+```
+
+---
+
+Study the confusion matrices on the previous slide:
+
+* Which algorithm makes more errors?
+
+* Is one type of mistakes more severe than the other? 
+
+* Discuss if/how it is possible to change the algorithm in order to decrease the number of severe mistakes.
+
+
+
+---
+
+## Building a classification tree: Algorithm 8.1
+
+\vspace{2mm}
+
+* Like for regression trees, we would like to find classification trees that are good at prediction.
+
+* Algorithm 8.1 can be used with misclassification, the Gini index, or cross-entropy instead of the RSS as quality measure.
+
+---
+
+
+### Finding an optimal classification tree 
+
+We prune the classification tree that was built with the deviance criterion. We use the misclassification error to do so:
+
+\scriptsize
+
+```{r headInjury3, echo=TRUE, fig.width=5, fig.height=4,fig.align = "center",out.width='60%'}
+set.seed(1)
+cv.head=cv.tree(tree.HIClass, FUN= prune.misclass)
+plot(cv.head$size,cv.head$dev,type="b",
+                   xlab="Terminal nodes",ylab="Misclassifications")
 ```
 
 
+\tiny
+(Todo: Exercise with `cv.head=cv.tree(tree.HIClass,FUN=prune.tree)` , that is, pruning according to deviance; Note: I think it is not possible to prune according to the Gini index - why??)
 
----
-
-### Questions:
-
-* The classification tree has two terminal nodes with factor "1" originating from the same branch. Why do we get this "unnecessary" split?
-* What if we have $x_1$ and $x_2$ and the true class boundary (two classes) is linear in $x_1$, $x_2$ space. How can we do that with our binary recursive splits?
-
----
-
-![Linear boundary ISL Figure 8.7](Introtostatlearn-326.png)
-
----
-
-* What about a rectangular boundary (figure above)?
-* Study the above confusion matrices. One type of mistake is more severe than the other. Discuss if it is possible to change the algorithm in order to decrease the number of severe mistakes.
-
-
-
----
-
-## Building a regression (classification) tree: Algorithm 8.1
-
-1. Use recursive binary splitting to grow a large tree on the training
-data, stopping only when each terminal node has fewer than some
-minimum number of observations.
-2. Apply cost complexity pruning to the large tree in order to obtain a
-sequence of best subtrees, as a function of $\alpha$.
-3. Use K-fold cross-validation to choose $\alpha$. That is, divide the training
-observations into K folds. For each k = $1,\ldots, K$:
-   + Repeat Steps 1 and 2 on all but the kth fold of the training data.
-   + Evaluate the mean squared prediction (misclassification, gini, cross-entropy) error on the data in the
-left-out kth fold, as a function of $\alpha$.
-   + Average the results for each value of $\alpha$, and pick $\alpha$ to minimize the average error.
-4. Return the subtree from Step 2 that corresponds to the chosen value of $\alpha$.
-
----
-
-
-###<a id="expruning"> Combining pruning and cross-validation to find optimal tree</a>###
-
-We continue using the [classification tree](classtree2). 
-
-```{r,echo=showsol}
-set.seed(1); cv.head=cv.tree(tree.HIClass,FUN=prune.misclass)
-par(pty="s"); plot(cv.head$size,cv.head$dev,type="b",
-                   xlab="Terminal nodes",ylab="misclassifications")
-```
 
 ---
 
 The function `cv.tree` automatically does $10$-fold cross-validation. `dev` is here the number of misclassifications.
+
+\scriptsize
 
 ```{r}
 print(cv.head)
@@ -791,29 +844,36 @@ print(cv.head)
 
 ---
 
-We have done cross-validation on our training set of 850 observations. According to the plot, the number of misclassifications is lowest if we use 5 terminal nodes. Next, we prune the classification tree according to this value:
+* We have done cross-validation on our training set of 850 observations. According to the plot, the number of misclassifications is as low for 7, 8 or 9 nodes, so we choose 7 terminal nodes as the smallest model (lowest variance). 
 
+* We prune the classification tree according to this value:
+
+\scriptsize
 ```{r}
-prune.HIClass=prune.misclass(tree.HIClass,best=5) 
-#Five node tree.
+prune.HIClass=prune.misclass(tree.HIClass,best=7) 
 ```
 
 ---
 
-```{r,echo=showsol}
+\scriptsize
+```{r headInjury4, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='60%'}
 plot(prune.HIClass)
 text(prune.HIClass,pretty=1)
 ```
 
-We see that the new tree doesn't have any unnecessary splits, and we have a simple and interpretable decision tree. How is the predictive performance of the model affected?
+
+\normalsize
+$\rightarrow$ No unnecessary splits left, and we have a simple and interpretable decision tree. 
+
+How is the predictive performance of the model affected?
 
 ---
 
-\footnotesize
+\scriptsize
 
 ```{r}
-tree.pred.prune=predict(prune.HIClass,headInjury2[test,],type="class")
-confusionMatrix(tree.pred,headInjury2[test,]$brain.injury)
+tree.pred.prune <- predict(prune.HIClass,headInjury2[test,],type="class")
+confusionMatrix(tree.pred.prune,headInjury2[test,]$brain.injury)$table
 ```
 
 \normalsize
@@ -824,62 +884,119 @@ We see that the misclassification rate is as small as before indicating that the
 
 The same repeated for the Gini-grown tree - comment on what is done.
 
-```{r,echo=showsol}
-set.seed(1); cv.headG=cv.tree(tree.HIClassG,FUN=prune.misclass)
-par(pty="m",mfrow=c(1,2)); plot(cv.headG$size,cv.headG$dev,type="b",
-                   xlab="Terminal nodes",ylab="misclassifications")
+\scriptsize
 
+```{r headInjury5, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='60%'}
+set.seed(10)
+cv.headG=cv.tree(tree.HIClassG,FUN=prune.misclass)
+plot(cv.headG$size,cv.headG$dev,type="b",
+                   xlab="Terminal nodes",ylab="Misclassifications")
+
+```
+
+
+---
+
+<!-- Check which tree has the lowest misclassification: -->
+
+<!-- \scriptsize -->
+
+<!-- ```{r} -->
+<!-- print(cv.headG) -->
+<!-- ``` -->
+
+\scriptsize
+
+```{r headInjury6, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
 prune.HIClassG=prune.misclass(tree.HIClassG,best=7) 
 plot(prune.HIClassG)
 text(prune.HIClassG,pretty=1)
 ```
 
----
 
-```{r}
-print(cv.headG)
-```
+\normalsize
+
+Compare this tree to the one from pruning the deviance-based tree.
+
+<!-- --- -->
+
+<!-- Misclassification rate -->
+
+<!-- ```{r} -->
+<!-- tree.pred.pruneG = predict(prune.HIClassG,headInjury2[test,],type="class") -->
+<!-- confusionMatrix(tree.pred.pruneG,headInjury2[test,]$brain.injury)$table -->
+<!-- ``` -->
+
+
+
 
 ---
 
 ### Questions: 
+
+\vspace{2mm}
 
 Discuss the bias-variance tradeoff of a regression tree when increasing/decreasing the number of terminal nodes, i.e: 
 
 * What happens to the bias?
 * What happens to the variance of a prediction if we reduce the tree size? 
 
+<!-- --- -->
+
+<!-- **A**: -->
+
+<!-- As the tree size increase the bias will decrease, and the variance will increase. This is the same as any other method when we increase the model complexity. -->
+
+
 ---
 
-**A**:
+# Trees versus linear models
 
-As the tree size increase the bias will decrease, and the variance will increase. This is the same as any other method when we increase the model complexity.
 
+
+* What if we have $x_1$ and $x_2$ and the true class boundary (two classes) is linear in $x_1$, $x_2$ space. How can we do that with our binary recursive splits?
+
+
+* What about a rectangular boundary?
+
+
+\centering
+![Linear boundary ISL Figure 8.7](../../ISLR/Figures/Chapter8/8.7.png){width=50%}
+
+
+
+---
 
 # From trees to forests
 
 **Advantages (+)**
 
-* Trees automatically select variables
-* Tree-growing algorithms scale well to large $n$, growing a tree greedily
-* Trees can handle mixed features (continouos, categorical) seamlessly, and can deal with missing data
-* Small trees are easy to interpret and explain to people
-* Some believe that decision trees mirror human decision making
-* Trees can be displayed graphically
+* Trees automatically select variables.
+* Tree-growing algorithms scale well to large $n$, growing a tree greedily.
+* Trees can handle mixed features (continouos, categorical) seamlessly, and can deal with missing data.
+* Small trees are easy to interpret and explain to people.
+* Some believe that decision trees mirror human decision making.
+* Trees can be displayed graphically.
 
 **Disadvantages (-)**
 
-* Large trees are not easy to interpret
-* Trees do not generally have good prediction performance (high variance)
+* Large trees are not easy to interpret.
+* Trees do not generally have good prediction performance (high variance).
 * Trees are not very robust, a small change in the data may cause a large change in the final estimated tree
 
 ---
 
 ## What is next?
 
-* **Bagging**: grow many trees (from bootstrapped data) and average - to get rid of the non-robustness and high variance by averaging
-* Variable importance plot - to see which variables make a difference (now that we have many trees).
+\vspace{2mm}
+
+
+* **Bagging**: grow many trees (from bootstrapped data) and average - to get rid of the non-robustness and high variance by averaging.
+
+* **Variable importance** - to see which variables make a difference (now that we have many trees).
+
 * **Random forest**: inject more randomness (and even less variance) by just allowing a random selection of predictors to be used for the splits at each node.
+
 * **Boosting**: make one tree, then another based on the residuals from the previous, repeat. The final predictor is a weighted sum of these trees.
 
 ---
@@ -1506,223 +1623,13 @@ mean((yhat.boost-boston.test)^2)
 
 ---
 
-# <a id="summing">Summing up </a>
+# Summing up
 
-with a Kahoot! quiz in the interactive lecture!
-
----
-
-#<a id="recex">Recommended exercises</a>
-
-###1. Theoretical questions:###
-<!-- a) Explain why a likelihood function for a classification tree can be written as  -->
-<!-- $$L(\mathbf{\theta})=\prod_{i=1}^{n} p_{i}^{y_i} (1-p_i)^{1-y_i}$$ -->
-<!-- where $p_i=\hat{y}_i$ is an estimator for $y_i$ for $\mathbf{x_i} \in R_m.$ -->
-
-a) Show that each bootstrap sample will contain on average approximately $2/3$ of the observations.
-
-###2. Understanding the concepts and algorithms:###
-
-a) Do Exercise 1 in our book (page 332)
-
-Draw an example (of your own invention) of a partition of two-dimensional feature space that could result from recursive binary splitting. Your example should contain at least six regions. Draw a decision tree corresponding to this partition. Be sure to label all aspects of your figures, including the regions R1,R2,..., the cutpoints t1,t2,..., and so forth.
-
-If the class border of the two dimensional space is linear, how can that be done with recursive binary splitting?
-
-b) Do Exercise 4 in the book (page 332).
-
-Suppose that we want to build a regression tree based on the following dataset:
-
-| $i$ 	| $(x_{i1},x_{i2})$ 	| $y$ 	|
-|:----:	|:------------:	|:----:	|
-| 1 	| (1,3) 	| 2 	|
-| 2 	| (2,2) 	| 5 	|
-| 3 	| (3,2) 	| 3 	|
-| 4 	| (3,4) 	| 7 	|
-
-
-Answer the following questions without using $R$:
-
-c) Find the optimal splitting variable and split point for the first binary splitting for these data according to the recursive binary splitting algorithm. 
-$Hint$: Draw a figure and look at possible divisions.
-
-d) Continue the tree construction for the toy data until each terminal node in the tree corresponds to one single observation. Let the resulting tree be denoted $T_0$.
-
-e) For what values of $\alpha$ in the cost-complexity criterion $C_{\alpha}(T)$ will the unpruned tree $T_0$ be the optimal tree? 
-$Hint:$ Prune the tree by cost complexity pruning.
-
-f) Suppose that we want to predict the response $y$ for a new observation at __x__=(2,3). What is the predicted value when using the tree $T_0$ constructed above?
-
-###3. Implementation:###
-In this exercise you are going to implement a spam filter for e-mails by using tree-based methods. Data from 4601 e-mails are collected and can be uploaded from the kernlab library as follows:
-```{r}
-library(kernlab)
-
-data(spam)
-```
-Each e-mail is classified by _type_ (_spam_ or _nonspam_), and this will be the response in our model. In addition there are 57 predictors in the dataset. The predictors describe the frequency of different words in the e-mails and orthography (capitalization, spelling, punctuation and so on).
-
-a) Study the dataset by writing _?spam_ in R.
-
-b) Create a training set and a test set for the dataset.
-
-c) Fit a tree to the training data with _type_ as the response and the rest of the variables as predictors. Study the results by using the _summary()_ function. Also create a plot of the tree. How many terminal nodes does it have?
-
-d) Predict the response on the test data. What is the misclassification rate?
-
-e) Use the _cv.tree()_ function to find the optimal tree size. Prune the tree according to the optimal tree size by using the _prune.misclass()_ function and plot the result. Predict the response on the test data by using the pruned tree. What is the misclassification rate in this case?
-
-f) Create a decision tree by using the bagging approach. Use the function _randomForest()_ and consider all of the predictors in each split. Predict the response on the test data and report the misclassification rate.
-
-g) Apply the _randomForest()_ function again, but this time consider only a subset of the predictors in each split. This corresponds to the random forest-algorithm. Study the importance of each variable by using the function _importance()_. Are the results as expected based on earlier results? Again, predict the response for the test data and report the misclassification rate.
-
-h) Use _gbm()_ to construct a boosted classification tree. Predict the response for the test data and report the misclassification rate.
-
-i) Compare the misclassification rates in d-h. Which method gives the lowest misclassification rate for the test data? Are the results as expected?
-
-## Compulsory exercise 3, 2018, Problem 1 - Classification with trees
-
-We will use the _German credit data set_ from the [UC Irvine machine learning repository](https://archive.ics.uci.edu/ml/index.php). Our aim is to classify a customer as _good_ or _bad_ with respect to credit risk. A set of 20 covariates (attributes) are available (both numerical and categorical) for 300 customers with bad credit risk and 700 customers with good credit risk.
-
-More information on the 20 covariates are found that the UCI archive [data set description](https://archive.ics.uci.edu/ml/datasets/Statlog+%28German+Credit+Data%29)
-
-
-```{r,echo=TRUE,eval=TRUE}
-library(caret) 
-#read data, divide into train and test
-germancredit = read.table("http://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.data")
-colnames(germancredit) = c("checkaccount", "duration", "credithistory", "purpose", "amount", "saving", "presentjob", "installmentrate", "sexstatus", "otherdebtor", "resident", "property", "age", "otherinstall", "housing", "ncredits", "job", "npeople", "telephone", "foreign", "response")
-germancredit$response = as.factor(germancredit$response) #2=bad
-table(germancredit$response)
-str(germancredit) # to see factors and integers, numerics
-
-set.seed(4268) #keep this -easier to grade work
-in.train <- createDataPartition(germancredit$response, p=0.75, list=FALSE)
-# 75% for training, one split
-germancredit.train <- germancredit[in.train,]; dim(germancredit.train)
-germancredit.test <- germancredit[-in.train,];dim(germancredit.test)
-```
-
-We will now look at classification trees, bagging, and random forests.
-
-Remark: in description of the data set it is hinted that we may use unequal cost of misclassification for the two classes, but we have not covered unequal misclassification costs in this course, and will therefore not address that in this problem set.
-
-### a) Full classification tree [1 point]
-
-```{r,echo=TRUE,eval=FALSE}
-# construct full tree
-library(tree)
-library(pROC)
-fulltree=tree(response~.,germancredit.train,split="deviance")
-summary(fulltree)
-plot(fulltree)
-text(fulltree)
-print(fulltree)
-fullpred=predict(fulltree,germancredit.test,type="class")
-testres=confusionMatrix(data=fullpred,reference=germancredit.test$response)
-print(testres)
-1-sum(diag(testres$table))/(sum(testres$table))
-predfulltree = predict(fulltree,germancredit.test, type = "vector")
-testfullroc=roc(germancredit.test$response == "2", predfulltree[,2])
-auc(testfullroc)
-plot(testfullroc)
-```
-
-Run the code and study the output.
-
-* Q1. Explain briefly how `fulltree` is constructed. The explanation should include the words: greedy, binary, deviance, root, leaves.
-
-### b) Pruned classification tree [1 point]
-
-```{r, echo=TRUE, eval=FALSE}
-# prune the full tree
-set.seed(4268)
-fullcv=cv.tree(fulltree,FUN=prune.misclass,K=5)
-plot(fullcv$size,fullcv$dev,type="b", xlab="Terminal nodes",ylab="misclassifications")
-print(fullcv)
-prunesize=fullcv$size[which.min(fullcv$dev)]
-prunetree=prune.misclass(fulltree,best=prunesize) 
-plot(prunetree)
-text(prunetree,pretty=1)
-predprunetree = predict(prunetree,germancredit.test, type = "class")
-prunetest=confusionMatrix(data=predprunetree,reference=germancredit.test$response)
-print(prunetest)
-1-sum(diag(prunetest$table))/(sum(prunetest$table))
-predprunetree = predict(prunetree,germancredit.test, type = "vector")
-testpruneroc=roc(germancredit.test$response == "2", predprunetree[,2])
-auc(testpruneroc)
-plot(testpruneroc)
-```
-
-Run the code and study the output.
-
-* Q2. Why do we want to prune the full tree? 
-* Q3. How is amount of pruning decided in the code? 
-* Q4. Compare the the full and pruned tree classification method with focus on interpretability and the ROC curves (AUC).
-
-### c) Bagged trees [1 point]
-
-```{r,echo=TRUE,eval=FALSE}
-library(randomForest)
-set.seed(4268)
-bag=randomForest(response~., data=germancredit,subset=in.train,
-                 mtry=20,ntree=500,importance=TRUE)
-bag$confusion
-1-sum(diag(bag$confusion))/sum(bag$confusion[1:2,1:2])
-yhat.bag=predict(bag,newdata=germancredit.test)
-misclass.bag=confusionMatrix(yhat.bag,germancredit.test$response)
-print(misclass.bag)
-1-sum(diag(misclass.bag$table))/(sum(misclass.bag$table))
-predbag = predict(bag,germancredit.test, type = "prob")
-testbagroc=roc(germancredit.test$response == "2", predbag[,2])
-auc(testbagroc)
-plot(testbagroc)
-varImpPlot(bag,pch=20)
-```
-
-Run the code and study the output.
-
-* Q5. What is the main motivation behind bagging?
-* Q6. Explain what the importance plots show, and give your interpretation for the data set.
-* Q7. Compare the performance of bagging with the best of the full and pruned tree model above with focus on interpretability and the ROC curves (AUC).
-
-### d) Random forest [1 point]
-
-```{r,echo=TRUE,eval=FALSE}
-set.seed(4268)
-rf=randomForest(response~.,
-                 data=germancredit,subset=in.train,
-                 mtry=4,ntree=500,importance=TRUE)
-rf$confusion
-1-sum(diag(rf$confusion))/sum(rf$confusion[1:2,1:2])
-yhat.rf=predict(rf,newdata=germancredit.test)
-misclass.rf=confusionMatrix(yhat.rf,germancredit.test$response)
-print(misclass.rf)
-1-sum(diag(misclass.rf$table))/(sum(misclass.rf$table))
-predrf = predict(rf,germancredit.test, type = "prob")
-testrfroc=roc(germancredit.test$response == "2", predrf[,2])
-auc(testrfroc)
-plot(testrfroc)
-varImpPlot(rf,pch=20)
-```
-
-Run the code and study the output.
-
-* Q8. The parameter `mtry=4` is used. What does this parameter mean, and what is the motivation behind choosing exactly this value?
-* Q9. The value of the parameter `mtry` is the only difference between bagging and random forest. What is the effect of choosing `mtry` to be a value less than the number of covariates?
-* Q10. Would you prefer to use bagging or random forest to classify the credit risk data?
+with a Kahoot quiz or another online tool (SRS?)
 
 ---
 
-# Exam problems
 
-## V2018 Problem 4 Classification of diabetes cases
-
-### c)
-
-Q20: Explain how we build a bagged set of trees, and why we would want to fit more than one tree.  
-Q21: Assume we have a data set of size $n$, calculate the probability that a given observation is in a given bootstrap sample.  
-Q22: What is an OOB sample?  
 
 
 # <a id="Rpackages">R packages</a>
