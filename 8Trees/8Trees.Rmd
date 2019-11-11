@@ -248,7 +248,7 @@ print(headtree)
 ---
 
 ## Glossary
-* Classification and regression trees are usually drawn upside down, where the top node is called the *root*.
+* CARTs (Classification and regression trees) are usually drawn upside down, where the top node is called the *root*.
 
 * The *terminal nodes* or *leaf nodes* are the nodes at the bottom, with no splitting criteria. These represent the final predicted class (for classification trees) or predicted response value (for regression trees) and are written symbolically as $R_j$ for $j = 1, 2, ..., J$ 
 
@@ -513,7 +513,7 @@ ozone.MSE2
 * If we have a data set with many predictors or choose a stringent stopping criterion, we may fit a (too) large tree. Thus, the number of observations from the training set that falls into some of the regions $R_j$ may be small $\rightarrow$ _\textcolor{red}{overfitting}_? 
 
 
-* A smaller tree with fewer splits leads to fewer regions $R_1, \ldots, R_J$ with more observations. This might lead to lower variance and better interpretation at the cost of a little bias.
+* A smaller tree with fewer splits leads to fewer regions $R_1, \ldots, R_J$ with more observations. This might lead to lower variance and better interpretation at the cost of more bias.
 
 * One possible alternative to the process described above is to grow the tree only so long as the decrease in the RSS due to each split exceeds some (high) threshold.
 
@@ -544,7 +544,7 @@ and adapted cost functions for classification trees (the entropy (deviance), Gin
 
 * Given a value of $\alpha$ we get a pruned tree (note: the same pruned tree within a small range of $\alpha$).
 
-* For $\alpha=0$ we get $T_0$ and as $\alpha$ increases we get smaller and smaller trees.
+* For $\alpha=0$ we get $T_0$ and as $\alpha$ increases we get shorter and shorter trees.
 
 
 So, which value of $\alpha$ is best?
@@ -555,7 +555,7 @@ So, which value of $\alpha$ is best?
 
 
 
-Please study this [note from Bo Lindqvist in MA8701 in 2017 - Advanced topics in Statistical Learning and Inference](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/CART1MA87012017BoLindqvist.pdf) for an example of how we perform cost complexity pruning in detail. Alterntively, this method, with proofs, are given in @Ripley, Section 7.2.
+Please study this [note from Bo Lindqvist in MA8701 in 2017 - Advanced topics in Statistical Learning and Inference](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/CART1MA87012017BoLindqvist.pdf) for an example of how we perform cost complexity pruning in detail. Alternatively, this method, with proofs, are given in @Ripley, Section 7.2.
 
 
 ---
@@ -582,7 +582,7 @@ observations into $k$ folds. For each $k = 1,\ldots, K$:
 
 ### Pruning the ozone tree
 
-Let us start with the tree with many leafes, and then prune it with 5-fold CV. We can then plot the CV error as a function of tree size (instead of $\alpha$ -- why?):
+Let us start with the tree with many leaves, and then prune it with 5-fold CV. We can then plot the CV error as a function of tree size (instead of $\alpha$ -- why?):
 
 ```{r ozone.cv, echo=FALSE, fig.width=6, fig.height=5,fig.align = "center",out.width='60%'}
 set.seed(563)
@@ -594,7 +594,7 @@ cv.ozone <- cv.tree(ozone.tree,K=5)
 plot(cv.ozone$dev ~  cv.ozone$size,type= "b", lwd=2, col="red", xlab="Tree Size", ylab="Deviance")
 ```
 
-Interestingly, it seems like a tree with 5 leafes performs best - which corresponds to the original choice.
+Interestingly, it seems like a tree with 5 leaves performs best - which corresponds to the original choice.
 
 <!-- --- -->
 
@@ -670,7 +670,7 @@ Why don't we just minimize the misclassification error $$E= 1- \max_k{\hat{p}_{j
     + Split 1: (100,300) and (300,100)  
     + Split 2: (200,400) and (200,0).
 
-Both splits result in 25% misclassification. Which of these splits is better? Probably the second one, because it produces a pure node.
+Both splits result in 25% misclassification. Which of these splits is better? Probably the second one, because it produces a _pure node_.
 
 
 
@@ -767,16 +767,23 @@ This is a very bushy tree!
 
 We also use the classification tree to predict the status of the patients in the test set. 
 
-\vspace{2mm}
+$~$
 
-With deviance: 
+With the deviance: 
+
+$~$
+
 \tiny
 
 ```{r}
 library(caret)
 tree.pred=predict(tree.HIClass,headInjury2[test,],type="class")
-confusionMatrix(tree.pred,reference=headInjury2[test,]$brain.injury)$table
+(confMat <- confusionMatrix(tree.pred,reference=headInjury2[test,]$brain.injury)$table)
+1 - sum(diag(confMat))/sum(confMat[1:2, 1:2])
 ```
+
+
+---
 
 \normalsize
 
@@ -786,7 +793,8 @@ With the Gini-index:
 
 ```{r}
 tree.predG=predict(tree.HIClassG,headInjury2[test,],type="class")
-confusionMatrix(tree.predG,reference=headInjury2[test,]$brain.injury)$table
+(confMatG <- confusionMatrix(tree.predG,reference=headInjury2[test,]$brain.injury)$table)
+1 - sum(diag(confMatG))/sum(confMatG[1:2, 1:2])
 ```
 
 ---
@@ -873,12 +881,13 @@ How is the predictive performance of the model affected?
 
 ```{r}
 tree.pred.prune <- predict(prune.HIClass,headInjury2[test,],type="class")
-confusionMatrix(tree.pred.prune,headInjury2[test,]$brain.injury)$table
+(confMat <- confusionMatrix(tree.pred.prune,headInjury2[test,]$brain.injury)$table)
+1 - (sum(diag(confMat))/sum(confMat[1:2,1:2]))
 ```
 
 \normalsize
 
-We see that the misclassification rate is as small as before indicating that the pruned tree is as good as the original tree for the test data.
+We see that the misclassification rate is as small as before, thus the pruned tree is as good as the original tree for the test data.
 
 ---
 
@@ -982,7 +991,7 @@ Discuss the bias-variance tradeoff of a regression tree when increasing/decreasi
 
 * Large trees are not easy to interpret.
 * Trees do not generally have good prediction performance (high variance).
-* Trees are not very robust, a small change in the data may cause a large change in the final estimated tree
+* Trees are not very robust, a small change in the data may cause a large change in the final estimated tree.
 
 ---
 
@@ -990,61 +999,85 @@ Discuss the bias-variance tradeoff of a regression tree when increasing/decreasi
 
 \vspace{2mm}
 
+Several of the above listed disadvantages can be addressed by 
 
 * **Bagging**: grow many trees (from bootstrapped data) and average - to get rid of the non-robustness and high variance by averaging.
 
-* **Variable importance** - to see which variables make a difference (now that we have many trees).
-
-* **Random forest**: inject more randomness (and even less variance) by just allowing a random selection of predictors to be used for the splits at each node.
+* **Random forests**: inject more randomness (and even less variance) by just allowing a random selection of predictors to be used for the splits at each node.
 
 * **Boosting**: make one tree, then another based on the residuals from the previous, repeat. The final predictor is a weighted sum of these trees.
 
+\vspace{1mm}
+
+In addition:
+
+* **Variable importance** - to see which variables make a difference (now that we have many trees).
+
+
 ---
 
-But first, 
+But first:
 
 ## Leo Breiman - the inventor of CART, bagging and random forests
 
+\vspace{1mm}
 Quotation from [Wikipedia](https://en.wikipedia.org/wiki/Leo_Breiman)
+\vspace{1mm}
 
+\begin{quote}
 Leo Breiman (January 27, 1928 – July 5, 2005) was a distinguished statistician at the University of California, Berkeley. He was the recipient of numerous honors and awards, and was a member of the United States National Academy of Science.
 
 Breiman's work helped to bridge the gap between statistics and computer science, particularly in the field of machine learning. His most important contributions were his work on classification and regression trees and ensembles of trees fit to bootstrap samples. Bootstrap aggregation was given the name bagging by Breiman. Another of Breiman's ensemble approaches is the random forest.
+\end{quote}
 
 ---
 
 From [Breimans obituary](https://www.berkeley.edu/news/media/releases/2005/07/07_breiman.shtml)
+\vspace{1mm}
 
+\begin{quote}
 BERKELEY – Leo Breiman, professor emeritus of statistics at the University of California, Berkeley.
 
 "It is trite to say so, but Leo Breiman was indeed a Renaissance man, and we shall miss him greatly," said Peter Bickel, professor of statistics and chairman this summer of UC Berkeley's statistics department.
 
 Breiman retired in 1993, but as a Professor in the Graduate School, he continued to get substantial National Science Foundation grants and supervised three Ph.D. students. Bickel said that some of Breiman's best work was done after retirement.
 
+\end{quote}
+
 ---
 
+\begin{quote}
 "In particular," said Bickel, "he developed one of the most successful state-of-the-art classification programs, 'Random Forest.' This method was based on a series of new ideas that he developed in papers during the last seven years, and it is extensively used in government and industry."
 
 Breiman's best known work is considered to be "Classification and Regression Trees," a work in collaboration with three other scholars that facilitates practical applications, such as the diagnosis of diseases, from a multitude of symptoms.
 
+\end{quote}
+
 ---
 
-#<a id="bag">Bagging</a>#
+# Bagging 
 
-Decision trees often suffer from high variance. By this we mean that the trees are sensitive to small changes in the predictors: If we change the observation set, we may get a very different tree. 
+\vspace{2mm}
+
+* Decision trees often suffer from high variance. By this we mean that the trees are sensitive to small changes in the predictors: If we change the observation set, we may get a very different tree. 
+
+* Another way to understand "high variance" is that, if we split our training data into two parts and fit a tree on each, we might get rather different decision trees.
+
+\vspace{2mm}
 
 Let's draw a new training set for our data and see what happens if we fit our full classification tree (deviance grown).
 
 ---
 
-```{r,echo=showsol}
+\scriptsize
+
+```{r headInjury7, echo=TRUE, fig.width=9, fig.height=5,fig.align = "center",out.width='90%'}
 set.seed(33)
 N=dim(headInjury2)[1]
-train2=sample(1:N,850) #We draw a new training sample. The number of observations is the same as before.
+train2=sample(1:N,850) # Draw a new training sample (same size).
 tree.HIClass2=tree(brain.injury~.,
-                   data=headInjury2,subset=train2) 
+                   data=headInjury2,subset=train2,split="deviance") 
 par(mfrow=c(1,2))
-#short=c("amnesia","bskullf","GCSdecr","GCS.13","GCS.15","risk","consc","oskullf","vomit","brain","age")
 plot(tree.HIClass);text(tree.HIClass,pretty=0)
 plot(tree.HIClass2);text(tree.HIClass2,pretty=0)
 
@@ -1052,78 +1085,99 @@ plot(tree.HIClass2);text(tree.HIClass2,pretty=0)
 
 ---
 
-This classification tree is constructed by using $850$ observations, just like the tree in the [classification trees section](classtree2), but we get two different trees that will give different predictions for a test set.
+This classification tree is constructed by using $850$ observations, just like the tree in the classification trees section, but we get two different trees that will give different predictions for a test set.
 
-To reduce the variance of decision trees we can apply _bootstrap aggregating_ (_bagging_), invented by Leo Breiman in 1996 (see [references](ref)).
+To reduce the variance of decision trees we can apply _bootstrap aggregating_ (_bagging_), invented by Leo Breiman in 1996 [@Breiman1996].
 
 ---
 
-## Independent data sets
+## Recall: Variance for independent datasets
 
-Assume we have $B$ i.i.d. observations of a random variable $X$ each with the same mean and with variance $\sigma^2$. We calculate the mean $\bar{X} = \frac{1}{B} \sum_{b=1}^B X_b$. The variance of the mean is
+\vspace{2mm}
+
+* Assume we have $B$ i.i.d. observations of a random variable $X$ each with the same mean and with variance $\sigma^2$. We calculate the mean $\bar{X} = \frac{1}{B} \sum_{b=1}^B X_b$. The variance of the mean is
 $$\text{Var}(\bar{X}) = \text{Var}\Big(\frac{1}{B}\sum_{b=1}^B X_b \Big) = \frac{1}{B^2} \sum_{b=1}^B \text{Var}(X_b) = \frac{\sigma^2}{B}.$$
 By averaging we get reduced variance. This is the basic idea!
 
-But, we will not draw random variables - we want to fit decision trees: $\hat{f}_1({\bf x}),\hat{f}_2({\bf x}),\ldots, \hat{f}_B({\bf x})$ and average those.
-$$ \hat{f}_{avg}({\bf x})=\frac{1}{B}\sum_{b=1}^B \hat{f}_b({\bf x})$$
+ 
+
+* For decision trees, if we have $B$ training sets, we could estimate $\hat{f}_1({\boldsymbol x}),\hat{f}_2({\boldsymbol x}),\ldots, \hat{f}_B({\boldsymbol x})$ and average them as
+$$ \hat{f}_{avg}({\boldsymbol x})=\frac{1}{B}\sum_{b=1}^B \hat{f}_b({\boldsymbol x}) \ .$$
 
 However, we do not have many independent data set - so we use _bootstrapping_ to construct $B$ data sets.
 
 ---
 
-## Bootstrapping (from Module 5)
+## Recall: Bootstrapping 
 
-Problem: we want to draw samples from a population with distribution $f$.
 
-But: we do not know $f$ and do not have a population to draw from, we only have our one sample.
+\vspace{2mm}
 
-Solution: we may use our sample as an empirical estimate for the distribution $f$ - by assuming that each sample point has probability $1/n$ for being drawn. 
+* Problem: we want to draw samples from a population with distribution $f$.
 
-Therefore: we draw with replacement $n$ observations from our sample - and that is our first _bootstrap sample_.
+* But: we do not know $f$ and do not have a population to draw from, we only have our one sample.
 
-We repeat this $B$ times and get $B$ bootstrap samples - that we use as our $B$ data sets.
+* Solution: we may use our sample as an empirical estimate for the distribution $f$ - by assuming that each sample point has probability $1/n$ for being drawn. 
+
+* Therefore: we draw _\textcolor{red}{with replacement}_ $n$ observations from our sample - and that is our first _bootstrap sample_.
+
+* We repeat this $B$ times and get $B$ bootstrap samples - that we use as our $B$ data sets.
 
 ---
 
-## Bootstrap samples and trees
+## Bagging = Bootstrap aggregating 
 
-For each bootstrap sample we construct a decision tree, $\hat{f}^{*b}(x)$ with $b=1,...,B$, and we then use information from all of the trees to draw inference. 
+* Idea: For each bootstrap sample $b=1,\ldots, B$ we construct a decision tree, $\hat{f}^{*b}(x)$, and we then use information from all of the trees to draw inference. 
 
-For a regression tree, we take the average of all of the predictions and use this as the final result:
+* For a _regression tree_, we take the average of all of the predictions and use this as the final result:
 $$
 \hat{f}_{bag}(x)=\frac{1}{B}\sum_{b=1}^B \hat{f}^{*b}(x).
 $$
-For a classification tree we record the predicted class (for a given observation $x$) for each of the $B$ trees and use the most occurring classification (majority vote) as the final prediction - or alternatively average posterior probabilities for each class.
+
+* For a _classification tree_ we record the predicted class (for a given observation $x$) for each of the $B$ trees and use the most occurring classification (_majority vote_) as the final prediction - or alternatively average posterior probabilities for each class.
 
 ---
 
-Originally, Breiman (1996) suggested to prune each tree, but later research has found that it is better to leave the trees at maximal size (a bushy tree), to make the trees as different from each other as possible.
+* Originally, @Breiman1996 suggested to prune each tree, but later research has found that it is better to leave the trees at maximal size (a bushy tree), to make the trees as different from each other as possible.
 
-The number $B$ is chosen to be as large as "necessary". An increase in $B$ will not lead to overfitting, and $B$ is not regarded as a tuning parameter. If a goodness of fit measure is plotted as a function of $B$ (soon) we see that (given that $B$ is large enough) increasing $B$ will not change the goodness of fit measure.
+* The number $B$ is chosen to be as large as "necessary". An increase in $B$ will not lead to overfitting, and $B$ is not regarded as a tuning parameter. If a goodness of fit measure is plotted as a function of $B$ (soon) we see that (given that $B$ is large enough) increasing $B$ will not change the goodness of fit measure.
 
-But first, a smart way to avoid doing cross-validation.
+
+* To find out which number $B$ is sufficient, we do _not_ need to run cross-validation, but can do something smarter (next slide).
+
 
 ---
 
-##<a id="oob">Out-of-bag error estimation</a>##
+## Out-of-bag error estimation
 
-* We use a subset of the observations in each bootstrap sample. From Module 5 we know that the probability that an observation is in the bootstrap sample is approximately $1-e^{-1}$=`r 1-exp(-1)` (approximately 2/3).
-* when an observation is left out of the bootstrap sample it is not used to build the tree, and we can use this observation as a part of a "test set" to measure the predictive performance and error of the fitted model, $f^{*b}(x)$. 
+\vspace{1mm}
 
-In other words: Since each observation $i$ has a probability of approximately 2/3 to be in a bootstrap sample, and we make $B$ bootstrap samples, then observation $i$ will be outside the bootstrap sample in approximately $B/3$ of the fitted trees. 
+* We use a subset of the observations in each bootstrap sample. Recall (module 5) that the probability that an observation is in the bootstrap sample is approximately $1-e^{-1}$=`r 1-exp(-1)` ($\approx 2/3$).
 
-The observations left out are referred to as the _out-of-bag_ observations, and the measured error of the $B/3$ predictions is called the _out-of-bag error_. 
+* When an observation is left out of the bootstrap sample it is not used to build the tree, and we can use this observation as a part of a "test set" to measure the predictive performance and error of the fitted model, $\hat{f}^{*b}(x)$. 
+
+<!-- In other words: Since each observation $i$ has a probability of approximately 2/3 to be in a bootstrap sample, and we make $B$ bootstrap samples, then observation $i$ will be outside the bootstrap sample in approximately $B/3$ of the fitted trees.  -->
+
+\vspace{2mm}
+
+**Terminology:**
+
+* The observations left out are referred to as the _out-of-bag_ (OOB) observations.
+
+* The measured error of the $B/3$ predictions is called the _out-of-bag error_. 
 
 
 <!-- Based on these $B/3$ predictions we can make one single prediction (_OOB prediction_) and measure the prediction error (_OOB error_).  -->
 
 ---
 
-##<a id="bagex">Example</a>##
+## Example
 
-We can do bagging by using the function _randomForest()_ in the _randomForest_ library.
+\vspace{1mm}
 
-\footnotesize
+We can do bagging by using the function `randomForest()` in the `randomForest` library.
+
+\scriptsize
 
 ```{r}
 library(randomForest)
@@ -1136,26 +1190,38 @@ bag$confusion
 ```
 \normalsize
 
-The variable _mtry=10_ because we want to consider all $10$ predictors in each split of the tree. The variable $ntree=500$ because we want to average over $500$ trees.
+The variable `mtry=10` because we want to consider all $10$ predictors in each split of the tree. The variable `ntree=500` because we want to average over $500$ trees.
+
+Todo (Exercise): Make a similar example, and let students plot the error rate against ntree (e.g. from 1 to 500, like figure 8.8).
 
 ---
 
 Predictive performance of the bagged tree on unseen test data:
+
+\scriptsize
+
 ```{r}
 yhat.bag=predict(bag,newdata=headInjury2[test,])
 misclass.bag=table(yhat.bag,headInjury2[test,]$brain.injury)
 print(misclass.bag)
 1-sum(diag(misclass.bag))/(sum(misclass.bag))
 ```
-We note that the misclassification rate has increased slightly for the bagged tree (as compared to our previous full and pruned tree). **In other examples an improvement is very often seen.**
+
+\normalsize
+
+Note: The misclassification rate has increased slightly for the bagged tree (as compared to our previous full and pruned tree). **Typically, we would expect an improvement!**
 
 ---
 
 ## Prediction by majority vote vs. by averaging the probabilities 
 
-Consider the case when you have grown $B$ classification tree with a binary response with classes 0 and 1. You might wonder which approach to choose to make a final prediction: majority vote or an average of the probabilities? Or would the prediction be the same in each case? 
+\vspace{1mm}
 
-The difference between these two procedures can be compared to the difference between the mean value and median of a set of numbers. If we average the probabilities and make a classification thereafter, we have the mean value. If we sort all of our classifications, so that the classifications corresponding to one class would be lined up after each other, followed by the classifications corresponding to the other class we obtain the median value. 
+* Consider the case when you have grown $B$ classification tree with a binary response with classes 0 and 1. You might wonder which approach to choose to make a final prediction: majority vote or an average of the probabilities? Or would the prediction be the same in each case? 
+
+\vspace{1mm}
+
+* The difference between these two procedures can be compared to the difference between the mean value and median of a set of numbers. If we average the probabilities and make a classification thereafter, we have the mean value. If we sort all of our classifications, so that the classifications corresponding to one class would be lined up after each other, followed by the classifications corresponding to the other class we obtain the median value. 
 
 ---
 
@@ -1169,42 +1235,60 @@ The two procedures thus have their pros and cons: By averaging the predictions n
 
 ## When should we use bagging?
 
-Bagging can be used for predictors (regression and classification) that are not trees, and according to Breiman (1996) 
+\vspace{2mm}
 
-* the vital element is the instability of the prediction method
-* if perturbing the learning set can cause significant changes in the predictor constructed, then bagging can improve accuracy.
+Bagging can also be used for prediction methods (regression and classification) that are not trees. Bagging can improve accuracy when, according to @Breiman1996
 
-Breiman (1996) suggests that these methods should be suitable for bagging:
+* the vital element is the instability of the prediction method.
+* if perturbing the learning set can cause significant changes in the predictor constructed.
 
-* neural nets, classification and regression trees, subset selection in linear regression
+\vspace{1mm}
 
-however not nearest neigbours - since 
+@Breiman1996 suggests that these methods should be suitable for bagging:
 
-* the stability of nearest neighbour classification methods with respect to perturbations of the data distinguishes them from competitors such as trees and neural nets.
+* Neural nets, classification and regression trees, subset selection in linear regression.
+
+\vspace{1mm}
+
+However, bagging is not suitable for nearest neighbour classification, since the stability of these methods with respect to perturbations of the data distinguishes them from competitors such as trees and neural nets.
 
 ---
 
 
 ## Variable importance plots
 
-Bagging is an example of an _ensemble method_, so is boosting and random forests (to come next). For all of these methods many trees are grown and combined, and the predictive power can be highly improved. However, this comes at a cost of interpretability. Instead of having one tree, the resulting model consists of $B$ trees, where $B$ often is 300 or 500 (or maybe even 5000 when boosting). 
+\vspace{1mm}
 
-Variable importance plots show _the relative importance of the predictors:_ the predictors are sorted according to their importance, such that the top variables have a higher importance than the bottom variables. 
-There are in general two types of variable importance plots: 
+* Bagging typically (but not always) improves accuracy of predictions.
 
-* variable importance based on decrease in node impurity and 
-* variable importance based on randomization.
+* Drawback: It becomes difficult to interpret the results. Instead of having one tree, the resulting model consists of many trees. So, which predictors are (how) important?
+
+<!-- Bagging is an example of an _ensemble method_, so is boosting and random forests (to come next). For all of these methods many trees are grown and combined, and the predictive power can be highly improved. However, this comes at a cost of interpretability.  -->
+
+* _\textcolor{red}{Variable importance plots}_ show _the relative importance of the predictors:_ the predictors are sorted according to their importance, such that the top variables have a higher importance than the bottom variables. 
+
+\vspace{1mm}
+
+* There are in general two types of variable importance plots: 
+
+    * variable importance based on decrease in node impurity.
+    * variable importance based on randomization.
 
 ---
 
 ### Variable importance based on node impurity
 
+\vspace{1mm}
+
 The term *important* relates to _total decrease in the node impurity, over splits for a predictor_, and is defined differently for regression trees and classification trees.
+
+\vspace{4mm}
 
 **Regression trees:** 
 
+
 * The importance of each predictor is calculated using the RSS. 
-* The algorithm records the total amount that the RSS is decreased due to splits for each predictor (there may be many spits for one predictor for each tree). 
+* The algorithm records the total amount that the RSS is decreased due to splits for each predictor (there may be many splits for one predictor for each tree). 
 * This decrease in RSS is then averaged over the $B$ trees. The higher the decrease, the more important the predictor.
 
 ---
@@ -1214,7 +1298,10 @@ The term *important* relates to _total decrease in the node impurity, over split
 * The importance of each predictor is calculated using the Gini index. 
 * The importance is the mean decrease (over all $B$ trees) in the Gini index by splits of a predictor.
 
-R: `varImpPlot` (or `importance`) in `randomForest` with `type=2`.
+
+** Doing this in R**
+
+`varImpPlot` (or `importance`) in `randomForest` with `type=2`.
 
 ---
 
@@ -1648,7 +1735,7 @@ install.packages("e1071")
 ```
 ---
  
-# <a id="further">References and further reading</a>
+# Further reading
 
 * [Videoes on YouTube by the authors of ISL, Chapter 8](https://www.youtube.com/playlist?list=PL5-da3qGB5IB23TLuA8ZgVGC8hV8ZAdGh), and corresponding [slides](https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/trees.pdf)
 * [Solutions to exercises in the book, chapter 8](https://rstudio-pubs-static.s3.amazonaws.com/65564_925dfde884e14ef9b5735eddd16c263e.html)
@@ -1658,5 +1745,8 @@ install.packages("e1071")
 
 # Acknowledgements
 
-I thank Thea Roksv{\aa}g, whose developed the set of slides that I modified to get this set of slides. In addition, Mette Langaas and Julia Debik have contributed to the original version.
+I thank Thea Roksv{\aa}g, who developed the set of slides that I modified to get this set of slides. In addition, Mette Langaas and Julia Debik have contributed to the original version.
 
+---
+
+# References
