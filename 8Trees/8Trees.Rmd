@@ -1182,11 +1182,11 @@ We can do bagging by using the function `randomForest()` in the `randomForest` l
 ```{r}
 library(randomForest)
 set.seed(1)
-bag=randomForest(brain.injury~.,
+r.brain.bag <- randomForest(brain.injury~.,
                  data=headInjury2,subset=train,
                  mtry=10,ntree=500,importance=TRUE)
-bag$confusion
-1-sum(diag(bag$confusion))/sum(bag$confusion[1:2,1:2])
+r.brain.bag$confusion
+1-sum(diag(r.brain.bag$confusion))/sum(r.brain.bag$confusion[1:2,1:2])
 ```
 \normalsize
 
@@ -1201,7 +1201,7 @@ Predictive performance of the bagged tree on unseen test data:
 \scriptsize
 
 ```{r}
-yhat.bag=predict(bag,newdata=headInjury2[test,])
+yhat.bag=predict(r.brain.bag,newdata=headInjury2[test,])
 misclass.bag=table(yhat.bag,headInjury2[test,]$brain.injury)
 print(misclass.bag)
 1-sum(diag(misclass.bag))/(sum(misclass.bag))
@@ -1237,10 +1237,12 @@ The two procedures thus have their pros and cons: By averaging the predictions n
 
 \vspace{2mm}
 
-Bagging can also be used for prediction methods (regression and classification) that are not trees. Bagging can improve accuracy when, according to @Breiman1996
+Bagging can also be used for prediction methods (regression and classification) that are not trees. 
 
-* the vital element is the instability of the prediction method.
-* if perturbing the learning set can cause significant changes in the predictor constructed.
+* According to @Breiman1996 Bagging can improve accuracy when, 
+
+    * the vital element is the instability of the prediction method.
+    * perturbing the learning set can cause significant changes in the predictor constructed.
 
 \vspace{1mm}
 
@@ -1299,31 +1301,60 @@ The term *important* relates to _total decrease in the node impurity, over split
 * The importance is the mean decrease (over all $B$ trees) in the Gini index by splits of a predictor.
 
 
-** Doing this in R**
+**Doing this in R**
 
 `varImpPlot` (or `importance`) in `randomForest` with `type=2`.
 
 ---
 
-**Auto data example**
+### Example 1: Ozone data (regression tree)
 
-```{r}
+\scriptsize
+```{r ozoneImp, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='50%'}
 set.seed(4268)
-data(mtcars)
-mtcars.rf <- randomForest(mpg ~ ., data=mtcars, ntree=1000, 
-                          keep.forest=FALSE,
-                          importance=TRUE)
+ozone.rf <- randomForest(ozone~temp+wind, data=ozone.train, ntree=500, mtry=2,keep.forest=FALSE,importance=TRUE)
+varImpPlot(ozone.rf,type=2,pch=20)
 ```
+
+\normalsize
+This is a bit boring (only two predictors). More interesting example?
 
 ---
 
-```{r}
+### Example 2: Auto data (regression tree)
+
+\vspace{1mm}
+
+The data relates fuel consumption (`mpg`) to 10 aspects of automobile desing and performance.
+
+\scriptsize
+
+```{r autoImp, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='50%'}
+data(mtcars)
+mtcars.rf <- randomForest(mpg ~ ., data=mtcars, ntree=1000, 
+                          keep.forest=FALSE,
+                          mtry=10,
+                          importance=TRUE)
 varImpPlot(mtcars.rf,type=2,pch=20)
 ```
 
 ---
 
-### Variable importance based on randomization
+### Example 3: Head injury (classification tree)
+
+\vspace{1mm}
+
+\scriptsize
+
+```{r brain, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='50%'}
+varImpPlot(r.brain.bag,type=2,pch=20)
+```
+
+---
+
+### Another approach: Variable importance based on randomization
+
+\vspace{2mm}
 
 Variable importance based on randomization is calculated using the OOB sample. 
 
@@ -1338,7 +1369,7 @@ R: `varImpPlot` (or `importance`) in `randomForest` with `type=1`.
 
 ---
 
-```{r}
+```{r autoImp2, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='50%'}
 varImpPlot(mtcars.rf,type=1,pch=20)
 ```
 
@@ -1347,29 +1378,32 @@ varImpPlot(mtcars.rf,type=1,pch=20)
 
 The two types together: do they agree?
 
-```{r}
-varImpPlot(mtcars.rf,pch=20)
+```{r autoImp3, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='70%'}
+varImpPlot(mtcars.rf,pch=20,main="")
 ```
 
 ---
 
-#<a id="rf">Random Forest</a>
+# Random Forests 
 
-If there is a strong predictor in the dataset, the decision trees produced by each of the bootstrap samples in the bagging algorithm becomes very similar: Most of the trees will use the same strong predictor in the top split. 
+ 
 
-We have seen this for our example trees for the minor head injury example, the predictor _GCS.15.2hours_ was chosen in the top split every time. This is probably the case for a large amount of the bagged trees as well.
+* If there is a strong predictor in the dataset, the decision trees produced by each of the bootstrap samples in the bagging algorithm becomes very similar: Most of the trees will use the same strong predictor in the top split. 
 
-This is not optimal, because we get $B$ trees that are highly correlated. We don't get a large reduction in variance by averaging $\hat{f}^{*b}(x)$ when the correlation between the trees is high. In the [previous section](bagex) we actually saw a (marginal) decrease in the predictive performance for the bagged tree compared to the [pruned tree](expruning) and the [full tree](classtree2).
+* We have seen this for our example trees for the minor head injury example, the predictor `GCS.15` was chosen in the top split every time. This is probably the case for a large amount of the bagged trees as well.
 
-_Random forests_ is a solution to this problem and a method for decorrelating the trees. 
+* Not optimal, as we get $B$ trees that are highly correlated. We don't get a large reduction in variance by averaging $\hat{f}^{*b}(x)$ when the correlation between the trees is high. In the previous section we actually even saw a (marginal) decrease in the predictive performance for the bagged tree compared to the pruned tree and the full tree.
+
 
 ---
 
 ## The effect of correlation on the variance of the mean
 
-The variance of the average of $B$ observations of i.i.d random variables $X$, each with variance $\sigma^2$ is $\frac{\sigma^2}{B}$. Now, suppose we have $B$ observations of a random variable $X$ which are identically distributed, each with mean $\mu$ and variance $\sigma^2$, but not independent. 
+\vspace{2mm}
 
-That is, suppose the variables have a positive correlation $\rho$
+* The variance of the average of $B$ observations of _i.i.d._ random variables $X$, each with variance $\sigma^2$ is $\frac{\sigma^2}{B}$. Now, suppose we have $B$ observations of a random variable $X$ which are identically distributed, each with mean $\mu$ and variance $\sigma^2$, but not independent. 
+
+* That is, suppose the variables have a positive correlation $\rho$
 $$\text{Cov}(X_i, X_j) = \rho \sigma^2, \quad i \neq j.$$
 
 ---
@@ -1390,40 +1424,56 @@ rhovec=seq(-1,1,length=100)
 plot(rhovec,varmean(rho=rhovec),type="b")
 ```
 
+
 ---
 
-The idea behind random forests is to _improve the variance reduction of bagging_ by reducing the correlation between the trees. 
+* _Random forests_ provide an improvement over bagged trees by a small tweak that decorrelates the trees. This
+reduces the variance when we average the trees.
 
-The procedure is thus as in bagging, but with the important difference, that 
+* As in bagging, we build a number of decision trees on bootstrapped training samples.
 
-* at each split we are only allowed to consider $m<p$ of the predictors. 
+* But when building these decision trees, each time a split in
+a tree is considered, a _random selection_ of $m$ predictors is
+chosen as split candidates from the full set of p predictors.
+The split is allowed to use only one of those m predictors.
 
-A new sample of $m$ predictors is taken at each split and 
+* A fresh selection of $m$ predictors is taken at each split, typically 
+    * $m\approx \sqrt p$ (classificaton),  
+    * $m=p/3$ (regression).
 
-* typically $m\approx \sqrt p$ (classificaton) and $m=p/3$ (regression)
+\vspace{2mm}
 
-The general idea is at for very correlated predictors $m$ is chosen to be small.
+The general idea is that for very correlated predictors $m$ is chosen to be small.
+
+
 
 ---
 
 The number of trees, $B$, is not a tuning parameter, and the best is to choose it large enough. 
 
-If $B$ is sufficiently large (three times the number needed for the random forest to stabilize), the OOB error estimate is equvalent to LOOCV (Efron and Hastie, 2016, p 330).
+If $B$ is sufficiently large (three times the number needed for the random forest to stabilize), the OOB error estimate is equvalent to LOOCV [see @Efron_Hastie2016, p. 330].
 
 ---
 
+ISLR Figure 8.10, gene expression data set with 15 classes and 500 predictors:
+
+\centering
 ![ISLR Figure 8.10, gene expression data set with 15 classes and 500 predictors](../../ISLR/Figures/Chapter8/8.10.png)
 
 ---
 
-##<a id="exrf">Example</a>##
+## Example 
 
-We decorrelate the trees by using the _randomForest()_ function again, but this time we set _mtry=3_. This means that the algorithm only considers three of the predictors in each split. We choose $3$ because we have $10$ predictors in total and $\sqrt{10}\approx 3$. 
+\vspace{2mm}
+
+We decorrelate the brain injury classification trees by using the `randomForest()` function again, but this time we set `mtry=3` (instead for `mtry=10`). This means that the algorithm only considers three of the predictors in each split. We choose $3$ because we have $10$ predictors in total and $\sqrt{10}\approx 3$. 
+
+\scriptsize
 
 ```{r}
 set.seed(1)
 
-rf=randomForest(brain.injury~.,
+r.brain.rf = randomForest(brain.injury~.,
                 data=headInjury2,subset=train,
                 mtry=3,ntree=500,importance=TRUE)
 
@@ -1432,12 +1482,14 @@ rf=randomForest(brain.injury~.,
 ---
 
 We check the predictive performance as before:
-\footnotesize
-```{r}
-rf$confusion
-1-sum(diag(rf$confusion[1:2,1:2]))/(sum(rf$confusion[1:2,1:2]))
 
-yhat.rf=predict(rf,newdata=headInjury2[test,])
+\tiny
+
+```{r}
+r.brain.rf$confusion
+1-sum(diag(r.brain.rf$confusion[1:2,1:2]))/(sum(r.brain.rf$confusion[1:2,1:2]))
+
+yhat.rf=predict(r.brain.rf,newdata=headInjury2[test,])
 
 misclass.rf=table(yhat.rf,headInjury2[test,]$brain.injury)
 print(misclass.rf)
@@ -1446,35 +1498,47 @@ print(misclass.rf)
 ```
 \normalsize
 
-The misclassification rate is slightly decreased compared to the [bagged tree](bagex) (and to the [pruned tree](expruning)).
+The misclassification rate is slightly decreased compared to the bagged tree (and to the pruned tree).
 
 ---
 
-By using the _varImpPlot()_ function we can study the importance of each predictor.
+By using the `varImpPlot()` function we can study the importance of each predictor.
 
-```{r}
-varImpPlot(rf,pch=20)
-varImpPlot(rf,pch=20,type=1)
-varImpPlot(rf,pch=20,type=2)
-
+\scriptsize
+```{r brainImp, echo=TRUE, fig.width=8, fig.height=5,fig.align = "center",out.width='70%'}
+varImpPlot(r.brain.rf,pch=20, main="")
 ```
 
-As expected _GCS.15.2hours_ is a strong predictor along with _basal.skull.facture_ and _age_. This means that most of the trees will have these predictors in the top split.
+\normalsize
+
+As expected `GCS.15` (GCS=15 at 2h) is a strong predictor along with `bskullf` (basal skull facture) and `age`. This means that most of the trees will have these predictors in the top split.
 
 ---
 
-**Iris example**
+## Iris example -- bagging
+\tiny
+(borrowed from \url{https://gist.github.com/ramhiser/6dec3067f087627a7a85})
 
-Variable importance plot for bagging:
+\vspace{1mm}
+
+\normalsize
+Variable importance plot for bagging
+
+
+
+
+\scriptsize
+
+```{r, echo=FALSE}
+library(dplyr)
+```
 
 ```{r,echo=showsol,eval=TRUE}
-# borrowed from https://gist.github.com/ramhiser/6dec3067f087627a7a85
-library(dplyr)
-library(ggplot2)
-#library(ggpubr)
-rf_out <- randomForest(Species ~ ., data=iris, mtry=4)
+rf_out <- randomForest(Species ~ ., data=iris, mtry=4, ntree=500)
 rf_out$confusion
+```
 
+```{r iris, echo=FALSE, fig.width=8, fig.height=3.5,fig.align = "center",out.width='70%'}
 # Extracts variable importance (Mean Decrease in Gini Index)
 # Sorts by variable importance and relevels factors to match ordering
 var_importance <- data_frame(variable=setdiff(colnames(iris), "Species"),
@@ -1484,7 +1548,7 @@ var_importance$variable <- factor(var_importance$variable, levels=var_importance
 
 p <- ggplot(var_importance, aes(x=variable, weight=importance, fill=variable))
 p <- p + geom_bar() + ggtitle("Variable Importance from Random Forest Fit")
-p <- p + xlab("Demographic Attribute") + ylab("Variable Importance (Mean Decrease in Gini Index)")
+p <- p + xlab("Demographic Attribute") + ylab("Mean Decrease in Gini Index")
 p <- p + scale_fill_discrete(name="Variable Name")
 p=p + theme(axis.text.x=element_blank(),
           axis.text.y=element_text(size=12),
@@ -1498,15 +1562,23 @@ p
 ---
 
 
-**Iris example**
+## Iris example -- random forest
+\tiny
+(borrowed from \url{https://gist.github.com/ramhiser/6dec3067f087627a7a85})
 
+\vspace{1mm}
+
+\normalsize
 Variable importance plot for random forest:
 
-```{r,echo=showsol,eval=TRUE}
-# borrowed from https://gist.github.com/ramhiser/6dec3067f087627a7a85
+\scriptsize
 
-rf_out=randomForest(Species~.,data=iris)
+```{r,echo=showsol,eval=TRUE}
+rf_out=randomForest(Species~.,data=iris,mtry=2,ntree=500)
 rf_out$confusion
+```
+
+```{r iris2, echo=FALSE, fig.width=8, fig.height=3.5,fig.align = "center",out.width='70%'}
 var_importance <- data_frame(variable=setdiff(colnames(iris), "Species"),
                              importance=as.vector(importance(rf_out)))
 var_importance <- arrange(var_importance, desc(importance))
@@ -1514,7 +1586,7 @@ var_importance$variable <- factor(var_importance$variable, levels=var_importance
 
 pp <- ggplot(var_importance, aes(x=variable, weight=importance, fill=variable))
 pp <- pp + geom_bar() + ggtitle("Variable Importance from Random Forest Fit")
-pp <- pp + xlab("Demographic Attribute") + ylab("Variable Importance (Mean Decrease in Gini Index)")
+pp <- pp + xlab("Demographic Attribute") + ylab("Mean Decrease in Gini Index")
 pp <- pp + scale_fill_discrete(name="Variable Name")
 pp=pp + theme(axis.text.x=element_blank(),
           axis.text.y=element_text(size=12),
@@ -1550,59 +1622,84 @@ In boosting the trees are grown _sequentially_ so that each tree is grown using 
     c) Update the residuals, $$r_i \leftarrow r_i - \lambda \hat{f}^b(x_i).$$  
 3. The boosted model is $\hat{f}(x) = \sum_{b=1}^B \lambda \hat{f}^b(x).$
 
-Boosting has three tuning parameters which need to set, and can be found using cross-validation.
+Boosting has three tuning parameters which need to be set ($B$, $\lambda$, $d$), and can be found using cross-validation.
 
 ---
 
 **Tuning parameters**
 
-* The number of trees to be grown, $B$. The value of $B$ could be chosen using cross-validation. A too small value of $B$ would imply that much information is unused (remember that boosting is a slow learner), whereas a too large value of $B$ may lead to overfitting. 
-* $\lambda$: This is a shrinkage parameter and controls the rate at which boosting learns. The role of $\lambda$ is to scale the new information, when added to the existing tree. We add information from the $b$-th tree to our existing tree $\hat{f}$, but scaled by the $\lambda$. Choosing a small value for $\lambda$ ensures that the algorithm learns slowly, but will require a larger tree ensemble. Typical values of $\lambda$ is 0.1 or 0.01.
-* Interaction depth $d$: The number of splits in each tree. This parameter controls the complexity of the boosted tree ensemble (the level of interaction between variables that we may estimate). By choosing $d=1$ a tree stump will be fitted at each step and this gives an additive model.
+* **Number of trees $B$**. Could be chosen using cross-validation. A too small value of $B$ would imply that much information is unused (remember that boosting is a slow learner), whereas a too large value of $B$ may lead to overfitting. 
+
+* **Shrinkage parameter $\lambda$**. Controls the rate at which boosting learns. $\lambda$ scales the new information from the $b$-th tree, when added to the existing tree $\hat{f}$. Choosing a small value for $\lambda$ ensures that the algorithm learns slowly, but will require a larger $B$. Typical values of $\lambda$ is 0.1 or 0.01.
+
+* **Interaction depth $d$**: The number of splits in each tree. This parameter controls the complexity of the boosted tree ensemble (the level of interaction between variables that we may estimate). By choosing $d=1$ a tree stump will be fitted at each step and this gives an additive model.
 
 ---
 
-#<a id="boostex">Example: Boston data set</a>
+# Example: Boston data set 
+\tiny
+(ISLR book, Sections 8.3.2 to 8.3.4.)
 
-First - to get to know the data set we run through trees, bagging and random forests - before arriving at boosting. See also the ISLR book, Section 8.3.4.
+\normalsize
+Remember the data set: The aim is to predict the median value of woner occupied homes (in 1000\$)
 
-### Data
+We first run through trees, bagging and random forests - before arriving at boosting. 
+
+\scriptsize
+
+
 ```{r}
 library(MASS)
-library(tree)
 set.seed(1)
 train = sample(1:nrow(Boston), nrow(Boston)/2)
-colnames(Boston)
 head(Boston)
 ```
 
 ---
 
 ### Regression tree
+
+\scriptsize
 ```{r}
-tree.boston=tree(medv~.,Boston,subset=train)
-summary(tree.boston); plot(tree.boston)
+tree.boston=tree(medv~.,Boston,subset=train) 
+summary(tree.boston); 
+```
+
+---
+
+```{r boston1, echo=TRUE, fig.width=8, fig.height=6,fig.align = "center",out.width='70%'}
+plot(tree.boston)
 text(tree.boston,pretty=0)
 ```
+
+\small
+Remember: the `tree()` function has a built-in default stopping criterion to decide when to stop enlarging the tree. You can change this with the `control` option, for example by setting `control = tree.control(mincut = 2, minsize = 4, mindev = 0.001)`. You can then continue with the following steps from there.
 
 ---
 
 ### Need to prune?
 
-```{r}
+\scriptsize
+
+```{r boston2, echo=TRUE, fig.width=8, fig.height=6,fig.align = "center",out.width='70%'}
 cv.boston=cv.tree(tree.boston)
 plot(cv.boston$size,cv.boston$dev,type='b')
 ```
 
-Most complex tree selected.
+\normalsize
+
+It looks like the most complex tree was selected.
 
 ---
 
 ### Pruning
+\vspace{1mm}
 
-Just to show pruning (even if most complex tree was selected).
+Want to prune anyway (even if most complex tree was selected)?
 
-```{r}
+\scriptsize
+
+```{r boston3, echo=TRUE, fig.width=8, fig.height=6,fig.align = "center",out.width='70%'}
 prune.boston=prune.tree(tree.boston,best=5)
 plot(prune.boston)
 text(prune.boston,pretty=0)
@@ -1611,12 +1708,19 @@ text(prune.boston,pretty=0)
 ---
 
 ### Test error for full tree
+\vspace{1mm}
 
-```{r}
+Because the full tree (with 7 nodes) was the best, we continue with this one.
+
+\scriptsize
+```{r boston4, echo=TRUE, fig.width=5, fig.height=4,fig.align = "center",out.width='50%'}
 yhat=predict(tree.boston,newdata=Boston[-train,])
 boston.test=Boston[-train,"medv"]
 plot(yhat,boston.test, pch=20)
 abline(0,1)
+```
+
+```{r}
 mean((yhat-boston.test)^2)
 ```
 
@@ -1624,26 +1728,44 @@ mean((yhat-boston.test)^2)
 
 ### Bagging
 
-```{r}
+\vspace{2mm}
 
+\small
+Remember: For bagging you can use the `randomForest()` function, but include all variables (here `mtry=13`).
+
+\scriptsize
+```{r}
 library(randomForest)
 set.seed(1)
 bag.boston=randomForest(medv~.,data=Boston,subset=train,mtry=13,importance=TRUE)
 bag.boston
 ```
 
-Plotting predicted test values vs true values.
+<!-- \small -->
+<!-- Error rate for the test set: -->
 
-```{r}
+<!-- \scriptsize -->
+<!-- ```{r} -->
+<!-- mean((yhat.bag-boston.test)^2) -->
+<!-- ``` -->
+
+---
+
+### Test error for bagged tree
+
+\vspace{1mm}
+
+
+\scriptsize
+```{r boston5, echo=TRUE, fig.width=5, fig.height=4,fig.align = "center",out.width='50%'}
 yhat.bag = predict(bag.boston,newdata=Boston[-train,])
 plot(yhat.bag, boston.test,pch=20)
 abline(0,1)
-mean((yhat.bag-boston.test)^2)
 ```
 
-Error rate on test set for bagging
 
-```{r,eval=FALSE,echo=FALSE}
+\scriptsize
+```{r}
 bag.boston=randomForest(medv~.,data=Boston,subset=train,mtry=13,ntree=25)
 yhat.bag = predict(bag.boston,newdata=Boston[-train,])
 mean((yhat.bag-boston.test)^2)
@@ -1653,18 +1775,58 @@ mean((yhat.bag-boston.test)^2)
 
 ### Random forest
 
+\vspace{2mm}
+
+Let's changing from bagging to a random forest (n.b., why are we now speaking of a _forst_ and no longer of a _tree_?), using 6 randomly selected predictors for each tree:
+
+\scriptsize
 ```{r}
 set.seed(1)
 rf.boston=randomForest(medv~.,data=Boston,subset=train,mtry=6,importance=TRUE)
 yhat.rf = predict(rf.boston,newdata=Boston[-train,])
 mean((yhat.rf-boston.test)^2)
-importance(rf.boston)
-varImpPlot(rf.boston)
 ```
+
+\vspace{2mm}
+\normalsize
+It's interesting to see how the prediction error further decreased with respect to simple bagging.
 
 ---
 
-### Finally, boosting Boston
+Variable importance
+
+\scriptsize
+
+```{r}
+importance(rf.boston)
+```
+
+\normalsize
+
+Interpretation?
+
+---
+
+And the variable importance plots
+
+\scriptsize
+```{r boston6, echo=TRUE, fig.width=6, fig.height=4,fig.align = "center",out.width='80%'}
+varImpPlot(rf.boston,main="")
+```
+
+\normalsize
+To understand what this means, please check again the meaning of the variables by typing `?Boston`. 
+
+
+---
+
+### Boosting 
+
+\vspace{2mm}
+
+And finally, we are boosing the Boston trees!
+
+\scriptsize
 
 ```{r}
 library(gbm)
@@ -1674,21 +1836,28 @@ boost.boston=gbm(medv~.,data=Boston[train,],
                  n.trees=5000,interaction.depth=4)
 summary(boost.boston,plotit=FALSE)
 ```
+
 ---
 
 **Partial dependency plots - integrating out other variables **
 
-```{r}
-par(mfrow=c(1,2))
-plot(boost.boston,i="rm")
-plot(boost.boston,i="lstat")
+\small
+`rm` (number of rooms) and `lstat` (% of lower status population) are the most important predictors. Partial dependency plots show the effect of individual predictors, integrated over the other predictors see @hastie_etal2009, Section 10.13.2.
+
+\scriptsize
+
+```{r boston7, echo=TRUE, fig.width=5, fig.height=3,fig.align = "center",out.width='40%'}
+plot(boost.boston,i="rm",ylab="medv")
+plot(boost.boston,i="lstat",ylab="medv")
 ```
 
 ---
 
 **Prediction on test set**
 
-First for model with $\lambda=0.001$ (default), then with $\lambda=0.2$: MSE on test set. We could have done cross-validation to find the beste $\lambda$ over a grid.
+First for model with $\lambda=0.001$ (default), then with $\lambda=0.2$, to calculae the MSE on the test set. We could have done cross-validation to find the best $\lambda$ over a grid.
+
+\scriptsize
 
 ```{r}
 yhat.boost=predict(boost.boston,newdata=Boston[-train,],n.trees=5000)
@@ -1701,11 +1870,11 @@ mean((yhat.boost-boston.test)^2)
 
 ---
 
-```{r}
+\scriptsize
+
+```{r boston8, echo=TRUE, fig.width=5, fig.height=4,fig.align = "center",out.width='60%'}
 plot(yhat.boost,boston.test,pch=20)
 abline(0,1)
-mean((yhat.boost-boston.test)^2)
-
 ```
 
 ---
@@ -1717,23 +1886,6 @@ with a Kahoot quiz or another online tool (SRS?)
 ---
 
 
-
-
-# <a id="Rpackages">R packages</a>
-These packages needs to be install before knitting this R Markdown file.
-
-```{r, eval=FALSE,echo=TRUE}
-install.packages("gamlss.data")
-install.packages("tidyverse")
-install.packages("GGally")
-install.packages("Matrix")
-install.packages("tree")
-install.packages("randomForest")
-install.packages("gbm")
-install.packages("caret")
-install.packages("e1071")
-```
----
  
 # Further reading
 
@@ -1750,3 +1902,5 @@ I thank Thea Roksv{\aa}g, who developed the set of slides that I modified to get
 ---
 
 # References
+
+\tiny
