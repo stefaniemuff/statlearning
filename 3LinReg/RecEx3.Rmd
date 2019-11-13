@@ -9,6 +9,7 @@ output:
     toc_depth: 2
     keep_tex: yes
     fig_caption: yes
+urlcolor: blue
 ---
 
 ```{r setup, include=FALSE}
@@ -185,23 +186,6 @@ summary(fitIQ)$adj.r.squared
 ```
 
 
-###e) 
-We now want to use model selection to arrive at a good model. Start by defining which covariates you want to include and how to code them (use dummy variable coding of `location`). What about year of construction - is that a linear covariate? Maybe you want to make intervals in time instead? Linear or categorical for the time? What about the `district`? We leave that since we have not talked about how to use spatial covariates.
-
-Hint: if you want to test out interval versions of year of construction the function `mutate` (from `dplyr`) is useful:
-```{r, eval=FALSE}
-rent99 <- rent99 %>% mutate(yearc.cat = cut(yearc, breaks = c(-Inf, seq(1920,2000,10)), labels = 10*1:9))
-```
-More on `dplyr`: Tutorial: <http://genomicsclass.github.io/book/pages/dplyr_tutorial.html>
-and Cheat sheet (data wrangling): <https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf> and dplyr in particular: <https://github.com/rstudio/cheatsheets/raw/master/source/pdfs/data-transformation-cheatsheet.pdf>
-
-###f)
-(More on this in Module 6.)
-
-There are many ways to perform model selection for multiple linear regression. One possibility is best subsets, which can be done using the `regsubsets` function from library `leaps`. 
-Assume your "full" model fitted by `lm` is called  `fit`. You may define `x` from `model.matrix(fit)[,-1]` (not including the intercept term), and then run `best=regsubsets(x=model.matrix(fit)[,-1],y=rent99$rent)` and look at `summary(best)`.
-Explain the print-out (with all the stars). Using the Mallows Cp (named `cp` in the list from `summary(best)`) will give the same result at using AIC (which is not available in this function). What is your preferred model?
-Hint: look at the R-code in Problem 2 (Figure 3) from the TMA4267V2017 exam: [pdf](https://www.math.ntnu.no/emner/TMA4267/2017v/Exam/eV2017Enew.pdf), and maybe the solutions for the interpretation [pdf](https://www.math.ntnu.no/emner/TMA4267/2017v/Exam/mergedLFV2017.pdf)
 
 ---
 
@@ -242,71 +226,15 @@ plot(x,e2,pch=20)
 abline(h=0,col=2)
 ```
 
-###d. 
-All this fuss about raw, standardized and studentized residuals- does really matter in practice? Below is one example where the raw residuals are rather different from the standardized, but the standardized is identical to the studentized. Can you come up with a simulation model where the standardized and studentized are very different? Hint: what about at smaller sample size?
-
-```{r, eval=FALSE}
-n=1000
-beta=matrix(c(0,1,1/2,1/3),ncol=1)
-set.seed(123)
-x1=rnorm(n,0,1); x2=rnorm(n,0,2); x3=rnorm(n,0,3)
-X=cbind(rep(1,n),x1,x2,x3)
-y=X%*%beta+rnorm(n,0,2)
-fit=lm(y~x1+x2+x3)
-yhat=predict(fit)
-summary(fit)
-ehat=residuals(fit); estand=rstandard(fit); estud=rstudent(fit)
-plot(yhat,ehat,pch=20)
-points(yhat,estand,pch=20,col=2)
-```
-
 ---
 
-# <a id="further"> Further reading </a>
+## Problem 5
 
-* Need details on the simple linear regression: From TMA4240/TMA4245 Statistics we have the thematic page for [Simple linear regression (in Norwegian)](https://wiki.math.ntnu.no/tma4245/tema/begreper/regression).
-* Need more advanced thory: Theoretical version (no simple linear regression) from TMA4315 Generalized linear models H2018: [TMA4315M2: Multiple linear regression](https://www.math.ntnu.no/emner/TMA4315/2018h/2MLR.html)
-* Slightly different presentation (more focus on multivariate normal theory): [Slides and written material from TMA4267](https://www.math.ntnu.no/emner/TMA4267/2017v/TMA4267V2017Part2.pdf)
-* And, same source, but now [Slides and written material from TMA4267 Linear Statistical Models in 2017, Part 3: Hypothesis testing and ANOVA](http://www.math.ntnu.no/emner/TMA4267/2017v/TMA4267V2017Part3.pdf)
-* [Videoes on YouTube by the authors of ISL, Chapter 2](https://www.youtube.com/playlist?list=PL5-da3qGB5IBSSCPANhTgrw82ws7w_or9)
+A problem with an interaction term between two continuous variables, and between a continuous and a factor covariable with more than two levels.
 
----
+Important: In the latter case, we need again the $F$-test to check if the interaction is relevant.
 
-# <a id="Rpackages"> R packages</a>
 
-If you want to look at the .Rmd file and `knit` it, you need to first install the following packages (only once).
 
-```{r, eval=FALSE}
-# packages to install before knitting this R Markdown file
-# to knit the Rmd
-install.packages("knitr")
-install.packages("rmarkdown")
-
-# nice tables in Rmd
-install.packages("kableExtra")
-
-# cool layout for the Rmd
-install.packages("prettydoc") # alternative to github
-
-#plotting
-install.packages("ggplot2") # cool plotting
-install.packages("ggpubr") # for many ggplots
-install.packages("GGally") # for ggpairs
-#datasets
-install.packages("ElemStatLearn") # for ozone data set
-install.packages("gamlss.data")#rent index data set here
-#methods
-install.packages("nortest")#test for normality - e.g. Anderson-Darling
-
-install.packages("car") # vif
-library(Matrix)
-install.packages("reshape")
-install.packages("corrplot")
-install.packages("tidyverse")
-```
-
-# Acknowledgements
-
-Thanks to Julia Debik for contributing to this module page.
 
 

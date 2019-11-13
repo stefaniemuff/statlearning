@@ -857,7 +857,8 @@ We can compute the sample standard deviation (standard error) of all
 \(\text{MSE}_j(\theta)\), \(j=1,\ldots, k\)
 \[\hat{\text{SE}}(\text{CV}_k(\theta))= \sqrt{\sum_{j=1}^k (\text{MSE}_j(\theta) - \overline{\text{MSE}}(\theta))/(k-1)} \, \]
 
-for each value of the complexity parameter \(\theta\).
+for each value of the complexity parameter
+\(\theta\).\footnote{Strictly speaking, this estimate is not quite valid. Why?}
 
 The \emph{one standard error rule} is to choose the simplest model
 (\emph{e.g.}, with lowest polynomial degree) within one standard error
@@ -893,22 +894,36 @@ What do we need to change from our regression set-up?
 
 \begin{block}{Can we use CV for model assessment?}
 
-Assume that we have a method where we not need to perform model
-selection (maybe this is done using the methods from Module 6, that is
-AIC or lasso), but want to perform model assessment based on all our
-data.
+\vspace{2mm}
 
-Then we can use CV with all data (then the validation part is really the
-test part) and report on the model performance using the validation
-parts of the data as above.
+\begin{itemize}
+\item
+  Assume that we have a method where we not need to perform model
+  selection (maybe using the methods from Module 6), but want to perform
+  model assessment based on all our data.
+\item
+  Then we can use CV with all data (then the validation part is really
+  the test part) and report on the model performance using the
+  validation parts of the data as above.
+\end{itemize}
+
+\vspace{2mm}
 
 \end{block}
 
 \begin{block}{Can we use CV both for model selection and model
 assessment?}
 
-Then you can use two layers of CV - also called \emph{nested CV}. See
-drawing in class.
+\vspace{2mm}
+
+\begin{itemize}
+\item
+  Not really: using the test set for both model selection and estimation
+  tends to overfit the test data, and the bias will be underestimated.
+\item
+  Solution: you can use two layers of CV - also called \emph{nested CV}.
+  See drawing in class.
+\end{itemize}
 
 \end{block}
 
@@ -949,20 +964,19 @@ We use this strategy to produce a classifier:
 How can we use cross-validation to produce an estimate of the
 performance of this classifier?
 
-\textbf{Q}: Can we apply cross-validation only to step 2? Why or why
-not?
-
 \end{block}
 
 \end{frame}
 
 \begin{frame}
 
-Can we apply cross-validation only to step 2?
+\textbf{Q}: Can we apply cross-validation only to step 2? Why (not)?
 
-\textbf{A:} No, step 1 is part of the training procedure (the class
-labels are used) and must be part of the CV to give an honest estimate
-of the performance of the classifier.
+\textbf{A:} No, \textbf{step 1 is part of the training procedure} (the
+class labels have already been used) and must be part of the CV to give
+an honest estimate of the performance of the classifier.
+
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -972,9 +986,11 @@ of the performance of the classifier.
   Right: Apply cross-validation to steps 1 and 2.
 \end{itemize}
 
-We will see in the Recommended Exercises that doing the wrong thing can
-give a misclassification error approximately 0 - even if the ``true''
-rate is 50\%.
+\(~\)
+
+Note: We will see in the Recommended Exercises that doing the wrong
+thing can give a misclassification error approximately 0 - even if the
+``true'' rate is 50\%. (todo: check)
 
 \end{frame}
 
@@ -983,12 +999,21 @@ rate is 50\%.
 \begin{block}{Selection bias in gene extraction on the basis of
 microarray gene-expression data}
 
+\vspace{2mm}
+
 Article by \href{http://www.pnas.org/content/99/10/6562}{Christophe
-Ambroise and Geoffrey J. McLachlan, PNAS 2002}: Direct quotation from
-the abstract of the article follows.
+Ambroise and Geoffrey J. McLachlan, PNAS 2002}.
+
+\centering
+\includegraphics[width=1.05000\textwidth]{pnas.png}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
 
 \begin{itemize}
-\tightlist
 \item
   In the context of cancer diagnosis and treatment, we consider the
   problem of constructing an accurate prediction rule on the basis of a
@@ -1005,73 +1030,65 @@ the abstract of the article follows.
   selection bias.
 \end{itemize}
 
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{itemize}
-\tightlist
-\item
-  There is no allowance because the rule is either tested on tissue
-  samples that were used in the first instance to select the genes being
-  used in the rule or because the cross-validation of the rule is not
-  external to the selection process; that is, gene selection is not
-  performed in training the rule at each stage of the crossvalidation
-  process.
-\item
-  We describe how in practice the selection bias can be assessed and
-  corrected for by either performing a crossvalidation or applying the
-  bootstrap external to the selection process.
-\item
-  We recommend using 10-fold rather than leave-one-out cross-validation,
-  and concerning the bootstrap, we suggest using the so-called .632
-  bootstrap error estimate designed to handle overfitted prediction
-  rules.
-\item
-  Using two published data sets, we demonstrate that when correction is
-  made for the selection bias, the cross-validated error is no longer
-  zero for a subset of only a few genes.
-\end{itemize}
+\vspace{2mm} See also this nice
+\href{https://www.youtube.com/watch?v=S06JpVoNaA0}{anecdote at about
+7min 15 in the video}.
 
 \end{frame}
 
 \begin{frame}{The Bootstrap}
 
+\vspace{2mm}
+
 \begin{itemize}
 \tightlist
 \item
-  flexible and powerful statistical tool that can be used to quantify
+  Flexible and powerful statistical tool that can be used to quantify
   \emph{uncertainty} associated with an estimator or statistical
-  learning method
+  learning method.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
-  we will look at getting an estimate for the standard error of a sample
-  median and of a regression coefficient
+  Very popular to obtain standard errors or confidence intervals for a
+  coefficient, when parametric theory does not provide it.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
-  in Module 8 - bootstrapping is the core of the \emph{ensemble method}
-  referred to at \emph{bagging}=bootstrap aggregation,
-\item
-  in TMA4300 Computation statistics - a lot more theory on the
-  bootstrap.
+  We will look at getting an estimate for the standard error of a sample
+  median and of a regression coefficient.
 \end{itemize}
 
 \end{frame}
 
 \begin{frame}
 
-The inventor: Bradley Efron in 1979 -
-\href{https://www.youtube.com/watch?v=6l9V1sINzhE}{see interview}.
-
-The name? \emph{To pull oneself up by one's bootstraps} from ``The
-Surprising Adventures of Baron Munchausen'' by Rudolph Erich Raspe:
+\begin{itemize}
+\item
+  The inventor: Bradley Efron in 1979 -
+  \href{https://www.youtube.com/watch?v=6l9V1sINzhE}{see interview}.
+\item
+  The name? \emph{To pull oneself up by one's bootstraps} from ``The
+  Surprising Adventures of Baron Munchausen'' by Rudolph Erich Raspe:
+\end{itemize}
 
 \emph{The Baron had fallen to the bottom of a deep lake. Just when it
 looked like all was lost, he thought to pick himself up by his own
 bootstraps.}
 
-\textbf{Idea: Use the data itself to get more information about a
-statistic (an estimator).}
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Idea: Use the data itself to get more information about a
+  statistic (an estimator).}
+\end{itemize}
 
 \end{frame}
 
@@ -1079,25 +1096,37 @@ statistic (an estimator).}
 
 \begin{block}{Example: the standard deviation of the sample median?}
 
-Assume that we observe a random sample \(X_1, X_2, \ldots, X_n\) from an
-unknown probability distribution \(f\). We are interesting in saying
-something about the population median, and to do that we calculate the
-sample median \(\tilde{X}\). But, how accurate is \(\tilde{X}\) as an
-estimator?
+\vspace{2mm}
 
-The bootstrap was introduced as a computer-based method to estimate the
-standard deviation of an estimator, for example our estimator
-\(\tilde{X}\).
-
-But, before we look at the bootstrap method, first we assume that we
-know \(F\) and can sample from \(F\), and use simulations to answer our
-question.
+\begin{itemize}
+\item
+  Assume that we observe a random sample \(X_1, X_2, \ldots, X_n\) from
+  an unknown probability distribution \(f\). We are interesting in
+  saying something about the population median, and to do that we
+  calculate the sample median \(\tilde{X}\). But, how accurate is
+  \(\tilde{X}\) as an estimator?
+\item
+  If we would know our distiribution \(F\), we could sample from \(F\),
+  and use simulations to answer our question.
+\item
+  However, without knowledge of the distribution, we cannot calculate
+  the standard deviation of our estimator, thus
+  \(\text{SD}(\tilde{X})\).
+\item
+  That's where the bootstrap method comes into play.
+\end{itemize}
 
 \end{block}
 
 \end{frame}
 
 \begin{frame}[fragile]
+
+Let's first assume we would know \(f\), for example \(X\sim N(0,1)\).
+Then we can repeatedly take samples and calculate the standard deviation
+of all medians to obtain an estimate:
+
+\small
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1117,53 +1146,44 @@ question.
 ## [1] 0.1259035
 \end{verbatim}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# approximation for large samples (sd of median of standard normal)}
-\FloatTok{1.253} \OperatorTok{*}\StringTok{ }\DecValTok{1}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{(n)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 0.1246782
-\end{verbatim}
-
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ estimator), }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_density}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{5Resample_files/figure-beamer/unnamed-chunk-4-1.pdf}
+\begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/boot1-1} \end{center}
 
 \end{frame}
 
 \begin{frame}
 
-\begin{block}{Moving from simulation to bootstrapping}
+\begin{block}{Moving from simulation to bootstrapping (\(f\) unknown)}
 
-The bootstrap method is using the observed data to estimate the
-\emph{empirical distribution} \(\hat{f}\), that is each observed value
-of \(x\) is given probability \(1/n\).
+\vspace{2mm}
 
-A \emph{bootstrap sample} \(X^*_1,X^*_2,\ldots, X^*_n\) is a random
-sample drawn from \(\hat{f}\).
-
-A simple way to obtain the bootstrap sample is to \emph{draw with
-replacement from \(X_1, X_2, \ldots, X_n\)}.
-
-This means that our bootstrap sample consists of \(n\) members of
-\(X_1, X_2, \ldots, X_n\) - some appearing 0 times, some 1, some 2, etc.
+\begin{itemize}
+\item
+  The bootstrap method is using the observed data to estimate the
+  \emph{empirical distribution} \(\hat{f}\), that is each observed value
+  of \(x\) is given probability \(1/n\).
+\item
+  A \emph{bootstrap sample} \(X^*_1,X^*_2,\ldots, X^*_n\) is a random
+  sample drawn from \(\hat{f}\).
+\item
+  A simple way to obtain the bootstrap sample is to \emph{draw with
+  replacement from \(X_1, X_2, \ldots, X_n\)}.
+\item
+  \textbf{Note}: Our bootstrap sample consists of \(n\) members of
+  \(X_1, X_2, \ldots, X_n\) - some appearing more than once, other not
+  appearing at all.
+\end{itemize}
 
 \end{block}
 
 \end{frame}
 
 \begin{frame}[fragile]
+
+\small
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1193,17 +1213,6 @@ This means that our bootstrap sample consists of \(n\) members of
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{# how many observations have not been selected in our boot1 sample?}
-\NormalTok{n }\OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{table}\NormalTok{(}\KeywordTok{table}\NormalTok{(boot1)))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 38
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \KeywordTok{median}\NormalTok{(boot1)}
 \end{Highlighting}
 \end{Shaded}
@@ -1218,16 +1227,38 @@ This means that our bootstrap sample consists of \(n\) members of
 
 \begin{block}{The bootstrap algorithm for estimating standard errors}
 
+\vspace{2mm}
+
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
+\tightlist
 \item
-  \(B\) bootstrap samples: drawn with replacement from the original data
+  Drawing \(B\) bootstrap samples: drawn with replacement from the
+  original data
+\end{enumerate}
+
+\vspace{1mm}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\tightlist
 \item
   Evaluate statistic: on each of the \(B\) bootstrap samples to get
   \(\tilde{X}^*_b\) for the \(b\)th bootstrap sample.
+\end{enumerate}
+
+\vspace{1mm}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
 \item
-  Estimate squared standard error by:
-  \[\frac{1}{B-1}\sum_{b=1}^B (\tilde{X}^*_b-\frac{1}{B}\sum_{b=1}^B \tilde{X}^*_b)^2\]
+  Estimate squared standard error by
+  \[\frac{1}{B-1}\sum_{b=1}^B (\tilde{X}^*_b-\frac{1}{B}\sum_{b=1}^B \tilde{X}^*_b)^2 \ ,\]
+  which is the empirical standard deviation from the \(B\) estimates
+  \(\tilde{X}^*_b\), \(b=1,\ldots,B\).
 \end{enumerate}
 
 \end{block}
@@ -1236,7 +1267,7 @@ This means that our bootstrap sample consists of \(n\) members of
 
 \begin{frame}[fragile]
 
-\begin{block}{with for-loop in R}
+\begin{block}{With a for-loop in R}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1271,22 +1302,18 @@ This means that our bootstrap sample consists of \(n\) members of
 
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ estimator), }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_density}\NormalTok{()}
-\end{Highlighting}
-\end{Shaded}
+The distribution of the 1000 sampled estimates:
 
-\includegraphics{5Resample_files/figure-beamer/unnamed-chunk-7-1.pdf}
+\begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/boot2-1} \end{center}
 
 \end{frame}
 
 \begin{frame}[fragile]
 
-\begin{block}{using built in \texttt{boot} function from library
-\texttt{boot}}
+\begin{block}{Alternative: the built-in \texttt{boot} function from
+library \texttt{boot}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1347,16 +1374,24 @@ This means that our bootstrap sample consists of \(n\) members of
 
 \begin{block}{With or without replacement?}
 
+\vspace{2mm}
+
 In bootstrapping we sample \emph{with replacement} from our
 observations.
 
+\vspace{4mm}
+
 \textbf{Q:} What if we instead sample \emph{without replacement}?
+
+\vspace{2mm}
 
 \textbf{A:} Then we would always get the same sample - given that the
 order of the sample points is not important for our estimator.
 
-(In permutation testing we sample without replacement to get samples
-under the null hypothesis - a separate field of research.)
+\vspace{4mm}
+
+(Sidenote: In permutation testing we sample without replacement to get
+samples under the null hypothesis - a separate field of research.)
 
 \end{block}
 
@@ -1375,15 +1410,16 @@ The least squares estimator:
 \(\hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}\) has
 \(\text{Cov}(\boldsymbol\beta)=\sigma^2({\bf X}^T{\bf X})^{-1}\).
 
-We will in the recommended exercises look at how to use bootstrapping to
-estimate the covariance of the estimator. Why is that ``needed'' if we
-already know the mathematical formula for the standard deviation?
-Answer: not needed - but OK to look at an example?
+In the recommended exercises we will look at how to use bootstrapping to
+estimate the covariance of the estimator.\footnote{
+Why is that "needed" if we already know the mathematical formula for the standard deviation? Answer: not needed - but OK to look at an example}
 
-We will not do this here - but our bootstrap samples can also be used to
-make confidence intervals for the regression coefficients or prediction
-intervals for new observations. This means that we do not have to rely
-on assuming that the error terms are normally distributed!
+\vspace{2mm} \normalsize
+
+Moreover: our bootstrap samples can also be used to make confidence
+intervals for the regression coefficients or prediction intervals for
+new observations. This means that we do not have to rely on assuming
+that the error terms are normally distributed!
 
 \end{block}
 
@@ -1391,27 +1427,35 @@ on assuming that the error terms are normally distributed!
 
 \begin{frame}
 
-\begin{block}{Bagging}
+\begin{block}{A related method: Bagging}
 
-Bagging is a special case of \emph{ensemble methods}.
+\vspace{2mm}
 
-In Module 8 we will look at bagging, which is built on bootstrapping the
-the fact that it is possible to reduce the variance of a prediction by
-taking the average of many model fits.
+Bagging (\emph{bootstrap aggregation}) is a special case of
+\emph{ensemble methods}.
+
+\vspace{2mm}
 
 \begin{itemize}
-\tightlist
 \item
-  Assume that we have \(B\) different predictors
-  \(X_1, X_2, \ldots, X_B\). We have built them on \(B\) different
-  bootstrap samples.
+  In Module 8 we will look at bagging, which is built on bootstrapping
+  and the fact that it is possible to reduce the variance of a
+  prediction by taking the average of many model fits.
 \item
-  All are predictors for some parameter \(\mu\) and that all have some
-  unknown variance \(\sigma^2\).
+  Particularly useful for estimation methods with large variances (like
+  regression trees).
 \item
-  We then decide that we want to use all the predictors together -
-  equally weighted - and make \(\bar{X}=\frac{1}{n} \sum_{i=1}^n X_i\),
-  which we often use to predict \(\mu\).
+  Idea:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Draw \(B\) bootstrap samples from your data and train the method for
+    each sample \(b\) in order to get \(\hat{f}^{\star b}(x)\).
+  \item
+    To obtain a prediction, average over all predictions to obtain
+    \[\hat{f}_{bag}(x) = \frac{1}{B} \sum_{b=1}^B \hat{f}^{\star b}(x) \ .\]
+  \end{itemize}
 \end{itemize}
 
 \end{block}
@@ -1420,20 +1464,33 @@ taking the average of many model fits.
 
 \begin{frame}
 
-We can therefore obtain a new model (our average of the individual
-models) that has a smaller variance than each of the individual model
-because
+\begin{itemize}
+\tightlist
+\item
+  Like this, we obtain a new model that has a smaller variance than each
+  of the individual model. If the bootstrap samples were independent
+  (which they are of course not), the variance (thus prediction error)
+  would be reduced by
+\end{itemize}
 
-\[\text{Var}(\bar{X})=\frac{\sigma^2}{n}\]
+\[\text{Var}(\bar{X})=\frac{\sigma^2}{B} \ .\] \vspace{2mm}
 
-Since this averaged predictor has smaller variance than each of the
-predictors we would assum that this is a more accurate prediction.
-However, the interpretation of this bagged prediction might be harder
-then for the separate predictors.
+\begin{itemize}
+\tightlist
+\item
+  In reality, the variance reduction is less. For a pairwise correlation
+  \(\rho\) we would have \(\rho\sigma^2 + \frac{1-\rho}{B}\sigma^2\).
+\end{itemize}
 
-Models that have poor prediction ability (as we may see can happen with
-regression and classification trees) might benefit greatly from bagging.
-More in Module 8.
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Models that have poor prediction ability (as we may see can happen
+  with regression and classification trees) might benefit greatly from
+  bagging. More in Module 8.
+\end{itemize}
 
 \end{frame}
 
@@ -1448,7 +1505,7 @@ More in Module 8.
   assessment.
 \item
   Use bootstrapping to estimate the standard deviation of an estimator,
-  and understand how it is performed before module 8 on trees.
+  and understand how it is performed.
 \end{itemize}
 
 \end{block}

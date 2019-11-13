@@ -180,44 +180,45 @@ cross-validation}\label{recommended-exercises-on-cross-validation}
 cross-validation is
 implemented}{Problem 1: Explain how k-fold cross-validation is implemented}}\label{problem-1-explain-how-k-fold-cross-validation-is-implemented}
 
-\begin{itemize}
-\tightlist
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
 \item
-  draw a figure,
+  Draw a figure
 \item
-  specify algorithmically what is done,
+  Specify algorithmically what is done, and in particular how the
+  ``results'' from each fold are aggregated
 \item
-  and in particular how the ``results'' from each fold are aggregated,
+  Relate to one example from regression. Ideas are the complexity w.r.t.
+  polynomials of increasing degree in multiple linear regression, or
+  \(K\) in KNN-regression.
 \item
-  relate to one example from regression (maybe is complexity wrt
-  polynomials of increasing degree in multiple linear regression or
-  \(K\) in KNN-regression?)
-\item
-  relate to one example from classification (maybe is complexity wrt
-  polynomials of increasing degree in logistic regression or \(K\) in
-  KNN-classification?)
-\end{itemize}
+  Relate to one example from classification. Ideas are the complexity
+  w.r.t. polynomials of increasing degree in logistic regression, or
+  \(K\) in KNN-classification?)
+\end{enumerate}
 
 Hint: the words ``loss function'', ``fold'', ``training'',
 ``validation'' are central.
 
 \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
-\subsection{\texorpdfstring{Problem 2: What are the advantages and
-disadvantages of \(k\)-fold
-cross-validation}{Problem 2: What are the advantages and disadvantages of k-fold cross-validation}}\label{problem-2-what-are-the-advantages-and-disadvantages-of-k-fold-cross-validation}
+\subsection{\texorpdfstring{Problem 2: Advantages and disadvantages of
+\(k\)-fold
+Cross-Validation}{Problem 2: Advantages and disadvantages of k-fold Cross-Validation}}\label{problem-2-advantages-and-disadvantages-of-k-fold-cross-validation}
 
+What are the advantages and disadvantages of \(k\)-fold cross-validation
 relative to
 
-\begin{itemize}
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
 \tightlist
 \item
-  the validation set approach
+  The validation set approach
 \item
-  leave one out cross-validation (LOOCV)
+  Leave one out cross-validation (LOOCV)
 \item
-  what are recommended values for \(k\), and why?
-\end{itemize}
+  What are recommended values for \(k\), and why?
+\end{enumerate}
 
 Hint: the words ``bias'', ``variance'' and ``computational complexity''
 should be included.
@@ -232,31 +233,55 @@ The task here is to devise an algorithm to ``prove'' that the wrong way
 is wrong and that the right way is right.
 
 \begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\tightlist
+\def\labelenumi{\alph{enumi})}
 \item
   What are the steps of such an algorithm? Write down a suggestion.
-  Hint: how do you generate data for predictors and class labels, how do
+  Hint: How do you generate data for predictors and class labels, how do
   you do the classification task, where is the CV in the correct way and
   wrong way inserted into your algorithm? Can you make a schematic
   drawing of the right and the wrong way? Hint:
   \href{https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/cv_boot.pdf}{ISL
   book slides, page 20+21} - but you can do better?
+\item
+  We are now doing a simulation to illustrate the selection bias problem
+  in CV, when it is applied the wrong way. Here is what we are
+  (conceptually) going to do:
 \end{enumerate}
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+Generate data
 
-\begin{enumerate}
-\def\labelenumi{\alph{enumi}.}
-\setcounter{enumi}{1}
+\begin{itemize}
+\item
+  Simulate high dimensional data (\(p=5000\) predictors) from
+  independent or correlated normal variables, but with few samples
+  (\(n=50\)).
+\item
+  Randomly assign a class labels (here only 2) - so the truth is that
+  the misclassification rate can not get very small. What is the
+  theoretical misclassification rate (for this random set)?
+\end{itemize}
+
+Classification task:
+
+\begin{itemize}
 \tightlist
 \item
-  One possible version of this is presented in the R-code below. Go
-  through the code and explain what is done in each step, then run the
-  code and observe if the results are in agreement with what you
-  expected. Make changes to the R-code if you want to test out different
-  strategies.
-\end{enumerate}
+  We choose a few (\(d=25\)) of the predictors (how? we just select
+  those with the highest correlation to the outcome).
+\item
+  Perform a classification rule (here: logistic empirical Bayes) on
+  these predictors.
+\item
+  Then, we do CV (\(k=5\)) on only \(d\) =wrong way, or \(c+d\)=right
+  way.
+\item
+  Report misclassification errors for both situations.
+\end{itemize}
+
+One possible version of this is presented in the R-code below. Go
+through the code and explain what is done in each step, then run the
+code and observe if the results are in agreement with what you expected.
+Make changes to the R-code if you want to test out different strategies.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -369,13 +394,15 @@ Our sample size is \(n\).
 
 \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
-\subsection{Problem 2: Estimate standard deviation with
-bootstrapping}\label{problem-2-estimate-standard-deviation-with-bootstrapping}
+\subsection{Problem 2: Estimate standard deviation and confidence
+intervals with
+bootstrapping}\label{problem-2-estimate-standard-deviation-and-confidence-intervals-with-bootstrapping}
 
 Explain with words and an algorithm how you would proceed to use
-bootstrapping to estimate the standard deviation of one of the
-regression parameters in multiple linear regression. Comment on which
-assumptions you make for your regression model.
+bootstrapping to estimate the standard deviation and the 95\% confidence
+interval of one of the regression parameters in multiple linear
+regression. Comment on which assumptions you make for your regression
+model.
 
 \subsection{Problem 3: Implement problem
 2}\label{problem-3-implement-problem-2}
@@ -395,6 +422,14 @@ from the regression model.
 \NormalTok{n =}\StringTok{ }\KeywordTok{dim}\NormalTok{(SLID)[}\DecValTok{1}\NormalTok{]}
 \NormalTok{SLID.lm =}\StringTok{ }\KeywordTok{glm}\NormalTok{(wages }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ SLID)}
 \KeywordTok{summary}\NormalTok{(SLID.lm)}\OperatorTok{$}\NormalTok{coeff[}\DecValTok{3}\NormalTok{, }\DecValTok{2}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+Todo: Bootstrap the CI, and compare to
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{confint}\NormalTok{(SLID.lm)}
 \end{Highlighting}
 \end{Shaded}
 

@@ -242,10 +242,6 @@ We name the model fitted above \texttt{modelA}.
 \KeywordTok{ggplot}\NormalTok{(modelA, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{sample =}\NormalTok{ .stdresid)) }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_qq}\NormalTok{(}\DataTypeTok{pch =} \DecValTok{19}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_abline}\NormalTok{(}\DataTypeTok{intercept =} \DecValTok{0}\NormalTok{, }
     \DataTypeTok{slope =} \DecValTok{1}\NormalTok{, }\DataTypeTok{linetype =} \StringTok{"dotted"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{x =} \StringTok{"Theoretical quantiles"}\NormalTok{, }
     \DataTypeTok{y =} \StringTok{"Standardized residuals"}\NormalTok{, }\DataTypeTok{title =} \StringTok{"Normal Q-Q"}\NormalTok{, }\DataTypeTok{subtitle =} \KeywordTok{deparse}\NormalTok{(modelA}\OperatorTok{$}\NormalTok{call))}
-
-\CommentTok{# normality test}
-\KeywordTok{library}\NormalTok{(nortest)}
-\KeywordTok{ad.test}\NormalTok{(}\KeywordTok{rstudent}\NormalTok{(modelA))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -296,11 +292,7 @@ he is not using anti-hypertensive medication.
 \end{itemize}
 
 (Comment: Is that allowed - to only do the inverse? Yes, that could be
-the result of a first order Taylor expansion approximation. If you think
-this is interesting you can read more from page 36 here:
-\url{https://www.math.ntnu.no/emner/TMA4267/2017v/L12.pdf} - but that is
-not on the reading list of this course. You have probably used this
-result in your physics courses.)
+the result of a first order Taylor expansion approximation.)
 
 \begin{itemize}
 \tightlist
@@ -491,53 +483,6 @@ For the code - what is the connection between \texttt{sigma} and RSS?
 ## [1] 0.4494479
 \end{verbatim}
 
-\subsubsection{e)}\label{e-1}
-
-We now want to use model selection to arrive at a good model. Start by
-defining which covariates you want to include and how to code them (use
-dummy variable coding of \texttt{location}). What about year of
-construction - is that a linear covariate? Maybe you want to make
-intervals in time instead? Linear or categorical for the time? What
-about the \texttt{district}? We leave that since we have not talked
-about how to use spatial covariates.
-
-Hint: if you want to test out interval versions of year of construction
-the function \texttt{mutate} (from \texttt{dplyr}) is useful:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{rent99 <-}\StringTok{ }\NormalTok{rent99 }\OperatorTok{%>%}\StringTok{ }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{yearc.cat =} \KeywordTok{cut}\NormalTok{(yearc, }\DataTypeTok{breaks =} \KeywordTok{c}\NormalTok{(}\OperatorTok{-}\OtherTok{Inf}\NormalTok{, }\KeywordTok{seq}\NormalTok{(}\DecValTok{1920}\NormalTok{, }
-    \DecValTok{2000}\NormalTok{, }\DecValTok{10}\NormalTok{)), }\DataTypeTok{labels =} \DecValTok{10} \OperatorTok{*}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{9}\NormalTok{))}
-\end{Highlighting}
-\end{Shaded}
-
-More on \texttt{dplyr}: Tutorial:
-\url{http://genomicsclass.github.io/book/pages/dplyr_tutorial.html} and
-Cheat sheet (data wrangling):
-\url{https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf}
-and dplyr in particular:
-\url{https://github.com/rstudio/cheatsheets/raw/master/source/pdfs/data-transformation-cheatsheet.pdf}
-
-\subsubsection{f)}\label{f-1}
-
-(More on this in Module 6.)
-
-There are many ways to perform model selection for multiple linear
-regression. One possibility is best subsets, which can be done using the
-\texttt{regsubsets} function from library \texttt{leaps}. Assume your
-``full'' model fitted by \texttt{lm} is called \texttt{fit}. You may
-define \texttt{x} from \texttt{model.matrix(fit){[},-1{]}} (not
-including the intercept term), and then run
-\texttt{best=regsubsets(x=model.matrix(fit){[},-1{]},y=rent99\$rent)}
-and look at \texttt{summary(best)}. Explain the print-out (with all the
-stars). Using the Mallows Cp (named \texttt{cp} in the list from
-\texttt{summary(best)}) will give the same result at using AIC (which is
-not available in this function). What is your preferred model? Hint:
-look at the R-code in Problem 2 (Figure 3) from the TMA4267V2017 exam:
-\href{https://www.math.ntnu.no/emner/TMA4267/2017v/Exam/eV2017Enew.pdf}{pdf},
-and maybe the solutions for the interpretation
-\href{https://www.math.ntnu.no/emner/TMA4267/2017v/Exam/mergedLFV2017.pdf}{pdf}
-
 \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
 \subsection{Problem 4: Simulations in
@@ -588,108 +533,15 @@ To see how things looks when the model is correct and wrong.
 \end{Highlighting}
 \end{Shaded}
 
-\subsubsection{d.}\label{d.}
-
-All this fuss about raw, standardized and studentized residuals- does
-really matter in practice? Below is one example where the raw residuals
-are rather different from the standardized, but the standardized is
-identical to the studentized. Can you come up with a simulation model
-where the standardized and studentized are very different? Hint: what
-about at smaller sample size?
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{n =}\StringTok{ }\DecValTok{1000}
-\NormalTok{beta =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\OperatorTok{/}\DecValTok{2}\NormalTok{, }\DecValTok{1}\OperatorTok{/}\DecValTok{3}\NormalTok{), }\DataTypeTok{ncol =} \DecValTok{1}\NormalTok{)}
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
-\NormalTok{x1 =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(n, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)}
-\NormalTok{x2 =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(n, }\DecValTok{0}\NormalTok{, }\DecValTok{2}\NormalTok{)}
-\NormalTok{x3 =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(n, }\DecValTok{0}\NormalTok{, }\DecValTok{3}\NormalTok{)}
-\NormalTok{X =}\StringTok{ }\KeywordTok{cbind}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, n), x1, x2, x3)}
-\NormalTok{y =}\StringTok{ }\NormalTok{X }\OperatorTok{%*%}\StringTok{ }\NormalTok{beta }\OperatorTok{+}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(n, }\DecValTok{0}\NormalTok{, }\DecValTok{2}\NormalTok{)}
-\NormalTok{fit =}\StringTok{ }\KeywordTok{lm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{x1 }\OperatorTok{+}\StringTok{ }\NormalTok{x2 }\OperatorTok{+}\StringTok{ }\NormalTok{x3)}
-\NormalTok{yhat =}\StringTok{ }\KeywordTok{predict}\NormalTok{(fit)}
-\KeywordTok{summary}\NormalTok{(fit)}
-\NormalTok{ehat =}\StringTok{ }\KeywordTok{residuals}\NormalTok{(fit)}
-\NormalTok{estand =}\StringTok{ }\KeywordTok{rstandard}\NormalTok{(fit)}
-\NormalTok{estud =}\StringTok{ }\KeywordTok{rstudent}\NormalTok{(fit)}
-\KeywordTok{plot}\NormalTok{(yhat, ehat, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{)}
-\KeywordTok{points}\NormalTok{(yhat, estand, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{, }\DataTypeTok{col =} \DecValTok{2}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
 \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
-\section{ Further reading }\label{further-reading}
+\subsection{Problem 5}\label{problem-5}
 
-\begin{itemize}
-\tightlist
-\item
-  Need details on the simple linear regression: From TMA4240/TMA4245
-  Statistics we have the thematic page for
-  \href{https://wiki.math.ntnu.no/tma4245/tema/begreper/regression}{Simple
-  linear regression (in Norwegian)}.
-\item
-  Need more advanced thory: Theoretical version (no simple linear
-  regression) from TMA4315 Generalized linear models H2018:
-  \href{https://www.math.ntnu.no/emner/TMA4315/2018h/2MLR.html}{TMA4315M2:
-  Multiple linear regression}
-\item
-  Slightly different presentation (more focus on multivariate normal
-  theory):
-  \href{https://www.math.ntnu.no/emner/TMA4267/2017v/TMA4267V2017Part2.pdf}{Slides
-  and written material from TMA4267}
-\item
-  And, same source, but now
-  \href{http://www.math.ntnu.no/emner/TMA4267/2017v/TMA4267V2017Part3.pdf}{Slides
-  and written material from TMA4267 Linear Statistical Models in 2017,
-  Part 3: Hypothesis testing and ANOVA}
-\item
-  \href{https://www.youtube.com/playlist?list=PL5-da3qGB5IBSSCPANhTgrw82ws7w_or9}{Videoes
-  on YouTube by the authors of ISL, Chapter 2}
-\end{itemize}
+A problem with an interaction term between two continuous variables, and
+between a continuous and a factor covariable with more than two levels.
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-\section{ R packages}\label{r-packages}
-
-If you want to look at the .Rmd file and \texttt{knit} it, you need to
-first install the following packages (only once).
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\CommentTok{# packages to install before knitting this R Markdown file to knit}
-\CommentTok{# the Rmd}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"knitr"}\NormalTok{)}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"rmarkdown"}\NormalTok{)}
-
-\CommentTok{# nice tables in Rmd}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"kableExtra"}\NormalTok{)}
-
-\CommentTok{# cool layout for the Rmd}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"prettydoc"}\NormalTok{)  }\CommentTok{# alternative to github}
-
-\CommentTok{# plotting}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"ggplot2"}\NormalTok{)  }\CommentTok{# cool plotting}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"ggpubr"}\NormalTok{)  }\CommentTok{# for many ggplots}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"GGally"}\NormalTok{)  }\CommentTok{# for ggpairs}
-\CommentTok{# datasets}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"ElemStatLearn"}\NormalTok{)  }\CommentTok{# for ozone data set}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"gamlss.data"}\NormalTok{)  }\CommentTok{#rent index data set here}
-\CommentTok{# methods}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"nortest"}\NormalTok{)  }\CommentTok{#test for normality - e.g. Anderson-Darling}
-
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"car"}\NormalTok{)  }\CommentTok{# vif}
-\KeywordTok{library}\NormalTok{(Matrix)}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"reshape"}\NormalTok{)}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"corrplot"}\NormalTok{)}
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"tidyverse"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\section{Acknowledgements}\label{acknowledgements}
-
-Thanks to Julia Debik for contributing to this module page.
+Important: In the latter case, we need again the \(F\)-test to check if
+the interaction is relevant.
 
 
 \end{document}
