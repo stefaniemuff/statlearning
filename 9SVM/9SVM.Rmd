@@ -324,15 +324,15 @@ $$y_i (\beta_0+{\boldsymbol x}_i^T {\boldsymbol \beta})>0 \ .$$
 \vspace{2mm}
 The hyperplane thus leads to a _\textcolor{red}{natural classifier}_, depending on the side of the hyperplane where the new observation lies.
 
-The class  $y^*$ of a new observation $x^*=(x_1^*,...,x_n^*)$ is assigned depending on the value $f(x^*)=\beta_0+\beta_1 x_1^* + \beta_2 x_{2}^*+...+\beta_p x_{p}^*$
+The class  $y^*$ of a new observation ${\boldsymbol x}^*=(x_1^*,...,x_n^*)$ is assigned depending on the value $f({\boldsymbol x}^*)=\beta_0+\beta_1 x_1^* + \beta_2 x_{2}^*+...+\beta_p x_{p}^*$
 
 \begin{center}
 \colorbox{lightgray}{\begin{minipage}{8cm}
 {\bf Hyperplane classifier:}
 
 $$y^* = \left\{ \begin{array}{ll}
-1 \ , & \text{if } f(x^*) >0 \ ,\\
--1 \ , & \text{if } f(x^*) < 0 \ .
+1 \ , & \text{if } f({\boldsymbol x}^*) >0 \ ,\\
+-1 \ , & \text{if } f({\boldsymbol x}^*) < 0 \ .
 \end{array}\right.$$
  \end{minipage}}
 \end{center}
@@ -457,7 +457,6 @@ par(pty="s");par(mfrow=c(1,1))
 plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));
 points(forest2[forest2[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
 points(forest2[forest2[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-
 ```
 
 It is still possible to construct a hyperplane and use it for classification, but then we have to allow some misclassification in the training data. 
@@ -466,7 +465,7 @@ It is still possible to construct a hyperplane and use it for classification, bu
 
 * In some situations allowing for some misclassifications makes the class boundaries more robust to future observations (avoid overfitting).
 
-* When there are more predictors than observations it is always possible to find a separating hyperplane in the predictor space, but the might not be the "best" hyperplane for us.
+* When there are more predictors than observations it is always possible to find a separating hyperplane in the predictor space, but it might not be the "best" hyperplane for us.
 
 * We relax the maximal margin classifier to allow for a _soft margin classifier_ (=support vector classifier). 
 
@@ -475,7 +474,7 @@ It is still possible to construct a hyperplane and use it for classification, bu
 ## Optimization problem
 \vspace{2mm}
 
-To obtain a support vector classifier we relax the conditions that we had for the maximal margin hyperplane by allowing for a "budget" $C$ of misclassifications:
+To obtain a **support vector classifier** we relax the conditions that we had for the maximal margin hyperplane by allowing for a "budget" $C$ of misclassifications:
 \vspace{2mm}
 
 \colorbox{lightgray}{\begin{minipage}{10cm}
@@ -499,21 +498,13 @@ $$\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C.$$
 
 ---
 
-
-* The hyperplane has the property that it **only** depends on the observations that **either lie on the margin or on the wrong side of the margin**. 
-
-* These observations are called our **support vectors**. 
-
-* The observations on the correct side of the margin do not affect the support vectors. The length of distance for the support vectors to the class boundary is proportional to the slacks.
-
----
-
 **Classification rule:** We classify a test observation ${\boldsymbol x}^*$ based on the sign of $f({\boldsymbol x}^*)=\beta_0+\beta_1 x_1^*+...+\beta_p x_p^*$ as before:
 
 * If $f({\boldsymbol x}^*)<0$  then $y^*=-1$.
 * If $f({\boldsymbol x}^*)>0$  then $y^*=1$.
 
 More on solving the optimization problem: @ESL Section 12.2.1 (primal and dual Lagrange problem, quadratic convex problem).
+
 
 ---
 
@@ -524,7 +515,7 @@ ISLR Figure 9.7: From large $C$ (top left) to small $C$ (bottom right). As C dec
 
 ---
 
-See also Figure 19.3 in @casi:
+See also Figure 19.3 in @casi, where the violations (estimates of $\epsilon_i$) are shown in green:
 
 \centering
 ![casi Figure 19.3](../../casi/19.3.png){width=80%}
@@ -532,36 +523,55 @@ See also Figure 19.3 in @casi:
 
 ---
 
+
+* The hyperplane has the property that it **only** depends on the observations that **either lie on the margin or on the wrong side of the margin**. 
+
+* These observations are called our **support vectors**. 
+
+* The observations on the correct side of the margin do not affect the support vectors. The length of distance for the support vectors to the class boundary is proportional to the slacks.
+
+
+---
+
+
 ## Questions
 
-* Should the variables be standardized before used with this method?
-* The support vector classifier only depends on the observations that violate the margin. How does $C$ affect the width of the margin?  
-* Discuss how the tuning parameter $C$ affects the bias-variance trade-off of the method. 
+1. Should the variables be standardized before used with this method?
+
+2. The support vector classifier only depends on the observations that violate the margin. How does $C$ affect the width of the margin?  
+
+3. Discuss how the tuning parameter $C$ affects the bias-variance trade-off of the method. 
 
 
 
 ---
 
-**A:** Yes, should be standardized because this method treats all variables equally. Same as for lasso and ridge. 
+**A:** 
 
-If $C$ is small then $M$ must give narrow margin? $C$ is our bias-variance trade-off tuning parameter: C large: allow many violations: more bias, less variance. C small: highly fit the data: less bias, more variance.
+<!-- 1. Yes, should be standardized because this method treats all variables equally. Same as for lasso and ridge.  -->
+
+<!-- 2. If $C$ is small then $M$ must give narrow margin. -->
+
+<!-- 3. $C$ is our bias-variance trade-off tuning parameter: C large: allow many violations: more bias, less variance. C small: highly fit the data: less bias, more variance. -->
 
 ---
 
 ##Example
 
-We will now find a support vector classifier for the second training dataset (forest2) and use this to classify the observations in the second test set (seeds2). 
+\vspace{2mm}
+
+We will now find a support vector classifier for the second training dataset (`forest2`) and use this to classify the observations in the second test set (`seeds2`). 
 
 * There are $100$ observations of trees: 45 pines ($y_i=1$) and 55 redwood trees ($y_i=-1$). 
 * In the test set there are 20 seeds: 10 pine seeds and 10 redwood seeds.
 
 The function `svm` in the package `e1071` is used to find the maximal margin hyperplane. The response needs to be coded as a factor variable, and the data set has to be stored as a dataframe.
 
-\footnotesize
+\scriptsize
 ```{r}
 library(e1071)
-forest2=read.table(file="https://www.math.ntnu.no/emner/TMA4268/2019v/data/forest2.txt"); 
-seeds2=read.table(file="https://www.math.ntnu.no/emner/TMA4268/2019v/data/seeds2.txt"); 
+forest2=read.table(file="forest2.txt"); 
+seeds2=read.table(file="seeds2.txt"); 
 train2=data.frame(x=forest2[,1:2], y=as.factor(forest2[,3]))
 test2=data.frame(x=seeds2[,1:2], y=as.factor(seeds2[,3]))
 ```
@@ -571,25 +581,27 @@ test2=data.frame(x=seeds2[,1:2], y=as.factor(seeds2[,3]))
 
 The `svm` function uses a slightly different formulation from what we wrote above. 
 
-We had in our presentation a budget for errors $C$, but in `svm` we instead have an argument `cost` that allows us to specify the cost of violating the margin. 
+We had in our presentation a budget for errors $C$, but in `svm` we instead have an argument `cost` that allows us to specify the cost of violating the margin (you can think of the cost as $\propto \frac{1}{C}$). 
 
 * When `cost` is set to a low value, the margin will be wider than if set to a large value. 
 
-We first try with `cost=1`. We set `kernel='linear'` as we are interested in a linear decision boundary. `scale=TRUE` scales the predictors to have mean 0 and standard deviation 1. We choose not to scale.
+We first try with `cost=1`. We set `kernel='linear'` as we are interested in a linear decision boundary. `scale=TRUE` scales the predictors to have mean 0 and standard deviation 1. We choose `scale=FALSE` (no scaling).
 
 ---
 
 \footnotesize
-```{r}
+```{r forest2.2, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='80%'}
 svmfit_linear1=svm(y ~ ., data=train2, kernel='linear', cost=1, scale=FALSE)
 plot(svmfit_linear1,train2,col=c("lightcoral","lightgreen"))
 ```
 
+(Note: The decision boundary looks a bit strange, and $x_1$ is plotted on the (usual) $y$-axis and $x_2$ on the $x$-axis. Both problems are due to implementation, nothing for us to worry.)
+
 ---
 
+\scriptsize
 ```{r}
 summary(svmfit_linear1)
-svmfit_linear1$index #support vectors id in data set
 ```
 \normalsize
 
@@ -597,60 +609,94 @@ svmfit_linear1$index #support vectors id in data set
 
 **Observations**
 
-* Remark that the $x_1$ is plotted on the vertical axis, and the the implementation of the plotting function is made in a way that the linear boundary looks jagged. 
-* The crosses in the plot indicate the support vectors. With $cost=1$, we have 56 support vectors, 28 in each class.
-* All other observations are shown as circles.
+
+* The crosses in the plot indicate the support vectors, whose index can be obtained from 
+
+\scriptsize
+```{r}
+svmfit_linear1$index #support vectors id in data set
+```
+
+\normalsize
+
+* With `cost=1`, we have 56 support vectors, 28 in each class. 
+
+* All other data points are shown as circles.
+
+* However, no explicit output for the linear decision boundary, and no margin width is given by `svm()`. Want to see how to find this? See the recommended exercises. 
+
+Todo: Need to make sure this exercise is included also this year.
 
 ---
 
-Next, we set $cost=100$:
-\footnotesize
-```{r}
+Next, we set `cost=100`:
+
+\scriptsize
+```{r forest2.3, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
 svmfit_linear2=svm(y ~ ., data=train2, kernel='linear', cost=100, scale=FALSE)
 plot(svmfit_linear2,train2,col=c("lightcoral","lightgreen"))
 ```
 
 ---
 
+\scriptsize
 ```{r}
 summary(svmfit_linear2)
 ```
 \normalsize
 
+Thus with `cost=100` we have 31 support vectors, i.e the width of the margin is decreased. 
+
 ---
 
-With $cost=100$ we have 31 support vectors, i.e the width of the margin is decreased. 
+### Cross-validation to find an optimal `cost`
 
-How do we find an optimal $cost$ parameter? By using the *tune()* function we can perform ten-fold cross-validation and find the cost-parameter that gives the lowest cross-validation error:
+\vspace{2mm}
 
-\footnotesize
+The `cost` is a tuning parameter. By using the `tune()` function we can perform 10-fold cross-validation and find the cost-parameter that gives the lowest cross-validation error:
+
+\tiny
 
 ```{r}
 set.seed(1)
-CV_linear=tune(svm,y~.,data=train2,kernel="linear",ranges=list(cost=c(0.001,0.01,0.1,1,5,10,100)))
+CV_linear=tune(svm,y~.,data=train2,kernel="linear",ranges=list(cost=c(0.001, 0.01, 0.1, 1, 5, 10, 50)))
 summary(CV_linear)
 ```
-\normalsize
+
+<!-- --- -->
+
+<!-- ```{r forest2.4, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'} -->
+<!-- plot(CV_linear) -->
+<!-- ``` -->
+
 
 ---
 
-According to the *tune()* function we should set the cost parameter to 0.1. The function also stores the best model obtained and we can access it as follows:
+According to the `tune()` function we should set the cost parameter to 5. The function also stores the best model obtained and we can access it as follows:
+
+\scriptsize
 ```{r}
 bestmod_linear=CV_linear$best.model
 ```
 
+\normalsize
 Next, we want to predict the class label of the seeds in the test set. We use the `predict` function and make a confusion table:
 
+\scriptsize
 ```{r}
 ypred_linear=predict(bestmod_linear,test2)
 table(predict=ypred_linear,truth=test2[,3])
 ```
 
+\normalsize
+
+Thus two of the seeds are misclassified, the other 18 are ok.
+
 ---
 
 \footnotesize
 
-```{r,echo=showsol}
+```{r forest2.4, echo=FALSE, fig.width=8, fig.height=5,fig.align = "center",out.width='90%'}
 par(mfrow=c(1,2)); par(pty="s")
 plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("True class")
 points(seeds2[seeds2[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
@@ -666,11 +712,11 @@ points(seeds2[which(ypred_linear!=seeds2[,3]),1:2],pch=21) #Mark misclassificati
 
 \normalsize
 
----
+The two misclassified observations are marked with a black circle. Unsurprisingly, they lie on the border between the green and the orange points. Why?
 
-In this case three of the test observations are misclassified: These three observations are marked with a black circle in the plot, and we observe that they lie on the border between the green and the orange points which is reasonable: The test observations located on the border between green and orange are hardest to predict.
+<!-- which is reasonable: The test observations located on the border between green and orange are hardest to predict. -->
 
-Missing: the `svm` function is not (directly) outputting the equation for the class boundary, and not the value for the width of the margin. Want to see how to find this? See the recommended exercises. 
+
 
 ---
 

@@ -470,17 +470,18 @@ This means that for all observations (all are correctly classified)
 \emph{\textcolor{red}{natural classifier}}, depending on the side of the
 hyperplane where the new observation lies.
 
-The class \(y^*\) of a new observation \(x^*=(x_1^*,...,x_n^*)\) is
-assigned depending on the value
-\(f(x^*)=\beta_0+\beta_1 x_1^* + \beta_2 x_{2}^*+...+\beta_p x_{p}^*\)
+The class \(y^*\) of a new observation
+\({\boldsymbol x}^*=(x_1^*,...,x_n^*)\) is assigned depending on the
+value
+\(f({\boldsymbol x}^*)=\beta_0+\beta_1 x_1^* + \beta_2 x_{2}^*+...+\beta_p x_{p}^*\)
 
 \begin{center}
 \colorbox{lightgray}{\begin{minipage}{8cm}
 {\bf Hyperplane classifier:}
 
 $$y^* = \left\{ \begin{array}{ll}
-1 \ , & \text{if } f(x^*) >0 \ ,\\
--1 \ , & \text{if } f(x^*) < 0 \ .
+1 \ , & \text{if } f({\boldsymbol x}^*) >0 \ ,\\
+-1 \ , & \text{if } f({\boldsymbol x}^*) < 0 \ .
 \end{array}\right.$$
  \end{minipage}}
 \end{center}
@@ -656,7 +657,7 @@ training data.
   overfitting).
 \item
   When there are more predictors than observations it is always possible
-  to find a separating hyperplane in the predictor space, but the might
+  to find a separating hyperplane in the predictor space, but it might
   not be the ``best'' hyperplane for us.
 \item
   We relax the maximal margin classifier to allow for a \emph{soft
@@ -671,9 +672,9 @@ training data.
 
 \vspace{2mm}
 
-To obtain a support vector classifier we relax the conditions that we
-had for the maximal margin hyperplane by allowing for a ``budget'' \(C\)
-of misclassifications: \vspace{2mm}
+To obtain a \textbf{support vector classifier} we relax the conditions
+that we had for the maximal margin hyperplane by allowing for a
+``budget'' \(C\) of misclassifications: \vspace{2mm}
 
 \colorbox{lightgray}{\begin{minipage}{10cm}
 $$\mathrm{maximize}_{\beta_0,\beta_1,...,\beta_p}  M $$
@@ -721,23 +722,6 @@ $$\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C.$$
 
 \begin{frame}
 
-\begin{itemize}
-\item
-  The hyperplane has the property that it \textbf{only} depends on the
-  observations that \textbf{either lie on the margin or on the wrong
-  side of the margin}.
-\item
-  These observations are called our \textbf{support vectors}.
-\item
-  The observations on the correct side of the margin do not affect the
-  support vectors. The length of distance for the support vectors to the
-  class boundary is proportional to the slacks.
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}
-
 \textbf{Classification rule:} We classify a test observation
 \({\boldsymbol x}^*\) based on the sign of
 \(f({\boldsymbol x}^*)=\beta_0+\beta_1 x_1^*+...+\beta_p x_p^*\) as
@@ -770,7 +754,8 @@ side of the margin decreases and the marin narrows.
 
 \begin{frame}
 
-See also Figure 19.3 in Efron and Hastie (2016):
+See also Figure 19.3 in Efron and Hastie (2016), where the violations
+(estimates of \(\epsilon_i\)) are shown in green:
 
 \centering
 \includegraphics[width=0.80000\textwidth]{../../casi/19.3.png}
@@ -779,19 +764,36 @@ See also Figure 19.3 in Efron and Hastie (2016):
 
 \begin{frame}
 
+\begin{itemize}
+\item
+  The hyperplane has the property that it \textbf{only} depends on the
+  observations that \textbf{either lie on the margin or on the wrong
+  side of the margin}.
+\item
+  These observations are called our \textbf{support vectors}.
+\item
+  The observations on the correct side of the margin do not affect the
+  support vectors. The length of distance for the support vectors to the
+  class boundary is proportional to the slacks.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
 \begin{block}{Questions}
 
-\begin{itemize}
-\tightlist
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
 \item
   Should the variables be standardized before used with this method?
 \item
   The support vector classifier only depends on the observations that
-  violate the margin. How does \(C\) affect the width of the margin?\\
+  violate the margin. How does \(C\) affect the width of the margin?
 \item
   Discuss how the tuning parameter \(C\) affects the bias-variance
   trade-off of the method.
-\end{itemize}
+\end{enumerate}
 
 \end{block}
 
@@ -799,13 +801,7 @@ See also Figure 19.3 in Efron and Hastie (2016):
 
 \begin{frame}
 
-\textbf{A:} Yes, should be standardized because this method treats all
-variables equally. Same as for lasso and ridge.
-
-If \(C\) is small then \(M\) must give narrow margin? \(C\) is our
-bias-variance trade-off tuning parameter: C large: allow many
-violations: more bias, less variance. C small: highly fit the data: less
-bias, more variance.
+\textbf{A:}
 
 \end{frame}
 
@@ -813,9 +809,11 @@ bias, more variance.
 
 \begin{block}{Example}
 
+\vspace{2mm}
+
 We will now find a support vector classifier for the second training
-dataset (forest2) and use this to classify the observations in the
-second test set (seeds2).
+dataset (\texttt{forest2}) and use this to classify the observations in
+the second test set (\texttt{seeds2}).
 
 \begin{itemize}
 \tightlist
@@ -831,13 +829,13 @@ The function \texttt{svm} in the package \texttt{e1071} is used to find
 the maximal margin hyperplane. The response needs to be coded as a
 factor variable, and the data set has to be stored as a dataframe.
 
-\footnotesize
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(e1071)}
-\NormalTok{forest2 =}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\DataTypeTok{file =} \StringTok{"https://www.math.ntnu.no/emner/TMA4268/2019v/data/forest2.txt"}\NormalTok{)}
-\NormalTok{seeds2 =}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\DataTypeTok{file =} \StringTok{"https://www.math.ntnu.no/emner/TMA4268/2019v/data/seeds2.txt"}\NormalTok{)}
+\NormalTok{forest2 =}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\DataTypeTok{file =} \StringTok{"forest2.txt"}\NormalTok{)}
+\NormalTok{seeds2 =}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\DataTypeTok{file =} \StringTok{"seeds2.txt"}\NormalTok{)}
 \NormalTok{train2 =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ forest2[, }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{], }\DataTypeTok{y =} \KeywordTok{as.factor}\NormalTok{(forest2[, }\DecValTok{3}\NormalTok{]))}
 \NormalTok{test2 =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ seeds2[, }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{], }\DataTypeTok{y =} \KeywordTok{as.factor}\NormalTok{(seeds2[, }\DecValTok{3}\NormalTok{]))}
 \end{Highlighting}
@@ -856,7 +854,8 @@ what we wrote above.
 
 We had in our presentation a budget for errors \(C\), but in
 \texttt{svm} we instead have an argument \texttt{cost} that allows us to
-specify the cost of violating the margin.
+specify the cost of violating the margin (you can think of the cost as
+\(\propto \frac{1}{C}\)).
 
 \begin{itemize}
 \tightlist
@@ -868,8 +867,8 @@ specify the cost of violating the margin.
 We first try with \texttt{cost=1}. We set
 \texttt{kernel=\textquotesingle{}linear\textquotesingle{}} as we are
 interested in a linear decision boundary. \texttt{scale=TRUE} scales the
-predictors to have mean 0 and standard deviation 1. We choose not to
-scale.
+predictors to have mean 0 and standard deviation 1. We choose
+\texttt{scale=FALSE} (no scaling).
 
 \end{frame}
 
@@ -885,11 +884,17 @@ scale.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-3-1.pdf}
+\begin{center}\includegraphics[width=0.8\linewidth]{9SVM_files/figure-beamer/forest2.2-1} \end{center}
+
+(Note: The decision boundary looks a bit strange, and \(x_1\) is plotted
+on the (usual) \(y\)-axis and \(x_2\) on the \(x\)-axis. Both problems
+are due to implementation, nothing for us to worry.)
 
 \end{frame}
 
 \begin{frame}[fragile]
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -920,6 +925,23 @@ scale.
 ##  -1 1
 \end{verbatim}
 
+\normalsize
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\textbf{Observations}
+
+\begin{itemize}
+\tightlist
+\item
+  The crosses in the plot indicate the support vectors, whose index can
+  be obtained from
+\end{itemize}
+
+\scriptsize
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{svmfit_linear1}\OperatorTok{$}\NormalTok{index  }\CommentTok{#support vectors id in data set}
@@ -934,30 +956,26 @@ scale.
 
 \normalsize
 
-\end{frame}
-
-\begin{frame}
-
-\textbf{Observations}
-
 \begin{itemize}
-\tightlist
 \item
-  Remark that the \(x_1\) is plotted on the vertical axis, and the the
-  implementation of the plotting function is made in a way that the
-  linear boundary looks jagged.
+  With \texttt{cost=1}, we have 56 support vectors, 28 in each class.
 \item
-  The crosses in the plot indicate the support vectors. With \(cost=1\),
-  we have 56 support vectors, 28 in each class.
+  All other data points are shown as circles.
 \item
-  All other observations are shown as circles.
+  However, no explicit output for the linear decision boundary, and no
+  margin width is given by \texttt{svm()}. Want to see how to find this?
+  See the recommended exercises.
 \end{itemize}
+
+Todo: Need to make sure this exercise is included also this year.
 
 \end{frame}
 
 \begin{frame}[fragile]
 
-Next, we set \(cost=100\): \footnotesize
+Next, we set \texttt{cost=100}:
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -967,11 +985,13 @@ Next, we set \(cost=100\): \footnotesize
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-5-1.pdf}
+\begin{center}\includegraphics[width=0.7\linewidth]{9SVM_files/figure-beamer/forest2.3-1} \end{center}
 
 \end{frame}
 
 \begin{frame}[fragile]
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1004,24 +1024,28 @@ Next, we set \(cost=100\): \footnotesize
 
 \normalsize
 
+Thus with \texttt{cost=100} we have 31 support vectors, i.e the width of
+the margin is decreased.
+
 \end{frame}
 
 \begin{frame}[fragile]
 
-With \(cost=100\) we have 31 support vectors, i.e the width of the
-margin is decreased.
+\begin{block}{Cross-validation to find an optimal \texttt{cost}}
 
-How do we find an optimal \(cost\) parameter? By using the \emph{tune()}
-function we can perform ten-fold cross-validation and find the
+\vspace{2mm}
+
+The \texttt{cost} is a tuning parameter. By using the \texttt{tune()}
+function we can perform 10-fold cross-validation and find the
 cost-parameter that gives the lowest cross-validation error:
 
-\footnotesize
+\tiny
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
 \NormalTok{CV_linear =}\StringTok{ }\KeywordTok{tune}\NormalTok{(svm, y }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ train2, }\DataTypeTok{kernel =} \StringTok{"linear"}\NormalTok{, }\DataTypeTok{ranges =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{cost =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.001}\NormalTok{, }
-    \FloatTok{0.01}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{100}\NormalTok{)))}
+    \FloatTok{0.01}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{50}\NormalTok{)))}
 \KeywordTok{summary}\NormalTok{(CV_linear)}
 \end{Highlighting}
 \end{Shaded}
@@ -1046,18 +1070,20 @@ cost-parameter that gives the lowest cross-validation error:
 ## 4 1e+00  0.15 0.10801234
 ## 5 5e+00  0.14 0.10749677
 ## 6 1e+01  0.15 0.09718253
-## 7 1e+02  0.15 0.09718253
+## 7 5e+01  0.15 0.09718253
 \end{verbatim}
 
-\normalsize
+\end{block}
 
 \end{frame}
 
 \begin{frame}[fragile]
 
-According to the \emph{tune()} function we should set the cost parameter
-to 0.1. The function also stores the best model obtained and we can
-access it as follows:
+According to the \texttt{tune()} function we should set the cost
+parameter to 5. The function also stores the best model obtained and we
+can access it as follows:
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1065,8 +1091,11 @@ access it as follows:
 \end{Highlighting}
 \end{Shaded}
 
+\normalsize
 Next, we want to predict the class label of the seeds in the test set.
 We use the \texttt{predict} function and make a confusion table:
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1082,51 +1111,23 @@ We use the \texttt{predict} function and make a confusion table:
 ##      1   2 10
 \end{verbatim}
 
+\normalsize
+
+Thus two of the seeds are misclassified, the other 18 are ok.
+
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}
 
 \footnotesize
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{))}
-\KeywordTok{par}\NormalTok{(}\DataTypeTok{pty =} \StringTok{"s"}\NormalTok{)}
-\KeywordTok{plot}\NormalTok{(}\OtherTok{NA}\NormalTok{, }\DataTypeTok{xlab =} \StringTok{"x1"}\NormalTok{, }\DataTypeTok{ylab =} \StringTok{"x2"}\NormalTok{, }\DataTypeTok{xlim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{ylim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{))}
-\KeywordTok{title}\NormalTok{(}\StringTok{"True class"}\NormalTok{)}
-\KeywordTok{points}\NormalTok{(seeds2[seeds2[, }\DecValTok{3}\NormalTok{] }\OperatorTok{==}\StringTok{ }\DecValTok{-1}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{], }\DataTypeTok{pch =} \DecValTok{19}\NormalTok{, }\DataTypeTok{col =} \StringTok{"lightcoral"}\NormalTok{, }
-    \DataTypeTok{cex =} \FloatTok{0.9}\NormalTok{)}
-\KeywordTok{points}\NormalTok{(seeds2[seeds2[, }\DecValTok{3}\NormalTok{] }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{], }\DataTypeTok{pch =} \DecValTok{19}\NormalTok{, }\DataTypeTok{col =} \StringTok{"darkseagreen"}\NormalTok{, }
-    \DataTypeTok{cex =} \FloatTok{0.9}\NormalTok{)}
-\KeywordTok{points}\NormalTok{(seeds2[}\KeywordTok{which}\NormalTok{(ypred_linear }\OperatorTok{!=}\StringTok{ }\NormalTok{seeds2[, }\DecValTok{3}\NormalTok{]), }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{], }\DataTypeTok{pch =} \DecValTok{21}\NormalTok{)  }\CommentTok{#Mark misclassification.}
-
-\KeywordTok{plot}\NormalTok{(}\OtherTok{NA}\NormalTok{, }\DataTypeTok{xlab =} \StringTok{"x1"}\NormalTok{, }\DataTypeTok{ylab =} \StringTok{"x2"}\NormalTok{, }\DataTypeTok{xlim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{ylim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{))}
-\KeywordTok{title}\NormalTok{(}\StringTok{"Predicted class"}\NormalTok{)}
-\KeywordTok{points}\NormalTok{(seeds2[ypred_linear }\OperatorTok{==}\StringTok{ }\DecValTok{-1}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{], }\DataTypeTok{pch =} \DecValTok{19}\NormalTok{, }\DataTypeTok{col =} \StringTok{"lightcoral"}\NormalTok{, }
-    \DataTypeTok{cex =} \FloatTok{0.9}\NormalTok{)}
-\KeywordTok{points}\NormalTok{(seeds2[ypred_linear }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{], }\DataTypeTok{pch =} \DecValTok{19}\NormalTok{, }\DataTypeTok{col =} \StringTok{"darkseagreen"}\NormalTok{, }
-    \DataTypeTok{cex =} \FloatTok{0.9}\NormalTok{)}
-\KeywordTok{points}\NormalTok{(seeds2[}\KeywordTok{which}\NormalTok{(ypred_linear }\OperatorTok{!=}\StringTok{ }\NormalTok{seeds2[, }\DecValTok{3}\NormalTok{]), }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{], }\DataTypeTok{pch =} \DecValTok{21}\NormalTok{)  }\CommentTok{#Mark misclassification.}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-10-1.pdf}
+\begin{center}\includegraphics[width=0.9\linewidth]{9SVM_files/figure-beamer/forest2.4-1} \end{center}
 
 \normalsize
 
-\end{frame}
-
-\begin{frame}[fragile]
-
-In this case three of the test observations are misclassified: These
-three observations are marked with a black circle in the plot, and we
-observe that they lie on the border between the green and the orange
-points which is reasonable: The test observations located on the border
-between green and orange are hardest to predict.
-
-Missing: the \texttt{svm} function is not (directly) outputting the
-equation for the class boundary, and not the value for the width of the
-margin. Want to see how to find this? See the recommended exercises.
+The two misclassified observations are marked with a black circle.
+Unsurprisingly, they lie on the border between the green and the orange
+points. Why?
 
 \end{frame}
 
@@ -1137,7 +1138,7 @@ more suitable than a linear decision boundary. In such cases you can use
 a \textbf{Support Vector Machine} (SVM). This is an extension of the
 support vector classifier.
 
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-11-1.pdf}
+\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-9-1.pdf}
 
 \end{frame}
 
@@ -1411,7 +1412,7 @@ non-linear decision boundary:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-13-1.pdf}
+\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-11-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1460,7 +1461,7 @@ We could also try with a polynomial kernel with degree 4 as follows:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-14-1.pdf}
+\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-12-1.pdf}
 
 \end{frame}
 
@@ -1577,7 +1578,7 @@ the results:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-18-1.pdf}
+\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-16-1.pdf}
 
 \end{frame}
 
@@ -1595,7 +1596,7 @@ the results:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-19-1.pdf}
+\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-17-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
