@@ -1,0 +1,79 @@
+--- 
+title: "Interactive lecture module 8 and 9 - solutions" 
+subtitle: "TMA4268 Statistical learning"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+author: "Mette Langaas"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+  pdf_document:
+    toc: true
+    toc_depth: 2
+    keep_tex: yes
+    fig_caption: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 8. Tree-based methods
+
+## Problems for interactive lecture
+
+## Problem 1: Regions and tree
+
+We have a classification problem with covariates (predictors) `Sepal.Width` and  `Sepal.Length` and reponse `Species` (three species)
+
+The graph below gives a partition of the predictor space of variables `Sepal.Width` and  `Sepal.Length`, where the observations are shown in different colors for the different species
+
+### a) From regions to tree
+
+Sketch the classification tree corresponding to the partition. Specify variables that are split on and an approximate value of the split point
+
+
+```{r,echo=FALSE,eval=TRUE}
+library(tree)
+library(datasets)
+
+itree=tree(Species~Sepal.Length+Sepal.Width,data=iris)
+pitree=prune.tree(itree,best=5)
+plot(pitree,type="uniform")
+text(pitree,cex=0.8)
+
+par(pty="s")
+#par(mar=c(5.1, 4.1, 2.1, 8.1), xpd=TRUE)
+plot(iris$Sepal.Length,iris$Sepal.Width, col=iris$Species, pch=20)
+partition.tree(pitree, add=TRUE,cex=0.8)
+```
+
+###b) From tree to regions
+
+For the tree plot, draw the corresponding region plot.
+
+```{r,echo=FALSE,eval=TRUE}
+library(tree)
+library(datasets)
+
+itree=tree(Species~Sepal.Length+Sepal.Width,data=iris,split="gini")
+pitree=prune.misclass(itree,best=6)
+plot(pitree,type="uniform")
+text(pitree,cex=0.8)
+
+par(pty="s")
+plot(iris$Sepal.Width,iris$Sepal.Length ,col=iris$Species, pch=20)
+partition.tree(pitree, add=TRUE,cex=0.8)
+```
+
+## Compulsory exercise 3 in 2018: Problem 1 on Classification with trees
+
+<https://www.math.ntnu.no/emner/TMA4268/2018v/CompEx/Compulsory3solutions.html>
+
+# 9. Support vector machines
+
+## Compulsory exercise 3 in 2018: Problem 3: 
+
+<https://www.math.ntnu.no/emner/TMA4268/2018v/CompEx/Compulsory3solutions.html>
+
