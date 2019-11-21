@@ -359,8 +359,7 @@ $$y^* = \left\{ \begin{array}{ll}
 * We want to maximize this margin. 
 
 
-(From a statistical point of view we might be afraid that we are overfitting the data now. Why?)
-<!-- Mainly when $p$ is large. -->
+
 
 ---
 
@@ -431,6 +430,13 @@ lines(xx,linje(xx),lwd=1.5,lty=1)
 
 2. Is there any tuning parameters that needs to be chosen?
 
+3. Look at the figure below (Figure 9.5 from ISRL). What could be the problem with the (maximal margin) hyperplane idea?
+
+<!-- overfitting the data; not so robust -->
+<!-- Mainly when $p$ is large. -->
+
+\centering
+![](../../ISLR/Figures/Chapter9/9.5.png){width=80%}
 
 <!-- **A**: -->
 
@@ -442,7 +448,7 @@ lines(xx,linje(xx),lwd=1.5,lty=1)
 
 <!-- * Can the predictive performance be increased by allowing some of the training observations to be on the wrong side of the margin and/or hyperplane? -->
 
-<!-- Overfitting if focus on few support points?  -->
+<!-- Overfitting if focus on few support points. -->
 
 
 ---
@@ -465,7 +471,7 @@ It is still possible to construct a hyperplane and use it for classification, bu
 
 * In some situations allowing for some misclassifications makes the class boundaries more robust to future observations (avoid overfitting).
 
-* When there are more predictors than observations it is always possible to find a separating hyperplane in the predictor space, but it might not be the "best" hyperplane for us.
+* Even when the data are linear separable\footnote{in particular when $n\leq p+1$, we can always find a separating hyperplane, unless there are exact feature ties across the class barrier, see Efron and Hastie, 2016}, the separating hyperplane might not be the "best" hyperplane for us in terms of robustness.
 
 * We relax the maximal margin classifier to allow for a _soft margin classifier_ (=support vector classifier). 
 
@@ -496,6 +502,15 @@ $$\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C.$$
      
 * $C$ is a _\textcolor{red}{tuning (regularization) parameter}_ (chosen by cross-validation) giving the _\textcolor{red}{budget for slacks}_. It restricts the number of the training observations that can be on the wrong side of the hyperplane. No more than $C$ of the observations can be on the wrong side. 
 
+
+
+---
+
+Figure 19.3 in @casi gives a nice graphical representation of the soft margin classifier idea, where the violations (estimates of $\epsilon_i$) are shown in green:
+
+\centering
+![casi Figure 19.3](../../casi/19.3.png){width=80%}
+
 ---
 
 **Classification rule:** We classify a test observation ${\boldsymbol x}^*$ based on the sign of $f({\boldsymbol x}^*)=\beta_0+\beta_1 x_1^*+...+\beta_p x_p^*$ as before:
@@ -506,19 +521,6 @@ $$\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C.$$
 More on solving the optimization problem: @ESL Section 12.2.1 (primal and dual Lagrange problem, quadratic convex problem).
 
 
----
-
-ISLR Figure 9.7: From large $C$ (top left) to small $C$ (bottom right). As C decreases the tolerance for observations being on the wrong side of the margin decreases and the marin narrows.
-
-\centering
-![ISLR Figure 9.7: Top left=large C, smaller top right, bottom left and bottom right. As C decreases the tolerance for observations being on the wrong side of the margin decreases, and the margin narrows.](../../ISLR/Figures/Chapter9/9.7.png){width=60%}
-
----
-
-See also Figure 19.3 in @casi, where the violations (estimates of $\epsilon_i$) are shown in green:
-
-\centering
-![casi Figure 19.3](../../casi/19.3.png){width=80%}
 
 
 ---
@@ -553,6 +555,16 @@ See also Figure 19.3 in @casi, where the violations (estimates of $\epsilon_i$) 
 <!-- 2. If $C$ is small then $M$ must give narrow margin. -->
 
 <!-- 3. $C$ is our bias-variance trade-off tuning parameter: C large: allow many violations: more bias, less variance. C small: highly fit the data: less bias, more variance. -->
+
+---
+
+### Role of the tuning parameter $C$
+
+ISLR Figure 9.7: From large $C$ (top left) to small $C$ (bottom right). As C decreases the tolerance for observations being on the wrong side of the margin decreases and the marin narrows.
+
+\centering
+![ISLR Figure 9.7: Top left=large C, smaller top right, bottom left and bottom right. As C decreases the tolerance for observations being on the wrong side of the margin decreases, and the margin narrows.](../../ISLR/Figures/Chapter9/9.7.png){width=60%}
+
 
 ---
 
@@ -722,11 +734,14 @@ The two misclassified observations are marked with a black circle. Unsurprisingl
 
 # Support Vector Machines 
 
-For some datasets a non-linear decicion boundary between the classes is more suitable than a linear decision boundary. In such cases you can use a **Support Vector Machine** (SVM). This is an extension of the support vector classifier. 
 
-```{r,echo=FALSE}
+* For some datasets a non-linear decicion boundary between the classes is more suitable than a linear decision boundary. 
+
+* In such cases you can use a **Support Vector Machine** (SVM). This is an extension of the support vector classifier. 
+
+````{r forest3.1, echo=FALSE, fig.width=6, fig.height=5,fig.align = "center",out.width='40%'}
 par(pty="s");par(mfrow=c(1,1))
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));
+plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1), main="Forest 3");
 points(forest3[forest3[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
 points(forest3[forest3[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
 
@@ -736,55 +751,84 @@ points(forest3[forest3[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
 
 ## Expanding the feature space
 
-We saw in Module 7 that in regression we could fit non-linear curves by using a polynomial basis - adding polynomials of different order as covariates. This was a linear regression in the transformed variables, but non-linear in the original variables. Maybe we may add many such extra features and find a nice linear boundary in that high-dimensional space?
+\vspace{2mm}
 
-@casi (page 377): _If $n \le p+1$ we can always find a separating hyperplane, unless there are exact features ties across the class barrier._ (Two observations with equal covariate vector, but different classes.)
+* Recall from Module 7: We could fit non-linear regression curves by using a polynomial basis - adding polynomials of different order as covariates. This was a **linear regression in the transformed variables**, but non-linear in the original variables. 
+
+\vspace{2mm}
+
+* **Idea**: Find a nice linear boundary in that high-dimensional space using
+    + higher-order terms $X_i^k$
+    + interaction terms $X_i X_{i'}$
+    + other functions of $X_i$.
+
+\vspace{2mm}
+
+* **Problem**: Computation becomes unmanageable (too many possibilities!)
 
 ---
 
-![ISLR Figure 9.9](../../ISLR/Figures/Chapter9/9.9.png)
+### Example
 
-Left: expanding feature space to include cubic polynomials ($x_1,x_2,x_1x_2,x_1^2,x_2^2,x_1^2x_2,x_1x_2^2x_1^3,x_2^3$, 9 parameters to estimate in addition to intercept), and also observe the margins.
-(Right: radial basis function kernel - wait a bit.)
+(ISRL Figure 9.9)
 
-Next: replace polynomials with _kernels_ for elegance and computational issues.
+\centering
+![ISLR Figure 9.9](../../ISLR/Figures/Chapter9/9.9.png){width=80%}
+
+
+\flushleft
+
+* **Left**: expanding feature space to include cubic polynomials ($x_1,x_2,x_1x_2,x_1^2,x_2^2,x_1^2x_2,x_1x_2^2x_1^3,x_2^3$, 9 parameters to estimate in addition to intercept), and also observe the margins.
+
+* **Right**: radial basis function kernel - wait a bit.)
+
+
 
 ---
 
 ## Inner products
 
-We have not focused on how to solve the optimisation problem of finding the support vector classifier hyperplane, because this is outside the scope of this course. 
+* Remember the the optimisation problem of finding the support vector classifier hyperplane. We have _not_ explained how to solve the problem because this is outside the scope of this course. 
 
-Remember that we classify a new observation ${\boldsymbol x}^*$ by first calculating a numerical value for the estimated $f({\boldsymbol x}^*)$ and then if $f({\boldsymbol x}^*)<0$ classify as $-1$ and if $f({\boldsymbol x}^*)>0$ classify as $1$.
+* Remember classification rule  $f({\boldsymbol x}^*)<0$ versus $f({\boldsymbol x}^*)>0$ to classify as $y^* = -1$ or $1$, respectively.
 
-It can be _shown_ (using optimization theory) that the solution to the support vector classifier problem at a new observation ${\boldsymbol x}^*$, can be expressed as
+* It can be _shown_ (using optimization theory) that the solution to the support vector classifier problem at a new observation ${\boldsymbol x}^*$, can be expressed as
 $$
 f({\boldsymbol x}^*)=\beta_0 + \sum_{i=1}^n \alpha_i \langle {\boldsymbol x}^*,{\boldsymbol x}_i \rangle
 $$
 where $\alpha_i$ is some parameter and $i=1,...,n$. 
 
+
+
 ---
 
-A term of the form $\langle {\boldsymbol x}_i, {\boldsymbol x}_{i'} \rangle$ denotes the inner product between two observations $i$ and $i'$ and is defined as:
+\begin{center}
+\colorbox{lightgray}{\begin{minipage}{10cm}
+The {\bf inner product} between two observations $i$ and $i'$ is defined as
 $$
-\langle {\boldsymbol x}_i , {\boldsymbol x}_{i'}\rangle =\sum_{j=1}^p x_{ij} x_{i' j}.
+\langle {\boldsymbol x}_i , {\boldsymbol x}_{i'}\rangle =\sum_{j=1}^p x_{ij} x_{i' j} \ .
 $$
-This means that we need (in addition to the intercept) to estimate $n$ parameters ($\alpha_i$s) instead of $p$ ($\beta_j$s) (and for our expanded feature space then $p$ might be larger than $n$). (For the interested reader: See Eq. 19.22 and 19.23 of @casi.)
+The inner product encodes for the \emph{similarity} between observations.
+\end{minipage}}
+\end{center}
+
+* Thus all we need is to know to classify a new observations is the **similarity** to all the training observations. 
+
+* Moreover, it then turns out that to estimate the parameters $\beta_0,\alpha_1,...,\alpha_n$ this can be based on the ${n \choose 2}$ inner products $\langle {\boldsymbol x}_i,{\boldsymbol x}_i' \rangle$ between all pair of training observations (and their correct class)\footnote{For the interested reader: See Section 12.2.1 in James et al (2013), or Eq. 19.22 and 19.23 of Efron and Hastie (2016).}.
 
 ---
 
-Further, it then turns out that to estimate the parameters $\beta_0,\alpha_1,...,\alpha_n$ this can be based on the ${n choose 2}$ inner products $\langle {\boldsymbol x}_i,{\boldsymbol x}_i' \rangle$ between all pair of training observations (the class of the training observations is also included).   
+Even better...
 
-Also, $\alpha_i=0$ for the observations $i$ that are _not_ the support vectors. Remark: we could alternatively say that $\alpha_i \neq 0$ define the support vectors.
+* It turns out that $\alpha_i=0$ for observations $i$ that are _not_ the support vectors. Alternatively, we could say that $\alpha_i \neq 0$ define the support vectors.
 
----
 
-Thus, we only need the inner product between the new observation and the observations corresponding to support vectors to classify a new observation, and
+* Thus, we only need the inner product between the new observation and the observations corresponding to support vectors to classify a new observation, and
 
 $$
 f({\boldsymbol x})=\beta_0 + \sum_{i \in \mathcal{S}} \alpha_i \langle {\boldsymbol x}, {\boldsymbol x}_i\rangle,
 $$
-where $\mathcal{S}$ contains the indices of the support points. So, we have sparsity in the observations (but not in the predictors).
+where $\mathcal{S}$ contains the indices of the support points. 
 
 
 ---
@@ -793,23 +837,31 @@ where $\mathcal{S}$ contains the indices of the support points. So, we have spar
 
 ![ISLR Figure 9.6](../../ISLR/Figures/Chapter9/9.6.png)
 
-Observe: we need all observations (both $x$ and $y$ values) to decide on which observations are the support vectors.
+* **Q**: So why don't we just directly only use the support vectors?
+* **A**: We first need to solve the optimization problem to figure out _which ones_ these are!
+
 
 ---
 
 ## Kernels
 
-(we now use $x$ to denote a new observation)
+* Idea: replace the innerproduct $\langle {\boldsymbol x}_i, {\boldsymbol x}_{i'}\rangle$ as measure of similarity by a more general concept:
 
-The next step is now to _replace the inner product_ $\langle {\boldsymbol x}, {\boldsymbol x}_i\rangle$ with a function $K({\boldsymbol x}_i,{\boldsymbol x}_{i'})$ referred to as the **kernel**:
+\begin{center}
+\colorbox{lightgray}{\begin{minipage}{10cm}
+Replace $\langle {\boldsymbol x}_i, {\boldsymbol x}_{i'}\rangle$ by a {\bf kernel} 
+$K({\boldsymbol x}_i,{\boldsymbol x}_{i'})$, such that
 $$
 f({\boldsymbol x})=\beta_0 + \sum_{i \in \mathcal{S}} \alpha_i K({\boldsymbol x},{\boldsymbol x}_i).
 $$
-For the linear case (which is what we have considered so far), the kernel is simply the inner product $K({\boldsymbol x}_i,{\boldsymbol x}_i')=\sum_{j=1}^p x_{ij}x_{i'j}$. 
+\end{minipage}}
+\end{center}
 
-The two arguments to the kernel are two $p$-vectors.
+* For the familiar linear case, the kernel is simply the inner product (_linear kernel_) $K({\boldsymbol x}_i,{\boldsymbol x}_i')=\sum_{j=1}^p x_{ij}x_{i'j}$. 
 
-If we  want a more flexible decision boundary we could instead use a **polynomial kernel**. This polynomial kernel of degree $d>1$ is given by:
+<!-- The two arguments to the kernel are two $p$-vectors. -->
+
+* If we  want a more flexible decision boundary we could instead use a _polynomial kernel_ of degree $d>1$:
 $$
 K({\boldsymbol x}_i,{\boldsymbol x}_i')=(1+\sum_{j1}^p x_{ij} x_{i'j})^d.
 $$
@@ -821,46 +873,72 @@ $$
 
 ---
 
-Using these kernels our solution for the class boundary can be written of the form
+* By using _non-linear kernels_, the resulting classifier is a _\textcolor{red}{support vector machine}_.
 
-$$f({\boldsymbol x})=\beta_0 +\sum_{i\in \cal{S}} \alpha_i K({\boldsymbol x},{\boldsymbol x}_i)$$
+* The nice thing here is that we only need to calculate the kernels, _not the basis functions_.
 
-The nice thing here is that we only need to calculate the kernels, not the basis functions (what we in Module 7 did as extra columns of the design matrix).
+* We only need to compute $K(x_i,x_{i'})$ for the ${n \choose 2}$ distinct pairs -- without explicitly working in an enlarged feature space. This is very useful when there are _many featuers_, i.e., $p\geq n$.
 
 ---
 
-A very popular choice is the radial kernel,
+### The radial kernel
+
+* A very popular choice is the _radial kernel_,
 $$
-K({\boldsymbol x}_i,{\boldsymbol x}_i')=\exp(-\gamma \sum_{j=1}^p (x_{ij}-x_{i'j})^2),
+K({\boldsymbol x}_i,{\boldsymbol x}_i')=\exp(-\gamma \sum_{j=1}^p (x_{ij}-x_{i'j})^2) \ ,
 $$
 where $\gamma$ is a positive constant (a tuning parameter). 
 
-Observe the connection to a multivariate normal density, where $\gamma \propto 1/\sigma^2$ ($\sigma^2$ variance in normal distribution). If $\gamma$ is small (similar to large variance in the normal distribution) the decision boundaries are smoother than for larger $\gamma$.
+\vspace{1mm}
 
-It turns out that this computes the inner product in a very high (infinite) dimensional feature space. But, this does not give overfitting because some of the dimensions are "squashed down" (but we have the parameter $\gamma$ and the budget parameter that we have to decide on). 
+* Interestingly, the radial kernel computes the inner product in a very high (infinite) dimensional feature space. But, this does not give overfitting because some of the dimensions are "squashed down" (but we have the parameter $\gamma$ and the budget parameter that we have to decide on). 
 
-The radial kernel is convinient if we want a circular decision boundary, and $\gamma$ and our budget can be chosen by cross-validation.
+\vspace{1mm}
+\small
 
-Remark: the mathematics behind this is based on _reproducing-kernel Hilbert spaces_ (see page 384 of @casi for a glimpse of the theory).
+* Connection to a multivariate normal density, where $\gamma \propto 1/\sigma^2$ ($\sigma^2$ variance in normal distribution). If $\gamma$ is small (similar to large variance in the normal distribution) the decision boundaries are smoother than for larger $\gamma$.
+
+---
+
+
+* The radial kernel is convenient if we want a circular decision boundary.
+
+* $\gamma$ and our budget can be chosen by cross-validation.
+
+* Remark: the mathematics behind this is based on _reproducing-kernel Hilbert spaces_ (see page 384 of @casi for a glimpse of the theory).
 
 ---
 
 Study Figures 19.5 and 19.6 (page 383) in @casi to see how the radial kernel can make smooth functions.
+
+\centering
+![casi Figure 19.6](../../casi/19.6.png){width=70%}
+
+\flushleft
+\small
+
+If you want to download the whole book you can do this here:
 
 [Computer Age Statistical Inference](https://web.stanford.edu/~hastie/CASI_files/PDF/casi.pdf)
 
 ---
 
 ## Kernels and our optimization
+\vspace{2mm}
 
-We now merge our optimization problem (from our support vector classifier) with our kernel representation $f({\boldsymbol x})$ to get the Support Vector Machine (SVM).
+We now merge our optimization problem (from our support vector classifier) with our kernel representation $f({\boldsymbol x})$ to get the 
+\vspace{2mm}
+
+\colorbox{lightgray}{\begin{minipage}{10cm}
+{\bf Support Vector Machine (SVM)}
 
 $$\mathrm{maximize}_{\beta_0,\alpha_1,...,\alpha_n,\epsilon_1,...,\epsilon_n,} \quad M $$
 $$y_i(f({\boldsymbol x}_i))\geq M(1-\epsilon_i) \quad  \forall i=1,...,n.$$
 $$\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C.$$
 
 where 
-$$f({\boldsymbol x}_i)=\beta_0 +\sum_{l\in \cal{S}} \alpha_l K({\boldsymbol x}_i,{\boldsymbol x}_l)$$
+$$f({\boldsymbol x}_i)=\beta_0 +\sum_{l=1}^n \alpha_l K({\boldsymbol x}_i,{\boldsymbol x}_l)$$
+\end{minipage}}
 
 ---
 
@@ -1037,11 +1115,17 @@ It is possible to extend the logistic regression to include non-linear terms, an
 
 ---
  
-# References
+# Further reading
 
 * [Videoes on YouTube by the authors of ISL, Chapter 9](https://www.youtube.com/playlist?list=PL5-da3qGB5IDl6MkmovVdZwyYOhpCxo5o), and corresponding [slides](https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/svm.pdf)
+
 * [Solutions to exercises in the book, chapter 9](https://rpubs.com/ppaquay/65566)
 
+* Chapters 12.1-12.3 in @ESL
 
+* Chapter 19 (Support-Vector Machines and Kernel Methods) in @casi. 
 
+---
+
+# References
 

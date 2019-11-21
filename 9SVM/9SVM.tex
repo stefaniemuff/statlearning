@@ -520,9 +520,6 @@ $$y^* = \left\{ \begin{array}{ll}
   We want to maximize this margin.
 \end{itemize}
 
-(From a statistical point of view we might be afraid that we are
-overfitting the data now. Why?)
-
 \end{block}
 
 \end{frame}
@@ -629,7 +626,13 @@ Observe: \vspace{-2mm}
   Explain briefly the idea behind the maximal margin classifier.
 \item
   Is there any tuning parameters that needs to be chosen?
+\item
+  Look at the figure below (Figure 9.5 from ISRL). What could be the
+  problem with the (maximal margin) hyperplane idea?
 \end{enumerate}
+
+\centering
+\includegraphics[width=0.80000\textwidth]{../../ISLR/Figures/Chapter9/9.5.png}
 
 \end{block}
 
@@ -656,9 +659,10 @@ training data.
   class boundaries more robust to future observations (avoid
   overfitting).
 \item
-  When there are more predictors than observations it is always possible
-  to find a separating hyperplane in the predictor space, but it might
-  not be the ``best'' hyperplane for us.
+  Even when the data are linear
+  separable\footnote{in particular when $n\leq p+1$, we can always find a separating hyperplane, unless there are exact feature ties across the class barrier, see Efron and Hastie, 2016},
+  the separating hyperplane might not be the ``best'' hyperplane for us
+  in terms of robustness.
 \item
   We relax the maximal margin classifier to allow for a \emph{soft
   margin classifier} (=support vector classifier).
@@ -722,6 +726,17 @@ $$\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C.$$
 
 \begin{frame}
 
+Figure 19.3 in Efron and Hastie (2016) gives a nice graphical
+representation of the soft margin classifier idea, where the violations
+(estimates of \(\epsilon_i\)) are shown in green:
+
+\centering
+\includegraphics[width=0.80000\textwidth]{../../casi/19.3.png}
+
+\end{frame}
+
+\begin{frame}
+
 \textbf{Classification rule:} We classify a test observation
 \({\boldsymbol x}^*\) based on the sign of
 \(f({\boldsymbol x}^*)=\beta_0+\beta_1 x_1^*+...+\beta_p x_p^*\) as
@@ -738,27 +753,6 @@ before:
 More on solving the optimization problem: Friedman, Hastie, and
 Tibshirani (2001) Section 12.2.1 (primal and dual Lagrange problem,
 quadratic convex problem).
-
-\end{frame}
-
-\begin{frame}
-
-ISLR Figure 9.7: From large \(C\) (top left) to small \(C\) (bottom
-right). As C decreases the tolerance for observations being on the wrong
-side of the margin decreases and the marin narrows.
-
-\centering
-\includegraphics[width=0.60000\textwidth]{../../ISLR/Figures/Chapter9/9.7.png}
-
-\end{frame}
-
-\begin{frame}
-
-See also Figure 19.3 in Efron and Hastie (2016), where the violations
-(estimates of \(\epsilon_i\)) are shown in green:
-
-\centering
-\includegraphics[width=0.80000\textwidth]{../../casi/19.3.png}
 
 \end{frame}
 
@@ -802,6 +796,21 @@ See also Figure 19.3 in Efron and Hastie (2016), where the violations
 \begin{frame}
 
 \textbf{A:}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Role of the tuning parameter \(C\)}
+
+ISLR Figure 9.7: From large \(C\) (top left) to small \(C\) (bottom
+right). As C decreases the tolerance for observations being on the wrong
+side of the margin decreases and the marin narrows.
+
+\centering
+\includegraphics[width=0.60000\textwidth]{../../ISLR/Figures/Chapter9/9.7.png}
+
+\end{block}
 
 \end{frame}
 
@@ -1133,12 +1142,16 @@ points. Why?
 
 \begin{frame}{Support Vector Machines}
 
-For some datasets a non-linear decicion boundary between the classes is
-more suitable than a linear decision boundary. In such cases you can use
-a \textbf{Support Vector Machine} (SVM). This is an extension of the
-support vector classifier.
+\begin{itemize}
+\item
+  For some datasets a non-linear decicion boundary between the classes
+  is more suitable than a linear decision boundary.
+\item
+  In such cases you can use a \textbf{Support Vector Machine} (SVM).
+  This is an extension of the support vector classifier.
+\end{itemize}
 
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-9-1.pdf}
+\begin{center}\includegraphics[width=0.4\linewidth]{9SVM_files/figure-beamer/forest3.1-1} \end{center}
 
 \end{frame}
 
@@ -1146,17 +1159,44 @@ support vector classifier.
 
 \begin{block}{Expanding the feature space}
 
-We saw in Module 7 that in regression we could fit non-linear curves by
-using a polynomial basis - adding polynomials of different order as
-covariates. This was a linear regression in the transformed variables,
-but non-linear in the original variables. Maybe we may add many such
-extra features and find a nice linear boundary in that high-dimensional
-space?
+\vspace{2mm}
 
-Efron and Hastie (2016) (page 377): \emph{If \(n \le p+1\) we can always
-find a separating hyperplane, unless there are exact features ties
-across the class barrier.} (Two observations with equal covariate
-vector, but different classes.)
+\begin{itemize}
+\tightlist
+\item
+  Recall from Module 7: We could fit non-linear regression curves by
+  using a polynomial basis - adding polynomials of different order as
+  covariates. This was a \textbf{linear regression in the transformed
+  variables}, but non-linear in the original variables.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Idea}: Find a nice linear boundary in that high-dimensional
+  space using
+
+  \begin{itemize}
+  \tightlist
+  \item
+    higher-order terms \(X_i^k\)
+  \item
+    interaction terms \(X_i X_{i'}\)
+  \item
+    other functions of \(X_i\).
+  \end{itemize}
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Problem}: Computation becomes unmanageable (too many
+  possibilities!)
+\end{itemize}
 
 \end{block}
 
@@ -1164,15 +1204,26 @@ vector, but different classes.)
 
 \begin{frame}
 
-\includegraphics{../../ISLR/Figures/Chapter9/9.9.png}
+\begin{block}{Example}
 
-Left: expanding feature space to include cubic polynomials
-(\(x_1,x_2,x_1x_2,x_1^2,x_2^2,x_1^2x_2,x_1x_2^2x_1^3,x_2^3\), 9
-parameters to estimate in addition to intercept), and also observe the
-margins. (Right: radial basis function kernel - wait a bit.)
+(ISRL Figure 9.9)
 
-Next: replace polynomials with \emph{kernels} for elegance and
-computational issues.
+\centering
+\includegraphics[width=0.80000\textwidth]{../../ISLR/Figures/Chapter9/9.9.png}
+
+\flushleft
+
+\begin{itemize}
+\item
+  \textbf{Left}: expanding feature space to include cubic polynomials
+  (\(x_1,x_2,x_1x_2,x_1^2,x_2^2,x_1^2x_2,x_1x_2^2x_1^3,x_2^3\), 9
+  parameters to estimate in addition to intercept), and also observe the
+  margins.
+\item
+  \textbf{Right}: radial basis function kernel - wait a bit.)
+\end{itemize}
+
+\end{block}
 
 \end{frame}
 
@@ -1180,20 +1231,22 @@ computational issues.
 
 \begin{block}{Inner products}
 
-We have not focused on how to solve the optimisation problem of finding
-the support vector classifier hyperplane, because this is outside the
-scope of this course.
-
-Remember that we classify a new observation \({\boldsymbol x}^*\) by
-first calculating a numerical value for the estimated
-\(f({\boldsymbol x}^*)\) and then if \(f({\boldsymbol x}^*)<0\) classify
-as \(-1\) and if \(f({\boldsymbol x}^*)>0\) classify as \(1\).
-
-It can be \emph{shown} (using optimization theory) that the solution to
-the support vector classifier problem at a new observation
-\({\boldsymbol x}^*\), can be expressed as \[
-f({\boldsymbol x}^*)=\beta_0 + \sum_{i=1}^n \alpha_i \langle {\boldsymbol x}^*,{\boldsymbol x}_i \rangle
-\] where \(\alpha_i\) is some parameter and \(i=1,...,n\).
+\begin{itemize}
+\item
+  Remember the the optimisation problem of finding the support vector
+  classifier hyperplane. We have \emph{not} explained how to solve the
+  problem because this is outside the scope of this course.
+\item
+  Remember classification rule \(f({\boldsymbol x}^*)<0\) versus
+  \(f({\boldsymbol x}^*)>0\) to classify as \(y^* = -1\) or \(1\),
+  respectively.
+\item
+  It can be \emph{shown} (using optimization theory) that the solution
+  to the support vector classifier problem at a new observation
+  \({\boldsymbol x}^*\), can be expressed as \[
+  f({\boldsymbol x}^*)=\beta_0 + \sum_{i=1}^n \alpha_i \langle {\boldsymbol x}^*,{\boldsymbol x}_i \rangle
+  \] where \(\alpha_i\) is some parameter and \(i=1,...,n\).
+\end{itemize}
 
 \end{block}
 
@@ -1201,44 +1254,49 @@ f({\boldsymbol x}^*)=\beta_0 + \sum_{i=1}^n \alpha_i \langle {\boldsymbol x}^*,{
 
 \begin{frame}
 
-A term of the form
-\(\langle {\boldsymbol x}_i, {\boldsymbol x}_{i'} \rangle\) denotes the
-inner product between two observations \(i\) and \(i'\) and is defined
-as: \[
-\langle {\boldsymbol x}_i , {\boldsymbol x}_{i'}\rangle =\sum_{j=1}^p x_{ij} x_{i' j}.
-\] This means that we need (in addition to the intercept) to estimate
-\(n\) parameters (\(\alpha_i\)s) instead of \(p\) (\(\beta_j\)s) (and
-for our expanded feature space then \(p\) might be larger than \(n\)).
-(For the interested reader: See Eq. 19.22 and 19.23 of Efron and Hastie
-(2016).)
+\begin{center}
+\colorbox{lightgray}{\begin{minipage}{10cm}
+The {\bf inner product} between two observations $i$ and $i'$ is defined as
+$$
+\langle {\boldsymbol x}_i , {\boldsymbol x}_{i'}\rangle =\sum_{j=1}^p x_{ij} x_{i' j} \ .
+$$
+The inner product encodes for the \emph{similarity} between observations.
+\end{minipage}}
+\end{center}
+
+\begin{itemize}
+\item
+  Thus all we need is to know to classify a new observations is the
+  \textbf{similarity} to all the training observations.
+\item
+  Moreover, it then turns out that to estimate the parameters
+  \(\beta_0,\alpha_1,...,\alpha_n\) this can be based on the
+  \({n \choose 2}\) inner products
+  \(\langle {\boldsymbol x}_i,{\boldsymbol x}_i' \rangle\) between all
+  pair of training observations (and their correct
+  class)\footnote{For the interested reader: See Section 12.2.1 in James et al (2013), or Eq. 19.22 and 19.23 of Efron and Hastie (2016).}.
+\end{itemize}
 
 \end{frame}
 
 \begin{frame}
 
-Further, it then turns out that to estimate the parameters
-\(\beta_0,\alpha_1,...,\alpha_n\) this can be based on the
-\({n choose 2}\) inner products
-\(\langle {\boldsymbol x}_i,{\boldsymbol x}_i' \rangle\) between all
-pair of training observations (the class of the training observations is
-also included).
+Even better\ldots{}
 
-Also, \(\alpha_i=0\) for the observations \(i\) that are \emph{not} the
-support vectors. Remark: we could alternatively say that
-\(\alpha_i \neq 0\) define the support vectors.
-
-\end{frame}
-
-\begin{frame}
-
-Thus, we only need the inner product between the new observation and the
-observations corresponding to support vectors to classify a new
-observation, and
+\begin{itemize}
+\item
+  It turns out that \(\alpha_i=0\) for observations \(i\) that are
+  \emph{not} the support vectors. Alternatively, we could say that
+  \(\alpha_i \neq 0\) define the support vectors.
+\item
+  Thus, we only need the inner product between the new observation and
+  the observations corresponding to support vectors to classify a new
+  observation, and
+\end{itemize}
 
 \[
 f({\boldsymbol x})=\beta_0 + \sum_{i \in \mathcal{S}} \alpha_i \langle {\boldsymbol x}, {\boldsymbol x}_i\rangle,
-\] where \(\mathcal{S}\) contains the indices of the support points. So,
-we have sparsity in the observations (but not in the predictors).
+\] where \(\mathcal{S}\) contains the indices of the support points.
 
 \end{frame}
 
@@ -1248,8 +1306,15 @@ we have sparsity in the observations (but not in the predictors).
 
 \includegraphics{../../ISLR/Figures/Chapter9/9.6.png}
 
-Observe: we need all observations (both \(x\) and \(y\) values) to
-decide on which observations are the support vectors.
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Q}: So why don't we just directly only use the support
+  vectors?
+\item
+  \textbf{A}: We first need to solve the optimization problem to figure
+  out \emph{which ones} these are!
+\end{itemize}
 
 \end{frame}
 
@@ -1257,25 +1322,41 @@ decide on which observations are the support vectors.
 
 \begin{block}{Kernels}
 
-(we now use \(x\) to denote a new observation)
+\begin{itemize}
+\tightlist
+\item
+  Idea: replace the innerproduct
+  \(\langle {\boldsymbol x}_i, {\boldsymbol x}_{i'}\rangle\) as measure
+  of similarity by a more general concept:
+\end{itemize}
 
-The next step is now to \emph{replace the inner product}
-\(\langle {\boldsymbol x}, {\boldsymbol x}_i\rangle\) with a function
-\(K({\boldsymbol x}_i,{\boldsymbol x}_{i'})\) referred to as the
-\textbf{kernel}: \[
+\begin{center}
+\colorbox{lightgray}{\begin{minipage}{10cm}
+Replace $\langle {\boldsymbol x}_i, {\boldsymbol x}_{i'}\rangle$ by a {\bf kernel} 
+$K({\boldsymbol x}_i,{\boldsymbol x}_{i'})$, such that
+$$
 f({\boldsymbol x})=\beta_0 + \sum_{i \in \mathcal{S}} \alpha_i K({\boldsymbol x},{\boldsymbol x}_i).
-\] For the linear case (which is what we have considered so far), the
-kernel is simply the inner product
-\(K({\boldsymbol x}_i,{\boldsymbol x}_i')=\sum_{j=1}^p x_{ij}x_{i'j}\).
+$$
+\end{minipage}}
+\end{center}
 
-The two arguments to the kernel are two \(p\)-vectors.
+\begin{itemize}
+\tightlist
+\item
+  For the familiar linear case, the kernel is simply the inner product
+  (\emph{linear kernel})
+  \(K({\boldsymbol x}_i,{\boldsymbol x}_i')=\sum_{j=1}^p x_{ij}x_{i'j}\).
+\end{itemize}
 
-If we want a more flexible decision boundary we could instead use a
-\textbf{polynomial kernel}. This polynomial kernel of degree \(d>1\) is
-given by: \[
-K({\boldsymbol x}_i,{\boldsymbol x}_i')=(1+\sum_{j1}^p x_{ij} x_{i'j})^d.
-\] (This kernel is not so much used in practice, but is popular for
-proofs.)
+\begin{itemize}
+\tightlist
+\item
+  If we want a more flexible decision boundary we could instead use a
+  \emph{polynomial kernel} of degree \(d>1\): \[
+  K({\boldsymbol x}_i,{\boldsymbol x}_i')=(1+\sum_{j1}^p x_{ij} x_{i'j})^d.
+  \] (This kernel is not so much used in practice, but is popular for
+  proofs.)
+\end{itemize}
 
 \end{block}
 
@@ -1283,41 +1364,75 @@ proofs.)
 
 \begin{frame}
 
-Using these kernels our solution for the class boundary can be written
-of the form
-
-\[f({\boldsymbol x})=\beta_0 +\sum_{i\in \cal{S}} \alpha_i K({\boldsymbol x},{\boldsymbol x}_i)\]
-
-The nice thing here is that we only need to calculate the kernels, not
-the basis functions (what we in Module 7 did as extra columns of the
-design matrix).
+\begin{itemize}
+\item
+  By using \emph{non-linear kernels}, the resulting classifier is a
+  \emph{\textcolor{red}{support vector machine}}.
+\item
+  The nice thing here is that we only need to calculate the kernels,
+  \emph{not the basis functions}.
+\item
+  We only need to compute \(K(x_i,x_{i'})\) for the \({n \choose 2}\)
+  distinct pairs -- without explicitly working in an enlarged feature
+  space. This is very useful when there are \emph{many featuers}, i.e.,
+  \(p\geq n\).
+\end{itemize}
 
 \end{frame}
 
 \begin{frame}
 
-A very popular choice is the radial kernel, \[
-K({\boldsymbol x}_i,{\boldsymbol x}_i')=\exp(-\gamma \sum_{j=1}^p (x_{ij}-x_{i'j})^2),
-\] where \(\gamma\) is a positive constant (a tuning parameter).
+\begin{block}{The radial kernel}
 
-Observe the connection to a multivariate normal density, where
-\(\gamma \propto 1/\sigma^2\) (\(\sigma^2\) variance in normal
-distribution). If \(\gamma\) is small (similar to large variance in the
-normal distribution) the decision boundaries are smoother than for
-larger \(\gamma\).
+\begin{itemize}
+\tightlist
+\item
+  A very popular choice is the \emph{radial kernel}, \[
+  K({\boldsymbol x}_i,{\boldsymbol x}_i')=\exp(-\gamma \sum_{j=1}^p (x_{ij}-x_{i'j})^2) \ ,
+  \] where \(\gamma\) is a positive constant (a tuning parameter).
+\end{itemize}
 
-It turns out that this computes the inner product in a very high
-(infinite) dimensional feature space. But, this does not give
-overfitting because some of the dimensions are ``squashed down'' (but we
-have the parameter \(\gamma\) and the budget parameter that we have to
-decide on).
+\vspace{1mm}
 
-The radial kernel is convinient if we want a circular decision boundary,
-and \(\gamma\) and our budget can be chosen by cross-validation.
+\begin{itemize}
+\tightlist
+\item
+  Interestingly, the radial kernel computes the inner product in a very
+  high (infinite) dimensional feature space. But, this does not give
+  overfitting because some of the dimensions are ``squashed down'' (but
+  we have the parameter \(\gamma\) and the budget parameter that we have
+  to decide on).
+\end{itemize}
 
-Remark: the mathematics behind this is based on \emph{reproducing-kernel
-Hilbert spaces} (see page 384 of Efron and Hastie (2016) for a glimpse
-of the theory).
+\vspace{1mm} \small
+
+\begin{itemize}
+\tightlist
+\item
+  Connection to a multivariate normal density, where
+  \(\gamma \propto 1/\sigma^2\) (\(\sigma^2\) variance in normal
+  distribution). If \(\gamma\) is small (similar to large variance in
+  the normal distribution) the decision boundaries are smoother than for
+  larger \(\gamma\).
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\item
+  The radial kernel is convenient if we want a circular decision
+  boundary.
+\item
+  \(\gamma\) and our budget can be chosen by cross-validation.
+\item
+  Remark: the mathematics behind this is based on
+  \emph{reproducing-kernel Hilbert spaces} (see page 384 of Efron and
+  Hastie (2016) for a glimpse of the theory).
+\end{itemize}
 
 \end{frame}
 
@@ -1325,6 +1440,14 @@ of the theory).
 
 Study Figures 19.5 and 19.6 (page 383) in Efron and Hastie (2016) to see
 how the radial kernel can make smooth functions.
+
+\centering
+\includegraphics[width=0.70000\textwidth]{../../casi/19.6.png}
+
+\flushleft
+\small
+
+If you want to download the whole book you can do this here:
 
 \href{https://web.stanford.edu/~hastie/CASI_files/PDF/casi.pdf}{Computer
 Age Statistical Inference}
@@ -1335,16 +1458,22 @@ Age Statistical Inference}
 
 \begin{block}{Kernels and our optimization}
 
+\vspace{2mm}
+
 We now merge our optimization problem (from our support vector
 classifier) with our kernel representation \(f({\boldsymbol x})\) to get
-the Support Vector Machine (SVM).
+the \vspace{2mms}
 
-\[\mathrm{maximize}_{\beta_0,\alpha_1,...,\alpha_n,\epsilon_1,...,\epsilon_n,} \quad M \]
-\[y_i(f({\boldsymbol x}_i))\geq M(1-\epsilon_i) \quad  \forall i=1,...,n.\]
-\[\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C.\]
+\colorbox{lightgray}{\begin{minipage}{10cm}
+{\bf Support Vector Machine (SVM)}
 
-where
-\[f({\boldsymbol x}_i)=\beta_0 +\sum_{l\in \cal{S}} \alpha_l K({\boldsymbol x}_i,{\boldsymbol x}_l)\]
+$$\mathrm{maximize}_{\beta_0,\alpha_1,...,\alpha_n,\epsilon_1,...,\epsilon_n,} \quad M $$
+$$y_i(f({\boldsymbol x}_i))\geq M(1-\epsilon_i) \quad  \forall i=1,...,n.$$
+$$\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C.$$
+
+where 
+$$f({\boldsymbol x}_i)=\beta_0 +\sum_{l=1}^n \alpha_l K({\boldsymbol x}_i,{\boldsymbol x}_l)$$
+\end{minipage}}
 
 \end{block}
 
@@ -1412,7 +1541,7 @@ non-linear decision boundary:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-11-1.pdf}
+\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-10-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1461,7 +1590,7 @@ We could also try with a polynomial kernel with degree 4 as follows:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-12-1.pdf}
+\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-11-1.pdf}
 
 \end{frame}
 
@@ -1578,7 +1707,7 @@ the results:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-16-1.pdf}
+\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-15-1.pdf}
 
 \end{frame}
 
@@ -1596,7 +1725,7 @@ the results:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-17-1.pdf}
+\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-16-1.pdf}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1734,10 +1863,9 @@ terms, and ridge penalty.
 
 \end{frame}
 
-\begin{frame}{References}
+\begin{frame}{Further reading}
 
 \begin{itemize}
-\tightlist
 \item
   \href{https://www.youtube.com/playlist?list=PL5-da3qGB5IDl6MkmovVdZwyYOhpCxo5o}{Videoes
   on YouTube by the authors of ISL, Chapter 9}, and corresponding
@@ -1745,7 +1873,16 @@ terms, and ridge penalty.
 \item
   \href{https://rpubs.com/ppaquay/65566}{Solutions to exercises in the
   book, chapter 9}
+\item
+  Chapters 12.1-12.3 in Friedman, Hastie, and Tibshirani (2001)
+\item
+  Chapter 19 (Support-Vector Machines and Kernel Methods) in Efron and
+  Hastie (2016).
 \end{itemize}
+
+\end{frame}
+
+\begin{frame}{References}
 
 \hypertarget{refs}{}
 \hypertarget{ref-casi}{}
