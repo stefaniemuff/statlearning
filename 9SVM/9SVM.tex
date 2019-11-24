@@ -1218,9 +1218,9 @@ points. Why?
   \textbf{Left}: expanding feature space to include cubic polynomials
   (\(x_1,x_2,x_1x_2,x_1^2,x_2^2,x_1^2x_2,x_1x_2^2x_1^3,x_2^3\), 9
   parameters to estimate in addition to intercept), and also observe the
-  margins.
+  margins (interpretation?).
 \item
-  \textbf{Right}: radial basis function kernel - wait a bit.)
+  \textbf{Right}: radial basis function kernel - wait a bit.
 \end{itemize}
 
 \end{block}
@@ -1312,8 +1312,7 @@ f({\boldsymbol x})=\beta_0 + \sum_{i \in \mathcal{S}} \alpha_i \langle {\boldsym
   \textbf{Q}: So why don't we just directly only use the support
   vectors?
 \item
-  \textbf{A}: We first need to solve the optimization problem to figure
-  out \emph{which ones} these are!
+  \textbf{A}: 
 \end{itemize}
 
 \end{frame}
@@ -1353,9 +1352,9 @@ $$
 \item
   If we want a more flexible decision boundary we could instead use a
   \emph{polynomial kernel} of degree \(d>1\): \[
-  K({\boldsymbol x}_i,{\boldsymbol x}_i')=(1+\sum_{j1}^p x_{ij} x_{i'j})^d.
-  \] (This kernel is not so much used in practice, but is popular for
-  proofs.)
+  K({\boldsymbol x}_i,{\boldsymbol x}_i')=(1+\sum_{j1}^p x_{ij} x_{i'j})^d \ , 
+  \] which computes the inner products needed for \(d\)-dimensional
+  polynomials. Try it for \(p=2\) and \(d=2\) (see board).
 \end{itemize}
 
 \end{block}
@@ -1400,11 +1399,11 @@ $$
   Interestingly, the radial kernel computes the inner product in a very
   high (infinite) dimensional feature space. But, this does not give
   overfitting because some of the dimensions are ``squashed down'' (but
-  we have the parameter \(\gamma\) and the budget parameter that we have
-  to decide on).
+  we have the parameter \(\gamma\) and the budget parameter \(C\) that
+  we have to decide on).
 \end{itemize}
 
-\vspace{1mm} \small
+\vspace{1mm}
 
 \begin{itemize}
 \tightlist
@@ -1462,14 +1461,14 @@ Age Statistical Inference}
 
 We now merge our optimization problem (from our support vector
 classifier) with our kernel representation \(f({\boldsymbol x})\) to get
-the \vspace{2mms}
+the \vspace{2mm}
 
 \colorbox{lightgray}{\begin{minipage}{10cm}
 {\bf Support Vector Machine (SVM)}
 
 $$\mathrm{maximize}_{\beta_0,\alpha_1,...,\alpha_n,\epsilon_1,...,\epsilon_n,} \quad M $$
-$$y_i(f({\boldsymbol x}_i))\geq M(1-\epsilon_i) \quad  \forall i=1,...,n.$$
-$$\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C.$$
+$$y_i(f({\boldsymbol x}_i))\geq M(1-\epsilon_i) \quad  \forall i=1,...,n \ ,$$
+$$\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C \ ,$$
 
 where 
 $$f({\boldsymbol x}_i)=\beta_0 +\sum_{l=1}^n \alpha_l K({\boldsymbol x}_i,{\boldsymbol x}_l)$$
@@ -1483,11 +1482,17 @@ $$f({\boldsymbol x}_i)=\beta_0 +\sum_{l=1}^n \alpha_l K({\boldsymbol x}_i,{\bold
 
 \begin{block}{Tuning parameter example}
 
+\vspace{2mm}
+
 Heart data - predict heart disease from \(p=13\) predictors.
 
 Training errors as ROC and AUC.
 
-\includegraphics{../../ISLR/Figures/Chapter9/9.10.png}
+\vspace{1mm}
+
+\centering
+
+\includegraphics[width=0.90000\textwidth]{../../ISLR/Figures/Chapter9/9.10.png}
 
 \end{block}
 
@@ -1497,7 +1502,8 @@ Training errors as ROC and AUC.
 
 Heart data - test error.
 
-\includegraphics{../../ISLR/Figures/Chapter9/9.11.png}
+\centering
+\includegraphics[width=0.90000\textwidth]{../../ISLR/Figures/Chapter9/9.11.png}
 
 \end{frame}
 
@@ -1533,6 +1539,8 @@ non-linear decision boundary:
 
 \begin{frame}[fragile]
 
+\scriptsize
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{svmfit_kernel1 =}\StringTok{ }\KeywordTok{svm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ train3, }\DataTypeTok{kernel =} \StringTok{"radial"}\NormalTok{, }\DataTypeTok{gamma =} \DecValTok{1}\NormalTok{, }
@@ -1541,7 +1549,13 @@ non-linear decision boundary:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-10-1.pdf}
+\begin{center}\includegraphics[width=0.7\linewidth]{9SVM_files/figure-beamer/forest3.3-1} \end{center}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1580,7 +1594,7 @@ non-linear decision boundary:
 
 We could also try with a polynomial kernel with degree 4 as follows:
 
-\footnotesize
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1590,11 +1604,13 @@ We could also try with a polynomial kernel with degree 4 as follows:
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-11-1.pdf}
+\begin{center}\includegraphics[width=0.7\linewidth]{9SVM_files/figure-beamer/forest3.4-1} \end{center}
 
 \end{frame}
 
 \begin{frame}[fragile]
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1627,8 +1643,6 @@ We could also try with a polynomial kernel with degree 4 as follows:
 ##  -1 1
 \end{verbatim}
 
-\normalsize
-
 \end{frame}
 
 \begin{frame}[fragile]
@@ -1638,7 +1652,7 @@ decision boundary seems like a good idea. Thus, we proceed with
 \texttt{kernel=\textquotesingle{}radial\textquotesingle{}}, and use the
 \texttt{tune()} function to find the optimal tuning parameter \(C\):
 
-\footnotesize
+\tiny
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1691,41 +1705,17 @@ the results:
 
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{))}
-\KeywordTok{par}\NormalTok{(}\DataTypeTok{pty =} \StringTok{"s"}\NormalTok{)}
-\KeywordTok{plot}\NormalTok{(}\OtherTok{NA}\NormalTok{, }\DataTypeTok{xlab =} \StringTok{"x1"}\NormalTok{, }\DataTypeTok{ylab =} \StringTok{"x2"}\NormalTok{, }\DataTypeTok{xlim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{ylim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{))}
-\KeywordTok{title}\NormalTok{(}\StringTok{"True class"}\NormalTok{)}
-\KeywordTok{points}\NormalTok{(seeds3[seeds3[, }\DecValTok{3}\NormalTok{] }\OperatorTok{==}\StringTok{ }\DecValTok{-1}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{], }\DataTypeTok{pch =} \DecValTok{19}\NormalTok{, }\DataTypeTok{col =} \StringTok{"lightcoral"}\NormalTok{, }
-    \DataTypeTok{cex =} \FloatTok{0.9}\NormalTok{)}
-\KeywordTok{points}\NormalTok{(seeds3[seeds3[, }\DecValTok{3}\NormalTok{] }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{], }\DataTypeTok{pch =} \DecValTok{19}\NormalTok{, }\DataTypeTok{col =} \StringTok{"darkseagreen"}\NormalTok{, }
-    \DataTypeTok{cex =} \FloatTok{0.9}\NormalTok{)}
-\KeywordTok{points}\NormalTok{(seeds3[}\KeywordTok{which}\NormalTok{(ypred_kernel }\OperatorTok{!=}\StringTok{ }\NormalTok{seeds3[, }\DecValTok{3}\NormalTok{]), }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{], }\DataTypeTok{pch =} \DecValTok{21}\NormalTok{)  }\CommentTok{#Mark misclassification.}
-\end{Highlighting}
-\end{Shaded}
+\scriptsize
 
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-15-1.pdf}
+\begin{center}\includegraphics[width=0.9\linewidth]{9SVM_files/figure-beamer/forest3.5-1} \end{center}
 
 \end{frame}
 
 \begin{frame}[fragile]
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(}\OtherTok{NA}\NormalTok{, }\DataTypeTok{xlab =} \StringTok{"x1"}\NormalTok{, }\DataTypeTok{ylab =} \StringTok{"x2"}\NormalTok{, }\DataTypeTok{xlim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{ylim =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{))}
-\KeywordTok{title}\NormalTok{(}\StringTok{"Predicted class"}\NormalTok{)}
-\KeywordTok{points}\NormalTok{(seeds3[ypred_kernel }\OperatorTok{==}\StringTok{ }\DecValTok{-1}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{], }\DataTypeTok{pch =} \DecValTok{19}\NormalTok{, }\DataTypeTok{col =} \StringTok{"lightcoral"}\NormalTok{, }
-    \DataTypeTok{cex =} \FloatTok{0.9}\NormalTok{)}
-\KeywordTok{points}\NormalTok{(seeds3[ypred_kernel }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{], }\DataTypeTok{pch =} \DecValTok{19}\NormalTok{, }\DataTypeTok{col =} \StringTok{"darkseagreen"}\NormalTok{, }
-    \DataTypeTok{cex =} \FloatTok{0.9}\NormalTok{)}
-\KeywordTok{points}\NormalTok{(seeds3[}\KeywordTok{which}\NormalTok{(ypred_kernel }\OperatorTok{!=}\StringTok{ }\NormalTok{seeds3[, }\DecValTok{3}\NormalTok{]), }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{], }\DataTypeTok{pch =} \DecValTok{21}\NormalTok{)  }\CommentTok{#Mark misclassification.}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{9SVM_files/figure-beamer/unnamed-chunk-16-1.pdf}
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1740,7 +1730,7 @@ the results:
 ##      1   1 5
 \end{verbatim}
 
-Only one seed is misclassified.
+\normalsize  Only one seed is misclassified.
 
 \end{frame}
 

@@ -778,9 +778,9 @@ points(forest3[forest3[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
 
 \flushleft
 
-* **Left**: expanding feature space to include cubic polynomials ($x_1,x_2,x_1x_2,x_1^2,x_2^2,x_1^2x_2,x_1x_2^2x_1^3,x_2^3$, 9 parameters to estimate in addition to intercept), and also observe the margins.
+* **Left**: expanding feature space to include cubic polynomials ($x_1,x_2,x_1x_2,x_1^2,x_2^2,x_1^2x_2,x_1x_2^2x_1^3,x_2^3$, 9 parameters to estimate in addition to intercept), and also observe the margins (interpretation?).
 
-* **Right**: radial basis function kernel - wait a bit.)
+* **Right**: radial basis function kernel - wait a bit.
 
 
 
@@ -838,7 +838,8 @@ where $\mathcal{S}$ contains the indices of the support points.
 ![ISLR Figure 9.6](../../ISLR/Figures/Chapter9/9.6.png)
 
 * **Q**: So why don't we just directly only use the support vectors?
-* **A**: We first need to solve the optimization problem to figure out _which ones_ these are!
+* **A**: 
+<!-- We first need to solve the optimization problem to figure out _which ones_ these are! -->
 
 
 ---
@@ -863,9 +864,9 @@ $$
 
 * If we  want a more flexible decision boundary we could instead use a _polynomial kernel_ of degree $d>1$:
 $$
-K({\boldsymbol x}_i,{\boldsymbol x}_i')=(1+\sum_{j1}^p x_{ij} x_{i'j})^d.
+K({\boldsymbol x}_i,{\boldsymbol x}_i')=(1+\sum_{j1}^p x_{ij} x_{i'j})^d \ , 
 $$
-(This kernel is not so much used in practice, but is popular for proofs.)
+which computes the inner products needed for $d$-dimensional polynomials. Try it for $p=2$ and $d=2$ (see board).
 
 <!-- This gives $\binom{p+d}{d}$ possible basis functions. -->
 
@@ -891,10 +892,10 @@ where $\gamma$ is a positive constant (a tuning parameter).
 
 \vspace{1mm}
 
-* Interestingly, the radial kernel computes the inner product in a very high (infinite) dimensional feature space. But, this does not give overfitting because some of the dimensions are "squashed down" (but we have the parameter $\gamma$ and the budget parameter that we have to decide on). 
+* Interestingly, the radial kernel computes the inner product in a very high (infinite) dimensional feature space. But, this does not give overfitting because some of the dimensions are "squashed down" (but we have the parameter $\gamma$ and the budget parameter $C$ that we have to decide on). 
 
 \vspace{1mm}
-\small
+
 
 * Connection to a multivariate normal density, where $\gamma \propto 1/\sigma^2$ ($\sigma^2$ variance in normal distribution). If $\gamma$ is small (similar to large variance in the normal distribution) the decision boundaries are smoother than for larger $\gamma$.
 
@@ -933,8 +934,8 @@ We now merge our optimization problem (from our support vector classifier) with 
 {\bf Support Vector Machine (SVM)}
 
 $$\mathrm{maximize}_{\beta_0,\alpha_1,...,\alpha_n,\epsilon_1,...,\epsilon_n,} \quad M $$
-$$y_i(f({\boldsymbol x}_i))\geq M(1-\epsilon_i) \quad  \forall i=1,...,n.$$
-$$\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C.$$
+$$y_i(f({\boldsymbol x}_i))\geq M(1-\epsilon_i) \quad  \forall i=1,...,n \ ,$$
+$$\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C \ ,$$
 
 where 
 $$f({\boldsymbol x}_i)=\beta_0 +\sum_{l=1}^n \alpha_l K({\boldsymbol x}_i,{\boldsymbol x}_l)$$
@@ -944,17 +945,24 @@ $$f({\boldsymbol x}_i)=\beta_0 +\sum_{l=1}^n \alpha_l K({\boldsymbol x}_i,{\bold
 
 ## Tuning parameter example
 
+\vspace{2mm}
+
 Heart data - predict heart disease from $p=13$ predictors.
 
 Training errors as ROC and AUC.
 
-![ISLR Figure 9.10](../../ISLR/Figures/Chapter9/9.10.png)
+\vspace{1mm}
+
+\centering
+
+![ISLR Figure 9.10](../../ISLR/Figures/Chapter9/9.10.png){width=90%}
 
 ---
 
 Heart data - test error.
 
-![ISLR Figure 9.11](../../ISLR/Figures/Chapter9/9.11.png)
+\centering
+![ISLR Figure 9.11](../../ISLR/Figures/Chapter9/9.11.png){width=90%}
 
 ---
 
@@ -965,6 +973,7 @@ To illustrate the SVM we use the third training dataset (forest3) and the third 
 
 \footnotesize
 
+
 ```{r}
 library(e1071)
 forest3=read.table(file="forest3.txt"); seeds3=read.table(file="seeds3.txt")
@@ -974,9 +983,17 @@ test3=data.frame(x=seeds3[,1:2], y=as.factor(seeds3[,3]))
 
 ---
 
-```{r}
+\scriptsize
+```{r forest3.3, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
 svmfit_kernel1=svm(y ~ ., data=train3, kernel='radial', gamma=1, cost=10, scale=FALSE)
 plot(svmfit_kernel1,train3,col=c("lightcoral","lightgreen"))
+```
+
+---
+
+\scriptsize
+
+```{r}
 summary(svmfit_kernel1)
 
 ```
@@ -986,26 +1003,27 @@ summary(svmfit_kernel1)
 
 We could also try with a polynomial kernel with degree 4 as follows:
 
-\footnotesize
+\scriptsize
 
-```{r}
+```{r forest3.4, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
 svmfit_kernel2=svm(y ~ ., data=train3, kernel='polynomial', degree=4, cost=100000, scale=FALSE)
 plot(svmfit_kernel2,train3,col=c("lightcoral","lightgreen"))
 ```
 
 ---
 
+\scriptsize
 ```{r}
 summary(svmfit_kernel2)
 ```
 
-\normalsize
+ 
 
 ---
 
 For this dataset a radial kernel is a natural choice: A circular decision boundary seems like a good idea. Thus, we proceed with `kernel='radial'`, and use the `tune()` function to find the optimal tuning parameter $C$:
 
-\footnotesize
+\tiny
 
 ```{r}
 set.seed(1)
@@ -1026,25 +1044,30 @@ ypred_kernel=predict(bestmod_kernel,test3)
 
 ---
 
-```{r}
-par(mfrow=c(1,3)); par(pty="s")
+\scriptsize
+
+
+```{r forest3.5, echo=FALSE, fig.width=7, fig.height=5,fig.align = "center",out.width='90%'}
+par(mfrow=c(1,2),pty="s",mar=c(1,4,1,1),oma=c(0,2,0,0))
 plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("True class")
 points(seeds3[seeds3[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
 points(seeds3[seeds3[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
+points(seeds3[which(ypred_kernel!=seeds3[,3]),1:2],pch=21) #Mark misclassification.
+ 
+plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("Predicted class")
+points(seeds3[ypred_kernel==-1,1:2],pch=19,col="lightcoral",cex=0.9)
+points(seeds3[ypred_kernel==1,1:2],pch=19,col="darkseagreen",cex=0.9)
 points(seeds3[which(ypred_kernel!=seeds3[,3]),1:2],pch=21) #Mark misclassification.
 ```
 
 ---
 
+\scriptsize
 ```{r}
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("Predicted class")
-points(seeds3[ypred_kernel==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(seeds3[ypred_kernel==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-points(seeds3[which(ypred_kernel!=seeds3[,3]),1:2],pch=21) #Mark misclassification.
-
 table(predict=ypred_kernel,truth=test3[,3])
 ```
 
+\normalsize 
 Only one seed is misclassified.
 
 ---
