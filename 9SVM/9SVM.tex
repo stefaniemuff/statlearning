@@ -1494,6 +1494,8 @@ Training errors as ROC and AUC.
 
 \includegraphics[width=0.90000\textwidth]{../../ISLR/Figures/Chapter9/9.10.png}
 
+\textbf{Q}: How are the ROC curves formed?
+
 \end{block}
 
 \end{frame}
@@ -1511,17 +1513,13 @@ Heart data - test error.
 
 \begin{block}{Example: forest 3}
 
-To illustrate the SVM we use the third training dataset (forest3) and
-the third test set (seeds3). We use the \texttt{svm} function as before.
-However, we now set
+\vspace{2mm}
+
+To illustrate the SVM we use the third training dataset
+(\texttt{forest3}) and the third test set (\texttt{seeds3}). We use the
+\texttt{svm} function as before. However, we now set
 \texttt{kernel=\textquotesingle{}radial\textquotesingle{}} as we want a
 non-linear decision boundary:
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}[fragile]
 
 \footnotesize
 
@@ -1535,6 +1533,8 @@ non-linear decision boundary:
 \end{Highlighting}
 \end{Shaded}
 
+\end{block}
+
 \end{frame}
 
 \begin{frame}[fragile]
@@ -1543,8 +1543,8 @@ non-linear decision boundary:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{svmfit_kernel1 =}\StringTok{ }\KeywordTok{svm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ train3, }\DataTypeTok{kernel =} \StringTok{"radial"}\NormalTok{, }\DataTypeTok{gamma =} \DecValTok{1}\NormalTok{, }
-    \DataTypeTok{cost =} \DecValTok{10}\NormalTok{, }\DataTypeTok{scale =} \OtherTok{FALSE}\NormalTok{)}
+\NormalTok{svmfit_kernel1 =}\StringTok{ }\KeywordTok{svm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ train3, }\DataTypeTok{kernel =} \StringTok{"radial"}\NormalTok{, }\DataTypeTok{cost =} \DecValTok{10}\NormalTok{, }
+    \DataTypeTok{scale =} \OtherTok{FALSE}\NormalTok{)}
 \KeywordTok{plot}\NormalTok{(svmfit_kernel1, train3, }\DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"lightcoral"}\NormalTok{, }\StringTok{"lightgreen"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
@@ -1658,7 +1658,7 @@ decision boundary seems like a good idea. Thus, we proceed with
 \begin{Highlighting}[]
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
 \NormalTok{CV_kernel =}\StringTok{ }\KeywordTok{tune}\NormalTok{(svm, y }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ train3, }\DataTypeTok{kernel =} \StringTok{"radial"}\NormalTok{, }\DataTypeTok{gamma =} \DecValTok{1}\NormalTok{, }
-    \DataTypeTok{ranges =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{cost =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.001}\NormalTok{, }\FloatTok{0.01}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{100}\NormalTok{)))}
+    \DataTypeTok{ranges =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{cost =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.001}\NormalTok{, }\FloatTok{0.01}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{1000}\NormalTok{)))}
 \KeywordTok{summary}\NormalTok{(CV_kernel)}
 \end{Highlighting}
 \end{Shaded}
@@ -1684,6 +1684,7 @@ decision boundary seems like a good idea. Thus, we proceed with
 ## 5 5e+00 0.1357143  0.1226248
 ## 6 1e+01 0.1214286  0.1298110
 ## 7 1e+02 0.1089286  0.1066291
+## 8 1e+03 0.1767857  0.1226970
 \end{verbatim}
 
 \normalsize
@@ -1692,9 +1693,11 @@ decision boundary seems like a good idea. Thus, we proceed with
 
 \begin{frame}[fragile]
 
-The optimal \(C\) is 10. Next, we predict the class label of the seeds
-in the test set with a model with C=10, make a confusion table and plot
-the results:
+The optimal \(C\) is 100. Next, we predict the class label of the seeds
+in the test set with a model with \(C=100\), make a confusion table and
+plot the results:
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1738,15 +1741,16 @@ the results:
 
 \begin{block}{More than two classes}
 
-What if we have \(k\) classes?
+\vspace{2mm}
+
+What if we have \(k\) classes? Two popular approaches:
 
 \begin{itemize}
-\tightlist
 \item
   OVA: one-versus-all. Fit \(k\) different two-class SVMs
-  \(f_k({\boldsymbol x})\) where one class is compared to all other
-  classes. Classify a test observation to the class where
-  \(f_k({\boldsymbol x}^*)\) is largest.
+  \(f_k({\boldsymbol x})\) where, each time, one class is compared to
+  the ensemble of all other classes. Classify a test observation to the
+  class where \(f_k({\boldsymbol x}^*)\) is largest.
 \item
   OVO: one-versus-one. \texttt{libsvm} uses this approach, in which
   \(k(k-1)/2\) binary classifiers are trained; the appropriate class is
@@ -1758,34 +1762,41 @@ What if we have \(k\) classes?
 
 \end{frame}
 
-\begin{frame}{Comparisons}
-
-Focus is comparing the support vector classifier and logistic regression
+\begin{frame}{Comparisons: SVM and logistic regression}
 
 It is possible to write the optimization problem for the support vector
 classifier as a ``loss''+``penalty'':
 
-\[\text{minimize}_{\boldsymbol \beta} \left\{ \sum_{i=1}^n \max(0,1-y_i f({\boldsymbol x}_i))+ \lambda \sum_{j=1}^p \beta_j^2 \right\}\]
+\[\text{minimize}_{\boldsymbol \beta} \left\{ \underbrace{\sum_{i=1}^n \max(0,1-y_i f({\boldsymbol x}_i))}_{=L(\boldsymbol x, \boldsymbol{y},\boldsymbol\beta)}+ \underbrace{\lambda \sum_{j=1}^p \beta_j^2}_{\text{Penalty}} \right\}\]
 
 \begin{itemize}
 \item
-  the loss is called \emph{hinge loss} - observe the max and 0 to
-  explain why only support vectors contribute
+  The margin now corresponds to \(M=1\), and its width is determined by
+  \(\sum_{j=1}^p \beta_j^2\).
 \item
-  the penalty is a ridge penalty
+  The loss is called \emph{\textcolor{red}{hinge loss}} - observe the
+  max and 0 to explain why only support vectors contribute
 \item
-  large \(\lambda\) gives \(\beta\)s small and more violations=high
-  bias, but low variance
+  The penalty is a ridge penalty.
 \item
-  small \(\lambda\) gives \(\beta\)s large and less violations=low bias,
-  but high variance
+  Large \(\lambda\) gives small \(\beta\)s and more violations=high
+  bias, but low variance.
+\item
+  Small \(\lambda\) gives large \(\beta\)s and less violations=low bias,
+  but high variance.
 \end{itemize}
 
 \end{frame}
 
 \begin{frame}
 
-\includegraphics{../../ISLR/Figures/Chapter9/9.12.png}
+Interestingly, the loss functions for a support-vector classifier with
+\(f(X)=\beta_0 + \beta_1X_1 +\ldots + \beta_pX_p\) and for logistic
+regression using the same set of predictors \emph{look very similar}:
+\vspace{-2mm}
+
+\centering
+\includegraphics[width=0.90000\textwidth]{../../ISLR/Figures/Chapter9/9.12.png}
 
 \end{frame}
 
@@ -1794,16 +1805,22 @@ classifier as a ``loss''+``penalty'':
 \textbf{Hinge loss:} \[\max(0,1-y_if({\boldsymbol x}_i))\]
 
 For comparison a logistic regression (with ridge penalty) would be
-(binomial deviance with -1,1 coding of \(y\))
+(binomial deviance with \(-1,1\) coding of \(y\))
 
 \[ \log(1+\exp(-y_i f({\boldsymbol x}_i)))\]
 
-It can be shown that in logistic regression all observations contribute
-weighted by \(p_i(1-p_i)\) (where \(p_i\) is probability for class 1),
-that fade smoothly with distance to the decision boundary
-
-It is possible to extend the logistic regression to include non-linear
-terms, and ridge penalty.
+\begin{itemize}
+\item
+  Todo: Perhaps a conceptual exercise to show that this loss is the
+  deviance for the \(y=-1,1\) encoding.
+\item
+  In logistic regression all observations contribute weighted by
+  \(p_i(1-p_i)\) (where \(p_i\) is probability for class 1), that fade
+  smoothly with distance to the decision boundary
+\item
+  Note: It is possible to extend the logistic regression to include
+  non-linear terms, and ridge penalty.
+\end{itemize}
 
 \end{frame}
 
@@ -1812,14 +1829,15 @@ terms, and ridge penalty.
 \begin{block}{When to use SVM?}
 
 \begin{itemize}
-\tightlist
 \item
   If classes are nearly separable SVM will perform better than logistic
-  regression. (LDA will also perform better than logistic regression.)
+  regression. (Also LDA will perform better than logistic regression;
+  what is the problem with logistic regression?)
 \item
-  and if not, then a ridge penalty version of logistic regression are
-  very similar to SVM, and logistic regression will also give you
-  probabilities for each class.
+  Otherwise, a ridge penalty version of logistic regression is
+  \textbf{very} similar to SVM, and logistic regression will also give
+  you probabilities for each
+  class.\footnote{Todo: It could be nice to have an exercise that compares SVM with logistic regression, with and without ridge penalty, and perhaps also LD; or this can be saved for compulsory exercise 2}
 \item
   If class boundaries are non-linear then SVM is more popular, but
   kernel versions of logistic regression is possible, but more

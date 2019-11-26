@@ -957,6 +957,8 @@ Training errors as ROC and AUC.
 
 ![ISLR Figure 9.10](../../ISLR/Figures/Chapter9/9.10.png){width=90%}
 
+**Q**: How are the ROC curves formed?
+
 ---
 
 Heart data - test error.
@@ -967,12 +969,12 @@ Heart data - test error.
 ---
 
 ## Example: forest 3
-To illustrate the SVM we use the third training dataset (forest3) and the third test set (seeds3). We use the `svm` function as before. However, we now set `kernel='radial'` as we want a non-linear decision boundary:
+\vspace{2mm}
 
----
+To illustrate the SVM we use the third training dataset (`forest3`) and the third test set (`seeds3`). We use the `svm` function as before. However, we now set `kernel='radial'` as we want a non-linear decision boundary:
+
 
 \footnotesize
-
 
 ```{r}
 library(e1071)
@@ -985,7 +987,7 @@ test3=data.frame(x=seeds3[,1:2], y=as.factor(seeds3[,3]))
 
 \scriptsize
 ```{r forest3.3, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
-svmfit_kernel1=svm(y ~ ., data=train3, kernel='radial', gamma=1, cost=10, scale=FALSE)
+svmfit_kernel1=svm(y ~ ., data=train3, kernel='radial', cost=10, scale=FALSE)
 plot(svmfit_kernel1,train3,col=c("lightcoral","lightgreen"))
 ```
 
@@ -1027,7 +1029,7 @@ For this dataset a radial kernel is a natural choice: A circular decision bounda
 
 ```{r}
 set.seed(1)
-CV_kernel=tune(svm,y~.,data=train3,kernel="radial",gamma=1,ranges=list(cost=c(0.001,0.01,0.1,1,5,10,100)))
+CV_kernel=tune(svm,y~.,data=train3,kernel="radial",gamma=1,ranges=list(cost=c(0.001,0.01,0.1,1,5,10,100,1000)))
 summary(CV_kernel)
 ```
 
@@ -1035,8 +1037,9 @@ summary(CV_kernel)
 
 ---
 
-The optimal $C$ is 10. Next, we predict the class label of the seeds in the test set with a model with C=10, make a confusion table and plot the results:
+The optimal $C$ is 100. Next, we predict the class label of the seeds in the test set with a model with $C=100$, make a confusion table and plot the results:
 
+\scriptsize
 ```{r}
 bestmod_kernel=CV_kernel$best.model
 ypred_kernel=predict(bestmod_kernel,test3)
@@ -1045,7 +1048,6 @@ ypred_kernel=predict(bestmod_kernel,test3)
 ---
 
 \scriptsize
-
 
 ```{r forest3.5, echo=FALSE, fig.width=7, fig.height=5,fig.align = "center",out.width='90%'}
 par(mfrow=c(1,2),pty="s",mar=c(1,4,1,1),oma=c(0,2,0,0))
@@ -1075,61 +1077,75 @@ Only one seed is misclassified.
 # Extensions 
 
 ## More than two classes
+\vspace{2mm}
 
-What if we have $k$ classes?
+What if we have $k$ classes? Two popular approaches:
 
-* OVA: one-versus-all. Fit $k$ different two-class SVMs $f_k({\boldsymbol x})$ where one class is compared to all other classes. Classify a test observation to the class where $f_k({\boldsymbol x}^*)$ is largest.
+* OVA: one-versus-all. Fit $k$ different two-class SVMs $f_k({\boldsymbol x})$ where, each time, one class is compared to the ensemble of all other classes. Classify a test observation to the class where $f_k({\boldsymbol x}^*)$ is largest.
+
 * OVO: one-versus-one. `libsvm` uses this approach, in which $k(k-1)/2$ binary classifiers are trained; the appropriate class is found by a voting scheme (the class that wins the most pairwise competitions are chosen).
 
 ---
 
-# Comparisons
+# Comparisons: SVM and logistic regression
 
-Focus is comparing the support vector classifier and logistic regression 
 
 It is possible to write the optimization problem for the support vector classifier as a "loss"+"penalty":
 
-$$\text{minimize}_{\boldsymbol \beta} \left\{ \sum_{i=1}^n \max(0,1-y_i f({\boldsymbol x}_i))+ \lambda \sum_{j=1}^p \beta_j^2 \right\}$$
+$$\text{minimize}_{\boldsymbol \beta} \left\{ \underbrace{\sum_{i=1}^n \max(0,1-y_i f({\boldsymbol x}_i))}_{=L(\boldsymbol x, \boldsymbol{y},\boldsymbol\beta)}+ \underbrace{\lambda \sum_{j=1}^p \beta_j^2}_{\text{Penalty}} \right\}$$
 
-* the loss is called _hinge loss_ - observe the max and 0 to explain why only support vectors contribute
-* the penalty is a ridge penalty 
+* The margin now corresponds to $M=1$, and its width is determined by $\sum_{j=1}^p \beta_j^2$.
+* The loss is called _\textcolor{red}{hinge loss}_ - observe the max and 0 to explain why only support vectors contribute
+* The penalty is a ridge penalty. 
 
-* large $\lambda$ gives $\beta$s small and more violations=high bias, but low variance
-* small $\lambda$ gives $\beta$s large and less violations=low bias, but high variance
+* Large $\lambda$ gives small $\beta$s and more violations=high bias, but low variance.
+* Small $\lambda$ gives large $\beta$s and less violations=low bias, but high variance.
 
 ---
 
-![ISLR Figure 9.12: hinge loss - loss 0 for observations on the correct side of the margin](../../ISLR/Figures/Chapter9/9.12.png)
+Interestingly, the loss functions for a support-vector classifier with $f(X)=\beta_0 + \beta_1X_1 +\ldots + \beta_pX_p$ and for logistic regression using the same set of predictors _look very similar_:
+\vspace{-2mm}
+
+\centering
+![ISLR Figure 9.12: hinge loss - loss 0 for observations on the correct side of the margin](../../ISLR/Figures/Chapter9/9.12.png){width=90%}
 
 ---
 
 **Hinge loss:**
 $$\max(0,1-y_if({\boldsymbol x}_i))$$
 
-For comparison a logistic regression (with ridge penalty) would be (binomial deviance with -1,1 coding of $y$)
+For comparison a logistic regression (with ridge penalty) would be (binomial deviance with $-1,1$ coding of $y$)
 
 $$ \log(1+\exp(-y_i f({\boldsymbol x}_i)))$$
 
-It can be shown that in logistic regression all observations contribute weighted by $p_i(1-p_i)$ (where $p_i$ is probability for class 1), that fade smoothly with distance to the decision boundary
+* Todo: Perhaps a conceptual exercise to show that this loss is the deviance for the $y=-1,1$ encoding.
 
-It is possible to extend the logistic regression to include non-linear terms, and ridge penalty.
+* In logistic regression all observations contribute weighted by $p_i(1-p_i)$ (where $p_i$ is probability for class 1), that fade smoothly with distance to the decision boundary
+
+* Of course, is possible to extend the logistic regression to include non-linear terms, and also a ridge penalty.
 
 ---
 
 ## When to use SVM?
 
-* If classes are nearly separable SVM will perform better than logistic regression. (LDA will also perform better than logistic regression.)
-* and if not, then a ridge penalty version of logistic regression are very similar to SVM, and logistic regression will also give you probabilities for each class.
-* If class boundaries are non-linear then SVM is more popular, but kernel versions of logistic regression is possible, but more computationally expensive.
+* If classes are nearly separable SVM will perform better than logistic regression. (Also LDA will perform better than logistic regression; what is the problem with logistic regression?)
+
+* Otherwise, a ridge penalty version of logistic regression is **very** similar to SVM, and logistic regression will also give you probabilities for each class.\footnote{Todo: It could be nice to have an exercise that compares SVM with logistic regression, with and without ridge penalty, and perhaps also LD; or this can be saved for compulsory exercise 2}
+
+* If class boundaries are non-linear then SVM is more popular, but _kernel versions of logistic regression_ are also possible, but more computationally expensive (and traditionally less used).
 
 ---
 
 # Summing up
 
-* We use methods from computer science, not probability models - but looks for a separating hyperplane in (an extended) feature space in the classification setting.
-* SVM is a widely successful and a "must have tool"
+* We use methods from computer science, not probability models, but it also looks for a separating hyperplane in (an extended) feature space in the classification setting.
+
+* SVM is a widely successful and a "must have tool".
+
 * Interpretation of SVM: all features are included and maybe not so easy to interpret (remember ridge-type penalty does not shrink to zero).
+
 * The budget must be chosen wisely, and a bad choice can lead to overfitting.
+
 * Not so easy to get class probabilites from SVM (what is done is actually to fit a logistic regression after fitting SVM).
 
 
