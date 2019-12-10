@@ -1,0 +1,3672 @@
+\documentclass[10pt,ignorenonframetext,]{beamer}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+\usetheme[]{Singapore}
+\usefonttheme{serif}
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\newif\ifbibliography
+\hypersetup{
+            pdftitle={Module 11: Neural Networks},
+            pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
+            colorlinks=true,
+            linkcolor=Maroon,
+            citecolor=Blue,
+            urlcolor=blue,
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{longtable,booktabs}
+\usepackage{caption}
+% These lines are needed to make table captions work with longtable:
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight0.8\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+
+\AtBeginPart{
+  \let\insertpartnumber\relax
+  \let\partname\relax
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \let\insertsectionnumber\relax
+    \let\sectionname\relax
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \let\insertsubsectionnumber\relax
+  \let\subsectionname\relax
+  \frame{\subsectionpage}
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+\usepackage{multirow}
+
+\title{Module 11: Neural Networks}
+\subtitle{TMA4268 Statistical Learning V2020}
+\author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
+\date{April xx, 2020}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Introduction}
+
+\begin{itemize}
+\item
+  Neural networks (NN) were first introduced in the 1990's.
+\item
+  Shift from statistics to computer science and machine learning, as
+  they are highly parameterized
+\item
+  Statisticians were skeptical: ``It's just a nonlinear model''.
+\item
+  After the first hype, NNs were pushed aside by boosting and support
+  vector machines.
+\item
+  Revival since 2010: The emergence of
+  \emph{\textcolor{red}{Deep learning}} as a consequence of improved
+  computer resources, some innovations, and applications to image and
+  video classification, and speech and text processing
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Learning material for this module}
+
+(on the reading list)
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://www.math.ntnu.no/emner/TMA4268/2019v/notes/M11L1notes.pdf}{Classnotes
+  25.03.2019}
+\item
+  \href{https://www.math.ntnu.no/emner/TMA4268/2019v/notes/M11L2notes.pdf}{Classnotes
+  28.03.2019}
+\end{itemize}
+
+See also \emph{References and further reading} (last slide), for further
+reading material.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{What will you learn?}
+
+\begin{itemize}
+\tightlist
+\item
+  Why a module on neural networks?
+\item
+  Translating from statistical to neural networks language
+
+  \begin{itemize}
+  \tightlist
+  \item
+    linear regression
+  \item
+    logistic regression
+  \item
+    multiclass (multinomial) regression
+  \end{itemize}
+\item
+  Feedforward networks
+
+  \begin{itemize}
+  \tightlist
+  \item
+    one hidden layer
+  \item
+    universal approximation theorem
+  \end{itemize}
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\tightlist
+\item
+  Neural network parts
+
+  \begin{itemize}
+  \tightlist
+  \item
+    model: architecture, activation functions
+  \item
+    method: loss fuction
+  \item
+    algorithm: how to estimate parameters, gradient descent and
+    back-propagation
+  \item
+    recent developents
+  \end{itemize}
+\item
+  Deep learning
+
+  \begin{itemize}
+  \tightlist
+  \item
+    the timeline
+  \item
+    Keras
+  \end{itemize}
+\item
+  References
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Why a module on neural networks?}
+
+\begin{itemize}
+\tightlist
+\item
+  Every day you read about the success of AI, machine learning --- and
+  in particular deep learning.
+\item
+  In the last five years the field of deep learning has gone from low
+  level performance to excellent performance --- particularly in image
+  recognition and speech transcription.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\tightlist
+\item
+  Deep learning is based on a layered artificial neural network
+  structure.
+\end{itemize}
+
+But, what is a \emph{neural network}?
+
+\end{frame}
+
+\begin{frame}
+
+\centering
+\includegraphics[width=0.50000\textwidth]{Neuron3.png}
+
+Neuron and myelinated axon, with signal flow from inputs at dendrites to
+outputs at axon terminals. Image credits: By Egm4313.s12 (Prof.~Loc
+Vu-Quoc) \url{https://commons.wikimedia.org/w/index.php?curid=72816083}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\tightlist
+\item
+  Understanding the basic building blocks of artificial neural network,
+  and how they are connected to concepts in mathematical statistics
+  might be useful!
+\item
+  The focus here will mainly be to relate what we have learned from
+  regression and classification in this course to the basic framework of
+  artificial neural network,
+\item
+  and we will touch upon the new and hot stuff.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\tightlist
+\item
+  There are several (self-study) learning resources (some listed under
+  `further references') that the student my turn to for further
+  knowledge into deep learning, but this presentation is heavily based
+  on Chollet and Allaire (2018), with added formulas and theory.
+\item
+  There is a new IT3030
+  \href{https://www.ntnu.no/studier/emner/IT3030\#tab=omEmnet}{deep
+  learning course at NTNU}.
+\end{itemize}
+
+\centering
+\includegraphics[width=0.30000\textwidth]{DeepLearningwithR.jpeg}
+\includegraphics[width=0.30000\textwidth]{DeepLearning.jpeg}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{AI, machine learning and statistics}
+
+\begin{itemize}
+\item
+  Artificial intelligence dates back to the 1950s, and can be seen as
+  \emph{the effort to automate intellectual tasks normally performed by
+  humans} (page 4, Chollet and Allaire (2018)).
+\item
+  AI was first based on hardcoded rules, but turned out to be
+  intractable for solving more complex, fuzzy problems.
+\item
+  With the field of \emph{machine learning} the shift is that a system
+  is \emph{trained} rather than explicitly programmed.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Machine learning}
+
+\begin{itemize}
+\item
+  Machine learning is related to mathematical statistics, but differ in
+  many ways (as we will soon see).
+\item
+  In short, machine learning attachs much larger, and more complex data
+  sets than what is usually done in statistics.
+\item
+  The focus in machine learning is not on mathematical theory, but is
+  more oriented towards \emph{engineering}, and ideas are proven
+  \emph{empirically} rather than theoretically (which is the case in
+  mathematical statistics).
+\item
+  According to Chollet and Allaire (2018) (page 19):
+
+  \begin{quote}Machine learning isn't mathematics or physics, where major advancements can be done with a pen and a piece of paper. It's an engineering science.\end{quote}
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{From statistics to artificial neural networks}
+
+Recapitulate from Module 3 with the bodyfat dataset that contained the
+following variables.
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{bodyfat}: \% of body fat.
+\item
+  \texttt{age}: age of the person.
+\item
+  \texttt{weight}: body weighth.
+\item
+  \texttt{height}: body height.
+\item
+  \texttt{neck}: neck thickness.
+\item
+  \texttt{bmi}: bmi.
+\item
+  \texttt{abdomen}: circumference of abdomen.
+\item
+  \texttt{hip}: circumference of hip.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+We will now look at modelling the \texttt{bodyfat} as response and using
+all other variables as covariates - this will give us
+
+\begin{itemize}
+\tightlist
+\item
+  one numerical output (response), and
+\item
+  seven covariates
+\item
+  one intercept
+\end{itemize}
+
+Let \(n\) be the number of observations in the training set, here
+\(n=243\).
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Multiple linear regression model}
+
+(from Module 3)
+
+\(~\)
+
+We assume
+
+\begin{equation}
+ Y_i=\beta_0 + \beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_p x_{ip}+\varepsilon_i={\boldsymbol x}_i^T{\boldsymbol \beta}+\varepsilon_i \ ,
+\end{equation}
+
+for \(i=1,\ldots,n\), where \(x_{ij}\) is the value \(j\)th predictor
+for the \(i\)th datapoint, and
+\(\boldsymbol{\beta}^\top = (\beta_0,\beta_1,\ldots,\beta_p)\) the
+regression coeffficients.
+
+\(~\)
+
+\(~\)
+
+We used the compact matrix notation for all observations
+\(i=1,\ldots,n\) together:
+\[{\boldsymbol Y}={\boldsymbol {X}} \boldsymbol{\beta}+{\boldsymbol{\varepsilon}}  \ .\]
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+Assumptions:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(\text{E}(\boldsymbol{\varepsilon})=\bf{0}\).
+\item
+  \(\text{Cov}(\boldsymbol{\varepsilon})=\text{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\bf{I}\).
+\item
+  The design matrix has full rank, \(\text{rank}({\boldsymbol X})=p+1\).
+  (We assume \(n>>(p+1)\).)
+\end{enumerate}
+
+The classical \emph{normal} linear regression model is obtained if
+additionally
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  \(\boldsymbol\varepsilon\sim N_n({\boldsymbol 0},\sigma^2 {\boldsymbol I})\)
+  holds. Here \(N_n\) denotes the \(n\)-dimensional multivarate normal
+  distribution.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{From statistical model to network architecture}
+
+\(~\)
+
+We need \emph{new concepts}:
+
+\begin{itemize}
+\item
+  Our covariates are now presented as \emph{input nodes} in an
+  \emph{input layer}.
+\item
+  The intercept is presented as a node, and is called a \emph{bias}
+  node. (New meaning to us!)
+\item
+  The response is presented as one \emph{output node} in an \emph{output
+  layer}.
+\item
+  The regression coefficients are called \emph{weights} and are often
+  written on the lines (arrows) from the inputs to the output node.
+\item
+  All lines going into the output node signifies that we multiply the
+  covariate values in the input nodes with the weights (regression
+  coefficients), and then sum. This sum can be sent through a socalled
+  \emph{activition function}. The activation function for linear
+  regression is just the identity function.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\scriptsize
+
+\begin{verbatim}
+## # weights:  8
+## initial  value 4665345.995957 
+## iter  10 value 4474.902315
+## final  value 4415.454124 
+## converged
+\end{verbatim}
+
+\begin{center}\includegraphics[width=0.8\linewidth]{11Nnet_files/figure-beamer/motivating-1} \end{center}
+
+\end{frame}
+
+\begin{frame}
+
+The regression function is then rewritten from the linear regression
+case
+
+\begin{equation*}
+ Y_i=\beta_0 + \beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_p x_{ip}+\varepsilon_i \ ,
+\end{equation*}
+
+to the neural network case
+
+\begin{equation*}
+y_1({\boldsymbol x}_i)=\phi_o(w_0+w_1 x_{i1}+\cdots + w_p x_{ip}) \ ,
+\end{equation*}
+
+where \(\phi_o(x)=x\).
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\item
+  We do not say anything of what is random and fixed, and do not make
+  any assumption distribution of a random variable.
+\item
+  In the statistics world we would have written
+  \(\hat{y}_1({\boldsymbol x}_i)\) to specify that we are estimating a
+  predicted value of the response for the given covariate value. To be
+  able to distinguish this predicted response from the observed response
+  we use the notation:
+  \[ \hat{y}_1({\boldsymbol x}_i)=\phi_o(w_0+w_1 x_{i1}+\cdots + w_p x_{ip})\]
+\end{itemize}
+
+The only difference to our MLR model is then that we would have called
+the \(w\)s \(\hat{\beta}\)s instead.
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Statistical parameter estimation}
+
+\vspace{2mm}
+
+In multiple linear regression, the parameters \(\boldsymbol\beta\) are
+estimated with maximum likelihood and least squares. These two methods
+give the same estimator when we assume the normal linear regression
+model.
+
+The estimator \(\hat{\boldsymbol \beta}\) is found by minimizing the RSS
+for a multiple linear regression model:
+\[\begin{aligned} \text{RSS} &=\sum_{i=1}^n (y_i - \hat y_i)^2 = \sum_{i=1}^n (y_i - \hat \beta_0 - \hat \beta_1 x_{i1} - \hat \beta_2 x_{i2} -...-\hat \beta_p x_{ip} )^2 \\
+&= \sum_{i=1}^n (y_i-{\boldsymbol x}_i^T \boldsymbol \beta)^2=({\boldsymbol Y}-{\boldsymbol X}\hat{\boldsymbol{\beta}})^T({\boldsymbol Y}-{\boldsymbol X}\hat{\boldsymbol{\beta}}) \ .\end{aligned}\]
+
+This problem has a solution given on closed form:
+\[ \hat{\boldsymbol\beta}=({\boldsymbol X}^T{\boldsymbol X})^{-1} {\boldsymbol X}^T {\boldsymbol Y} \ .\]
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Neural networks: loss function and gradient descent}
+
+\vspace{4mm}
+
+We now translate what we did for the regression setup into the neural
+networks world: \vspace{2mm}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Replace the parameters \(\boldsymbol\beta\) \(\rightarrow\)
+  \emph{network weights} \(\boldsymbol w\).
+\item
+  Replace the RSS in our \emph{training data set} \(\rightarrow\)
+  \emph{mean squared error}
+  \[ J({\boldsymbol w})=\frac{1}{n}\sum_{i=1}^n (y_i-{\hat{y}_1({\boldsymbol x}_i)})^2 \ ,\]
+  where \(J({\boldsymbol w})\) indicates that the unknown parameters are
+  the weights \({\boldsymbol w}\).
+\end{enumerate}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Replace \emph{minimizing} the loss function (RSS) via
+
+  \begin{itemize}
+  \tightlist
+  \item
+    calculate the derivative of the loss function with respect to each
+    of our parameters
+  \item
+    solve the \((p+1)\) linear equations.
+  \end{itemize}
+
+  \(\rightarrow\)
+  \emph{\textcolor{red}{more general minization procedures}} that work
+  also when the loss function does not have a closed form.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Finding optimal weights (schematic description)}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Initialize weights by random numerical values.
+\item
+  Calculate the predicted values \(\hat{y}_1({\boldsymbol x}_i)\) for
+  each observation.
+\item
+  Calculate the loss function \(J(\boldsymbol{w})\), which we want to
+  minimize.
+\item
+  Calculate the \emph{gradient of a function} (it gives the
+  \emph{direction of the steepest ascent}) in the \((p+1)\)- dimensional
+  space of real numbers (for \(p+1\) weights).
+\item
+  Update weights in our \(p+1\)-dimensional in the direction of the
+  \emph{negative of the gradient} we \emph{decreases the loss function}
+  most quickly. The \emph{step length} (``\emph{learning rate}'')
+  determines how far we go in an iteration.
+\item
+  Iterate steps 2--6 until convergence.
+\item
+  Return final weights.
+\end{enumerate}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+Figures that give good illustration of the optimization problem.
+
+Chollet and Allaire (2018):
+
+\begin{itemize}
+\tightlist
+\item
+  2.11: SGD down a 1D loess curve
+\item
+  2.12: Gradient descent down a 2D loss surface
+\item
+  2.13: local and global minimum
+\end{itemize}
+
+(see board)
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Finding optimal weights: Algorithm}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Let \(t=0\) and denote the given initial values for the weights
+  \({\boldsymbol w}^{(t)}\),
+\item
+  \emph{propagate} the observations through the network and calculate
+  the predictions \({\hat{y}_1({\boldsymbol x}_i)}\)
+\item
+  calculate the loss function \(J({\boldsymbol w}^{(0)})\),
+\item
+  find the gradient (direction) in the \((p+1)\)-dimensional space of
+  the weights, and evaluate this at the current weight values
+  \(\nabla J({\boldsymbol w}^{(0)})={\frac{\partial J}{\partial {\boldsymbol w}}}({\boldsymbol w}^{(0)})\)
+\item
+  go with a given step length (learning rate) \(\lambda\) in the
+  direction of the negative of the gradient of the loss function to get
+  updated values for the weights
+  \[{\boldsymbol w}^{(t+1)}={\boldsymbol w}^{(t)} - \lambda \nabla J({\boldsymbol w}^{(t)})\]
+\item
+  Set \(t=t+1\), go to 2. and continue to 6. several times until you
+  arrive at a (local) optimum
+\item
+  The final values of the weights in that \((p+1)\) dimensional space
+  are our parameter estimates and your network is \emph{trained} and can
+  be used for prediction on a test set.
+\end{enumerate}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Backpropagation}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  In neural networks the gradient part of the gradient descent algorithm
+  is implemented efficiently in an algorithm called
+  \emph{backpropagation} (see later).
+\end{itemize}
+
+\vspace{4mm}
+
+Here we compare
+
+\begin{itemize}
+\tightlist
+\item
+  the MLR solution with \texttt{lm}
+\item
+  the neural network solution with \texttt{nnet}
+  \footnote{which in fact improves upon the gradient descent with Hessian information and the BFGS-algorithmBFGS is a quasi-Newton method (also known as a variable metric algorithm), specifically that published simultaneously in 1970 by Broyden, Fletcher, Goldfarb and Shanno. This uses function values and gradients to build up a picture of the surface to be optimized.}
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Parameter estimation vs.~network weights}
+
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit =}\StringTok{ }\KeywordTok{lm}\NormalTok{(bodyfat }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{weight }\OperatorTok{+}\StringTok{ }\NormalTok{height }\OperatorTok{+}\StringTok{ }\NormalTok{bmi }\OperatorTok{+}\StringTok{ }\NormalTok{neck }\OperatorTok{+}\StringTok{ }\NormalTok{abdomen }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\NormalTok{hip, }\DataTypeTok{data =}\NormalTok{ d.bodyfat)}
+\NormalTok{fitnnet =}\StringTok{ }\KeywordTok{nnet}\NormalTok{(bodyfat }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{weight }\OperatorTok{+}\StringTok{ }\NormalTok{height }\OperatorTok{+}\StringTok{ }\NormalTok{bmi }\OperatorTok{+}\StringTok{ }\NormalTok{neck }\OperatorTok{+}\StringTok{ }\NormalTok{abdomen }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\NormalTok{hip, }\DataTypeTok{data =}\NormalTok{ d.bodyfat, }\DataTypeTok{linout =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{size =} \DecValTok{0}\NormalTok{, }\DataTypeTok{skip =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{maxit =} \DecValTok{1000}\NormalTok{, }
+    \DataTypeTok{entropy =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # weights:  8
+## initial  value 1756621.204380 
+## iter  10 value 4471.392652
+## final  value 4415.453729 
+## converged
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cbind}\NormalTok{(fitnnet}\OperatorTok{$}\NormalTok{wts, fit}\OperatorTok{$}\NormalTok{coefficients)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                      [,1]          [,2]
+## (Intercept) -9.748906e+01 -9.748903e+01
+## age         -9.607667e-04 -9.607669e-04
+## weight      -6.292822e-01 -6.292820e-01
+## height       3.974885e-01  3.974884e-01
+## bmi          1.785331e+00  1.785330e+00
+## neck        -4.945725e-01 -4.945725e-01
+## abdomen      8.945189e-01  8.945189e-01
+## hip         -1.255549e-01 -1.255549e-01
+\end{verbatim}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Logistic regression: Diabetes}
+
+\vspace{2mm}
+
+Aim is to predict if a person has
+diabetes\footnote{Logistic regression is the "hello world" of machine learning.}.
+The data is from a population of women of Pima Indian heritage in the
+US, available in the R \texttt{MASS} package. The following information
+is available for each woman:
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{diabetes}: \texttt{0}= not present, \texttt{1}= present
+\item
+  \texttt{npreg}: number of pregnancies
+\item
+  \texttt{glu}: plasma glucose concentration in an oral glucose
+  tolerance test
+\item
+  \texttt{bp}: diastolic blood pressure (mmHg)
+\item
+  \texttt{skin}: triceps skin fold thickness (mm)
+\item
+  \texttt{bmi}: body mass index (weight in kg/(height in m)\(^2\))
+\item
+  \texttt{ped}: diabetes pedigree function.
+\item
+  \texttt{age}: age in years
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The statistical model}
+
+\vspace{2mm}
+
+\begin{itemize}
+\item
+  \(i=1,\ldots, n\) observations in the training set. We will use \(r\)
+  (instead of \(p\)) to be the number of covariates, to avoid confusion
+  with the probability \(p\).
+\item
+  The reponse \(Y_i\) is coded (\(\mathcal{C} = \{1, 0\}\) or \{success,
+  failure\}) with
+\end{itemize}
+
+\[Y_i = \begin{cases} 1 \text{ with probability } p_i, \\ 0 \text{ with probability } 1-p_i. \end{cases}\]
+
+In logistic regression we \emph{link} together our covariates
+\({\boldsymbol x}_i\) with this probability \(p_i\) using a
+\emph{logistic function}.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{align*}p_i&= \frac{\exp(\beta_0+\beta_1 x_{i1}+\cdots + \beta_r x_{ir})}{1 + \exp(\beta_0 + \beta_1 x_{i1}+\cdots+\beta_r x_{ir})}\\=&\frac{1}{1+\exp(-\beta_0 - \beta_1 x_{i1}-\cdots-\beta_r x_{ir})}
+\end{align*}
+
+This function is S-shaped, and ranges between 0 and 1 (so the \(p_i\) is
+between 0 and 1).
+
+\begin{center}\includegraphics[width=0.6\linewidth]{11Nnet_files/figure-beamer/unnamed-chunk-3-1} \end{center}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Parameter estimation in the statistical model}
+
+(Maximum likelihood) \vspace{2mm}
+
+We assume that pairs of covariates and responses \(\{x_i, y_i\}\) are
+measured independently of each other. Given \(n\) such observation
+pairs, the likelihood function of a logistic regression model can be
+written as:
+\[L(\boldsymbol{\beta}) = \prod_{i=1}^n L_i(\boldsymbol{\beta}) = \prod_{i=1}^n f(y_i; \boldsymbol{\beta}) = \prod_{i=1}^n (p_i)^{y_i}(1-p_i)^{1-y_i},\]
+where
+\(\boldsymbol{\beta} = (\beta_0, \beta_1, \beta_2, \ldots, \beta_r)^T\)
+enters into \(p_i\).
+
+It is easier (and equivalent) to maximize the log-likelihood:
+
+\[ \ln(L(\boldsymbol{\beta}))=l(\boldsymbol{\beta}) =\sum_{i=1}^n \Big ( y_i \ln p_i + (1-y_i) \ln(1 - p_i )\Big ) \ .\]
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\tightlist
+\item
+  To maximize the log-likelihood function we find the \(r+1\) partial
+  derivatives (to form the gradient), and set equal til 0.
+\item
+  This gives us a set of \(r+1\) non-linear equations in the
+  \(\beta_j\)s.
+\item
+  This set of equations does not have a closed form solution.
+\item
+  These equations are therefore solved numerically, using the
+  \emph{Newton-Raphson algorithm} (or Fisher Scoring):
+  \[\beta^{(t+1)}=\beta^{(t)} + {\boldsymbol F}({\boldsymbol \beta}{(t)})^{-1} s(\beta^{(t)}) \ ,\]
+  where the gradient of the log-likelihood
+  \({\boldsymbol s}({\boldsymbol \beta})=\frac{\partial l}{\partial \boldsymbol \beta}\)
+  is called the score vector, and here the new quantity
+  \({\boldsymbol F}({\boldsymbol \beta}^{(t)})^{-1}\) is called the
+  inverse \emph{expected Fisher information matrix} and is the expected
+  value of the negative of the gradient of the score vector (the
+  negative of the Hessian matrix of the loglikelihood), and also the
+  covariance matrix of the score
+  vector.\footnote{Observe that we here are maximizing so we are going in the direction of the gradient, not the negative of the direction which is needed when we minimize.}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The neural network model: architecture and activation
+function}
+
+\vspace{2mm}
+
+\begin{itemize}
+\item
+  Remember: in the neural network (NN) version of the MLR, we had:
+  \[ y_1({\boldsymbol x}_i)=\phi_o(w_0+w_1 x_{i1}+\cdots + w_r x_{ir}) \ , \]
+  where \(\phi_o(x)=x\).
+\item
+  In the NN version of logistic regression we instead have the logistic
+  function as the function \(\phi_o\), that is
+\end{itemize}
+
+\[ \phi_o(x)=\frac{1}{1+\exp(-x)} \ .\]
+
+This is now referred to as the \emph{sigmoid} activation function and is
+often denoted \(\sigma(x)\). Again, we prefer to use
+\(\hat{y}_1({\boldsymbol x}_i)\) and get:
+
+\[ \hat{y}_1({\boldsymbol x}_i)=\frac{1}{1+\exp(-(w_0+w_1 x_{i1}+\cdots + w_r x_{ir}))} \in (0,1) \ . \]
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Neural networks: loss function and gradient descent}
+
+For parameter estimation we looked at maximizing the log-likelihood of
+the statistical model. For neural networks the negative of the binomial
+loglikelihood is a scaled version of the \emph{binomial cross-entropy
+loss}.
+
+\[ J({\boldsymbol w})=-\frac{1}{n}\sum_{i=1}^n (y_i\ln({\hat{y}_1({\boldsymbol x}_i)})+(1-y_i)\ln(1-{\hat{y}_1({\boldsymbol x}_i)})\]
+
+The optimization is also now done using gradient descent, but observe
+that due to the activation function we can use the chain rule when
+calculating the partial derivatives to get the gradient direction. The
+Algorithm given for MLR is also applicable now, with the modification to
+the activation and loss function given here.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Parameter estimation vs.~network weights}
+
+\scriptsize 
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fitlogist =}\StringTok{ }\KeywordTok{glm}\NormalTok{(diabetes }\OperatorTok{~}\StringTok{ }\NormalTok{npreg }\OperatorTok{+}\StringTok{ }\NormalTok{glu }\OperatorTok{+}\StringTok{ }\NormalTok{bp }\OperatorTok{+}\StringTok{ }\NormalTok{skin }\OperatorTok{+}\StringTok{ }\NormalTok{bmi }\OperatorTok{+}\StringTok{ }\NormalTok{ped }\OperatorTok{+}\StringTok{ }\NormalTok{age, }
+    \DataTypeTok{data =}\NormalTok{ train, }\DataTypeTok{family =} \KeywordTok{binomial}\NormalTok{(}\DataTypeTok{link =} \StringTok{"logit"}\NormalTok{))}
+\KeywordTok{summary}\NormalTok{(fitlogist)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = diabetes ~ npreg + glu + bp + skin + bmi + ped + 
+##     age, family = binomial(link = "logit"), data = train)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.9830  -0.6773  -0.3681   0.6439   2.3154  
+## 
+## Coefficients:
+##              Estimate Std. Error z value Pr(>|z|)    
+## (Intercept) -9.773062   1.770386  -5.520 3.38e-08 ***
+## npreg        0.103183   0.064694   1.595  0.11073    
+## glu          0.032117   0.006787   4.732 2.22e-06 ***
+## bp          -0.004768   0.018541  -0.257  0.79707    
+## skin        -0.001917   0.022500  -0.085  0.93211    
+## bmi          0.083624   0.042827   1.953  0.05087 .  
+## ped          1.820410   0.665514   2.735  0.00623 ** 
+## age          0.041184   0.022091   1.864  0.06228 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 256.41  on 199  degrees of freedom
+## Residual deviance: 178.39  on 192  degrees of freedom
+## AIC: 194.39
+## 
+## Number of Fisher Scoring iterations: 5
+\end{verbatim}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(nnet)}
+\KeywordTok{library}\NormalTok{(NeuralNetTools)}
+\NormalTok{fitnnet =}\StringTok{ }\KeywordTok{nnet}\NormalTok{(diabetes }\OperatorTok{~}\StringTok{ }\NormalTok{npreg }\OperatorTok{+}\StringTok{ }\NormalTok{glu }\OperatorTok{+}\StringTok{ }\NormalTok{bp }\OperatorTok{+}\StringTok{ }\NormalTok{skin }\OperatorTok{+}\StringTok{ }\NormalTok{bmi }\OperatorTok{+}\StringTok{ }\NormalTok{ped }\OperatorTok{+}\StringTok{ }\NormalTok{age, }
+    \DataTypeTok{data =}\NormalTok{ train, }\DataTypeTok{linout =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{size =} \DecValTok{0}\NormalTok{, }\DataTypeTok{skip =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{maxit =} \DecValTok{1000}\NormalTok{, }
+    \DataTypeTok{entropy =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{Wts =}\NormalTok{ fitlogist}\OperatorTok{$}\NormalTok{coefficients }\OperatorTok{+}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{8}\NormalTok{, }\DecValTok{0}\NormalTok{, }\FloatTok{0.1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # weights:  8
+## initial  value 3755.085763 
+## iter  10 value 103.256762
+## iter  20 value 89.203364
+## final  value 89.195333 
+## converged
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# entropy=TRUE because default is least squares}
+\KeywordTok{cbind}\NormalTok{(fitnnet}\OperatorTok{$}\NormalTok{wts, fitlogist}\OperatorTok{$}\NormalTok{coefficients)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                     [,1]         [,2]
+## (Intercept) -9.773061617 -9.773061533
+## npreg        0.103183438  0.103183427
+## glu          0.032116812  0.032116823
+## bp          -0.004767529 -0.004767542
+## skin        -0.001916648 -0.001916632
+## bmi          0.083623921  0.083623912
+## ped          1.820410792  1.820410367
+## age          0.041183522  0.041183529
+\end{verbatim}
+
+In the \texttt{nnet} R package a slightly different version is used,
+\texttt{entropy=maximum\ conditional\ likelihood} which is half the
+deviance for the logistic regression model.
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plotnet}\NormalTok{(fitnnet)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-7-1.pdf}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+But, there may also exist local minima.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{fitnnet =}\StringTok{ }\KeywordTok{nnet}\NormalTok{(diabetes }\OperatorTok{~}\StringTok{ }\NormalTok{npreg }\OperatorTok{+}\StringTok{ }\NormalTok{glu }\OperatorTok{+}\StringTok{ }\NormalTok{bp }\OperatorTok{+}\StringTok{ }\NormalTok{skin }\OperatorTok{+}\StringTok{ }\NormalTok{bmi }\OperatorTok{+}\StringTok{ }\NormalTok{ped }\OperatorTok{+}\StringTok{ }\NormalTok{age, }
+    \DataTypeTok{data =}\NormalTok{ train, }\DataTypeTok{linout =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{size =} \DecValTok{0}\NormalTok{, }\DataTypeTok{skip =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{maxit =} \DecValTok{10000}\NormalTok{, }
+    \DataTypeTok{entropy =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{Wts =}\NormalTok{ fitlogist}\OperatorTok{$}\NormalTok{coefficients }\OperatorTok{+}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{8}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # weights:  8
+## initial  value 24315.298582 
+## final  value 12526.062906 
+## converged
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{cbind}\NormalTok{(fitnnet}\OperatorTok{$}\NormalTok{wts, fitlogist}\OperatorTok{$}\NormalTok{coefficients)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                     [,1]         [,2]
+## (Intercept)   -36.733537 -9.773061533
+## npreg         -77.126994  0.103183427
+## glu         -2984.409175  0.032116823
+## bp          -1835.934259 -0.004767542
+## skin         -718.072629 -0.001916632
+## bmi          -818.561311  0.083623912
+## ped            -8.687473  1.820410367
+## age          -773.023878  0.041183529
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Multiclass regression}
+
+\begin{block}{Which type of iris species?}
+
+The \texttt{iris} flower data set was introduced by the British
+statistician and biologist Ronald Fisher in 1936, and we studied that in
+module 4 on classification.
+
+\begin{itemize}
+\tightlist
+\item
+  Three plant species \{setosa, virginica, versicolor\} (50 observation
+  of each), and
+\item
+  four features: \texttt{Sepal.Length}, \texttt{Sepal.Width},
+  \texttt{Petal.Length} and \texttt{Petal.Width}.
+\end{itemize}
+
+The aim is to predict the species of an iris plant.
+
+\end{block}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Statistical model}
+
+We only briefly mentioned this method in module 4 (there our focus was
+on LDA and QDA when we had more than two classes), and the full
+theoretical treatment is given in the statistics course TMA4315
+Generalized linear models, Module 6 on categorical regression (nominal
+response).
+
+\textbf{Assumptions:}
+
+We have independent observation pairs \((Y_i,{\boldsymbol x}_i)\), where
+the covariate vector \({\boldsymbol x}_i\) consists of the same
+measurements for each response category (that is, not different
+covariate types that are measured for each response category.
+
+Each observation can only belong to one response class, \(Y_i=c\) for
+\(c=1,\ldots, C\), and we define a dummy variable coding of the response
+in a \(C\)-dimensional vector:
+\({\boldsymbol y}_i=(0,0,\ldots,0,1,0,\ldots,0)\) with a value of \(1\)
+in the \(c\)th element of \({\boldsymbol y}_i\) if the class is \(c\).
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+The probabilities are \(p_{ic}=P(Y_i=c)\) that the response is category
+\(c\) for subject \(i\), where \(\sum_{c=1}^C p_{ic}=1\) (which means
+that \(p_{iC}=1-\sum_{c=1}^{C-1} p_{ic}\) and in statistics we don't
+include \(p_{iC}\) in the modelling).
+
+To analyse this type of data a generalization of the model for the
+logistic regression (for two classes) can be used, and the model we fit
+is:
+
+\[p_{ic}=P(Y_i=c)= \frac{\exp({\boldsymbol x}_i^T{\boldsymbol \beta}_c)}{1+\sum_{s=1}^{C-1}\exp({\boldsymbol x}_i^T{\boldsymbol \beta}_s)}\]
+\[=
+\frac{\exp(\beta_{0c}+\beta_{1c} x_{i1}+\cdots + \beta_{rc} x_{ir})}{1 + \sum_{s=1}^{C-1} \exp(\beta_{0s} + \beta_{1s} x_{i1}+\cdots+\beta_{rs} x_{ir})}\]
+
+See the difference to
+\(p_i=P(Y_i=1)= \frac{\exp({\boldsymbol x}_i^T{\boldsymbol \beta})}{1+\exp({\boldsymbol x}_i^T{\boldsymbol \beta})}\)
+for two classes.
+
+An observation is classified to the class with the highest probability,
+\(\text{argmax}p_{ic}\).
+
+\textbf{Q}: How many parameters are we estimating?
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Neural network architecture and activation function}
+
+The neural network uses the dummy variable coding of the responses, but
+call this \emph{one-hot} coding, and builds an output layer with \(C\)
+nodes --- and corresponding 0/1 targets (responses).
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+The activation function for the ouput layer is called \emph{softmax} and
+is given as
+
+\begin{align}
+\hat{y}_1({\boldsymbol x}_i)&= \frac{\exp({\boldsymbol x}_i^T{\boldsymbol w}_1)}{\sum_{s=1}^{C}\exp({\boldsymbol x}_i^T{\boldsymbol w}_s)}\\
+{\hat y_2}({\boldsymbol x}_i)& = \frac{\exp({\boldsymbol x}_i^T{\boldsymbol w}_2)}{\sum_{s=1}^{C}\exp({\boldsymbol x}_i^T{\boldsymbol w}_s)}\\
+\vdots & = \vdots \\
+{\hat y_C}({\boldsymbol x}_i)&= \frac{\exp({\boldsymbol x}_i^T{\boldsymbol w}_C)}{\sum_{s=1}^{C}\exp({\boldsymbol x}_i^T{\boldsymbol w}_s)}
+\end{align}
+
+Where each \({\boldsymbol w}_s\) is a \(r+1\) dimensional vector of
+weights.
+
+Observe that there is some redundancy here, since
+\(\sum_{c=1}^C {\hat y}_{ci}({\boldsymbol x}_i)=1\), so we could have
+had \(C-1\) output nodes, but this is not done.
+
+The focus of neural networks is not to interpret the weights, and there
+is no need to assume full rank of a matrix with output nodes.
+
+\textbf{Q:} How many parameters are we estimating?
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-9-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Parameter estimation}
+
+The likelihood of the multinomial regression model can be written as
+
+\[ \ln(L({\boldsymbol \beta})\propto \sum_{i=1}^n \sum_{c=1}^C y_{ic}\ln(p_{ic})\]
+where \(p_{iC}=1-p_{i1}-p_{i2}-\cdots -p_{i,C-1}\), and the regression
+parameters enters via the \(p_{ic}\)s.
+
+Parameter estimation is done in the same way as for the logistic
+regression, with the Fisher scoring algorithm (with score vector and
+Fisher information matrix).
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Neural networks: loss function and gradient descent}
+
+For parameter estimation we looked at maximizing the log-likelihood of
+the statistical model. For neural networks the negative of the
+multinomial loglikelihood is a scaled version of the \emph{categorical
+cross-entropy loss}.
+
+\[ J({\boldsymbol w})=-\frac{1}{n}\sum_{i=1}^n\frac{1}{C} \sum_{c=1}^C (y_{ic}\ln({\hat{y}_c({\boldsymbol x}_i)})\]
+
+The optimization is done using gradient descent, with minor changes from
+what was done for the logistic regression due to the added sum and the
+small change in the activation function.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Parameter estimation vs.~network weights}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(caret)}
+\CommentTok{# multiclass model via neural network}
+\NormalTok{fit=}\KeywordTok{multinom}\NormalTok{(species}\OperatorTok{~}\NormalTok{.,}\DataTypeTok{family=}\NormalTok{multinomial, }\DataTypeTok{data=}\NormalTok{iris_train)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # weights:  18 (10 variable)
+## initial  value 54.930614 
+## iter  10 value 4.798952
+## iter  20 value 1.053616
+## iter  30 value 0.018109
+## iter  40 value 0.007116
+## iter  50 value 0.005460
+## iter  60 value 0.001449
+## iter  70 value 0.001337
+## iter  80 value 0.000769
+## iter  90 value 0.000768
+## iter 100 value 0.000312
+## final  value 0.000312 
+## stopped after 100 iterations
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Call:
+## multinom(formula = species ~ ., data = iris_train, family = multinomial)
+## 
+## Coefficients:
+##   (Intercept)  Sepal.L.  Sepal.W.  Petal.L.  Petal.W.
+## s    16.52211 7.1991829  13.55332 -41.97642  10.72629
+## v  -205.03192 0.9502856 -33.88279  10.51631 140.60878
+## 
+## Std. Errors:
+##   (Intercept) Sepal.L. Sepal.W. Petal.L.   Petal.W.
+## s    447.9773 2150.290 1523.092 851.1332   89.60559
+## v   3713.8154 3471.479 8225.015 388.6877 1589.66680
+## 
+## Residual Deviance: 0.0006247145 
+## AIC: 20.00062
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{testclass=}\KeywordTok{predict}\NormalTok{(fit,}\DataTypeTok{new=}\NormalTok{iris_test)}
+\KeywordTok{confusionMatrix}\NormalTok{(}\DataTypeTok{data=}\NormalTok{testclass,}\DataTypeTok{reference=}\NormalTok{iris_test}\OperatorTok{$}\NormalTok{species)}\OperatorTok{$}\NormalTok{table}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##           Reference
+## Prediction  c  s  v
+##          c 38  0  4
+##          s  0 28  0
+##          v  0  0 30
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(NeuralNetTools)}
+\CommentTok{#plotnet(iris.nnet)}
+\KeywordTok{summary}\NormalTok{(iris.nnet)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## a 4-0-3 network with 15 weights
+## options were - skip-layer connections  softmax modelling  decay=5e-04
+##  b->o1 i1->o1 i2->o1 i3->o1 i4->o1 
+##  17.10  -1.04   0.25   2.68 -11.43 
+##  b->o2 i1->o2 i2->o2 i3->o2 i4->o2 
+##   2.03   3.64   5.52  -8.30  -5.39 
+##  b->o3 i1->o3 i2->o3 i3->o3 i4->o3 
+## -19.13  -2.60  -5.78   5.63  16.82
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(caret)}
+\KeywordTok{table}\NormalTok{(}\KeywordTok{predict}\NormalTok{(iris.nnet, iris_test, }\DataTypeTok{type =} \StringTok{"class"}\NormalTok{),iris_test}\OperatorTok{$}\NormalTok{species)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    
+##      c  s  v
+##   c 37  0  4
+##   s  0 28  0
+##   v  1  0 30
+\end{verbatim}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Summing up}
+
+\begin{itemize}
+\tightlist
+\item
+  Fitting a multiple linear regression
+
+  \begin{itemize}
+  \tightlist
+  \item
+    can be achived by building a neural network with one input layer and
+    one node in the output layer,
+  \item
+    linear activation function,
+  \item
+    and mean squared loss,
+  \end{itemize}
+\item
+  Classification with two classes can be performed using logistic
+  regression, and this
+
+  \begin{itemize}
+  \tightlist
+  \item
+    by building a neural network with one input layer and one node in
+    the output layer,
+  \item
+    sigmoid activation function,
+  \item
+    and binary cross-entropy loss.
+  \item
+    Remember: this will only give linear boundaries between the classes
+    (in the output space).
+  \end{itemize}
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\tightlist
+\item
+  Classification with \(C\) classes, \(C>2\), can be performed using
+  multinomial regression,
+
+  \begin{itemize}
+  \tightlist
+  \item
+    by building a neural network with one input layer and \(C\) nodes in
+    the output layer,
+  \item
+    softmax activation function,
+  \item
+    and categorical cross-entropy loss.
+  \item
+    Also here: this will only give linear boundaries between the classes
+    (in the output space).
+  \end{itemize}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\tightlist
+\item
+  We have seen that parameters (weights) can be found using gradient
+  descent algorithms:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    activation function ``must'' be differentiable
+  \item
+    step length (learning rate) must be set
+  \end{itemize}
+\item
+  But, we have now only looked at linear models --- which give linar
+  boundaries in the classification case --- now we need to move on to
+  allow for non-linearities!
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Feedforward networks}
+
+In feedforward networks we have only connections (weights) forward in
+the network, and no feedback connctions that sends the output of the
+model back into the network. The word \emph{multi-layer perceptron}
+(MLP) and \emph{sequentially layered} networks are also used
+
+The examples of MLR, logistic regression and multiclass regression are
+examples of feedfeedward networks without any socalled \emph{hidden
+layers} (between the input and output layers).
+
+We may have no hidden layer, one (to be studied next), or many.
+
+The number of hidden layers is called the \emph{depth} of the network,
+and the number of nodes in a layer is called the \emph{width} of the
+layer.
+
+\end{frame}
+
+\begin{frame}
+
+The idea of using many layers of many nodes is inspired from
+neuroscience, but today we don't have the goal to model the brain ---
+but instead to approximate function to perform statistical
+generalizations and maybe also insight into the problem at hand.
+
+Now we will see how adding \emph{hidden layers} with \emph{non-linear
+activation functions} between the input and output layer will make
+nonlinear statistical models.
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The single hidden layer feedforward network}
+
+The word neuron and node can be used interchangeably. We stick with
+greek letters \(\alpha\) and \(\beta\) for parameters, but call them
+weights.
+
+We use the following notation:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Inputs (input layer nodes), \(j=1,\dots p\):
+  \(x_1, x_2, \ldots, x_p\), or as a vector \({\boldsymbol x}\).
+\item
+  The nodes in the hidden layer, \(m=1,\ldots, M\):
+  \(z_1, z_2, \ldots, z_m\), or as vector \({\boldsymbol z}\), and the
+  hidden layer activation function \(\phi_h\). \[
+  z_m({\boldsymbol x})=\phi_h(\alpha_{0m}+\sum_{j=1}^p \alpha_{jm}x_{j})
+  \] where \(\alpha_{jm}\) is the weight from input \(j\) to hidden node
+  \(m\), and \(\alpha_{0m}\) is the bias term for the \(m\)th hidden
+  node. The hidden nodes can be thought of as \emph{latent variables}.
+\end{enumerate}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  The node(s) in the output layer, \(c=1,\ldots C\):
+  \(y_1, y_2, \ldots, y_C\), or as vector \({\boldsymbol y}\), and
+  output layer activation function \(\phi_o\). \[
+  \hat{y}_c({\boldsymbol x})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}z_{m}({\boldsymbol x}))
+  \] where \(\beta_{mc}\) is from hidden neuron \(m\) to ouput node
+  \(c\), and \(\beta_{0c}\) is the bias term for the \(c\)th output
+  node.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+
+To sum up: \(c=1,\ldots C\): \(y_1, y_2, \ldots, y_C\), where \(y_c\) is
+given as
+
+\[
+\hat{y}_c({\boldsymbol x})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}z_{m})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}\phi_h(\alpha_{0m}+\sum_{j=1}^p \alpha_{jm}x_{j}))
+\]
+
+\textbf{Hands on:}
+
+\begin{itemize}
+\tightlist
+\item
+  Identify p, M, C in the network figure below, and relate that to the
+  \(y_{c}({\boldsymbol x})\) equation.
+\item
+  How many parameters need to be estimated for this network?
+\item
+  What decides the value of \(p\) and \(C\)?
+\item
+  What is the connection between problem, \(\phi_o\) and \(C\)?
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\centering
+\includegraphics[width=0.80000\textwidth]{drawNNp3h2o3.png}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Special case with linear activation function for the
+hidden layer}
+
+\[
+\hat{y}_c({\boldsymbol x})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}z_{m})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}\phi_h(\alpha_{0m}+\sum_{j=1}^p \alpha_{jm}x_{j}))
+\]
+
+Here we assume that \(\phi_h(z)=z\), called linear or identity
+activiation:
+
+\[
+\hat{y}_c({\boldsymbol x})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}(\alpha_{0m}+\sum_{j=1}^p \alpha_{jm}x_{j}))
+\]
+
+\textbf{Q:} Does this look like something you have seen before?
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+For regression (linear output activation also) we have looked at a
+similar model in Module 6: principal component regression. Then the
+weights \(\alpha_{jm}\) were not estimated, but were defined to be the
+eigenvectors corresponding to the of the \(m\)th largest eigenvalue of
+the estimated covariance matrix of the covariates \({\boldsymbol x}_i\).
+Therefore we may think of the hidden nodes as \emph{latent variables}.
+In PCR only the \(\beta\)s were estimated using the responses (and the
+latent variables).
+
+In Module 6 we also touched upon Partial least squares, where the latent
+variables were found with the help of the response \(y\). Here both the
+\(\alpha\)s and \(\beta\)s were estimated.
+
+In Module 4 we only considered ``ordinary logistic regression'', but we
+could have used the principal components in place of the original
+covariates --- which then could have been depictured as a feedforward
+network with one hidden layer, but where only the \(\beta\)s were
+estimated.
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Universal approximation property}
+
+We may think of the goal of a feedforward network to approximate some
+function \(f\), mapping our input vector \({\boldsymbol x}\) to an
+output value \({\boldsymbol y}\) (as we saw with regression and
+classification).
+
+What type of mathematical function can a feedforward neural network with
+one hidden layer and linear output activation represent?
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+According to Goodfellow, Bengio, and Courville (2016), page 198: The
+\emph{universal approximation theorem} says that a feedforward network
+with
+
+\begin{itemize}
+\tightlist
+\item
+  a \emph{linear output layer}
+\item
+  at least one hidden layer with a ``squashing'' activation function and
+  ``enough'' hidden units
+\end{itemize}
+
+can approximate any (Borel measurable) function from one
+finite-dimensional space (our input layer) to another (our output layer)
+with any desired non-zero amount of error.
+
+The theorem has been shown both for the sigmoid (logistic) and ReLU
+activation functions in the hidden layer.
+
+\end{frame}
+
+\begin{frame}
+
+\textbf{The rectified linear unit ReLU} \(\phi_h(a)=\max(0,a)\)
+
+\includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-11-1.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+Earlier, the default activation function for the hiddan layer was the
+sigmoid, but now the ReLU is default activiation function to be used in
+the hidden layer(s) of a feedforward network --- in particular when more
+than one hidden layer is used. The ReLU function is piecewise linear,
+but in total non-linear.
+
+\end{frame}
+
+\begin{frame}
+
+Even though a large feedforward network with one hidden layer may be
+able to represent a desired function, we may not be able to estimate the
+parameters of the function,
+
+\begin{itemize}
+\tightlist
+\item
+  we may choose a too many or too few nodes in the hidden layer
+\item
+  our optimization routine may fail
+\item
+  we may overfit/underfit the training data
+\end{itemize}
+
+Therefore, sometimes networks with more than one hidden layer is used
+--- with fewer total number of nodes but more layers. A network with
+many hidden layers is called a \emph{deep network}.
+
+\end{frame}
+
+\begin{frame}
+
+In module 7 we looked at additive models of ``complex'' functions
+(splines) of one covariate each.
+
+Now we look at many rather simple non-linear function of linear
+combinations of covariates, and non-linear functions of non-linear
+functions of linear combinations of covariates.
+
+\textbf{Q:} Is one better than the other when it comes to
+interpretation, and to prediction?
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{The \texttt{nnet} R package}
+
+In order to not make this too complex (since we only have one week to
+work with this module), we will use the \texttt{nnet} R package by Brian
+Ripley (instead of the currently very popular \texttt{keras} package for
+deep learning --- however, we will also present the \texttt{keras}
+package for completeness).
+
+\texttt{nnet} fits one hidden layer with sigmoid activiation function.
+The implementation is not gradient descent, but instead BFGS using
+\texttt{optim}.
+
+\textbf{Description:} Fit single-hidden-layer neural network, possibly
+with skip-layer connections.
+
+Usage: (for formula class):
+\texttt{nnet(formula,\ data,\ weights,\ ...,\ subset,\ na.action,\ contrasts\ =\ NULL)}
+
+\texttt{nnet(x,\ y,\ ...)}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+Some arguments to \texttt{nnet()}
+
+\begin{itemize}
+\tightlist
+\item
+  formula, or x and y
+\item
+  x= input variables, matrix or data frame
+\item
+  y= response (target) values, if factor=classification
+\item
+  size: number of units in the hidden layer. Can be zero if there are
+  skip-layer units.
+\item
+  data: the dataset to be used
+\item
+  subset: index of entries in data that is the training sample
+\end{itemize}
+
+If the response in formula is a factor, an appropriate classification
+network is constructed; this has one output and entropy fit if the
+number of levels is two, and a number of outputs equal to the number of
+classes and a softmax output stage for more levels.
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\tightlist
+\item
+  linout: switch for linear output units. Default logistic output units.
+\item
+  entropy: switch for entropy (= maximum conditional likelihood)
+  fitting. Default by least-squares.
+\item
+  softmax switch for softmax (log-linear model) and maximum conditional
+  likelihood fitting. linout, entropy, softmax and censored are mutually
+  exclusive.
+\item
+  censored: A variant on softmax, in which non-zero targets mean
+  possible classes. Thus for softmax a row of (0, 1, 1) means one
+  example each of classes 2 and 3, but for censored it means one example
+  whose class is only known to be 2 or 3.
+\item
+  skip: switch to add skip-layer connections from input to output.
+\item
+  decay: parameter for weight decay. Default 0.
+\item
+  maxit: maximum number of iterations. Default 100.
+\item
+  MaxNWts: The maximum allowable number of weights. There is no
+  intrinsic limit in the code, but increasing MaxNWts will probably
+  allow fits that are very slow and time-consuming.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Examples}
+
+\begin{block}{Boston house prices}
+
+The objective here is to predict the median price of homes in a given
+Boston suburb in the mid-1970s, and 10 input variables are given.
+
+This data set is both available in the \texttt{MASS} and \texttt{keras}
+R package.
+
+\begin{block}{Preparing the data}
+
+\begin{itemize}
+\tightlist
+\item
+  Few data points: only 506, split between 404 training samples and 102
+  test samples (this split already done in the \texttt{keras} library)
+\item
+  Each feature in the input data (for example, the crime rate) has a
+  different scale, some values are proportions, which take values
+  between 0 and 1; others take values between 1 and 12, others between 0
+  and 100, and so on.
+\item
+  The targets are the median values of owner-occupied homes, in
+  thousands of dollars.
+\end{itemize}
+
+\end{block}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(keras)}
+\NormalTok{dataset <-}\StringTok{ }\KeywordTok{dataset_boston_housing}\NormalTok{()}
+\KeywordTok{c}\NormalTok{(}\KeywordTok{c}\NormalTok{(train_data, train_targets), }\KeywordTok{c}\NormalTok{(test_data, test_targets)) }\OperatorTok{%<-%}\StringTok{ }\NormalTok{dataset}
+\KeywordTok{str}\NormalTok{(train_targets)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  num [1:404(1d)] 15.2 42.3 50 21.1 17.7 18.5 11.3 15.6 15.6 14.4 ...
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(train_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         [,1] [,2]  [,3] [,4]  [,5]  [,6]  [,7]   [,8] [,9] [,10] [,11]
+## [1,] 1.23247  0.0  8.14    0 0.538 6.142  91.7 3.9769    4   307  21.0
+## [2,] 0.02177 82.5  2.03    0 0.415 7.610  15.7 6.2700    2   348  14.7
+## [3,] 4.89822  0.0 18.10    0 0.631 4.970 100.0 1.3325   24   666  20.2
+## [4,] 0.03961  0.0  5.19    0 0.515 6.037  34.5 5.9853    5   224  20.2
+## [5,] 3.69311  0.0 18.10    0 0.713 6.376  88.4 2.5671   24   666  20.2
+## [6,] 0.28392  0.0  7.38    0 0.493 5.708  74.3 4.7211    5   287  19.6
+##       [,12] [,13]
+## [1,] 396.90 18.72
+## [2,] 395.38  3.11
+## [3,] 375.52  3.26
+## [4,] 396.90  8.01
+## [5,] 391.43 14.65
+## [6,] 391.13 11.74
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(MASS)  }\CommentTok{#no names for columns - take that from other source}
+\KeywordTok{colnames}\NormalTok{(Boston)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "crim"    "zn"      "indus"   "chas"    "nox"     "rm"      "age"    
+##  [8] "dis"     "rad"     "tax"     "ptratio" "black"   "lstat"   "medv"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{colnames}\NormalTok{(train_data) =}\StringTok{ }\KeywordTok{colnames}\NormalTok{(Boston)[}\OperatorTok{-}\DecValTok{13}\NormalTok{]}
+\KeywordTok{colnames}\NormalTok{(test_data) =}\StringTok{ }\KeywordTok{colnames}\NormalTok{(Boston)[}\OperatorTok{-}\DecValTok{13}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+A widespread best practice to deal with such data is to do feature-wise
+normalization. This is to make the optimization easier with gradient
+based methods.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{org_train =}\StringTok{ }\NormalTok{train_data}
+\NormalTok{mean <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(train_data, }\DecValTok{2}\NormalTok{, mean)}
+\NormalTok{std <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(train_data, }\DecValTok{2}\NormalTok{, sd)}
+\NormalTok{train_data <-}\StringTok{ }\KeywordTok{scale}\NormalTok{(train_data, }\DataTypeTok{center =}\NormalTok{ mean, }\DataTypeTok{scale =}\NormalTok{ std)}
+\NormalTok{test_data <-}\StringTok{ }\KeywordTok{scale}\NormalTok{(test_data, }\DataTypeTok{center =}\NormalTok{ mean, }\DataTypeTok{scale =}\NormalTok{ std)}
+\end{Highlighting}
+\end{Shaded}
+
+Note that the quantities used for normalizing the test data are computed
+using the training data. You should never use in your workflow any
+quantity computed on the test data, even for something as simple as data
+normalization. This also means that we need to do this standardization
+again (from scratch) if we need to do cross-validation.
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+Just checking out one hidden layer with 5 units to get going.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(nnet)}
+\NormalTok{fit5 <-}\StringTok{ }\KeywordTok{nnet}\NormalTok{(train_targets }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ train_data, }\DataTypeTok{size =} \DecValTok{5}\NormalTok{, }\DataTypeTok{linout =} \OtherTok{TRUE}\NormalTok{, }
+    \DataTypeTok{maxit =} \DecValTok{1000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # weights:  76
+## initial  value 245152.741465 
+## iter  10 value 12420.525228
+## iter  20 value 6902.467151
+## iter  30 value 5723.819800
+## iter  40 value 5177.095194
+## iter  50 value 4689.188029
+## iter  60 value 4451.205619
+## iter  70 value 4357.164555
+## iter  80 value 4254.337102
+## iter  90 value 4118.662278
+## iter 100 value 4026.432205
+## iter 110 value 3918.047699
+## iter 120 value 3738.715855
+## iter 130 value 3406.126780
+## iter 140 value 3168.917490
+## iter 150 value 3084.137765
+## iter 160 value 3069.231409
+## iter 170 value 3061.111815
+## iter 180 value 3048.847428
+## iter 190 value 3021.014988
+## iter 200 value 2992.050465
+## iter 210 value 2984.054015
+## iter 220 value 2978.747128
+## iter 230 value 2971.909234
+## iter 240 value 2951.028001
+## iter 250 value 2936.939591
+## iter 260 value 2934.430484
+## iter 270 value 2932.502517
+## iter 280 value 2931.194886
+## iter 290 value 2930.713119
+## iter 300 value 2930.496846
+## iter 310 value 2930.072463
+## iter 320 value 2927.357698
+## iter 330 value 2925.042771
+## iter 340 value 2924.214962
+## iter 350 value 2924.019369
+## iter 360 value 2922.190825
+## iter 370 value 2921.733842
+## iter 380 value 2921.709770
+## iter 390 value 2921.673054
+## iter 400 value 2921.586000
+## iter 410 value 2921.087768
+## iter 420 value 2920.013649
+## iter 430 value 2918.119987
+## iter 440 value 2917.580537
+## iter 450 value 2917.529205
+## iter 460 value 2917.478376
+## iter 470 value 2917.428053
+## iter 480 value 2917.255010
+## iter 490 value 2917.232905
+## iter 500 value 2917.193604
+## iter 510 value 2916.542979
+## final  value 2916.377014 
+## converged
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{summary}\NormalTok{(fit5)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## a 13-5-1 network with 76 weights
+## options were - linear output units 
+##    b->h1   i1->h1   i2->h1   i3->h1   i4->h1   i5->h1   i6->h1   i7->h1 
+##  -132.12   -78.30    -9.02    19.32     5.10    14.23    59.89     7.00 
+##   i8->h1   i9->h1  i10->h1  i11->h1  i12->h1  i13->h1 
+##    21.03    64.26   -60.43    -3.87     7.50   -51.93 
+##    b->h2   i1->h2   i2->h2   i3->h2   i4->h2   i5->h2   i6->h2   i7->h2 
+##    -3.85    -1.01     0.56    -0.03     0.12    -0.51     0.54    -0.07 
+##   i8->h2   i9->h2  i10->h2  i11->h2  i12->h2  i13->h2 
+##    -1.24     1.26     1.27    -0.48     0.36    -1.88 
+##    b->h3   i1->h3   i2->h3   i3->h3   i4->h3   i5->h3   i6->h3   i7->h3 
+##    25.84    -0.73    41.04    -4.75    -2.00    -8.34    -6.28    -3.93 
+##   i8->h3   i9->h3  i10->h3  i11->h3  i12->h3  i13->h3 
+##   -23.34    -4.65    -5.50    -1.82     2.61   -14.67 
+##    b->h4   i1->h4   i2->h4   i3->h4   i4->h4   i5->h4   i6->h4   i7->h4 
+## -1124.48  -773.24  -102.16  -329.55   748.05  -657.22  1618.86 -1292.65 
+##   i8->h4   i9->h4  i10->h4  i11->h4  i12->h4  i13->h4 
+## -2108.62  1346.05 -1746.72  -541.44  1736.48   -43.50 
+##    b->h5   i1->h5   i2->h5   i3->h5   i4->h5   i5->h5   i6->h5   i7->h5 
+## -1120.64   683.80  -142.16    61.33 -6226.81  -497.87  -446.33     4.21 
+##   i8->h5   i9->h5  i10->h5  i11->h5  i12->h5  i13->h5 
+##  -255.20  -278.21   826.66   257.90   438.04    -3.16 
+##     b->o    h1->o    h2->o    h3->o    h4->o    h5->o 
+##    14.28     7.49    24.48     7.41     3.51    -2.83
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred =}\StringTok{ }\KeywordTok{predict}\NormalTok{(fit5, }\DataTypeTok{newdata =}\NormalTok{ test_data, }\DataTypeTok{type =} \StringTok{"raw"}\NormalTok{)}
+\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{mean}\NormalTok{((pred[, }\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{test_targets)}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 4.977579
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{mean}\NormalTok{(}\KeywordTok{abs}\NormalTok{(pred[, }\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{test_targets))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3.29981
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+Now, use cross-validation to find the best number of hidden nodes ---
+but that took some time, so only results shown below. Remember the
+scaling need to be done within the loop.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{grid =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{25}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{50}\NormalTok{)}
+
+\NormalTok{k <-}\StringTok{ }\DecValTok{4}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{indices <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(train_data))}
+\NormalTok{folds <-}\StringTok{ }\KeywordTok{cut}\NormalTok{(indices, }\DataTypeTok{breaks =}\NormalTok{ k, }\DataTypeTok{labels =} \OtherTok{FALSE}\NormalTok{)}
+\CommentTok{# have now assigned the traning data to 4 diffeent folds all of}
+\CommentTok{# the same size (101)}
+
+\NormalTok{resmat =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\OtherTok{NA}\NormalTok{, }\DataTypeTok{ncol =}\NormalTok{ k, }\DataTypeTok{nrow =} \KeywordTok{length}\NormalTok{(grid))}
+\ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{k) \{}
+\NormalTok{    thistrain =}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{dim}\NormalTok{(train_data)[}\DecValTok{1}\NormalTok{])[folds }\OperatorTok{!=}\StringTok{ }\NormalTok{j]}
+\NormalTok{    thisvalid =}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{dim}\NormalTok{(train_data)[}\DecValTok{1}\NormalTok{])[folds }\OperatorTok{==}\StringTok{ }\NormalTok{j]}
+\NormalTok{    mean <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(org_train[thistrain, ], }\DecValTok{2}\NormalTok{, mean)}
+\NormalTok{    std <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(org_train[thistrain, ], }\DecValTok{2}\NormalTok{, sd)}
+\NormalTok{    new <-}\StringTok{ }\KeywordTok{scale}\NormalTok{(org_train, }\DataTypeTok{center =}\NormalTok{ mean, }\DataTypeTok{scale =}\NormalTok{ std)}
+    \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(grid)) \{}
+\NormalTok{        thissize =}\StringTok{ }\NormalTok{grid[i]}
+        
+\NormalTok{        fit =}\StringTok{ }\KeywordTok{nnet}\NormalTok{(train_targets }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ new, }\DataTypeTok{size =}\NormalTok{ thissize, }
+            \DataTypeTok{linout =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{maxit =} \DecValTok{5000}\NormalTok{)}
+\NormalTok{        pred =}\StringTok{ }\KeywordTok{predict}\NormalTok{(fit, }\DataTypeTok{newdata =}\NormalTok{ new[thisvalid, ], }\DataTypeTok{type =} \StringTok{"raw"}\NormalTok{)}
+\NormalTok{        resmat[i, j] =}\StringTok{ }\KeywordTok{sum}\NormalTok{((pred[, }\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{train_targets[thisvalid])}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{    \}}
+\NormalTok{\}}
+\NormalTok{mse =}\StringTok{ }\KeywordTok{apply}\NormalTok{(resmat, }\DecValTok{1}\NormalTok{, sum)}\OperatorTok{/}\KeywordTok{nrow}\NormalTok{(train_data)}
+\KeywordTok{plot}\NormalTok{(grid, mse, }\DataTypeTok{type =} \StringTok{"l"}\NormalTok{)}
+\NormalTok{mse}
+\CommentTok{# 7.727735e+00 2.550359e+00 9.582672e-01 3.458643e-01 4.290271e-01}
+\CommentTok{# 1.337877e-03 1.786437e-07}
+\end{Highlighting}
+\end{Shaded}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+The best model here was the model with 50 nodes, the largest model we
+tried. Fitting that model on the full training set and testing on the
+test set
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(nnet)}
+\NormalTok{fit50 <-}\StringTok{ }\KeywordTok{nnet}\NormalTok{(train_targets }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ train_data, }\DataTypeTok{size =} \DecValTok{50}\NormalTok{, }\DataTypeTok{linout =} \OtherTok{TRUE}\NormalTok{, }
+    \DataTypeTok{maxit =} \DecValTok{5000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # weights:  751
+## initial  value 270057.408487 
+## iter  10 value 7120.629568
+## iter  20 value 1912.248122
+## iter  30 value 1045.291511
+## iter  40 value 654.075165
+## iter  50 value 483.020417
+## iter  60 value 381.456615
+## iter  70 value 303.378804
+## iter  80 value 206.528830
+## iter  90 value 117.599100
+## iter 100 value 75.531273
+## iter 110 value 48.326269
+## iter 120 value 31.066476
+## iter 130 value 20.833693
+## iter 140 value 14.263621
+## iter 150 value 10.101553
+## iter 160 value 7.434405
+## iter 170 value 5.503605
+## iter 180 value 4.199943
+## iter 190 value 3.403191
+## iter 200 value 2.654316
+## iter 210 value 1.858079
+## iter 220 value 1.304752
+## iter 230 value 0.863482
+## iter 240 value 0.594627
+## iter 250 value 0.404327
+## iter 260 value 0.292482
+## iter 270 value 0.206237
+## iter 280 value 0.142111
+## iter 290 value 0.101128
+## iter 300 value 0.075254
+## iter 310 value 0.053798
+## iter 320 value 0.037321
+## iter 330 value 0.024749
+## iter 340 value 0.013239
+## iter 350 value 0.006591
+## iter 360 value 0.003741
+## iter 370 value 0.001995
+## iter 380 value 0.000971
+## iter 390 value 0.000412
+## iter 400 value 0.000122
+## final  value 0.000096 
+## converged
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{head}\NormalTok{(}\KeywordTok{summary}\NormalTok{(fit50))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $n
+## [1] 13 50  1
+## 
+## $nunits
+## [1] 65
+## 
+## $nconn
+##  [1]   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0  14  28
+## [18]  42  56  70  84  98 112 126 140 154 168 182 196 210 224 238 252 266
+## [35] 280 294 308 322 336 350 364 378 392 406 420 434 448 462 476 490 504
+## [52] 518 532 546 560 574 588 602 616 630 644 658 672 686 700 751
+## 
+## $conn
+##   [1]  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8
+##  [24]  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3
+##  [47]  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12
+##  [70] 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7
+##  [93]  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2
+## [116]  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11
+## [139] 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6
+## [162]  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1
+## [185]  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10
+## [208] 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5
+## [231]  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0
+## [254]  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9
+## [277] 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4
+## [300]  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13
+## [323]  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8
+## [346]  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3
+## [369]  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12
+## [392] 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7
+## [415]  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2
+## [438]  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11
+## [461] 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6
+## [484]  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1
+## [507]  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10
+## [530] 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5
+## [553]  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0
+## [576]  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9
+## [599] 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4
+## [622]  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13
+## [645]  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8
+## [668]  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3
+## [691]  4  5  6  7  8  9 10 11 12 13  0 14 15 16 17 18 19 20 21 22 23 24 25
+## [714] 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48
+## [737] 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63
+## 
+## $nsunits
+## [1] 64
+## 
+## $decay
+## [1] 0
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{pred =}\StringTok{ }\KeywordTok{predict}\NormalTok{(fit50, }\DataTypeTok{newdata =}\NormalTok{ test_data, }\DataTypeTok{type =} \StringTok{"raw"}\NormalTok{)}
+\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{mean}\NormalTok{((pred[, }\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{test_targets)}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 5.155742
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mae =}\StringTok{ }\KeywordTok{mean}\NormalTok{(}\KeywordTok{abs}\NormalTok{(pred[, }\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{test_targets))}
+\NormalTok{mae}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3.894279
+\end{verbatim}
+
+See here:
+\url{https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural_networks_boston_housing.html}
+for running two hidden layers of 64 nodes each with \texttt{keras}.
+(This gave a mean absolute error on the test set of 2.682524 after early
+stopping.)
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Using \texttt{nnet}}
+
+\begin{itemize}
+\tightlist
+\item
+  only one hidden layer available
+\item
+  only sigmoid hidden layer activation function
+\item
+  optimization done with an optimization method where the learning rate
+  is automatically calculated
+\item
+  weight decay (\(L_2\) regularization as for the ridge regression) is
+  available (see below)
+\item
+  optimization is supposed to be done until convergence
+\item
+  the possible choice of hyper parameter is the number of notes in the
+  hidden layer
+\end{itemize}
+
+\textbf{We suggest you use \texttt{nnet} in Compulsory exercise 2,
+Problem 3.}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Neural network parts}
+
+We now focus on the different elements of neural networks.
+
+Illustration drawn in class, motivated from Figure 1.9/3.1 from Chollet
+and Allaire (2018).
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Model}
+
+\begin{block}{Output layer activation}
+
+These choices have been guided by solutions in statistics (multiple
+linear regression, logistic regression, multiclass regression)
+
+\begin{itemize}
+\tightlist
+\item
+  Linear: for regression problems
+\item
+  Sigmoid: for two-class classification problems
+\item
+  Softmax: for more than two classes classification problems
+\end{itemize}
+
+Remark: it is important that the output activation is matched with an
+appropriate loss function.
+
+\end{block}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Hidden layer activation}
+
+\textbf{Q:} Why can we not just use linar activation function in all
+hidden layers?
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\textbf{A:} Then each layer would only be able to do linear
+transformations of the input data and a deep stack of linear layers
+would still implement a linear operation. The activation functions
+sigmoid and relu add non-linearity to the model. And, the universial
+approximation property is dependent on a squashing type activation
+function.
+
+\end{frame}
+
+\begin{frame}
+
+\includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-17-1.pdf}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{itemize}
+\tightlist
+\item
+  Sigmoid: \(g(a)=1/(1+\exp(-a))\). The previous standard choice. These
+  units were found to saturate at a high value when the input was very
+  positive and at a low value when the input was very negative, and that
+  they were only strongly sensitive when the input was close to 0. This
+  saturation lead to problems in the gradient descent routines.
+\end{itemize}
+
+\textbf{However, for our Compulsory exercise 2, Problem 3, there should
+be quite ok to use sigmoid hidden layer activation in the \texttt{nnet}
+R package (default hidden layer activation is sigmoid, and that can not
+be changed).}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\tightlist
+\item
+  ReLU: \(\phi_h(a)=\max(0,a)\). The standard choice for deep networks
+  (many hidden layers and many nodes) today.
+\end{itemize}
+
+The function is piecewise linear, but in total non-linear. It has shown
+to be easy to use with gradient descent --- even though the function is
+not differentiable at 0. As we will touch upon later, we don't expect to
+train a network until the gradient is 0. The derivative from the left at
+0 is 0, and the derivative from the right is 1. See Goodfellow, Bengio,
+and Courville (2016) page 192 for a discussion on this topic.
+
+When initializing the parameter going into a ReLU node, the advice is to
+set weight of the bias node to be small and positive, e.g.~0.1, which
+makes it likely that node will be active (larger than 0) for most inputs
+in the training set.
+
+\end{frame}
+
+\begin{frame}
+
+Goodfellow, Bengio, and Courville (2016), page 226, reports this
+(replacing sigmoid with ReLU) to be one of the major changes that have
+improved the performance of the feedforward networks.
+
+ReLU can also be motivated from biology.
+
+\begin{itemize}
+\tightlist
+\item
+  For some inputs a biological neuron can be completely inactive
+\item
+  For some inputs a biological neuron output can be proportional to the
+  input
+\item
+  But, most of the time a biological neuron is inactive.
+\end{itemize}
+
+According to Goodfellow, Bengio, and Courville (2016), page 197, hidden
+unit design is an \emph{active area of research.}
+
+\end{frame}
+
+\begin{frame}
+
+Other possible choices for hidden layer activation functions are:
+
+\begin{itemize}
+\tightlist
+\item
+  Radial basis functions: as we looked at in Module 9.
+\item
+  Softplus: \(\phi_h(a)=\ln(1+\exp(a))\)
+\item
+  Hard tanh: \(\phi_h(a)=\max(-1,\min(1,a))\)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Neural motivation for squashing functions}
+
+\centering
+\includegraphics[width=0.80000\textwidth]{Action_potential.png}
+
+\url{https://commons.wikimedia.org/wiki/File:Action_potential.svg}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Network architecture}
+
+How many nodes in the network and how are the nodes connected to
+eachother? This depends on the problem, and here experience is
+important.
+
+We will only consider feedforward networks, where all nodes in one layer
+is connected to all the nodes in the next layer. The layers are then
+\emph{fully connected} and \emph{dense}.
+
+Choosing architecture to us is to chose the \emph{depth of the network
+(how many hidden layers)} and the \emph{width of each layer}.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+However, the recent practice, see e.g. Chollet and Allaire (2018),
+Section 4.5.6 and Goodfellow, Bengio, and Courville (2016), page 229, is
+to
+
+\begin{itemize}
+\tightlist
+\item
+  choose a too large network (too many nodes and/or too many layers) so
+  that if trained until convergence (optimum) then the this would result
+  in overfitting, and
+\item
+  then use other means to avoid this (various variants of regularization
+  and hyperparameter optimization).
+\end{itemize}
+
+This makes the choice of network architecture to be to \emph{choose a
+large enough network}. See also Hyperparameter optimization below.
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Method}
+
+The method part is to choose the loss function for the output layer.
+
+The choice of loss function is closely related to the output layer
+activation function. To sum up, the popular problem types, output
+activation and loss functions are:
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+Problem & Output activation & Loss function\tabularnewline
+\midrule
+\endhead
+Regression & \texttt{linear} & \texttt{mse}\tabularnewline
+Classification (C=2) & \texttt{sigmoid} &
+\texttt{binary\_crossentropy}\tabularnewline
+Classification (C\textgreater{}2) & \texttt{softmax} &
+\texttt{categorical\_crossentropy}\tabularnewline
+\bottomrule
+\end{longtable}
+
+where the mathematical formulas are given for \(n\) training samples.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+Let all network parameters (weights) be denoted by
+\({\boldsymbol \theta}\).
+
+\begin{block}{Mean squared error}
+
+\[ J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n (y_i-{\hat{y}_1({\boldsymbol x}_i)})^2\]
+\(\hat{y}_1({\boldsymbol x}_i)\) is the output from the linear output
+node, and \(y_i\) is the response.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Binary cross-entropy}
+
+\[ J({\boldsymbol \theta})=-\frac{1}{n}\sum_{i=1}^n (y_i\ln({\hat{y}_1({\boldsymbol x}_i)})+(1-y_i)\ln(1-{\hat{y}_1({\boldsymbol x}_i)})\]
+
+where \(\hat{y}_1({\boldsymbol x}_i)\) is the output from the sigmoid
+output node, and \(y_i\) is the 0/1 observed class.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Categorical cross-entropy}
+
+\[ J({\boldsymbol \theta})=-\frac{1}{n}\sum_{i=1}^n\frac{1}{C} \sum_{c=1}^C (y_{ic}\ln({\hat{y}_c({\boldsymbol x}_i)})\]
+where \(\hat{y}_c({\boldsymbol x}_i)\) is the output from the softmax
+output node \(c\) and \(y_{ic}\) is the observed one-hot coding (0/1)
+for class \(c\).
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Overall}
+
+Due to how estimation is done (see below), the loss functions chosen
+``need'' to be:
+
+\begin{itemize}
+\tightlist
+\item
+  differentiable
+\item
+  possible to compute for each single training data point (or a
+  mini-batch --- to be explained soon)
+\end{itemize}
+
+In the 1980-1990s the mean squared error was the prominent loss function
+also for classification problems, but this has subsequently changed ---
+motivated by the spread of maximum likelihood from statistics to machine
+learning.
+
+Observe that we have only given the formula for the loss function, and
+not explicitly assumed anything about any probability distribution of
+the responses (not even assumed that the responses are random
+variables). However, we know which statistical model assumptions would
+give the loss functions as related to the negative of the loglikelihood.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Optimizors}
+
+Let the unknown parameters be denoted \({\boldsymbol \theta}\) (what we
+have previously denotes as \(\alpha\)s and \(\beta\)s), and the loss
+function to be minimized \(J({\boldsymbol \theta})\).
+
+Illustration: Figure 1.9 from Chollet and Allaire (2018) (again).
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Gradient descent}
+
+Let \(\nabla J({\boldsymbol \theta}^{(t)})\) be the gradient of the loss
+function evaluated at the current estimate
+\({\boldsymbol \theta}^{(t)}\), then a step \(t+1\) of the algorithm the
+new values (estimates) of of the parameters are given as:
+
+\[{\boldsymbol \theta}^{(t+1)}={\boldsymbol \theta}^{(t)} - \lambda \nabla_{\boldsymbol \theta} J({\boldsymbol \theta}^{(t)})\]
+
+The \emph{learning rate} \(\lambda\) is often set to some small value.
+In \texttt{keras} the default learning rate is \(0.01\).
+
+Remember that the gradient is the vector of partical derivative of the
+loss function with respect to each of the parameter in the network.
+
+\textbf{Q}: Why are we moving in the direction of the negative of the
+gradient? Why not the positive?
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Mini-batch stochastic gradient descent (SGD)}
+
+The loss function is computed as a mean over all training examples.
+
+\[J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n J({\boldsymbol x}_i, y_i)\]
+
+This means that the gradient will also be a mean over the gradient
+contribution from each training example.
+
+\[\nabla_{\boldsymbol \theta} J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n \nabla_{\boldsymbol \theta} J({\boldsymbol x}_i, y_i)\]
+
+To build a network that generalizes well, it is important to have many
+training examples, but that would make us spend a lot of time and
+computer resources at calculating each gradient descent step.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+We observe that we may see the gradient as an average over many
+individual gradients, and think of this as an estimator for an
+expectation. This expectation can we (also) approximate by the average
+gradient over just a \emph{mini-batch} (random sample) of the
+observations.
+
+The idea here is that the optimizer will converge much faster if they
+can rapidly compute approximate estimates of the gradient, instead of
+slowly computing the exact gradient (using all training data).
+
+In addition with multicore systems, mini-batches may be processed in
+parallell and the batch size is often a power of 2 (32 or 256).
+
+It also turns out that small batches also serves as a regularization
+effect maybe due to the variability they bring to the optimization
+process.
+
+\end{frame}
+
+\begin{frame}
+
+In the 4th video (on backpropagation) from 3Blue1Brown there is nice
+example of one trajectory from gradient decent and one from SGD (13:50
+minutes into the video):
+\url{https://www.youtube.com/watch?v=tIeHLnjs5U8}
+
+\end{frame}
+
+\begin{frame}
+
+This means that for (mini-batch) stochastic gradient descent we do as
+follows:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Divide all the training samples randomly into mini-batches.
+\item
+  For each mini-batch: Make predictions of the reponses in the
+  mini-batch in a \emph{forward pass}.
+\item
+  Compute the loss for the training data in this batch.
+\item
+  Compute the gradient of the loss with regard to the model's parameters
+  (\emph{backward pass}) based on the training data in the batch.
+  \(\nabla_{\boldsymbol \theta}^* J({\boldsymbol \theta}^{(t)})\)
+\item
+  Update all weighs, but just using the average gradient from the
+  mini-batch
+  \({\boldsymbol \theta}^{(t+1)}={\boldsymbol \theta}^{(t)} - \lambda \nabla_{\boldsymbol \theta} ^* J({\boldsymbol \theta}^{(t)})\)
+\item
+  Repeat 2-5 until convergence. (Could have gone back to 1, but often
+  not done.)
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\tightlist
+\item
+  The algorithm defined above is called mini-batch SGD. The Stochastic
+  part comes from the fact that we are randomly sampling batches from
+  the training data.
+\item
+  Stochastic gradient descent (SGD) for size equals to 1.
+\item
+  Mini-batch SGD is a compromise between SGD (one sample per iteration)
+  and full gradient descent (full dataset per iteration)
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Backpropagation algorithm}
+
+Computing the analytical expression for the gradient \(\nabla J\) is not
+difficult, but the numerical evaluation may be expensive. The
+Backpropagation algorithm is an simple and inexpensive way to calculate
+the gradient.
+
+The chain rue is used to compute derivatives of functions of other
+functions where the derivatives are known, this is done efficiently with
+backpropagation.
+
+Backpropagation starts with the value of the loss function and works
+backward from the top layers to the bottom layers, applying the chain
+rule to compute the contribution that each parameter have in the loss
+value.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+More information:
+
+\begin{itemize}
+\tightlist
+\item
+  Mathematical details in Goodfellow, Bengio, and Courville (2016)
+  Section 6.5 (pages 204-238),
+\item
+  3Blue1Brown: video overview:
+  \url{https://www.youtube.com/watch?v=Ilg3gGewQ5U} and chain rule maths
+  \url{https://www.youtube.com/watch?v=tIeHLnjs5U8}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Variations of SDG --- with adaptive learning rates}
+
+General concept:
+
+\begin{itemize}
+\tightlist
+\item
+  momentum term: previous gradients are allowed to contribute.
+\end{itemize}
+
+Named variants: In \texttt{keras} the ``default optimizer'' is RMSprop.
+
+\begin{itemize}
+\tightlist
+\item
+  AdaGrad: individually adapt the learning rates of all model parameters
+  by scaling them inversely proportional to the square root of the sum
+  of all their historical squared values. (Nice properties for convex
+  problems, but with non-linear hidden activation function we do not
+  have a convex problem.)
+\item
+  RMSprop: modification to AdaGrad in non-convex setting. Scales with
+  exponentially weighted moving average instead of all historical
+  squared gradient values.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Further reading on optimizers}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://keras.io/optimizers/}{Keras documentation for
+  Optimizers}
+\item
+  \href{http://ruder.io/optimizing-gradient-descent/index.html}{An
+  overview of gradient descent optimization algorithms}
+\item
+  \href{http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf}{Overview
+  of mini-batch gradient descent}
+\item
+  Andrew Ng explains about RMSprop in Coursera course:
+  \href{https://www.coursera.org/learn/deep-neural-network/lecture/BhJlm/rmsprop}{Improving
+  Deep Neural Networks: Hyperparameter tuning, Regularization and
+  Optimization}
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Regularization}
+
+Goodfellow, Bengio, and Courville (2016), Chapter 7, define
+regularization as \emph{any modification we make to a learning algorithm
+that is intended to reduce its generalization error but not its training
+error}.
+
+We looked at regularization in Module 6, where our aim was to trade
+\emph{increased bias} for \emph{reduced variance}. Another way of
+looking at this is we need not focus entirely on finding the model of
+``correct size'', but instead find a large model that has been
+regularized properly.
+
+In Module 6 we looked in particular at adding a penalty to the loss
+function. The penalties we looked at were of type absolute value of
+parameter (\(L_1\), lasso, where we looked at this as model selection)
+and square value of parameter (\(L_2\), ridge regression). This can also
+done for neural networks.
+
+In neural networks, \emph{weight decay} is the expression for adding a
+\(L_2\)-penalty to the loss function, and is available in the
+\texttt{nnet} R package.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+Other versions of regularization are \emph{dataset augmentation} and
+\emph{label smoothing}:
+
+\begin{itemize}
+\item
+  Dataset augmentation means adding fake data to the dataset, in order
+  that the trained model will generalize better. For some learning task
+  it is straightforward to create the new fake data --- for image data
+  this can be done by rotating and scaling the images.
+\item
+  Label smoothing is motivated by the fact that the training data may
+  contain errors in the reponses recorded, and replaced the one-hot
+  coding for \(C\) classes with \(\epsilon/(C-1)\) and \(1-\epsilon\)
+  for some small \(\epsilon\).
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Early stopping}
+
+(Based on Goodfellow, Bengio, and Courville (2016), Section 7.8)
+
+The most commonly used for of regularization is \emph{early stopping}.
+
+If we have chosen a sufficiently large model with the capacity to
+overfit the training data, we would observe that the training error
+decreases steadily during training, but the error on the validation set
+at some point begins to increase.
+
+If we stop the learning early and return the parameters giving the test
+performance on the validation set, this model would hopefully be a
+better model than if we trained the model until convergence --- and this
+model will then also give a better test set error.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+It is possible to think of the number of \emph{training steps} as a
+hyperparameter. This hyperparameter can easily be set, and the cost is
+just that we need to monitor the performance on the validation set
+during training. Alternatively, cross-validation can be used.
+
+One strategy is to first find the optimal stopping time for the training
+based on the valiation set (or with cross-validation with small data
+sets), and then retrain the full training set (including the validation
+part) and stop at the selected stopping time.
+
+Why is early stopping a regularization technique? By early stopping the
+optimization procedure has only seen a relatively small part of the
+parameter space in the neighbourhood of the intitial parameter value.
+See Goodfellow, Bengio, and Courville (2016), page 250 for a
+relationship with \(L_2\) regularization.
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Hyperparameter optimization}
+
+How to avoid overfitting:
+
+\begin{itemize}
+\tightlist
+\item
+  reduce network size,
+\item
+  collect more observations,
+\item
+  regularization (including early stopping and drop-out)
+\end{itemize}
+
+The network architacture, the number of batches to run before
+terminating the optimzation, the drop-out rate, are all examples of
+hyperparameters that need to be chosen in a sensible way before fitting
+the final model.
+
+It is important that the hyperparameters are chosen on a validation set
+or by cross-validation.
+
+However, a ``popular'' term is \emph{validation-set overfitting} and
+refers to using the validation set to decide many hyperparameters, so
+many that you may effectively overfit the validation set.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+In statistics we use design of experiments to explore these
+hyperparameters, and just using marginal grids (one hyperparameter at a
+time) is common in machine learning.
+
+Example on DOE:hyperparameter optimization with boosting (which of cause
+also can be used for neural networks). Article: Design of experiments
+and response surface methodology to tune machine learning
+hyperparameters, with a random forest case-study (2018), Gustavo A.
+Lujan-Moreno, Phillip R. Howard, Omar G. Rojas, Douglas Montgomery,
+Expert Systems with Applications, Volume 109,
+\url{https://doi.org/10.1016/j.eswa.2018.05.024}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Dropout}
+
+(Based on Goodfellow, Bengio, and Courville (2016), Section 7.12, and
+Chollet and Allaire (2018) 4.4.3)
+
+Dropout was developed by Geoff Hinton and his students.
+
+\begin{itemize}
+\tightlist
+\item
+  During training: randomly \emph{dropout} (set to zero) outputs in a
+  layer. Drop-out rates may be chosen between 0.2 and 0.5.
+\item
+  During test: not dropout, but scale done the layer output values by a
+  factor equal to the drop-out rate (since now more units are active
+  than we had during training)
+\end{itemize}
+
+Alternatively, the drop-out and scaling (now upscaling) can be done
+during training.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+One way to look at dropout is on the lines of what we did in Module 8
+when we used bootstrapping to produced many data sets and then fitted a
+model to each of them and then took the average (bagging). But randomly
+dropping out outputs in a layer, this can be looked as mimicking bagging
+--- in an efficient way.
+
+See Goodfellow, Bengio, and Courville (2016), Section 7.12 for more
+insight into the mathematics behind drop-out.
+
+\end{frame}
+
+\begin{frame}
+
+\url{https://www.reddit.com/r/MachineLearning/comments/4w6tsv/ama_we_are_the_google_brain_team_wed_love_to/}
+
+The following is a direct quotation.
+
+figplucker: \textbf{How was `Dropout' conceived? Was there an `aha'
+moment?}
+
+geoffhinton (2 years ago)
+
+There were actually three aha moments. One was in about 2004 when
+Radford Neal suggested to me that the brain might be big because it was
+learning a large ensemble of models. I thought this would be a very
+inefficient use of hardware since the same features would need to be
+invented separately by different models. Then I realized that the
+``models'' could just be the subset of active neurons. This would allow
+combinatorially many models and might explain why randomness in spiking
+was helpful.
+
+Soon after that I went to my bank. The tellers kept changing and I asked
+one of them why. He said he didn't know but they got moved around a lot.
+I figured it must be because it would require cooperation between
+employees to successfully defraud the bank. \textbf{This made me realize
+that randomly removing a different subset of neurons on each example
+would prevent conspiracies and thus reduce overfitting.}
+
+I tried this out rather sloppily (I didn't have an adviser) in 2004 and
+it didn't seem to work any better than keeping the squared weights small
+so I forgot about it.
+
+Then in 2011, Christos Papadimitriou gave a talk at Toronto in which he
+said that the whole point of sexual reproduction was to break up complex
+co-adaptations. He may not have said it quite like that, but that's what
+I heard. It was clearly the same abstract idea as randomly removing
+subsets of the neurons. So I went back and tried harder and in
+collaboration with my grad students we showed that it worked really
+well.
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Metrics}
+
+Provides different forms to measure how well the predictions are
+compared with the true values.
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{accuracy}: Percentage of correct classifications
+\item
+  \texttt{mae}: Mean absolute error.
+\end{itemize}
+
+These metrics can be monitored during training (on validation set) or in
+the end on the test set, and can be the basis for the choice when to top
+training.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Deep learning}
+
+\begin{block}{Timeline}
+
+(based on Chollet and Allaire (2018))
+
+Neural networks were investigated in ``toy form'' in the 1950s. The
+first big step was taken in the 1980s when the backpropagation algorithm
+were developed (rediscovered) to perform gradient descent in an
+efficient way.
+
+In 1989 (Bell Labs, Yann LeCun) used convolutional neural networks to
+classifying handwritten digits, and \emph{LeNet} was used in the US
+Postal Service for reading ZIP codes in the 1990s.
+
+Not so much seen (?) activity in the neural network field in the 2000s.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+In 2011 neural networks with many layers (and trained with GPUs) were
+performing well on image classification tasks. The
+\href{http://www.image-net.org/}{\emph{ImageNet}} classification
+challenge (classify high resolution colour images into 1k different
+categories after training on 1.4M images) was won by solutions with deep
+convolutional neural networks (convnets). In 2011 the accuracy was
+74.3\%, in 2012 83.6\% and in 2015 96.4\%.
+
+From 2012, convnets is the general solution for computer vision tasks.
+Other application areas are natural language processing.
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Deep?}
+
+Deep learning does not mean a deeper understanding, but refers to
+sucessive layers of representations - where the number of layers gives
+the \emph{depth} of the model. Often tens to hundreds of layers are
+used.
+
+Deep neural networks are not seen as models of the brain, and are not
+related to neurobiology.
+
+A deep network can be seen as many stages of
+\emph{information-destillation} (Chollet and Allaire (2018), page 9),
+where each stage performes a simple data transformation. These
+transformations are not curated by the data analyst, but is estimated in
+the network.
+
+In statistics we first select a set of inputs, then look at how these
+inputs should be transformed (projections in simple form or
+high-dimensional and nonlinear forms), before we apply some statistical
+methods. This transformation step can be called \emph{feature
+engineering} and has been automated in deep learning.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\emph{Deep Learning is an algorithm which has no theoretical limitations
+of what it can learn; the more data you give and the more computational
+time you provide, the better it is.}
+
+Geoffrey Hinton (Google)
+
+\end{frame}
+
+\begin{frame}
+
+In addition, this built-in feature engineering of the deep network is
+not performed in a greedy fashion, but \emph{jointly} with
+estimating/learning the full model.
+
+The success of deep learning is dependent upon the breakthroughts in
+hardware development, expecially with faster CPUs and massively
+parallell graphical processing units (GPUs). Tensor processing units
+(TPUs) is the next step.
+
+Achievements of deep learning includes high quality (near-human to super
+human) image classification, speech recognition, handwriting
+transcription, machine translation, digital assistants, autonomous
+driving, advertise targeting, web searches, playing Go and chess.
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The R keras package}
+
+Earlier good programming skills in C++ was essential to work in deep
+learning. In addition also skills on programming for GPUs were needed
+(e.g NVIDIA CUDA programming interface). With the launch of the Keras
+library now users may only need basic skills in Python or R.
+
+\href{https://keras.io/}{Keras} can be seen as a way to use LEGO bricks
+in deep learning. To quote the web-page:
+
+\emph{Keras is a high-level neural networks API, written in Python and
+capable of running on top of TensorFlow, CNTK, or Theano. It was
+developed with a focus on enabling fast experimentation. Being able to
+go from idea to result with the least possible delay is key to doing
+good research.}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\href{https://www.tensorflow.org/}{Tensorflow} is a
+\emph{symbolic-tensor manipulation} framework that also can perform
+autodifferentiation.
+
+A tensor is defined by its number of axis (below), shape (dimension) and
+data type (double, integer, character)
+
+\begin{itemize}
+\tightlist
+\item
+  0D tensor is a scalar
+\item
+  1D tensor is a vector
+\item
+  2D tensor is a matrix - and the two \emph{axis} of the tensor is the
+  rows and columns
+\item
+  3D tensor generalization of a matrix, and may be used for time series
+  data
+\item
+  4D tensors may be used for images (samples, height, width, channels),
+  and
+\item
+  5D tensors may be used for video (as 4D, plus frames).
+\end{itemize}
+
+Tensor operations (reshaping, dot product) are performed in TensorFlow.
+
+The use of Tensorflow in R Keras is referred to as ``using Tensorflow as
+a backend engine''. Tensorflow is the default backend.
+
+\end{frame}
+
+\begin{frame}
+
+More information on the R solution: \url{https://keras.rstudio.com/}
+
+Cheat-sheet for R Keras:
+\url{https://github.com/rstudio/cheatsheets/raw/master/keras.pdf}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Simple data analysis workflow}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Select training and test data
+\item
+  Define the model(s): layers, nodes in layers, activation function
+\item
+  Configure the learning process by choosing a loss function, an
+  optimizer, and some metrics to monitor. If needed decide on an
+  evaluation protocol (validation set, cross-validation, iterated
+  cross-validation)
+\item
+  Perform any needed preprocessing of data to fit the choices in 2 and 3
+\item
+  Fit the model to the data
+\item
+  Make preditions for test data or use the model
+\end{enumerate}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+Chollet and Allaire (2018) Section 4.5 has the following recommentations
+for step 3+5:
+
+\begin{itemize}
+\tightlist
+\item
+  Develop a first model that performs better than a basic baseline
+  (maybe the basic baseline could be standard statistics solutions)
+\item
+  Develop a model that overfits the data
+\item
+  Regularize and tune hyperparameters
+\end{itemize}
+
+Here is a tutorial:
+\url{https://keras.rstudio.com/articles/tutorial_overfit_underfit.html}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{MNIST dataset}
+
+This is a larger image version of the handwritten digits data set (a
+different version, ZIP-codes is found under Recommended exercises).
+
+This data analysis is based on
+\url{https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/8-neural_networks_mnist.html}
+and the \texttt{R\ keras} cheat sheet. An advanced version using
+convolutional neural nets is found here:
+\url{https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/12-neural_networks_convolution_mnist.html}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+Objective: classify the digit contained in an image (128 \(\times\) 128
+greyscale). Problem type: Multiclass classification based on image data.
+
+\includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-18-1.pdf}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+Labels for the training data:
+
+\begin{verbatim}
+## train_labels
+##    0    1    2    3    4    5    6    7    8    9 
+## 5923 6742 5958 6131 5842 5421 5918 6265 5851 5949
+\end{verbatim}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{1. Training and test data}
+
+60 000 images for training and 10 000 images for testing.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Training data}
+\NormalTok{train_images <-}\StringTok{ }\NormalTok{mnist}\OperatorTok{$}\NormalTok{train}\OperatorTok{$}\NormalTok{x}
+\NormalTok{train_labels <-}\StringTok{ }\NormalTok{mnist}\OperatorTok{$}\NormalTok{train}\OperatorTok{$}\NormalTok{y}
+
+\CommentTok{# Test data}
+\NormalTok{test_images <-}\StringTok{ }\NormalTok{mnist}\OperatorTok{$}\NormalTok{test}\OperatorTok{$}\NormalTok{x}
+\NormalTok{test_labels <-}\StringTok{ }\NormalTok{mnist}\OperatorTok{$}\NormalTok{test}\OperatorTok{$}\NormalTok{y}
+\NormalTok{org_testlabels <-}\StringTok{ }\NormalTok{test_labels}
+\end{Highlighting}
+\end{Shaded}
+
+The \texttt{train\_images} is a tensor (generalization of a matrix) with
+3 axis, \texttt{(samples,\ height,\ width)}.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{2. Defining the model}
+
+In this case we are using a \texttt{layer\_dense} (fully connected)
+which expects an input tensor of rank equal to two
+\texttt{(sample,\ features)} where each \texttt{sample} should contain
+\texttt{28*28=784} pixels. Adding a bias term (intercept) is default for
+\texttt{layer\_dense}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{network <-}\StringTok{ }\KeywordTok{keras_model_sequential}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }\KeywordTok{layer_dense}\NormalTok{(}\DataTypeTok{units =} \DecValTok{512}\NormalTok{, }\DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{, }
+    \DataTypeTok{input_shape =} \KeywordTok{c}\NormalTok{(}\DecValTok{28} \OperatorTok{*}\StringTok{ }\DecValTok{28}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{layer_dense}\NormalTok{(}\DataTypeTok{units =} \DecValTok{10}\NormalTok{, }\DataTypeTok{activation =} \StringTok{"softmax"}\NormalTok{)}
+\KeywordTok{summary}\NormalTok{(network)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Model: "sequential"
+## ___________________________________________________________________________
+## Layer (type)                     Output Shape                  Param #     
+## ===========================================================================
+## dense (Dense)                    (None, 512)                   401920      
+## ___________________________________________________________________________
+## dense_1 (Dense)                  (None, 10)                    5130        
+## ===========================================================================
+## Total params: 407,050
+## Trainable params: 407,050
+## Non-trainable params: 0
+## ___________________________________________________________________________
+\end{verbatim}
+
+As activation function we use \texttt{relu} for the hidden layer, and
+\texttt{softmax} for the output layer - since we have 10 classes (where
+one is correct each time). We could have included more layers in our
+model - and then maybe used early stopping if our model was chosen too
+big.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{3. Configure the learning process}
+
+We next need to choose the loss function we will use, which is
+cross-entropy, and then the version of the optimizer. Here htis is
+RMSprop. Finally, which measure - metrics - do we want to monitor in our
+training phase? Here we choose accuracy (=percentage correctly
+classified).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{network }\OperatorTok{%>%}\StringTok{ }\KeywordTok{compile}\NormalTok{(}\DataTypeTok{optimizer =} \StringTok{"rmsprop"}\NormalTok{, }\DataTypeTok{loss =} \StringTok{"categorical_crossentropy"}\NormalTok{, }
+    \DataTypeTok{metrics =} \KeywordTok{c}\NormalTok{(}\StringTok{"accuracy"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{4. Preprocessing to match with model inputs and outputs}
+
+The training data is scored in an array of dimension (60000, 28, 28) of
+type integer with values in the {[}0, 255{]} interval. The data must be
+reshaped into the shape the network expects (28*28). In addition the
+grey scale values are scales to be in the {[}0, 1{]} interval.
+
+Also, the response must be transformed from 0-10 to a vector of 0s and
+1s (dummy variable coding) aka one-hot-coding.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{train_images <-}\StringTok{ }\KeywordTok{array_reshape}\NormalTok{(train_images, }\KeywordTok{c}\NormalTok{(}\DecValTok{60000}\NormalTok{, }\DecValTok{28} \OperatorTok{*}\StringTok{ }\DecValTok{28}\NormalTok{))}
+\NormalTok{train_images <-}\StringTok{ }\NormalTok{train_images}\OperatorTok{/}\DecValTok{255}
+\NormalTok{train_labels <-}\StringTok{ }\KeywordTok{to_categorical}\NormalTok{(train_labels)}
+
+\NormalTok{test_images <-}\StringTok{ }\KeywordTok{array_reshape}\NormalTok{(test_images, }\KeywordTok{c}\NormalTok{(}\DecValTok{10000}\NormalTok{, }\DecValTok{28} \OperatorTok{*}\StringTok{ }\DecValTok{28}\NormalTok{))}
+\NormalTok{test_images <-}\StringTok{ }\NormalTok{test_images}\OperatorTok{/}\DecValTok{255}
+\NormalTok{test_labels <-}\StringTok{ }\KeywordTok{to_categorical}\NormalTok{(test_labels)}
+\end{Highlighting}
+\end{Shaded}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{5. Fit the model}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fitted<-network }\OperatorTok{%>%}\StringTok{ }\KeywordTok{fit}\NormalTok{(train_images, train_labels,}
+ \DataTypeTok{epochs =} \DecValTok{30}\NormalTok{, }\DataTypeTok{batch_size =} \DecValTok{128}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{plot}\NormalTok{(fitted)}\OperatorTok{+}\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Fitted model"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\centering
+\includegraphics[width=0.50000\textwidth]{mnistex.png}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{6. Evaluation and prediction}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{network }\OperatorTok{%>%}\StringTok{ }\KeywordTok{evaluate}\NormalTok{(test_images, test_labels)}
+\NormalTok{testres =}\StringTok{ }\NormalTok{network }\OperatorTok{%>%}\StringTok{ }\KeywordTok{predict_classes}\NormalTok{(test_images)}
+\CommentTok{# $loss [1] 0.1194063 $acc [1] 0.9827}
+\KeywordTok{confusionMatrix}\NormalTok{(}\KeywordTok{factor}\NormalTok{(testres), }\KeywordTok{factor}\NormalTok{(org_testlabels))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Confusion Matrix and Statistics}
+
+\NormalTok{          Reference}
+\NormalTok{Prediction    }\DecValTok{0}    \DecValTok{1}    \DecValTok{2}    \DecValTok{3}    \DecValTok{4}    \DecValTok{5}    \DecValTok{6}    \DecValTok{7}    \DecValTok{8}    \DecValTok{9}
+         \DecValTok{0}  \DecValTok{971}    \DecValTok{0}    \DecValTok{3}    \DecValTok{0}    \DecValTok{1}    \DecValTok{2}    \DecValTok{5}    \DecValTok{1}    \DecValTok{1}    \DecValTok{1}
+         \DecValTok{1}    \DecValTok{1} \DecValTok{1128}    \DecValTok{2}    \DecValTok{0}    \DecValTok{0}    \DecValTok{0}    \DecValTok{2}    \DecValTok{2}    \DecValTok{2}    \DecValTok{3}
+         \DecValTok{2}    \DecValTok{1}    \DecValTok{1} \DecValTok{1009}    \DecValTok{3}    \DecValTok{3}    \DecValTok{0}    \DecValTok{2}    \DecValTok{7}    \DecValTok{2}    \DecValTok{0}
+         \DecValTok{3}    \DecValTok{0}    \DecValTok{1}    \DecValTok{2}  \DecValTok{997}    \DecValTok{0}   \DecValTok{11}    \DecValTok{1}    \DecValTok{3}    \DecValTok{4}    \DecValTok{3}
+         \DecValTok{4}    \DecValTok{1}    \DecValTok{0}    \DecValTok{2}    \DecValTok{0}  \DecValTok{969}    \DecValTok{1}    \DecValTok{4}    \DecValTok{2}    \DecValTok{3}    \DecValTok{7}
+         \DecValTok{5}    \DecValTok{0}    \DecValTok{1}    \DecValTok{0}    \DecValTok{1}    \DecValTok{0}  \DecValTok{871}    \DecValTok{3}    \DecValTok{0}    \DecValTok{1}    \DecValTok{4}
+         \DecValTok{6}    \DecValTok{3}    \DecValTok{2}    \DecValTok{2}    \DecValTok{0}    \DecValTok{3}    \DecValTok{4}  \DecValTok{940}    \DecValTok{0}    \DecValTok{1}    \DecValTok{0}
+         \DecValTok{7}    \DecValTok{1}    \DecValTok{1}    \DecValTok{4}    \DecValTok{2}    \DecValTok{1}    \DecValTok{0}    \DecValTok{0} \DecValTok{1002}    \DecValTok{2}    \DecValTok{3}
+         \DecValTok{8}    \DecValTok{2}    \DecValTok{1}    \DecValTok{7}    \DecValTok{0}    \DecValTok{0}    \DecValTok{2}    \DecValTok{1}    \DecValTok{4}  \DecValTok{953}    \DecValTok{1}
+         \DecValTok{9}    \DecValTok{0}    \DecValTok{0}    \DecValTok{1}    \DecValTok{7}    \DecValTok{5}    \DecValTok{1}    \DecValTok{0}    \DecValTok{7}    \DecValTok{5}  \DecValTok{987}
+
+\NormalTok{Overall Statistics}
+
+\NormalTok{               Accuracy }\OperatorTok{:}\StringTok{ }\FloatTok{0.9827}
+                 \DecValTok{95}\NormalTok{% CI }\OperatorTok{:}\StringTok{ }\NormalTok{(}\FloatTok{0.9799}\NormalTok{, }\FloatTok{0.9852}\NormalTok{)}
+\NormalTok{    No Information Rate }\OperatorTok{:}\StringTok{ }\FloatTok{0.1135}
+\NormalTok{    P}\OperatorTok{-}\NormalTok{Value [Acc }\OperatorTok{>}\StringTok{ }\NormalTok{NIR] }\OperatorTok{:}\StringTok{ }\ErrorTok{<}\StringTok{ }\FloatTok{2.2e-16}
+
+\NormalTok{                  Kappa }\OperatorTok{:}\StringTok{ }\FloatTok{0.9808}
+\NormalTok{ Mcnemar}\StringTok{'s Test P-Value : NA}
+\end{Highlighting}
+\end{Shaded}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Kaggle}
+
+\href{https://www.kaggle.com/}{Kaggle} has hosted machine-learning
+competitions since 2010, and by looking at solutions to competitions it
+is possible to get an overview of what works. In 2016-2017 gradient
+boosting methods won the competitions with structured data (``shallow''
+learning problems), while deeplearning won perceptual problems (as image
+classification), Chollet and Allaire (2018) (page 18). Kaggle has helped
+(and is helping) the rise in deep learning.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Other analyses}
+
+\begin{block}{Boston housing price}
+
+taken from Chollet and Allaire (2018):
+\url{https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural_networks_boston_housing.html}
+
+\end{block}
+
+\begin{block}{Movie data base}
+
+\url{https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/9-neural_networks_imdb.html}
+
+\end{block}
+
+\begin{block}{Reuters data}
+
+\url{https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/10-neural_networks_reuters.html}
+
+\end{block}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Summing up}
+
+\begin{itemize}
+\tightlist
+\item
+  Feedforward network architecture: mathematical formula - layers of
+  multivariate transformed (\texttt{relu}, \texttt{linear},
+  \texttt{sigmoid}) inner products - sequentially connected.
+\item
+  What is the number of parameters that need to be estimated? Intercept
+  term (for each layer) is possible and is referred to as ``bias term''.
+\item
+  Loss function to minimize (on output layer): regression (mean
+  squared), classification binary (binary crossentropy), classification
+  multiple classes (categorical crossentropy) --- and remember to
+  connect to the correct choice of output activiation function: mean
+  squared loss goes with linear activiation, binary crossentropy with
+  sigmoid, categorical crossentropy with softmax.
+\item
+  How to minimize the loss function: gradient based (chain rule)
+  back-propagation - many variants.
+\item
+  Technicalities: \texttt{nnet} in R
+\item
+  Optional: \texttt{keras} in R. Use of tensors. Piping sequential
+  layers, piping to estimation and then to evaluation (metrics).
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Not covered}
+
+(The first two topics are covered in Chollet and Allaire (2018))
+
+Recurrent networks: extending the feedforward network to also have
+feedback connections. This is a popular type of network to analyse time
+series data and natural language applications.
+
+Convolutional networks: some layers in a sequential network contain
+operations specially suitable for grid-like topology (images).
+Convolution is used in place of general layer (where we do matrix
+multiplication) in at least one layer. A popular operation is
+\emph{pooling}.
+
+Explanable AI (XAI): how to use methods on the network or the
+predictions of the network to figure out the underlying reasoning of the
+network. Popular methods are called LIME (local linear regression),
+Shaply (concept from game theory). The \texttt{DALEX} R package contains
+different socalled \emph{explainers}
+\url{https://arxiv.org/abs/1806.08915}.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{References and further reading}
+
+\begin{itemize}
+\tightlist
+\item
+  \url{https://youtu.be/aircAruvnKk} from 3BLUE1BROWN - 4 videos - using
+  the MNIST-data set as the running example
+\item
+  Look at how the hidden layer behave:
+  \url{https://playground.tensorflow.org}
+\item
+  Friedman, Hastie, and Tibshirani (2001),Chapter 11: Neural Networks
+\item
+  Efron and Hastie (2016), Chapter 18: Neural Networks and Deep Learning
+\item
+  Chollet and Allaire (2018)
+\item
+  Goodfellow, Bengio, and Courville (2016) (to be used in IT3030)
+\item
+  Explaining backpropagation
+  \url{http://neuralnetworksanddeeplearning.com/chap2.html}
+\item
+  Slides from MA8701 (Thiago Martins)
+  \url{https://www.math.ntnu.no/emner/MA8701/2019v/DeepLearning/}
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Acknowledgements}
+
+\hypertarget{refs}{}
+\hypertarget{ref-kerasR}{}
+Chollet, François, and J. J. Allaire. 2018. \emph{Deep Learning with R}.
+Manning Press. \url{https://www.manning.com/books/deep-learning-with-r}.
+
+\hypertarget{ref-casi}{}
+Efron, Bradley, and Trevor Hastie. 2016. \emph{Computer Age Statistical
+Inference - Algorithms, Evidence, and Data Science}. Cambridge
+University Press.
+
+\hypertarget{ref-ESL}{}
+Friedman, Jerome, Trevor Hastie, and Robert Tibshirani. 2001. \emph{The
+Elements of Statistical Learning}. Vol. 1. Springer series in statistics
+New York.
+
+\hypertarget{ref-goodfellow}{}
+Goodfellow, Ian, Yoshua Bengio, and Aaron Courville. 2016. \emph{Deep
+Learning}. MIT Press.
+
+\end{frame}
+
+\end{document}
