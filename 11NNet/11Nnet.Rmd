@@ -298,9 +298,9 @@ $$ \hat{\boldsymbol\beta}=({\boldsymbol X}^T{\boldsymbol X})^{-1} {\boldsymbol X
 We now translate what we did for the regression setup into the neural networks world:
 \vspace{2mm}
 
-1. Replace the parameters $\boldsymbol\beta$ $\rightarrow$ _network weights_ $\boldsymbol w$.
+1. Replace the parameters $\boldsymbol\beta$ with _network weights_ $\boldsymbol w$.
 
-2. Replace the RSS in our _training data set_ $\rightarrow$ _mean squared error_
+2. Replace the RSS in our _training data set_ with the following _\textcolor{red}{loss function}_  (_mean squared error_)
 $$ J({\boldsymbol w})=\frac{1}{n}\sum_{i=1}^n (y_i-{\hat{y}_1({\boldsymbol x}_i)})^2 \ ,$$
 where $J({\boldsymbol w})$ indicates that the unknown parameters are the weights ${\boldsymbol w}$.
 
@@ -492,18 +492,23 @@ $$ \hat{y}_1({\boldsymbol x}_i)=\frac{1}{1+\exp(-(w_0+w_1 x_{i1}+\cdots + w_r x_
 
 ### Neural networks: loss function and gradient descent
 
-For parameter estimation we looked at maximizing the log-likelihood of the statistical model. For neural networks the negative of the binomial loglikelihood is a scaled version of the _binomial cross-entropy loss_.
+\vspace{2mm}
 
-$$ J({\boldsymbol w})=-\frac{1}{n}\sum_{i=1}^n (y_i\ln({\hat{y}_1({\boldsymbol x}_i)})+(1-y_i)\ln(1-{\hat{y}_1({\boldsymbol x}_i)})$$
+* For parameter estimation we looked at maximizing the log-likelihood of the statistical model. 
 
-The optimization is also now done using gradient descent, but observe that due to the activation function we can use the chain rule when calculating the partial derivatives to get the gradient direction. The Algorithm given for MLR is also applicable now, with the modification to the activation and loss function given here.
+* For neural networks the negative of the binomial loglikelihood is a scaled version of the _\textcolor{red}{binomial cross-entropy loss}_
+$$ J({\boldsymbol w})=-\frac{1}{n}\sum_{i=1}^n (y_i\ln({\hat{y}_1({\boldsymbol x}_i)})+(1-y_i)\ln(1-{\hat{y}_1({\boldsymbol x}_i)}) \ . $$
+
+* Optimization is done also with gradient descent, but we need the chain rule (due to the activation function) to get the partial derivatives for the gradient direction. 
+
+* Same algorithm as for the linear case is also applicable now, with the modification to the activation and loss function given here.
 
 ---
 
 ### Parameter estimation vs. network weights
 
 
-\scriptsize 
+\tiny 
 ```{r,echo=FALSE}
 library(MASS)
 Pima.tr$diabetes=as.numeric(Pima.tr$type)-1
@@ -520,11 +525,11 @@ summary(fitlogist)
 
 ---
 
-\scriptsize
+\tiny
 
 ```{r}
+set.seed(787879)
 library(nnet)
-library(NeuralNetTools)
 fitnnet=nnet(diabetes~npreg+glu+bp+skin+bmi+ped+age,
              data=train,linout=FALSE,size=0,skip=TRUE,maxit=1000,
              entropy=TRUE,Wts=fitlogist$coefficients+rnorm(8,0,0.1))
@@ -532,11 +537,12 @@ fitnnet=nnet(diabetes~npreg+glu+bp+skin+bmi+ped+age,
 cbind(fitnnet$wts,fitlogist$coefficients)
 ```
 
+\normalsize
 In the `nnet` R package a slightly different version is used, `entropy=maximum conditional likelihood` which is half the deviance for the logistic regression model.
 
 ---
 
-```{r}
+```{r,echo=TRUE, fig.width=8, fig.height=8,fig.align = "center",out.width='90%'}
 plotnet(fitnnet)
 ```
 
@@ -544,6 +550,7 @@ plotnet(fitnnet)
 
 But, there may also exist local minima.
 
+\scriptsize
 ```{r}
 set.seed(123)
 fitnnet=nnet(diabetes~npreg+glu+bp+skin+bmi+ped+age,
@@ -554,135 +561,192 @@ cbind(fitnnet$wts,fitlogist$coefficients)
 
 ---
 
-## Multiclass regression
+# Multiclass regression
 
-### Which type of iris species?
+\textbf{Which type of iris species?}
 
 The `iris` flower data set was introduced by the British statistician and biologist Ronald Fisher in 1936, and we studied that in module 4 on classification.
 
 * Three plant species \{setosa, virginica, versicolor\} (50 observation of each), and
-* four features: `Sepal.Length`, `Sepal.Width`, `Petal.Length` and `Petal.Width`.
+* Four features: `Sepal.Length`, `Sepal.Width`, `Petal.Length` and `Petal.Width`.
 
 The aim is to predict the species of an iris plant.
 
 ---
 
 ### Statistical model
+\vspace{2mm}
 
-We only briefly mentioned this method in module 4 (there our focus was on LDA and QDA when we had more than two classes), and the full theoretical treatment is given in the statistics course TMA4315 Generalized linear models, Module 6 on categorical regression (nominal response).
+& We only briefly mentioned this method in module 4 (there our focus was on LDA and QDA when we had more than two classes)\footnote{The full theoretical treatment is given in the statistics course TMA4315 Generalized linear models, Module 6 on categorical regression (nominal response)}.
+
+\vspace{4mm}
 
 **Assumptions:**
 
-We have independent observation pairs $(Y_i,{\boldsymbol x}_i)$, where the covariate vector ${\boldsymbol x}_i$ consists of the same measurements for each response category (that is, not different covariate types that are measured for each response category.
+* We have independent observation pairs $(Y_i,{\boldsymbol x}_i)$, where the covariate vector ${\boldsymbol x}_i$ consists of the same measurements for each response category (that is, not different covariate types that are measured for each response category.
 
-Each observation can only belong to one response class, $Y_i=c$ for $c=1,\ldots, C$, and we define a dummy variable coding of the response in a $C$-dimensional vector: ${\boldsymbol y}_i=(0,0,\ldots,0,1,0,\ldots,0)$ with a value of $1$ in the $c$th element of ${\boldsymbol y}_i$ if the class is $c$.
+* Each observation can only belong to one response class, $Y_i=c$ for $c=1,\ldots, C$.
+
+_\textcolor{red}{Dummy variable coding}_ of the response in a $C$-dimensional vector: ${\boldsymbol y}_i=(0,0,\ldots,0,1,0,\ldots,0)$ with a value of $1$ in the $c^{th}$ element of ${\boldsymbol y}_i$ if the class is $c$.
+
+---
+
+* Probabilities that the response is category $c$ for subject $i$
+$$p_{ic}=P(Y_i=c)  \ ,$$
+where $\sum_{c=1}^C p_{ic}=1$. Note that in statistics we don't include $p_{i1}$
+in the modelling because $p_{i1}=1-\sum_{c=2}^{C} p_{ic}$, and $\beta_1=0$.
+
+* A generalization of the logistic regression model (for two classes) can be used. The model we fit is:
+$$p_{ic}=P(Y_i=c)= \frac{\exp({\boldsymbol x}_i^T{\boldsymbol \beta}_c)}{1+\sum_{s=2}^{C}\exp({\boldsymbol x}_i^T{\boldsymbol \beta}_s)}$$
+
+<!-- See the difference to $p_i=P(Y_i=1)= \frac{\exp({\boldsymbol x}_i^T{\boldsymbol \beta})}{1+\exp({\boldsymbol x}_i^T{\boldsymbol \beta})}$ for two classes. -->
+
+An observation is classified to the class with the highest probability, $\underset{c}{\text{argmax}}(p_{ic})$.
+
+<!-- **Q**: How many parameters are we estimating? -->
 
 ---
 
-The probabilities are $p_{ic}=P(Y_i=c)$ that the response is category $c$ for subject $i$, where $\sum_{c=1}^C p_{ic}=1$ (which means that $p_{iC}=1-\sum_{c=1}^{C-1} p_{ic}$ and in statistics we don't include $p_{iC}$
-in the modelling).
+### Parameter estimation in the statistical model
+\vspace{2mm}
 
-To analyse this type of data a generalization of the model for the logistic regression (for two classes) can be used, and the model we fit is:
+* The likelihood of the multinomial regression model can be written as
+$$ \ln(L({\boldsymbol \beta})\propto \sum_{i=1}^n \sum_{c=1}^C y_{ic}\ln(p_{ic}) \ ,$$
+where $p_{iC}=1-p_{i1}-p_{i2}-\cdots -p_{i,C-1}$, and the regression parameters enter via the $p_{ic}$s.
 
-$$p_{ic}=P(Y_i=c)= \frac{\exp({\boldsymbol x}_i^T{\boldsymbol \beta}_c)}{1+\sum_{s=1}^{C-1}\exp({\boldsymbol x}_i^T{\boldsymbol \beta}_s)}$$
-$$=
-\frac{\exp(\beta_{0c}+\beta_{1c} x_{i1}+\cdots + \beta_{rc} x_{ir})}{1 + \sum_{s=1}^{C-1} \exp(\beta_{0s} + \beta_{1s} x_{i1}+\cdots+\beta_{rs} x_{ir})}$$
+* Parameter estimation is done in the same way as for the logistic regression, with the Fisher scoring algorithm (with score vector and Fisher information matrix).
 
-See the difference to $p_i=P(Y_i=1)= \frac{\exp({\boldsymbol x}_i^T{\boldsymbol \beta})}{1+\exp({\boldsymbol x}_i^T{\boldsymbol \beta})}$ for two classes.
-
-An observation is classified to the class with the highest probability, $\text{argmax}p_{ic}$.
-
-**Q**: How many parameters are we estimating?
+* However (and this might be confusing), an efficient function in R also relies on neural networks for optimization (see below).
 
 ---
+
 
 ### Neural network architecture and activation function
+\vspace{4mm}
 
-The neural network uses the dummy variable coding of the responses, but call this _one-hot_ coding, and builds an output layer with $C$ nodes — and corresponding 0/1 targets (responses).
+* The neural network uses the dummy variable coding of the responses, called _\textcolor{red}{one-hot coding}_.
+
+* Builds an output layer with $C$ nodes and corresponding 0/1 targets (responses).
 
 ---
 
-The activation function for the ouput layer is called _softmax_ and is given as
+### Softmax
 
-\begin{align}
-\hat{y}_1({\boldsymbol x}_i)&= \frac{\exp({\boldsymbol x}_i^T{\boldsymbol w}_1)}{\sum_{s=1}^{C}\exp({\boldsymbol x}_i^T{\boldsymbol w}_s)}\\
-{\hat y_2}({\boldsymbol x}_i)& = \frac{\exp({\boldsymbol x}_i^T{\boldsymbol w}_2)}{\sum_{s=1}^{C}\exp({\boldsymbol x}_i^T{\boldsymbol w}_s)}\\
-\vdots & = \vdots \\
-{\hat y_C}({\boldsymbol x}_i)&= \frac{\exp({\boldsymbol x}_i^T{\boldsymbol w}_C)}{\sum_{s=1}^{C}\exp({\boldsymbol x}_i^T{\boldsymbol w}_s)}
-\end{align}
+* The activation function for the ouput layer is called _\textcolor{red}{softmax}_. For each class $c=1,\ldots, C$ it is given as
+$$
+\hat{y}_c({\boldsymbol x}_i) = \frac{\exp({\boldsymbol x}_i^T{\boldsymbol w}_c)}{\sum_{s=1}^{C}\exp({\boldsymbol x}_i^T{\boldsymbol w}_s)} \ ,
+$$
+where each ${\boldsymbol w}_s$ is a $r+1$ dimensional vector of weights.
 
-Where each ${\boldsymbol w}_s$ is a $r+1$ dimensional vector of weights.
+* Note: there is some redundancy here, since $\sum_{c=1}^C {\hat y}_{c}({\boldsymbol x}_i)=1$, so we could have had $C-1$ output nodes, but this is not done.
 
-Observe that there is some redundancy here, since $\sum_{c=1}^C {\hat y}_{ci}({\boldsymbol x}_i)=1$, so we could have had $C-1$ output nodes, but this is not done.
-
-The focus of neural networks is not to interpret the weights, and there is no need to assume full rank of a matrix with output nodes.
+* The focus of neural networks is not to interpret the weights, and there is no need to assume full rank of a matrix with output nodes.
 
 **Q:** How many parameters are we estimating?
 
 ---
 
-```{r,results="hide",echo=FALSE}
-library(nnet)
-set.seed(1)
-train = sample(1:150, 50)
+### Neural networks: loss function and gradient descent
+
+* For parameter estimation we looked at maximizing the log-likelihood of the statistical model. For neural networks the negative of the multinomial loglikelihood is a scaled version of the _categorical cross-entropy loss_
+$$ J({\boldsymbol w})=-\frac{1}{n}\sum_{i=1}^n\frac{1}{C} \sum_{c=1}^C (y_{ic}\ln({\hat{y}_c({\boldsymbol x}_i)}) \ .$$
+
+* The optimization is done using gradient descent, with minor changes from what was done for the logistic regression due to the added sum and the small change in the activation function.
+
+
+---
+
+### Fitting multinomial regression vs a neural network
+
+First select a training sample
+
+```{r,echo=F}
 ird <- data.frame(rbind(iris3[,,1], iris3[,,2], iris3[,,3]),
         species = factor(c(rep("s",50), rep("c", 50), rep("v", 50))))
+```
+
+\scriptsize
+```{r}
+library(nnet)
+set.seed(123)
+train = sample(1:150, 50)
 iris_train = ird[train, ]
 iris_test = ird[-train, ]
+```
+
+\normalsize
+Then fit the `nnet()` (by default using the softmax activation function)
+<!-- using the `softmax` activation function: -->
+
+\scriptsize
+```{r}
 iris.nnet <- nnet(species ~ ., data = ird, subset = train, size = 0, skip=TRUE,rang = 0.1, decay = 5e-4, maxit = 200)
-library(NeuralNetTools)
-plotnet(iris.nnet)
 ```
 
 ---
 
-### Parameter estimation
+How many weights have been estimated? What does the graph look like?
 
-The likelihood of the multinomial regression model can be written as
+\scriptsize
+```{r}
+summary(iris.nnet)
+```
 
-$$ \ln(L({\boldsymbol \beta})\propto \sum_{i=1}^n \sum_{c=1}^C y_{ic}\ln(p_{ic})$$
-where $p_{iC}=1-p_{i1}-p_{i2}-\cdots -p_{i,C-1}$, and the regression parameters enters via the $p_{ic}$s.
+---
+  
+```{r iris_nnet, echo=FALSE, fig.width=9, fig.height=9,fig.align = "center",out.width='90%'}
+plotnet(iris.nnet)
+```
 
-Parameter estimation is done in the same way as for the logistic regression, with the Fisher scoring algorithm (with score vector and Fisher information matrix).
+
 
 ---
 
-### Neural networks: loss function and gradient descent
+Fitting the multinomial regression. This is also done with nnet, but using a wrapper `multinom`, which uses the `entropy` activation function.
 
-For parameter estimation we looked at maximizing the log-likelihood of the statistical model. For neural networks the negative of the multinomial loglikelihood is a scaled version of the _categorical cross-entropy loss_.
-
-$$ J({\boldsymbol w})=-\frac{1}{n}\sum_{i=1}^n\frac{1}{C} \sum_{c=1}^C (y_{ic}\ln({\hat{y}_c({\boldsymbol x}_i)})$$
-
-The optimization is done using gradient descent, with minor changes from what was done for the logistic regression due to the added sum and the small change in the activation function.
-
----
-
-### Parameter estimation vs. network weights
-
+\scriptsize
 ```{r,tidy=FALSE}
 library(caret)
-# multiclass model via neural network
-fit=multinom(species~.,family=multinomial, data=iris_train)
+fit=multinom(species~ -1 + .,family=multinomial, data=iris_train)
 summary(fit)
+```
+
+---
+
+Problem: `multinom()` seems to fit an intercept _plus_ an offset note (B):
+
+```{r iris_fit, echo=FALSE, fig.width=9, fig.height=9,fig.align = "center",out.width='80%'}
+plotnet(fit)
+```
+
+<!-- Solution would be to use `multinom(species~  -1 + .,family=multinomial, data=iris_train)` -->
+
+---
+
+### The performance of multinomial regression vs nnet
+
+\scriptsize
+```{r}
 testclass=predict(fit,new=iris_test)
 confusionMatrix(data=testclass,reference=iris_test$species)$table
 
-library(NeuralNetTools)
-#plotnet(iris.nnet)
-summary(iris.nnet)
-library(caret)
 table(predict(iris.nnet, iris_test, type = "class"),iris_test$species)
 ```
 
 ---
 
+For more on multinomial regression with R, check [here](https://www.r-bloggers.com/%F0%9F%93%8A-multinomial-regression-in-r/).
+
+---
+
 ## Summing up
 
-* Fitting a multiple linear regression
+* Fitting a _multiple linear regression_
      + can be achived by building a neural network with one input layer and one node in the output layer,
      + linear activation function,
      + and mean squared loss,
-* Classification with two classes can be performed using logistic regression, and this
+     
+* _Classification with two classes_ can be performed using logistic regression, and this
      + by building a neural network with one input layer and one node in the output layer,
      + sigmoid activation function,
      + and binary cross-entropy loss.
