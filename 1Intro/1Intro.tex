@@ -121,7 +121,7 @@
 \title{Module 1: Introduction}
 \subtitle{TMA4268 Statistical Learning V2020}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{March xx, 2020}
+\date{6th January, 2020}
 
 \begin{document}
 \frame{\titlepage}
@@ -134,6 +134,503 @@ the course.
 
 \textbf{I would like to thank Mette for her great work and for the
 permission to use her material!}
+
+\end{frame}
+
+\begin{frame}{Learning outcomes of TMA4268}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Knowledge.} The student has knowledge about the most popular
+  statistical learning models and methods that are used for
+  \emph{prediction} and \emph{inference} in science and technology.
+  Emphasis is on regression- and classification-type statistical models.
+\item
+  \textbf{Skills.} The student can, based on an existing data set,
+  choose a suitable statistical model, apply sound statistical methods,
+  and perform the analyses using statistical software. The student can
+  present, interpret and communicate the results from the statistical
+  analyses, and knows which conclusions can be drawn from the analyses,
+  and what are the caveats.
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Learning material}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\item
+  \textbf{The main learning source is the textbook by James, Witten, Hastie, Tibshirani (2013)}:
+  ``An Introduction to Statistical Learning''. The textbook can be
+  downloaded here: \url{https://www-bcf.usc.edu/~gareth/ISL/}
+
+  \begin{itemize}
+  \item
+    The ebook an also be downloaded from Springer:
+    \url{https://www.springer.com/gp/book/9781461471370} (NB, need to be
+    on NTNU network or via vpn.)
+  \item
+    There are 15 hours of youtube videos by two of the authors of the
+    book, Trevor Hastie an Rob Tibshirani -the inventors of statistical
+    learning - all links
+    \href{https://www.r-bloggers.com/in-depth-introduction-to-machine-learning-in-15-hours-of-expert-videos/}{here}
+  \end{itemize}
+\item
+  All the lecture notes, \textbf{including any classnotes} made on the
+  board (not necessarily available online).
+\item
+  \textbf{Additional reading material will be clearly indicated in the modules and on the course page.}
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}{Course page}
+
+All the relevant information for the course can be found here:
+
+\url{https://wiki.math.ntnu.no/tma4268/2020v/start}
+
+On each module page, all the relevant learning material and exercises
+(incl. solutions) will be provided in due time.
+
+\end{frame}
+
+\begin{frame}{The Statistical Learning Team 2020}
+
+\begin{block}{The TAs:}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://www.ntnu.no/ansatte/martina.hall}{Martina Hall}; PhD
+  student
+\item
+  \href{https://www.ntnu.no/ansatte/michail.spitieris}{Michail
+  Spitieris}; PhD student
+\end{itemize}
+
+\end{block}
+
+\begin{block}{The Lecturers}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://www.ntnu.edu/employees/stefanie.muff}{Stefanie Muff};
+  Associate Professor
+\item
+  \href{https://www.ntnu.no/ansatte/thiago.guerrera}{Thiago Guerrera
+  Martins}; NTNU/AIAscience (Modules 6 \& 10)
+\item
+  \href{https://www.ntnu.no/ansatte/andreas.strand}{Andreas Strand};
+  Postdoc (Module 7)
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Who is this course for?}
+
+\begin{block}{Primary requirements}
+
+\begin{itemize}
+\item
+  Bachelor level: 3rd year student from Science or Technology programs,
+  and master/PhD level students with interest in performing statistical
+  analyses.
+\item
+  Statistics background: TMA4240/45 Statistics, ST1101+ST1201, or
+  equivalent.
+\item
+  No background in statistical software needed: but we will use the R
+  statistical software extensively in the course. Knowing python will
+  make this easier for you!
+\item
+  Not a prerequisist but a good thing with knowledge of computing -
+  preferably an introductory course in informatics, like TDT4105 or
+  TDT4110.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Overlap}
+
+\begin{itemize}
+\item
+  TDT4173 Machine learning and case based reasoning: courses differ in
+  philosophy (computer science vs.~statistics).
+\item
+  TMA4267 Linear Statistical Models: useful to know about multivariate
+  random vectors, covariance matrices and the multivariate normal
+  distribution. Overlap only for Multiple linear regression (M3).
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{About the course}
+
+\begin{block}{Focus: Statistical theory \textbf{and} doing analyses}
+
+\begin{itemize}
+\item
+  The course has focus on \textbf{statistical theory}, but we apply all
+  models and theory using (mostly) available function in R and real data
+  sets.
+\item
+  It it important that the student in the end of the course \textbf{can
+  analyse all types of data} (covered in the course) - not just
+  understand the theory.
+\item
+  And vice versa - the student must also \textbf{understand} the model,
+  methods and algorithms used.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Course content}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Statistical learning
+\item
+  Multiple linear regression
+\item
+  Classification
+\item
+  Resampling methods
+\item
+  Model selection/regularization
+\item
+  Non-linearity
+\item
+  Support vector machines
+\item
+  Tree-based methods
+\item
+  Unsupervised methods
+\item
+  Neural nets
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Learning methods, activities and grading}
+
+\(~\)
+
+\begin{itemize}
+\item
+  Lectures, exercises and works (projects). ~
+\item
+  Portfolio assessment is the basis for the grade awarded in the course.
+  This portfolio comprises
+
+  \begin{itemize}
+  \tightlist
+  \item
+    a written final examination (80\%).
+  \item
+    works (projects) (\(2\times 10\%=20\%\)). ~
+  \end{itemize}
+\item
+  The results for the constituent parts are to be given in \%-points,
+  while the grade for the whole portfolio (course grade) is given by the
+  letter grading system. Retake of examination may be given as an oral
+  examination. The lectures may be given in English.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Exam from 2019}
+
+This is the digital exam held in Inspera.
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://www.math.ntnu.no/emner/TMA4268/Exam/V2019e.pdf}{Problem
+  set}
+\item
+  \href{https://www.math.ntnu.no/emner/TMA4268/Exam/e2019sol.html}{Tentative
+  solutions}
+\item
+  \href{https://www.math.ntnu.no/emner/TMA4268/Exam/gradingdocumentV2019.pdf}{Grading
+  document}
+\end{itemize}
+
+However, please note that this was the exam created by Mette Langaas and
+her team, and not by us. The recommended and compulsory exercises will
+give you hints abou the exam, so we highly recommend you will work on
+them.
+
+\end{frame}
+
+\begin{frame}{Teaching philosophy}
+
+\begin{block}{The modules}
+
+~
+
+\begin{itemize}
+\item
+  Divide the topics of the course into modular units with specific
+  focus.
+\item
+  This (hopefully) facilitates learning?
+\item
+  12 modules (weeks of teaching) =
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{Module 1}: introduction (this module)
+  \item
+    \textbf{Modules 2 - 11}: the 10 topics listed previously
+  \item
+    \textbf{Module 12}: summing up\\
+    \hspace*{0.333em}
+  \end{itemize}
+\item
+  Two weeks without lectures (but supervision of exercises)
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The lectures}
+
+\vspace{2mm}
+
+\textbf{Mondays at 10.15-12 in S1 and Fridays at 14.15-16.00 in S4}
+
+\begin{itemize}
+\item
+  We have \(2\cdot 2\) hours of lectures every week (except when working
+  with the compulsory exercises).
+\item
+  \textbf{Note}: The \textbf{first lecture of each module will be on
+  Fridays}, the second lecture on \textbf{Mondays}, and the exercise
+  that corresponds to this module on Thursdays.
+\item
+  Some weeks the Monday lecture will be \emph{interactive} or with some
+  self-study / exercise component, where
+  \emph{\textcolor{red}{active learning}} is in focus.
+\item
+  The other weeks (modules 3, 4, 6, 8, 10 and 11) the Monday lecture is
+  a plenary lecture in S1.
+\item
+  The first week of the course the second lecture is replaced by an R
+  workshop!
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The weekly supervision sessions}
+
+~
+
+\textbf{Thursdays 08.15-10 in Smia} ~\\
+\hspace*{0.333em}
+
+\begin{itemize}
+\tightlist
+\item
+  For each module \emph{recommended exercises} are uploaded. These are
+  partly
+
+  \begin{itemize}
+  \tightlist
+  \item
+    theoretical exercises (from book or not)
+  \item
+    computational tasks
+  \item
+    data analysis
+  \end{itemize}
+\item
+  These are supervised in the weekly exercise slots.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The compulsory exercises}
+
+\begin{itemize}
+\item
+  We will have \textbf{two compulsory exercises}, each with a maximal
+  score of 100 points.
+\item
+  These are supervised in the weekly exercise slots and there will be
+  one week without lectures (only with supervision) for each compulsory
+  exercise.
+\item
+  Focus: theory, analysis in R, and interpretation.
+\item
+  Work in \textbf{groups of maximum 3}; handed in on Blackboard and be
+  written in R Markdown (both .Rmd and .pdf handed in).
+\item
+  The TAs grade the exercises.
+\item
+  This gives 20\% of the final evaluation in the course, the written
+  exam the remaining 80\%.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The lecture material}
+
+\vspace{2mm}
+
+\begin{itemize}
+\item
+  All the material presented in class will be available on our course
+  webpage (\url{https://wiki.math.ntnu.no/tma4268/2020v/start}).
+\item
+  There will be both a \emph{.pdf and an .Rmd} version. This will allow
+  you to check and use the code that I use to generate the slides.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Student active learning}
+
+Student's learning styles are different! Felder and Silverman (1988)
+suggested the following learning stlye axes:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi})}
+\item
+  \textbf{active - reflective}: How do you process information: actively
+  (through physical activities and discussions), or reflexively (through
+  introspection)?
+\item
+  \textbf{sensing-intuitive}: What kind of information do you tend to
+  receive: sensitive (external agents like places, sounds, physical
+  sensation) or intuitive (internal agents like possibilities, ideas,
+  through hunches)?
+\item
+  \textbf{visual-verbal:} Through which sensorial channels do you tend
+  to receive information more effectively: visual (images, diagrams,
+  graphics), or verbal (spoken words, sound)? Many students have a
+  visual learning style!
+\item
+  \textbf{sequential - global}: How do you make progress: sequentially
+  (with continuous steps), or globally (through leaps and an integral
+  approach)?
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{We try!}
+
+\vspace{2mm}
+
+\begin{itemize}
+\item
+  \(\ldots\) to acknowledging these different learning style axes.
+\item
+  \(\ldots\) to choose teaching styles that matche the learning styles
+  of the students.
+\end{itemize}
+
+\vspace{-3mm}
+
+\begin{itemize}
+\item
+  \(\ldots\) to provide learning environments, opportunities,
+  interactions, and tasks that help to learn deeper.
+\item
+  \(\ldots\) to provide guidance and support that challenges students
+  based on their current ability.
+\end{itemize}
+
+We will now focus on \emph{active} and \emph{reflective} learning styles
+and learning methods.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Active vs.~reflective learning styles}
+
+\vspace{2mm}
+
+\textbf{Reflective learning methods}
+
+\begin{itemize}
+\tightlist
+\item
+  Plenary lectures
+\item
+  Reading textbook
+\item
+  Self study
+\end{itemize}
+
+\vspace{4mm}
+
+\textbf{Active learing methods}
+
+\begin{itemize}
+\tightlist
+\item
+  Pause in plenary lecture to ask questions and let students think
+  and/or discuss.
+\item
+  In-class quizzes (with the NTNU invention Kahoot!) - individual and
+  team mode.
+\item
+  Projects - individual or in groups.
+\item
+  Group discussion
+\item
+  Interactive lectures
+\end{itemize}
+
+\end{block}
 
 \end{frame}
 
@@ -537,619 +1034,7 @@ More: \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2585023/}
 
 \end{frame}
 
-\begin{frame}{Who is this course for?}
-
-\begin{block}{Primary requirements}
-
-\begin{itemize}
-\item
-  Bachelor level: 3rd year student from Science or Technology programs,
-  and master/PhD level students with interest in performing statistical
-  analyses.
-\item
-  Statistics background: TMA4240/45 Statistics, ST1101+ST1201, or
-  equivalent.
-\item
-  No background in statistical software needed: but we will use the R
-  statistical software extensively in the course. Knowing python will
-  make this easier for you!
-\item
-  Not a prerequisist but a good thing with knowledge of computing -
-  preferably an introductory course in informatics, like TDT4105 or
-  TDT4110.
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
 \begin{frame}
-
-\begin{block}{Overlap}
-
-\begin{itemize}
-\item
-  TDT4173 Machine learning and case based reasoning: courses differ in
-  philosophy (computer science vs.~statistics). See Bb under FAQ for
-  more details.
-\item
-  TMA4267 Linear Statistical Models: useful to know about multivariate
-  random vectors, covariance matrices and the multivariate normal
-  distribution. Overlap only for Multiple linear regression (M3).
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}{About the course}
-
-\begin{block}{Focus: Statistical theory \textbf{and} doing analyses}
-
-\begin{itemize}
-\item
-  The course has focus on \textbf{statistical theory}, but we apply all
-  models and theory using (mostly) available function in R and real data
-  sets.
-\item
-  It it important that the student in the end of the course \textbf{can
-  analyse all types of data} (covered in the course) - not just
-  understand the theory.
-\item
-  And vice versa - the student must also \textbf{understand} the model,
-  methods and algorithms used.
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Learning outcome}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  \textbf{Knowledge.} The student has knowledge about the most popular
-  statistical learning models and methods that are used for
-  \emph{prediction} and \emph{inference} in science and technology.
-  Emphasis is on regression- and classification-type statistical models.
-\item
-  \textbf{Skills.} The student can, based on an existing data set,
-  choose a suitable statistical model, apply sound statistical methods,
-  and perform the analyses using statistical software. The student can
-  present, interpret and communicate the results from the statistical
-  analyses, and knows which conclusions can be drawn from the analyses,
-  and what are the caveats.
-\end{enumerate}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Course content}
-
-\vspace{2mm}
-
-\begin{itemize}
-\tightlist
-\item
-  Statistical learning
-\item
-  Multiple linear regression
-\item
-  Classification
-\item
-  Resampling methods
-\item
-  Model selection/regularization
-\item
-  Non-linearity
-\item
-  Support vector machines
-\item
-  Tree-based methods
-\item
-  Unsupervised methods
-\item
-  Neural nets
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Learning methods, activities and grading}
-
-\begin{itemize}
-\item
-  Lectures, exercises and works (projects). ~
-\item
-  Portfolio assessment is the basis for the grade awarded in the course.
-  This portfolio comprises
-
-  \begin{itemize}
-  \tightlist
-  \item
-    a written final examination (80\%).
-  \item
-    works (projects) (20\%). ~
-  \end{itemize}
-\item
-  The results for the constituent parts are to be given in \%-points,
-  while the grade for the whole portfolio (course grade) is given by the
-  letter grading system. Retake of examination may be given as an oral
-  examination. The lectures may be given in English.
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Literature for the course}
-
-~\\
-\hspace*{0.333em}
-
-\textbf{Textbook:} James, Witten, Hastie, Tibshirani (2013): ``An
-Introduction to Statistical Learning''.
-
-~\\
-\textbf{Tentative reading list:} the whole book + the module pages+ two
-compulsory exercises.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Course team}
-
-~
-
-\textbf{Lecturers:}
-
-\begin{itemize}
-\tightlist
-\item
-  Stefanie Muff (IMF and CBD at NTNU)
-\item
-  Thiago G. Martins (AIAscience and IMF/NTNU)
-\item
-  Andreas Strand (NTNU)
-\end{itemize}
-
-\vspace{2mm}
-
-\textbf{Teaching assistents (TA)}
-
-\begin{itemize}
-\tightlist
-\item
-  Martina Hall
-\item
-  Michail Spitieris
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}{Teaching philosophy}
-
-\begin{block}{The modules}
-
-~
-
-\begin{itemize}
-\item
-  Divide the topics of the course into modular units with specific
-  focus.
-\item
-  This (hopefully) facilitates learning?
-\item
-  12 modules (weeks of teaching) =
-
-  \begin{itemize}
-  \tightlist
-  \item
-    \textbf{Module 1}: introduction (this module)
-  \item
-    \textbf{Modules 2 - 11}: the 10 topics listed previously
-  \item
-    \textbf{Module 12}: summing up\\
-    \hspace*{0.333em}
-  \end{itemize}
-\item
-  Two weeks without lectures (but supervision of exercises)
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{The lectures}
-
-~
-
-\textbf{Mondays at 8.15-10 in S4 and Thursdays at 14.15-16.00 in F6 or
-Smia} ~
-
-\begin{itemize}
-\tightlist
-\item
-  We have \(2\cdot 2\) hours of lectures every week (except when working
-  with the compulsory exercises).
-\item
-  Each week is a new topic and a new module
-\item
-  Some weeks (modules 2, 5, 7 and 9) the second 2h are partly a lecture
-  and partly an \emph{interactive lecture} in Smia, where active
-  learning is in focus (more below).
-\item
-  The other weeks (modules 3, 4, 6, 8, 10 and 11) the second lecture is
-  a plenary lecture in F6.
-\item
-  The first week of the course the second lecture is replaced by an R
-  workshop!
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{The weekly supervision sessions}
-
-~
-
-\textbf{Thursdays 16.15-18 in Smia} ~\\
-\hspace*{0.333em}
-
-For each module \emph{recommended exercises} are given. These are partly
-
-\begin{itemize}
-\tightlist
-\item
-  theoretical exercises (from book or not)
-\item
-  computational tasks
-\item
-  data analysis
-\end{itemize}
-
-These are supervised in the weekly exercise slots.
-
-We have joint supervision sessions with the TMA4267 Linear statistical
-models course.
-
-TAs from both courses will be present.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{The compulsory exercises}
-
-\begin{itemize}
-\item
-  We will have \textbf{two compulsory exercises}, each with a maximal
-  score of 15 points.
-\item
-  These are supervised in the weekly exercise slots and there will be
-  one week without lectures (only with supervision) for each compulsory
-  exercise.
-\item
-  Focus: theory, analysis in R, and interpretation.
-\item
-  Work in \textbf{groups of maximum 3}; handed in on Blackboard and be
-  written in R Markdown (both .Rmd and .pdf handed in).
-\item
-  The TAs grade the exercises.
-\item
-  This gives 20\% of the final evaluation in the course, and the written
-  exam the final 70\%.
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{How to use the module pages?}
-
-\begin{itemize}
-\tightlist
-\item
-  A slides version (output: beamer\_presentation) of the pages used in
-  the plenary lectures.
-\item
-  A webpage version (output: html\_document) used in the interactive
-  lectures.
-\item
-  A document version (output: pdf\_document) used for student self
-  study.
-\item
-  The Rmd version - used as notebook to investigate changes to the R
-  code.
-\item
-  Additional class notes (written in class) linked in.
-\end{itemize}
-
-The module pages are the backbone of the course!
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}{Student active learning}
-
-We (probably) all have different ways in which we learn - and we have
-different learning ambitions when attending a course.
-
-~
-
-\begin{block}{Felder and Silverman learning styles}
-
-Back in 1988 Felder and Silverman published an article where they
-suggested that there was a mismatch between the way students learn and
-the way university courses were taught. They devised a taxonomy for
-learning styles - where four different axis are defined:
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi})}
-\tightlist
-\item
-  active - reflective: How do you process information: actively (through
-  physical activities and discussions), or reflexively (through
-  introspection)?
-\item
-  sensing-intuitive: What kind of information do you tend to receive:
-  sensitive (external agents like places, sounds, physical sensation) or
-  intuitive (internal agents like possibilities, ideas, through
-  hunches)?
-\item
-  visual-verbal: Through which sensorial channels do you tend to receive
-  information more effectively: visual (images, diagrams, graphics), or
-  verbal (spoken words, sound)?
-\item
-  sequential - global: How do you make progress: sequentially (with
-  continuous steps), or globally (through leaps and an integral
-  approach)?
-\end{enumerate}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{The idea:}
-
-\begin{itemize}
-\item
-  Acknowledging these different learning style axes
-\item
-  Choose teaching styles that matche the learning styles of the
-  students.
-\item
-  Many students (according to Felder and coauthors) have a visual way of
-  learning, and then teachers should spend time devising visual aids (in
-  addition to verbal aids - that were the prominent aids in 1988), and
-  so on.
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Student active learning in TMA4268}
-
-\begin{itemize}
-\item
-  Students have different background knowledge, learning ambitions and
-  learning styles (verbal/visual, active/reflective, global/sequential,
-  \ldots{}). ~
-\item
-  Teachers aim to make diverse learning resources available in courses,
-  and ~
-\item
-  \emph{promote student active teaching methods}.
-\end{itemize}
-
-~
-
-\textbf{Hypothesis:} Students will learn better/deeper with a
-combination of different teaching methods.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-Therefore we aim to:
-
-\begin{itemize}
-\tightlist
-\item
-  Provide learning environments, opportunities, interactions, tasks and
-  instruction that foster deep learning.
-\item
-  Provide guidance and support that challenges students based on their
-  current ability.
-\item
-  Students discover their current strengths and weaknesses and what they
-  need to do to improve.
-\end{itemize}
-
-We will now focus on \emph{active} and \emph{reflective} learning styles
-and learning methods.
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Active vs.~reflective learning styles}
-
-\begin{block}{What are student reflective learning methods/tasks?}
-
-\begin{itemize}
-\tightlist
-\item
-  Plenary lectures
-\item
-  Reading textbook
-\item
-  Self study
-\end{itemize}
-
-\end{block}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Plenary lecture}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi})}
-\tightlist
-\item
-  The teacher is lecturer
-\item
-  Limited amount of interaction student-lecturer
-\item
-  Limited amount of interaction student-student
-\item
-  Lecturer active, student passive
-\item
-  Where: lecture theatre, auditorium
-\item
-  Resources: (black)board, screen (for projector), microphone for
-  lecturer, desks in rows.
-\end{enumerate}
-
-~
-
-\textbf{Positive}: By using the traditional lecture method, lecturers
-can present a large amount of material in a relatively brief amount of
-time.
-
-\textbf{Negative}: is it also efficient for the student? Maybe efficient
-for students with a \emph{reflective learning style}?
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{What are student active learing methods/tasks?}
-
-\begin{itemize}
-\tightlist
-\item
-  Pause in plenary lecture to ask questions and let students think
-  and/or discuss.
-\item
-  In-class quizzes (with the NTNU invention Kahoot!) - individual and
-  team mode.
-\item
-  Projects - individual or in groups.
-\item
-  Group discussion
-\item
-  Interactive lectures
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Interactive lecture}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi})}
-\tightlist
-\item
-  The teacher is not a lecturer, but an advisor, and teaching assistent
-  (TA) may also be present
-\item
-  Focus on interaction student-teacher
-\item
-  Focus on interaction student-student
-\item
-  Student and teacher/TA both active
-\item
-  Where: a room designed for interaction, collaboration and activity
-\item
-  Resources: (white)boards, screens, group tables, laptop/PC, possibly a
-  podium for short announcements
-\end{enumerate}
-
-Positive: Studens are active. This is how work is done in many
-cooperative environments (your future workplace?).
-
-Negative: Challenging group processes. Unfamiliar setting for students?
-
-Challenge: requires dedicated space and suitable problems to work on in
-groups
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Innovative learning space: Smia}
-
-A room where interaction and activity is in focus. Flat floor with group
-tables, whiteboard and screen - PC and electricity outlets.
-
-~
-
-\url{https://www.ntnu.no/laeringsarealer/smia}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Interactive lectures in Smia}
-
-(modules 2,5,7 and 9): Work alone,in pairs, or larger groups (lecturer
-help to form), introduction (5 min) - work on problem sets (35+,
-lecturer and TA supervise) - summing up (5 min), pause, repeat. Lecturer
-interrupts if common confusions or interesting observations by some of
-the tables.
-
-\end{block}
 
 \end{frame}
 
