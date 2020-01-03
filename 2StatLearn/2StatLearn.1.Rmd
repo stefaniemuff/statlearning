@@ -2,7 +2,7 @@
 subtitle: "TMA4268 Statistical Learning V2020"
 title: "Module 2, Part 1: Statistical Learning "
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "January xx, 2020"
+date: "January 10, 2020"
 output:
   # pdf_document:
   #   toc: true
@@ -21,6 +21,7 @@ output:
     colortheme: "default"
     font: "serif"
 urlcolor: blue
+bibliography: refs.bib
 header-includes: \usepackage{xcolor}
 
 ---
@@ -35,6 +36,15 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 ```
 
+
+# Acknowledgements
+
+* A lot of this material stems from Mette Langaas and her TAs (especiall Julia Debik). I would like to thank Mette for the permission to use her material!
+
+* Some of the figures and slides in this presentation are taken (or are inspired) from @ISL.
+
+---
+
 # Introduction
 
 ## Learning material for this module
@@ -42,21 +52,31 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 * James et al (2013): An Introduction to Statistical Learning. Chapter 2.  
 * Additional material (in this module page) on random variables, covariance matrix and the multivariate normal distribution (known for students who have taken TMA4267 Linear statistical models).
 
-Some of the figures and slides in this presentation are taken (or are inspired) from "An Introduction to Statistical Learning, with applications in R" (Springer, 2013) with permission from the authors: G. James, D. Witten, T. Hastie and R. Tibshirani.
+
 
 ---
 
 ## What will you learn?
 
+\vspace{2mm}
+
 * Statistical learning and examples thereof
-* Introduce relevant notation and terminology.
+\vspace{1mm}
+
+* Introduce relevant notation and terminology
+\vspace{1mm}
+
 * Prediction accuracy vs. model interpretability
+\vspace{1mm}
+
 * Bias-variance trade-off
-* Classification (a first look):
-    + The Bayes classifier
-    + K nearest neighbour (KNN) classifier
+\vspace{1mm}
+
 * The basics of random vectors, covariance matrix and the multivariate normal distribution.
 
+<!-- * Classification (a first look): -->
+<!--     + The Bayes classifier -->
+<!--     + K nearest neighbour (KNN) classifier -->
 
 ---
 
@@ -72,15 +92,22 @@ Statistical learning plays a key role in many areas of science, finance and indu
 
 ---
 
-##  Variable types
+# Key concepts (stats) and notation
 
-Variables can be characterized as either *quantitative* or *qualitative*. 
 
+Todo (see M1L1notes.pdf)
+
+
+---
+
+##  Two variable types
+\vspace{2mm}
 
 **Quantitative** variables are variables from a continuous set, they have a numerical value. 
 
 * Examples: a person's weight, a company's income, the age of a building, the temperature outside, the level of precipitation etc.
 
+\vspace{2mm}
 
 **Qualitative** variables are variables from a discrete set, from a set of $K$ different classes/labels/categories. 
 
@@ -99,11 +126,11 @@ Variables can be characterized as either *quantitative* or *qualitative*.
 
 * To identify the risk factors for Prostate cancer.
 
-* To predict whether someone will suffer from a heart disease, given knowledge about condition, behaviour, age etc.
-
-* To predict whether someone will suffer a heart attack on the basis of demographic, diet and clinical measurements. Here the outcome is binary (<span style="color:#00C0af">yes</span>,<span style="color:#F8766D">no</span>) with both qualitative and quantitative input variables. 
+* Estimating the risk that someone will suffer from a heart disease or heart attack, given knowledge about condition, behaviour, age, or demographic, diet and clinical measurements. Here the _outcome is binary_ (yes, no) with both qualitative and quantitative input variables. 
 
 * Predict soemeone's body fat, given BMI, weight, age, etc.
+
+* Digit recognition.
 
 ---
 
@@ -119,19 +146,27 @@ pairs(SAheart,col=as.numeric(SAheart$chd)+2)
 
 ---
 
-### Handwritten digit recognition: 
+### Handwritten digit recognition 
 To identify the numbers in a handwritten ZIP code, from a digitized image. This is a classification problem, where the response variable is categorical with classes \{0, 1, 2, ..., 9\} and the task is to correctly predict the class membership.
+\vspace{1mm}
 
-![Examples of handwritten digits from U.S. postal envelopes. Image taken from <https://web.stanford.edu/~hastie/ElemStatLearnII/>](digits.png){width=250px,align=center}
+![Examples of handwritten digits from U.S. postal envelopes. Image taken from <https://web.stanford.edu/~hastie/ElemStatLearnII/>](digits.png){width=70%}
+\vspace{1mm}
 
-
+Examples of handwritten digits from U.S. postal envelopes. 
+\scriptsize
+Image taken from <https://web.stanford.edu/~hastie/ElemStatLearnII/>
 
 ---
 
-### Email classification (spam detection): 
+### Email classification (spam detection)  
 
-The goal is to build a spam filter. This filter can based on the frequencies of words and characters in emails. The table below show the average percentage of words or characters in an email message, based on 4601 emails of which 1813 were classified as a spam.
+* Goal: to build a spam filter. 
+* This filter can based on the frequencies of words and characters in emails. 
 
+The table below show the average percentage of words or characters in an email message, based on 4601 emails of which 1813 were classified as a spam.
+
+ 
 ```{r spam, echo=FALSE,warning=FALSE}
 spam_dataset = read.csv("data.csv",header=FALSE,sep=";")
 spam_names = read.csv("names.csv",header=FALSE,sep=";")
@@ -171,16 +206,7 @@ You can read the article [here](http://www.nejm.org/doi/full/10.1056/NEJMon12110
 
 ---
 
-### Were there common underlying aims and elements of these examples of statistical learning?
 
-* To predict the price of a stock 3 months from now, based on company performance measures and economic data.
-* To identify the risk factors for developing diabetes based on diet, physical activity, family history and body measurements.
-* The goal is to build a spam filter. 
-* To predict whether someone will suffer a heart attack on the basis of demographic, diet and clinical measurements. 
-* To identify the numbers in a handwritten ZIP code, from a digitized image.
-* What makes a Nobel Prize winner? Perseverance, luck, skilled mentors or simply chocolate consumption?
-
---- 
 
 # The Supervised Learning Problem
 
@@ -210,6 +236,8 @@ observations (examples, instances) of these measurements.
 
 ## Supervised learning and its objectives
 
+\vspace{2mm}
+
 Our data set (training set) consists of $n$ measurement of the response variable $Y$ and of $p$ covariates $x$: 
 $$(y_1, x_{11}, x_{12},\ldots, x_{1p}), (y_2, x_{21},\ldots, x_{2p}), \ldots, (y_n, x_{n1}, x_{n2},\ldots, x_{np}).$$
 $~$
@@ -228,8 +256,11 @@ On the basis of the \emph{training data} we would like to:
 Supervised learning examples (we will study):  
 
   * Linear regression (M3), Logistic regression (M4), Generalized additive models (M7)
-  * Classification trees, bagging, boosting (M8), K-nearest neighbor classifier (M2, M4)
+  * Classification trees, bagging, boosting (M8), K-nearest neighbor classifier (M4)
   * Support vector machines (M9)
+  * Neural networks (M11)
+  
+$\rightarrow$ The majority of problems studied here fall in the supervised learning category
 
 ---
 
@@ -292,11 +323,14 @@ method, to know how well or how badly it is working
 
 $\rightarrow$ **Simpler methods often perform as well as fancier ones!**
 
-* This is an exciting research area, having important
-applications in science, industry and finance.
 
 * Statistical learning is a fundamental ingredient in the
 training of a modern data scientist.
+
+* It is an exciting research area, having important
+applications in science, industry and finance.
+
+
 
 ---
 
@@ -1250,7 +1284,5 @@ When fitting a statistical model the aim is often to obtain **the most predictiv
 
 
 
-# Acknowledgements
-
-Thanks to Julia Debik for contributing to this module page.
+# References
 

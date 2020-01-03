@@ -87,10 +87,24 @@
 \title{Module 2, Part 1: Statistical Learning}
 \subtitle{TMA4268 Statistical Learning V2020}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{January xx, 2020}
+\date{January 10, 2020}
 
 \begin{document}
 \frame{\titlepage}
+
+\begin{frame}{Acknowledgements}
+
+\begin{itemize}
+\item
+  A lot of this material stems from Mette Langaas and her TAs (especiall
+  Julia Debik). I would like to thank Mette for the permission to use
+  her material!
+\item
+  Some of the figures and slides in this presentation are taken (or are
+  inspired) from James et al. (2013).
+\end{itemize}
+
+\end{frame}
 
 \begin{frame}{Introduction}
 
@@ -107,11 +121,6 @@
   students who have taken TMA4267 Linear statistical models).
 \end{itemize}
 
-Some of the figures and slides in this presentation are taken (or are
-inspired) from ``An Introduction to Statistical Learning, with
-applications in R'' (Springer, 2013) with permission from the authors:
-G. James, D. Witten, T. Hastie and R. Tibshirani.
-
 \end{block}
 
 \end{frame}
@@ -120,26 +129,17 @@ G. James, D. Witten, T. Hastie and R. Tibshirani.
 
 \begin{block}{What will you learn?}
 
-\begin{itemize}
-\tightlist
-\item
-  Statistical learning and examples thereof
-\item
-  Introduce relevant notation and terminology.
-\item
-  Prediction accuracy vs.~model interpretability
-\item
-  Bias-variance trade-off
-\item
-  Classification (a first look):
+\vspace{2mm}
 
-  \begin{itemize}
-  \tightlist
-  \item
-    The Bayes classifier
-  \item
-    K nearest neighbour (KNN) classifier
-  \end{itemize}
+\begin{itemize}
+\item
+  Statistical learning and examples thereof \vspace{1mm}
+\item
+  Introduce relevant notation and terminology \vspace{1mm}
+\item
+  Prediction accuracy vs.~model interpretability \vspace{1mm}
+\item
+  Bias-variance trade-off \vspace{1mm}
 \item
   The basics of random vectors, covariance matrix and the multivariate
   normal distribution.
@@ -166,12 +166,17 @@ and industry.
 
 \end{frame}
 
+\begin{frame}{Key concepts (stats) and notation}
+
+Todo (see M1L1notes.pdf)
+
+\end{frame}
+
 \begin{frame}
 
-\begin{block}{Variable types}
+\begin{block}{Two variable types}
 
-Variables can be characterized as either \emph{quantitative} or
-\emph{qualitative}.
+\vspace{2mm}
 
 \textbf{Quantitative} variables are variables from a continuous set,
 they have a numerical value.
@@ -182,6 +187,8 @@ they have a numerical value.
   Examples: a person's weight, a company's income, the age of a
   building, the temperature outside, the level of precipitation etc.
 \end{itemize}
+
+\vspace{2mm}
 
 \textbf{Qualitative} variables are variables from a discrete set, from a
 set of \(K\) different classes/labels/categories.
@@ -211,15 +218,15 @@ set of \(K\) different classes/labels/categories.
 \item
   To identify the risk factors for Prostate cancer.
 \item
-  To predict whether someone will suffer from a heart disease, given
-  knowledge about condition, behaviour, age etc.
-\item
-  To predict whether someone will suffer a heart attack on the basis of
-  demographic, diet and clinical measurements. Here the outcome is
-  binary ({yes},{no}) with both qualitative and quantitative input
+  Estimating the risk that someone will suffer from a heart disease or
+  heart attack, given knowledge about condition, behaviour, age, or
+  demographic, diet and clinical measurements. Here the \emph{outcome is
+  binary} (yes, no) with both qualitative and quantitative input
   variables.
 \item
   Predict soemeone's body fat, given BMI, weight, age, etc.
+\item
+  Digit recognition.
 \end{itemize}
 
 \end{frame}
@@ -235,14 +242,17 @@ variables.
 
 \begin{frame}
 
-\begin{block}{Handwritten digit recognition:}
+\begin{block}{Handwritten digit recognition}
 
 To identify the numbers in a handwritten ZIP code, from a digitized
 image. This is a classification problem, where the response variable is
 categorical with classes \{0, 1, 2, \ldots{}, 9\} and the task is to
-correctly predict the class membership.
+correctly predict the class membership. \vspace{1mm}
 
-\includegraphics{digits.png}
+\includegraphics[width=0.70000\textwidth]{digits.png} \vspace{1mm}
+
+Examples of handwritten digits from U.S. postal envelopes. \scriptsize
+Image taken from \url{https://web.stanford.edu/~hastie/ElemStatLearnII/}
 
 \end{block}
 
@@ -250,12 +260,20 @@ correctly predict the class membership.
 
 \begin{frame}
 
-\begin{block}{Email classification (spam detection):}
+\begin{block}{Email classification (spam detection)}
 
-The goal is to build a spam filter. This filter can based on the
-frequencies of words and characters in emails. The table below show the
-average percentage of words or characters in an email message, based on
-4601 emails of which 1813 were classified as a spam.
+\begin{itemize}
+\tightlist
+\item
+  Goal: to build a spam filter.
+\item
+  This filter can based on the frequencies of words and characters in
+  emails.
+\end{itemize}
+
+The table below show the average percentage of words or characters in an
+email message, based on 4601 emails of which 1813 were classified as a
+spam.
 
 \begin{longtable}[]{@{}lrrrrrr@{}}
 \toprule
@@ -305,36 +323,6 @@ informal review of the article
 
 \end{frame}
 
-\begin{frame}
-
-\begin{block}{Were there common underlying aims and elements of these
-examples of statistical learning?}
-
-\begin{itemize}
-\tightlist
-\item
-  To predict the price of a stock 3 months from now, based on company
-  performance measures and economic data.
-\item
-  To identify the risk factors for developing diabetes based on diet,
-  physical activity, family history and body measurements.
-\item
-  The goal is to build a spam filter.
-\item
-  To predict whether someone will suffer a heart attack on the basis of
-  demographic, diet and clinical measurements.
-\item
-  To identify the numbers in a handwritten ZIP code, from a digitized
-  image.
-\item
-  What makes a Nobel Prize winner? Perseverance, luck, skilled mentors
-  or simply chocolate consumption?
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
 \begin{frame}{The Supervised Learning Problem}
 
 \textcolor{blue}{\emph{Starting point}}:
@@ -363,6 +351,8 @@ examples of statistical learning?}
 \begin{frame}
 
 \begin{block}{Supervised learning and its objectives}
+
+\vspace{2mm}
 
 Our data set (training set) consists of \(n\) measurement of the
 response variable \(Y\) and of \(p\) covariates \(x\):
@@ -395,10 +385,15 @@ Supervised learning examples (we will study):
   models (M7)
 \item
   Classification trees, bagging, boosting (M8), K-nearest neighbor
-  classifier (M2, M4)
+  classifier (M4)
 \item
   Support vector machines (M9)
+\item
+  Neural networks (M11)
 \end{itemize}
+
+\(\rightarrow\) The majority of problems studied here fall in the
+supervised learning category
 
 \end{frame}
 
@@ -481,11 +476,11 @@ ones!}
 
 \begin{itemize}
 \item
-  This is an exciting research area, having important applications in
-  science, industry and finance.
-\item
   Statistical learning is a fundamental ingredient in the training of a
   modern data scientist.
+\item
+  It is an exciting research area, having important applications in
+  science, industry and finance.
 \end{itemize}
 
 \end{frame}
@@ -1354,9 +1349,13 @@ most predictive model}.
 
 \end{frame}
 
-\begin{frame}{Acknowledgements}
+\begin{frame}{References}
 
-Thanks to Julia Debik for contributing to this module page.
+\hypertarget{refs}{}
+\hypertarget{ref-ISL}{}
+James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani.
+2013. \emph{An Introduction to Statistical Learning}. Vol. 112.
+Springer.
 
 \end{frame}
 

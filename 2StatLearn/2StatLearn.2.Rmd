@@ -2,7 +2,7 @@
 subtitle: "TMA4268 Statistical Learning V2020"
 title: "Module 2, Part 2: Random vectors, covariance, multivariate Normal distribution"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "January xx, 2020"
+date: "January 13, 2020"
 output:
   # pdf_document:
   #   toc: true
@@ -38,9 +38,11 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 \normalsize
 
-* Random vectors,
+* Random vectors
+\vspace{2mm}
 
-* The covariance and correlation matrix and 
+* The covariance and correlation matrix 
+\vspace{2mm}
 
 * The multivariate normal distribution
 
@@ -48,10 +50,10 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 # Random vector
 
-* A random vector $\mathbf{X}_{(p\times 1)}$ is a $p$-dimensional vector of random variables. 
+* A random vector $\boldsymbol{X}_{(p\times 1)}$ is a $p$-dimensional vector of random variables. 
     + Weight of cork deposits in $p=4$ directions (N, E, S, W).
     + Rent index in Munich: rent, area, year of construction, location, bath condition, kitchen condition, central heating, district.
-* Joint distribution function: $f(\mathbf{x})$.
+* Joint distribution function: $f(\boldsymbol{x})$.
 * From joint distribution function to marginal (and conditional distributions).
 $$f_1(x_1)=\int_{-\infty}^{\infty}\cdots \int_{-\infty}^{\infty} f(x_1,x_2,\ldots,x_p)dx_2 \cdots dx_p$$
 * Cumulative distribution (definite integrals!) used to calculate probabilites.
@@ -62,7 +64,7 @@ $$f_1(x_1)=\int_{-\infty}^{\infty}\cdots \int_{-\infty}^{\infty} f(x_1,x_2,\ldot
 ## Moments 
 \vspace{2mm}
 
-The moments are important properties about the distribution of $\mathbf{X}$. We will look at:
+The moments are important properties about the distribution of $\boldsymbol{X}$. We will look at:
 
 * E: Mean of random vector and random matrices.
 * Cov: Covariance matrix.
@@ -96,32 +98,32 @@ dim(corkds)
 
 * This leads us to the definition of random vectors and a random matrix for cork trees:
 
-$$\mathbf{X}_{(28 \times 4)}=\left[ \begin{array}{cccc}X_{11} & X_{12} & X_{13}& X_{14}\\ X_{21} & X_{22} & X_{23}& X_{24}\\ X_{31} & X_{32} & X_{33}& X_{34}\\ \vdots & \vdots & \ddots & \vdots\\ X_{28,1} & X_{28,2} & X_{28,3}& X_{28,4}\\ \end{array} \right]$$
+$$\boldsymbol{X}_{(28 \times 4)}=\left[ \begin{array}{cccc}X_{11} & X_{12} & X_{13}& X_{14}\\ X_{21} & X_{22} & X_{23}& X_{24}\\ X_{31} & X_{32} & X_{33}& X_{34}\\ \vdots & \vdots & \ddots & \vdots\\ X_{28,1} & X_{28,2} & X_{28,3}& X_{28,4}\\ \end{array} \right]$$
 
 ---
 
 ## Rules for means
 
-* Random vector $\mathbf{X}_{(p\times 1)}$ with mean vector $\mathbf{\mu}_{(p\times 1)}$:
+* Random vector $\boldsymbol{X}_{(p\times 1)}$ with mean vector $\boldsymbol{\mu}_{(p\times 1)}$:
 
-$$\mathbf{X}_{(p\times 1)}=\left[ \begin{array}{c}X_1\\ X_2\\ \vdots\\ X_p\\ \end{array}\right], \text{ and }\mathbf{\mu}_{(p \times 1)}=\text{E}(\mathbf{X})=\left[ \begin{array}{c}\text{E}(X_1)\\ \text{E}(X_2)\\ \vdots\\ \text{E}(X_p)\\ \end{array}\right]$$
+$$\boldsymbol{X}_{(p\times 1)}=\left[ \begin{array}{c}X_1\\ X_2\\ \vdots\\ X_p\\ \end{array}\right], \text{ and }\boldsymbol{\mu}_{(p \times 1)}=\text{E}(\boldsymbol{X})=\left[ \begin{array}{c}\text{E}(X_1)\\ \text{E}(X_2)\\ \vdots\\ \text{E}(X_p)\\ \end{array}\right]$$
 
   $\rightarrow$ Observe that $\text{E}(X_j)$ is calculated from the marginal distribution of $X_j$ and contains no information about dependencies between $X_{j}$ and $X_k$, $k\neq j$.
 
-* Random matrix $\mathbf{X}_{(n\times p)}$ and random matrix $\mathbf{Y}_{(n\times p)}$:
-$$\text{E}(\mathbf{X}+\mathbf{Y})=\text{E}(\mathbf{X})+\text{E}(\mathbf{Y})$$
+* Random matrix $\boldsymbol{X}_{(n\times p)}$ and random matrix $\boldsymbol{Y}_{(n\times p)}$:
+$$\text{E}(\boldsymbol{X}+\boldsymbol{Y})=\text{E}(\boldsymbol{X})+\text{E}(\boldsymbol{Y})$$
 
 (Rules of vector addition)
 
 ---
 
-* Random matrix $\mathbf{X}_{(n\times p)}$ and conformable constant matrices $\mathbf{A}$ and $\mathbf{B}$:
-$$\text{E}(\mathbf{A}\mathbf{X}\mathbf{B})=\mathbf{A}\text{E}(\mathbf{X})\mathbf{B}$$
-Proof: Look at element $(i,j)$ of $\mathbf{A}\mathbf{X}\mathbf{B}$ 
+* Random matrix $\boldsymbol{X}_{(n\times p)}$ and conformable constant matrices $\boldsymbol{A}$ and $\boldsymbol{B}$:
+$$\text{E}(\boldsymbol{A}\boldsymbol{X}\boldsymbol{B})=\boldsymbol{A}\text{E}(\boldsymbol{X})\boldsymbol{B}$$
+Proof: Look at element $(i,j)$ of $\boldsymbol{A}\boldsymbol{X}\boldsymbol{B}$ 
 $$e_{ij}=\sum_{k=1}^n a_{ik} \sum_{l=1}^p X_{kl}b_{lj}$$
-(where $a_{ik}$ and $b_{lj}$ are elements of $\mathbf{A}$ and $\mathbf{B}$ respectively), and see that $\text{E}(e_{ij})$ is the element $(i,j)$ if $\mathbf{A}\text{E}(\mathbf{X})\mathbf{B}$.
+(where $a_{ik}$ and $b_{lj}$ are elements of $\boldsymbol{A}$ and $\boldsymbol{B}$ respectively), and see that $\text{E}(e_{ij})$ is the element $(i,j)$ if $\boldsymbol{A}\text{E}(\boldsymbol{X})\boldsymbol{B}$.
 
-**Q**: what are the univariate analog to this formula - that you studied in your first introductory course in statistics? What do you think happens if we look at $\text{E}(\mathbf{A}\mathbf{X}\mathbf{B})+\mathbf{d}$?
+**Q**: what are the univariate analog to this formula - that you studied in your first introductory course in statistics? What do you think happens if we look at $\text{E}(\boldsymbol{A}\boldsymbol{X}\boldsymbol{B})+\boldsymbol{d}$?
 
 ```{r, echo=FALSE, results='asis', eval=showsolB}
 cat("
@@ -152,15 +154,15 @@ Make a scatter plot to show this.
 
 ## Variance-covariance matrix
 
-* Consider random vector $\mathbf{X}_{(p\times 1)}$ with mean vector $\mathbf{\mu}_{(p\times 1)}$:
-$$\mathbf{X}_{(p\times 1)} =\left[ \begin{array}{c} X_1\\ X_2\\ \vdots\\ X_p\\ \end{array} \right], \text{ and }\mathbf{\mu}_{(p\times 1)} =\text{E}(\mathbf{X})=\left[ \begin{array}{c} \text{E}(X_1)\\ \text{E}(X_2)\\ \vdots\\ \text{E}(X_p)\\ \end{array}\right]$$
+* Consider random vector $\boldsymbol{X}_{(p\times 1)}$ with mean vector $\boldsymbol{\mu}_{(p\times 1)}$:
+$$\boldsymbol{X}_{(p\times 1)} =\left[ \begin{array}{c} X_1\\ X_2\\ \vdots\\ X_p\\ \end{array} \right], \text{ and }\boldsymbol{\mu}_{(p\times 1)} =\text{E}(\boldsymbol{X})=\left[ \begin{array}{c} \text{E}(X_1)\\ \text{E}(X_2)\\ \vdots\\ \text{E}(X_p)\\ \end{array}\right]$$
 
-* Variance-covariance matrix $\mathbf\Sigma$ (real and symmetric)
+* Variance-covariance matrix $\boldsymbol\Sigma$ (real and symmetric)
 \begin{align*}
-\mathbf\Sigma & =\text{Cov}(\mathbf{X})  
-=\text{E}[(\mathbf{X}-\mathbf{\mu})(\mathbf{X}-\mathbf{\mu})^T] \\
+\boldsymbol\Sigma & =\text{Cov}(\boldsymbol{X})  
+=\text{E}[(\boldsymbol{X}-\boldsymbol{\mu})(\boldsymbol{X}-\boldsymbol{\mu})^T] \\
 & = \left[ \begin{array}{cccc} \sigma_{11} & \sigma_{12} & \cdots & \sigma_{1p}\\ \sigma_{12} & \sigma_{22} & \cdots & \sigma_{2p}\\ \vdots & \vdots & \ddots & \vdots\\ \sigma_{1p} & \sigma_{2p} & \cdots & \sigma_{pp}\\ \end{array}  \right] 
- = \text{E}(\mathbf{X}\mathbf{X}^T)-\mathbf{\mu}\mathbf{\mu}^T
+ = \text{E}(\boldsymbol{X}\boldsymbol{X}^T)-\boldsymbol{\mu}\boldsymbol{\mu}^T
 \end{align*}
 
 
@@ -169,18 +171,18 @@ $$\mathbf{X}_{(p\times 1)} =\left[ \begin{array}{c} X_1\\ X_2\\ \vdots\\ X_p\\ \
 
 
 
-* The diagonal elements in $\mathbf\Sigma$, $\sigma_{ii}=\sigma_i^2$, are variances.
+* The diagonal elements in $\boldsymbol\Sigma$, $\sigma_{ii}=\sigma_i^2$, are variances.
 
 * The off-diagonal elements are covariances $\sigma_{ij}=\text{E}[(X_i-\mu_i)(X_j-\mu_j)]=\sigma_{ji}$.
 
-* $\mathbf\Sigma$ is called variance, covariance and variance-covariance matrix and denoted both $\text{Var}(\mathbf{X})$ and $\text{Cov}(\mathbf{X})$.
+* $\boldsymbol\Sigma$ is called variance, covariance and variance-covariance matrix and denoted both $\text{Var}(\boldsymbol{X})$ and $\text{Cov}(\boldsymbol{X})$.
 
 ---
 
 ### Exercise: the variance-covariance matrix
     
-Let $\mathbf{X}_{4\times 1}$ have variance-covariance matrix
-$$\mathbf\Sigma= \left[ \begin{array}{cccc} 2&1&0&0\\
+Let $\boldsymbol{X}_{4\times 1}$ have variance-covariance matrix
+$$\boldsymbol\Sigma= \left[ \begin{array}{cccc} 2&1&0&0\\
       1&2&0&1\\
       0&0&2&1\\
       0&1&1&2\\
@@ -194,8 +196,8 @@ Explain what this means.
 ### Correlation matrix
 $~$
 
-Correlation matrix $\mathbf{\rho}$ (real and symmetric)
-$$\mathbf{\rho}=\left[ \begin{array}{cccc}
+Correlation matrix $\boldsymbol{\rho}$ (real and symmetric)
+$$\boldsymbol{\rho}=\left[ \begin{array}{cccc}
     \frac{\sigma_{11}}{\sqrt{\sigma_{11}\sigma_{11}}} &
     \frac{\sigma_{12}}{\sqrt{\sigma_{11}\sigma_{22}}} &
     \cdots &
@@ -216,9 +218,9 @@ $$\mathbf{\rho}=\left[ \begin{array}{cccc}
     \rho_{1p} & \rho_{2p} & \cdots & 1\\
 \end{array}\right]$$
 
-$$\mathbf{\rho}=(\mathbf{V}^{\frac{1}{2}})^{-1}
-    \mathbf\Sigma(\mathbf{V}^{\frac{1}{2}})^{-1}, \text{   where    }
-   \mathbf{V}^{\frac{1}{2}}=
+$$\boldsymbol{\rho}=(\boldsymbol{V}^{\frac{1}{2}})^{-1}
+    \boldsymbol\Sigma(\boldsymbol{V}^{\frac{1}{2}})^{-1}, \text{   where    }
+   \boldsymbol{V}^{\frac{1}{2}}=
  \left[ \begin{array}{cccc}
     \sqrt{\sigma_{11}} & 0& \cdots & 0\\
     0 & \sqrt{\sigma_{22}} & \cdots & 0\\
@@ -232,8 +234,8 @@ $$\mathbf{\rho}=(\mathbf{V}^{\frac{1}{2}})^{-1}
 
 $~$
 
-Let $\mathbf{X}_{4\times 1}$ have variance-covariance matrix
-$$\mathbf\Sigma= \left[ \begin{array}{cccc} 2&1&0&0\\
+Let $\boldsymbol{X}_{4\times 1}$ have variance-covariance matrix
+$$\boldsymbol\Sigma= \left[ \begin{array}{cccc} 2&1&0&0\\
       1&2&0&1\\
       0&0&2&1\\
       0&1&1&2\\
@@ -256,16 +258,16 @@ $$\mathbf\Sigma= \left[ \begin{array}{cccc} 2&1&0&0\\
 
 $~$ 
 
-Consider a random vector $\mathbf{X}_{(p\times 1)}$ with mean vector
-    $\mathbf{\mu}=\text{E}(\mathbf{X})$ and
-   variance-covariance matrix $\mathbf\Sigma=\text{Cov}(\mathbf{X})$.
+Consider a random vector $\boldsymbol{X}_{(p\times 1)}$ with mean vector
+    $\boldsymbol{\mu}=\text{E}(\boldsymbol{X})$ and
+   variance-covariance matrix $\boldsymbol\Sigma=\text{Cov}(\boldsymbol{X})$.
 
 The linear combinations 
-$$\mathbf{Z}=\mathbf{C}\mathbf{X}=\left[ \begin{array}{c} \sum_{j=1}^p c_{1j}X_j\\ \sum_{j=1}^p c_{2j}X_j\\ \vdots \\ \sum_{j=1}^p c_{kj}X_j \end{array} \right]$$ 
+$$\boldsymbol{Z}=\boldsymbol{C}\boldsymbol{X}=\left[ \begin{array}{c} \sum_{j=1}^p c_{1j}X_j\\ \sum_{j=1}^p c_{2j}X_j\\ \vdots \\ \sum_{j=1}^p c_{kj}X_j \end{array} \right]$$ 
 have
-$$\text{E}(\mathbf{Z})=\text{E}(\mathbf{C}\mathbf{X})=\mathbf{C}\mathbf{\mu}$$
-$$\text{Cov}(\mathbf{Z})=\text{Cov}(\mathbf{C}\mathbf{X})=
-   \mathbf{C}\mathbf\Sigma\mathbf{C}^T$$
+$$\text{E}(\boldsymbol{Z})=\text{E}(\boldsymbol{C}\boldsymbol{X})=\boldsymbol{C}\boldsymbol{\mu}$$
+$$\text{Cov}(\boldsymbol{Z})=\text{Cov}(\boldsymbol{C}\boldsymbol{X})=
+   \boldsymbol{C}\boldsymbol\Sigma\boldsymbol{C}^T$$
 
 [Proof](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/CXproof.pdf)
 
@@ -275,19 +277,19 @@ $$\text{Cov}(\mathbf{Z})=\text{Cov}(\mathbf{C}\mathbf{X})=
 
 ### Exercise: Linear combinations
 
-$$\mathbf{X}=\left[ \begin{array}{c} X_N\\
+$$\boldsymbol{X}=\left[ \begin{array}{c} X_N\\
           X_E\\
 X_S\\
           X_W\\
           \end{array}
           \right]k
-          \mathbf{\mu}=\left[
+          \boldsymbol{\mu}=\left[
       \begin{array}{c} \mu_N\\
           \mu_E\\
 \mu_S\\
           \mu_W\\
           \end{array}
-          \right], \text{ and } \mathbf\Sigma=\left[ \begin{array}{cccc}
+          \right], \text{ and } \boldsymbol\Sigma=\left[ \begin{array}{cccc}
     \sigma_{NN} & \sigma_{NE} & \sigma_{NS} & \sigma_{NW}\\
     \sigma_{NE} & \sigma_{EE} & \sigma_{ES}& \sigma_{EW}\\
         \sigma_{NS} & \sigma_{EE} & \sigma_{SS}& \sigma_{SW}\\
@@ -295,11 +297,11 @@ X_S\\
 \end{array} \right]$$
 
 Scientists would like to compare the following three _contrasts_: N-S, E-W and (E+W)-(N+S),
-and define a new random vector $\mathbf{Y}_{(3\times 1)}=\mathbf{C}_{(3\times 4)} \mathbf{X}_{(4\times 1)}$ giving the three contrasts.
+and define a new random vector $\boldsymbol{Y}_{(3\times 1)}=\boldsymbol{C}_{(3\times 4)} \boldsymbol{X}_{(4\times 1)}$ giving the three contrasts.
 
-* Write down $\mathbf{C}$.
+* Write down $\boldsymbol{C}$.
 * Explain how to find $\text{E}(Y_1)$ and $\text{Cov}(Y_1,Y_3)$.
-* Use R to find the mean vector, covariance matrix and correlations matrix of $\mathbf{Y}$, when the mean vector and covariance matrix for $\mathbf{X}$ is given below.
+* Use R to find the mean vector, covariance matrix and correlations matrix of $\boldsymbol{Y}$, when the mean vector and covariance matrix for $\boldsymbol{X}$ is given below.
 
 ---
 
@@ -328,8 +330,8 @@ C %*% Sigma %*% t(C)
 ### The covariance matrix - more requirements?
 $~$
 
-Random vector $\mathbf{X}_{(p\times 1)}$ with mean vector $\mathbf{\mu}_{(p\times 1)}$ and covariance matrix
-$$\mathbf\Sigma=\text{Cov}(\mathbf{X})=\text{E}[(\mathbf{X}-\mathbf{\mu})(\mathbf{X}-\mathbf{\mu})^T]=
+Random vector $\boldsymbol{X}_{(p\times 1)}$ with mean vector $\boldsymbol{\mu}_{(p\times 1)}$ and covariance matrix
+$$\boldsymbol\Sigma=\text{Cov}(\boldsymbol{X})=\text{E}[(\boldsymbol{X}-\boldsymbol{\mu})(\boldsymbol{X}-\boldsymbol{\mu})^T]=
 \left[ \begin{array}{cccc}
     \sigma_{11} & \sigma_{12} & \cdots & \sigma_{1p}\\
     \sigma_{12} & \sigma_{22} & \cdots & \sigma_{2p}\\
@@ -340,15 +342,15 @@ $$\mathbf\Sigma=\text{Cov}(\mathbf{X})=\text{E}[(\mathbf{X}-\mathbf{\mu})(\mathb
 ---
 
 
-* The covariance matrix is by construction symmetric, and it is common to require that the covariance matrix is positive semidefinite. This means that, for every vector $\mathbf{b}\neq \mathbf{0}$
+* The covariance matrix is by construction symmetric, and it is common to require that the covariance matrix is positive semidefinite. This means that, for every vector $\boldsymbol{b}\neq \boldsymbol{0}$
 
-$$\mathbf{b}^T \mathbf{\Sigma} \mathbf{B} \geq 0 \ .$$
+$$\boldsymbol{b}^T \boldsymbol{\Sigma} \boldsymbol{b} \geq 0 \ .$$
 
 
 * Why do you think that is?
 
 
-Hint: Is it possible that the variance of the linear combination $\mathbf{Y}=\mathbf{b}^T\mathbf{X}$ is negative? 
+Hint: Is it possible that the variance of the linear combination $\boldsymbol{Y}=\boldsymbol{b}^T\boldsymbol{X}$ is negative? 
 
 ---
 
@@ -360,8 +362,8 @@ Choose the correct answer - time limit was 30 seconds for each question! Let's g
 ### Question 1: Mean of sum
 \vspace{2mm}
 
-$\mathbf{X}$ and $\mathbf{Y}$ are two bivariate random vectors with $\text{E}(\mathbf{X})=(1,2)^T$
-and $\text{E}(\mathbf{Y})=(2,0)^T$. What is $\text{E}(\mathbf{X}+\mathbf{Y})$?
+$\boldsymbol{X}$ and $\boldsymbol{Y}$ are two bivariate random vectors with $\text{E}(\boldsymbol{X})=(1,2)^T$
+and $\text{E}(\boldsymbol{Y})=(2,0)^T$. What is $\text{E}(\boldsymbol{X}+\boldsymbol{Y})$?
 
 * A: $(1.5,1)^T$
 * B: $(3,2)^T$
@@ -373,7 +375,7 @@ and $\text{E}(\mathbf{Y})=(2,0)^T$. What is $\text{E}(\mathbf{X}+\mathbf{Y})$?
 ### Question 2: Mean of linear combination
 \vspace{2mm}
 
-$\mathbf{X}$ is a 2-dimensional random vector with $\text{E}(\mathbf{X})=(2,5)^T$ , and $\mathbf{b}=(0.5, 0.5)^T$ is a constant vector. What is $\text{E}(\mathbf{b}^T\mathbf{X})$?
+$\boldsymbol{X}$ is a 2-dimensional random vector with $\text{E}(\boldsymbol{X})=(2,5)^T$ , and $\boldsymbol{b}=(0.5, 0.5)^T$ is a constant vector. What is $\text{E}(\boldsymbol{b}^T\boldsymbol{X})$?
 
 * A: 3.5
 * B: 7
@@ -385,54 +387,54 @@ $\mathbf{X}$ is a 2-dimensional random vector with $\text{E}(\mathbf{X})=(2,5)^T
 ### Question 3: Covariance
 \vspace{2mm}
 
-$\mathbf{X}$ is a $p$-dimensional random vector with mean $\mathbf{\mu}$. Which of the following defines the covariance matrix?
+$\boldsymbol{X}$ is a $p$-dimensional random vector with mean $\boldsymbol{\mu}$. Which of the following defines the covariance matrix?
 
-* A: $E[(\mathbf{X}-\mathbf{\mu})^T(\mathbf{X}-\mathbf{\mu})]$ 
-* B: $E[(\mathbf{X}-\mathbf{\mu})(\mathbf{X}-\mathbf{\mu})^T]$ 
-* C: $E[(\mathbf{X}-\mathbf{\mu})(\mathbf{X}-\mathbf{\mu})]$  
-* D: $E[(\mathbf{X}-\mathbf{\mu})^T(\mathbf{X}-\mathbf{\mu})^T]$
+* A: $E[(\boldsymbol{X}-\boldsymbol{\mu})^T(\boldsymbol{X}-\boldsymbol{\mu})]$ 
+* B: $E[(\boldsymbol{X}-\boldsymbol{\mu})(\boldsymbol{X}-\boldsymbol{\mu})^T]$ 
+* C: $E[(\boldsymbol{X}-\boldsymbol{\mu})(\boldsymbol{X}-\boldsymbol{\mu})]$  
+* D: $E[(\boldsymbol{X}-\boldsymbol{\mu})^T(\boldsymbol{X}-\boldsymbol{\mu})^T]$
 
 ---
 
 ### Question 4: Mean of linear combinations
 \vspace{2mm}
 
-$\mathbf{X}$ is a $p$-dimensional random vector with mean $\mathbf{\mu}$
-and covariance matrix $\mathbf\Sigma$. $\mathbf{C}$ is a constant matrix. 
-What is then the mean of the $k$-dimensional random vector $\mathbf{Y}=\mathbf{C}\mathbf{X}$?
+$\boldsymbol{X}$ is a $p$-dimensional random vector with mean $\boldsymbol{\mu}$
+and covariance matrix $\boldsymbol\Sigma$. $\boldsymbol{C}$ is a constant matrix. 
+What is then the mean of the $k$-dimensional random vector $\boldsymbol{Y}=\boldsymbol{C}\boldsymbol{X}$?
 
-* A: $\mathbf{C}\mathbf{\mu}$
-* B: $\mathbf{C}\mathbf\Sigma$
-* C: $\mathbf{C}\mathbf{\mu}\mathbf{C}^T$
-* D: $\mathbf{C}\mathbf\Sigma\mathbf{C}^T$
+* A: $\boldsymbol{C}\boldsymbol{\mu}$
+* B: $\boldsymbol{C}\boldsymbol\Sigma$
+* C: $\boldsymbol{C}\boldsymbol{\mu}\boldsymbol{C}^T$
+* D: $\boldsymbol{C}\boldsymbol\Sigma\boldsymbol{C}^T$
 
 ---
 
 ### Question 5: Covariance of linear combinations
 \vspace{2mm}
 
-$\mathbf{X}$ is a $p$-dimensional random vector with mean $\mathbf{\mu}$
-and covariance matrix $\mathbf\Sigma$. $\mathbf{C}$ is a constant matrix. 
-What is then the covariance of the $k$-dimensional random vector $\mathbf{Y}=\mathbf{C}\mathbf{X}$?
+$\boldsymbol{X}$ is a $p$-dimensional random vector with mean $\boldsymbol{\mu}$
+and covariance matrix $\boldsymbol\Sigma$. $\boldsymbol{C}$ is a constant matrix. 
+What is then the covariance of the $k$-dimensional random vector $\boldsymbol{Y}=\boldsymbol{C}\boldsymbol{X}$?
 
-* A: $\mathbf{C}\mathbf{\mu}$
-* B: $\mathbf{C}\mathbf\Sigma$
-* C: $\mathbf{C}\mathbf{\mu}\mathbf{C}^T$
-* D: $\mathbf{C}\mathbf\Sigma\mathbf{C}^T$
+* A: $\boldsymbol{C}\boldsymbol{\mu}$
+* B: $\boldsymbol{C}\boldsymbol\Sigma$
+* C: $\boldsymbol{C}\boldsymbol{\mu}\boldsymbol{C}^T$
+* D: $\boldsymbol{C}\boldsymbol\Sigma\boldsymbol{C}^T$
 
 ---
 
 ### Question 6: Correlation
 \vspace{2mm}
 
-$\mathbf{X}$ is a $2$-dimensional random vector with
+$\boldsymbol{X}$ is a $2$-dimensional random vector with
 covariance matrix 
-\[ \mathbf\Sigma= \left[\begin{array}{cc}
+\[ \boldsymbol\Sigma= \left[\begin{array}{cc}
           4 & 0.8 \\
           0.8 & 1\\
       \end{array}
     \right]\]
-Then the correlation between the two elements of $\mathbf{X}$ are:
+Then the correlation between the two elements of $\boldsymbol{X}$ are:
 
 * A: 0.10
 * B: 0.25
@@ -476,9 +478,9 @@ Why is the mvN so popular?
 ## The multivariate normal (mvN) pdf
 \vspace{2mm}
 
-The random vector $\mathbf{X}_{p\times 1}$ is multivariate normal $N_p$ with mean $\mathbf{\mu}$ and (positive definite) covariate matrix $\mathbf\Sigma$. The pdf is:
+The random vector $\boldsymbol{X}_{p\times 1}$ is multivariate normal $N_p$ with mean $\boldsymbol{\mu}$ and (positive definite) covariate matrix $\boldsymbol\Sigma$. The pdf is:
 
-$$f(\mathbf{x})=\frac{1}{(2\pi)^\frac{p}{2}|\mathbf\Sigma|^\frac{1}{2}} \exp\{-\frac{1}{2}(\mathbf{x}-\mathbf{\mu})^T\mathbf\Sigma^{-1}(\mathbf{x}-\mathbf{\mu})\}$$
+$$f(\boldsymbol{x})=\frac{1}{(2\pi)^\frac{p}{2}|\boldsymbol\Sigma|^\frac{1}{2}} \exp\{-\frac{1}{2}(\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})\}$$
 
 **Questions**: 
 
@@ -488,20 +490,20 @@ $$f(x)=\frac{1}{\sqrt{2\pi}\sigma}\exp\{ \frac{1}{2\sigma^2}(x-\mu)^2\}$$
 * Why do we need the constant in front of the $\exp$?
 * What is the dimension of the part in $\exp$? 
 
-* What happens if the determinant $|\mathbf\Sigma| = 0$?
+* What happens if the determinant $|\boldsymbol\Sigma| = 0$?
 
 ---
 
 ## Six useful properties of the mvN
 \vspace{2mm}
 
-Let $\mathbf{X}_{(p\times 1)}$ be a random vector from $N_p(\mathbf{\mu},\mathbf\Sigma)$.
+Let $\boldsymbol{X}_{(p\times 1)}$ be a random vector from $N_p(\boldsymbol{\mu},\boldsymbol\Sigma)$.
 
 1. The grapical contours of the mvN are ellipsoids (can be shown using spectral decomposition).
 
-2. Linear combinations of components of $\mathbf{X}$ are (multivariate) normal 
+2. Linear combinations of components of $\boldsymbol{X}$ are (multivariate) normal 
 
-3. All subsets of the components of $\mathbf{X}$ are (multivariate) normal (special case of the above).
+3. All subsets of the components of $\boldsymbol{X}$ are (multivariate) normal (special case of the above).
 
 4. Zero covariance implies that the corresponding components are independently distributed (in contrast to general distributions).
 
@@ -517,18 +519,18 @@ The result 4 is rather useful! If you have a bivariate normal and observed covar
 ## Contours of multivariate normal distribution
 \vspace{2mm}
 
-* Contours of constant density for the $p$-dimensional normal distribution are ellipsoids defined by $\mathbf{x}$ such that
-$$ (\mathbf{x}-\mathbf{\mu})^T\mathbf\Sigma^{-1}(\mathbf{x}-\mathbf{\mu})=b $$
+* Contours of constant density for the $p$-dimensional normal distribution are ellipsoids defined by $\boldsymbol{x}$ such that
+$$ (\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})=b $$
 where $b>0$ is a constant.
 
-* These ellipsoids are centered at $\mathbf{\mu}$ and have axes $\pm \sqrt{b \lambda_i}\mathbf{e}_i$, where $\mathbf\Sigma\mathbf{e}_i=\lambda_i \mathbf{e}_i$, for $i=1,...,p$.
+* These ellipsoids are centered at $\boldsymbol{\mu}$ and have axes $\pm \sqrt{b \lambda_i}\boldsymbol{e}_i$, where $\boldsymbol\Sigma\boldsymbol{e}_i=\lambda_i \boldsymbol{e}_i$, for $i=1,...,p$.
 
 * To see this the spectral decomposition of the covariance matrix is useful.
 
-* $(\mathbf{x}-\mathbf{\mu})^T\mathbf\Sigma^{-1}(\mathbf{x}-\mathbf{\mu})$ is distributed as $\chi^2_p$.
+* $(\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})$ is distributed as $\chi^2_p$.
 
-<!-- * The volume inside the ellipsoid of $\mathbf{x}$ values satisfying -->
-<!-- $$ (\mathbf{x}-\mathbf{\mu})^T\mathbf\Sigma^{-1}(\mathbf{x}-\mathbf{\mu}) \le \chi^2_p(\alpha) $$ -->
+<!-- * The volume inside the ellipsoid of $\boldsymbol{x}$ values satisfying -->
+<!-- $$ (\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu}) \le \chi^2_p(\alpha) $$ -->
 <!-- has probability $1-\alpha$. -->
 
 ---
@@ -543,7 +545,7 @@ _In M4: Classification the mvN is very important and we will often draw contours
 ## Identify the mvNs from their contours
 \vspace{4mm}
 
-Let $\mathbf\Sigma=\left[\begin{array}{cc} \sigma_x^2 & \rho\sigma_{x}\sigma_{y}\\\rho\sigma_{x}\sigma_{y}&\sigma_y^2\\ \end{array} \right]$.
+Let $\boldsymbol\Sigma=\left[\begin{array}{cc} \sigma_x^2 & \rho\sigma_{x}\sigma_{y}\\\rho\sigma_{x}\sigma_{y}&\sigma_y^2\\ \end{array} \right]$.
 
 \vspace{4mm}
 The following four figure contours have been generated:
@@ -617,18 +619,18 @@ Choose the correct answer - time limit was 30 seconds for each question! Let's g
 \vspace{2mm}
 
 The probability density function is 
-$(\frac{1}{2\pi})^\frac{p}{2}\det(\mathbf\Sigma)^{-\frac{1}{2}}\exp\{-\frac{1}{2}Q\}$ where $Q$ is
+$(\frac{1}{2\pi})^\frac{p}{2}\det(\boldsymbol\Sigma)^{-\frac{1}{2}}\exp\{-\frac{1}{2}Q\}$ where $Q$ is
 
-* A: $(\mathbf{x}-\mathbf{\mu})^T\mathbf\Sigma^{-1}(\mathbf{x}-\mathbf{\mu})$
-* B: $(\mathbf{x}-\mathbf{\mu})\mathbf\Sigma(\mathbf{x}-\mathbf{\mu})^T$
-* C: $\mathbf\Sigma-\mathbf{\mu}$
+* A: $(\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})$
+* B: $(\boldsymbol{x}-\boldsymbol{\mu})\boldsymbol\Sigma(\boldsymbol{x}-\boldsymbol{\mu})^T$
+* C: $\boldsymbol\Sigma-\boldsymbol{\mu}$
 
 ---
 
 ### Question 2:  Trivariate normal pdf
 \vspace{2mm}
 
-What graphical form has the solution to $f(\mathbf{x})=$ constant?
+What graphical form has the solution to $f(\boldsymbol{x})=$ constant?
 
 * A: Circle
 * B: Parabola
@@ -640,21 +642,21 @@ What graphical form has the solution to $f(\mathbf{x})=$ constant?
 ### Question 3: Multivariate normal distribution
 \vspace{2mm}
 
-$\mathbf{X}_p \sim N_p(\mathbf{\mu},\mathbf\Sigma)$, and 
-$\mathbf{C}$ is a $k \times p$ constant matrix. $\mathbf{Y}=\mathbf{C}\mathbf{X}$ is
+$\boldsymbol{X}_p \sim N_p(\boldsymbol{\mu},\boldsymbol\Sigma)$, and 
+$\boldsymbol{C}$ is a $k \times p$ constant matrix. $\boldsymbol{Y}=\boldsymbol{C}\boldsymbol{X}$ is
 
 * A: Chi-squared with $k$ degrees of freedom
-* B: Multivariate normal with mean $k\mathbf{\mu}$
+* B: Multivariate normal with mean $k\boldsymbol{\mu}$
 * C: Chi-squared with $p$ degrees of freedom
-* D: Multivariate normal with mean $\mathbf{C}\mathbf{\mu}$
+* D: Multivariate normal with mean $\boldsymbol{C}\boldsymbol{\mu}$
 
 ---
 
 ### Question 4: Independence
 \vspace{2mm}
 
- Let $\mathbf{X}\sim N_3(\mathbf{\mu},\mathbf\Sigma)$, with
-$$\mathbf\Sigma= \left[     
+ Let $\boldsymbol{X}\sim N_3(\boldsymbol{\mu},\boldsymbol\Sigma)$, with
+$$\boldsymbol\Sigma= \left[     
 \begin{array}{ccc} 1&1&0\\
       1&3&2\\
       0&2&5\\
@@ -672,12 +674,12 @@ Which two variables are independent?
 ### Question 5: Constructing independent variables?
 \vspace{2mm}
 
-Let $\mathbf{X}\sim N_p(\mathbf{\mu},\mathbf\Sigma)$. How can I construct a vector of independent standard normal variables from $\mathbf{X}$?
+Let $\boldsymbol{X}\sim N_p(\boldsymbol{\mu},\boldsymbol\Sigma)$. How can I construct a vector of independent standard normal variables from $\boldsymbol{X}$?
 
-* A: $\mathbf\Sigma(\mathbf{X}-\mathbf{\mu})$
-* B: $\mathbf\Sigma^{-1}(\mathbf{X}+\mathbf{\mu})$
-* C: $\mathbf\Sigma^{-\frac{1}{2}}(\mathbf{X}-\mathbf{\mu})$
-* D: $\mathbf\Sigma^{\frac{1}{2}}(\mathbf{X}+\mathbf{\mu})$
+* A: $\boldsymbol\Sigma(\boldsymbol{X}-\boldsymbol{\mu})$
+* B: $\boldsymbol\Sigma^{-1}(\boldsymbol{X}+\boldsymbol{\mu})$
+* C: $\boldsymbol\Sigma^{-\frac{1}{2}}(\boldsymbol{X}-\boldsymbol{\mu})$
+* D: $\boldsymbol\Sigma^{\frac{1}{2}}(\boldsymbol{X}+\boldsymbol{\mu})$
 
 
 ---
@@ -697,6 +699,22 @@ cat("
 
 * [Videoes on YouTube by the authors of ISL, Chapter 2](https://www.youtube.com/playlist?list=PL5-da3qGB5IDvuFPNoSqheihPOQNJpzyy)
 
+
+---
+
+# Excursion: R Markdown and `knitr`
+
+We will use R Markdown for writing the Compulsory exercise reports in our course.
+
+1) What is R Markdown? 
+
+1-minute introduction video: <https://rmarkdown.rstudio.com/lesson-1.html>
+
+Then, if more is needed also a chapter from the Data Science book: <http://r4ds.had.co.nz/r-markdown.html>
+
+
+2) What is `knitr`?
+<https://yihui.name/knitr/>
 
 ---
 
