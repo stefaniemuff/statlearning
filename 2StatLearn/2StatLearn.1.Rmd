@@ -319,7 +319,7 @@ techniques, in order to know how and when to use them.
 to grasp the more sophisticated ones.
 
 * It is important to accurately assess the performance of a
-method, to know how well or how badly it is working
+method, to know how well or how badly it is working.
 
 $\rightarrow$ **Simpler methods often perform as well as fancier ones!**
 
@@ -359,7 +359,7 @@ and there is a great deal of “cross-fertilization”.
 
 * Criticism: ML often re-invents existing methods and names them differently, but often without awareness of existing methods in statistics.
 
-* Almost weekly new literature that delivers comparison. Often, the "simple" statistcal methods "win".
+* Almost weekly new literature that delivers comparison. Often, the "simple" statistical methods "win".
 
 ![ML vs statistics controversy](ML_vs_stat.png)
 
@@ -367,8 +367,9 @@ and there is a great deal of “cross-fertilization”.
 
 
 ## What is the aim in statistical learning?
+\vspace{3mm}
 
-Assume:
+Assume\footnote{We are talking about supervised methods now.}:
 
 * we observe one _quantitative_ response $Y$ and 
 * $p$ different predictors $x_1, x_2,... , x_p$. 
@@ -392,6 +393,7 @@ Sales of a product, given advertising budgets in different media.
 
 # Example 2
 
+\vspace{2mm}
 Income for given levels of education.
 
 ![ISLR Figure 2.12](../../ISLR/Figures/Chapter2/2.2.png)
@@ -509,13 +511,13 @@ Asumption about the form or shape of the function $f$.
 
 The multiple linear model (M3) is an example of a parametric method: 
 
-$$f(x) = \beta_0 + \beta_1 x_1 + ... + \beta_p x_p+\varepsilon, $$
+$$f(x) = \beta_0 + \beta_1 x_1 + ... + \beta_p x_p+\varepsilon \ , $$
 
 with $\varepsilon \sim N(0,\sigma^2)$.
 
 $~$
 
-The task simplifies to finding estimates of the $p+1$ coefficients $\beta_0, \beta_1, .. ,\beta_p$. To do this we use the training data to fit the model, such that $$Y \approx \hat{\beta_0} + \hat{\beta_1} x_1 + ... + \hat{\beta_p} x_p.$$ 
+The task simplifies to finding estimates of the $p+1$ coefficients $\beta_0, \beta_1, .. ,\beta_p$. To do this we use the training data to fit the model, such that $$Y \approx \hat{\beta_0} + \hat{\beta_1} x_1 + ... + \hat{\beta_p} x_p \ .$$ 
 
 ---
 
@@ -531,11 +533,15 @@ $~$
 
 * Non-parametric methods seek an estimate of $f$ that gets close to the data points, but without making explicit assumptions about the form of the function $f$. 
 
-* The $K$-nearest neighbour algorithm is an example of a non-parametric model. Used in classification, this algorithm predicts a class membership for a new observation by making a majority vote based on its $K$ nearest neighbours. We will discuss the $K$-nearest neighbour algorithm later in this module.
+* The $K$-nearest neighbour algorithm is an example of a non-parametric model. Used in classification, this algorithm predicts a class membership for a new observation by making a majority vote based on its $K$ nearest neighbours. We will discuss the $K$-nearest neighbour algorithm in Module 4.
+
+(Todo: For the exercises make sure no KNN questions are in RecEx2 -- I moved all this to module 4, because it was otherwise resdundant. You can also move the respective questions to RecEx4, if that makes sense.)
 
 ---
 
 ### Q: What are advantages and disadvantages of parametric and non-parametric methods?
+
+\vspace{2mm}
 
 Hints: interpretability, amount of data needed, complexity, assumptions made, prediction accuracy, computational complexity, over/under-fit.
 
@@ -559,7 +565,7 @@ Advantages | Disadvantages
 ------------------------------------ | ------------------------------------ 
 Flexible: a large number of functional forms can be fitted|Can overfit the data\vspace{2mm}
 No strong assumptions about the underlying function are made|Computationally more expensive as more parameters need to be estimated\vspace{2mm}
-Can often give good predictions |Much data is required to estimate (the complex) $f$.
+Can often give good predictions |Much data are required to estimate (the complex) $f$.
 
 ---
 
