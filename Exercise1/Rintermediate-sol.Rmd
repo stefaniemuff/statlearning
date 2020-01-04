@@ -6,12 +6,12 @@ date: "January 06, 2020"
 header-includes:
  - \usepackage{xcolor}
 output:
-  pdf_document:
-    toc: true
-    toc_depth: 2
-    keep_tex: yes
+  # pdf_document:
+  #   toc: false
+  #   toc_depth: 2
+  #   keep_tex: yes
   html_document:
-    toc: true
+    toc: false
     toc_float: true
     toc_depth: 2
 ---
@@ -21,15 +21,12 @@ output:
 
 (Latest changes: 03.01.20: first version for 2020)
 
-Before working with this file you should have worked with the 
-[Rbeginner file]: (https://htmlpreview.github.io/?https://github.com/stefaniemuff/statlearning/blob/master/Exercise1/Rbeginner.html)
+Before working with this file you should have worked with the `Rbeginner` file [here](https://wiki.math.ntnu.no/tma4268/2020v/subpage1).
 
-If you read the solutions version (file name ending in "sol") the **solutions to _exercises_ are included.** (For the advanced user: toggle solutions on/off in Rmd-file with variable `showsol`.)
+If you read the solutions version (file name ending in "sol") the **solutions to Exercises are included.** 
+<!-- (For the advanced user: toggle solutions on/off in Rmd-file with variable `showsol`.) -->
 
-* Version without solutions: <https://htmlpreview.github.io/?https://github.com/stefaniemuff/statlearning/blob/master/Exercise1/Rintermediate.html>
-* Version with solutions: <https://htmlpreview.github.io/?https://github.com/stefaniemuff/statlearning/blob/master/Exercise1/Rintermediate-sol.html>
 
-(to see .Rmd or .pdf just replace in links above)
 
 ```{r setup, include=FALSE}
 #showsol<-FALSE
@@ -56,7 +53,7 @@ We will also make a function to do a $z$-test (so, just a bit of inference) and 
 
 Tools for working with probability distributions are included in the default environment in R, and we will now look at the _binomial_ (discrete) distribution and the _normal_, _chi-squared_, _t_ and Fisher _F_ (continuous distribution). The multivariate normal distribution will be covered in the interatice lecture of Module 2 of TMA4268 (and is also a large part of TMA4267).
 
-For each of these distributions, there exists functions that calculates the pdf (probability density or mass function, often denoted $f$ in previous courses), the cumulative distribution function (often denoted $F$), the inverse cumulative distribution function (often denoted $F^{-1}$) and drawing random numbers form the given distribution. For the normal distribution these functions are called:
+For each of these distributions, there exists functions that calculate the pdf (probability density or mass function, often denoted $f$ in previous courses), the cumulative distribution function (often denoted $F$), the inverse cumulative distribution function (often denoted $F^{-1}$) and drawing random numbers form the given distribution. For the normal distribution these functions are called:
 
 Function | Meaning
 ---------|-----------
@@ -145,7 +142,7 @@ cat("**Solution:**
 ```
 \endgroup
 
-We can also plot the distribution using random generated values for the distribution. The function `rnorm()` draws random values from the given distribution. Below we draw `n=10000` values and make a histogram.
+We can also plot the distribution using randomly generated values for the distribution. The function `rnorm()` draws random values from the given distribution. Below we draw `n=10000` values and make a histogram.
 
 ```{r, eval=T, tidy=TRUE}
 n = 10000
@@ -170,9 +167,9 @@ __Exercise:__ Check your drawn values to see that the mean and variance agree wi
 ## t-distribution
 Let $X_i$ be independent normal variables with mean $\mu$ and variance $\sigma^2$, and $\bar{X}=\frac{1}{n}\sum_{i=1}^n X_i$ and 
 $S^2=\frac{1}{n-1}\sum_{i=1}^n (X_i-\bar{X})^2$. Further let
-$$ T=\frac{\bar{X}-\mu}{S/\sqrt{n}}$$
+$$ T=\frac{\bar{X}-\mu}{S/\sqrt{n}} \ .$$
 
-We can plot the pdf for the $t$-distribution with $n-1$ degrees of freedom, and add the standard normal for reference. Is the red curve the $t$ or normal curve? How can you see that?
+We can plot the pdf for the $t$-distribution with $n-1$ degrees of freedom (here $n=10$), and add the standard normal for reference. Is the red curve the $t$ or normal curve? How can you see that?
 
 ```{r, eval=T, tidy=TRUE}
 library(ggplot2)
@@ -189,7 +186,7 @@ p
          
 ```
 
-We can also plot the pdf for the $t$-distribution with other degrees of freedom. 
+We can also plot the pdf for the $t$-distribution with other degrees of freedom, for example `df=2`, `df=5` or `df=50`. 
 ```{r, eval=T, tidy=TRUE}
 x = seq(from = -5, to = 5, length=100)
 pdft2 = dt(x = x, df=2)
@@ -229,14 +226,14 @@ p
 
 ## Critical values and significance level
 
-To find the significance level and critical values, `pnorm()` (cdf-function) and `qnorm()` (quantile function - inverse cdf) are helpful functions. If we want to find the critical values of a standard normal distribution with significance level $\alpha=0.05$, we can use the quantile function
+To find the significance level and critical values, `pnorm()` (cdf-function) and `qnorm()` (quantile function - inverse cdf) are helpful functions. For example, if we want to find the critical values of a standard normal distribution with significance level $\alpha=0.05$, we can use the quantile function
 ```{r, eval=T}
 z_l = qnorm(0.025, mean = 0, sd = 1) #lower
 z_u = qnorm(0.975, mean = 0, sd = 1) #upper
 c(z_l, z_u)
 ```
 
-Below, we find the significance level (cdf of the critical values, $P(Z>z_{\alpha/2}) = \alpha/2$ and $P(Z<z_{1-\alpha/2}) = \alpha/2$). Instead of integrating, we can use the cumulative distribution function `pnorm()`
+Using the lower and upper quantiles (`z_l` and `z_u`), we can invert the procedure and find the significance level (cdf of the critical values, $P(Z>z_{\alpha/2}) = \alpha/2$ and $P(Z<z_{1-\alpha/2}) = \alpha/2$). Instead of integrating, we can use the cumulative distribution function `pnorm()`. For a one-sided test we would obtain
 
 ```{r, eval=T, tidy = TRUE}
 alpha_lower = pnorm(q = z_l, mean = 0, sd = 1, lower.tail = TRUE)
@@ -246,7 +243,7 @@ c(alpha_lower, alpha_upper)
 Note that for the upper tail, we could have written `alpha_upper = pnorm(q = q, mean = 0, sd = 1, lower.tail = FALSE)`. The logical option `lower.tail` indicate if you want to calculate the upper, $P(X>x)$, or the lower, $P(X\leq x)$, tail. The default is `TRUE`, meaning that if you don't include this option as input it will automatically calculate the lower tail. 
 
 __Exercise__
-Find the cdf of $x=-5$ and $x=5$ from looking at the figure __and__ using the distribution function in R.
+Find the value of the cdf for $x=-5$ and $x=5$ from looking at the figure __and__ using the distribution function in R.
 
 \begingroup\color{dg}
 ```{r, echo=FALSE, results='asis', eval=showsol}
@@ -291,9 +288,9 @@ p
 
 Let us assume that $X$ is a random variable from a normal distribution with know variance $\sigma^2$ and we want to perform a hypothesis test to test that the mean of $X$ is not equal to $0$, $\mu\neq 0$, that is, a two-sided test.
 
-Assume that have collected a random sample $(X_1,X_2,\ldots,X_n)$, and that we may assume that $\frac{\bar{X}-\mu}{\sigma/\sqrt{n}}$ follows a standard normal distribution (and $\sigma^2$ is known). Here $\bar{X}=\frac{1}{n} \sum_{i=1}^n X_i$.  A t-test is implemented in R (function `t.test`) but no `z.test`, so now we (for the sake of exercise) want to implement our own z-test.
+Assume that have collected a random sample $(X_1,X_2,\ldots,X_n)$, and that we may assume that $\frac{\bar{X}-\mu}{\sigma/\sqrt{n}}$ follows a standard normal distribution (and $\sigma^2$ is known). Here $\bar{X}=\frac{1}{n} \sum_{i=1}^n X_i$.  A t-test is implemented in R (function `t.test`), but we will now implement our own z-test.
 
-Then we need a function with the data and given (known) standard deviation as input. We assume that the data are given in a vector named `x`. 
+To this end, we need a function with the data and given (known) standard deviation as input. We assume that the data are given in a vector named `x`. 
 
 Read and discuss what is done here.
 
@@ -312,9 +309,10 @@ myz.test <- function(x,sd)
 }
 ```
 
-To use the function we first generate some data and then call the function.
+To use the function we first generate some data and then call the function. To ensure that we all get the same results, we also set a seed first.
 
 ```{r, eval=TRUE}
+set.seed(23422)
 testds <- rnorm(100,mean=0.5,sd=6)
 myz.test(testds,sd=6)
 ```
@@ -347,11 +345,12 @@ The test $H_0\\colon\\mu=0$ versus $H_1\\colon\\mu\\neq0$ is performed 1000 time
 ```
 \endgroup
 
-If you want reproducible results, it is useful to set the random generator seed. That is done as `set.seed(a)` where  `a` is the seed you want to set.
+
+
 
 # Plotting pdfs
 
-For the user who wants to do advanced graphics: Below is an example of how to draw multiple plots using `ggplot`. 
+For the user who wants to do a bit more advanced graphics: Below is an example of how to draw multiple plots using `ggplot`. 
 
 __Exercise:__
 What is this plot showing?
@@ -374,7 +373,7 @@ ggplot(df, aes(x, y = value, color = variable))+
                             labels=c("0, 1", "0, 2", "1, 2 ", "-1, 2"))+ theme_minimal()
 ```
 
-Let's assume we flip a coin where the probability of getting head is $p = P(head) = P(X=1) = 0.5$, and the probabiltiy of getting tails is $1-p = P(tails) = P(X=0)$. The following shows the number of times we get head and tails of a throw when we try 1000 times 
+Let's assume we flip a coin where the probability of getting head is $p = P(head) = P(X=1) = 0.5$, and the probabiltiy of getting tails is $1-p = P(tails) = P(X=0)$. The following shows the number of times we get head and tails of a throw when we try 1000 times.
 
 ```{r, eval = T, echo = T, tidy = T}
 n = 1000
@@ -511,3 +510,4 @@ Here is more about using `ggplot` to plot functions in general: <http://t-redact
 # Acknowledgements
 
 We thank Øyvind Bakke, Mette Langaas and her PhD students from 2018 and 2019 for building up the original version of this sheet.
+
