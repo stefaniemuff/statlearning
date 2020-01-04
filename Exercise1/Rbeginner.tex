@@ -23,10 +23,14 @@
 }{}
 \usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
+\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
 \hypersetup{unicode=true,
-            pdftitle={Rbeginner: R and RStudio -- a first tour},
-            pdfauthor={Mette Langaas and Martina Hall, Department of Mathematical Sciences, NTNU},
-            pdfborder={0 0 0},
+            pdftitle={Part I: R and RStudio},
+            pdfauthor={Martina Hall, Michail Spitieris, Stefanie Muff, Department of Mathematical Sciences, NTNU},
+            colorlinks=true,
+            linkcolor=Maroon,
+            citecolor=Blue,
+            urlcolor=blue,
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
 \usepackage{color}
@@ -107,7 +111,7 @@
 \usepackage{titling}
 
 % Create subtitle command for use in maketitle
-\newcommand{\subtitle}[1]{
+\providecommand{\subtitle}[1]{
   \posttitle{
     \begin{center}\large#1\end{center}
     }
@@ -115,28 +119,24 @@
 
 \setlength{\droptitle}{-2em}
 
-  \title{Rbeginner: R and RStudio -- a first tour}
+  \title{Part I: R and RStudio}
     \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
-  \subtitle{TMA4268 Statistical Learning V2019. Module 1: INTRODUCTION TO
+  \subtitle{TMA4268 Statistical Learning V2020. Module 1: INTRODUCTION TO
 STATISTICAL LEARNING}
-  \author{Mette Langaas and Martina Hall, Department of Mathematical Sciences,
-NTNU}
+  \author{Martina Hall, Michail Spitieris, Stefanie Muff, Department of
+Mathematical Sciences, NTNU}
     \preauthor{\centering\large\emph}
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{week 2, 2019}
+    \date{January 6th, 2020}
 
 
 \begin{document}
 \maketitle
 
-{
-\setcounter{tocdepth}{2}
-\tableofcontents
-}
-(Latest changes: 31.12.18: first version for 2019)
+(Latest changes: 03.01.20: first version for 2020)
 
 R is a free software environment for statistical computing and graphics.
 It runs on a wide variety of UNIX platforms, Windows and MacOS. R can be
@@ -158,18 +158,17 @@ windows?}\label{part-a-using-rstudio---what-are-the-different-windows}
 Start RStudio. Then you (probably) have the following four windows.
 
 \begin{itemize}
-\tightlist
 \item
   \textbf{Source} (aka script window) - upper left window: where you
   write your code and keep track of your work.
 \item
   \textbf{Console} - lower left window: where the R commands are
   executed (so here is where you R installation lives). Sometimes also
-  referred to as command window.\\
+  referred to as command window.
 \item
   \textbf{Environment/History/Connections/Presentation} - upper right
   window: the objects that you have in your workspace, and the commands
-  you have executed, and more.\\
+  you have executed, and more.
 \item
   \textbf{Files/Plots/Packages/Help/Viewer}- lower right: overview of
   your files, the plots you produce, the packages you have installed and
@@ -204,7 +203,13 @@ the objects you have created are found in a \texttt{.RData} file (more
 about objects soon). This could be useful if you don't want to run all
 the commands in the script again, because if you start R in the same
 working directory all the objects you have created will be automatically
-availble to you. More on objects next.
+available to you. However, we recommend to \textbf{not} save
+\texttt{.RData} files unless you really need them for later use (could
+take up much space!). In order to ensure reproducible code, \textbf{we
+recommend to turn off the option to automatically save the workspace} by
+going into Tools-\textgreater{}Global
+Options..-\textgreater{}General-\textgreater{}Save workspace to .RData
+on exit-\textgreater{} Never.
 
 You can download the \textbf{RStudio IDE cheat sheet}:
 \url{https://github.com/rstudio/cheatsheets/raw/master/rstudio-ide.pdf}
@@ -215,14 +220,16 @@ R-commands}\label{part-b-trying-out-r-commands}
 To exceute your commands, you can either type directly in the console or
 run the commands from the source window. In the \textbf{source window},
 you can run the current line by pressing Ctrl and Enter (Windows) or CMD
-and Enter (MacOS), or you can run select lines by marking them and
+and Enter (MacOS), or you can run selected lines by marking them and
 pressing Ctrl + Enter. You can also use the Run-button in the top right
 corner of the window to run selected lines or commands, and the
 Source-button in the top right corner to run everything in your Source
-window.
+window. \textbf{We recomend to always use the source window and save the
+script, in this way your code will not disappear!}
 
-\textbf{Q}: Write and execute the following commands. What have you done
-mathematically here?
+\textbf{Q}: Open a new script and save it as \texttt{"MyRbeginner.R"}.
+Write the following commands into your script and execute them
+one-by-one. What have you done mathematically here?
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -274,210 +281,10 @@ symbol:
 \end{Highlighting}
 \end{Shaded}
 
-Save your work as \texttt{myRintro.R} - and we will try to open that in
-Part C.
+Save your work - and we will try to open it later.
 
-\section{Part C: Importing and
-exporting}\label{part-c-importing-and-exporting}
-
-\subsection{\texorpdfstring{Executing the commands in an R-file with
-\texttt{source}}{Executing the commands in an R-file with source}}\label{executing-the-commands-in-an-r-file-with-source}
-
-You ended Part B by quitting RStudio, now open RStudio again, and open
-the file \texttt{myRintro.R} in your source window. Then either write:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{source}\NormalTok{(}\StringTok{"myRintro.R"}\NormalTok{)  }\CommentTok{#given that your working directory is wher myRintro.R is saved}
-\end{Highlighting}
-\end{Shaded}
-
-or source with the source button in the upper right corner of the source
-window.
-
-It is also possible to source a file from the internet, for example a
-version of Part B can be sources from the TMA4268 catalog:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{source}\NormalTok{(}\StringTok{"https://www.math.ntnu.no/emner/TMA4268/2019v/1Intro/RintroPartB.R"}\NormalTok{, }
-    \DataTypeTok{echo =} \OtherTok{TRUE}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-Here \texttt{echo=TRUE} echoes the commands being run- in addition to
-the results of the commands.
-
-Reading and writing data into R may be a bit tricky if the format of the
-data is not defined exactly, so here we just show how to read three nice
-formats.
-
-You may also choose Enviroment (window upper right) -Import Data set -
-and get help.
-
-\subsection{Printing to and reading from a
-csv-file}\label{printing-to-and-reading-from-a-csv-file}
-
-\textbf{Q}: Study the R script below and find out what is done in each
-line of the script.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{n =}\StringTok{ }\DecValTok{1000}
-\NormalTok{ds =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(n), }\DataTypeTok{ncol =} \DecValTok{10}\NormalTok{)}
-\KeywordTok{colnames}\NormalTok{(ds) =}\StringTok{ }\KeywordTok{paste}\NormalTok{(}\StringTok{"Variable"}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{, }\DataTypeTok{sep =} \StringTok{""}\NormalTok{)}
-\KeywordTok{write.csv}\NormalTok{(ds, }\DataTypeTok{file =} \StringTok{"stnorm.csv"}\NormalTok{, }\DataTypeTok{row.names =} \OtherTok{FALSE}\NormalTok{)  }\CommentTok{#do not want 1:100 as rownames}
-\KeywordTok{getwd}\NormalTok{()}
-\KeywordTok{list.files}\NormalTok{()  }\CommentTok{#files in the folder of getwd()}
-\NormalTok{dss =}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\DataTypeTok{file =} \StringTok{"stnorm.csv"}\NormalTok{, }\DataTypeTok{header =} \OtherTok{TRUE}\NormalTok{)}
-\KeywordTok{dim}\NormalTok{(dss)}
-\KeywordTok{typeof}\NormalTok{(dss)}
-\KeywordTok{head}\NormalTok{(dss)}
-\end{Highlighting}
-\end{Shaded}
-
-\subsection{Printing to and reading from other file
-formats}\label{printing-to-and-reading-from-other-file-formats}
-
-There exists may packages to read different type of input data, and
-reading \texttt{xls} files can be done using the package
-\texttt{readxl}.
-
-\subsection{Exporting plots}\label{exporting-plots}
-
-We will talk more about generating random data from different
-distribution in \texttt{Rintermediate.R} and more about plotting in Part
-F. However, the following commands draws 100 realizations from the
-standard normal distribution and makes a boxplot. Write these commands
-and run them.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{ds =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{)}
-\KeywordTok{boxplot}\NormalTok{(ds)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{Rbeginner_files/figure-latex/unnamed-chunk-6-1.pdf}
-
-You how should have a boxplot in your Plots window - looking similar to
-the one shown here. \textbf{Q}: What are the different parts of this
-boxplot? Hint: median, 1 and 3rd quantiles. To read what the function
-\texttt{boxplot} does you may write \texttt{help(boxplot)} or just
-\texttt{?boxplot}. How are the whiskers defined?
-
-Now, we want to export this plot - maybe to be put on a webpage or just
-for fun (we will use R Markdown for our compulsory exercises and will
-then not need to export plots).
-
-You may save the plot (for example as pdf or svg) Export in the Plots
-window, or alternatively you may write
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{dev.copy2pdf}\NormalTok{(}\DataTypeTok{file =} \StringTok{"box.pdf"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-The will produce a pdf-file thtat is saved to your working directory.
-
-A third solution \texttt{pdf("box.pdf");\ boxplot(ds);\ dev.off()}to
-make a file named box.pdf with the boxplot, then it is possible to save
-many plots together in one pdf-file - just add more plots before closing
-the pdf-file with \texttt{dev.off()}.
-
-\section{Part D: Packages - and
-functions}\label{part-d-packages---and-functions}
-
-R is a free and open source program. Everyone can contribute with making
-functions (like \texttt{boxplot} and \texttt{rnorm}) and packages
-(collection of functions and data sets), and there exists a \emph{lot}
-of available packages. Some are already included in the default R
-session, like the package \texttt{stats} that includes many basic
-functions for doing statistics.
-
-Every statistical researcher who would like to to get their new
-statistitical methods used will make an R package and distribute it with
-their article (on the new method). Most books also comes with R packages
-with data sets and functions. Our ISL book has the package
-\texttt{ISLR}, hosted on the most widely used service for R packages:
-CRAN. See the official page for the package here:
-\url{https://cran.r-project.org/web/packages/ISLR/index.html}.
-
-To install an R package from CRAN you go to the Packages tab and see if
-the packages is already available on your computer. If you see ISLR in
-this list just press the square next to ISLR to load the package into R.
-
-If you don't see ISLR you will have to download it from CRAN. Do this by
-either pressing Install on the top left corner of the Packages window,
-CRAN is already filled as ``Install from'' and then write ``ISLR'' as
-the name of the package to install, and nice to have chosen ``install
-dependencies'' (then packages that ISLR depend on will also be
-installed). Then press ``Install''. You might have to select from
-different mirrors for CRAN - choose Norway, and you are good to go. Then
-``ISLR'' should pop up in the list of packages installed, and you tick
-(in the square) to load the package into R.
-
-Alternatively, in the console (or source) window you may write:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{install.packages}\NormalTok{(}\StringTok{"ISLR"}\NormalTok{)}
-\KeywordTok{library}\NormalTok{(ISLR)  }\CommentTok{# to make the package available in the current session}
-\end{Highlighting}
-\end{Shaded}
-
-Now the packages is installed and loaded to the current session.
-Remember that whenever starting a new session, you need to reload the
-packages you want to use, using the \texttt{library()} function, or
-ticking the square next to ISLR in the Packages window.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(}\DataTypeTok{help =} \StringTok{"ISLR"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\textbf{Q}: Look at the contents of the \texttt{ISLR} to see that only
-data sets are available - you may also see that by selecting the name
-ISLR in the Packages window. To know more about the data set named
-\texttt{NCI60} either just select the data set in the Packages window,
-or write \texttt{help(NCI60)} after ISLR is loaded. What can you say
-about \texttt{NCI60}?
-
-Another package that we will use is \texttt{car}. \textbf{Q}: Install
-the \texttt{car} package from CRAN, check the content of the package
-(data sets and functions) and investigate
-
-We will be using a lot of packages in this course, and the ones we use
-will be listed on the start of each module page. We would assume that
-you have loaded these packages if you want to reproduce that statistical
-analyses on the module pages.
-
-Before start using the functions of the package, it is often a good idea
-to visit the help pages of the package to see which functions and data
-sets are available, how they are used, what they calculate, and the
-output they give, etx.. These pages are found in the Help window to the
-left or typing \texttt{?name}in the console, (ex. \texttt{?mean}).
-
-In the stats package, you find functions for making and evaluating
-distributions. We use the function \texttt{rnorm} to sample independent
-data from the univariate normal distribution.
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{rnorm  }\CommentTok{#lists the function code}
-\StringTok{`}\DataTypeTok{?}\StringTok{`}\NormalTok{(rnorm  }\CommentTok{#help pages for the function}
-\NormalTok{)}
-\KeywordTok{rnorm}\NormalTok{()  }\CommentTok{#gives error}
-\KeywordTok{rnorm}\NormalTok{(}\DataTypeTok{n =} \DecValTok{100}\NormalTok{, }\DataTypeTok{mean =} \DecValTok{0}\NormalTok{, }\DataTypeTok{sd =} \DecValTok{1}\NormalTok{)  }\CommentTok{#draw random samples from this distribution}
-\StringTok{`}\DataTypeTok{?}\StringTok{`}\NormalTok{(lm  }\CommentTok{# more to see, will be what we use to perform linear regression}
-\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\section{Part E: More on vectors and
-matrices}\label{part-e-more-on-vectors-and-matrices}
+\section{Part C: Vectors and
+matrices}\label{part-c-vectors-and-matrices}
 
 R can handle both numeric and non numeric data. The concatenate
 \texttt{c}-function can handle both numeric and non-numeric data, but be
@@ -491,12 +298,10 @@ careful when mixing them.
 \KeywordTok{typeof}\NormalTok{(x)}
 \NormalTok{y =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"a"}\NormalTok{, }\StringTok{"b"}\NormalTok{, }\StringTok{"c"}\NormalTok{)}
 \KeywordTok{typeof}\NormalTok{(y)}
-
 \NormalTok{u =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"1"}\NormalTok{, }\StringTok{"2"}\NormalTok{, }\StringTok{"3"}\NormalTok{)}
 \KeywordTok{typeof}\NormalTok{(u)}
 \NormalTok{v =}\StringTok{ }\KeywordTok{as.numeric}\NormalTok{(u)}
 \KeywordTok{typeof}\NormalTok{(v)}
-
 \NormalTok{z =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{, }\DecValTok{1}\NormalTok{, }\StringTok{"yellow"}\NormalTok{, }\DecValTok{2}\NormalTok{)}
 \KeywordTok{typeof}\NormalTok{(z)}
 \CommentTok{# w = z - 1 this gives error}
@@ -533,20 +338,25 @@ or equal to, etc.
 ##      2      2
 \end{verbatim}
 
-Useful for vectors:
+Some useful code to work with vectors. First we will look at three
+equivalent ways to generate a vector \(x=(1,2,3,4,5)^\top\), and then do
+some (logical) operations. After each line, you can type \texttt{x} into
+the console to see how \texttt{x} was modified:
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{x =}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{5}
-\NormalTok{x =}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DataTypeTok{length =} \DecValTok{5}\NormalTok{)}
+\NormalTok{x =}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\DataTypeTok{from =} \DecValTok{1}\NormalTok{, }\DataTypeTok{to =} \DecValTok{5}\NormalTok{, }\DataTypeTok{length =} \DecValTok{5}\NormalTok{)}
 \NormalTok{x =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{)}
 \DecValTok{2} \OperatorTok{%in%}\StringTok{ }\NormalTok{x}
 \DecValTok{6} \OperatorTok{%in%}\StringTok{ }\NormalTok{x}
+\NormalTok{x[}\DecValTok{2}\NormalTok{]}
 \NormalTok{x[}\DecValTok{2}\NormalTok{] =}\StringTok{ }\DecValTok{10}
 \NormalTok{x[}\DecValTok{3}\OperatorTok{:}\DecValTok{4}\NormalTok{] =}\StringTok{ }\DecValTok{0}
 \NormalTok{x[}\OperatorTok{-}\DecValTok{2}\NormalTok{] =}\StringTok{ }\DecValTok{1}
 \NormalTok{x[}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{)] =}\StringTok{ }\DecValTok{4}
 \NormalTok{x[x }\OperatorTok{>}\StringTok{ }\DecValTok{4}\NormalTok{] =}\StringTok{ }\DecValTok{10}
+\NormalTok{x}
 \NormalTok{y =}\StringTok{ }\KeywordTok{log}\NormalTok{(x)}
 \NormalTok{z =}\StringTok{ }\KeywordTok{exp}\NormalTok{(y)}
 \NormalTok{z =}\StringTok{ }\NormalTok{z }\OperatorTok{+}\StringTok{ }\NormalTok{y}
@@ -562,11 +372,13 @@ Useful for vectors:
 \KeywordTok{sort}\NormalTok{(x)}
 \KeywordTok{order}\NormalTok{(x)}
 \KeywordTok{sort}\NormalTok{(x) }\OperatorTok{==}\StringTok{ }\NormalTok{x[}\KeywordTok{order}\NormalTok{(x)]}
+\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{)}
+\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{, }\DataTypeTok{replace =}\NormalTok{ T)}
 \end{Highlighting}
 \end{Shaded}
 
 Notice the length of your vectors when doing calculations with two
-vectors.
+vectors. Try to understand what the following operations do:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -574,7 +386,6 @@ vectors.
 \NormalTok{y =}\StringTok{ }\DecValTok{2}
 \NormalTok{x }\OperatorTok{-}\StringTok{ }\NormalTok{y}
 \DecValTok{5} \OperatorTok{*}\StringTok{ }\NormalTok{x}
-
 \NormalTok{z =}\StringTok{ }\DecValTok{10}\OperatorTok{:}\DecValTok{15}
 \NormalTok{w =}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{2}
 \NormalTok{z }\OperatorTok{-}\StringTok{ }\NormalTok{w}
@@ -589,7 +400,8 @@ vectors.
 
 What happens here?
 
-For matrices:
+Now let's look at matrices, and start to generate a \(3\times 2\) matrix
+\texttt{A}:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -617,6 +429,11 @@ For matrices:
 ## [1,]    1    2    3
 ## [2,]    4    5    6
 \end{verbatim}
+
+We hope you do remember matrix multiplication. If two matrices
+\texttt{A} and \texttt{B} fulfil certain dimension criteria, they can be
+multiplied. In \texttt{R} this is done using the \texttt{\%*\%}
+operation. Try out what the following lines of code do:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -677,9 +494,21 @@ Other matrix commands are
 \end{Highlighting}
 \end{Shaded}
 
-\section{Part F: Plotting}\label{part-f-plotting}
+\section{Part D: Basics about
+plotting}\label{part-d-basics-about-plotting}
 
-Create a plot
+In \texttt{R} there are nowadays two paradigms for how to plot: The
+base-R plotting universe, and the (more modern) \texttt{ggplot()}
+approach using the \texttt{ggplot2} package in R. The latter will be
+discussed more in the \texttt{Rplots} exercise part, and is therefore
+only briefly mentioned below. In the base-R version, the functions
+\texttt{plot()}, \texttt{histogram()} and \texttt{boxplot()} are the
+most frequently used functions. Although these functions are (by some)
+considered to be a bit old-fashioned, they are often useful to get a
+quick first impression of your data (and in fact, some people continue
+to use them as their main starting point to plot).
+
+To create a plot, we simulate some data and plot them:
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -691,89 +520,55 @@ Create a plot
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics{Rbeginner_files/figure-latex/unnamed-chunk-20-1.pdf}
+\includegraphics{Rbeginner_files/figure-latex/unnamed-chunk-12-1.pdf}
 
 To draw the plot in the way you want, check the help pages of the plot
 function to see which input values you can change to make your plot look
 the way you want to.
 
-The package \texttt{ggplot2}is a powerful tool for making nice plots. In
-this package, the function \texttt{qplot()}can be used to compute the
-basic graphics from the plot function - however it is better to use the
-grammar of graphics that is the core of the \texttt{ggplot2} package -
-if you want to learn more about the grammar of graphics you should start
-by reading \href{http://r4ds.had.co.nz/data-visualisation.html}{Chapter
-3 of the book \texttt{R\ for\ Data\ Science}}.
+The package \texttt{ggplot2} is a powerful tool for making nice plots.
+In this package, the function \texttt{ggplot(data,aes(x=x,y=y))} makes
+the foundation of the plot with the data \texttt{data} and features of
+the plot are added with \texttt{+geom\_point()},
+\texttt{+geom\_boxplot()}, \texttt{+xlab("Temperature")} ect. If you
+want to learn more about the grammar of graphics you should start by
+reading \href{http://r4ds.had.co.nz/data-visualisation.html}{Chapter 3
+of the book \texttt{R\ for\ Data\ Science}}.
 
-Before diving in to this, the list below shows some basic tools for
-plotting using both \texttt{plot()}and \texttt{qplot()} (the last from
-the \texttt{ggplot2} package).
+The list below shows some basic tools for plotting using both
+\texttt{plot()}and \texttt{ggplot()} (the last from the \texttt{ggplot2}
+package). For \texttt{ggplot()} we must first save the data into a
+object and build the foundation of the plot with \texttt{ggplot()}
+before we run these functions. See ``Visualizations in R'' for more
+plotting and check out \url{https://ggplot2.tidyverse.org/reference/}
+for more functions of the \texttt{ggplot2} package.
 
 \begin{longtable}[]{@{}lll@{}}
 \toprule
-\begin{minipage}[b]{0.41\columnwidth}\raggedright\strut
-Description\strut
-\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\raggedright\strut
-Base Graphics\strut
-\end{minipage} & \begin{minipage}[b]{0.25\columnwidth}\raggedright\strut
-ggplot2\strut
-\end{minipage}\tabularnewline
+Description & Base Graphics & ggplot2\tabularnewline
 \midrule
 \endhead
-\begin{minipage}[t]{0.41\columnwidth}\raggedright\strut
-Plot y versus x using points\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
-plot(x, y)\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
-qplot(x, y)\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.41\columnwidth}\raggedright\strut
-Plot y versus x using lines\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
-plot(x, y, type = ``l'')\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
-qplot(x, y, geom = ``line'')\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.41\columnwidth}\raggedright\strut
-Plot y versus x using both points and lines\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
-plot(x, y, type = ``b'')\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
-qplot(x, y, geom = c(``point'', ``line''))\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.41\columnwidth}\raggedright\strut
-Boxplot of x\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
-boxplot(x)\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
-qplot(x, geom = ``boxplot'')\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.41\columnwidth}\raggedright\strut
-Side-by-side boxplot of x and y\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
-boxplot(x, y)\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
-qplot(x, y, geom = ``boxplot'')\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.41\columnwidth}\raggedright\strut
-Histogram of x\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
-hist(x)\strut
-\end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
-qplot(x, geom = ``histogram'')\strut
-\end{minipage}\tabularnewline
+Plot y versus x using points & plot(x, y) & +
+geom\_point()\tabularnewline
+Boxplot of x & boxplot(x) & + geom\_boxplot()\tabularnewline
+Histogram of x & hist(x) & + geom\_histogram()\tabularnewline
 \bottomrule
 \end{longtable}
 
 Plotting will be an important part of any statistical analysis course.
 
-\section{Part G: Writing a simple
-function}\label{part-g-writing-a-simple-function}
+\section{Part E: Writing a simple
+function}\label{part-e-writing-a-simple-function}
 
-When starting a function, you should start with the name of the function
-and state if the function takes input values. Then you write the
-function code inside the branches \({}\). Remember to return the output
-of the function using \texttt{return()}.
+Like in other programming languages, R allows you to write functions.
+Functions are a collection of commands that are bundled. This allows you
+to avoid copy-past around code, and you are certainly familiar with this
+idea from Python.
+
+When starting a function R, you should start with the name of the
+function and state if the function takes input values. Then you write
+the function code inside the branches \({}\). Remember to return the
+output of the function using \texttt{return()}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -787,8 +582,7 @@ of the function using \texttt{return()}.
 \end{Highlighting}
 \end{Shaded}
 
-\textbf{Q}: If \texttt{x} and \texttt{y} are two vectors of different
-lengths - what does then the function return?
+\textbf{Q}: What does the function return?
 
 To start using the function, you must first run it through the console
 so that it is in your enviroment (mark and run). Then you call the
@@ -829,11 +623,11 @@ and \texttt{print()}.
 \end{Highlighting}
 \end{Shaded}
 
-While loopes can be written in a similar mannar, using \texttt{while}
+While-loops can be written in a similar manner, using \texttt{while}
 instad of \texttt{for}.
 
-\section{Part H: Lists and data
-frames}\label{part-h-lists-and-data-frames}
+\section{Part F: Lists and data
+frames}\label{part-f-lists-and-data-frames}
 
 Lists and data frames are good tools for storing and accessing your
 data.
@@ -905,15 +699,276 @@ Similar to a list, we access elements in the data frame using
 \texttt{df\$Sex{[}2{]}}. If your data frame is very large, it is easier
 to view typing \texttt{View(df)}.
 
+\section{Part G: Loading and writing
+files}\label{part-g-loading-and-writing-files}
+
+There are several ways to read and write diffferent file types in R.
+txt-files (tab separated) and csv-files (comma separated) are the most
+common ones, and we show here how to write and read such files. Remember
+to check the format of your file before reading it into R. You may also
+choose Enviroment (window upper right) -Import Data set - and get help.
+
+\subsection{csv-files (comma
+separated)}\label{csv-files-comma-separated}
+
+You can save your dataframe \texttt{df} from part F by writing it out as
+a csv-file using the command \texttt{write.csv()}. Use the Help-window
+and search for \texttt{write.csv} or type \texttt{?write.csv} in the
+console to see which arguments to include.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{write.csv}\NormalTok{(df, }\DataTypeTok{file =} \StringTok{"MyFirstFile.csv"}\NormalTok{, }\DataTypeTok{row.names =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+The file is now saved in your working directory. To save it somewhere
+else, you can either use
+\texttt{setwd("\textasciitilde{}/your\_selected\_folder/")} before
+writing the file, or include the path when saving it
+\texttt{write.csv(df,file="\textasciitilde{}/your\_selected\_folder/MyFirstFile.csv")}.
+
+To read a csv-file into R, we use a similar command \texttt{read.csv()}.
+Remember to name the data when reading it, else it will not be stored in
+your environment.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{getwd}\NormalTok{()  }\CommentTok{#path of your working directory}
+\KeywordTok{list.files}\NormalTok{()  }\CommentTok{#files in the folder }
+\NormalTok{myDf =}\StringTok{ }\KeywordTok{read.csv}\NormalTok{(}\DataTypeTok{file =} \StringTok{"MyFirstFile.csv"}\NormalTok{, }\DataTypeTok{header =} \OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+To read a file from another folder, you can either use
+\texttt{setwd("\textasciitilde{}/your\_selected\_folder/")} before
+reading the file, or include the path when reading it
+\texttt{read.csv(file="\textasciitilde{}/your\_selected\_folder/MyFirstFile.csv",\ header=TRUE)}.
+
+\subsection{txt-files (tab separated)}\label{txt-files-tab-separated}
+
+If you want to save your data as a txt-file, you can use the command
+\texttt{write.table()}. With this function you can choose which format
+you want to save the file as with the argument \texttt{sep=}. For a
+txt-file, set \texttt{sep="\textbackslash{}t"} and name your file .txt.
+(You can also use this for csv - \texttt{sep=","}). Use the Help-window
+and search for \texttt{write.table} or type \texttt{?write.table} in the
+console to see which arguments to include.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{write.table}\NormalTok{(df, }\DataTypeTok{file =} \StringTok{"MyFirstFile.txt"}\NormalTok{, }\DataTypeTok{sep =} \StringTok{"}\CharTok{\textbackslash{}t}\StringTok{"}\NormalTok{, }\DataTypeTok{row.names =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+To read the txt-file into R, use the command \texttt{read.table()} and
+remember to set the argument \texttt{sep="\textbackslash{}t"}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{myDf =}\StringTok{ }\KeywordTok{read.table}\NormalTok{(}\DataTypeTok{file =} \StringTok{"MyFirstFile.txt"}\NormalTok{, }\DataTypeTok{sep =} \StringTok{"}\CharTok{\textbackslash{}t}\StringTok{"}\NormalTok{, }\DataTypeTok{header =} \OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\subsection{Printing to and reading from other file
+formats}\label{printing-to-and-reading-from-other-file-formats}
+
+There exists many packages to read different type of input data. A quick
+google search will guide you! Reading \texttt{xls} files can be done
+using the package \texttt{readxl}, but we recommend to NEVER use this
+format. Always write your files as txt or csv, and if you have to read a
+\texttt{xls} file, be very careful about the format of the file! It's
+all too easy to mess up with Excel files.
+
+\subsection{\texorpdfstring{Executing the commands in an R-file with
+\texttt{source}}{Executing the commands in an R-file with source}}\label{executing-the-commands-in-an-r-file-with-source}
+
+Open again the file \texttt{myRintro.R} in your source window. Then
+either write:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{source}\NormalTok{(}\StringTok{"myRintro.R"}\NormalTok{)  }\CommentTok{#given that your working directory is wher myRintro.R is saved}
+\end{Highlighting}
+\end{Shaded}
+
+or source with the source button in the upper right corner of the source
+window. Alternatively -- and that's what we like in our efficient
+everyday workflow -- check out the shortcut for your OS by clicking on
+code -\textgreater{} source in the RStudio menu.
+
+It is also possible to source a file from the internet, for example a
+version of Part B can be sources from the TMA4268 catalog:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{source}\NormalTok{(}\StringTok{"https://www.math.ntnu.no/emner/TMA4268/2019v/1Intro/RintroPartB.R"}\NormalTok{, }
+    \DataTypeTok{echo =} \OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Here \texttt{echo=TRUE} echoes the commands being run- in addition to
+the results of the commands.
+
+\subsection{Exporting plots - some
+alternatives}\label{exporting-plots---some-alternatives}
+
+We will talk more about generating random data from different
+distribution in \texttt{Rintermediate.R}. However, the following
+commands draws 100 realizations from the standard normal distribution
+and makes a boxplot. Write these commands and run them.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{ds =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DecValTok{100}\NormalTok{)}
+\KeywordTok{boxplot}\NormalTok{(ds)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Rbeginner_files/figure-latex/unnamed-chunk-27-1.pdf}
+
+Now, we want to export this plot - maybe to be put on a webpage or just
+for fun (we will use R Markdown for our compulsory exercises and will
+then not need to export plots).
+
+You may save the plot (for example as pdf or svg) by pressing Export in
+the Plots window, or alternatively you may write
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{dev.copy2pdf}\NormalTok{(}\DataTypeTok{file =} \StringTok{"box.pdf"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+This will produce a pdf-file that is saved to your working directory.
+
+A third solution
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pdf}\NormalTok{(}\StringTok{"box.pdf"}\NormalTok{)}
+\KeywordTok{boxplot}\NormalTok{(ds)}
+\KeywordTok{dev.off}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+to make a file named box.pdf with the boxplot, then it is possible to
+save many plots together in one pdf-file - just add more plots before
+closing the pdf-file with \texttt{dev.off()}. For more on exporting
+plots, take a look at
+\url{http://www.sthda.com/english/wiki/creating-and-saving-graphs-r-base-graphs}.
+
+\section{Part H: Functions and
+packages}\label{part-h-functions-and-packages}
+
+We have already seen how to make functions in Part E and we have used
+some existing functions like \texttt{boxplot()}, \texttt{sample()} and
+\texttt{rnorm()}. R is a free and open source program where everyone can
+contribute with making functions, and there exists \emph{a lot}.
+Functions are available through packages (collection of functions and/or
+data) that can be installed and loaded into R. Some are already included
+in the default R session, like the package \texttt{stats} that includes
+many basic functions for doing statistics. Making your own functions is
+an important part of programming and statistical analysis, but using
+existing functions and packages often makes life easier.
+
+Every statistical researcher who would like to to get their new
+statistitical methods used will make an R package and distribute it with
+their article (on the new method). Most books also come with R packages
+with data sets and functions. Our ISL book has the package
+\texttt{ISLR}, hosted on the most widely used service for R packages:
+CRAN. See the official page for the package here:
+\url{https://cran.r-project.org/web/packages/ISLR/index.html}.
+
+To install an R package from CRAN you go to the Packages tab and see if
+the packages is already available on your computer. If you see ISLR in
+this list just press the square next to ISLR to load the package into R.
+
+If you don't see ISLR you will have to download it from CRAN. Do this by
+either pressing Install on the top left corner of the Packages window,
+CRAN is already filled as ``Install from'' and then write ``ISLR'' as
+the name of the package to install, and nice to have chosen ``install
+dependencies'' (then packages that ISLR depend on will also be
+installed). Then press ``Install''. You might have to select from
+different mirrors for CRAN - choose Norway, and you are good to go. Then
+``ISLR'' should pop up in the list of packages installed, and you tick
+(in the square) to load the package into R.
+
+Alternatively -- and the easier way that we recommend -- you write in
+the console (or source) window:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{install.packages}\NormalTok{(}\StringTok{"ISLR"}\NormalTok{)}
+\KeywordTok{library}\NormalTok{(ISLR)  }\CommentTok{# to make the package available in the current session}
+\end{Highlighting}
+\end{Shaded}
+
+Now the packages is installed and loaded to the current session.
+Remember that whenever starting a new session, you need to reload the
+packages you want to use, using the \texttt{library()} function, or
+ticking the square next to ISLR in the Packages window. You don't need
+to install it again, it is already on your computer.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(}\DataTypeTok{help =} \StringTok{"ISLR"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{Q}: Look at the contents of the \texttt{ISLR} to see that only
+data sets are available - you may also see that by selecting the name
+ISLR in the Packages window. To know more about the data set named
+\texttt{NCI60} either just select the data set in the Packages window,
+or write \texttt{help(NCI60)} or \texttt{?NCI60} after ISLR is loaded.
+What can you say about \texttt{NCI60}?
+
+Another package that we will use is \texttt{car}.
+
+\textbf{Q}: Install the \texttt{car} package from CRAN, check the
+content of the package (data sets and functions) and investigate
+
+We will be using a lot of packages in this course, and by using the .Rmd
+version of our course material you can see which packages we load and
+use. We would assume that you have installed these packages if you want
+to reproduce that statistical analyses on the module pages.
+
+Before start using the functions of the package, it is often a good idea
+to visit the help pages of the package to see which functions and data
+sets are available, how they are used, what they calculate, and the
+output they give, etc.. These pages are found in the Help window to the
+left or typing \texttt{?name} in the console, (ex. \texttt{?mean}).
+
+In the stats package, you find functions for making and evaluating
+distributions. We use the function \texttt{rnorm} to sample independent
+data from the univariate normal distribution.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rnorm  }\CommentTok{#lists the function code}
+\StringTok{`}\DataTypeTok{?}\StringTok{`}\NormalTok{(rnorm  }\CommentTok{#help pages for the function}
+\NormalTok{)}
+\KeywordTok{rnorm}\NormalTok{()  }\CommentTok{#gives error}
+\KeywordTok{rnorm}\NormalTok{(}\DataTypeTok{n =} \DecValTok{100}\NormalTok{, }\DataTypeTok{mean =} \DecValTok{0}\NormalTok{, }\DataTypeTok{sd =} \DecValTok{1}\NormalTok{)  }\CommentTok{#draw random samples from this distribution}
+\StringTok{`}\DataTypeTok{?}\StringTok{`}\NormalTok{(lm  }\CommentTok{# more to see, will be what we use to perform linear regression}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
 \section{What is next?}\label{what-is-next}
 
-You may now move to
-\href{https://www.math.ntnu.no/emner/TMA4268/2019v/1Intro/Rintermediate.html}{Rintermediate.html}
-to see how R can be used on topics that should already be familiar to
-you from TMA4240/TMA4245 Statistics - or similar courses. Or, if you did
+You may now move to \texttt{Rintermediate} on our
+\href{https://wiki.math.ntnu.no/tma4268/2020v/subpage1}{course page} to
+see how R can be used on topics that should already be familiar to you
+from TMA4240/TMA4245 Statistics - or similar courses. Or, if you did
 ST1201 you can look at an overview of how the methods in ST1201 can be
 performed in R:
 \href{https://www.math.ntnu.no/emner/TMA4268/2019v/1Intro/ST1201inR.html}{ST1201inR.html}
+
+\section{Acknowledgements}\label{acknowledgements}
+
+We thank Mette Langaas and her PhD students from 2018 and 2019 for
+building up the original version of this sheet.
 
 
 \end{document}
