@@ -5,14 +5,16 @@ author: "Martina Hall, Michail Spitieris, Stefanie Muff, Department of Mathemati
 date: "January 06, 2020"
 output:
   pdf_document:
-    toc: true
+    toc: false
     toc_depth: 2
     keep_tex: yes
   html_document:
     toc: true
     toc_float: true
     toc_depth: 2
+urlcolor: blue
 ---
+\definecolor{dg}{rgb}{0,.25,0}
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,results="hold",cache=TRUE)
@@ -21,9 +23,11 @@ showsol<-FALSE
 
 # Introduction
 
-For each of the plots (scatter plot, histogram, boxplot, area chart, heat map, correlogram) _explain what you see (including what is on the x- and y-axis) and try to transform what you see into insight about the data_. All except the correlogram use `ggplot2` for plotting. If you want to read more about the idea behind `ggplot2` (grammar of graphics) Chapter 3 of [R for Data Science]() is a good read. Other resources are:
+For each of the plots (scatter plot, histogram, boxplot, area chart, heat map, correlogram) _explain what you see (including what is on the x- and y-axis) and try to transform what you see into insight about the data_. All except the correlogram use `ggplot2` for plotting. If you want to read more about the idea behind `ggplot2` (grammar of graphics) Chapter 3 of [R for Data Science](https://r4ds.had.co.nz/data-visualisation.html) is a good read. Other resources are:
 
-<http://t-redactyl.io/blog/2016/03/creating-plots-in-r-using-ggplot2-part-9-function-plots.html>, <https://ggplot2.tidyverse.org/reference/>
+<http://t-redactyl.io/blog/2016/03/creating-plots-in-r-using-ggplot2-part-9-function-plots.html>
+
+<https://ggplot2.tidyverse.org/reference/>
 
 ## Packages needed
 
@@ -62,8 +66,8 @@ The scatterplot shows that the people with the largest wages often are the peopl
 
 ```{r scatter2, warning=FALSE, message=FALSE}
 ggplot(SLID, aes(education, wages)) + geom_point(aes(color = language)) + 
-  scale_x_continuous("Education")+
-  scale_y_continuous("Wages")+ 
+  scale_x_continuous("Education") +
+  scale_y_continuous("Wages") + 
   theme_bw() + labs(title="Scatterplot") + facet_wrap( ~ language)+theme_minimal()
 ```
 
@@ -148,7 +152,7 @@ ggplot(cars_melt, aes(x =variable, y = model)) +
 
 ```{r, echo=FALSE, results='asis', eval=showsol}
 cat("**Solution:** 
-Visualization of the data. Shows the values of the different covariates (-1 to 3) for the different car models. 
+Visualization of the data. Shows the values of the different covariates (-1 to 3) for the different car models. Note that the covariates were centered and standardized to have a mean of 0 and a standard deviation of 1, thus it is possible to compare them more easily.
 ")
 ```
 

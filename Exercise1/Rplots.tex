@@ -23,10 +23,14 @@
 }{}
 \usepackage[margin=1in]{geometry}
 \usepackage{hyperref}
+\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
 \hypersetup{unicode=true,
-            pdftitle={Visualizations in R},
-            pdfauthor={Mette Langaas and Julia Debik, Department of Mathematical Sciences, NTNU},
-            pdfborder={0 0 0},
+            pdftitle={Part III: Visualizations in R},
+            pdfauthor={Martina Hall, Michail Spitieris, Stefanie Muff, Department of Mathematical Sciences, NTNU},
+            colorlinks=true,
+            linkcolor=Maroon,
+            citecolor=Blue,
+            urlcolor=blue,
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
 \usepackage{color}
@@ -106,7 +110,7 @@
 \usepackage{titling}
 
 % Create subtitle command for use in maketitle
-\newcommand{\subtitle}[1]{
+\providecommand{\subtitle}[1]{
   \posttitle{
     \begin{center}\large#1\end{center}
     }
@@ -114,26 +118,25 @@
 
 \setlength{\droptitle}{-2em}
 
-  \title{Visualizations in R}
+  \title{Part III: Visualizations in R}
     \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
   \subtitle{TMA4268 Statistical Learning V2019. Module 1: INTRODUCTION TO
 STATISTICAL LEARNING}
-  \author{Mette Langaas and Julia Debik, Department of Mathematical Sciences, NTNU}
+  \author{Martina Hall, Michail Spitieris, Stefanie Muff, Department of
+Mathematical Sciences, NTNU}
     \preauthor{\centering\large\emph}
   \postauthor{\par}
       \predate{\centering\large\emph}
   \postdate{\par}
-    \date{week 2, 2019}
+    \date{January 06, 2020}
 
 
 \begin{document}
 \maketitle
 
-{
-\setcounter{tocdepth}{2}
-\tableofcontents
-}
+\definecolor{dg}{rgb}{0,.25,0}
+
 \section{Introduction}\label{introduction}
 
 For each of the plots (scatter plot, histogram, boxplot, area chart,
@@ -141,7 +144,13 @@ heat map, correlogram) \emph{explain what you see (including what is on
 the x- and y-axis) and try to transform what you see into insight about
 the data}. All except the correlogram use \texttt{ggplot2} for plotting.
 If you want to read more about the idea behind \texttt{ggplot2} (grammar
-of graphics) Chapter 3 of \href{}{R for Data Science} is a good read.
+of graphics) Chapter 3 of
+\href{https://r4ds.had.co.nz/data-visualisation.html}{R for Data
+Science} is a good read. Other resources are:
+
+\url{http://t-redactyl.io/blog/2016/03/creating-plots-in-r-using-ggplot2-part-9-function-plots.html}
+
+\url{https://ggplot2.tidyverse.org/reference/}
 
 \subsection{Packages needed}\label{packages-needed}
 
@@ -250,7 +259,6 @@ plots}\label{all-pairs-and-different-plots}
 \NormalTok{carsdf =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{scale}\NormalTok{(mtcars))}
 \NormalTok{carsdf}\OperatorTok{$}\NormalTok{model =}\StringTok{ }\KeywordTok{rownames}\NormalTok{(mtcars)}
 \NormalTok{cars_melt =}\StringTok{ }\KeywordTok{melt}\NormalTok{(carsdf, }\DataTypeTok{id.vars =} \StringTok{"model"}\NormalTok{)}
-
 \KeywordTok{ggplot}\NormalTok{(cars_melt, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ variable, }\DataTypeTok{y =}\NormalTok{ model)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_raster}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill =}\NormalTok{ value)) }\OperatorTok{+}\StringTok{ }
 \StringTok{    }\KeywordTok{labs}\NormalTok{(}\DataTypeTok{title =} \StringTok{"Heat Map"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_fill_continuous}\NormalTok{(}\DataTypeTok{name =} \StringTok{"Value"}\NormalTok{) }\OperatorTok{+}\StringTok{ }\KeywordTok{theme_minimal}\NormalTok{()}
 \end{Highlighting}
@@ -268,30 +276,10 @@ plots}\label{all-pairs-and-different-plots}
 ## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
 \end{verbatim}
 
-\section{Correlogram}\label{correlogram}
+\section{Acknowledgements}\label{acknowledgements}
 
-The \texttt{ozone} data:
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(faraway)}
-\KeywordTok{data}\NormalTok{(ozone)}
-\KeywordTok{library}\NormalTok{(corrplot)}
-\NormalTok{ozonecorr =}\StringTok{ }\KeywordTok{cor}\NormalTok{(ozone)}
-\KeywordTok{corrplot}\NormalTok{(ozonecorr)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{Rplots_files/figure-latex/corrplot-1.pdf}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(corrgram)}
-\KeywordTok{corrgram}\NormalTok{(ozone, }\DataTypeTok{upper.panel =}\NormalTok{ panel.conf)}
-\end{Highlighting}
-\end{Shaded}
-
-\includegraphics{Rplots_files/figure-latex/corrplot-2.pdf}
+We thank Mette Langaas and her PhD students from 2018 and 2019 for
+building up the original version of this sheet.
 
 
 \end{document}
