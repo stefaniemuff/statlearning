@@ -49,7 +49,7 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 ## Learning material for this module
 
-* James et al (2013): An Introduction to Statistical Learning. Chapter 2.  
+* James et al (2013): An Introduction to Statistical Learning. Chapter 2 (except 2.2.3).  
 * Additional material (in this module page) on random variables, covariance matrix and the multivariate normal distribution (known for students who have taken TMA4267 Linear statistical models).
 
 
@@ -84,7 +84,10 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 *Statistical learning* is the process of learning from data. 
 
-By applying *statistical methods* on a *data set* (called the *training set*), we would like to *draw conclusions* about the relations between the variables (aka _inference_) or to *find a predictive function* (aka _predition_) for new observations. 
+By applying *statistical methods* on a *data set* (called the *training set*), we would like to 
+
+* *draw conclusions* about the relations between the variables (_\textcolor{red}{inference}_) or 
+* *find a predictive function* for new observations (_\textcolor{red}{predition}_). 
 
 Also, we would like to find structures in the data that help us to learn something about the real world.
 
@@ -132,22 +135,25 @@ Todo (see M1L1notes.pdf)
 
 * Digit recognition.
 
----
-
-South African coronary heart disease data: 462 observations and 10 variables.
-```{r heart, echo=FALSE, message=FALSE,fig.width=8, fig.height=8,out.width='16cm',fig.align = "center"}
-library(ElemStatLearn)
-library(ggplot2)
-library(GGally)
-SAheart$chd = as.factor(SAheart$chd)
-#ggpairs(SAheart, ggplot2::aes(color=chd), upper="blank",  lower = list(continuous = wrap("points", alpha = 0.3, size=0.2)))
-pairs(SAheart,col=as.numeric(SAheart$chd)+2)
-```
+* Image recognition.
 
 ---
 
-### Handwritten digit recognition 
-To identify the numbers in a handwritten ZIP code, from a digitized image. This is a classification problem, where the response variable is categorical with classes \{0, 1, 2, ..., 9\} and the task is to correctly predict the class membership.
+<!-- South African coronary heart disease data: 462 observations and 10 variables. -->
+<!-- ```{r heart, echo=FALSE, message=FALSE,fig.width=8, fig.height=8,out.width='16cm',fig.align = "center"} -->
+<!-- library(ElemStatLearn) -->
+<!-- library(ggplot2) -->
+<!-- library(GGally) -->
+<!-- SAheart$chd = as.factor(SAheart$chd) -->
+<!-- #ggpairs(SAheart, ggplot2::aes(color=chd), upper="blank",  lower = list(continuous = wrap("points", alpha = 0.3, size=0.2))) -->
+<!-- pairs(SAheart,col=as.numeric(SAheart$chd)+2) -->
+<!-- ``` -->
+
+<!-- --- -->
+
+### Example 1: Handwritten digit recognition 
+* Aim: To identify the numbers in a handwritten ZIP code, from a digitized image. 
+* Classification problem, where the response variable is categorical with classes \{0, 1, 2, ..., 9\}.
 \vspace{1mm}
 
 ![Examples of handwritten digits from U.S. postal envelopes. Image taken from <https://web.stanford.edu/~hastie/ElemStatLearnII/>](digits.png){width=70%}
@@ -159,7 +165,7 @@ Image taken from <https://web.stanford.edu/~hastie/ElemStatLearnII/>
 
 ---
 
-### Email classification (spam detection)  
+### Example 2: Email classification (spam detection)  
 
 * Goal: to build a spam filter. 
 * This filter can based on the frequencies of words and characters in emails. 
@@ -190,7 +196,7 @@ kable(means, digits = 2, col.names = c("you", "free", "george", "!", "$", "edu")
 
 ---
 
-### What makes a Nobel Prize winner? 
+### Example 3: What makes a Nobel Prize winner? 
 
 Perseverance, luck, skilled mentors or simply chocolate consumption? An article published in the New England Journal of Medicine have concluded with the following:
 
@@ -212,11 +218,11 @@ You can read the article [here](http://www.nejm.org/doi/full/10.1056/NEJMon12110
 
 \textcolor{blue}{\emph{Starting point}}:
 
-* Outcome measurement $Y$ (also called dependent variable,
-response, target).
+* Outcome measurement $Y$, also called dependent variable,
+response, target.
 
-* Vector of $p$ predictor measurements *X* (also called inputs,
-regressors, covariates, features, independent variables).
+* Vector of $p$ predictor measurements $X=(X_1,\ldots,X_p)$, also called inputs,
+regressors, covariates, features, independent variables.
 
 * In the **regression problem**, $Y$ is quantitative (e.g price,
 blood pressure).
@@ -245,22 +251,16 @@ $~$
 
 On the basis of the \emph{training data} we would like to:
 
-* **Accurately predict** unseen test cases. 
+* **accurately predict** unseen test cases. 
 
-* **Understand** which input affects the outcomes, and how.
+* **understand** which input affects the outcomes, and how.
 
-* **Assess the quality** of your predictions and inference.
+* **assess the quality** of your predictions and inference.
 
----
+\vspace{2mm}
 
-Supervised learning examples (we will study):  
+The majority of problems studied in this course fall in the supervised learning category (exception: Module 10)
 
-  * Linear regression (M3), Logistic regression (M4), Generalized additive models (M7)
-  * Classification trees, bagging, boosting (M8), K-nearest neighbor classifier (M4)
-  * Support vector machines (M9)
-  * Neural networks (M11)
-  
-$\rightarrow$ The majority of problems studied here fall in the supervised learning category
 
 ---
 
@@ -272,10 +272,6 @@ measured on a set of samples.
 * Objective is more fuzzy -- find (hidden) patterns or groupings in the data - in order to _gain insight and understanding_. There is no _correct_ answer.
 
 * Difficult to know how well your are doing.
-
-* Different from supervised learning, but can be useful as a
-pre-processing step for supervised learning.
-
  
 
 Examples in the course:   
@@ -283,39 +279,15 @@ Examples in the course:
   * Clustering (M10)
   * Principal component analysis (M10)
 
----
 
-# Semi-supervised learning 
-
-(Not considered in this course)
-
-* Our data set consists of a input data, and some of the data has labelled responses. 
-
-* This situation can for example occur if the measurement of input data is cheap, while the output data is expensive to collect. 
-
-* Classical solutions (likelihood-based) to this problem exists in statistics (missing at random observations).
-
---- 
- 
-# Task
-
-Find examples to explain the difference between supervised and unsupervised learning.
-
-*
-
-*
-
-* 
 
 ---
 
 
 # Overall philosophy 
 
-It is important to understand the ideas behind the various
-techniques, in order to know how and when to use them.
 
-* One has to understand the simpler methods first, in order
+* Important to understand the simpler methods first, in order
 to grasp the more sophisticated ones.
 
 * It is important to accurately assess the performance of a
@@ -400,7 +372,7 @@ Income for given levels of education.
 
 ---
 
-There are two main reasons for estimating $f$: 
+There are two main reasons for estimating $f$:
 
 * **Prediction**
 
@@ -455,7 +427,7 @@ $$\text{E}[(Y-\hat{Y})^2] = \underbrace{\text{E}[(f(X)-\hat{f}(X))^2]}_{reducibl
 ## Reason 2: Inference
 $~$
 
-**Aim**: _understand_ how the response variable is affected by the various predictors (covariates). 
+**Aim**: understand_how the response variable is affected by the various predictors (covariates). 
 
 $~$
 
@@ -533,9 +505,94 @@ $~$
 
 * Non-parametric methods seek an estimate of $f$ that gets close to the data points, but without making explicit assumptions about the form of the function $f$. 
 
-* The $K$-nearest neighbour algorithm is an example of a non-parametric model. Used in classification, this algorithm predicts a class membership for a new observation by making a majority vote based on its $K$ nearest neighbours. We will discuss the $K$-nearest neighbour algorithm in Module 4.
+* Example: $K$-nearest neighbour (KNN) algorithm, used in classification. KNN predicts a class membership for a new observation by making a majority vote based on its $K$ nearest neighbours. We will discuss the $K$-nearest neighbour algorithm in Module 4.
 
 (Todo: For the exercises make sure no KNN questions are in RecEx2 -- I moved all this to module 4, because it was otherwise resdundant. You can also move the respective questions to RecEx4, if that makes sense.)
+
+---
+
+### KNN example
+$~$
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+library(class)
+library(dplyr)
+library(ggpubr)
+library(mvtnorm)
+library(MASS)
+library(ggplot2)
+
+set.seed(9)
+
+Sigma = matrix(c(2, 0, 0, 2), 2, 2)
+
+mu1 = c(1, 1)
+mu2 = c(3, 3)
+
+X1 = mvrnorm(100, mu=mu1, Sigma=Sigma)
+X2 = mvrnorm(100, mu=mu2, Sigma=Sigma)
+
+class = c(rep("A",100), rep("B", 100))
+class = as.factor(class)
+
+df = data.frame(rbind(X1, X2), class)
+
+
+test = expand.grid(x = seq(min(df[,1]-1), max(df[,1]+1), by=0.2), y=seq(min(df[,2]-1), max(df[,2]+1), by=0.2))
+
+
+## k = 1
+classif = class::knn(df[,1:2], test=test, cl=df[,3], k=1, prob=TRUE)
+prob = attr(classif, "prob")
+
+dataf = bind_rows(mutate(test, prob=prob, class="A", prob_cls=ifelse(classif==class, 1, 0)),
+                  mutate(test, prob=prob, class="B", prob_cls=ifelse(classif==class, 1, 0)))
+
+gg = ggplot(dataf)+geom_point(aes(x=x, y=y, colour=class), data=mutate(test, class=classif), size=0.01) 
+gg = gg + geom_contour(aes(x=x, y=y, z=prob_cls, group=class, color=class), data=dataf, bins=2,size=0.5)
+gg = gg + geom_point(aes(x=x, y=y, col=class), size=2, data=data.frame(x=df[,1], y=df[,2], class=df[,3]))
+gg = gg + ggtitle("k = 1")+xlab("X1")+ylab("X2")+theme_minimal()
+
+# k = 3
+classif3 = class::knn(df[,1:2], test=test, cl=df[,3], k=3, prob=TRUE)
+prob3 = attr(classif3, "prob")
+
+dataf3 = bind_rows(mutate(test, prob=prob3, class="A", prob_cls=ifelse(classif3==class, 1, 0)),
+                    mutate(test, prob=prob3, class="B", prob_cls=ifelse(classif3==class, 1, 0)))
+
+gg3 = ggplot(dataf3)+geom_point(aes(x=x, y=y, colour=class), data=mutate(test, class=classif3), size=0.01)
+gg3 = gg3 + geom_contour(aes(x=x, y=y, z=prob_cls, group=class, color=class), data=dataf3, bins=2, size=0.5)
+gg3 = gg3 + geom_point(aes(x=x, y=y, col=class), size=2, data=data.frame(x=df[,1], y=df[,2], class=df[,3]))
+gg3 = gg3 + ggtitle("k = 3")+xlab("X1")+ylab("X2")+theme_minimal()
+
+## k = 10
+
+classif10 = class::knn(df[,1:2], test=test, cl=df[,3], k=10, prob=TRUE)
+prob10 = attr(classif10, "prob")
+
+dataf10 = bind_rows(mutate(test, prob=prob10, class="A", prob_cls=ifelse(classif10==class, 1, 0)),
+                  mutate(test, prob=prob10, class="B", prob_cls=ifelse(classif10==class, 1, 0)))
+
+gg10 = ggplot(dataf10)+geom_point(aes(x=x, y=y, colour=class), data=mutate(test, class=classif10), size=0.05)
+gg10 = gg10 + geom_contour(aes(x=x, y=y, z=prob_cls, group=class, color=class), data=dataf10, bins=2, size=0.5)
+gg10 = gg10 + geom_point(aes(x=x, y=y, col=class), size=2, data=data.frame(x=df[,1], y=df[,2], class=df[,3]))
+gg10 = gg10 + ggtitle("k = 10")+xlab("X1")+ylab("X2")+theme_minimal()
+
+## k = 150
+
+classif150 = class::knn(df[,1:2], test=test, cl=df[,3], k=150, prob=TRUE)
+prob150 = attr(classif150, "prob")
+
+dataf150 = bind_rows(mutate(test, prob=prob150, class="A", prob_cls=ifelse(classif150==class, 1, 0)),
+                  mutate(test, prob=prob150, class="B", prob_cls=ifelse(classif150==class, 1, 0)))
+
+gg150 = ggplot(dataf150)+geom_point(aes(x=x, y=y, colour=class), data=mutate(test, class=classif150), size=0.05)
+gg150 = gg150 + geom_contour(aes(x=x, y=y, z=prob_cls, group=class, color=class), data=dataf150, bins=2, size=0.5)
+gg150 = gg150 + geom_point(aes(x=x, y=y, col=class), size=2, data=data.frame(x=df[,1], y=df[,2], class=df[,3]))
+gg150 = gg150 + ggtitle("k = 150")+xlab("X1")+ylab("X2")+theme_minimal()
+
+ggarrange(gg,gg3,gg10,gg150)
+```
 
 ---
 
@@ -580,7 +637,7 @@ Can often give good predictions |Much data are required to estimate (the complex
 
 **Flexible** methods:
 
-* KNN classification (M2, M4), KNN regression, Smoothing splines (M7)
+* KNN classification (M4), KNN regression, Smoothing splines (M7)
 * Bagging and boosting (M8), support vector machines (M9)
 * Neural networks (M11)
 
@@ -595,7 +652,7 @@ Example: Prediction of icome from "Years of Education" and "Seniority"\vspace{2m
 ![ISLR Figure 2.4](../../ISLR/Figures/Chapter2/2.4.png){width=45%}
 ![ISLR Figure 2.6](../../ISLR/Figures/Chapter2/2.6.png){width=45%}
 
-
+A linear model vs a perfect fit.
 
 
 ---
@@ -617,7 +674,7 @@ We illustrate this by a toy example using polynomial regression.
 
 ## Polynomial regression example (simulation)
 
-Consider a covariate $x$ observed between -2 to 4 and $n=61$ observations.
+Consider a covariate $x$ observed between $x=-2, \ldots , 4$ and $n=61$ observations.
 
 ```{r data, echo=FALSE, fig.width=5, fig.height=3,fig.align = "center"}
 library(ggplot2)
@@ -793,11 +850,13 @@ $$\text{Ave}(y_0-\hat{f}(x_0))^2$$
 
 **Q:** What if we do not have access to test data?
 
-**A:** In Module 5 we will look into using _cross validation_ to mimic the use of a test set.
+<!-- **A:** In Module 5 we will look into using _cross validation_ to mimic the use of a test set. -->
+
+\vspace{2mm}
 
 **Q:** But, can we instead just use the training data MSE to choose a model? A low training error should also give a low test error?
 
-**A:** Sadly no, if we use a flexible model we will look at several cases where a low training error is a sign of overfitting, and will give a high test error. So, the training error is not a good estimator for the test error because it does not properly account for model complexity.
+<!-- **A:** Sadly no, if we use a flexible model we will look at several cases where a low training error is a sign of overfitting, and will give a high test error. So, the training error is not a good estimator for the test error because it does not properly account for model complexity. -->
 
 ---
 
@@ -900,11 +959,12 @@ Why?
 
 # The Bias-Variance trade-off
 
-* Assume we have fitted a _regression_ curve $Y  = f(x) + \varepsilon$ to our training data, which consist of independent observation pairs $\{x_i, y_i\}$ for $i=1,..,n$. (Yes, only one covariate $x$.)
+* The U-shape is the result of _two competing properties_ of statistical learning methods.
 
-* Assume that $\varepsilon$ is an unobserved random variable that adds noise to the relationship between the response variable and the covariates (random error), with mean zero and constant variance $\sigma^2$ for all values of $x$.
 
-* $\varepsilon$ is a substitute for all the unobserved variables that influence $Y$. 
+* Assume we have fitted a _regression_ curve 
+$$Y  = f(x) + \varepsilon$$ 
+to our training data $\{x_i, y_i\}$ for $i=1,..,n$, and $\varepsilon$ is an unobserved random variable that adds random, uncorrelated noise with mean zero and constant variance $\sigma^2$. $\varepsilon$ is a substitute for all the unobserved variables that influence $Y$. 
 
 * The training data was used to estimate $\hat{f}$. 
 
@@ -923,12 +983,19 @@ $~$
 
 Using that $y_0=f(x_0)+\varepsilon$, this expected test MSE can be decomposed into three terms 
 \begin{align*}
-& \text{E}[f(x_0)+\varepsilon - \hat{f}(x_0)]^2  \\
-&= \text{E}[f(x_0)^2] +\text{E}[\varepsilon^2] + \underbrace{\text{E}[\hat{f}(x_0)^2]}_{=f(x_0)^2} -2\text{E}[f(x_0)\hat{f}(x_0)] \\
-&= \text{Var}(f(x_0)) + \text{E}[f(x_0)^2] + \text{Var}(\varepsilon) + \text{Var}(\hat{f}(x_0)) +  \text{E}[\hat{f}(x_0)]^2 \\
-& \qquad -2 f(x_0)\text{E}[\hat{f}(x_0)] \\
+&\text{E}[y_0 - \hat{f}(x_0)]^2 = \\
+& ... \\
 & =  \underbrace{\text{Var}(\varepsilon)}_{\text{Irreducible error}} + \underbrace{\text{Var}(\hat{f}(x_0))}_{\text{Variance of prediction}} + \underbrace{\left( f(x_0) - \text{E}[\hat{f}(x_0)] \right)^2}_{\text{Squared bias}}
 \end{align*}
+
+
+<!-- \begin{align*} -->
+<!-- & \text{E}[f(x_0)+\varepsilon - \hat{f}(x_0)]^2  \\ -->
+<!-- &= \underbrace{\text{E}[f(x_0)^2]}_{=f(x_0)^2} +\text{E}[\varepsilon^2] + \text{E}[\hat{f}(x_0)^2] -2\text{E}[f(x_0)\hat{f}(x_0)] \\ -->
+<!-- &= f(x_0)^2 + \text{Var}(\varepsilon) + \text{Var}(\hat{f}(x_0)) +  \text{E}[\hat{f}(x_0)]^2 \\ -->
+<!-- & \qquad -2 f(x_0)\text{E}[\hat{f}(x_0)] \\ -->
+<!-- & =  \underbrace{\text{Var}(\varepsilon)}_{\text{Irreducible error}} + \underbrace{\text{Var}(\hat{f}(x_0))}_{\text{Variance of prediction}} + \underbrace{\left( f(x_0) - \text{E}[\hat{f}(x_0)] \right)^2}_{\text{Squared bias}} -->
+<!-- \end{align*} -->
 
 **Q**: what assumptions have we made in the derivation above?
 
@@ -938,11 +1005,11 @@ Using that $y_0=f(x_0)+\varepsilon$, this expected test MSE can be decomposed in
 
 $$\text{E}[(y_0 - \hat{f}(x_0))^2]=\cdots=\text{Var}(\varepsilon) +  \text{Var}(\hat{f}(x_0))+[\text{Bias}(\hat{f}(x_0))]^2$$
 
-* First term: irreducible error. This term cannot be reduced regardless how well our statistical model fits the data. 
+* _\textcolor{red}{Irreducible error}_. This term cannot be reduced regardless how well our statistical model fits the data. 
 
-* Second term: variance of the prediction at $x_0$ or the expected deviation around the mean at $x_0$. If the variance is high, there is large uncertainty associated with the prediction. 
+* _\textcolor{red}{Variance}_ of the prediction at $\hat{f}(x_0)$. Relates to the amount by which $\hat{f}(x_0)$ is expected to change for different training data. If the variance is high, there is large uncertainty associated with the prediction. 
 
-* Third term: squared bias. The bias gives an estimate of how much the prediction differs from the true mean. If the bias is low the model gives a prediction which is close to the true value.
+* _\textcolor{red}{Squared bias}_. The bias gives an estimate of how much the prediction differs from the true mean. If the bias is low the model gives a prediction which is close to the true value.
 
 
 ---
@@ -957,6 +1024,19 @@ However, if we also assume that $X$ is a random variable, this is really
 
 The **overall expected test MSE** can we then compute by averaging the expected test MSE over all possible values of $x_0$ (averaging with respect to frequency in test set),
 or mathematically by the law of total expectation $\text{E} \{ \text{E}[(Y - \hat{f}(X))^2 \mid X]\}$ (also sometimes referred to as the law of double expectations).
+
+---
+
+### General rule
+\vspace{4mm}
+
+For more flexible models, the variance will _increase_ and the bias will _decrease_.
+
+\vspace{4mm}
+
+\centering
+This is called the _\textcolor{red}{Bias-variance trade-off}_.
+
 
 ---
 
@@ -992,7 +1072,7 @@ ggarrange(p1,p2,p10,p20)
 ```
 
  
-For 4 different polynomial models (poly1,2,10 and 20), the squared bias, variance, irreducible error and the total sum. Plots based on 100 simulations for the polynomial example. 
+For four different polynomial models (poly1,2,10 and 20), the squared bias, variance, irreducible error and the total sum. Plots based on 100 simulations for the polynomial example. 
 
 
 ---
@@ -1011,7 +1091,7 @@ ggarrange(pa,pb,pc,pd)
 
  
 
-At 4 different values for $x_0$, the squared bias, variance, irreducible error and the total sum. Plots based on 100 simulations for the polynomial example. 
+At four different values for $x_0$, the squared bias, variance, irreducible error and the total sum. Plots based on 100 simulations for the polynomial example. 
 
 
 ---
@@ -1022,7 +1102,7 @@ p=ggplot(data=meandf,aes(x=poly,y=overall,colour=variable))+geom_line()+ggtitle(
 p
 ```
 
-Overall version (averaging over 61 gridpoints of x).
+Overall version (averaging over 61 gridpoints of $x$).
 
 ---
 
@@ -1057,6 +1137,9 @@ When fitting a statistical model the aim is often to obtain **the most predictiv
 * The aim is to find the optimum.
 
 ---
+
+
+# References
 
 <!-- # Classification (ev to be removed, with reference to see Module 4!!) -->
 
@@ -1290,5 +1373,4 @@ When fitting a statistical model the aim is often to obtain **the most predictiv
 
 
 
-# References
 

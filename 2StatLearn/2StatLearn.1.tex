@@ -113,8 +113,8 @@
 \begin{itemize}
 \tightlist
 \item
-  James et al (2013): An Introduction to Statistical Learning. Chapter
-  2.\\
+  James et al (2013): An Introduction to Statistical Learning. Chapter 2
+  (except 2.2.3).\\
 \item
   Additional material (in this module page) on random variables,
   covariance matrix and the multivariate normal distribution (known for
@@ -154,9 +154,17 @@
 \emph{Statistical learning} is the process of learning from data.
 
 By applying \emph{statistical methods} on a \emph{data set} (called the
-\emph{training set}), we would like to \emph{draw conclusions} about the
-relations between the variables (aka \emph{inference}) or to \emph{find
-a predictive function} (aka \emph{predition}) for new observations.
+\emph{training set}), we would like to
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{draw conclusions} about the relations between the variables
+  (\emph{\textcolor{red}{inference}}) or
+\item
+  \emph{find a predictive function} for new observations
+  (\emph{\textcolor{red}{predition}}).
+\end{itemize}
 
 Also, we would like to find structures in the data that help us to learn
 something about the real world.
@@ -227,27 +235,25 @@ set of \(K\) different classes/labels/categories.
   Predict soemeone's body fat, given BMI, weight, age, etc.
 \item
   Digit recognition.
+\item
+  Image recognition.
 \end{itemize}
 
 \end{frame}
 
 \begin{frame}
 
-South African coronary heart disease data: 462 observations and 10
-variables.
+\begin{block}{Example 1: Handwritten digit recognition}
 
-\begin{center}\includegraphics[width=16cm]{2StatLearn.1_files/figure-beamer/heart-1} \end{center}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Handwritten digit recognition}
-
-To identify the numbers in a handwritten ZIP code, from a digitized
-image. This is a classification problem, where the response variable is
-categorical with classes \{0, 1, 2, \ldots{}, 9\} and the task is to
-correctly predict the class membership. \vspace{1mm}
+\begin{itemize}
+\tightlist
+\item
+  Aim: To identify the numbers in a handwritten ZIP code, from a
+  digitized image.
+\item
+  Classification problem, where the response variable is categorical
+  with classes \{0, 1, 2, \ldots{}, 9\}. \vspace{1mm}
+\end{itemize}
 
 \includegraphics[width=0.70000\textwidth]{digits.png} \vspace{1mm}
 
@@ -260,7 +266,7 @@ Image taken from \url{https://web.stanford.edu/~hastie/ElemStatLearnII/}
 
 \begin{frame}
 
-\begin{block}{Email classification (spam detection)}
+\begin{block}{Example 2: Email classification (spam detection)}
 
 \begin{itemize}
 \tightlist
@@ -291,7 +297,7 @@ spam & 2.26 & 0.52 & 0.00 & 0.51 & 0.17 & 0.01\tabularnewline
 
 \begin{frame}
 
-\begin{block}{What makes a Nobel Prize winner?}
+\begin{block}{Example 3: What makes a Nobel Prize winner?}
 
 Perseverance, luck, skilled mentors or simply chocolate consumption? An
 article published in the New England Journal of Medicine have concluded
@@ -329,11 +335,12 @@ informal review of the article
 
 \begin{itemize}
 \item
-  Outcome measurement \(Y\) (also called dependent variable, response,
-  target).
+  Outcome measurement \(Y\), also called dependent variable, response,
+  target.
 \item
-  Vector of \(p\) predictor measurements \emph{X} (also called inputs,
-  regressors, covariates, features, independent variables).
+  Vector of \(p\) predictor measurements \(X=(X_1,\ldots,X_p)\), also
+  called inputs, regressors, covariates, features, independent
+  variables.
 \item
   In the \textbf{regression problem}, \(Y\) is quantitative (e.g price,
   blood pressure).
@@ -363,37 +370,19 @@ On the basis of the \emph{training data} we would like to:
 
 \begin{itemize}
 \item
-  \textbf{Accurately predict} unseen test cases.
+  \textbf{accurately predict} unseen test cases.
 \item
-  \textbf{Understand} which input affects the outcomes, and how.
+  \textbf{understand} which input affects the outcomes, and how.
 \item
-  \textbf{Assess the quality} of your predictions and inference.
+  \textbf{assess the quality} of your predictions and inference.
 \end{itemize}
+
+\vspace{2mm}
+
+The majority of problems studied in this course fall in the supervised
+learning category (exception: Module 10)
 
 \end{block}
-
-\end{frame}
-
-\begin{frame}
-
-Supervised learning examples (we will study):
-
-\begin{itemize}
-\tightlist
-\item
-  Linear regression (M3), Logistic regression (M4), Generalized additive
-  models (M7)
-\item
-  Classification trees, bagging, boosting (M8), K-nearest neighbor
-  classifier (M4)
-\item
-  Support vector machines (M9)
-\item
-  Neural networks (M11)
-\end{itemize}
-
-\(\rightarrow\) The majority of problems studied here fall in the
-supervised learning category
 
 \end{frame}
 
@@ -409,9 +398,6 @@ supervised learning category
   \emph{correct} answer.
 \item
   Difficult to know how well your are doing.
-\item
-  Different from supervised learning, but can be useful as a
-  pre-processing step for supervised learning.
 \end{itemize}
 
 Examples in the course:
@@ -426,46 +412,12 @@ Examples in the course:
 
 \end{frame}
 
-\begin{frame}{Semi-supervised learning}
-
-(Not considered in this course)
-
-\begin{itemize}
-\item
-  Our data set consists of a input data, and some of the data has
-  labelled responses.
-\item
-  This situation can for example occur if the measurement of input data
-  is cheap, while the output data is expensive to collect.
-\item
-  Classical solutions (likelihood-based) to this problem exists in
-  statistics (missing at random observations).
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}{Task}
-
-Find examples to explain the difference between supervised and
-unsupervised learning.
-
-\begin{itemize}
-\item
-\item
-\item
-\end{itemize}
-
-\end{frame}
-
 \begin{frame}{Overall philosophy}
 
-It is important to understand the ideas behind the various techniques,
-in order to know how and when to use them.
-
 \begin{itemize}
 \item
-  One has to understand the simpler methods first, in order to grasp the
-  more sophisticated ones.
+  Important to understand the simpler methods first, in order to grasp
+  the more sophisticated ones.
 \item
   It is important to accurately assess the performance of a method, to
   know how well or how badly it is working.
@@ -659,8 +611,8 @@ reducible and irreducible error?}
 
 \(~\)
 
-\textbf{Aim}: \emph{understand} how the response variable is affected by
-the various predictors (covariates).
+\textbf{Aim}: understand\_how the response variable is affected by the
+various predictors (covariates).
 
 \(~\)
 
@@ -756,16 +708,27 @@ Fitting a parametric models is thus done in two steps:
   the data points, but without making explicit assumptions about the
   form of the function \(f\).
 \item
-  The \(K\)-nearest neighbour algorithm is an example of a
-  non-parametric model. Used in classification, this algorithm predicts
-  a class membership for a new observation by making a majority vote
-  based on its \(K\) nearest neighbours. We will discuss the
-  \(K\)-nearest neighbour algorithm in Module 4.
+  Example: \(K\)-nearest neighbour (KNN) algorithm, used in
+  classification. KNN predicts a class membership for a new observation
+  by making a majority vote based on its \(K\) nearest neighbours. We
+  will discuss the \(K\)-nearest neighbour algorithm in Module 4.
 \end{itemize}
 
 (Todo: For the exercises make sure no KNN questions are in RecEx2 -- I
 moved all this to module 4, because it was otherwise resdundant. You can
 also move the respective questions to RecEx4, if that makes sense.)
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{KNN example}
+
+\(~\)
+
+\includegraphics{2StatLearn.1_files/figure-beamer/unnamed-chunk-1-1.pdf}
 
 \end{block}
 
@@ -879,7 +842,7 @@ Much data are required to estimate (the complex) \(f\).\strut
 \begin{itemize}
 \tightlist
 \item
-  KNN classification (M2, M4), KNN regression, Smoothing splines (M7)
+  KNN classification (M4), KNN regression, Smoothing splines (M7)
 \item
   Bagging and boosting (M8), support vector machines (M9)
 \item
@@ -900,6 +863,8 @@ Example: Prediction of icome from ``Years of Education'' and
 \centering
 \includegraphics[width=0.45000\textwidth]{../../ISLR/Figures/Chapter2/2.4.png}
 \includegraphics[width=0.45000\textwidth]{../../ISLR/Figures/Chapter2/2.6.png}
+
+A linear model vs a perfect fit.
 
 \end{block}
 
@@ -932,8 +897,8 @@ We illustrate this by a toy example using polynomial regression.
 
 \begin{block}{Polynomial regression example (simulation)}
 
-Consider a covariate \(x\) observed between -2 to 4 and \(n=61\)
-observations.
+Consider a covariate \(x\) observed between \(x=-2, \ldots , 4\) and
+\(n=61\) observations.
 
 \begin{center}\includegraphics{2StatLearn.1_files/figure-beamer/data-1} \end{center}
 
@@ -1113,17 +1078,10 @@ Polynomial example: fitted order 1-20 polynomial when the truth is order
 
 \textbf{Q:} What if we do not have access to test data?
 
-\textbf{A:} In Module 5 we will look into using \emph{cross validation}
-to mimic the use of a test set.
+\vspace{2mm}
 
 \textbf{Q:} But, can we instead just use the training data MSE to choose
 a model? A low training error should also give a low test error?
-
-\textbf{A:} Sadly no, if we use a flexible model we will look at several
-cases where a low training error is a sign of overfitting, and will give
-a high test error. So, the training error is not a good estimator for
-the test error because it does not properly account for model
-complexity.
 
 \end{frame}
 
@@ -1140,7 +1098,7 @@ one repetition, right: 100 repetitions for the testMSE.
 
 \begin{frame}
 
-\begin{center}\includegraphics{2StatLearn.1_files/figure-beamer/unnamed-chunk-1-1} \end{center}
+\begin{center}\includegraphics{2StatLearn.1_files/figure-beamer/unnamed-chunk-2-1} \end{center}
 
 \textbf{A}: If choosing flexibility based on training MSE=poly20 wins,
 if choose flexibility based on test MSE=poly 2 wins.
@@ -1174,18 +1132,15 @@ Why?
 
 \begin{itemize}
 \item
+  The U-shape is the result of \emph{two competing properties} of
+  statistical learning methods.
+\item
   Assume we have fitted a \emph{regression} curve
-  \(Y = f(x) + \varepsilon\) to our training data, which consist of
-  independent observation pairs \(\{x_i, y_i\}\) for \(i=1,..,n\). (Yes,
-  only one covariate \(x\).)
-\item
-  Assume that \(\varepsilon\) is an unobserved random variable that adds
-  noise to the relationship between the response variable and the
-  covariates (random error), with mean zero and constant variance
-  \(\sigma^2\) for all values of \(x\).
-\item
-  \(\varepsilon\) is a substitute for all the unobserved variables that
-  influence \(Y\).
+  \[Y  = f(x) + \varepsilon\] to our training data \(\{x_i, y_i\}\) for
+  \(i=1,..,n\), and \(\varepsilon\) is an unobserved random variable
+  that adds random, uncorrelated noise with mean zero and constant
+  variance \(\sigma^2\). \(\varepsilon\) is a substitute for all the
+  unobserved variables that influence \(Y\).
 \item
   The training data was used to estimate \(\hat{f}\).
 \end{itemize}
@@ -1221,10 +1176,8 @@ Using that \(y_0=f(x_0)+\varepsilon\), this expected test MSE can be
 decomposed into three terms
 
 \begin{align*}
-& \text{E}[f(x_0)+\varepsilon - \hat{f}(x_0)]^2  \\
-&= \text{E}[f(x_0)^2] +\text{E}[\varepsilon^2] + \underbrace{\text{E}[\hat{f}(x_0)^2]}_{=f(x_0)^2} -2\text{E}[f(x_0)\hat{f}(x_0)] \\
-&= \text{Var}(f(x_0)) + \text{E}[f(x_0)^2] + \text{Var}(\varepsilon) + \text{Var}(\hat{f}(x_0)) +  \text{E}[\hat{f}(x_0)]^2 \\
-& \qquad -2 f(x_0)\text{E}[\hat{f}(x_0)] \\
+&\text{E}[y_0 - \hat{f}(x_0)]^2 = \\
+& ... \\
 & =  \underbrace{\text{Var}(\varepsilon)}_{\text{Irreducible error}} + \underbrace{\text{Var}(\hat{f}(x_0))}_{\text{Variance of prediction}} + \underbrace{\left( f(x_0) - \text{E}[\hat{f}(x_0)] \right)^2}_{\text{Squared bias}}
 \end{align*}
 
@@ -1240,16 +1193,17 @@ decomposed into three terms
 
 \begin{itemize}
 \item
-  First term: irreducible error. This term cannot be reduced regardless
-  how well our statistical model fits the data.
+  \emph{\textcolor{red}{Irreducible error}}. This term cannot be reduced
+  regardless how well our statistical model fits the data.
 \item
-  Second term: variance of the prediction at \(x_0\) or the expected
-  deviation around the mean at \(x_0\). If the variance is high, there
-  is large uncertainty associated with the prediction.
+  \emph{\textcolor{red}{Variance}} of the prediction at
+  \(\hat{f}(x_0)\). Relates to the amount by which \(\hat{f}(x_0)\) is
+  expected to change for different training data. If the variance is
+  high, there is large uncertainty associated with the prediction.
 \item
-  Third term: squared bias. The bias gives an estimate of how much the
-  prediction differs from the true mean. If the bias is low the model
-  gives a prediction which is close to the true value.
+  \emph{\textcolor{red}{Squared bias}}. The bias gives an estimate of
+  how much the prediction differs from the true mean. If the bias is low
+  the model gives a prediction which is close to the true value.
 \end{itemize}
 
 \end{frame}
@@ -1276,14 +1230,32 @@ total expectation \(\text{E} \{ \text{E}[(Y - \hat{f}(X))^2 \mid X]\}\)
 
 \begin{frame}
 
+\begin{block}{General rule}
+
+\vspace{4mm}
+
+For more flexible models, the variance will \emph{increase} and the bias
+will \emph{decrease}.
+
+\vspace{4mm}
+
+\centering
+This is called the \emph{\textcolor{red}{Bias-variance trade-off}}.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
 \begin{block}{Polynomial example (cont.)}
 
 \(Y=x^2\) is still the \emph{truth}.
 
 \begin{center}\includegraphics[width=0.9\linewidth]{2StatLearn.1_files/figure-beamer/biasvarianceforx-1} \end{center}
 
-For 4 different polynomial models (poly1,2,10 and 20), the squared bias,
-variance, irreducible error and the total sum. Plots based on 100
+For four different polynomial models (poly1,2,10 and 20), the squared
+bias, variance, irreducible error and the total sum. Plots based on 100
 simulations for the polynomial example.
 
 \end{block}
@@ -1294,7 +1266,7 @@ simulations for the polynomial example.
 
 \begin{center}\includegraphics{2StatLearn.1_files/figure-beamer/biasvarianceforpoly-1} \end{center}
 
-At 4 different values for \(x_0\), the squared bias, variance,
+At four different values for \(x_0\), the squared bias, variance,
 irreducible error and the total sum. Plots based on 100 simulations for
 the polynomial example.
 
@@ -1304,7 +1276,7 @@ the polynomial example.
 
 \begin{center}\includegraphics[width=0.9\linewidth]{2StatLearn.1_files/figure-beamer/averageoverxs-1} \end{center}
 
-Overall version (averaging over 61 gridpoints of x).
+Overall version (averaging over 61 gridpoints of \(x\)).
 
 \end{frame}
 
@@ -1350,10 +1322,6 @@ most predictive model}.
 \item
   The aim is to find the optimum.
 \end{itemize}
-
-\end{frame}
-
-\begin{frame}
 
 \end{frame}
 
