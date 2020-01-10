@@ -36,7 +36,7 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 ```
 
-Last update: January 09, 2020
+Last update: January 10, 2020
 
 ---
 
@@ -510,7 +510,6 @@ $~$
 
 * Example: $K$-nearest neighbour (KNN) algorithm, used in classification. KNN predicts a class membership for a new observation by making a majority vote based on its $K$ nearest neighbours. We will discuss the $K$-nearest neighbour algorithm in Module 4.
 
-(Todo: For the exercises make sure no KNN questions are in RecEx2 -- I moved all this to module 4, because it was otherwise resdundant. You can also move the respective questions to RecEx4, if that makes sense.)
 
 ---
 
@@ -908,11 +907,14 @@ Left: one repetition, right: 100 repetitions for the testMSE.
 
 ---
 
-```{r,echo=FALSE,fig.width=7,fig.height=4.5,fig.align="center",out.widht='80%'}
+```{r,echo=FALSE,fig.width=7,fig.height=4.5,fig.align="center",out.width='80%'}
 ggarrange(p1,pall,testp1,testpall)
 ```
 
-**A**: If choosing flexibility based on training MSE=poly20 wins, if choose flexibility based on test MSE=poly 2 wins.
+**A**: If choosing flexibility
+
+* _based on training MSE_:  poly20 wins
+* _based on test MSE_: poly2 wins.
 
 
 
@@ -965,18 +967,18 @@ Why?
 * The U-shape is the result of _two competing properties_ of statistical learning methods.
 
 
-* Assume we have fitted a _regression_ curve 
+Assume we have fitted a _regression_ curve 
 $$Y  = f(x) + \varepsilon$$ 
-to our training data $\{x_i, y_i\}$ for $i=1,..,n$, and $\varepsilon$ is an unobserved random variable that adds random, uncorrelated noise with mean zero and constant variance $\sigma^2$. $\varepsilon$ is a substitute for all the unobserved variables that influence $Y$. 
+to our training data $\{x_i, y_i\}$ for $i=1,..,n$, and $\varepsilon$ is an unobserved random variable that adds random, uncorrelated, mean-zero noise term with variance $\sigma^2$.\footnote{$\varepsilon$ is a substitute for all the unobserved variables that influence $Y$.}
 
-* The training data was used to estimate $\hat{f}$. 
+The training data was used to estimate $\hat{f}$. 
 
 ---
 
 * We want to use $\hat{f}$ to obtain the predicted response value $\hat{f}(x_0)$ for an unseed test observation $(x_0,y_0)$.
 
-* The _expected test mean squared error (MSE) at $x_0$_ is defined as:
-$$\text{E}[y_0 - \hat{f}(x_0)]^2$$
+* The _\textcolor{red}{expected test mean squared error (MSE)} at $x_0$_ is defined as:
+$$\text{E}[y_0 - \hat{f}(x_0)]^2 \ .$$
 
 $~$
 
@@ -984,7 +986,7 @@ $~$
 
 ---
 
-Using that $y_0=f(x_0)+\varepsilon$, this expected test MSE can be decomposed into three terms 
+Using that $y_0=f(x_0)+\varepsilon$, this expected test MSE can be decomposed into three terms (board)
 \begin{align*}
 &\text{E}[y_0 - \hat{f}(x_0)]^2 = \\
 & ... \\
@@ -1000,9 +1002,7 @@ Using that $y_0=f(x_0)+\varepsilon$, this expected test MSE can be decomposed in
 <!-- & =  \underbrace{\text{Var}(\varepsilon)}_{\text{Irreducible error}} + \underbrace{\text{Var}(\hat{f}(x_0))}_{\text{Variance of prediction}} + \underbrace{\left( f(x_0) - \text{E}[\hat{f}(x_0)] \right)^2}_{\text{Squared bias}} -->
 <!-- \end{align*} -->
 
-**Q**: what assumptions have we made in the derivation above?
 
-**A**: classnotes.
 
 ---
 

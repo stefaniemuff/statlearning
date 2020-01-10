@@ -94,7 +94,7 @@
 
 \begin{frame}
 
-Last update: January 09, 2020
+Last update: January 10, 2020
 
 \end{frame}
 
@@ -720,10 +720,6 @@ Fitting a parametric models is thus done in two steps:
   will discuss the \(K\)-nearest neighbour algorithm in Module 4.
 \end{itemize}
 
-(Todo: For the exercises make sure no KNN questions are in RecEx2 -- I
-moved all this to module 4, because it was otherwise resdundant. You can
-also move the respective questions to RecEx4, if that makes sense.)
-
 \end{block}
 
 \end{frame}
@@ -1104,10 +1100,17 @@ one repetition, right: 100 repetitions for the testMSE.
 
 \begin{frame}
 
-\begin{center}\includegraphics{2StatLearn.1_files/figure-beamer/unnamed-chunk-2-1} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{2StatLearn.1_files/figure-beamer/unnamed-chunk-2-1} \end{center}
 
-\textbf{A}: If choosing flexibility based on training MSE=poly20 wins,
-if choose flexibility based on test MSE=poly 2 wins.
+\textbf{A}: If choosing flexibility
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{based on training MSE}: poly20 wins
+\item
+  \emph{based on test MSE}: poly2 wins.
+\end{itemize}
 
 \end{frame}
 
@@ -1137,19 +1140,19 @@ Why?
 \begin{frame}{The Bias-Variance trade-off}
 
 \begin{itemize}
+\tightlist
 \item
   The U-shape is the result of \emph{two competing properties} of
   statistical learning methods.
-\item
-  Assume we have fitted a \emph{regression} curve
-  \[Y  = f(x) + \varepsilon\] to our training data \(\{x_i, y_i\}\) for
-  \(i=1,..,n\), and \(\varepsilon\) is an unobserved random variable
-  that adds random, uncorrelated noise with mean zero and constant
-  variance \(\sigma^2\). \(\varepsilon\) is a substitute for all the
-  unobserved variables that influence \(Y\).
-\item
-  The training data was used to estimate \(\hat{f}\).
 \end{itemize}
+
+Assume we have fitted a \emph{regression} curve
+\[Y  = f(x) + \varepsilon\] to our training data \(\{x_i, y_i\}\) for
+\(i=1,..,n\), and \(\varepsilon\) is an unobserved random variable that
+adds random, uncorrelated, mean-zero noise term with variance
+\(\sigma^2\).\footnote{$\varepsilon$ is a substitute for all the unobserved variables that influence $Y$.}
+
+The training data was used to estimate \(\hat{f}\).
 
 \end{frame}
 
@@ -1160,8 +1163,8 @@ Why?
   We want to use \(\hat{f}\) to obtain the predicted response value
   \(\hat{f}(x_0)\) for an unseed test observation \((x_0,y_0)\).
 \item
-  The \emph{expected test mean squared error (MSE) at \(x_0\)} is
-  defined as: \[\text{E}[y_0 - \hat{f}(x_0)]^2\]
+  The \emph{\textcolor{red}{expected test mean squared error (MSE)} at
+  \(x_0\)} is defined as: \[\text{E}[y_0 - \hat{f}(x_0)]^2 \ .\]
 \end{itemize}
 
 \(~\)
@@ -1179,17 +1182,13 @@ Why?
 \begin{frame}
 
 Using that \(y_0=f(x_0)+\varepsilon\), this expected test MSE can be
-decomposed into three terms
+decomposed into three terms (board)
 
 \begin{align*}
 &\text{E}[y_0 - \hat{f}(x_0)]^2 = \\
 & ... \\
 & =  \underbrace{\text{Var}(\varepsilon)}_{\text{Irreducible error}} + \underbrace{\text{Var}(\hat{f}(x_0))}_{\text{Variance of prediction}} + \underbrace{\left( f(x_0) - \text{E}[\hat{f}(x_0)] \right)^2}_{\text{Squared bias}}
 \end{align*}
-
-\textbf{Q}: what assumptions have we made in the derivation above?
-
-\textbf{A}: classnotes.
 
 \end{frame}
 
