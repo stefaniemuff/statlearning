@@ -1,0 +1,786 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\hypersetup{unicode=true,
+            pdftitle={Module 2: Recommended Exercises},
+            pdfauthor={Martina Hall, Michail Spitieris, Stefanie Muff, Department of Mathematical Sciences, NTNU},
+            colorlinks=true,
+            linkcolor=Maroon,
+            citecolor=Blue,
+            urlcolor=blue,
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Module 2: Recommended Exercises}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \subtitle{TMA4268 Statistical Learning V2020}
+  \author{Martina Hall, Michail Spitieris, Stefanie Muff, Department of
+Mathematical Sciences, NTNU}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{January xx, 2020}
+
+
+\begin{document}
+\maketitle
+
+\section{Theoretical exercises}\label{theoretical-exercises}
+
+\subsection{Problem 1}\label{problem-1}
+
+Describe a real-life application in which classification might be
+useful. Identify the response and the predictors. Is the goal inference
+or prediction?
+
+\subsection{Problem 2}\label{problem-2}
+
+Describe a real-life application in which regression might be useful.
+Identify the response and the predictors. Is the goal inference or
+prediction?
+
+\subsection{Problem 3}\label{problem-3}
+
+Take a look at Figure 2.9 in the course book (p.31).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\tightlist
+\item
+  Will a flexible or rigid method typically have the highest test error?
+\item
+  Does a small variance imply an overfit or rather an underfit to the
+  data?
+\item
+  Relate the problem of over-and underfitting to the bias-variance
+  trade-off.
+\end{enumerate}
+
+\subsection{Problem 4}\label{problem-4}
+
+Exercise 7 from the book (p.53) slightly modified. The table below
+provides a training data set consisting of seven observations, two
+predictors and one qualitative response variable.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(kableExtra)}
+\NormalTok{knnframe =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{x1 =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{-1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{x2 =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{, }
+    \DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{), }\DataTypeTok{y =} \KeywordTok{as.factor}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\StringTok{"A"}\NormalTok{, }\StringTok{"A"}\NormalTok{, }\StringTok{"A"}\NormalTok{, }\StringTok{"B"}\NormalTok{, }\StringTok{"B"}\NormalTok{, }\StringTok{"B"}\NormalTok{, }\StringTok{"B"}\NormalTok{)))}
+\KeywordTok{print}\NormalTok{(knnframe)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   x1 x2 y
+## 1  3  3 A
+## 2  2  0 A
+## 3  1  1 A
+## 4  0  1 B
+## 5 -1  0 B
+## 6  2  1 B
+## 7  1  0 B
+\end{verbatim}
+
+We wish to use this data set to make a prediction for \(Y\) when
+\(X_1=1, X_2=2\) using the \(K\)-nearest neighbors classification
+method.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\item
+  Compute the Euclidean distance between each observation and the test
+  point, \(X_1=1,X_2=2\).
+\item
+  What is our prediction with \(K=1\)? Why?
+\item
+  What is our prediction with \(K=4\)? Why?
+\item
+  If the Bayes decision boundary in this problem is highly non-linear,
+  when would we expect the best value for \(K\) to be large or small?
+  Why?
+\item
+  Install and load the \texttt{ggplot2} library, and plot the points in
+  \texttt{R} using the functions \texttt{ggplot}, and
+  \texttt{geom\_point()}.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{install.packages}\NormalTok{(ggplot2)}
+\KeywordTok{library}\NormalTok{(ggplot2)}
+
+\KeywordTok{ggplot}\NormalTok{(knnframe, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x1, }\DataTypeTok{y =}\NormalTok{ x2)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_point}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{5}
+\tightlist
+\item
+  Use the function \texttt{knn} from the \texttt{class} library to make
+  a prediction for the test point using \texttt{k=1}. Do you obtain the
+  same result as by hand? R-hint (fill in the \texttt{...} parts):
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(class)}
+\KeywordTok{knn}\NormalTok{(knnframe[, }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{)], }\DataTypeTok{test =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{), }\DataTypeTok{cl =}\NormalTok{ ..., }\DataTypeTok{k =}\NormalTok{ ...)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{6}
+\tightlist
+\item
+  Use the function \texttt{knn} to make a prediction for the test point
+  using \texttt{k=4} and \texttt{k=7}.
+\end{enumerate}
+
+\clearpage
+
+\subsection{Problem 5: Core concepts in statistical learning (Problem 1
+from compulsory exercise 1 in
+2018)}\label{problem-5-core-concepts-in-statistical-learning-problem-1-from-compulsory-exercise-1-in-2018}
+
+We consider a regression problem, where the true underlying curve is
+\(f(x)=-x+x^2+x^3\) and we are considering \(x \in [-3,3]\) (see Figure
+1). This non-linear curve is only observed with added noise (either a
+random phenomenon, or unobservable variables influence the
+observations), that is, we observe \(y=f(x)+\varepsilon\). In our
+example the error is sampled from \(\varepsilon\sim N(0,2^2)\).
+
+\begin{figure}
+\centering
+\includegraphics[width=0.35000\textwidth]{Prob1f1.png}
+\caption{\(f(x)=-x+x^2+x^3\)}
+\end{figure}
+
+In real life we would only have a limited number of points
+\((x_i,y_i)\), \(i=1,\ldots,n\), and we want to find \(f\) such that we
+can make good predictions at new values \(x_0\). We will use the method
+of \(K\) nearest neighbour regression to do this here. Here we have a
+training set of \(n=61\) observations \((x_i,y_i)\), \(i=1,\ldots,n\).
+The KNN regression method provides a prediction at a value \(x_0\) by
+finding the closest \(K\) points (Euclidean distance) and calculating
+the average of the observed \(y\) values at the points in the respective
+neighborhood \(\mathcal{N}_0\):
+
+\[\hat{f}(x_0)=\frac{1}{K}\sum_{i\in \mathcal{N}_0} y_i\]
+
+It then estimates the regression curve at \(x_0\) as the average of the
+response values for the training observations in \(\mathcal{N}_0\). In
+addition we have a test set of \(n=61\) observations (at the same grid
+points as for the training set), but now with new observed values \(y\).
+
+We have considered \(K=1,\ldots,25\) in the KNN method. Our experiment
+has been repeated \(M=1000\) times (that is, \(M\) versions of training
+and test set).
+
+\subsubsection{a) Training and test MSE}\label{a-training-and-test-mse}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.55000\textwidth]{Prob1f2.png}
+\caption{Estimated \(f\) function for the KNN method with
+\(K=1,2,10,25\) for \(M=1000\) simulated cases (blue) and the true
+underlying function (black).}
+\end{figure}
+
+Of course, we do not know the true curve in real live, and need to use
+the test data to decide on model flexibility (choosing \(K\)). But let
+us first apply the KNN method with \(K=1,2,10,25\) to our training data,
+repeated for \(M\) different training sets (blue lines). The black lines
+show the true underlying curve (Figure 2).
+
+\begin{itemize}
+\tightlist
+\item
+  Comment briefly on what you see.
+\item
+  Does a high or low value of \(K\) give the most flexible fit?
+\end{itemize}
+
+In Figure 3 (below) you see the mean-squared errors (MSEs) for the
+training set and for the test set (right panel for one training and one
+test set, and left panel for \(M\)).
+
+\begin{itemize}
+\tightlist
+\item
+  Comment on what you see.
+\item
+  What do you think is the ``best'' choice for K?
+\end{itemize}
+
+\begin{figure}
+\centering
+\includegraphics[width=0.55000\textwidth]{Prob1f3.png}
+\caption{Mean squared errors for training and test sets}
+\end{figure}
+
+\eject
+
+\subsubsection{b) Bias-variance
+trade-off}\label{b-bias-variance-trade-off}
+
+In order to better understand/explain the bias-variance trade-off, we
+now leave the real world situation, and assume we know the truth. You
+will not observe these curves in real life -- but the understanding of
+the bias-variance trade-off is a core skill in this course! In the
+Figure 4 you see a plot of estimated squared bias, estimated variance,
+true irreducible error and the sum of these (labelled total) and
+averaged over all values of \(x\). The squared bias and the variance are
+calculated based on the predicted values and the ``true'' values
+(without the added noise) at each \(x\).
+
+\begin{itemize}
+\tightlist
+\item
+  Explain how that is done. Hint: this is what the \(M\) repeated
+  training data sets are used for.
+\item
+  Focus on Figure 4. As the flexibility of the model increases (\(K\)
+  decreases), what happens with
+
+  \begin{enumerate}
+  \def\labelenumi{\roman{enumi})}
+  \tightlist
+  \item
+    the squared bias,
+  \item
+    the variance,
+  \item
+    the irreducible error?
+  \end{enumerate}
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
+\item
+  What would you recommend is the optimal value of \(K\)? Is this in
+  agreement with what you found in a)?
+\end{itemize}
+
+Extra: We have chosen to also plot curves at four values of \(x\) -
+Figure 5 (below). Based on these four curves, that would you recommend
+is the optimal value of \(K\)? Is this in agreement with what you found
+previously (averaged over \(x\))?
+
+\begin{figure}
+\centering
+\includegraphics[width=0.50000\textwidth]{Prob1f4.png}
+\caption{Estimated squared bias, estimated variance, true irreducible
+error and the sum of these (total).}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width=1.00000\textwidth]{Prob1f5.png}
+\caption{Figure 5}
+\end{figure}
+
+For completeness the R code used is given in the Rmd file, but not
+printed here (we used \texttt{M=1000}). You do not need to run the code,
+this is just if you have questions about how this was done.
+
+\footnotesize
+
+\normalsize
+\clearpage
+
+\subsection{Problem 6: Theory and practice - training and test MSE;
+bias-variance}\label{problem-6-theory-and-practice---training-and-test-mse-bias-variance}
+
+We will now look closely into the simulations and calculations performed
+for the training error (MSEtrain), test error (MSEtest), and the
+bias-variance trade-off in lecture 1 of module 2.
+
+Simulation setup:
+
+\begin{itemize}
+\tightlist
+\item
+  True function \(f(x)=x^2\) with normal noise
+  \(\varepsilon \sim N(0,2^2)\).
+\item
+  \(x= -2.0, -1.9, ... ,4.0\) (grid with 61 values).
+\item
+  Parametric models are fitted (polynomials of degree 1 to degree 20).
+\item
+  M=100 simulations.
+\end{itemize}
+
+\subsubsection{a) Problem set-up}\label{a-problem-set-up}
+
+\begin{itemize}
+\tightlist
+\item
+  Look at the code below and run it yourself. Explain what is done (you
+  do not need not understand the code in detail).
+\item
+  We will learn more about the \texttt{lm} function in M3 - now just
+  think of this as fitting a polynomial regression and predict gives the
+  fitted curve in our grid points. \texttt{predarray} is just a way to
+  save \(M\) simulations of 61 gridpoints in \(x\) and 20 polynomial
+  models.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{library}\NormalTok{(ggpubr)}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{2}\NormalTok{)  }\CommentTok{# to reproduce}
+
+\NormalTok{M =}\StringTok{ }\DecValTok{100}  \CommentTok{# repeated samplings, x fixed }
+\NormalTok{nord =}\StringTok{ }\DecValTok{20}  \CommentTok{# order of polynoms}
+
+
+\NormalTok{x =}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\OperatorTok{-}\DecValTok{2}\NormalTok{, }\DecValTok{4}\NormalTok{, }\FloatTok{0.1}\NormalTok{)}
+\NormalTok{truefunc =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{return}\NormalTok{(x}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{true_y =}\StringTok{ }\KeywordTok{truefunc}\NormalTok{(x)}
+
+\NormalTok{error =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(}\KeywordTok{length}\NormalTok{(x) }\OperatorTok{*}\StringTok{ }\NormalTok{M, }\DataTypeTok{mean =} \DecValTok{0}\NormalTok{, }\DataTypeTok{sd =} \DecValTok{2}\NormalTok{), }\DataTypeTok{nrow =}\NormalTok{ M, }\DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{ymat =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rep}\NormalTok{(true_y, M), }\DataTypeTok{byrow =}\NormalTok{ T, }\DataTypeTok{nrow =}\NormalTok{ M) }\OperatorTok{+}\StringTok{ }\NormalTok{error}
+
+\NormalTok{predarray =}\StringTok{ }\KeywordTok{array}\NormalTok{(}\OtherTok{NA}\NormalTok{, }\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(M, }\KeywordTok{length}\NormalTok{(x), nord))}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{M) \{}
+    \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{nord) \{}
+\NormalTok{        predarray[i, , j] =}\StringTok{ }\KeywordTok{predict}\NormalTok{(}\KeywordTok{lm}\NormalTok{(ymat[i, ] }\OperatorTok{~}\StringTok{ }\KeywordTok{poly}\NormalTok{(x, j, }\DataTypeTok{raw =} \OtherTok{TRUE}\NormalTok{)))}
+\NormalTok{    \}}
+\NormalTok{\}}
+\CommentTok{# M matrices of size length(x) times nord first, only look at}
+\CommentTok{# variablity in the M fits and plot M curves where we had 1}
+
+\CommentTok{# for plotting need to stack the matrices underneath eachother and}
+\CommentTok{# make new variable 'rep'}
+\NormalTok{stackmat =}\StringTok{ }\OtherTok{NULL}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{M) stackmat =}\StringTok{ }\KeywordTok{rbind}\NormalTok{(stackmat, }\KeywordTok{cbind}\NormalTok{(x, }\KeywordTok{rep}\NormalTok{(i, }\KeywordTok{length}\NormalTok{(x)), }
+\NormalTok{    predarray[i, , ]))}
+\CommentTok{# dim(stackmat)}
+\KeywordTok{colnames}\NormalTok{(stackmat) =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"x"}\NormalTok{, }\StringTok{"rep"}\NormalTok{, }\KeywordTok{paste}\NormalTok{(}\StringTok{"poly"}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{20}\NormalTok{, }\DataTypeTok{sep =} \StringTok{""}\NormalTok{))}
+\NormalTok{sdf =}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(stackmat)  }\CommentTok{#NB have poly1-20 now - but first only use 1,2,20}
+\CommentTok{# to add true curve using stat_function - easiest solution}
+\NormalTok{true_x =}\StringTok{ }\NormalTok{x}
+\NormalTok{yrange =}\StringTok{ }\KeywordTok{range}\NormalTok{(}\KeywordTok{apply}\NormalTok{(sdf, }\DecValTok{2}\NormalTok{, range)[, }\DecValTok{3}\OperatorTok{:}\DecValTok{22}\NormalTok{])}
+\NormalTok{p1 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sdf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ poly1, }\DataTypeTok{group =}\NormalTok{ rep, }\DataTypeTok{colour =}\NormalTok{ rep)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{()}
+\NormalTok{p1 =}\StringTok{ }\NormalTok{p1 }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_function}\NormalTok{(}\DataTypeTok{fun =}\NormalTok{ truefunc, }\DataTypeTok{lwd =} \FloatTok{1.3}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"poly1"}\NormalTok{)}
+\NormalTok{p2 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sdf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ poly2, }\DataTypeTok{group =}\NormalTok{ rep, }\DataTypeTok{colour =}\NormalTok{ rep)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{()}
+\NormalTok{p2 =}\StringTok{ }\NormalTok{p2 }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_function}\NormalTok{(}\DataTypeTok{fun =}\NormalTok{ truefunc, }\DataTypeTok{lwd =} \FloatTok{1.3}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"poly2"}\NormalTok{)}
+\NormalTok{p10 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sdf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ poly10, }\DataTypeTok{group =}\NormalTok{ rep, }\DataTypeTok{colour =}\NormalTok{ rep)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{()}
+\NormalTok{p10 =}\StringTok{ }\NormalTok{p10 }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_function}\NormalTok{(}\DataTypeTok{fun =}\NormalTok{ truefunc, }\DataTypeTok{lwd =} \FloatTok{1.3}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"poly10"}\NormalTok{)}
+\NormalTok{p20 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sdf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ poly20, }\DataTypeTok{group =}\NormalTok{ rep, }\DataTypeTok{colour =}\NormalTok{ rep)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{()}
+\NormalTok{p20 =}\StringTok{ }\NormalTok{p20 }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_function}\NormalTok{(}\DataTypeTok{fun =}\NormalTok{ truefunc, }\DataTypeTok{lwd =} \FloatTok{1.3}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"poly20"}\NormalTok{)}
+\KeywordTok{ggarrange}\NormalTok{(p1, p2, p10, p20)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsubsection{b) Train and test MSE}\label{b-train-and-test-mse}
+
+\begin{itemize}
+\tightlist
+\item
+  First we produce predictions at each grid point based on our training
+  data (\texttt{x} and \texttt{ymat})
+\item
+  but we also draw new observations to calculate testMSE - see
+  \texttt{testymat}
+\item
+  observe how trainMSE and testMSE is calculated
+\item
+  run the code
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{2}\NormalTok{)  }\CommentTok{# to reproduce}
+
+\NormalTok{M =}\StringTok{ }\DecValTok{100}  \CommentTok{# repeated samplings,x fixed but new errors}
+\NormalTok{nord =}\StringTok{ }\DecValTok{20}
+\NormalTok{x =}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\OperatorTok{-}\DecValTok{2}\NormalTok{, }\DecValTok{4}\NormalTok{, }\FloatTok{0.1}\NormalTok{)}
+\NormalTok{truefunc =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{return}\NormalTok{(x}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{true_y =}\StringTok{ }\KeywordTok{truefunc}\NormalTok{(x)}
+
+\NormalTok{error =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(}\KeywordTok{length}\NormalTok{(x) }\OperatorTok{*}\StringTok{ }\NormalTok{M, }\DataTypeTok{mean =} \DecValTok{0}\NormalTok{, }\DataTypeTok{sd =} \DecValTok{2}\NormalTok{), }\DataTypeTok{nrow =}\NormalTok{ M, }\DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{testerror =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(}\KeywordTok{length}\NormalTok{(x) }\OperatorTok{*}\StringTok{ }\NormalTok{M, }\DataTypeTok{mean =} \DecValTok{0}\NormalTok{, }\DataTypeTok{sd =} \DecValTok{2}\NormalTok{), }\DataTypeTok{nrow =}\NormalTok{ M, }
+    \DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{ymat =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rep}\NormalTok{(true_y, M), }\DataTypeTok{byrow =}\NormalTok{ T, }\DataTypeTok{nrow =}\NormalTok{ M) }\OperatorTok{+}\StringTok{ }\NormalTok{error}
+\NormalTok{testymat =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rep}\NormalTok{(true_y, M), }\DataTypeTok{byrow =}\NormalTok{ T, }\DataTypeTok{nrow =}\NormalTok{ M) }\OperatorTok{+}\StringTok{ }\NormalTok{testerror}
+
+\NormalTok{predarray =}\StringTok{ }\KeywordTok{array}\NormalTok{(}\OtherTok{NA}\NormalTok{, }\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(M, }\KeywordTok{length}\NormalTok{(x), nord))}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{M) \{}
+    \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{nord) \{}
+\NormalTok{        predarray[i, , j] =}\StringTok{ }\KeywordTok{predict}\NormalTok{(}\KeywordTok{lm}\NormalTok{(ymat[i, ] }\OperatorTok{~}\StringTok{ }\KeywordTok{poly}\NormalTok{(x, j, }\DataTypeTok{raw =} \OtherTok{TRUE}\NormalTok{)))}
+\NormalTok{    \}}
+\NormalTok{\}}
+\NormalTok{trainMSE =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DataTypeTok{ncol =}\NormalTok{ nord, }\DataTypeTok{nrow =}\NormalTok{ M)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{M) trainMSE[i, ] =}\StringTok{ }\KeywordTok{apply}\NormalTok{((predarray[i, , ] }\OperatorTok{-}\StringTok{ }\NormalTok{ymat[i, ])}\OperatorTok{^}\DecValTok{2}\NormalTok{, }
+    \DecValTok{2}\NormalTok{, mean)}
+\NormalTok{testMSE =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DataTypeTok{ncol =}\NormalTok{ nord, }\DataTypeTok{nrow =}\NormalTok{ M)}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{M) testMSE[i, ] =}\StringTok{ }\KeywordTok{apply}\NormalTok{((predarray[i, , ] }\OperatorTok{-}\StringTok{ }\NormalTok{testymat[i, ])}\OperatorTok{^}\DecValTok{2}\NormalTok{, }
+    \DecValTok{2}\NormalTok{, mean)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Then we plot train and testMSE - first for one train + test data set,
+  then for 99 more.
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ggplot2)}
+\KeywordTok{library}\NormalTok{(ggpubr)}
+
+\CommentTok{# format suitable for plotting}
+\NormalTok{stackmat =}\StringTok{ }\OtherTok{NULL}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{M) stackmat =}\StringTok{ }\KeywordTok{rbind}\NormalTok{(stackmat, }\KeywordTok{cbind}\NormalTok{(}\KeywordTok{rep}\NormalTok{(i, nord), }\DecValTok{1}\OperatorTok{:}\NormalTok{nord, }
+\NormalTok{    trainMSE[i, ], testMSE[i, ]))}
+\KeywordTok{colnames}\NormalTok{(stackmat) =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"rep"}\NormalTok{, }\StringTok{"poly"}\NormalTok{, }\StringTok{"trainMSE"}\NormalTok{, }\StringTok{"testMSE"}\NormalTok{)}
+\NormalTok{sdf =}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(stackmat)}
+\NormalTok{yrange =}\StringTok{ }\KeywordTok{range}\NormalTok{(sdf[, }\DecValTok{3}\OperatorTok{:}\DecValTok{4}\NormalTok{])}
+\NormalTok{p1 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sdf[}\DecValTok{1}\OperatorTok{:}\NormalTok{nord, ], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{y =}\NormalTok{ trainMSE)) }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{()}
+\NormalTok{pall =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sdf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{group =}\NormalTok{ rep, }\DataTypeTok{y =}\NormalTok{ trainMSE, }\DataTypeTok{colour =}\NormalTok{ rep)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{()}
+\NormalTok{testp1 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sdf[}\DecValTok{1}\OperatorTok{:}\NormalTok{nord, ], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{y =}\NormalTok{ testMSE)) }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{()}
+\NormalTok{testpall =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sdf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{group =}\NormalTok{ rep, }\DataTypeTok{y =}\NormalTok{ testMSE, }
+    \DataTypeTok{colour =}\NormalTok{ rep)) }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{()}
+\KeywordTok{ggarrange}\NormalTok{(p1, pall, testp1, testpall)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  More plots: first boxplot and then mean for train and test MSE
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(reshape2)}
+\NormalTok{df =}\StringTok{ }\KeywordTok{melt}\NormalTok{(sdf, }\DataTypeTok{id =} \KeywordTok{c}\NormalTok{(}\StringTok{"poly"}\NormalTok{, }\StringTok{"rep"}\NormalTok{))[, }\DecValTok{-2}\NormalTok{]}
+\KeywordTok{colnames}\NormalTok{(df)[}\DecValTok{2}\NormalTok{] =}\StringTok{ "MSEtype"}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ df, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \KeywordTok{as.factor}\NormalTok{(poly), }\DataTypeTok{y =}\NormalTok{ value)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_boxplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill =}\NormalTok{ MSEtype))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{trainMSEmean =}\StringTok{ }\KeywordTok{apply}\NormalTok{(trainMSE, }\DecValTok{2}\NormalTok{, mean)}
+\NormalTok{testMSEmean =}\StringTok{ }\KeywordTok{apply}\NormalTok{(testMSE, }\DecValTok{2}\NormalTok{, mean)}
+\NormalTok{meandf =}\StringTok{ }\KeywordTok{melt}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(}\DataTypeTok{poly =} \DecValTok{1}\OperatorTok{:}\NormalTok{nord, trainMSEmean, testMSEmean)), }
+    \DataTypeTok{id =} \StringTok{"poly"}\NormalTok{)}
+\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ meandf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{c) Bias and variance - we use the
+truth!}\label{c-bias-and-variance---we-use-the-truth}
+
+Finally, we want to see how the expected quadratic loss can be
+decomposed into
+
+\begin{itemize}
+\tightlist
+\item
+  irreducible error: \(\text{Var}(\varepsilon)=4\)
+\item
+  squared bias: difference between mean of estimated parametric model
+  chosen and the true underlying curve (\texttt{truefunc})
+\item
+  variance: variance of the estimated parametric model
+\end{itemize}
+
+Notice that the test data is not used - only predicted values in each x
+grid point.
+
+Study and run the code. Explain the plots produced.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{meanmat =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DataTypeTok{ncol =} \KeywordTok{length}\NormalTok{(x), }\DataTypeTok{nrow =}\NormalTok{ nord)}
+\NormalTok{varmat =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DataTypeTok{ncol =} \KeywordTok{length}\NormalTok{(x), }\DataTypeTok{nrow =}\NormalTok{ nord)}
+\ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{nord) \{}
+\NormalTok{    meanmat[j, ] =}\StringTok{ }\KeywordTok{apply}\NormalTok{(predarray[, , j], }\DecValTok{2}\NormalTok{, mean)  }\CommentTok{# we now take the mean over the M simulations - to mimic E and Var at each x value and each poly model}
+\NormalTok{    varmat[j, ] =}\StringTok{ }\KeywordTok{apply}\NormalTok{(predarray[, , j], }\DecValTok{2}\NormalTok{, var)}
+\NormalTok{\}}
+\CommentTok{# nord times length(x)}
+\NormalTok{bias2mat =}\StringTok{ }\NormalTok{(meanmat }\OperatorTok{-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rep}\NormalTok{(true_y, nord), }\DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{nrow =}\NormalTok{ nord))}\OperatorTok{^}\DecValTok{2}  \CommentTok{#here the truth is finally used!}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Plotting the polys as a function of x
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{df =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{rep}\NormalTok{(x, }\DataTypeTok{each =}\NormalTok{ nord), }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{nord, }\KeywordTok{length}\NormalTok{(x)), }\KeywordTok{c}\NormalTok{(bias2mat), }
+    \KeywordTok{c}\NormalTok{(varmat), }\KeywordTok{rep}\NormalTok{(}\DecValTok{4}\NormalTok{, }\KeywordTok{prod}\NormalTok{(}\KeywordTok{dim}\NormalTok{(varmat))))  }\CommentTok{#irr is just 1}
+\KeywordTok{colnames}\NormalTok{(df) =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"x"}\NormalTok{, }\StringTok{"poly"}\NormalTok{, }\StringTok{"bias2"}\NormalTok{, }\StringTok{"variance"}\NormalTok{, }\StringTok{"irreducible error"}\NormalTok{)  }\CommentTok{#suitable for plotting}
+\NormalTok{df}\OperatorTok{$}\NormalTok{total =}\StringTok{ }\NormalTok{df}\OperatorTok{$}\NormalTok{bias2 }\OperatorTok{+}\StringTok{ }\NormalTok{df}\OperatorTok{$}\NormalTok{variance }\OperatorTok{+}\StringTok{ }\NormalTok{df}\OperatorTok{$}\StringTok{`}\DataTypeTok{irreducible error}\StringTok{`}
+\NormalTok{hdf =}\StringTok{ }\KeywordTok{melt}\NormalTok{(df, }\DataTypeTok{id =} \KeywordTok{c}\NormalTok{(}\StringTok{"x"}\NormalTok{, }\StringTok{"poly"}\NormalTok{))}
+\NormalTok{hdf1 =}\StringTok{ }\NormalTok{hdf[hdf}\OperatorTok{$}\NormalTok{poly }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{, ]}
+\NormalTok{hdf2 =}\StringTok{ }\NormalTok{hdf[hdf}\OperatorTok{$}\NormalTok{poly }\OperatorTok{==}\StringTok{ }\DecValTok{2}\NormalTok{, ]}
+\NormalTok{hdf10 =}\StringTok{ }\NormalTok{hdf[hdf}\OperatorTok{$}\NormalTok{poly }\OperatorTok{==}\StringTok{ }\DecValTok{10}\NormalTok{, ]}
+\NormalTok{hdf20 =}\StringTok{ }\NormalTok{hdf[hdf}\OperatorTok{$}\NormalTok{poly }\OperatorTok{==}\StringTok{ }\DecValTok{20}\NormalTok{, ]}
+
+\NormalTok{p1 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hdf1, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"poly1"}\NormalTok{)}
+\NormalTok{p2 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hdf2, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"poly2"}\NormalTok{)}
+\NormalTok{p10 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hdf10, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"poly10"}\NormalTok{)}
+\NormalTok{p20 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hdf20, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"poly20"}\NormalTok{)}
+\KeywordTok{ggarrange}\NormalTok{(p1, p2, p10, p20)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{itemize}
+\tightlist
+\item
+  Now plotting effect of more complex model at 4 chosen values of x,
+  compare to Figures in 2.12 on page 36 in ISL (our textbook).
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{hdfatxa =}\StringTok{ }\NormalTok{hdf[hdf}\OperatorTok{$}\NormalTok{x }\OperatorTok{==}\StringTok{ }\DecValTok{-1}\NormalTok{, ]}
+\NormalTok{hdfatxb =}\StringTok{ }\NormalTok{hdf[hdf}\OperatorTok{$}\NormalTok{x }\OperatorTok{==}\StringTok{ }\FloatTok{0.5}\NormalTok{, ]}
+\NormalTok{hdfatxc =}\StringTok{ }\NormalTok{hdf[hdf}\OperatorTok{$}\NormalTok{x }\OperatorTok{==}\StringTok{ }\DecValTok{2}\NormalTok{, ]}
+\NormalTok{hdfatxd =}\StringTok{ }\NormalTok{hdf[hdf}\OperatorTok{$}\NormalTok{x }\OperatorTok{==}\StringTok{ }\FloatTok{3.5}\NormalTok{, ]}
+\NormalTok{pa =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hdfatxa, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"x0=-1"}\NormalTok{)}
+\NormalTok{pb =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hdfatxb, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"x0=0.5"}\NormalTok{)}
+\NormalTok{pc =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hdfatxc, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"x0=2"}\NormalTok{)}
+\NormalTok{pd =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hdfatxd, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
+\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"x0=3.5"}\NormalTok{)}
+\KeywordTok{ggarrange}\NormalTok{(pa, pb, pc, pd)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsubsection{d) Repeat a-c}\label{d-repeat-a-c}
+
+\begin{itemize}
+\tightlist
+\item
+  Then try to change the true function \texttt{truefunc} to something
+  else - mayby order 3? What does this do the the plots produced? Maybe
+  you then also want to plot poly3?
+\item
+  Also try to change the standard deviation of the noise added to the
+  curve (now it is sd=2). What happens if you change this to sd=1 or
+  sd=3?
+\item
+  Or, change to the true function that is not a polynomial?
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\subsection{Problem 7: An exam problem from
+2018}\label{problem-7-an-exam-problem-from-2018}
+
+We have a univariate continuous random variable \(Y\) and a covariate
+\(x\). Further, we have observed a training set of independent
+observation pairs \(\{x_i, y_i\}\) for \(i=1,\ldots,n\). Assume a
+regression model \[Y_i  = f(x_i) + \varepsilon_i \ ,\] where \(f\) is
+the true regression function, and \(\varepsilon_i\) is an unobserved
+random variable with mean zero and constant variance \(\sigma^2\) (not
+dependent on the covariate). Using the training set we can find an
+estimate of the regression function \(f\), and we denote this by
+\(\hat{f}\). We want to use \(\hat{f}\) to make a prediction for a new
+observation (not dependent on the observations in the training set) at a
+covariate value \(x_0\). The predicted response value is then
+\(\hat{f}(x_0)\). We are interested in the error associated with this
+prediction.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\tightlist
+\item
+  Write down the definition of the expected test mean squared error
+  (MSE) at \(x_0\).
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+  Derive the decomposition of the expected test MSE into three terms.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  Explain with words how we can interpret the three terms. 
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Assume that we have a method to estimate the regression function,
+  where this method has a tuning parameter that controls the complexity
+  of the model and that a large value of the tuning parameter gives high
+  model complexity. Make a sketch of how the expected test MSE (at
+  \(x_0\)) and the decomposition into three terms could look as a
+  function of the tuning parameter.
+\end{enumerate}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{4}
+\tightlist
+\item
+  In your opinion, what is the most important implication of this
+  decomposition? Answer with \emph{only one} sentence.
+\end{enumerate}
+
+\section{Acknowledgements}\label{acknowledgements}
+
+We thank Mette Langaas and her PhD students (in particular Julia Debik)
+from 2018 and 2019 for building up the original version of this exercise
+sheet.
+
+
+\end{document}
