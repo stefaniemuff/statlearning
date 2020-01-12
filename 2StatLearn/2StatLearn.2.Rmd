@@ -34,7 +34,7 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
                       cache=TRUE, size="scriptsize")
 ```
 
-Last update: January 09, 2020
+Last update: January 12, 2020
 
 ---
 
@@ -70,7 +70,7 @@ Find examples to explain the difference between supervised and unsupervised lear
 
 # Random vector
 
-* A random vector $\boldsymbol{X}_{(p\times 1)}$ is a $p$-dimensional vector of random variables. 
+* A random vector $\boldsymbol{X}_{(p\times 1)}$ is a $p$-dimensional vector of random variables. For example
     + Weight of cork deposits in $p=4$ directions (N, E, S, W).
     + Rent index in Munich: rent, area, year of construction, location, bath condition, kitchen condition, central heating, district.
 * Joint distribution function: $f(\boldsymbol{x})$.
@@ -143,7 +143,14 @@ Proof: Look at element $(i,j)$ of $\boldsymbol{A}\boldsymbol{X}\boldsymbol{B}$
 $$e_{ij}=\sum_{k=1}^n a_{ik} \sum_{l=1}^p X_{kl}b_{lj}$$
 (where $a_{ik}$ and $b_{lj}$ are elements of $\boldsymbol{A}$ and $\boldsymbol{B}$ respectively), and see that $\text{E}(e_{ij})$ is the element $(i,j)$ if $\boldsymbol{A}\text{E}(\boldsymbol{X})\boldsymbol{B}$.
 
-**Q**: what are the univariate analog to this formula - that you studied in your first introductory course in statistics? What do you think happens if we look at $\text{E}(\boldsymbol{A}\boldsymbol{X}\boldsymbol{B})+\boldsymbol{d}$?
+
+---
+
+**Q**: 
+
+* What are the univariate analogue to the formulas on the previous two slides (which you studied in your first introductory course in statistics)? 
+
+* What do you think happens if we look at $\text{E}(\boldsymbol{X})+\boldsymbol{d}$ when $\boldsymbol{X}$ and $\boldsymbol{d}$ are of the same dimension?
 
 ```{r, echo=FALSE, results='asis', eval=showsolB}
 cat("
