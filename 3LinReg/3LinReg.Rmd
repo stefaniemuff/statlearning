@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "January 17 and 20, 2020"
 fontsize: 10pt
 output:
-  # beamer_presentation:
-  #   keep_tex: yes
-  #   fig_caption: false
-  #   latex_engine: xelatex
-  #   theme: "Singapore"
-  #   colortheme: "default"
-  #   font: "serif"
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+    theme: "Singapore"
+    colortheme: "default"
+    font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -190,9 +190,9 @@ $$Y \quad= \quad \underbrace{\text{ expected value }}_{\text{E}(Y) = \beta_0 + \
 
 Note:
  
-* The model for $Y$ given $x$ has \textcolor{red}{three parameters}: $\beta_0$ (intercept), $\beta_1$ (slope coefficient) and $\sigma^2$ .
-* $x$ is the \textcolor{red}{independent}/ \textcolor{red}{explanatory} / \textcolor{red}{regressor} variable.
-* $Y$ is the \textcolor{red}{dependent} / \textcolor{red}{outcome} / \textcolor{red}{response} variable.
+* The model for $Y$ given $x$ has _\textcolor{red}{three parameters}_: $\beta_0$ (intercept), $\beta_1$ (slope coefficient) and $\sigma^2$ .
+* $x$ is the _\textcolor{red}{independent}_/ _\textcolor{red}{explanatory}_ / _\textcolor{red}{regressor}_ variable.
+* $Y$ is the _\textcolor{red}{dependent}_ / _\textcolor{red}{outcome}_ / _\textcolor{red}{response}_ variable.
 
 
 ---
@@ -278,7 +278,7 @@ polygon(from_x,from_y,to_x,to_y,col=2,lwd=2)
 
 ---
 
-* Mathematically, $\beta_0$ and $\beta_1$ are estimated such that the sum of \textcolor{red}{squared vertical distances} (residual sum of squares)
+* Mathematically, $\beta_0$ and $\beta_1$ are estimated such that the sum of _\textcolor{red}{squared vertical distances}_ (residual sum of squares)
 
 $$\text{RSS} = \sum_{i=1}^n e_i^2 \ , \qquad \text{where} \quad e_i = y_i - (a + b x_i) $$
 
@@ -385,7 +385,7 @@ ggplot(d.bodyfat,aes(bmi,bodyfat)) + geom_point() + geom_smooth(method='lm',se=F
 ### Uncertainty in the estimates $\hat\beta_0$ and $\hat\beta_1$
 \vspace{2mm}
 
-Note: $\hat\beta_0$ and $\hat\beta_1$ are themselves \textcolor{red}{random variables} and as such contain \textcolor{red}{uncertainty}!
+Note: $\hat\beta_0$ and $\hat\beta_1$ are themselves _\textcolor{red}{random variables}_ and as such contain _\textcolor{red}{uncertainty}_!
 
 \vspace{4mm}
 
@@ -838,18 +838,16 @@ We will discuss this a bit in the final module 12. The topic is connected to goo
 $$\hat{\beta}_j \pm t_{(1-\alpha/2),n-2} \cdot\text{SE} (\hat{\beta}_j) \quad j=0, 1.$$
 * Interpretation of this confidence interval: 
 
-* There is a 95\% probability that the interval will contain the *true* value of $\beta_j$.
+    * There is a 95\% probability that the interval will contain the *true* value of $\beta_j$.
 
-* **It is the range of parameter estimates that are *compatible with the data* **.
-
-$~$
-
+    * **It is the range of parameter estimates that are *compatible with the data* **.
 
 
 ---
 
 Doing this for the bodfat example ``by hand'' is not hard. We have $241 (=243-2)$ degrees of freedom:
 
+\scriptsize
 ```{r}
 coefs <- summary(r.bodyfat)$coef
 beta <- coefs[2,1]
@@ -860,10 +858,13 @@ beta + c(-1,1) * qt(0.975,241) * sdbeta
 ---
 
 Even easier: directly ask R to give you the CIs.
+
+\scriptsize
 ```{r }
 confint(r.bodyfat,level=c(0.95))
 ```
 
+\normalsize
 
 **Interpretation:** for an increase in the bmi by one index point, roughly 1.82 percentage points more bodyfat are expected, and all true values for $\beta_1$ between 1.61 and 2.03 are compatible with the observed data.
 
@@ -875,19 +876,17 @@ $~$
 
 * Based on the joint distribution of the intercept and slope it is possible to find the distribution for the linear predictor $\hat{\beta}_0+\hat{\beta}_1 x$, and then confidence intervals for $\beta_0+\beta_1 x$. 
 
-$\rightarrow$ **Confidence range**
+\hspace{6mm} $\rightarrow$ **Confidence range**
 
 $~$
 
 
 * Accounting for the fact that we also have an error in the equation $\varepsilon$, we can also find the distribution of future observations.
 
-$\rightarrow$ **Prediction range**
+\hspace{6mm} $\rightarrow$ **Prediction range**
 
-
----
-
-Todo ev say more about confidence and prediction ranges, or put this into exercise class.
+\vspace{10mm}
+We will discuss confidence and prediction ranges in the (more general) multiple linear regression setup.
 
 ---
 
@@ -904,28 +903,32 @@ Measured by
 
 $$R^2 = \frac{\text{TSS}-\text{RSS}}{\text{TSS}}= 1-\frac{\text{RSS}}{\text{TSS}}=1-\frac{\sum_{i=1}^n(y_i-\hat{y}_i)^2}{\sum_{i=1}^n(y_i-\bar{y}_i)^2}, $$ 
 
-where $$\text{TSS} = \sum_{i=1}^n (y_i - \bar{y})^2$$ is the _total sum of squares_, a measure for the toal variability in $Y$. 
+where $$\text{TSS} = \sum_{i=1}^n (y_i - \bar{y})^2$$ is the _total sum of squares_, a measure for the total variability in $Y$. 
 
 
 ---
 
-### $R^2$ in the bodyfat example
+### $R^2$ in simple linear regression
 
+\vspace{3mm}
+
+
+\colorbox{lightgray}{\begin{minipage}{10cm}
+Note: In simple linear regression, $R^2$ is the squared correlation between the independent and the dependent variable.
+\end{minipage}}
+
+\vspace{6mm}
+
+Verify this by comparing $R^2$ from the bodyfat output to the squared correlation between the two variables: 
+
+\scriptsize
 ```{r}
 summary(r.bodyfat)$r.squared
-```
-
-
-Compare this to the squared correlation between the two variables: 
- 
-```{r}
 cor(d.bodyfat$bodyfat,d.bodyfat$bmi)^2
 ```
 
 
-\colorbox{lightgray}{\begin{minipage}{10cm}
-$\rightarrow$ In simple linear regression, $R^2$ is the squared correlation between the independent and the dependent variable.
-\end{minipage}}
+
 
 ---
 
@@ -972,15 +975,15 @@ $${\bf Y}={\bf {X}} \boldsymbol{\beta}+{\boldsymbol{\varepsilon}} $$
 ## Notation
 $~$
 
-* ${\bf Y}: (n \times 1)$ vector of responses [e.g. one of the following: rent, weight of baby, ph of lake, volume of tree]
+* ${\bf Y}: (n \times 1)$ vector of responses [e.g. one of the following: rent, weight of baby, pH of a lake, volume of a tree]
 
-* ${\bf X}: (n \times (p+1))$ design matrix, and ${\bf x}_i^T$ is a $(p+1)$-dimensional row row vector for observation $i$.
+* ${\bf X}: (n \times (p+1))$ design matrix, and ${\boldsymbol x}_i^T$ is a $(p+1)$-dimensional row row vector for observation $i$.
 
 * ${\boldsymbol \beta}: ((p+1) \times 1)$ vector of regression parameters $(\beta_0,\beta_1,\ldots,\beta_p)^\top$.
 
 * ${\boldsymbol \varepsilon}: (n\times 1)$ vector of random errors.
 
-* We assume that pairs $({\bf x}_i^T,y_i)$ $(i=1,...,n)$ are measured from _independent_ sampling units. 
+* We assume that pairs $({\boldsymbol x}_i^T,y_i)$ $(i=1,...,n)$ are measured from _independent_ sampling units. 
 
 $~$
 
@@ -996,13 +999,13 @@ $${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon}$$
 
 Assumptions:
 
-1. $\text{E}(\boldsymbol{\varepsilon})=\bf{0}$.
-2. $\text{Cov}(\boldsymbol{\varepsilon})=\text{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\bf{I}$.
+1. $\text{E}(\boldsymbol{\varepsilon})=\boldsymbol{0}$.
+2. $\text{Cov}(\boldsymbol{\varepsilon})=\text{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\boldsymbol{I}$.
 3. The design matrix has full rank, $\text{rank}({\bf X})=p+1$. (We assume $n>>(p+1)$.)
 
 The classical _normal_ linear regression model is obtained if additionally
 
-4. $\boldsymbol\varepsilon\sim N_n({\bf 0},\sigma^2 {\bf I})$ holds. Here $N_n$ denotes the $n$-dimensional multivarate normal distribution.
+4. $\boldsymbol\varepsilon\sim N_n({\boldsymbol 0},\sigma^2 {\bf I})$ holds. Here $N_n$ denotes the $n$-dimensional multivarate normal distribution.
 
 
 
@@ -1011,9 +1014,9 @@ The classical _normal_ linear regression model is obtained if additionally
 
 ---
 
-## Design matrix in R
+## Design matrix: Getting it in R
 
-\small
+\scriptsize
 ```{r}
 r.bodyfat=lm(bodyfat ~  bmi + age ,data=d.bodyfat)
 head(model.matrix(r.bodyfat))
@@ -1053,22 +1056,16 @@ $${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon} \ , \quad \boldsymbol\var
 ---
 
 
-## Parameter estimation
+## Parameter estimation for $\boldsymbol{\beta}$
 
 $~$
 
-In multiple linear regression parameters in $\beta$ are estimated with maximum likelihood and least squares. These two methods give the same estimator when we assume the normal linear regression model. 
+In multiple linear regression, the parameter vector $\boldsymbol\beta$ is estimated with maximum likelihood and least squares. These two methods give the same estimator when we assume the normal linear regression model. 
 
-$~$
-
-**Least squares and maximum likelihood estimator for ${\boldsymbol \beta}$:**
-$$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
-
----
 
 The estimator is found by minimizing the RSS for a multiple linear regression model:
 $$\begin{aligned} \text{RSS} &=\sum_{i=1}^n (y_i - \hat y_i)^2 = \sum_{i=1}^n (y_i - \hat \beta_0 - \hat \beta_1 x_{i1} - \hat \beta_2 x_{i2} -...-\hat \beta_p x_{ip} )^2 \\
-&= \sum_{i=1}^n (y_i-{\bf x}_i^T \boldsymbol \beta)^2=({\bf Y}-{\bf X}\hat{\boldsymbol{\beta}})^T({\bf Y}-{\bf X}\hat{\boldsymbol{\beta}})\end{aligned}$$
+&= \sum_{i=1}^n (y_i-{\boldsymbol x}_i^T \boldsymbol \beta)^2=({\bf Y}-{\bf X}\hat{\boldsymbol{\beta}})^T({\bf Y}-{\bf X}\hat{\boldsymbol{\beta}})\end{aligned}$$
 The estimator is found by solving the system of $(p+1)$ equations
 
 $$\frac{\partial \text{RSS}}{\partial \boldsymbol \beta}={\bf 0} \ .$$ 
@@ -1077,7 +1074,15 @@ $\rightarrow$ Derivation on the board.
 
 <!-- see [LeastSquaresMLR.pdf](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/LeastSquaresMLR.pdf) for a derivation (from TMA4267V2017). -->
 
+---
 
+We find that
+
+$~$
+\colorbox{lightgray}{\begin{minipage}{11cm}
+\textbf{Least squares and maximum likelihood estimator for ${\boldsymbol \beta}$:}
+$$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
+\end{minipage}}
 
 ---
 
@@ -1094,6 +1099,7 @@ summary(r.bodyfat3)
 
 Reproduce the values under `Estimate` by calculating without the use of `lm`.
 
+\scriptsize
 ```{r}
 X=model.matrix(r.bodyfat3 )
 Y=d.bodyfat$bodyfat
@@ -1105,50 +1111,43 @@ print(betahat)
 
 ## Distribution of the regression parameter estimator
 
-1. We assumed alassical _normal_ linear regression model with
-${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon}$ and 
-$\boldsymbol\varepsilon\sim N_n({\bf 0},\sigma^2 {\bf I})$, with full-rank matrix $\bf{X}$, leading to 
-$$ {\bf Y} \sim N_{n}(\bf X \boldsymbol \beta,\sigma^2 {\bf I}) \ .$$
-2. Then we "found" that an estimator for ${\bf \beta}$ is
-$$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}.$$
+\vspace{2mm}
+Given
+$$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y} \ ,$$
 <!-- 3. From Module 2: Part B: $\mathbf{Y}_{(n\times 1)}$ with mean vector -->
 <!--     $\mathbf{\mu}$ and variance-covariance matrix $\Sigma$, then $\mathbf{Z}=\mathbf{C}\mathbf{Y}$ -->
 <!-- has $\text{E}(\mathbf{Z})=\mathbf{C}\mathbf{\mu}$ and $\text{Cov}(\mathbf{Z})= -->
 <!--    \mathbf{C}\Sigma\mathbf{C}^T$. -->
 <!-- 4. Also Module 2: Part B: If ${\bf Y}$ is multivariate normal, then also $\mathbf{C}\mathbf{Y}$ is multivariate normal.  -->
 
-$~$
 
-**What are**
+**what are**
 
 * The mean $\text{E}(\hat{\boldsymbol\beta})$?
 * The covariance matrix $\text{Cov}(\hat{\boldsymbol\beta})$?
 * The distribution of $\hat{\boldsymbol\beta}$?
 
+\vspace{4mm}
+**Hint:** Use that 
+
+  * $\hat{\boldsymbol\beta}={\bf C}{\bf Y}$ with ${\bf C}=({\bf X}^T{\bf X})^{-1} {\bf X}^T$.
+  * ${\bf Y} \sim N_{n}({\bf X} {\boldsymbol\beta},\sigma^2 {\bf I})$. 
+
 
 ---
 
-## Distribution of the regression parameter estimator (summary)
+**Answers:**
 
-$$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
+(to come!)
 
-This can be written as $\hat{\boldsymbol\beta}={\bf C}{\bf Y}$ where 
+<!-- * $\text{E}(\hat{\boldsymbol\beta})={\bf C}\text{E}({\bf Y})=({\bf X}^T{\bf X})^{-1} {\bf X}^T{\bf X} {\boldsymbol\beta}={\boldsymbol\beta}$. -->
+<!-- * $\text{Cov}(\hat{\boldsymbol\beta})={\bf C}\text{Cov}({\bf Y}){\bf C}^T=({\bf X}^T{\bf X})^{-1} {\bf X}^T \sigma^2 {\bf I}(({\bf X}^T{\bf X})^{-1} {\bf X}^T)^T =({\bf X}^T{\bf X})^{-1} \sigma^2$. -->
+<!-- * $\hat{\boldsymbol\beta}$ is multivariate normal $(p+1)$ dimensions. -->
 
-* ${\bf C}=({\bf X}^T{\bf X})^{-1} {\bf X}^T$
-* ${\bf Y} \sim N_{n}({\bf X} {\boldsymbol\beta},\sigma^2 {\bf I})$. 
-
-
-Therefore:
-
-* $\text{E}(\hat{\boldsymbol\beta})={\bf C}\text{E}({\bf Y})=({\bf X}^T{\bf X})^{-1} {\bf X}^T{\bf X} {\boldsymbol\beta}={\boldsymbol\beta}$.
-* $\text{Cov}(\hat{\boldsymbol\beta})={\bf C}\text{Cov}({\bf Y}){\bf C}^T=({\bf X}^T{\bf X})^{-1} {\bf X}^T \sigma^2 {\bf I}(({\bf X}^T{\bf X})^{-1} {\bf X}^T)^T =({\bf X}^T{\bf X})^{-1} \sigma^2$.
-* $\hat{\boldsymbol\beta}$ is multivariate normal $(p+1)$ dimensions.
-
-So: $\hat{\beta}\sim N_{p+1}(\boldsymbol{\beta},\sigma^2({\bf X}^T{\bf X})^{-1})$.
+<!-- So: $\hat{\beta}\sim N_{p+1}(\boldsymbol{\beta},\sigma^2({\bf X}^T{\bf X})^{-1})$. -->
 
 <!-- [](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/PropertiesBetahatMLR.pdf) for a derivation. -->
-(Todo: Use PropertiesBetahatMLR.pdf for a derivation)
-
+ 
 
 ---
 
@@ -1156,9 +1155,15 @@ How does this compare to simple linear regression? Not so easy to see a connecti
 
 $$\hat{\beta}_0 = \bar{Y}-\hat{\beta}_1 \bar{x} \text{ and } \hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(Y_i-\bar{Y})}{\sum_{i=1}^n(x_i-\bar{x})^2},$$
 
-$$ \hat\beta=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
+$$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y} \ .$$
 
-Often we use centered data (and also scaled) to ease interpretation. 
+* Try to verify the connection using $\boldsymbol\beta=(\beta_0,\beta_1)^\top$ and ${\bf X}= \left[\begin{matrix} 1 & x_{11} \\
+1 & x_{21}  \\
+1  & \vdots  \\
+1 & x_{n1}  \\
+\end{matrix}\right]$.
+
+* Often we use centered data (and also scaled) to ease interpretation. 
 
 ---
  
@@ -1189,7 +1194,7 @@ New York, 1973: 111 observations of
 * `wind` : wind speed (mph)
 
 
-\small
+\scriptsize
 ```{r,echo=TRUE,eval=TRUE,messages=FALSE,warnings=FALSE,error=FALSE,results="hold"}
 library(ElemStatLearn)
 data(ozone)
@@ -1199,35 +1204,21 @@ head(ozone)
 ---
 
 \scriptsize
+
 ```{r,echo=TRUE,eval=TRUE,messages=FALSE,warnings=FALSE,error=FALSE,results="hold"}
 ozone.lm = lm(ozone~temperature+wind+radiation, data=ozone)
-```
-
-
-\small
-```{r}
-head(model.matrix(ozone.lm))
-head(ozone$ozone)
-```
-\normalsize
-
-
-
----
-
-
-\footnotesize
-```{r}
 summary(ozone.lm)
 ```
-\normalsize
+ 
 
 ---
 
-Remember:
-$\hat{\beta}\sim N_{p+1}(\boldsymbol{\beta},\sigma^2({\bf X}^T{\bf X})^{-1})$. The covariance matrix can be obtained as follows:
+* Remember:
+$\hat{\boldsymbol\beta}\sim N_{p+1}(\boldsymbol{\beta},\underbrace{\sigma^2({\bf X}^T{\bf X})^{-1}}_{\text{covariance matrix}})$. 
 
-\footnotesize
+* The covariance matrix can be obtained as follows:
+
+\scriptsize
 ```{r}
 vcov(ozone.lm)
 ```
@@ -1242,7 +1233,7 @@ vcov(ozone.lm)
 
 3. How well does the model fit the data?
 
-4. Given a set of predictor variables, what reaposne value should we predict, and how accurate is our prediction?
+4. Given a set of predictor variables, what response value should we predict, and how accurate is our prediction?
 
 ---
 
@@ -1265,7 +1256,7 @@ To answer this, we need the $F$-statistic
 
 $$F = \frac{(\text{TSS}-\text{RSS})/p}{\text{RSS}/(n-p-1)} \sim F_{p,(n-p-1)}\ ,$$
 
-where total sum of squares $\text{TSS}=\sum_i(y_i-\bar{y})^2$, and residual sum of squares $\text{RSS}=\sum_i(y_i-\hat{y}_i)^2$. Under the Normal regression assumptions, $F$ follows an $F_{p,(n-p-1)}$ distribution (see [@walepole.etal], Chapter 8.7).
+where total sum of squares $\text{TSS}=\sum_i(y_i-\bar{y})^2$, and residual sum of squares $\text{RSS}=\sum_i(y_i-\hat{y}_i)^2$. Under the Normal regression assumptions, $F$ follows an $F_{p,(n-p-1)}$ distribution (see @walepole.etal, Chapter 8.7).
 
 * If $H_0$ is true, $F$ is expected to be 1.
 
@@ -1281,6 +1272,7 @@ Checking the $F$-value in the `R` output:
 summary(r.bodyfat)
 ```
 
+\normalsize
 Conclusion?
 
 ---
@@ -1346,7 +1338,7 @@ $$H_0: \beta_j=0 \; \text{ vs. } \; H_1: \beta_j\neq 0$$
 
 $$F=\frac{(\text{RSS$_0$-RSS})/(p-1)}{\text{RSS}/(n-p-1)} \sim F_{1,n-p-1} \ ,$$
 $~$
-and it is known that
+and it is known that (or you can try to show it yourself)
 
 $$F_{1,n-p-1} = t^2_{n-p-1} \ ,$$
 thus we can use a $T$-statistics with $(n-p-1)$ degrees of freedom to get the $p$-value.
@@ -1380,23 +1372,17 @@ However:
 $~$
 
 * Using that 
-$$ T_j=\frac{\hat{\beta}_j-\beta_j}{\text{SE}(\hat\beta_j)}\sim t_{n-p-1} \ ,$$
-we can create confidence intervals for $\beta_j$ in the same manner as we did for simple linear regression. 
-
-$~$
-
-* For example, when using the typical confidence level $\alpha=0.05$ we have
+$$ T_j=\frac{\hat{\beta}_j}{\text{SE}(\hat\beta_j)}\sim t_{n-p-1} \ ,$$
+we can create confidence intervals for $\beta_j$ in the same manner as we did for simple linear regression (see slide 42). For example, when using the typical confidence level $\alpha=0.05$ we have
 
 $$\hat{\beta}_j \pm t_{0.975,n-p-2} \cdot\text{SE} (\hat{\beta}_j)  \ .$$
 
-
----
+* Using R, this is very easy:
 
 \footnotesize
 ```{r}
 confint(r.bodyfat)
 ```
-\normalsize
 
 
 ---
@@ -1408,7 +1394,7 @@ $~$
 Overarching question: 
 
 \begin{center}
- \textcolor{blue}{\bf Which model is the best?}
+ \emph{\textcolor{blue}{\bf Which model is the best?}}
 \end{center}
 
 But:
@@ -1494,7 +1480,9 @@ $\rightarrow$ $R_a$ may decrease when a new variable is added.
 
 ---
 
-## 3.1 Model fit -- broader sense
+##  Model fit -- in a broader sense
+
+$~$
 
 We will look at model validation / model checking later.
 
@@ -1504,20 +1492,19 @@ We will look at model validation / model checking later.
 ## 4. Predictions: Two questions
  
  
-
 1. **Which other regression lines are compatible with the observed data?**
 
 We can use $\hat\beta_0, \ldots , \hat\beta_p$ to estimate the _least squares plane_
 $$\hat{Y} = \hat\beta_0 + \hat\beta_1 X_1 + \ldots + \hat\beta_p X_p $$
  as an approximation of $f(X) = \beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p.$
-This leads to the \textcolor{red}{confidence interval}. 
+This leads to the _\textcolor{red}{confidence interval}_. 
 
 \vspace{4mm}
 
 2. **Where do future observations with a given $x$ coordinate lie?**
 
 
-Even if we could predict $\hat{Y}=f(X)$, the _true_ value $Y$ varies around $\hat{Y}$. We can compute a \textcolor{red}{prediction interval} for new observations $Y$.
+Even if we could predict $\hat{Y}=f(X)$, the _true_ value $Y$ varies around $\hat{Y}$. We can compute a _\textcolor{red}{prediction interval}_ for new observations $Y$.
 
 
 ---
@@ -1599,7 +1586,7 @@ Where does a {\bf future observation} lie with a certain confidence (i.e., 95\%)
 
 \vspace{4mm} 
 
-To answer this question, we have to \textcolor{red}{consider not only the uncertainty in the predicted value} $\hat y_0 =  \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}$, but also the \textcolor{red}{irreducible error} $\varepsilon_i \sim N(0,\sigma^2)$.  
+To answer this question, we have to _\textcolor{red}{consider not only the uncertainty in the predicted value}_ $\hat y_0 =  \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}$, but also the _\textcolor{red}{irreducible error}_ $\varepsilon_i \sim N(0,\sigma^2)$.  
 
 
 \vspace{4mm}
@@ -1612,7 +1599,7 @@ $\rightarrow$ The *prediction interval is always wider than the confidence range
 Confidence and prediction intervals can be found in R using `predict` on an `lm` object (make sure that `newdata` is a `data.frame` with the same names as the original data). 
 
 
-\footnotesize
+\scriptsize
 ```{r}
 fit=lm(bodyfat ~ bmi + age + abdomen,data=d.bodyfat)
 newobs=d.bodyfat[1,]
@@ -1620,10 +1607,10 @@ predict(fit,newdata=newobs,interval="confidence",type="response")
 predict(fit,newdata=newobs,interval="prediction",type="response")
 ```
 
-
+\normalsize
 Difference between `interval="confidence"` and `interval="prediction"`?
 
-Todo: Make an exercise about this!
+(See exercises)
 
 ---
 
@@ -1704,7 +1691,7 @@ $~$
 
 $~$
 
-The \textcolor{red}{Tukey-Anscombe} diagram plots the residuals against the fitted values. For the bodyfat data it looks like this:
+The _\textcolor{red}{Tukey-Anscombe}_ diagram plots the residuals against the fitted values. For the bodyfat data it looks like this:
 
 ```{r,echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='50%'}
 library(ggfortify)
@@ -2017,7 +2004,7 @@ y_i = \beta_0 + \beta_1 x_1 + \ldots + \beta_k x_k + \varepsilon_i \ .
 \end{equation*}
 
 \vspace{6mm}
-However:  this model is \textcolor{red}{not identifiable}.\footnote{What does that mean? I could add a constant to $\beta_1, \beta_2, ...\beta_k$ and subtract it from $\beta_0$, and the model would fit equally well to the data, so it cannot be decided which set of the parameters is best.}
+However:  this model is _\textcolor{red}{not identifiable}_.\footnote{What does that mean? I could add a constant to $\beta_1, \beta_2, ...\beta_k$ and subtract it from $\beta_0$, and the model would fit equally well to the data, so it cannot be decided which set of the parameters is best.}
 
 ---
 
@@ -2045,10 +2032,10 @@ y_i = \left\{
 
 \vspace{10mm}
 
-Please note that \textcolor{red}{a factor covariate with $k$ factor levels requires $k-1$ parameters!}
+Please note that _\textcolor{red}{a factor covariate with $k$ factor levels requires $k-1$ parameters!}_
 \vspace{2mm}
 
-$\rightarrow$ The \textcolor{red}{degrees of freedom} of the model are also reduced by $k-1$.
+$\rightarrow$ The _\textcolor{red}{degrees of freedom}_ of the model are also reduced by $k-1$.
 
 
 ---
@@ -2260,7 +2247,7 @@ We have seen that it is possible to include continuous, binary or factorial cova
 \vspace{2mm}
 
 \colorbox{lightgray}{\begin{minipage}{10cm}
-Even \textcolor{red}{transformations} of covariates can be included in (almost) any form. For instance the square of a variable $X^2$.
+Even \emph{\textcolor{red}{transformations}} of covariates can be included in (almost) any form. For instance the square of a variable $X^2$.
 
 \begin{equation*}
 y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \varepsilon_i \ , 
@@ -2285,7 +2272,7 @@ How can a \emph{quadratic} regression be a \emph{linear regression}??
 
 **Note**:
 
-The word _linear_ refers to the \textcolor{red}{linearity in the coefficients}, and not on a linear relationship between $Y$ and $X_1, \ldots , X_p$!
+The word _linear_ refers to the _\textcolor{red}{linearity in the coefficients}_, and not on a linear relationship between $Y$ and $X_1, \ldots , X_p$!
 
 
 \vspace{4mm}

@@ -332,15 +332,17 @@ Note:
 \begin{itemize}
 \tightlist
 \item
-  The model for \(Y\) given \(x\) has \textcolor{red}{three parameters}:
-  \(\beta_0\) (intercept), \(\beta_1\) (slope coefficient) and
-  \(\sigma^2\) .
+  The model for \(Y\) given \(x\) has
+  \emph{\textcolor{red}{three parameters}}: \(\beta_0\) (intercept),
+  \(\beta_1\) (slope coefficient) and \(\sigma^2\) .
 \item
-  \(x\) is the \textcolor{red}{independent}/
-  \textcolor{red}{explanatory} / \textcolor{red}{regressor} variable.
+  \(x\) is the \emph{\textcolor{red}{independent}}/
+  \emph{\textcolor{red}{explanatory}} /
+  \emph{\textcolor{red}{regressor}} variable.
 \item
-  \(Y\) is the \textcolor{red}{dependent} / \textcolor{red}{outcome} /
-  \textcolor{red}{response} variable.
+  \(Y\) is the \emph{\textcolor{red}{dependent}} /
+  \emph{\textcolor{red}{outcome}} / \emph{\textcolor{red}{response}}
+  variable.
 \end{itemize}
 
 \end{block}
@@ -452,8 +454,8 @@ minimizing the sum of the squared distances over all points:
 \tightlist
 \item
   Mathematically, \(\beta_0\) and \(\beta_1\) are estimated such that
-  the sum of \textcolor{red}{squared vertical distances} (residual sum
-  of squares)
+  the sum of \emph{\textcolor{red}{squared vertical distances}}
+  (residual sum of squares)
 \end{itemize}
 
 \[\text{RSS} = \sum_{i=1}^n e_i^2 \ , \qquad \text{where} \quad e_i = y_i - (a + b x_i) \]
@@ -608,8 +610,8 @@ It looks that a linear relationship between \texttt{bodyfat} and
 \vspace{2mm}
 
 Note: \(\hat\beta_0\) and \(\hat\beta_1\) are themselves
-\textcolor{red}{random variables} and as such contain
-\textcolor{red}{uncertainty}!
+\emph{\textcolor{red}{random variables}} and as such contain
+\emph{\textcolor{red}{uncertainty}}!
 
 \vspace{4mm}
 
@@ -1122,10 +1124,10 @@ However, this means we can make two types of errors: \vspace{2mm}
 \begin{itemize}
 \item
   The (mis)use of \(p\)-values is heavily under critique in the
-  scientific world!!!
+  scientific world!
 \item
   Simple yes/no decisions do often stand on very wiggly scientific
-  ground!!
+  ground.
 \end{itemize}
 
 \vspace{2mm} \(~\)
@@ -1170,15 +1172,16 @@ connected to good/bad research practice, problems with
   \[\hat{\beta}_j \pm t_{(1-\alpha/2),n-2} \cdot\text{SE} (\hat{\beta}_j) \quad j=0, 1.\]
 \item
   Interpretation of this confidence interval:
-\item
-  There is a 95\% probability that the interval will contain the
-  \emph{true} value of \(\beta_j\).
-\item
-  \textbf{It is the range of parameter estimates that are
-  \emph{compatible with the data} }.
-\end{itemize}
 
-\(~\)
+  \begin{itemize}
+  \item
+    There is a 95\% probability that the interval will contain the
+    \emph{true} value of \(\beta_j\).
+  \item
+    \textbf{It is the range of parameter estimates that are
+    \emph{compatible with the data} }.
+  \end{itemize}
+\end{itemize}
 
 \end{block}
 
@@ -1188,6 +1191,8 @@ connected to good/bad research practice, problems with
 
 Doing this for the bodfat example ``by hand'' is not hard. We have
 \(241 (=243-2)\) degrees of freedom:
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1208,6 +1213,8 @@ Doing this for the bodfat example ``by hand'' is not hard. We have
 
 Even easier: directly ask R to give you the CIs.
 
+\scriptsize
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{confint}\NormalTok{(r.bodyfat, }\DataTypeTok{level =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.95}\NormalTok{))}
@@ -1219,6 +1226,8 @@ Even easier: directly ask R to give you the CIs.
 ## (Intercept) -32.438703 -21.530032
 ## bmi           1.605362   2.032195
 \end{verbatim}
+
+\normalsize
 
 \textbf{Interpretation:} for an increase in the bmi by one index point,
 roughly 1.82 percentage points more bodyfat are expected, and all true
@@ -1242,7 +1251,7 @@ observed data.
   \(\beta_0+\beta_1 x\).
 \end{itemize}
 
-\(\rightarrow\) \textbf{Confidence range}
+\hspace{6mm} \(\rightarrow\) \textbf{Confidence range}
 
 \(~\)
 
@@ -1254,16 +1263,12 @@ observed data.
   observations.
 \end{itemize}
 
-\(\rightarrow\) \textbf{Prediction range}
+\hspace{6mm} \(\rightarrow\) \textbf{Prediction range}
+
+\vspace{10mm} We will discuss confidence and prediction ranges in the
+(more general) multiple linear regression setup.
 
 \end{block}
-
-\end{frame}
-
-\begin{frame}
-
-Todo ev say more about confidence and prediction ranges, or put this
-into exercise class.
 
 \end{frame}
 
@@ -1294,13 +1299,26 @@ Measured by
 \[R^2 = \frac{\text{TSS}-\text{RSS}}{\text{TSS}}= 1-\frac{\text{RSS}}{\text{TSS}}=1-\frac{\sum_{i=1}^n(y_i-\hat{y}_i)^2}{\sum_{i=1}^n(y_i-\bar{y}_i)^2}, \]
 
 where \[\text{TSS} = \sum_{i=1}^n (y_i - \bar{y})^2\] is the \emph{total
-sum of squares}, a measure for the toal variability in \(Y\).
+sum of squares}, a measure for the total variability in \(Y\).
 
 \end{frame}
 
 \begin{frame}[fragile]
 
-\begin{block}{\(R^2\) in the bodyfat example}
+\begin{block}{\(R^2\) in simple linear regression}
+
+\vspace{3mm}
+
+\colorbox{lightgray}{\begin{minipage}{10cm}
+Note: In simple linear regression, $R^2$ is the squared correlation between the independent and the dependent variable.
+\end{minipage}}
+
+\vspace{6mm}
+
+Verify this by comparing \(R^2\) from the bodyfat output to the squared
+correlation between the two variables:
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1312,8 +1330,6 @@ sum of squares}, a measure for the toal variability in \(Y\).
 ## [1] 0.5390391
 \end{verbatim}
 
-Compare this to the squared correlation between the two variables:
-
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{cor}\NormalTok{(d.bodyfat}\OperatorTok{$}\NormalTok{bodyfat, d.bodyfat}\OperatorTok{$}\NormalTok{bmi)}\OperatorTok{^}\DecValTok{2}
@@ -1323,10 +1339,6 @@ Compare this to the squared correlation between the two variables:
 \begin{verbatim}
 ## [1] 0.5390391
 \end{verbatim}
-
-\colorbox{lightgray}{\begin{minipage}{10cm}
-$\rightarrow$ In simple linear regression, $R^2$ is the squared correlation between the independent and the dependent variable.
-\end{minipage}}
 
 \end{block}
 
@@ -1400,17 +1412,18 @@ to write the model in matrix form:
 \begin{itemize}
 \item
   \({\bf Y}: (n \times 1)\) vector of responses {[}e.g.~one of the
-  following: rent, weight of baby, ph of lake, volume of tree{]}
+  following: rent, weight of baby, pH of a lake, volume of a tree{]}
 \item
-  \({\bf X}: (n \times (p+1))\) design matrix, and \({\bf x}_i^T\) is a
-  \((p+1)\)-dimensional row row vector for observation \(i\).
+  \({\bf X}: (n \times (p+1))\) design matrix, and
+  \({\boldsymbol x}_i^T\) is a \((p+1)\)-dimensional row row vector for
+  observation \(i\).
 \item
   \({\boldsymbol \beta}: ((p+1) \times 1)\) vector of regression
   parameters \((\beta_0,\beta_1,\ldots,\beta_p)^\top\).
 \item
   \({\boldsymbol \varepsilon}: (n\times 1)\) vector of random errors.
 \item
-  We assume that pairs \(({\bf x}_i^T,y_i)\) \((i=1,...,n)\) are
+  We assume that pairs \(({\boldsymbol x}_i^T,y_i)\) \((i=1,...,n)\) are
   measured from \emph{independent} sampling units.
 \end{itemize}
 
@@ -1436,9 +1449,9 @@ Assumptions:
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  \(\text{E}(\boldsymbol{\varepsilon})=\bf{0}\).
+  \(\text{E}(\boldsymbol{\varepsilon})=\boldsymbol{0}\).
 \item
-  \(\text{Cov}(\boldsymbol{\varepsilon})=\text{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\bf{I}\).
+  \(\text{Cov}(\boldsymbol{\varepsilon})=\text{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\boldsymbol{I}\).
 \item
   The design matrix has full rank, \(\text{rank}({\bf X})=p+1\). (We
   assume \(n>>(p+1)\).)
@@ -1452,8 +1465,8 @@ additionally
 \setcounter{enumi}{3}
 \tightlist
 \item
-  \(\boldsymbol\varepsilon\sim N_n({\bf 0},\sigma^2 {\bf I})\) holds.
-  Here \(N_n\) denotes the \(n\)-dimensional multivarate normal
+  \(\boldsymbol\varepsilon\sim N_n({\boldsymbol 0},\sigma^2 {\bf I})\)
+  holds. Here \(N_n\) denotes the \(n\)-dimensional multivarate normal
   distribution.
 \end{enumerate}
 
@@ -1463,9 +1476,9 @@ additionally
 
 \begin{frame}[fragile]
 
-\begin{block}{Design matrix in R}
+\begin{block}{Design matrix: Getting it in R}
 
-\small
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1545,19 +1558,24 @@ Assume that
 
 \begin{frame}
 
-\begin{block}{Parameter estimation}
+\begin{block}{Parameter estimation for \(\boldsymbol{\beta}\)}
 
 \(~\)
 
-In multiple linear regression parameters in \(\beta\) are estimated with
-maximum likelihood and least squares. These two methods give the same
-estimator when we assume the normal linear regression model.
+In multiple linear regression, the parameter vector \(\boldsymbol\beta\)
+is estimated with maximum likelihood and least squares. These two
+methods give the same estimator when we assume the normal linear
+regression model.
 
-\(~\)
+The estimator is found by minimizing the RSS for a multiple linear
+regression model:
+\[\begin{aligned} \text{RSS} &=\sum_{i=1}^n (y_i - \hat y_i)^2 = \sum_{i=1}^n (y_i - \hat \beta_0 - \hat \beta_1 x_{i1} - \hat \beta_2 x_{i2} -...-\hat \beta_p x_{ip} )^2 \\
+&= \sum_{i=1}^n (y_i-{\boldsymbol x}_i^T \boldsymbol \beta)^2=({\bf Y}-{\bf X}\hat{\boldsymbol{\beta}})^T({\bf Y}-{\bf X}\hat{\boldsymbol{\beta}})\end{aligned}\]
+The estimator is found by solving the system of \((p+1)\) equations
 
-\textbf{Least squares and maximum likelihood estimator for
-\({\boldsymbol \beta}\):}
-\[ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}\]
+\[\frac{\partial \text{RSS}}{\partial \boldsymbol \beta}={\bf 0} \ .\]
+
+\(\rightarrow\) Derivation on the board.
 
 \end{block}
 
@@ -1565,15 +1583,12 @@ estimator when we assume the normal linear regression model.
 
 \begin{frame}
 
-The estimator is found by minimizing the RSS for a multiple linear
-regression model:
-\[\begin{aligned} \text{RSS} &=\sum_{i=1}^n (y_i - \hat y_i)^2 = \sum_{i=1}^n (y_i - \hat \beta_0 - \hat \beta_1 x_{i1} - \hat \beta_2 x_{i2} -...-\hat \beta_p x_{ip} )^2 \\
-&= \sum_{i=1}^n (y_i-{\bf x}_i^T \boldsymbol \beta)^2=({\bf Y}-{\bf X}\hat{\boldsymbol{\beta}})^T({\bf Y}-{\bf X}\hat{\boldsymbol{\beta}})\end{aligned}\]
-The estimator is found by solving the system of \((p+1)\) equations
+We find that
 
-\[\frac{\partial \text{RSS}}{\partial \boldsymbol \beta}={\bf 0} \ .\]
-
-\(\rightarrow\) Derivation on the board.
+\(~\) \colorbox{lightgray}{\begin{minipage}{11cm}
+\textbf{Least squares and maximum likelihood estimator for ${\boldsymbol \beta}$:}
+$$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}$$
+\end{minipage}}
 
 \end{frame}
 
@@ -1626,6 +1641,8 @@ The estimator is found by solving the system of \((p+1)\) equations
 Reproduce the values under \texttt{Estimate} by calculating without the
 use of \texttt{lm}.
 
+\scriptsize
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{X =}\StringTok{ }\KeywordTok{model.matrix}\NormalTok{(r.bodyfat3)}
@@ -1651,23 +1668,10 @@ use of \texttt{lm}.
 
 \begin{block}{Distribution of the regression parameter estimator}
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  We assumed alassical \emph{normal} linear regression model with
-  \({\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon}\) and
-  \(\boldsymbol\varepsilon\sim N_n({\bf 0},\sigma^2 {\bf I})\), with
-  full-rank matrix \(\bf{X}\), leading to
-  \[ {\bf Y} \sim N_{n}(\bf X \boldsymbol \beta,\sigma^2 {\bf I}) \ .\]
-\item
-  Then we ``found'' that an estimator for \({\bf \beta}\) is
-  \[ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}.\]
-\end{enumerate}
+\vspace{2mm} Given
+\[ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y} \ ,\]
 
-\(~\)
-
-\textbf{What are}
+\textbf{what are}
 
 \begin{itemize}
 \tightlist
@@ -1679,46 +1683,26 @@ use of \texttt{lm}.
   The distribution of \(\hat{\boldsymbol\beta}\)?
 \end{itemize}
 
+\vspace{4mm} \textbf{Hint:} Use that
+
+\begin{itemize}
+\tightlist
+\item
+  \(\hat{\boldsymbol\beta}={\bf C}{\bf Y}\) with
+  \({\bf C}=({\bf X}^T{\bf X})^{-1} {\bf X}^T\).
+\item
+  \({\bf Y} \sim N_{n}({\bf X} {\boldsymbol\beta},\sigma^2 {\bf I})\).
+\end{itemize}
+
 \end{block}
 
 \end{frame}
 
 \begin{frame}
 
-\begin{block}{Distribution of the regression parameter estimator
-(summary)}
+\textbf{Answers:}
 
-\[ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}\]
-
-This can be written as \(\hat{\boldsymbol\beta}={\bf C}{\bf Y}\) where
-
-\begin{itemize}
-\tightlist
-\item
-  \({\bf C}=({\bf X}^T{\bf X})^{-1} {\bf X}^T\)
-\item
-  \({\bf Y} \sim N_{n}({\bf X} {\boldsymbol\beta},\sigma^2 {\bf I})\).
-\end{itemize}
-
-Therefore:
-
-\begin{itemize}
-\tightlist
-\item
-  \(\text{E}(\hat{\boldsymbol\beta})={\bf C}\text{E}({\bf Y})=({\bf X}^T{\bf X})^{-1} {\bf X}^T{\bf X} {\boldsymbol\beta}={\boldsymbol\beta}\).
-\item
-  \(\text{Cov}(\hat{\boldsymbol\beta})={\bf C}\text{Cov}({\bf Y}){\bf C}^T=({\bf X}^T{\bf X})^{-1} {\bf X}^T \sigma^2 {\bf I}(({\bf X}^T{\bf X})^{-1} {\bf X}^T)^T =({\bf X}^T{\bf X})^{-1} \sigma^2\).
-\item
-  \(\hat{\boldsymbol\beta}\) is multivariate normal \((p+1)\)
-  dimensions.
-\end{itemize}
-
-So:
-\(\hat{\beta}\sim N_{p+1}(\boldsymbol{\beta},\sigma^2({\bf X}^T{\bf X})^{-1})\).
-
-(Todo: Use PropertiesBetahatMLR.pdf for a derivation)
-
-\end{block}
+(to come!)
 
 \end{frame}
 
@@ -1729,9 +1713,16 @@ connection!
 
 \[\hat{\beta}_0 = \bar{Y}-\hat{\beta}_1 \bar{x} \text{ and } \hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(Y_i-\bar{Y})}{\sum_{i=1}^n(x_i-\bar{x})^2},\]
 
-\[ \hat\beta=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}\]
+\[ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y} \ .\]
 
-Often we use centered data (and also scaled) to ease interpretation.
+\begin{itemize}
+\item
+  Try to verify the connection using
+  \(\boldsymbol\beta=(\beta_0,\beta_1)^\top\) and
+  \({\bf X}= \left[\begin{matrix} 1 & x_{11} \\ 1 & x_{21} \\ 1 & \vdots \\ 1 & x_{n1} \\ \end{matrix}\right]\).
+\item
+  Often we use centered data (and also scaled) to ease interpretation.
+\end{itemize}
 
 \end{frame}
 
@@ -1755,7 +1746,7 @@ New York, 1973: 111 observations of
   \texttt{wind} : wind speed (mph)
 \end{itemize}
 
-\small
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1786,47 +1777,6 @@ New York, 1973: 111 observations of
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{ozone.lm =}\StringTok{ }\KeywordTok{lm}\NormalTok{(ozone }\OperatorTok{~}\StringTok{ }\NormalTok{temperature }\OperatorTok{+}\StringTok{ }\NormalTok{wind }\OperatorTok{+}\StringTok{ }\NormalTok{radiation, }\DataTypeTok{data =}\NormalTok{ ozone)}
-\end{Highlighting}
-\end{Shaded}
-
-\small
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{head}\NormalTok{(}\KeywordTok{model.matrix}\NormalTok{(ozone.lm))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##   (Intercept) temperature wind radiation
-## 1           1          67  7.4       190
-## 2           1          72  8.0       118
-## 3           1          74 12.6       149
-## 4           1          62 11.5       313
-## 5           1          65  8.6       299
-## 6           1          59 13.8        99
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{head}\NormalTok{(ozone}\OperatorTok{$}\NormalTok{ozone)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 41 36 12 18 23 19
-\end{verbatim}
-
-\normalsize
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\footnotesize
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \KeywordTok{summary}\NormalTok{(ozone.lm)}
 \end{Highlighting}
 \end{Shaded}
@@ -1854,17 +1804,19 @@ New York, 1973: 111 observations of
 ## F-statistic: 54.91 on 3 and 107 DF,  p-value: < 2.2e-16
 \end{verbatim}
 
-\normalsize
-
 \end{frame}
 
 \begin{frame}[fragile]
 
-Remember:
-\(\hat{\beta}\sim N_{p+1}(\boldsymbol{\beta},\sigma^2({\bf X}^T{\bf X})^{-1})\).
-The covariance matrix can be obtained as follows:
+\begin{itemize}
+\item
+  Remember:
+  \(\hat{\boldsymbol\beta}\sim N_{p+1}(\boldsymbol{\beta},\underbrace{\sigma^2({\bf X}^T{\bf X})^{-1}}_{\text{covariance matrix}})\).
+\item
+  The covariance matrix can be obtained as follows:
+\end{itemize}
 
-\footnotesize
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1895,7 +1847,7 @@ The covariance matrix can be obtained as follows:
 \item
   How well does the model fit the data?
 \item
-  Given a set of predictor variables, what reaposne value should we
+  Given a set of predictor variables, what response value should we
   predict, and how accurate is our prediction?
 \end{enumerate}
 
@@ -1930,7 +1882,7 @@ $$H_1: \text{at least one } \beta_j \text{ is non-zero.}$$
 where total sum of squares \(\text{TSS}=\sum_i(y_i-\bar{y})^2\), and
 residual sum of squares \(\text{RSS}=\sum_i(y_i-\hat{y}_i)^2\). Under
 the Normal regression assumptions, \(F\) follows an \(F_{p,(n-p-1)}\)
-distribution (see (Walepole et al. 2012), Chapter 8.7).
+distribution (see Walepole et al. (2012), Chapter 8.7).
 
 \begin{itemize}
 \item
@@ -1978,6 +1930,7 @@ Checking the \(F\)-value in the \texttt{R} output:
 ## F-statistic: 165.9 on 2 and 240 DF,  p-value: < 2.2e-16
 \end{verbatim}
 
+\normalsize
 Conclusion?
 
 \end{frame}
@@ -2079,7 +2032,7 @@ $$H_0: \beta_j=0 \; \text{ vs. } \; H_1: \beta_j\neq 0$$
 \end{itemize}
 
 \[F=\frac{(\text{RSS$_0$-RSS})/(p-1)}{\text{RSS}/(n-p-1)} \sim F_{1,n-p-1} \ ,\]
-\(~\) and it is known that
+\(~\) and it is known that (or you can try to show it yourself)
 
 \[F_{1,n-p-1} = t^2_{n-p-1} \ ,\] thus we can use a \(T\)-statistics
 with \((n-p-1)\) degrees of freedom to get the \(p\)-value.
@@ -2122,7 +2075,7 @@ However:
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
 
 \begin{block}{Inference about \(\beta_j\): confidence interval}
 
@@ -2132,27 +2085,19 @@ However:
 \tightlist
 \item
   Using that
-  \[ T_j=\frac{\hat{\beta}_j-\beta_j}{\text{SE}(\hat\beta_j)}\sim t_{n-p-1} \ ,\]
+  \[ T_j=\frac{\hat{\beta}_j}{\text{SE}(\hat\beta_j)}\sim t_{n-p-1} \ ,\]
   we can create confidence intervals for \(\beta_j\) in the same manner
-  as we did for simple linear regression.
-\end{itemize}
-
-\(~\)
-
-\begin{itemize}
-\tightlist
-\item
-  For example, when using the typical confidence level \(\alpha=0.05\)
-  we have
+  as we did for simple linear regression (see slide 42). For example,
+  when using the typical confidence level \(\alpha=0.05\) we have
 \end{itemize}
 
 \[\hat{\beta}_j \pm t_{0.975,n-p-2} \cdot\text{SE} (\hat{\beta}_j)  \ .\]
 
-\end{block}
-
-\end{frame}
-
-\begin{frame}[fragile]
+\begin{itemize}
+\tightlist
+\item
+  Using R, this is very easy:
+\end{itemize}
 
 \footnotesize
 
@@ -2169,7 +2114,7 @@ However:
 ## age           0.0788673   0.1864861
 \end{verbatim}
 
-\normalsize
+\end{block}
 
 \end{frame}
 
@@ -2182,7 +2127,7 @@ However:
 Overarching question:
 
 \begin{center}
- \textcolor{blue}{\bf Which model is the best?}
+ \emph{\textcolor{blue}{\bf Which model is the best?}}
 \end{center}
 
 But:
@@ -2278,7 +2223,7 @@ model 3: \(y\sim bmi + age + neck + hip + abdomen\)):
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.6004791
+## [1] 0.718497
 \end{verbatim}
 
 \normalsize
@@ -2323,7 +2268,9 @@ really improve the model!
 
 \begin{frame}
 
-\begin{block}{3.1 Model fit -- broader sense}
+\begin{block}{Model fit -- in a broader sense}
+
+\(~\)
 
 We will look at model validation / model checking later.
 
@@ -2348,7 +2295,7 @@ We can use \(\hat\beta_0, \ldots , \hat\beta_p\) to estimate the
 \[\hat{Y} = \hat\beta_0 + \hat\beta_1 X_1 + \ldots + \hat\beta_p X_p \]
 as an approximation of
 \(f(X) = \beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p.\) This leads to
-the \textcolor{red}{confidence interval}.
+the \emph{\textcolor{red}{confidence interval}}.
 
 \vspace{4mm}
 
@@ -2363,7 +2310,7 @@ the \textcolor{red}{confidence interval}.
 
 Even if we could predict \(\hat{Y}=f(X)\), the \emph{true} value \(Y\)
 varies around \(\hat{Y}\). We can compute a
-\textcolor{red}{prediction interval} for new observations \(Y\).
+\emph{\textcolor{red}{prediction interval}} for new observations \(Y\).
 
 \end{block}
 
@@ -2371,7 +2318,7 @@ varies around \(\hat{Y}\). We can compute a
 
 \begin{frame}
 
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-29-1} \end{center}
+\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-26-1} \end{center}
 
 Note: The prediction range is much broader than the confidence range.
 Why?
@@ -2433,9 +2380,9 @@ Where does a {\bf future observation} lie with a certain confidence (i.e., 95\%)
 \vspace{4mm}
 
 To answer this question, we have to
-\textcolor{red}{consider not only the uncertainty in the predicted value}
+\emph{\textcolor{red}{consider not only the uncertainty in the predicted value}}
 \(\hat y_0 = \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}\),
-but also the \textcolor{red}{irreducible error}
+but also the \emph{\textcolor{red}{irreducible error}}
 \(\varepsilon_i \sim N(0,\sigma^2)\).
 
 \vspace{4mm}
@@ -2454,7 +2401,7 @@ Confidence and prediction intervals can be found in R using
 \texttt{newdata} is a \texttt{data.frame} with the same names as the
 original data).
 
-\footnotesize
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2480,10 +2427,11 @@ original data).
 ## 1 13.17595 3.951613 22.4003
 \end{verbatim}
 
+\normalsize
 Difference between \texttt{interval="confidence"} and
 \texttt{interval="prediction"}?
 
-Todo: Make an exercise about this!
+(See exercises)
 
 \end{frame}
 
@@ -2588,10 +2536,10 @@ $~$
 
 \(~\)
 
-The \textcolor{red}{Tukey-Anscombe} diagram plots the residuals against
-the fitted values. For the bodyfat data it looks like this:
+The \emph{\textcolor{red}{Tukey-Anscombe}} diagram plots the residuals
+against the fitted values. For the bodyfat data it looks like this:
 
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-31-1} \end{center}
+\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-28-1} \end{center}
 
 This plot is ideal to check if assumptions 1. and 2. (and partially 4.)
 are met. Here, this seems fine.
@@ -2610,7 +2558,7 @@ To check assumption 3., the quantiles of the observed distribution are
 plotted against the quantiles of the respective theoretical (normal)
 distribution:
 
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-32-1} \end{center}
+\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-29-1} \end{center}
 
 If the points lie approximately on a straight line, the data is fairly
 normally distributed. This is often ``tested'' by eye, and needs some
@@ -2631,7 +2579,7 @@ normally distributed variable and compare to your plot.
 
 Example: Generate 59 points \(\varepsilon_i \sim N(0,1)\) each time:
 
-\begin{center}\includegraphics[width=0.8\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-33-1} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-30-1} \end{center}
 
 \end{block}
 
@@ -2652,7 +2600,7 @@ The idea is to plot the square root of the (standardized) residuals
 \(\sqrt{|R_i|}\) against the fitted values \(\hat{y_i}\). There should
 be \emph{no trend}:
 
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-34-1} \end{center}
+\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-31-1} \end{center}
 
 \end{block}
 
@@ -2703,7 +2651,7 @@ be \emph{no trend}:
 \textbf{Illustration}: Data points with \(x_i\) values far from the mean
 have a stronger leverage effect than when \(x_i\approx \overline{x}\):
 
-\begin{center}\includegraphics[width=0.9\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-35-1} \end{center}
+\begin{center}\includegraphics[width=0.9\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-32-1} \end{center}
 
 The outlier in the middle plot ``pulls'' the regression line in its
 direction and biases the slope.
@@ -2720,7 +2668,7 @@ to do it manually!
 In the leverage plot, (standardized) residuals \(\tilde{R_i}\) are
 plotted against the leverage \(H_{ii}\) (still for the bodyfat):
 
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-36-1} \end{center}
+\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-33-1} \end{center}
 
 \textbf{Critical ranges} are the top and bottom right corners!!
 
@@ -2974,7 +2922,7 @@ y_i = \beta_0 + \beta_1 x_1 + \ldots + \beta_k x_k + \varepsilon_i \ .
 \end{equation*}
 
 \vspace{6mm} However: this model is
-\textcolor{red}{not identifiable}.\footnote{What does that mean? I could add a constant to $\beta_1, \beta_2, ...\beta_k$ and subtract it from $\beta_0$, and the model would fit equally well to the data, so it cannot be decided which set of the parameters is best.}
+\emph{\textcolor{red}{not identifiable}}.\footnote{What does that mean? I could add a constant to $\beta_1, \beta_2, ...\beta_k$ and subtract it from $\beta_0$, and the model would fit equally well to the data, so it cannot be decided which set of the parameters is best.}
 
 \end{block}
 
@@ -3012,11 +2960,11 @@ y_i = \left\{
 \vspace{10mm}
 
 Please note that
-\textcolor{red}{a factor covariate with $k$ factor levels requires $k-1$ parameters!}
+\emph{\textcolor{red}{a factor covariate with $k$ factor levels requires $k-1$ parameters!}}
 \vspace{2mm}
 
-\(\rightarrow\) The \textcolor{red}{degrees of freedom} of the model are
-also reduced by \(k-1\).
+\(\rightarrow\) The \emph{\textcolor{red}{degrees of freedom}} of the
+model are also reduced by \(k-1\).
 
 \end{block}
 
@@ -3375,7 +3323,7 @@ factorial covariates in a regression model.
 \vspace{2mm}
 
 \colorbox{lightgray}{\begin{minipage}{10cm}
-Even \textcolor{red}{transformations} of covariates can be included in (almost) any form. For instance the square of a variable $X^2$.
+Even \emph{\textcolor{red}{transformations}} of covariates can be included in (almost) any form. For instance the square of a variable $X^2$.
 
 \begin{equation*}
 y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \varepsilon_i \ , 
@@ -3410,8 +3358,8 @@ How can a \emph{quadratic} regression be a \emph{linear regression}??
 \textbf{Note}:
 
 The word \emph{linear} refers to the
-\textcolor{red}{linearity in the coefficients}, and not on a linear
-relationship between \(Y\) and \(X_1, \ldots , X_p\)!
+\emph{\textcolor{red}{linearity in the coefficients}}, and not on a
+linear relationship between \(Y\) and \(X_1, \ldots , X_p\)!
 
 \vspace{4mm}
 
