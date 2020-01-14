@@ -2,16 +2,20 @@
 subtitle: "TMA4268 Statistical Learning V2020"
 title: "Module 3: Linear Regression"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "January xx, 2020"
+date: "January 17 and 20, 2020"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
 urlcolor: blue
 bibliography: refs.bib
 #header-includes: \usepackage{xcolor}
@@ -28,13 +32,21 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 ```
 
+---
+
+# Acknowledgements
+
+* A lot of this material stems from Mette Langaas and her TAs (especiall Julia Debik). I would like to thank Mette for the permission to use her material!
+
+* Some of the figures and slides in this presentation are taken (or are inspired) from @ISL.
+
 --- 
 
 # Introduction
 
 ## Learning material for this module
 
-* James et al (2013): An Introduction to Statistical Learning. Chapter 3.  
+* @ISL: An Introduction to Statistical Learning. Chapter 3.  
 
 We need more statistical theory than is presented in the textbook, which you find in this module page.
 
@@ -44,7 +56,11 @@ We need more statistical theory than is presented in the textbook, which you fin
 
 ## What will you learn?
 
-Todo
+* Simple linear regression: 
+    + Model and assumptions 
+    + Least squares
+
+*  
     
  
 ---
@@ -79,7 +95,7 @@ Body fat is an important indicator for overweight, but difficult to measure.
 
 
 \vspace{2mm}
-Study with 243 male participants, where body fat (%) and BMI and other predictors were measured. Some scatterplots: 
+Study with 243 male participants, where body fat (%) and BMI and other predictors were measured. Some scatterplots\footnote{The data to reproduce these plots and analyses can be found here: https://github.com/stefaniemuff/statlearning/tree/master/3LinReg/data}:
 
 
 ```{r motivating, echo=FALSE, fig.width=8, fig.height=3,fig.align = "center",out.width='100%'}
@@ -237,6 +253,7 @@ But what are we actually going to minimize?
 ---
 
 ## Least squares
+ISL
 
 Remember the **Least Squared Method**. Graphically, we are minimizing the sum of the squared distances over all points:
 
@@ -263,7 +280,7 @@ polygon(from_x,from_y,to_x,to_y,col=2,lwd=2)
 
 * Mathematically, $\beta_0$ and $\beta_1$ are estimated such that the sum of \textcolor{red}{squared vertical distances} (residual sum of squares)
 
-$$RSS = \sum_{i=1}^n e_i^2 \ , \qquad \text{where} \quad e_i = y_i - (a + b x_i) $$
+$$\text{RSS} = \sum_{i=1}^n e_i^2 \ , \qquad \text{where} \quad e_i = y_i - (a + b x_i) $$
 
 is being minimized.
 
@@ -285,6 +302,7 @@ $$e_i = Y_i - \hat{y}_i.$$
 
 
 ## Least squares estimators:
+\vspace{2mm}
 
 Using $n$ observed independent data points 
 $$(x_1,y_1), (x_2,y_2), \ldots, (x_n,y_n)\ ,$$ 
@@ -325,11 +343,15 @@ You can do this here:
 
 Assume a linear relationship between the % bodyfat (`bodyfat`) and the BMI (`bmi`), we can get the LS estimates using R as follows: 
 
+\scriptsize
 ```{r,eval=TRUE,echo=TRUE,size="tiny"}
 r.bodyfat = lm(bodyfat~bmi, data=d.bodyfat)
 ```
 
+\normalsize
 The estimates (and more information) can be obtained as follows:
+
+\scriptsize
 ```{r,eval=TRUE,echo=TRUE,size="tiny"}
 summary(r.bodyfat)$coef
 ```
@@ -370,7 +392,7 @@ Note: $\hat\beta_0$ and $\hat\beta_1$ are themselves \textcolor{red}{random vari
 Let us look again at the regression output, this time only for the coefficients. The second column shows the standard error of the estimate:
 \vspace{2mm}
 
-\small
+\scriptsize
 ```{r lmbodyfat.uncertainty,echo=T,eval=T}
 summary(r.bodyfat)$coef
 ```
@@ -437,13 +459,13 @@ Note: We will _derive a general version_ of these formulas for multiple linear r
 
 ---
 
-Under the assumption that $\varepsilon \sim N(0,\sigma^2)$, we have in addition that 
+Under the assumption that $\varepsilon \sim N(0,\sigma^2)$, and assuming $\hat\beta_0$ and $\hat\beta_1$ are estimated as in formulas (1) and (2), we have in addition that 
 
 $$
  \hat\alpha \sim N(\alpha,{\sigma^{2}_{\beta_0}}) \quad \text{and} \quad \hat\beta \sim N(\beta,{\sigma^{2}_{\beta_1}}) \ .
 $$
 
-This implies that that $\hat\beta_0$ and $\hat\beta_1$ as defined in formulas (1) and (2).
+
 
 ---
 
@@ -465,7 +487,7 @@ thus for a given $\sigma^2$, the standard error is only dependent on the _design
 
 ---
 
-\small
+\scriptsize
 ```{r,echo=TRUE,eval=TRUE}
 x1=seq(1:10)
 x2=c(rep(1,5),rep(10,5))
@@ -478,7 +500,7 @@ sd3=sqrt(1/sum((x3-mean(x3))^2))
 print(c(sd1,sd2,sd3))
 ```
 
-
+\normalsize
 $\rightarrow$ The second design - all observations at extremes - is best!
 
 ---
@@ -486,7 +508,7 @@ $\rightarrow$ The second design - all observations at extremes - is best!
 ## Residual standard error (RSE)
 \vspace{2mm}
 
-* **Problem**: $\sigma$ is usually no known, but needs to be estimated.
+* **Problem**: $\sigma$ is usually not known, but needs to be estimated.
 * Remember: The residual sum of squares is $\text{RSS}=\sum_{i=1}^n (y_i-\hat{\beta}_0-\hat{\beta_1}x_{i})^2$.
 
 * An estimate of $\sigma$, the residual standard error, RSE, is given by
@@ -499,18 +521,18 @@ $$\hat{\text{SE}}(\hat{\beta}_1)^2 = \frac{{\hat\sigma}^2}{\sum_{i=1}^n (x_i-\ba
 but we usually just write ${\text{SE}}(\hat{\beta}_1)^2$ (without the extra hat).
 
 
----
+<!-- --- -->
 
 
-If the simple linear regression assumptions are fulfilled, that is, $\varepsilon_i\sim N(0,\sigma^2)$ and all $\varepsilon_i$ independent, then it can be shown that
+<!-- If the simple linear regression assumptions are fulfilled, that is, $\varepsilon_i\sim N(0,\sigma^2)$ and all $\varepsilon_i$ independent, then it can be shown that -->
 
-$$\frac{\text{RSE}^2(n-2)}{\sigma^2}= \frac{\sum_{i=1}^n (y_i -\hat{y}_i)^2}{\sigma^2}\sim \chi^2_{n-2}$$
+<!-- $$\frac{\text{RSE}^2(n-2)}{\sigma^2}= \frac{\sum_{i=1}^n (y_i -\hat{y}_i)^2}{\sigma^2}\sim \chi^2_{n-2} \ .$$ -->
 
 ---
 
 The estimated standard errors can be seen using the `summary()` function:
 
-\small
+\scriptsize
 ```{r}
 summary(r.bodyfat)$coef
 ```
@@ -563,7 +585,7 @@ $~$
 
 Let's first go back to the output from the bodyfat example:
 
-\small
+\scriptsize
 ```{r,eval=TRUE,echo=TRUE}
 summary(r.bodyfat)$coef
 ```
@@ -629,7 +651,7 @@ T=\frac{\hat\beta_1 - 0}{SE(\hat\beta_1)}\ .
 \begin{center}
 \colorbox{lightgray}{\begin{minipage}{5cm}
 \begin{equation*}
-T=\frac{\hat\beta_1 - c}{SE(\hat\beta_1)}
+T=\frac{\hat\beta_1 - c}{SE(\hat\beta_1)} \ .
 \end{equation*}
 \end{minipage}}
 \end{center}
@@ -687,7 +709,7 @@ legend("topright",legend=c("df=1","df=3","df=10","df=30","normal"),col=1:5,lwd=2
 So let's again go back to the bodyfat regression output:
 
 
-\small
+\scriptsize
 ```{r}
 summary(r.bodyfat)$coef
 ```
@@ -698,7 +720,7 @@ summary(r.bodyfat)$coef
 
 $~$
 
-* The last column contains the *$p$-values* of the tests $\beta_0=0$ and $\beta_1=0$. 
+* The last column contains the *$p$-values* of the tests with $H_0$: $\beta_0=0$ and $\beta_1=0$, respectively.
 
 * The $p$-value for `bmi` is very small ($p<0.0001$). **What does this mean?**
 
@@ -771,7 +793,7 @@ In the testing setup, we typically _reject the null hypothesis_ if the $p$-value
 However, this means we can make two types of errors:
 \vspace{2mm}
 
-* Type I error:
+* Type I error: 
 
 * Type II error:
 
@@ -783,15 +805,20 @@ However, this means we can make two types of errors:
 
 $~$
 
-* The (mis)use of $p$-values is heavily under critique in the scientific world!!!
+* The (mis)use of $p$-values is heavily under critique in the scientific world!
 
 
 
-* Simple yes/no decisions do often stand on very wiggly scientific ground!!
+* Simple yes/no decisions do often stand on very wiggly scientific ground.
 
 \vspace{2mm}
 $~$
-(See reading tasks for this week.)
+
+We will discuss this a bit in the final module 12. The topic is connected to good/bad research practice, problems with ``reproducibility'' and scientific progress in general. See here:
+
+* The $p$-value statement by ASA: [https://amstat.tandfonline.com/doi/full/10.1080/00031305.2016.1154108#.Xh16iuExnhM](https://amstat.tandfonline.com/doi/full/10.1080/00031305.2016.1154108#.Xh16iuExnhM)
+* Ideas to redefine what ``statistical significane'' means: [https://www.nature.com/articles/s41562-017-0189-z](https://www.nature.com/articles/s41562-017-0189-z)
+* A blog by the Scientific American: [https://blogs.scientificamerican.com/observations/to-fix-the-reproducibility-crisis-rethink-how-we-do-experiments/](https://blogs.scientificamerican.com/observations/to-fix-the-reproducibility-crisis-rethink-how-we-do-experiments/)
 
 <!-- * "Reject $H_0$ when $H_0$ is true"="false positives" = "type I error" ="miscarriage of justice". -->
 <!-- These are our _fake news_, which are very important for us to avoid. -->

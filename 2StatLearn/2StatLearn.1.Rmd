@@ -4,15 +4,6 @@ title: "Module 2, Part 1: Statistical Learning "
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "January 10, 2020"
 output:
-  # pdf_document:
-  #   toc: true
-  #   toc_depth: 2
-  #   keep_tex: yes
-  #   fig_caption: yes
-  # html_pretty:
-  #   toc: true
-  #   toc_float: true
-  #   toc_depth: 2
   beamer_presentation:
     keep_tex: yes
     fig_caption: false
@@ -20,6 +11,10 @@ output:
     theme: "Singapore"
     colortheme: "default"
     font: "serif"
+  # html_document:
+  #   toc: true
+  #   toc_float: true
+  #   toc_depth: 2
 urlcolor: blue
 bibliography: refs.bib
 header-includes: \usepackage{xcolor}
@@ -1048,6 +1043,7 @@ This is called the _\textcolor{red}{Bias-variance trade-off}_.
 $Y=x^2$ is still the _truth_.
 
 ```{r biasvarianceforx,echo=FALSE, fig.width=8,fig.height=4,fig.align="center",out.width='90%'}
+library(reshape2)
 meanmat=matrix(ncol=length(x),nrow=nord)
 varmat=matrix(ncol=length(x),nrow=nord)
 for (j in 1:nord)

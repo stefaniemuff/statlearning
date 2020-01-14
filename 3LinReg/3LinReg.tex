@@ -120,10 +120,24 @@
 \title{Module 3: Linear Regression}
 \subtitle{TMA4268 Statistical Learning V2020}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{January xx, 2020}
+\date{January 17 and 20, 2020}
 
 \begin{document}
 \frame{\titlepage}
+
+\begin{frame}{Acknowledgements}
+
+\begin{itemize}
+\item
+  A lot of this material stems from Mette Langaas and her TAs (especiall
+  Julia Debik). I would like to thank Mette for the permission to use
+  her material!
+\item
+  Some of the figures and slides in this presentation are taken (or are
+  inspired) from James et al. (2013).
+\end{itemize}
+
+\end{frame}
 
 \begin{frame}{Introduction}
 
@@ -132,7 +146,7 @@
 \begin{itemize}
 \tightlist
 \item
-  James et al (2013): An Introduction to Statistical Learning. Chapter
+  James et al. (2013): An Introduction to Statistical Learning. Chapter
   3.
 \end{itemize}
 
@@ -147,7 +161,19 @@ you find in this module page.
 
 \begin{block}{What will you learn?}
 
-Todo
+\begin{itemize}
+\item
+  Simple linear regression:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Model and assumptions
+  \item
+    Least squares
+  \end{itemize}
+\item
+\end{itemize}
 
 \end{block}
 
@@ -196,7 +222,8 @@ measure.
 estimation (prediction) of body fat?
 
 \vspace{2mm} Study with 243 male participants, where body fat (\%) and
-BMI and other predictors were measured. Some scatterplots:
+BMI and other predictors were measured. Some
+scatterplots\footnote{The data to reproduce these plots and analyses can be found here: https://github.com/stefaniemuff/statlearning/tree/master/3LinReg/data}:
 
 \begin{center}\includegraphics[width=1\linewidth]{3LinReg_files/figure-beamer/motivating-1} \end{center}
 
@@ -408,6 +435,8 @@ But what are we actually going to minimize?
 
 \begin{block}{Least squares}
 
+ISL
+
 Remember the \textbf{Least Squared Method}. Graphically, we are
 minimizing the sum of the squared distances over all points:
 
@@ -427,7 +456,7 @@ minimizing the sum of the squared distances over all points:
   of squares)
 \end{itemize}
 
-\[RSS = \sum_{i=1}^n e_i^2 \ , \qquad \text{where} \quad e_i = y_i - (a + b x_i) \]
+\[\text{RSS} = \sum_{i=1}^n e_i^2 \ , \qquad \text{where} \quad e_i = y_i - (a + b x_i) \]
 
 is being minimized.
 
@@ -457,6 +486,8 @@ estimates.)
 \begin{frame}
 
 \begin{block}{Least squares estimators:}
+
+\vspace{2mm}
 
 Using \(n\) observed independent data points
 \[(x_1,y_1), (x_2,y_2), \ldots, (x_n,y_n)\ ,\]
@@ -507,13 +538,18 @@ Assume a linear relationship between the \% bodyfat (\texttt{bodyfat})
 and the BMI (\texttt{bmi}), we can get the LS estimates using R as
 follows:
 
+\scriptsize
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{r.bodyfat =}\StringTok{ }\KeywordTok{lm}\NormalTok{(bodyfat }\OperatorTok{~}\StringTok{ }\NormalTok{bmi, }\DataTypeTok{data =}\NormalTok{ d.bodyfat)}
 \end{Highlighting}
 \end{Shaded}
 
+\normalsize
 The estimates (and more information) can be obtained as follows:
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -581,7 +617,7 @@ Let us look again at the regression output, this time only for the
 coefficients. The second column shows the standard error of the
 estimate: \vspace{2mm}
 
-\small
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -668,15 +704,13 @@ cumbersome.
 
 \begin{frame}
 
-Under the assumption that \(\varepsilon \sim N(0,\sigma^2)\), we have in
-addition that
+Under the assumption that \(\varepsilon \sim N(0,\sigma^2)\), and
+assuming \(\hat\beta_0\) and \(\hat\beta_1\) are estimated as in
+formulas (1) and (2), we have in addition that
 
 \[
  \hat\alpha \sim N(\alpha,{\sigma^{2}_{\beta_0}}) \quad \text{and} \quad \hat\beta \sim N(\beta,{\sigma^{2}_{\beta_1}}) \ .
 \]
-
-This implies that that \(\hat\beta_0\) and \(\hat\beta_1\) as defined in
-formulas (1) and (2).
 
 \end{frame}
 
@@ -719,7 +753,7 @@ the \emph{design} of the \(x_i\)'s!
 
 \begin{frame}[fragile]
 
-\small
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -739,6 +773,7 @@ the \emph{design} of the \(x_i\)'s!
 ## [1] 0.11009638 0.07027284 0.11505715
 \end{verbatim}
 
+\normalsize
 \(\rightarrow\) The second design - all observations at extremes - is
 best!
 
@@ -752,7 +787,7 @@ best!
 
 \begin{itemize}
 \item
-  \textbf{Problem}: \(\sigma\) is usually no known, but needs to be
+  \textbf{Problem}: \(\sigma\) is usually not known, but needs to be
   estimated.
 \item
   Remember: The residual sum of squares is
@@ -776,22 +811,12 @@ extra hat).
 
 \end{frame}
 
-\begin{frame}
-
-If the simple linear regression assumptions are fulfilled, that is,
-\(\varepsilon_i\sim N(0,\sigma^2)\) and all \(\varepsilon_i\)
-independent, then it can be shown that
-
-\[\frac{\text{RSE}^2(n-2)}{\sigma^2}= \frac{\sum_{i=1}^n (y_i -\hat{y}_i)^2}{\sigma^2}\sim \chi^2_{n-2}\]
-
-\end{frame}
-
 \begin{frame}[fragile]
 
 The estimated standard errors can be seen using the \texttt{summary()}
 function:
 
-\small
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -852,7 +877,7 @@ intervals}.
 
 Let's first go back to the output from the bodyfat example:
 
-\small
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -942,7 +967,7 @@ T=\frac{\hat\beta_1 - 0}{SE(\hat\beta_1)}\ .
 \begin{center}
 \colorbox{lightgray}{\begin{minipage}{5cm}
 \begin{equation*}
-T=\frac{\hat\beta_1 - c}{SE(\hat\beta_1)}
+T=\frac{\hat\beta_1 - c}{SE(\hat\beta_1)} \ .
 \end{equation*}
 \end{minipage}}
 \end{center}
@@ -1004,7 +1029,7 @@ Brief recap:
 
 So let's again go back to the bodyfat regression output:
 
-\small
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1026,8 +1051,8 @@ So let's again go back to the bodyfat regression output:
 
 \begin{itemize}
 \item
-  The last column contains the \emph{\(p\)-values} of the tests
-  \(\beta_0=0\) and \(\beta_1=0\).
+  The last column contains the \emph{\(p\)-values} of the tests with
+  \(H_0\): \(\beta_0=0\) and \(\beta_1=0\), respectively.
 \item
   The \(p\)-value for \texttt{bmi} is very small (\(p<0.0001\)).
   \textbf{What does this mean?}
@@ -1103,7 +1128,24 @@ However, this means we can make two types of errors: \vspace{2mm}
   ground!!
 \end{itemize}
 
-\vspace{2mm} \(~\) (See reading tasks for this week.)
+\vspace{2mm} \(~\)
+
+We will discuss this a bit in the final module 12. The topic is
+connected to good/bad research practice, problems with
+``reproducibility'' and scientific progress in general. See here:
+
+\begin{itemize}
+\tightlist
+\item
+  The \(p\)-value statement by ASA:
+  \url{https://amstat.tandfonline.com/doi/full/10.1080/00031305.2016.1154108\#.Xh16iuExnhM}
+\item
+  Ideas to redefine what ``statistical significane'' means:
+  \url{https://www.nature.com/articles/s41562-017-0189-z}
+\item
+  A blog by the Scientific American:
+  \url{https://blogs.scientificamerican.com/observations/to-fix-the-reproducibility-crisis-rethink-how-we-do-experiments/}
+\end{itemize}
 
 \end{block}
 
@@ -3427,6 +3469,11 @@ adapted to get this set of slides.
 Box, G. E. P. 1979. ``Robustness in the Strategy of Scientific Model
 Building.'' In \emph{In Robustness in Statistics}, edited by R. L.
 Launer and G. N. Wilkinson, 201--36. New York: Academic Press.
+
+\hypertarget{ref-ISL}{}
+James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani.
+2013. \emph{An Introduction to Statistical Learning}. Vol. 112.
+Springer.
 
 \hypertarget{ref-walepole.etal}{}
 Walepole, R. E., R. H. Myers, S. L. Myers, and K. Ye. 2012.
