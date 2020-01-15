@@ -46,7 +46,7 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 ## Learning material for this module
 
-* @ISL: An Introduction to Statistical Learning. Chapter 3.  
+* @ISL: An Introduction to Statistical Learning, Chapter 3 (skip 3.5).  
 
 We need more statistical theory than is presented in the textbook, which you find in this module page.
 
@@ -1531,12 +1531,16 @@ legend("bottomright", c("confidence range (95%)", "prediction range (95%)"),
 lty=8, cex=1,col=c(2,4),lwd=2)
 ```
 
+\colorbox{lightgray}{\begin{minipage}{10cm}
+
+Plotting the confidence and prediction intervals around all predicted values $\hat Y_0$ one obtains the {\bf confidence range} or {\bf confidence band} for the expected values of $Y$.
+\end{minipage}} 
 
 Note: The prediction range is much broader than the confidence range. Why?
 
 ---
 
-### Calculation of the confidence range
+### Calculation of the confidence intervals/range
 
 $~$ 
 
@@ -1548,7 +1552,7 @@ $~$
 Where does $\hat y_0 = \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}$ lie with a certain confidence (i.e., 95\%)?
 \end{minipage}} 
 
-$~$ 
+\vspace{4mm} 
 
 This question is not trivial, because $\hat\beta_0, \ldots \hat\beta_p$ are estimates from the data and contain uncertainty. 
 
@@ -1558,10 +1562,7 @@ $~$
 
 <!-- %(Idea: $\hat y_0 \pm q\cdot se^{(\hat{y}_0)}$.) \\[6mm] -->
 
-\colorbox{lightgray}{\begin{minipage}{10cm}
 
-Plotting the confidence interval around all $\hat Y_0$ values one obtains the {\bf confidence range} or {\bf confidence band for the expected values} of $Y$.
-\end{minipage}} 
 
 \vspace{4mm}
 
@@ -1572,7 +1573,7 @@ $\rightarrow$ For the confidence range, only the uncertainty in the estimates $\
 ---
 
 
-### Calculation of the prediction interval
+### Calculation of the prediction intervals/range
 
 $~$ 
 
@@ -1586,17 +1587,21 @@ Where does a {\bf future observation} lie with a certain confidence (i.e., 95\%)
 
 \vspace{4mm} 
 
-To answer this question, we have to _\textcolor{red}{consider not only the uncertainty in the predicted value}_ $\hat y_0 =  \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}$, but also the _\textcolor{red}{irreducible error}_ $\varepsilon_i \sim N(0,\sigma^2)$.  
+To answer this question, we have to sum uncertainty over two components:
+
+1. the _\textcolor{red}{uncertainty in the predicted value}_ $\hat y_0 =  \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}$ (due to uncertainty in $\hat{\boldsymbol\beta}$).
+
+2. the _\textcolor{red}{irreducible error}_ $\varepsilon_i \sim N(0,\sigma^2)$.  
 
 
 \vspace{4mm}
 
-$\rightarrow$ The *prediction interval is always wider than the confidence range*.
+$\rightarrow$ The *prediction intervals and range are always wider than the confidence intervals and range*.
 
 
 ---
 
-Confidence and prediction intervals can be found in R using `predict` on an `lm` object (make sure that `newdata` is a `data.frame` with the same names as the original data). 
+Confidence and prediction intervals for given data points can be found in R using `predict` on an `lm` object (make sure that `newdata` is a `data.frame` with the same names as the original data). 
 
 
 \scriptsize
@@ -1614,9 +1619,6 @@ Difference between `interval="confidence"` and `interval="prediction"`?
 
 ---
 
-## Predictions: Model bias
-
-$~$
 
 Finally, we need to keep in mind that the model we work with is only an _approximation of the reality_. In fact,
 
@@ -1661,7 +1663,7 @@ made by George Box in his often-cited remark that
 
 $~$
 
-To make valid inference from our model, we must check if our model assumptions are fulfilled! 
+To make valid inference from our model, we must check if our model assumptions are fulfilled!\footnote{What is the problem if the assumptions are violated?}
 
 $~$
 
@@ -1715,25 +1717,25 @@ autoplot(r.bodyfat,smooth.colour=NA)[2]
 If the points lie approximately on a straight line, the data is fairly normally distributed. This is often ``tested'' by eye, and needs some experience.
 
 
----
+<!-- --- -->
 
-# Todo: Move this to exercises!
-## How do I know if a QQ-plot looks ``good''?
+<!-- # Todo: Move this to exercises! -->
+<!-- ## How do I know if a QQ-plot looks ``good''? -->
 
-There is **no quantitative rule** to answer this question, experience is needed. However, you can gain this experience from simulations. To this end, generate the same number of data points of a normally distributed variable and compare to your plot. 
+<!-- There is **no quantitative rule** to answer this question, experience is needed. However, you can gain this experience from simulations. To this end, generate the same number of data points of a normally distributed variable and compare to your plot.  -->
 
-Example: Generate 59 points $\varepsilon_i \sim N(0,1)$ each time:
+<!-- Example: Generate 59 points $\varepsilon_i \sim N(0,1)$ each time: -->
 
 
-```{r,echo=FALSE, fig.width=6, fig.height=3,fig.align = "center",out.width='80%'}
-set.seed(390457)
-par(mfrow=c(2,3),mar=c(4,4,1,1))
-for (ii in 1:6){
-  ss <- rnorm(59)
-  qqnorm(ss,main="")
-  qqline(ss,xlab="")
-}
-```
+<!-- ```{r,echo=FALSE, fig.width=6, fig.height=3,fig.align = "center",out.width='80%'} -->
+<!-- set.seed(390457) -->
+<!-- par(mfrow=c(2,3),mar=c(4,4,1,1)) -->
+<!-- for (ii in 1:6){ -->
+<!--   ss <- rnorm(59) -->
+<!--   qqnorm(ss,main="") -->
+<!--   qqline(ss,xlab="") -->
+<!-- } -->
+<!-- ``` -->
 
 
 ---
@@ -1746,7 +1748,7 @@ The scale-location plot is particularly suited to check the assumption of equal 
 
 $~$
 
-The idea is to plot the square root of the (standardized) residuals $\sqrt{|R_i|}$ against the fitted values $\hat{y_i}$. There should be *no trend*:
+The idea is to plot the square root of the (standardized) residuals $\sqrt{|r_i|}$ against the fitted values $\hat{y_i}$. There should be *no trend*:
  
 ```{r,echo=FALSE, fig.width=4, fig.height=4,fig.align = "center",out.width='50%'}
 autoplot(r.bodyfat,which=3) + theme_bw()
@@ -1768,7 +1770,10 @@ $~$
 
 $~$
 
-* In simple regression, the leverage of individual $i$ is defined as $H_{ii} = (1/n) + (x_i-\overline{x})^2 \sum(x_i-\overline{x})^2$. 
+* In simple regression, the leverage of individual $i$ is defined as 
+\begin{equation}\label{eq:leverage}
+H_{ii} = \frac{1}{n} + \frac{(x_i-\overline{x})^2}{\sum_{i'}(x_{i'}-\overline{x})^2} \ . 
+\end{equation}
 
 \vspace{7mm}
 
@@ -1809,7 +1814,7 @@ $~$
 ---
 
 
-In the leverage plot, (standardized) residuals $\tilde{R_i}$ are plotted against the leverage $H_{ii}$ (still for the bodyfat):
+In the leverage plot, (standardized) residuals $\tilde{r_i}$ are plotted against the leverage $H_{ii}$ (still for the bodyfat):
  
  
 ```{r,echo=FALSE, fig.width=4, fig.height=4,fig.align = "center",out.width='50%'}
@@ -1819,7 +1824,7 @@ autoplot(r.bodyfat,which=5)
 
 
 
-**Critical ranges** are the top and bottom right corners!!
+**Critical ranges** are the top and bottom right corners! Why?
 
 ---
 
@@ -1827,9 +1832,15 @@ autoplot(r.bodyfat,which=5)
 
 \vspace{3mm}
 
-* Leverage is defined as the diagonal elements of the hat matrix, i.e., the leverage of the $i$-th data point is $h_{ii}$ on the diagonal of $\mathbf{H = X(X^TX)^{-1}X^T}$. 
+* Leverage is defined as the diagonal elements of the so-called _hat matrix_ $\mathbf{H}$\footnote{Do you remember why $\mathbf{H}$ is called \emph{hat matrix}?}, i.e., the leverage of the $i$-th data point is $H_{ii}$ on the diagonal of $\mathbf{H = X(X^TX)^{-1}X^T}$. 
 
-* A large leverage indicated that the observation ($i$) has a large influence on the estimation results, and that the covariate values ($\bf{x}_i$) are unusual.
+\vspace{1mm}
+
+* Exercise: Verify that formula (4) comes out in the special case of simple linear regression.
+
+\vspace{1mm}
+
+* A large leverage indicated that the observation ($i$) has a large influence on the estimation results, and that the covariate values (${\boldsymbol x}_i$) are unusual.
 
 
 
@@ -1852,7 +1863,12 @@ autoplot(r.bodyfat,which=5)
 
 $~$
 
-If can be shown that the vector of residuals, ${\bf e}=(e_1,e_2,\ldots,e_n)$ have a normal (singular) distribution with mean $\text{E}({\bf e})={\bf 0}$ and covariance matrix $\text{Cov}({\bf e})=\sigma^2({\bf I}-{\bf H})$ where ${\bf H}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T$.
+It can be shown that the vector of residuals, ${\bf e}=(e_1,e_2,\ldots,e_n)$ have a normal (singular) distribution with 
+
+* $\text{E}({\bf e})={\bf 0}$ 
+* $\text{Cov}({\bf e})=\sigma^2({\bf I}-{\bf H})$, 
+
+where ${\bf H}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T$.
 
 $~$
 
@@ -1874,14 +1890,14 @@ That is, we want to check that our errors are independent, homoscedastic (same v
 
 **Standardized residuals:**
 
-$$r_i=\frac{e_i}{\hat{\sigma}\sqrt{1-h_{ii}}}$$
-where $h_{ii}$ is the $i$th diagonal element of the hat matrix ${\bf H}$.
+$$r_i=\frac{e_i}{\hat{\sigma}\sqrt{1-H_{ii}}}$$
+where $H_{ii}$ is the $i$th diagonal element of the hat matrix ${\bf H}$.
 
 In R you can get the standardized residuals from an `lm`-object (named `fit`) by `rstandard(fit)`.
 
 **Studentized residuals:**
 
-$$r^*_i=\frac{e_i}{\hat{\sigma}_{(i)}\sqrt{1-h_{ii}}}$$
+$$r^*_i=\frac{e_i}{\hat{\sigma}_{(i)}\sqrt{1-H_{ii}}}$$
 where $\hat{\sigma}_{(i)}$ is the estimated error variance in a model with observation number $i$ omitted. This seems like a lot of work, but it can be shown that it is possible to calculated the studentized residuals directly from the standardized residuals.
 
 In R you can get the studentized residuals from an `lm`-object (named `fit`) by `rstudent(fit)`.
@@ -1890,15 +1906,11 @@ In R you can get the studentized residuals from an `lm`-object (named `fit`) by 
 
 ### Diagnostic plots in `R`
 
-Todo: This must be part of the exercises.
+\vspace{2mm}
 
-Idea: Use `autoplot()` from the `ggfortify` package in R to plot the diagnostic plots.
+See exercises: We use `autoplot()` from the `ggfortify` package in R to plot the diagnostic plots.  
 
-<!-- More information on the plots here: <http://data.library.virginia.edu/diagnostic-plots/> and <http://ggplot2.tidyverse.org/reference/fortify.lm.html> -->
-
-<!-- ```{r echo = FALSE} -->
-<!-- library(ggplot2) -->
-<!-- ``` -->
+ 
 
 
 ---
@@ -1973,6 +1985,8 @@ Y_i = \left\{
 \end{equation*}
 \end{minipage}}
 
+\vspace{4mm}
+
 **Example**: Credit card data analysis in Section 3.3.1 in the ISLR book.
 
 
@@ -2027,15 +2041,15 @@ y_i = \left\{
 
 ---
 
-## !!Important to remember!!
+## !Important to remember!
 \textcolor{gray}{(Common aspect that leads to confusion!)}
 
 \vspace{10mm}
 
-Please note that _\textcolor{red}{a factor covariate with $k$ factor levels requires $k-1$ parameters!}_
+ _\textcolor{red}{A factor covariate with $k$ factor levels requires $k-1$ parameters!}_
 \vspace{2mm}
 
-$\rightarrow$ The _\textcolor{red}{degrees of freedom}_ of the model are also reduced by $k-1$.
+$\rightarrow$ The _degrees of freedom_ of the fitted model are therefore reduced by $k-1$.
 
 
 ---
@@ -2211,7 +2225,7 @@ For a non-Student: $\hat{y} =$ `r round(summary(r.lm)$coef[1,1],1)`  + (`r round
 
 $~$
 
-The hierchical principle states that if we include an interaction in a model, we
+If we include an interaction in a model, we
 should also include the main effects, even if the $p$-values associated with
 the coefficients of the main effects are large (see p.89 in ISLR book).
 
@@ -2219,7 +2233,7 @@ the coefficients of the main effects are large (see p.89 in ISLR book).
 
 ## More interactions
 
-\vspace{2mm}
+\vspace{4mm}
 
 We can include interactions also between
 
@@ -2228,7 +2242,7 @@ We can include interactions also between
 
 \vspace{4mm}
 
-$\rightarrow$ See exercises! (Todo)
+$\rightarrow$ See exercises!
 
 \vspace{4mm}
 
@@ -2336,15 +2350,6 @@ approaches for addressing this issue.
 <!-- ``` -->
 
 
----
-
-Team Kahoot?
-
----
-
-# Acknowledgements
-
-I thank Mette Langaas and Julia Debik, whose slides I modified and adapted to get this set of slides.
 
 ---
 
