@@ -1,0 +1,454 @@
+---
+title: 'Module 3: Recommended Exercises - Solution'
+author: Martina Hall, Michail Spitieris, Stefanie Muff, Department of Mathematical
+  Sciences, NTNU
+date: "January 23, 2020"
+output:
+  pdf_document:
+    toc: no
+    toc_depth: '2'
+  html_document:
+    df_print: paged
+    toc: no
+    toc_depth: '2'
+subtitle: TMA4268 Statistical Learning V2020
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
+                      cache=TRUE, size="scriptsize")
+
+```
+
+<!-- rmarkdown::render("RecEx3-sol.Rmd","all",encoding="UTF-8") -->
+<!-- rmarkdown::render("RecEx3-sol.Rmd","html_document",encoding="UTF-8") -->
+<!-- rmarkdown::render("RecEx3-sol.Rmd","pdf_document",encoding="UTF-8") -->
+
+Last changes: 16.01.2020
+
+---
+
+**We strongly recommend you to work through the Section 3.6 in the course book (Lab on linear regression)**
+
+---
+
+You need to install the following packages in R to run the code in this file.
+
+```{r,eval=FALSE,echo=TRUE}
+install.packages("knitr") #probably already installed
+install.packages("rmarkdown") #probably already installed
+install.packages("GLMsData") #data set for Problem 3
+install.packages("ggplot2") #plotting with ggplot 
+install.packages("nortest") #test that data comes from normal distribution
+install.packages("car") #qqPlot function
+install.packages("ISLR") #data problem 1
+install.packages("ggfortify") #diagnostic plots for lm objects
+```
+
+
+# Problem 1 (Book Ex. 9)
+
+This question involves the use of multiple linear regression on the `Auto` data set from `ISLR` package  (you may use `?Auto` to see a description of the data). First we exclude from our analysis the variable `name`.
+
+```{r}
+library(ISLR)
+Auto = subset(Auto, select = -name)
+#Auto$origin = factor(Auto$origin)
+summary(Auto)
+```
+
+####a)
+Use the function `ggpairs()` from `GGally` package to produce a scatterplot matrix which includes all of the variables in the data set.
+
+**Answer**
+
+```{r,warning=FALSE, message=FALSE}
+library(GGally)
+ggpairs(Auto)
+```
+
+####b) 
+Compute the correlation matrix between the variables.
+
+**Answer**
+
+```{r}
+cor(Auto)
+```
+
+####c) 
+Use the lm() function to perform a multiple linear regression with `mpg` as the response and all other variables (except `name`) as the predictors. Use the `summary()` function to print the results. Comment on the output. For instance:
+
+i. Is there a relationship between the predictors and the response?
+
+ii. Which predictors show evidence that they are related to the response? 
+
+iii. What does the coefficient for the year variable suggest?
+
+**Answer**
+
+```{r}
+fit.lm = lm(mpg ~ ., data=Auto)
+summary(fit.lm)
+```
+
+* There is strong evidence for a relationship between the covariates `displacement`, `weight`, `year`, `origin` and the response `mgp`.
+* The 0.75 coefficient suggests that a new model has higher mpg compared to an older one
+
+####d) 
+Use the `autoplot()` function from the `ggfortify` package to produce diagnostic plots of the linear regression fit by setting `smooth.colour = NA`, as sometimes the smoothed line can be misleading. Comment on any problems you see with the fit. Do the residual plots suggest any unusually large outliers? Does the leverage plot identify any observations with unusually high leverage?
+
+**Answer**
+
+```{r,warning=FALSE, message=FALSE}
+library(ggfortify)
+autoplot(fit.lm, smooth.colour = NA)
+```
+
+* In the residual vs fitted plot (the so-called Tukey-Anscombe plot) there is evidence of non-linearity.
+* Observation 14 has an unusually high leverage. This does not necessarily need to be a problem, but it would be wise to double-check that this observation is not an outlier.
+
+####e)
+For beginners, it can be difficult to decide whether a certain QQ plot looks "good" or "bad", because we only look at it and do not test anything. A way to get a feeling for how "bad" a QQ plot may look, even when the normality assumption is perfectly ok, we can use simulations: We can simply draw from the normal distribution and plot the QQ plot. Use the following code to repeat this nine times:
+
+
+```{r}
+set.seed(2332)
+n = 100
+
+par(mfrow = c(2,3))
+for(i in 1:6){
+  sim = rnorm(n)
+  qqnorm(sim, pch = 1, frame = FALSE)
+  qqline(sim, col = "blue", lwd = 1)
+}
+```
+
+####f)
+Let us look at interactions. These can be included via the `*` or `:` symbols in the linear predictor of the regression function (see Section 3.6.4 in the course book).
+
+Fit the same model as before, but now also include an interaction term between `year` and `origin`. Note that `origin` is encoded as 1, 2, 3, but it is actually a qualitative predictor with three levels (1=American, 2= European, 3=Japanese)! To ensure that R treats it correctly, we first need to convert `origin` into a factor variable (a synonymous for "qualitative predictor"): 
+
+```{r}
+Auto$origin = factor(Auto$origin)
+```
+
+**Answer**
+
+```{r}
+fit.lm1 = lm(mpg ~ displacement + weight + year*origin, data=Auto)
+summary(fit.lm1)
+anova(fit.lm1)
+```
+
+There is very strong evidence that the year-effect depends on the origin of the car, as can be seen by the $F$-test hat is given by the anova table ($p=0.0001057$). For European (2) and Japanese (3) cars, it seems that the fuel consumption (`mpg`) has a steeper slope for year: $\beta_{year}=0.615$ for the reference category 1 (American), wheras $\beta_{year}=0.615+0.519$ and $\beta_{year}=0.615+0.356$ for category 2 (European) and 3 (Japanese), respectively.
+
+Note: For a full understanding of interaction terms, you really do need both the `summary()` and the `anova()` tables.
+
+
+####g)
+Try a few different transformations of the variables, such as $\log(X),$ $\sqrt{X},$ $X^2$. See Section 3.6.5 in the course book for how to do this. Comment on your findings.
+
+```{r}
+# try 3 predictor transformations
+fit.lm3 = lm(mpg ~ poly(displacement, 2) + weight + year + origin, data=Auto)
+fit.lm4 = lm(mpg ~ displacement + I(log(weight)) + year + origin, data=Auto)
+fit.lm5 = lm(mpg ~ displacement + I(weight^2) + year + origin, data=Auto)
+summary(fit.lm3)
+summary(fit.lm4)
+summary(fit.lm5)
+```
+
+
+
+# Problem 2: Theoretical questions & Simulations
+
+###a)
+A core finding for the least-squares estiamtor $\hat{\boldsymbol\beta}$ of linear regression models is
+$$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y} \ , $$
+with $\hat{\boldsymbol\beta}\sim N_{p}(\boldsymbol\beta,\sigma^2({\bf X}^T{\bf X})^{-1})$.
+
+* Show that $\hat{\boldsymbol\beta}$ has this distribution with the given mean and covariance matrix. 
+* What do you need to assume to get to this result? 
+* What does this imply for the distribution of the $j$th element of $\hat{\boldsymbol\beta}$? 
+* In particular, how can we calculate the variance of $\hat{\beta}_j$?
+
+
+**Answer**
+
+\begin{align}
+E(\hat{\boldsymbol\beta})&=E((X^T X)^{-1}X^T Y)=(X^TX)^{-1}X^T E(Y) =(X^TX)^{-1}X^T E(X \boldsymbol\beta +\epsilon) \\
+&=(X^TX)^{-1}X^T (X \boldsymbol\beta +0)=(X^TX)^{-1}(X^T X) \boldsymbol\beta = I \boldsymbol\beta = \boldsymbol\beta
+\end{align}
+
+\begin{align}
+Cov(\hat{\boldsymbol\beta})&=Cov((X^T X)^{-1}X^T Y)=(X^TX)^{-1}X^T Cov(Y)((X^TX)^{-1}X^T)^T \\
+&=(X^TX)^{-1}X^T \sigma^2  I ((X^TX)^{-1}X^T)^T\\
+&=\sigma^2 (X^TX)^{-1} \\
+\end{align}
+
+We need to assume that $Y$ is multivariate normal. As $\hat{\boldsymbol\beta}$ is a linear transformation of a multivariate normal vector $Y$, $\hat{\boldsymbol\beta}$ is also multivariate normal. 
+
+All components of a multivariate normal vector are themselves univariate normal. This means that $\hat{\beta}_j$ is normally distributed with expected value given by the $\beta_j$ and the variance given by the $j$'th diagonal element of $\sigma^2 (X^T X)^{-1}$.
+
+###b) 
+What is the interpretation of a 95% confidence interval? Hint: repeat experiment (on $Y$), on average how many CIs cover the true $\beta_j$? The following code shows an interpentation of a $95\%$ confidence interval. Study and fill in the code where is needed
+
+* Model: $Y = 1 + 3X + \varepsilon$, with $\varepsilon \sim \mathsf{N}(0,1)$.
+
+```{r, eval=FALSE}
+beta0 =
+beta1 = 
+true_beta = c(beta0, beta1) # vector of model coefficients
+true_sd = 1 # choosing true sd
+X = runif(100,0,1) # simulate the predictor variable X
+Xmat = model.matrix(~X, data = data.frame(X)) # create design matrix
+
+
+ci_int = ci_x = 0 # Counts how many times the true value is within the confidence interval
+nsim = 1000
+for (i in 1:nsim){
+  y = rnorm(n = 100, mean = Xmat%*%true_beta, sd = rep(true_sd, 100))
+  mod = lm(y ~ x, data = data.frame(y = y, x = X))
+  ci = confint(mod)
+  ci_int[i] = ifelse( , 1, 0) # if true value of beta0 is within the CI then 1 else 0
+  ci_x[i] = ifelse( , 1, 0) # if true value of beta_1 is within the CI then 1 else 0
+}
+
+c(mean(ci_int), mean(ci_x))
+```
+
+**Answer**
+
+Fix covariates X. \*Collect $Y$, create CI using $\hat{\beta}$ and $\hat{\sigma}$\*, repeat from \* to \* many times. 95 % of the times the CI contains the true $\beta$. Collect $Y$ means simulate it with the true $\beta$ as parameter(s).
+
+```{r}
+# CI for beta_j
+beta0 = 1
+beta1 = 3
+true_beta = c(beta0, beta1) # vector of model coefficients
+true_sd = 1 # choosing true sd
+X = runif(100,0,1)
+Xmat = model.matrix(~X, data = data.frame(X)) # Design Matrix
+
+
+ci_int = ci_x = 0 # Counts how many times the true value is within the confidence interval
+nsim = 1000
+for (i in 1:nsim){
+  y = rnorm(n = 100, mean = Xmat%*%true_beta, sd = rep(true_sd, 100))
+  mod = lm(y ~ x, data = data.frame(y = y, x = X))
+  ci = confint(mod)
+  ci_int[i] = ifelse(true_beta[1] >= ci[1,1] && true_beta[1] <= ci[1,2], 1, 0)
+  ci_x[i] = ifelse(true_beta[2] >= ci[2,1] && true_beta[2] <= ci[2,2], 1, 0)
+}
+
+c(mean(ci_int), mean(ci_x))
+
+```
+
+###c)
+What is the interpretation of a 95% prediction interval? Hint: repeat experiment (on $Y$) for a given ${\boldsymbol x}_0$. Write R code that shows the interprentation of a 95% PI. Hint: In order to produce the PIs use the data point $x_0 = 0.4.$ Furthermore you may use a similar code structure as in b). 
+
+**Answer**
+
+Same idea. Fix covariates X and $x_0$. 
+* Collect $Y$, create PI using $\hat{\beta}$ and $\hat{\sigma}$, simulate $Y_0$\*, repeat from \* to \* many times. 95 % of the times the PI contains $Y_0$. Collect $Y$ and $Y_0$ means simulate it with the true $\beta$ as parameter(s). $Y_0$ should not be used to estimate $\beta$ or $\sigma$.
+
+```{r}
+# PI for Y_0
+beta0 = 1
+beta1 = 3
+true_beta = c(beta0, beta1) # vector of model coefficients
+true_sd = 1 # choosing true sd
+X = runif(100,0,1)
+Xmat = model.matrix(~X, data = data.frame(X)) # Design Matrix
+
+x0 = c(1,0.4)
+
+# simulating and fitting models many times
+pi_y0 = 0; nsim = 1000
+for (i in 1:nsim){
+  y = rnorm(n = 100, mean = Xmat%*%true_beta, sd = rep(true_sd, 100))
+  mod = lm(y ~ x, data = data.frame(y = y, x = X))
+  y0 = rnorm(n = 1, mean = x0%*%true_beta, sd = true_sd)
+  pi = predict(mod, newdata = data.frame(x = x0[2]), interval = "predict")[2:3]
+  pi_y0[i] = ifelse (y0 >= pi[1] && y0 <=pi[2], 1, 0)
+}
+
+mean(pi_y0)
+```
+
+###d)
+Construct a 95% CI for ${\boldsymbol x}_0^T \beta$. Explain what is the connections between a CI for $\beta_j$, a CI for ${\boldsymbol x}_0^T \beta$ and a PI for $Y$ at ${\boldsymbol x}_0$.
+
+**Answer**
+
+95 % CI for ${\boldsymbol x}_0^T\mathbf{\beta}$: Same idea as for $\beta_j$. Use that ${\boldsymbol x}_0^T\hat{\mathbf{\beta}} \sim N({\boldsymbol x}_0^T\mathbf{\beta}, {\boldsymbol x}_0^T$Var$(\hat{\mathbf{\beta}}){\boldsymbol x}_0)$ and do as for $\beta_j$. Note that ${\boldsymbol x}_0$ is a vector. 
+The connection between CI for $\mathbf{\beta}$, ${\boldsymbol x}_0^T\mathbf{\beta}$ and PI for $Y$ at ${\boldsymbol x}_0$: The first is CI for a parameter, the second is CI for the expected regression line in the point $x_0$ (when you only have one covariate, this may be more intuitive), and the last is the PI for the response $Y_0$. The difference between the two latter is that $Y$ are the observations, and ${\boldsymbol x}_0^T\mathbf{\beta}$ is the expected value of the observations and hence a function of the model parameters (NOT an observation).
+
+###e)
+Explain the difference between _error_ and _residual_.  What are the properties of the raw residuals? Why don't we want to use the raw residuals for model check? What is our solution to this? 
+
+**Answer**
+
+We have a model on the form $Y=X \beta + \epsilon$ where $\epsilon$ is the error. The error of the model is unknown and unobserved, but we can estimate it by what we call the residuals. The residuals are given by the difference between the true response and the predicted value 
+$$\hat{\epsilon}=Y-\hat{Y}=(I-X(X^TX)^{-1}X^T)Y.$$
+
+Properties of raw residuals: Normally distributed with mean 0 and covariance $Cov(\hat{\epsilon})=\sigma^2 (I-X(X^TX)^{-1}X^T).$ This means that the residuals may have different variance (depending on $X$) and may also be correlated.
+
+In a model check, we want to check that our errors are independent, homoscedastic (same variance for each observation) and not dependent on the covariates. As we don't know the true error, we use the residuals as predictors, but as mentioned, the residuals may have different variances and may be correlated. This is why we don't want to use the raw residuals for model check.
+
+To amend our problem we need to try to fix the residuals so that they at least have equal variances. We do that by working with standardized or studentized residuals. 
+
+
+
+# Problem 3 (Compulsory 1, 2019)
+
+The lung capacity data `lungcap` (from the `GLMsData` R package) gives information on health and on smoking habits of a sample of 654 youths, aged 3 to 19, in the area of East Boston during middle to late 1970s.
+
+We will focus on modelling forced expiratory volume `FEV`, a measure of lung capacity. For each person in the data set we have measurements of the following 5 variables:
+
+* `FEV` the forced expiratory volume in litres, a measure of lung capacity; a numeric vector,
+* `Age` the age of the subject in completed years; a numeric vector,
+* `Ht` the height in inches; a numeric vector,
+* `Gender` the gender of the subjects: a numeric vector with females coded as 0 and males as 1,
+* `Smoke` the smoking status of the subject: a numeric vector with non-smokers coded as 0 and smokers as 1
+
+First we transform the height from inches to cm. Then a multiple normal linear regression model is fitted to the data set with `log(FEV)` as response and the other variables as covariates. The following R code may be used.
+
+```{r,echo=TRUE,eval=TRUE}
+library(GLMsData)
+data("lungcap")
+lungcap$Htcm=lungcap$Ht*2.54
+modelA = lm(log(FEV) ~ Age + Htcm + Gender + Smoke, data=lungcap)
+summary(modelA)
+```
+
+We call the model fitted above `modelA`.
+
+#### a) 
+Write down the equation for the fitted `modelA`.
+
+**Answer**
+
+Model A: 
+$$\log{(\text{FEV})}=\beta_0 + \beta_1 \text{Age} + \beta_2 \text{Htcm} + \beta_3 \text{Gender} + \beta_4 \text{Smoke} + \epsilon$$ with the fitted version
+$\hat{\log(\text{FEV})}=$ `r coef(modelA)[1]` + `r coef(modelA)[2]` Age + `r coef(modelA)[3]` Htcm + `r coef(modelA)[4]` Gender + `r coef(modelA)[5]` Smoke
+
+
+#### b) 
+Explain (with words and formulas) what the following in the `summary`-output means, use the `Age` and/or the `Smoke` covariate for numerical examples.
+    
+* `Estimate` - in particular interpretation of `Intercept`
+* `Std.Error`
+* `Residual standard error`
+* `F-statistic`
+
+**Answer**
+
+* The `Estimate` column give the estimated regression coefficients, and are given by $\hat{\beta}=({\bf X}^T{\bf X})^{-1}{\bf X}^T{\bf Y}$. 
+The interpretation of $\hat{\beta}_j$ is that when all other covariates are kept constant and the covariate $x_j$ is increased to from $x_j$ to $x_j+1$ then on average the response increases by $\hat{\beta}_j$.
+For example, an increase in height of one cm is associated with an increase in the mean $\log(\text{FEV})$ by $0.016849$, keeping all other variables constant. The quantitative variable Age can be interpreted in the same way. 
+Parameter estimates for qualitative covariates indicate how much the value of explanatory variable changes compared to the reference level. For example the value of $\log(\text{FEV})$ will change by a factor of $-0.046067$ for smokers $(\text{Smoke=1})$, compared to non-smokers ($\text{Smoke=0}$).
+
+* The `Std.Error` $\hat{SD}(\hat{\beta_j})$ of the estimated coefficients is given by the square root of the diagonal entries of $({\bf X}^T{\bf X})^{-1}\hat{\sigma^2}$, where $\hat{\sigma}=\text{RSS}/(n-p-1)$. Here $n=654$ and $p=4$.
+* The residual standard error is the estimate of the standard deviation of $\epsilon$, and is given by $\sqrt{\text{RSS}/(n-p-1)}$ where RSS=$\sum_{i=1}^n (y_i-\hat{y}_i)^2$. 
+* The `F-statistic` is used test the hypothesis that all regression coefficients are zero, 
+\begin{align*}
+  H_0: & \beta_1 = \beta_2 = \cdots = \beta_p = 0 \quad \text{vs} \\
+  H_1: &\text{at least one $\beta$ is $\neq 0$} \\ 
+\end{align*}
+and is computed by
+\begin{equation*}
+  F = \frac{(TSS-RSS)/p}{RSS/(n-p-1)}
+\end{equation*}
+where $TSS= \sum_{i=1}^n(y_i-\bar y)^2$, $RSS =  \sum_{i=1}^n(y_i-\hat y_i)^2$, $n$ is the number of observations and $p$ is the number of covariates (and $p+1$ the number of estimated regression parameters). If the $p$-value is less than 0.05, we reject the hypothesis that there are no coefficients with effect on the outcome in the model.  
+
+
+#### c) 
+What is the proportion of variability explained by the fitted `modelA`? Comment.
+
+**Answer**
+* The $R^2$ statistic gives the proportion of variance explained by the model. In this model, the proportion of variability in $Y=\log{(\text{FEV})}$ explained by the data $X$ is 0.8106.
+
+#### d)
+
+Run the code below to produce diagnostic plots of "fitted values vs. standardized residuals" and "QQ-plot of standardized residuals" to assess the model fit. Comment on what you see.
+
+```{r,eval=TRUE}
+autoplot(modelA)
+```
+
+**Answer**
+
+* The fitted values vs residuals plot is nice with semingly random spread but from the QQ-plot looks like the plotted values  don't follow the normal line perfectly, but we know from problem 2e) that QQ-plots do typically not look perfect, even if the assumption of the normal distribution is fulfilled. 
+
+* Note: We usually avoid testing for normality. These tests have often very little power. In addition, we usually would want to show that the normal distribution is fulfilled, so we would need to formulate a test where $H_0$ would be "The normal distribution is violated", which we would then want to reject. 
+
+#### e)
+
+Now fit a model, call this `modelB`, with `FEV` as response, and the same covariates as for `modelA`. Would you prefer to use `modelA` or `modelB` when the aim is to make inference about `FEV`? Explain what you base your conclusion on.
+
+```{r,eval=TRUE}
+modelB = lm(FEV ~ Age + Htcm + Gender + Smoke, data=lungcap)
+
+# residual analysis
+autoplot(modelB)
+```
+
+**Answer**
+
+Now we have a problem, because there seems to be a pattern in the Tukey-Anscombe plot (residuals vs fitted), and the scale-location plot indicates that the variance increases for larger fitted values. This is a very typical pattern when using the log-transformation of the response solves the problem. So clearly, modelA is the model to be used when we want to make inference.
+
+
+ 
+#### f)
+
+Construct a 95% and a 99% confidence interval for $\beta_{\text{Age}}$ (write out the formula and calculate the interval numerically). Explain what these intervals tell you. 
+
+**Answer**
+
+Using
+ $$T_j=\frac{\hat{\beta}_j}{\sqrt{c_{jj}}\hat{\sigma}}\sim t_{n-p-1}$$
+$$ P(\hat{\beta}_j-t_{\alpha/2,n-p-1}\sqrt{c_{jj}}\hat{\sigma}
+\le  0  \le \hat{\beta}_j+t_{\alpha/2,n-p-1}\sqrt{c_{jj}}\hat{\sigma})=1-\alpha$$
+A $(1-\alpha)$% CI for $\beta_j$ is when we insert numerical values for the upper and lower limits: 
+$$\hat{\beta}_j-t_{\alpha/2,n-p-1}\sqrt{c_{jj}}\hat{\sigma},\hat{\beta}_j+t_{\alpha/2,n-p-1}\sqrt{c_{jj}}\hat{\sigma}$$.
+In this case $\alpha = 0.05$ or $\alpha=0.01$ and $j = 2.$ This means that before we have collected the data this interval has a 95% (99%) chance of covering the true value of $\beta_{Age}$. After the interval is made, the the true value is either within the interval or not.
+
+In R, the confidence intervals for the slope estimates can easily be extracted as follows:
+```{r}
+confint(modelA,level=0.95)
+confint(modelA,level=0.99)
+```
+
+
+#### g) 
+
+Consider a 16 year old male. He is 170 cm tall and not smoking.  
+```{r,eval=FALSE}
+new = data.frame(Age=16, Htcm=170, Gender="M", Smoke=0)
+```
+
+What is your best guess for his `log(FEV)`? Construct a 95% prediction interval for his forced expiratory volume `FEV`. Comment. Hint: first contruct values on the scale of the response `log(FEV)` and then transform the upper and lower limits of the prediction interval. Do you find this prediction interval useful? Comment.
+
+
+**Answer**
+
+```{r,eval=TRUE}
+new = data.frame(Age=16, Htcm=170, Gender="M", Smoke=0)
+pred = predict(modelA, newdata = new)
+pred #Best guess for log(FEV)
+# the inverse of log (natural) is exp
+fev = exp(pred)
+fev
+logf.ci = predict(modelA, newdata = new, level = 0.95, interval = "prediction")
+fev.ci = exp(logf.ci)
+fev.ci
+```
+
+We see that the interval is rather wide - so it gives us limited information. 
+<https://en.wikipedia.org/wiki/Spirometry#/media/File:Normal_values_for_FVC,_FEV1_and_FEF_25-75.png>
+
