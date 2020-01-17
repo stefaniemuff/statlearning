@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "January 17 and 20, 2020"
 fontsize: 10pt
 output:
-  # beamer_presentation:
-  #   keep_tex: yes
-  #   fig_caption: false
-  #   latex_engine: xelatex
-  #   theme: "Singapore"
-  #   colortheme: "default"
-  #   font: "serif"
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+    theme: "Singapore"
+    colortheme: "default"
+    font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -327,7 +327,7 @@ the least squares estiamtes for simple linear regression are given as
 \end{equation}
 and
 \begin{equation}\label{eq:beta1}
-\hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^n(x_i-\bar{x})^2} = \frac{Cov(\boldsymbol{x},\boldsymbol{y})}{Var(\boldsymbol{y})}\ ,
+\hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^n(x_i-\bar{x})^2} = \frac{Cov(\boldsymbol{x},\boldsymbol{y})}{Var(\boldsymbol{x})}\ ,
 \end{equation}
 
 \vspace{2mm}
@@ -446,10 +446,10 @@ Doing it 1000 times, we obtain the following distributions for $\hat\beta_0$ and
 ```{r sim_fig, echo=FALSE, fig.width=6, fig.height=3,fig.align = "center",out.width='40%'}
 library(cowplot)
 pars <- data.frame(pars)
-names(pars) <- c("alpha","beta")
+names(pars) <- c("beta0","beta1")
  
-p1 <-  ggplot(pars,aes(x=alpha)) + geom_histogram() +  theme_bw()
-p2 <-  ggplot(pars,aes(x=beta)) + geom_histogram() +  theme_bw()
+p1 <-  ggplot(pars,aes(x=beta0)) + geom_histogram() +  theme_bw()
+p2 <-  ggplot(pars,aes(x=beta1)) + geom_histogram() +  theme_bw()
 p <- plot_grid(p1,p2,  ncol = 2, rel_heights = c(1, .2))
 p
 ```
@@ -480,7 +480,7 @@ $~$
 Under the assumption that $\varepsilon \sim N(0,\sigma^2)$, and assuming $\hat\beta_0$ and $\hat\beta_1$ are estimated as in formulas (1) and (2), we have in addition that 
 
 $$
- \hat\alpha \sim N(\alpha,{\sigma^{2}_{\beta_0}}) \quad \text{and} \quad \hat\beta \sim N(\beta,{\sigma^{2}_{\beta_1}}) \ .
+ \hat\beta_0 \sim N(\beta_0,{\sigma^{2}_{\beta_0}}) \quad \text{and} \quad \hat\beta_1 \sim N(\beta_1,{\sigma^{2}_{\beta_1}}) \ .
 $$
 
 \vspace{6mm}
