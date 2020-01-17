@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "January 17 and 20, 2020"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -175,7 +175,7 @@ ggplot(d.bodyfat,aes(x=bmi,y=bodyfat)) + geom_point() + theme_bw() + ylab("body 
 geom_abline(intercept = -36, slope = 2.25, color="blue",    size=0.6) 
 ``` 
 
-**Task:** Estimate the intercept and slope parameters (by "eye") and write it down (we will look at your answers later).
+**Task:** Estimate the intercept and slope parameters (by "eye") and write it down (we will look at the "best" answer later).
 
 ---
 
@@ -266,7 +266,7 @@ But what are we actually going to minimize?
 ---
 
 ## Least squares
-ISL
+\vspace{2mm}
 
 Remember the **Least Squared Method**. Graphically, we are minimizing the sum of the squared distances over all points:
 
@@ -291,7 +291,7 @@ polygon(from_x,from_y,to_x,to_y,col=2,lwd=2)
 
 ---
 
-* Mathematically, $\beta_0$ and $\beta_1$ are estimated such that the sum of _\textcolor{red}{squared vertical distances}_ (residual sum of squares)
+* Mathematically, $a$ and $b$ are estimated such that the sum of _\textcolor{red}{squared vertical distances}_ (residual sum of squares)
 
 $$\text{RSS} = \sum_{i=1}^n e_i^2 \ , \qquad \text{where} \quad e_i = y_i - (a + b x_i) $$
 
@@ -327,12 +327,16 @@ the least squares estiamtes for simple linear regression are given as
 \end{equation}
 and
 \begin{equation}\label{eq:beta1}
-\hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^n(x_i-\bar{x})^2} \ ,
+\hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^n(x_i-\bar{x})^2} = \frac{Cov(\boldsymbol{x},\boldsymbol{y})}{Var(\boldsymbol{y})}\ ,
 \end{equation}
+
+\vspace{2mm}
 where 
 $\bar{y} = \frac{1}{n} \sum_{i=1}^n y_i$ and $\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$ are the sample means.
 
-
+\vspace{6mm}
+\scriptsize
+This is something you should have proven in your previous statistics classes; if you forgot how to get there, please check again, e.g. in chapter 11 of the book by @walepole.etal, see [here](https://github.com/stefaniemuff/statlearning/blob/master/literature/Walepole_book.pdf).
 
 ---
 
@@ -466,9 +470,10 @@ $$\text{Var}(\hat{\beta}_1)=\text{SE}(\hat{\beta}_1)^2 = \frac{\sigma^2}{\sum_{i
 * $\text{Cov}(\hat{\beta_0},\hat{\beta_1})$ is in general different from zero.
 
 $~$
+$~$
 
-\tiny
-Note: We will _derive a general version_ of these formulas for multiple linear regression, because without matrix notation this is very cumbersome.
+
+**Note**: We will _derive a general version_ of these formulas for multiple linear regression, because without matrix notation this is very cumbersome.
 
 ---
 
@@ -478,6 +483,9 @@ $$
  \hat\alpha \sim N(\alpha,{\sigma^{2}_{\beta_0}}) \quad \text{and} \quad \hat\beta \sim N(\beta,{\sigma^{2}_{\beta_1}}) \ .
 $$
 
+\vspace{6mm}
+
+**Again**: We will derive this in the multiple linear regression version in more generality.
 
 
 ---
@@ -506,11 +514,11 @@ x1=seq(1:10)
 x2=c(rep(1,5),rep(10,5))
 x3=runif(10,1,10)
 
-sd1=sqrt(1/sum((x1-mean(x1))^2))
-sd2=sqrt(1/sum((x2-mean(x2))^2))
-sd3=sqrt(1/sum((x3-mean(x3))^2))
+ss1 = sum((x1-mean(x1))^2)
+ss2 = sum((x2-mean(x2))^2)
+ss3 = sum((x3-mean(x3))^2)
 
-print(c(sd1,sd2,sd3))
+print(c(ss1,ss2,ss3))
 ```
 
 \normalsize
@@ -521,13 +529,13 @@ $\rightarrow$ The second design - all observations at extremes - is best!
 ## Residual standard error (RSE)
 \vspace{2mm}
 
-* **Problem**: $\sigma$ is usually not known, but needs to be estimated.
+* **Problem**: $\sigma$ is usually not known, but needs to be estimated\footnote{$\sigma^2$ is the \emph{irreducible error} variance.}.
 * Remember: The residual sum of squares is $\text{RSS}=\sum_{i=1}^n (y_i-\hat{\beta}_0-\hat{\beta_1}x_{i})^2$.
 
 * An estimate of $\sigma$, the residual standard error, RSE, is given by
 $$\hat\sigma = \text{RSE}  =\sqrt{\frac{1}{n-2} \text{RSS}} = \sqrt{\frac{1}{n-2}\sum_{i=1}^n (y_i -\hat{y}_i)^2} \ .$$
 
-* It is related to the amount the response variables deviate from the estimated regression line.
+
 * So actually we have
 
 $$\hat{\text{SE}}(\hat{\beta}_1)^2 = \frac{{\hat\sigma}^2}{\sum_{i=1}^n (x_i-\bar{x})^2} \ ,$$ 
@@ -578,19 +586,20 @@ ggplot(d.bodyfat, aes(x=bmi, y=bodyfat))+geom_point(alpha=0.8, size=0.5)+
 
 # Testing and Confidence Intervals 
 After the regression parameters and their uncertainties have been estimated, there are typically two fundamental questions:
-$~$
+
+\vspace{4mm}
 
  
 1. **"Are the parameters compatible with some specific value?"** 
  Typically, the question is whether the slope $\beta_1$ might be 0 or not, that is: "Is $x$ an informative predictor or not?"
  
- $\Rightarrow$ This leads to a **statistical test**. 
+ \hspace{4mm} $\rightarrow$ This leads to a **statistical test**. 
 
-\vspace{4mm}
+\vspace{6mm}
 
 2. "Which values of the parameters are compatible with the data?"
 
- $\Rightarrow$ This leads us to determine  **confidence intervals**.
+ \hspace{4mm} $\rightarrow$ This leads us to determine  **confidence intervals**.
 
 
 
@@ -681,7 +690,7 @@ Brief recap:
 
 $~$
 
-* Under $H_0$, $T$ has a $t$-distribution with $n-2$ degrees of freedom ($n=$ number of data points; compare to Chapter 8.6 in [@walepole.etal]).
+Under $H_0$, $T$ has a $t$-distribution with $n-2$ degrees of freedom ($n=$ number of data points; compare to Chapter 8.6 in @walepole.etal).
 
 
 ---

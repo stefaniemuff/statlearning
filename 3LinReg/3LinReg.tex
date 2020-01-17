@@ -317,7 +317,7 @@ exact?
 \begin{center}\includegraphics[width=0.6\linewidth]{3LinReg_files/figure-beamer/motivating3-1} \end{center}
 
 \textbf{Task:} Estimate the intercept and slope parameters (by ``eye'')
-and write it down (we will look at your answers later).
+and write it down (we will look at the ``best'' answer later).
 
 \end{frame}
 
@@ -465,7 +465,7 @@ But what are we actually going to minimize?
 
 \begin{block}{Least squares}
 
-ISL
+\vspace{2mm}
 
 Remember the \textbf{Least Squared Method}. Graphically, we are
 minimizing the sum of the squared distances over all points:
@@ -481,9 +481,9 @@ minimizing the sum of the squared distances over all points:
 \begin{itemize}
 \tightlist
 \item
-  Mathematically, \(\beta_0\) and \(\beta_1\) are estimated such that
-  the sum of \emph{\textcolor{red}{squared vertical distances}}
-  (residual sum of squares)
+  Mathematically, \(a\) and \(b\) are estimated such that the sum of
+  \emph{\textcolor{red}{squared vertical distances}} (residual sum of
+  squares)
 \end{itemize}
 
 \[\text{RSS} = \sum_{i=1}^n e_i^2 \ , \qquad \text{where} \quad e_i = y_i - (a + b x_i) \]
@@ -531,11 +531,17 @@ the least squares estiamtes for simple linear regression are given as
 and
 
 \begin{equation}\label{eq:beta1}
-\hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^n(x_i-\bar{x})^2} \ ,
+\hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^n(x_i-\bar{x})^2} = \frac{Cov(\boldsymbol{x},\boldsymbol{y})}{Var(\boldsymbol{y})}\ ,
 \end{equation}
 
-where \(\bar{y} = \frac{1}{n} \sum_{i=1}^n y_i\) and
+\vspace{2mm} where \(\bar{y} = \frac{1}{n} \sum_{i=1}^n y_i\) and
 \(\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i\) are the sample means.
+
+\vspace{6mm} \scriptsize
+This is something you should have proven in your previous statistics
+classes; if you forgot how to get there, please check again, e.g.~in
+chapter 11 of the book by Walepole et al. (2012), see
+\href{https://github.com/stefaniemuff/statlearning/blob/master/literature/Walepole_book.pdf}{here}.
 
 \end{block}
 
@@ -721,12 +727,11 @@ Doing it 1000 times, we obtain the following distributions for
   from zero.
 \end{itemize}
 
-\(~\)
+\(~\) \(~\)
 
-\tiny
-Note: We will \emph{derive a general version} of these formulas for
-multiple linear regression, because without matrix notation this is very
-cumbersome.
+\textbf{Note}: We will \emph{derive a general version} of these formulas
+for multiple linear regression, because without matrix notation this is
+very cumbersome.
 
 \end{block}
 
@@ -741,6 +746,11 @@ formulas (1) and (2), we have in addition that
 \[
  \hat\alpha \sim N(\alpha,{\sigma^{2}_{\beta_0}}) \quad \text{and} \quad \hat\beta \sim N(\beta,{\sigma^{2}_{\beta_1}}) \ .
 \]
+
+\vspace{6mm}
+
+\textbf{Again}: We will derive this in the multiple linear regression
+version in more generality.
 
 \end{frame}
 
@@ -791,16 +801,16 @@ the \emph{design} of the \(x_i\)'s!
 \NormalTok{x2 =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{))}
 \NormalTok{x3 =}\StringTok{ }\KeywordTok{runif}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{10}\NormalTok{)}
 
-\NormalTok{sd1 =}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{/}\KeywordTok{sum}\NormalTok{((x1 }\OperatorTok{-}\StringTok{ }\KeywordTok{mean}\NormalTok{(x1))}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
-\NormalTok{sd2 =}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{/}\KeywordTok{sum}\NormalTok{((x2 }\OperatorTok{-}\StringTok{ }\KeywordTok{mean}\NormalTok{(x2))}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
-\NormalTok{sd3 =}\StringTok{ }\KeywordTok{sqrt}\NormalTok{(}\DecValTok{1}\OperatorTok{/}\KeywordTok{sum}\NormalTok{((x3 }\OperatorTok{-}\StringTok{ }\KeywordTok{mean}\NormalTok{(x3))}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
+\NormalTok{ss1 =}\StringTok{ }\KeywordTok{sum}\NormalTok{((x1 }\OperatorTok{-}\StringTok{ }\KeywordTok{mean}\NormalTok{(x1))}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{ss2 =}\StringTok{ }\KeywordTok{sum}\NormalTok{((x2 }\OperatorTok{-}\StringTok{ }\KeywordTok{mean}\NormalTok{(x2))}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{ss3 =}\StringTok{ }\KeywordTok{sum}\NormalTok{((x3 }\OperatorTok{-}\StringTok{ }\KeywordTok{mean}\NormalTok{(x3))}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
 
-\KeywordTok{print}\NormalTok{(}\KeywordTok{c}\NormalTok{(sd1, sd2, sd3))}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{c}\NormalTok{(ss1, ss2, ss3))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.11009638 0.07027284 0.11505715
+## [1]  82.50000 202.50000  49.78026
 \end{verbatim}
 
 \normalsize
@@ -818,7 +828,7 @@ best!
 \begin{itemize}
 \item
   \textbf{Problem}: \(\sigma\) is usually not known, but needs to be
-  estimated.
+  estimated\footnote{$\sigma^2$ is the \emph{irreducible error} variance.}.
 \item
   Remember: The residual sum of squares is
   \(\text{RSS}=\sum_{i=1}^n (y_i-\hat{\beta}_0-\hat{\beta_1}x_{i})^2\).
@@ -826,9 +836,6 @@ best!
   An estimate of \(\sigma\), the residual standard error, RSE, is given
   by
   \[\hat\sigma = \text{RSE}  =\sqrt{\frac{1}{n-2} \text{RSS}} = \sqrt{\frac{1}{n-2}\sum_{i=1}^n (y_i -\hat{y}_i)^2} \ .\]
-\item
-  It is related to the amount the response variables deviate from the
-  estimated regression line.
 \item
   So actually we have
 \end{itemize}
@@ -875,7 +882,9 @@ time). See how the model fit varies:
 \begin{frame}{Testing and Confidence Intervals}
 
 After the regression parameters and their uncertainties have been
-estimated, there are typically two fundamental questions: \(~\)
+estimated, there are typically two fundamental questions:
+
+\vspace{4mm}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -886,9 +895,9 @@ estimated, there are typically two fundamental questions: \(~\)
   not, that is: ``Is \(x\) an informative predictor or not?''
 \end{enumerate}
 
-\(\Rightarrow\) This leads to a \textbf{statistical test}.
+\hspace{4mm} \(\rightarrow\) This leads to a \textbf{statistical test}.
 
-\vspace{4mm}
+\vspace{6mm}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -898,8 +907,8 @@ estimated, there are typically two fundamental questions: \(~\)
   ``Which values of the parameters are compatible with the data?''
 \end{enumerate}
 
-\(\Rightarrow\) This leads us to determine \textbf{confidence
-intervals}.
+\hspace{4mm} \(\rightarrow\) This leads us to determine
+\textbf{confidence intervals}.
 
 \end{frame}
 
@@ -1016,13 +1025,9 @@ Brief recap:
 
 \(~\)
 
-\begin{itemize}
-\tightlist
-\item
-  Under \(H_0\), \(T\) has a \(t\)-distribution with \(n-2\) degrees of
-  freedom (\(n=\) number of data points; compare to Chapter 8.6 in
-  (Walepole et al. 2012)).
-\end{itemize}
+Under \(H_0\), \(T\) has a \(t\)-distribution with \(n-2\) degrees of
+freedom (\(n=\) number of data points; compare to Chapter 8.6 in
+Walepole et al. (2012)).
 
 \end{block}
 
