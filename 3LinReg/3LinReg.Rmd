@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "January 17 and 20, 2020"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -34,7 +34,7 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 ---
 
-Last update: January 17, 2020
+Last update: January 19, 2020
 
 ---
 
@@ -627,14 +627,9 @@ $~$
 Remember: in a statistical test you first need to specify the _null hypothesis_. Here, typically, the null hypothesis is
 
 
-\begin{center}
-\colorbox{lightgray}{\begin{minipage}{6cm}
-\vspace{-2mm}
+ 
 $$H_0: \quad \beta_1 =   0  \ .$$
-
-\end{minipage}}
-\end{center}
-
+ 
 In words: $H_0$ =   ``There is no relationship between $X$ and $Y$.'' 
 
 \vspace{2mm}
@@ -648,35 +643,30 @@ In words: $H_0$ =   ``There is no relationship between $X$ and $Y$.''
 Here, the \emph{alternative hypothesis} is given by
 $~$
 
-\begin{center}
-\colorbox{lightgray}{\begin{minipage}{6cm}
+
 $$H_A: \quad \beta_1 \neq  0  $$
-\end{minipage}}
-\end{center}
+
 
 ---
  
 
 Remember: To carry out a statistical test, we need a _test statistic_. This is some type of **summary statistic** that follows a known distribution under $H_0$. For our purpose, we use the so-called **$T$-statistic**
 
-\begin{center}
-\colorbox{lightgray}{\begin{minipage}{5cm}
+
+
 \begin{equation*}\label{eq:beta}
 T=\frac{\hat\beta_1 - 0}{SE(\hat\beta_1)}\ . 
 \end{equation*}
-\end{minipage}}
-\end{center}
+
 
 
 \vspace{4mm}
 *Note*: If you want to test against another value than $\beta_1=0$, the formula is
-\begin{center}
-\colorbox{lightgray}{\begin{minipage}{5cm}
+
 \begin{equation*}
 T=\frac{\hat\beta_1 - c}{SE(\hat\beta_1)} \ .
 \end{equation*}
-\end{minipage}}
-\end{center}
+ 
 
 
 ---
@@ -763,9 +753,7 @@ $~$
 
 $~$
 
-\colorbox{lightgray}{\begin{minipage}{10cm}
-Formal definition of $p$-value: the probability to observe a data summary (e.g., an average) that is at least as extreme as the one observed, given that the Null Hypothesis is correct.
-\end{minipage}}
+**The $p$-value is** the probability to observe a data summary (e.g., an average) that is at least as extreme as the one observed, given that the Null Hypothesis is correct.
 
 \vspace{3mm}
 
@@ -934,10 +922,8 @@ where $$\text{TSS} = \sum_{i=1}^n (y_i - \bar{y})^2$$ is the _total sum of squar
 
 \vspace{3mm}
 
+**Note**: In simple linear regression, $R^2$ is the squared correlation between the independent and the dependent variable.
 
-\colorbox{lightgray}{\begin{minipage}{10cm}
-Note: In simple linear regression, $R^2$ is the squared correlation between the independent and the dependent variable.
-\end{minipage}}
 
 \vspace{6mm}
 
@@ -1070,7 +1056,7 @@ $${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon} \ , \quad \boldsymbol\var
 ---
 
 **A**:
-<!-- $$ {\bf Y} \sim N_{n}({\bf X} {\boldsymbol\beta},\sigma^2 {\bf I})$$ -->
+$$ {\bf Y} \sim N_{n}({\bf X} {\boldsymbol\beta},\sigma^2 {\bf I})$$
 
 
 
@@ -1082,10 +1068,11 @@ $${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon} \ , \quad \boldsymbol\var
 
 $~$
 
-In multiple linear regression, the parameter vector $\boldsymbol\beta$ is estimated with maximum likelihood and least squares. These two methods give the same estimator when we assume the normal linear regression model. 
+In multiple linear regression, the parameter vector $\boldsymbol\beta$ is estimated with _\textcolor{red}{maximum likelihood}_ and _\textcolor{red}{least squares}_. These two methods give the same estimator when we assume the normal linear regression model. 
 
+$~$
 
-The estimator is found by minimizing the RSS for a multiple linear regression model:
+With least suqres, we minimize the RSS for a multiple linear regression model:
 $$\begin{aligned} \text{RSS} &=\sum_{i=1}^n (y_i - \hat y_i)^2 = \sum_{i=1}^n (y_i - \hat \beta_0 - \hat \beta_1 x_{i1} - \hat \beta_2 x_{i2} -...-\hat \beta_p x_{ip} )^2 \\
 &= \sum_{i=1}^n (y_i-{\boldsymbol x}_i^T \hat{\boldsymbol\beta})^2=({\bf Y}-{\bf X}\hat{\boldsymbol{\beta}})^T({\bf Y}-{\bf X}\hat{\boldsymbol{\beta}})\end{aligned}$$
 The estimator is found by solving the system of $(p+1)$ equations
@@ -1156,7 +1143,9 @@ $$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y} \ ,$$
 
 **Answers:**
 
-See Problem 3 of recommended exercise 3 (and the respective solutions).
+See Problem 3 of recommended exercise 3 (and the respective solutions) to derive that
+
+$$\hat{\boldsymbol\beta}\sim N_{p+1}(\boldsymbol{\beta},\underbrace{\sigma^2({\bf X}^T{\bf X})^{-1}}_{\text{covariance matrix}}) \ . $$
 
 <!-- * $\text{E}(\hat{\boldsymbol\beta})={\bf C}\text{E}({\bf Y})=({\bf X}^T{\bf X})^{-1} {\bf X}^T{\bf X} {\boldsymbol\beta}={\boldsymbol\beta}$. -->
 <!-- * $\text{Cov}(\hat{\boldsymbol\beta})={\bf C}\text{Cov}({\bf Y}){\bf C}^T=({\bf X}^T{\bf X})^{-1} {\bf X}^T \sigma^2 {\bf I}(({\bf X}^T{\bf X})^{-1} {\bf X}^T)^T =({\bf X}^T{\bf X})^{-1} \sigma^2$. -->
@@ -1165,6 +1154,22 @@ See Problem 3 of recommended exercise 3 (and the respective solutions).
 <!-- So: $\hat{\beta}\sim N_{p+1}(\boldsymbol{\beta},\sigma^2({\bf X}^T{\bf X})^{-1})$. -->
 
 <!-- [](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/PropertiesBetahatMLR.pdf) for a derivation. -->
+ 
+ 
+ 
+
+---
+
+### The covariance matrix of $\boldsymbol{\hat\beta}$ in R
+
+\vspace{2mm}
+
+The covariance matrix for the $\boldsymbol{\hat\beta}$ can be obtained as follows:
+
+\scriptsize
+```{r}
+vcov(r.bodyfat3)
+```
  
 
 ---
@@ -1175,72 +1180,43 @@ $$\hat{\beta}_0 = \bar{Y}-\hat{\beta}_1 \bar{x} \text{ and } \hat{\beta}_1 = \fr
 
 $$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y} \ .$$
 
-* Try to verify the connection using $\boldsymbol\beta=(\beta_0,\beta_1)^\top$ and ${\bf X}= \left[\begin{matrix} 1 & x_{11} \\
+$~$ 
+
+**Exercise:** Verify the connection using $\boldsymbol\beta=(\beta_0,\beta_1)^\top$ and ${\bf X}= \left[\begin{matrix} 1 & x_{11} \\
 1 & x_{21}  \\
 1  & \vdots  \\
 1 & x_{n1}  \\
 \end{matrix}\right]$.
 
-
----
  
 
-## Another data set: Ozone
+<!-- ## Another example: Ozone -->
 
-<!-- ### Munich rent index (as in Part A) -->
+<!-- $~$ -->
 
-<!-- Munich, 1999: 3082 observations on 9 variables. -->
+<!-- New York, 1973: 111 observations of -->
 
-<!-- * `rent`: the net rent per month (in Euro). -->
-<!-- * `rentsqm`: the net rent per month per square meter (in Euro). -->
-<!-- * `area`: Living area in square meters. -->
-<!-- * `yearc`: year of construction. -->
-<!-- * `location`: quality of location: a factor indicating whether the location is average location, 1, good location, 2, and top location, 3. -->
-<!-- * `bath`: quality of bathroom: a a factor indicating whether the bath facilities are standard, 0, or premium, 1. -->
-<!-- * `kitchen`: Quality of kitchen: 0 standard 1 premium. -->
-<!-- * `cheating`: central heating: a factor 0 without central heating, 1 with central heating. -->
-<!-- * `district`: District in Munich. -->
+<!-- * `ozone` : ozone concentration (ppm); **response variable** -->
+<!-- * `radiation` : solar radiation (langleys) -->
+<!-- * `temperature` : daily maximum temperature (F) -->
+<!-- * `wind` : wind speed (mph) -->
 
-$~$
+<!-- **Question:** What is the expected ozone concentration, given we know solar radiation, temperature and wind speed? -->
 
-New York, 1973: 111 observations of
+<!-- \scriptsize -->
+<!-- ```{r,echo=TRUE,eval=TRUE,messages=FALSE,warnings=FALSE,error=FALSE,results="hold"} -->
+<!-- library(ElemStatLearn) -->
+<!-- data(ozone) -->
+<!-- head(ozone) -->
+<!-- ``` -->
 
-* `ozone` : ozone concentration (ppm); **response variable**
-* `radiation` : solar radiation (langleys)
-* `temperature` : daily maximum temperature (F)
-* `wind` : wind speed (mph)
+<!-- \scriptsize -->
 
+<!-- ```{r,echo=TRUE,eval=TRUE,messages=FALSE,warnings=FALSE,error=FALSE,results="hold"} -->
+<!-- ozone.lm = lm(ozone~temperature+wind+radiation, data=ozone) -->
+<!-- summary(ozone.lm) -->
+<!-- ``` -->
 
-\scriptsize
-```{r,echo=TRUE,eval=TRUE,messages=FALSE,warnings=FALSE,error=FALSE,results="hold"}
-library(ElemStatLearn)
-data(ozone)
-head(ozone)
-```
-
----
-
-\scriptsize
-
-```{r,echo=TRUE,eval=TRUE,messages=FALSE,warnings=FALSE,error=FALSE,results="hold"}
-ozone.lm = lm(ozone~temperature+wind+radiation, data=ozone)
-summary(ozone.lm)
-```
- 
-
----
-
-* Remember:
-$\hat{\boldsymbol\beta}\sim N_{p+1}(\boldsymbol{\beta},\underbrace{\sigma^2({\bf X}^T{\bf X})^{-1}}_{\text{covariance matrix}})$. 
-
-* The covariance matrix can be obtained as follows:
-
-\scriptsize
-```{r}
-vcov(ozone.lm)
-```
-
----
 
 # Four important questions
 
@@ -1300,13 +1276,12 @@ $~$
 
 Sometimes we don't want to test if all $\beta$'s are zero at the same time, but only a subset $1,\ldots , q$:
 
-\begin{center}
-\colorbox{lightgray}{\begin{minipage}{11cm}
-\vspace{-2mm}
-$$ H_0: \beta_1=\beta_2=\cdots= \beta_q =0 \text{  vs.  } H_1: \text{at least one different from zero}.$$
-\end{minipage}}
-\end{center}
 
+$$ H_0: \beta_1=\beta_2=\cdots= \beta_q =0$$
+\text{  vs.  } 
+$$H_1: \text{at least one different from zero}.$$
+
+\vspace{2mm}
 Again, the $F$-test can be used, but now $F$ is calculated like
 
 $$F=\frac{(\text{RSS$_0$-RSS})/(q)}{\text{RSS}/(n-p-1)} \sim F_{q,n-p-1} \ ,$$
@@ -1321,6 +1296,7 @@ where
 ---
 
 ## Example in R
+\vspace{3mm}
 
 * **Question:** Do `weight` and `height` explain something of `bodyfat`, on top of the variables `bmi` and `age`?
 
@@ -1342,21 +1318,13 @@ $~$
 
 A special case is
 
-\begin{center}
-\colorbox{lightgray}{\begin{minipage}{7cm}
 
 $$H_0: \beta_j=0 \; \text{ vs. } \; H_1: \beta_j\neq 0$$
-\end{minipage}}
-\end{center}
+\vspace{2mm}
 
 * Nothing new: We did it for simple linear regression!
 
-* However, now the $F$-statistic becomes
-
-$$F=\frac{(\text{RSS$_0$-RSS})/(p-1)}{\text{RSS}/(n-p-1)} \sim F_{1,n-p-1} \ ,$$
-$~$
-and it is known that (or you can try to show it yourself)
-
+* This makes sense: is known that (or you can try to show it yourself)
 $$F_{1,n-p-1} = t^2_{n-p-1} \ ,$$
 thus we can use a $T$-statistics with $(n-p-1)$ degrees of freedom to get the $p$-value.
 
@@ -1390,7 +1358,7 @@ $~$
 
 * Using that 
 $$ T_j=\frac{\hat{\beta}_j}{\text{SE}(\hat\beta_j)}\sim t_{n-p-1} \ ,$$
-we can create confidence intervals for $\beta_j$ in the same manner as we did for simple linear regression (see slide 42). For example, when using the typical confidence level $\alpha=0.05$ we have
+we can create confidence intervals for $\beta_j$ in the same manner as we did for simple linear regression (see slide 43). For example, when using the typical confidence level $\alpha=0.05$ we have
 
 $$\hat{\beta}_j \pm t_{0.975,n-p-2} \cdot\text{SE} (\hat{\beta}_j)  \ .$$
 
@@ -1565,11 +1533,11 @@ Given a realization of $X_1, \ldots ,X_p$, say $x_1^{(0)}, \ldots x_p^{(0)}$. Th
 
 $~$ 
 
-\colorbox{lightgray}{\begin{minipage}{10cm}
-Where does $\hat y_0 = \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}$ lie with a certain confidence (i.e., 95\%)?
-\end{minipage}} 
+ 
+**Where does $\hat y_0 = \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}$ lie with a certain confidence (i.e., 95\%)?**
 
-\vspace{4mm} 
+
+\vspace{6mm} 
 
 This question is not trivial, because $\hat\beta_0, \ldots \hat\beta_p$ are estimates from the data and contain uncertainty. 
 
@@ -1598,11 +1566,9 @@ Given a new value of $X_1, \ldots, X_p$, say $x_1^{(0)}, \ldots x_p^{(0)}$. The 
 
 $~$ 
 
-\colorbox{lightgray}{\begin{minipage}{10cm}
-Where does a {\bf future observation} lie with a certain confidence (i.e., 95\%)?
-\end{minipage}} 
+**Where does a future observation lie with a certain confidence (i.e., 95\%)?**
 
-\vspace{4mm} 
+\vspace{6mm} 
 
 To answer this question, we have to sum uncertainty over two components:
 
@@ -1629,10 +1595,6 @@ predict(fit,newdata=newobs,interval="confidence",type="response")
 predict(fit,newdata=newobs,interval="prediction",type="response")
 ```
 
-\normalsize
-Difference between `interval="confidence"` and `interval="prediction"`?
-
-(See exercises)
 
 ---
 
@@ -1688,21 +1650,17 @@ The assumption in linear regression is that the residuals follow a $N(0,\sigma^2
 
 $~$
 
-\colorbox{lightgray}{\begin{minipage}{10cm}
 1. The expected value of $\varepsilon_i$ is 0: $\text{E}(\varepsilon_i)=0$. 
-
-$~$
+\vspace{1mm}
 
 2. All $\varepsilon_i$ have the same variance: $\text{Var}(\varepsilon_i)=\sigma^2$.  
-
-$~$
+\vspace{1mm}
 
 3. The $\varepsilon_i$ are normally distributed. 
-
-$~$
+\vspace{1mm}
 
 4. The $\varepsilon_i$ are independent of each other.
-\end{minipage}}
+
 
 ---
 
@@ -1765,7 +1723,7 @@ The scale-location plot is particularly suited to check the assumption of equal 
 
 $~$
 
-The idea is to plot the square root of the (standardized) residuals $\sqrt{|r_i|}$ against the fitted values $\hat{y_i}$. There should be *no trend*:
+The idea is to plot the square root of the (standardized) residuals $\sqrt{|\tilde{r}_i|}$ against the fitted values $\hat{y_i}$. There should be *no trend*:
  
 ```{r,echo=FALSE, fig.width=4, fig.height=4,fig.align = "center",out.width='50%'}
 autoplot(r.bodyfat,which=3) + theme_bw()
@@ -1857,7 +1815,7 @@ autoplot(r.bodyfat,which=5)
 
 \vspace{1mm}
 
-* A large leverage indicated that the observation ($i$) has a large influence on the estimation results, and that the covariate values (${\boldsymbol x}_i$) are unusual.
+* A large leverage indicates that the observation ($i$) has a large influence on the estimation results, and that the covariate values (${\boldsymbol x}_i$) are unusual.
 
 
 
@@ -1899,9 +1857,14 @@ $~$
 
 **A**:
 
-We would like to check the model assumptions - we see that they are all connected to the error terms. But, but we have not observed the error terms $\varepsilon$ so they can not be used for this. However, we have made "predictions" of the errors - our residuals. And, we want to use our residuals to check the model assumptions. 
+* To check the model assumptions we want to look at the distribution of the error terms $\varepsilon_i$, to check that our errors are independent, homoscedastic (same variance for each observation), and not dependent on our covariates.
 
-That is, we want to check that our errors are independent, homoscedastic (same variance for each observation), and not dependent on our covariates - and we want to use the residuals (observed) in place of the errors (unobserved). Then it would have been great if the residuals have these properties when the underlying errors have. To amend our problem we need to try to fix the residual so that they at least have equal variances. We do that by working with _standardized_ or _studentized residuals_.
+* However, we only have the residuals $e_i$, the "predictions" for $\epsilon_i$.
+
+* It would have been great if the $e_i$ have the same properties as $\epsilon_i$. 
+
+\vspace{2mm}
+$\rightarrow$ To make the $e_i$ more "like $\epsilon_i$", we use _\textcolor{red}{standardized}_ or _\textcolor{red}{studentized residuals}_.
 
 ---
 
@@ -1912,10 +1875,12 @@ where $H_{ii}$ is the $i$th diagonal element of the hat matrix ${\bf H}$.
 
 In R you can get the standardized residuals from an `lm`-object (named `fit`) by `rstandard(fit)`.
 
+\vspace{2mm}
+
 **Studentized residuals:**
 
 $$r^*_i=\frac{e_i}{\hat{\sigma}_{(i)}\sqrt{1-H_{ii}}}$$
-where $\hat{\sigma}_{(i)}$ is the estimated error variance in a model with observation number $i$ omitted. This seems like a lot of work, but it can be shown that it is possible to calculated the studentized residuals directly from the standardized residuals.
+where $\hat{\sigma}_{(i)}$ is the estimated error variance in a model with observation number $i$ omitted. It can be shown that it is possible to calculated the studentized residuals directly from the standardized residuals.
 
 In R you can get the studentized residuals from an `lm`-object (named `fit`) by `rstudent(fit)`.
 
@@ -1989,7 +1954,6 @@ In reality, there are no restrictions assumed with respect to the $X$ variables.
 One very frequent data type are **binary** variables, that is, variables that can only attain values 0 or 1. 
 \vspace{4mm}
 
-\colorbox{lightgray}{\begin{minipage}{10cm}
 If the binary variable $x$ is the only variable in the model $Y_i = \beta_0 + \beta_1 x_i + \varepsilon_i$, the model has only two predicted outcomes (plus error):
 
 \begin{equation*}
@@ -2000,7 +1964,6 @@ Y_i = \left\{
 \end{array}
 \right .
 \end{equation*}
-\end{minipage}}
 
 \vspace{4mm}
 
@@ -2016,8 +1979,6 @@ $~$
 More generally, a covariate may indicate a **category**, for instance the species of an animal or a plant. This type of covariate is called a **factor**. The trick: convert a factor variable $X$ with $k$ levels (for instance 3 species) into $k$ dummy variables $X_j$ with 
 \vspace{2mm}
 
-\colorbox{lightgray}{\begin{minipage}{10cm}
-\vspace{-0mm}
 \begin{equation*}
 x_{ij} = \left\{ 
 \begin{array} {ll}
@@ -2025,7 +1986,7 @@ x_{ij} = \left\{
 0, & \text{otherwise.}
 \end{array}\right.
 \end{equation*}
-\end{minipage}}
+
 
 \vspace{4mm}
 
@@ -2273,26 +2234,22 @@ $\rightarrow$ See exercises!
 **Linear regression is even more powerful!**
 \vspace{2mm}
 
-We have seen that it is possible to include continuous, binary or factorial covariates in a regression model.
+* We have seen that it is possible to include continuous, binary or factorial covariates in a regression model.
 
 \vspace{2mm}
 
-\colorbox{lightgray}{\begin{minipage}{10cm}
-Even \emph{\textcolor{red}{transformations}} of covariates can be included in (almost) any form. For instance the square of a variable $X^2$.
-
+* Even \emph{\textcolor{red}{transformations}} of covariates can be included in (almost) any form. For instance the square of a variable $X^2$
 \begin{equation*}
 y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \varepsilon_i \ , 
 \end{equation*}
-which leads to a {\bf quadratic} or {\bf polynomial} regression (if higher order terms are used).
-\end{minipage}}
+which leads to a **quadratic** or **polynomial** regression (if higher order terms are used).
 
 \vspace{4mm}
 
-Other common transformations are: 
-
-* $\log$ 
-* $\sqrt{..}$
-* $\sin$, $\cos$,
+* Other common transformations are: 
+    * $\log$ 
+    * $\sqrt{..}$
+    * $\sin$, $\cos$,
 
 
 --- 
