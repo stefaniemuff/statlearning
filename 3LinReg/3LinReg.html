@@ -1083,9 +1083,9 @@ Question is whether we could as well omit all predictor variables at the same ti
 <li><p>Fit both models and use the <code>anova()</code> function to carry out the <span class="math inline">\(F\)</span>-test:</p></li>
 </ul>
 
-<pre class="r"><code>r.bodyfat.large = lm(bodyfat ~ bmi + age, data = d.bodyfat)
-r.bodyfat.small = lm(bodyfat ~ bmi + age + weight + height, data = d.bodyfat)
-anova(r.bodyfat.large, r.bodyfat.small)</code></pre>
+<pre class="r"><code>r.bodyfat.small = lm(bodyfat ~ bmi + age, data = d.bodyfat)
+r.bodyfat.large = lm(bodyfat ~ bmi + age + weight + height, data = d.bodyfat)
+anova(r.bodyfat.small, r.bodyfat.large)</code></pre>
 <pre><code>## Analysis of Variance Table
 ## 
 ## Model 1: bodyfat ~ bmi + age
