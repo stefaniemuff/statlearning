@@ -2,7 +2,7 @@
 subtitle: "TMA4268 Statistical Learning V2020"
 title: "Module 4: Classification"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "February xx, 2020"
+date: "January 24 and 27, 2020"
 fontsize: 10pt
 output:
   beamer_presentation:
@@ -12,6 +12,10 @@ output:
     theme: "Singapore"
     colortheme: "default"
     font: "serif"
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
 urlcolor: blue
 bibliography: refs.bib
 header-includes: \usepackage{multirow}
@@ -28,17 +32,32 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 whichformat="latex"
 ```
 
+---
+
+Last update: January 24, 2020
+
+---
+
+# Acknowledgements
+
+* A lot of this material stems from Mette Langaas and her TAs (especiall Julia Debik). I would like to thank Mette for the permission to use her material!
+
+* Some of the figures and slides in this presentation are taken (or are inspired) from @james.etal.
+
+--- 
+
 # Introduction
 
 ## Learning material for this module
-
-* James et al (2013): An Introduction to Statistical Learning. Chapter 4.  
-
-We need more statistical theory than is presented in the textbook, which you find in this module page.
-
 \vspace{2mm}
 
-Some of the figures and slides in this presentation are taken (or are inspired) from @james.etal.
+* James et al (2013): An Introduction to Statistical Learning. Chapter 4 + Chapter 2.2.3.  
+
+$~$
+
+* We need more statistical theory than is presented in the textbook, which you find on these module slides.
+
+
 
 <!-- --- -->
 
@@ -54,22 +73,30 @@ Some of the figures and slides in this presentation are taken (or are inspired) 
 
 ---
 
-## What will you learn? (todo)
+## What will you learn?
 
-* What is classification and discrimination?
-* What is the Bayes classifier and the Bayes risk?
-* What is the sampling paradigm and what is modelled then?
-* Linear discriminant analysis: model, method, results.
-* Quadratic discriminant analysis: model, method, results.
-* Naive Bayes - when and why?
-* That is the diagnostic paradigm and what is modelled then?
+* Classification and discrimination
+
+* Logistic regression
+
+* Bayes classifier, Bayes risk
+
 * KNN - majority vote or estimate posterior class probability?
+
+* Linear discriminant analysis: model, method, results.
+
+* Quadratic discriminant analysis: model, method, results.
+
+* Naive Bayes - when and why?
+
+* That is the diagnostic paradigm and what is modelled then?
+
 
 
 ---
 
 # What is classification?
-\vspace{2mm}
+\vspace{3mm}
 
 * By now our responses $Y$ was assumed _continuous_, while covariates were allowed to be _categorical_.
 
@@ -114,6 +141,7 @@ Some of the figures and slides in this presentation are taken (or are inspired) 
 ---
 
 ### Example: The credit card data
+\vspace{2mm}
 
 The `Default` dataset is available from the ISLR package. 
 
@@ -238,7 +266,7 @@ $~$
 
 * It is still possible to use linear regression for classification problems with two classes. It is actually not even a bad idea, and works well under some conditions. If the conditional class densities are (multivariate) normal with equal covariance matrices then this linear regression (with 0 and 1 response) will in fact give the same classification as linear discriminatn analysis (LDA). 
 
-* For categorical outcomes with more than two level, it requires some extra work (multivariate $Y$ due to the dummy variable coding). 
+* For categorical outcomes with more than two levels, it requires some extra work (multivariate $Y$ due to the dummy variable coding). 
 
 * We leave linear regression for now.
 
@@ -282,7 +310,7 @@ to $p_i$. How?
 \end{minipage}}
 \end{center}
 
-* **Q:** What is the rationale behind this? Other transformations that bring the linear predictor into a $0$ to $1$ range?
+* **Q:** What is the rationale behind this?
 
 
 ---
@@ -346,7 +374,7 @@ Default data: here $\hat{\beta}_0=$ `r round(glm_alpha,2)` and $\hat{\beta}_1=$ 
 
 * The coefficients $\beta_0, \beta_1, \ldots$ are estimated with _maximum likelihood_ (ML).
 
-* We assume that pairs of covariates and responses  $\{{\bf x}_i, y_i\}$ are measured independently of each other. Given $n$ such observation pairs, the likelihood function of a logistic regression model can be written as:
+* We assume that pairs of covariates and responses  $\{{\boldsymbol x}_i, y_i\}$ are measured independently of each other. Given $n$ such observation pairs, the likelihood function of a logistic regression model can be written as:
 $$L(\boldsymbol{\beta}) = \prod_{i=1}^n L_i(\boldsymbol{\beta}) = \prod_{i=1}^n f(y_i; \boldsymbol{\beta}) = \prod_{i=1}^n (p_i)^{y_i}(1-p_i)^{1-y_i},$$
 where $\boldsymbol{\beta} = (\beta_0, \beta_1, \beta_2, \ldots, \beta_p)^T$ enters into $p_i$
 
@@ -361,7 +389,7 @@ $$p_i= \frac{\exp(\beta_0+\beta_1 x_{i1}+\cdots + \beta_p x_{ip})}{1 + \exp(\bet
 \vspace{-4mm}
 
 \begin{align*} \log(L(\boldsymbol{\beta}))&=l(\boldsymbol{\beta}) =\sum_{i=1}^n \Big ( y_i \log p_i + (1-y_i) \log(1 - p_i )\Big ) \\ &= \sum_{i=1}^n \Big ( y_i \log \Big (\frac{p_i}{1-p_i} \Big) + \log(1-p_i) \Big ) \\
-&= \sum_{i=1}^n \Big (y_i (\beta_0 + \beta_1 x_{i1}+\cdots + \beta_p x_{ip}) - \log(1 + e^{\beta_0 + \beta_1 x_{i1}+\cdots + \beta_p x_{ip}} \Big ).\end{align*}
+&= \sum_{i=1}^n \Big (y_i (\beta_0 + \beta_1 x_{i1}+\cdots + \beta_p x_{ip}) - \log(1 + e^{\beta_0 + \beta_1 x_{i1}+\cdots + \beta_p x_{ip}} ) \Big ).\end{align*}
 
 ---
 
@@ -433,7 +461,7 @@ $~$
 Let's again rearrange the _odds_ in the logistic regression model:
 
 \begin{align*}
- \frac{p_i}{1-p_i} = \text{odds}(Y_i=1 \mid X=x)  & = \frac{\text{P}(Y_i=1 \mid X=x)}{\text{P}(Y_i=0 \mid X = x)} \\
+ \frac{p_i}{1-p_i} &=  \frac{\text{P}(Y_i=1 \mid X=x)}{\text{P}(Y_i=0 \mid X = x)} \\[2mm]
  &= \exp(\beta_0) \cdot \exp(\beta_1 x_{i1}) \cdot \ldots \cdot  \exp(\beta_p x_{ip}) \ .
  \end{align*}
 
@@ -443,7 +471,7 @@ $~$
 <!-- p_i&= \frac{\exp(\eta_i)}{1+\exp(\eta_i)}\\ -->
 <!-- \eta_i&=\ln(\frac{p_i}{1-p_i})\\ -->
 <!-- \ln(\frac{p_i}{1-p_i})&=\beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_p x_{ip}\\ -->
-<!-- \frac{p_i}{1-p_i}=&\frac{\text{Pr}(Y_i=1|{\bf x}_i)}{\text{Pr}(Y_i=0|{\bf x}_i)}=\exp(\beta_0)\cdot \exp(\beta_1 x_{i1})\cdots\exp(\beta_p x_{ip}) -->
+<!-- \frac{p_i}{1-p_i}=&\frac{\text{Pr}(Y_i=1|{\boldsymbol x}_i)}{\text{Pr}(Y_i=0|{\boldsymbol x}_i)}=\exp(\beta_0)\cdot \exp(\beta_1 x_{i1})\cdots\exp(\beta_p x_{ip}) -->
 <!-- \end{align*} -->
 
 $\rightarrow$ We have a _multiplicative model_ for the odds - which can help us to interpret our $\beta$s.
@@ -465,19 +493,18 @@ Using simple algebra and the formula on the previous slide, you will see that
 
 \vspace{2mm}
 
-\begin{center}
-\colorbox{lightgray}{\begin{minipage}{11cm}
-{\bf Interpretation}: 
-By increasing covariate $x_{ij}$ by one unit, we change the odds ratio for $Y_i=1$ by a factor $\exp(\beta_j)$.
-\end{minipage}}
-\end{center}
+$~$
 
-\begin{center}
-\colorbox{lightgray}{\begin{minipage}{11cm}
-{\bf Moreover}:
-Taking the log on equation (2), it follows that $\beta_j$ can be interpreted as a {\bf log odds-ratio}.
-\end{minipage}}
-\end{center}
+**Interpretation**:
+
+By increasing covariate $x_{ij}$ by one unit, we change the odds ratio for $Y_i=1$ by a factor $\exp(\beta_j)$.
+ 
+ $~$
+
+**Moreover**:
+
+Taking the log on equation (2), it follows that $\beta_j$ can be interpreted as a **log odds-ratio**.
+ 
 
 ---
 
@@ -516,11 +543,11 @@ Let's catch up. Why were we doing all this in the first place?
 
 **Answer:** We wanted to build a model that **predict probabilities of categories** $Y$, _given_ certain covariates $X_1, \ldots, X_p$.
 
-\vspace{4mm}
+\vspace{2mm}
  
-* For given parameter estimates $\hat\beta_0, \hat\beta_1, \ldots \hat\beta_p$ and a new observation ${\bf x}_0$, we can estimate the probability $\hat{p}({\bf x}_0)$ that the new observation belongs to the class defined by $Y=1$
+* For given parameter estimates $\hat\beta_0, \hat\beta_1, \ldots \hat\beta_p$ and a new observation ${\boldsymbol x}_0$, we can estimate the probability $\hat{p}({\boldsymbol x}_0)$ that the new observation belongs to the class defined by $Y=1$
 
-$$\hat{p}({\bf x}_0) = \frac{e^{\hat{\eta}_0}}{1+e^{\hat{\eta}_0}} \ , $$
+$$\hat{p}({\boldsymbol x}_0) = \frac{e^{\hat{\eta}_0}}{1+e^{\hat{\eta}_0}} \ , $$
 
 with linear predictor
 $$\hat\eta_0 = \hat\beta_0 + \hat\beta_1 x_{01} + \ldots \hat\beta_p x_{0p} \ .$$
@@ -538,11 +565,14 @@ $$\hat{p}(X) = \frac{e^{\beta_0 + 2000 \cdot \beta_1 + 40000 \cdot \beta_2 + 1 \
 \vspace{6mm}
 
 Using R:
-\tiny
+\scriptsize
 ```{r}
 eta <- summary(glm_default2)$coef[,1] %*% c(1,2000,40000,1)
 exp(eta)/(1+exp(eta))
 ```
+
+\normalsize
+(Or via the `predict()` function in R.)
 
 ---
 
@@ -614,41 +644,46 @@ summary(glm_heart)
 
 * How would you now calculate $\hat{p}(X)$ that someone will develop CHD, given covariates $X$?
 
+\vspace{5mm}
+
+**R-hint:** The `predict()` function can be used to get predicted probabilities using 
+
+\scriptsize
+```{r, eval=FALSE}
+predict(glm_heart, newdata=... , type="response")
+```
 
 
+<!-- --- -->
+
+<!-- ## Multinomial logistic regression -->
+
+<!-- * Generalization of the logistic regression model to a response variable with more than two ($K$) possible classes.  -->
+
+<!-- * The probability that $Y$ belongs to class $k$, given an observation vector $\mathbf{x} = (x_1, x_2, \dots, x_p)^T$ is (usually) modelled by: -->
+<!-- $$\log \frac{\text{Pr}(Y = k | \mathbf{x})}{\text{Pr}(Y = K | \mathbf{x})}= \beta_{0k} + \beta_{1k} x_1 + \cdots + \beta_{pk} x_p ,$$ -->
+<!-- where $K$ is chosen as the _reference category_ (arbitrary). We would thus (jointly) estimate $K-1$ sets of regression parameters. -->
+
+<!-- * The multinomial logistic regression model is implemented in the `glmnet` or `VGAM` package in `R`. -->
+
+<!-- * We will not discuss this further since LDA is more popular (than logistic regression) in the multi-class setting. And, as we shall see soon - they are not that different. -->
 
 
 ---
 
-## Multinomial logistic regression
-
-* Generalization of the logistic regression model to a response variable with more than two ($K$) possible classes. 
-
-* The probability that $Y$ belongs to class $k$, given an observation vector $\mathbf{x} = (x_1, x_2, \dots, x_p)^T$ is (usually) modelled by:
-$$\log \frac{\text{Pr}(Y = k | \mathbf{x})}{\text{Pr}(Y = K | \mathbf{x})}= \beta_{0k} + \beta_{1k} x_1 + \cdots + \beta_{pk} x_p ,$$
-where $K$ is chosen as the _reference category_ (arbitrary). We would thus (jointly) estimate $K-1$ sets of regression parameters.
-
-* The multinomial logistic regression model is implemented in the `glmnet` or `VGAM` package in `R`.
-
-* We will not discuss this further since LDA is more popular (than logistic regression) in the multi-class setting. And, as we shall see soon - they are not that different.
-
-
----
-
-## Bayes classifier
+# The Bayes classifier
 
 * We were going for classification, but now estimated $\hat{p}(X)=\text{Pr}(Y \mid X)$ using logistic regression. Idea: probability can be used for classification.
 
-\vspace{1mm}
+\vspace{0mm}
 
 * Assume that we know or can estimate the probability that a new observation $x_0$ belongs to class $k$, for $K$ classes $\mathcal{C} = \{c_1, c_2,\ldots, c_K\}$, with elements numbered as $1, 2, ..., K$
 $$p_k(x_0) = \text{Pr}(Y=k | X=x_0), \quad k = 1, 2, ... K \ .$$
 This is the probability that $Y=k$ given the observation $x_0$. 
 \vspace{1mm}
 
-* The _Bayes classifier assigns an observation to the most likely class_, given its predictor values.  
+* The _Bayes classifier assigns an observation to \textcolor{red}{the most likely class}_, given its predictor values.  
 
-\vspace{1mm}
 
 * **Example** for two groups $\{A, B\}$. A new observation $x_0$ will be classified to $A$ if $\text{Pr}(Y=A | X=x_0) > 0.5$ and to class $B$ otherwise.
 
@@ -656,8 +691,9 @@ This is the probability that $Y=k$ given the observation $x_0$.
 ---
 
 ## Properties of the Bayes classifier
+\vspace{2mm}
 
-* It has the _smallest test error rate_. 
+* It has the _smallest \textcolor{red}{test error} rate_. 
 
 * The class boundaries using the Bayes classifier is called the _Bayes decision boundary_.
 
@@ -667,32 +703,16 @@ This is the probability that $Y=k$ given the observation $x_0$.
 
 ---
 
-### What is test error?
+# Some terminology
 
 \vspace{2mm}
-
-To understand what test error means, we need to understand the terms
-
-* _Training set_
-* _Test set_
-* _Training error_ 
-* _Test error_
-
-
-
----
-
  
 
-**Training set:** observations (independent pairs) $\{(x_1, y_1), ..., (x_n, y_n)\}$ where the response variable $Y$ is _qualitative_ and labelled $1, 2, ..., K$.
-
-The training set is used to construct the classification rule (by estimating parameters in class densities or posterior probabilites).
+**Training set:** Independent observations $\{(x_1, y_1), ..., (x_n, y_n)\}$ with _qualitative response_ variable $Y \in \{1, 2, ..., K\}$, used to construct the classification rule (by estimating parameters in class densities or posterior probabilites).
 
 \vspace{2mm}
 
-**Test set:** observations (independent pairs), same format as the training set.
-
-The test set is used to evaluate the classification rule.
+**Test set:** Independent observations of the same format as the training set, used to evaluate the classification rule.
 
 \vspace{2mm}
 
@@ -730,19 +750,17 @@ where the average is over all the test observations $(x_0,y_0)$.
 
 ---
 
-## The K-nearest neighbour (KNN) classifier
+# The K-nearest neighbour (KNN) classifier
 
-\vspace{2mm}
+* **Caveat** for the Bayes classifier: we usually don't know the conditional distribution of $\text{Pr}(Y  |  X)$ is for real data.
 
-* Caveat: We usually don't know the conditional distribution of $Y$ given $X$ for real data.
+\vspace{1mm}
 
-\vspace{2mm}
+* We have discussed how to estimate it with logistic regression (for two categories).
 
-* We have discussed how to do it with logistic regression (for two categories).
+\vspace{1mm}
 
-\vspace{2mm}
-
-* The $K$-nearest neighbor (KNN) classifier estimates this conditional distribution and chooses the most likely cateogry (Bayes classifier).\footnote{Attention!! $K$ refers to the number of neighbours used for the classifier, and \emph{not} to the number of classes!! The latter is assumed known.} 
+* Alternative: $K$-nearest neighbor (KNN) classifier estimates this conditional distribution _\textcolor{red}{non-parametrically}_ and chooses the most likely cateogry (Bayes classifier).\footnote{Attention!! $K$ refers to the number of neighbours used for the classifier, and \emph{not} to the number of classes!! The latter is assumed known.} 
 
 
 
@@ -752,9 +770,12 @@ where the average is over all the test observations $(x_0,y_0)$.
 The $K$-nearest neighbour classifier (KNN) works in the following way: 
 
 * Given a new observation $x_0$ it searches for the $K$ points in our training data that are closest to it (Euclidean distance). 
+\vspace{1mm}
+
 * These points make up the neighborhood of $x_0$, $\mathcal{N}_0$. 
-* The point $x_0$ is classified by taking a majority vote of the neighbors. 
-* That means that $x_0$ is classified to the most occurring class among its neighbors ("majority vote")
+\vspace{1mm}
+
+* Classification is done by a _\textcolor{red}{majority vote}_: $x_0$ is classified to the most occurring class among its neighbors
 $$\text{Pr}(Y=j | X = x_0) = \frac{1}{K} \sum_{i \in \mathcal{N}_0} I(y_i = j)\ .$$
 
 ---
@@ -763,7 +784,7 @@ $$\text{Pr}(Y=j | X = x_0) = \frac{1}{K} \sum_{i \in \mathcal{N}_0} I(y_i = j)\ 
 
 * Simulate $2\times 100$ observations from a bivariate normal distribution with mean vectors $\mu_A  = (1, 1)^T$, $\mu_B = (3, 3)^T$, and covariance matrix $\Sigma_A = \Sigma_B = \begin{pmatrix} 2\hspace{2mm}   0 \\ 0 \hspace{2mm} 2 \end{pmatrix}$.  
 
-* Aim: Find a rule to classify a new observation to $A$ or $B$.
+
 
 
 ```{r knn, message=FALSE,echo=FALSE, fig.width=5,fig.height=4,fig.align="center",out.width='55%'}
@@ -786,14 +807,20 @@ class = as.factor(class)
 
 df = data.frame(rbind(X1, X2), class)
 
-ggplot(df, aes(x=X1, y=X2, color=class))+geom_point(size=2)+theme_minimal()
+ggplot(df, aes(x=X1, y=X2, color=class))+geom_point(size=2)+theme_bw()
 ```
+
+
+
+
+* Aim: Find a rule to classify a new observation to $A$ or $B$.
 
 ---
 
 
-* Assume we have a new observation $X_0 = (x_{01}, x_{02})^T$ which we want to classify as belonging to the class $A$ or $B$. 
-* To illustrate this problem we fit the $K$-nearest neighbor classifier to our simulated data set with $K = 1, 3, 10$ and $150$ (next slide).
+* Assume we have a new observation $x_0 = (x_{01}, x_{02})^T$ which we want to classify as belonging to the class $A$ or $B$. 
+
+* We illustrate this by fitting the $K$-nearest neighbor classifier to our simulated data set with $K = 1, 3, 10$ and $150$ (next slide).
 
 \vspace{4mm}
 
@@ -870,15 +897,15 @@ ggarrange(gg,gg3,gg10,gg150)
 
 ---
 
-* The choice of $K$ has a big influence on the result of our classification. For $K=1$ the classification is made to the same class as the one nearest neighbor. As $K$ gets very large, the decision boundary tends towards a straight line (which is the Bayes boundary in this set-up).   
+## How to choose $K$?
+\vspace{2mm}
 
-* To find the optimal value of $K$ the typical procedure is to try different values of $K$ and then test the predictive power of the different classifiers, for example by cross-validation, which will be discussed in M5.
+* For $K=1$ the classification is made to the same class as the one nearest neighbor. As $K$ gets very large, the decision boundary tends towards a straight line (which is the Bayes boundary in this set-up).   
 
-* After trying all choices for $K$ between 1 and 50, a few choices of $K$ gave the smallest misclassification error rate, estimating by leave-one out cross-validation (see M5). The smallest error rate is equal to 0.165 (16.5\% misclassification).
+* Finding the _optimal value_ of $K$: try different values of $K$ and then test the predictive power of the different classifiers, for example by cross-validation (Module 5).
 
----
 
-```{r knnerror1,echo=FALSE,fig.width=6,fig.height=4,fig.align="center",out.width="90%"}
+```{r knnerror1,echo=FALSE,fig.width=6,fig.height=4,fig.align="center",out.width="60%"}
 misclas=numeric(50)
 n = dim(df)[1]
 set.seed(9)
@@ -907,9 +934,9 @@ Remember the bias-variance trade-off that we discussed in Module 2.
 Considerations:
 \vspace{2mm}
 
-* A too low value of $K$ will give a very flexible classifier (with high variance and low bias) which will fit the training set too well (it will overfit) and make poor predictions for new observations. 
+* A too low value of $K$ will give a very flexible classifier which will fit the training set too well: High variance, low bias, and thus poor predictions for new observations due to overfit. 
 
-* Choosing a high value for $K$ makes the classifier loose its flexibility and the classifier will have low variance but high bias.
+* Choosing a high value for $K$ makes the classifier loose its flexibility: Low variance, high bias.
 
 
 \vspace{2mm}
@@ -963,21 +990,20 @@ This is what we did so far: The focus was  _directly_ estimating the posterior d
 Given a continuous $X$ and categorical $Y$, and 
 
 * the probability  _\textcolor{red}{density}_ function $f_k(x) = \text{Pr}(X=x \mid Y=k)$ for $X$ in class $k$.
-* the  _\textcolor{red}{prior}_ proability for class $k$ $\pi_k = \text{Pr}(Y=k)$ is the prior probability.
+* the  _\textcolor{red}{prior}_ probability for class $k$ $\pi_k = \text{Pr}(Y=k)$ is the prior probability.
 
 How do we get $\text{Pr}(Y=k | X=x_0)$?
+\vspace{4mm}
 
-
-\begin{center}
-\colorbox{lightgray}{\begin{minipage}{10cm}
-{\bf Bayes theorem}
+ 
+**Bayes theorem**
+\vspace{-3mm}
 \begin{align*}
 p_k(X) = \text{Pr}(Y=k \mid X= x) &= 
-\frac{\text{Pr}({\bf X}={\bf x} \cap Y=k)}{f({\bf x})}\\
-&= \frac{ f_k(x) \pi_k}{\sum_{l=1}^K  f_l(x) \pi_l}  
+\frac{\text{Pr}(X=x \cap Y=k)}{f(x)}\\
+&= \frac{ f_k(x) \pi_k}{\sum_{l=1}^K  f_l(x) \pi_l}  \ .
 \end{align*}
-\end{minipage}}
-\end{center}
+
 
 
 ---
@@ -986,26 +1012,24 @@ p_k(X) = \text{Pr}(Y=k \mid X= x) &=
 # Discriminant Analysis
 
 \vspace{2mm}
-Discriminant analysis is relying on the _sampling paradigm_.
 
-\vspace{2mm}
+* Discriminant analysis is relying on the _sampling paradigm_.
+
 
 * The approach is to model the distribution of $X$ in each of
 the classes separately, and then use Bayes theorem to flip things
 around and obtain $\text{Pr}(Y \mid X)$.
 
-* When we use normal (Gaussian) distributions for each class,
-this leads to linear or quadratic discriminant analysis.
+<!-- * When we use normal (Gaussian) distributions for each class, -->
+<!-- this leads to linear or quadratic discriminant analysis. -->
 
-* However, this approach is quite general, and other distributions
-can be used as well. We will focus on normal distributions.
-
-
+<!-- * However, this approach is quite general, and other distributions -->
+<!-- can be used as well. We will focus on normal distributions. -->
 
 
----
 
-## Classification to the highest density
+
+## Example
 
 \vspace{2mm}
 
@@ -1037,11 +1061,12 @@ ggplot(XY)+geom_line(aes(x=x, y=0.5*y1), col="darkgreen")+geom_line(aes(x=x, y=0
 
 ```
 
-The decision boundary is where the point of intersection of the two lines is, because here $\pi_1 f_1(x)=\pi_2 f_2(x)$. Thus all points to left of the decision boundary will be classified as green and similarly, all points to the right of the decision boundary will be classified as orange. 
+The decision boundary is where the point of intersection of the two lines is, because here $\pi_1 f_1(x)=\pi_2 f_2(x)$. 
+
 
 ---
 
-We now specify different priors, such that $\pi_1 = 0.3$ and $\pi_2 = 0.7$. We see that this has affected the decision boundary, which now has shifted to the left:
+For different priors $\pi_1 = 0.3$ and $\pi_2 = 0.7$, the decision boundary shifts to the left:
 
 ```{r gauss2, echo=FALSE, fig.width=5, fig.height=3.5,fig.align = "center",out.width='70%'}
 ggplot(XY)+geom_line(aes(x=x, y=0.3*y1), col="darkgreen")+geom_line(aes(x=x, y=0.7*y2),col="orange")+geom_vline(xintercept=-0.45, linetype="dashed") +annotate("text", x = -2, y = 0.2, parse=TRUE, label =as.character(expression(pi[1] == 0.3)))+annotate("text", x=1, y=0.2, parse=TRUE, label=as.character(expression(pi[2]==0.7)))+labs(y=NULL, title=expression(pi[k]*f[k](x)))
@@ -1053,28 +1078,26 @@ ggplot(XY)+geom_line(aes(x=x, y=0.3*y1), col="darkgreen")+geom_line(aes(x=x, y=0
 
 
 ### Why discriminant analysis?
+\vspace{2mm}
 
-* When the classes are well-separated, the parameter
-estimates for the logistic regression model are surprisingly
-unstable. Linear discriminant analysis does not suffer from
-this problem.
+* Linear discriminant analysis is more stable than logistic regression when
 
-* If $n$ is small and the distribution of the predictors $X$ is
-approximately normal in each of the classes, the linear
-discriminant model is again more stable than the logistic
-regression model.
+    * the classes are well-separated. In that case, the parameter
+estimates for the logistic regression model are very
+unstable. 
+    * $n$ is small and the distribution of the predictors $X$ is
+approximately normal in each of the classes.
 
-* Linear discriminant analysis is popular when we have more
-than two response classes, because it also provides
-low-dimensional views of the data.
+\vspace{2mm}
+
+* Moreover, linear discriminant analysis is popular when we have more
+than two response classes, because it also provides low-dimensional views of the data.
 
 
 ---
 
 # Linear discriminant analysis (LDA) when $p=1$
 
-
-* Assume there is only one predictor $X$ ($p=1$).
 
 * Class conditional distributions $f_k(X)$ are assumed normal (Gaussian) for $k=1,\ldots,K$, that is
 $$f_k(x) = \frac{1}{\sqrt{2\pi}\sigma_k} e^{-\frac{1}{2}\big(\frac{x-\mu_k}{\sigma_k}\big)^2} $$
@@ -1088,7 +1111,7 @@ has parameters $\mu_k$ (mean) and $\sigma_k$ (standard deviation).
 ---
 
 We can insert the expression for each class distribution into Bayes formula to obtain the posterior probability $p_k(x) = \text{Pr}(Y = k | X = x)$
-$$p_k(x) = \frac{f_k({\bf x}) \pi_k}{f({\bf x})}=\frac{\pi_k \frac{1}{\sqrt{2\pi}\sigma} e^{-\frac{1}{2}\big(\frac{x-\mu_k}{\sigma}\big)^2}}{\sum_{l=1}^K \pi_l \frac{1}{\sqrt{2\pi}\sigma} e^{-\frac{1}{2}\big(\frac{x-\mu_l}{\sigma}\big)^2}} \ .$$
+$$p_k(x) = \frac{f_k({\boldsymbol x}) \pi_k}{f({\boldsymbol x})}=\frac{\pi_k \frac{1}{\sqrt{2\pi}\sigma} e^{-\frac{1}{2}\big(\frac{x-\mu_k}{\sigma}\big)^2}}{\sum_{l=1}^K \pi_l \frac{1}{\sqrt{2\pi}\sigma} e^{-\frac{1}{2}\big(\frac{x-\mu_l}{\sigma}\big)^2}} \ .$$
 
 Our rule is to classify to the class for which $p_k(x)$ is largest. 
 
@@ -1117,27 +1140,11 @@ $$x = \frac{\mu_1+ \mu_2}{2} \ .$$
 $$X_{\text{green}}\sim \mathcal{N}(-2, 1.5^2) \text{ and }
 X_{\text{orange}}\sim \mathcal{N}(2, 1.5^2) $$
 
-```{r gauss3, echo=FALSE, fig.width=4, fig.height=3,fig.align = "center",out.width='60%'}
-library(ggplot2)
-library(ggpubr)
-x = seq(-6, 6, by = 0.01)
-n = length(x)
-y1 = dnorm(x, mean = -2, sd=1.5)
-y2 = dnorm(x, mean= 2, sd=1.5)
-
-XY = data.frame(x, y1, y2)
-ggplot(XY)+geom_line(aes(x=x, y=0.5*y1), col="darkgreen")+geom_line(aes(x=x, y=0.5*y2), col="orange")+geom_vline(xintercept=0, linetype="dashed")+ annotate("text", x = 1.7, y = 0.175, parse=TRUE, label = as.character(expression(paste(pi[1], "=", pi[2], "=", 0.5))))+labs(y=NULL)
-```
 
 
 
-* Where is the decision boundary? 
 
-* How can we calculate the error rate?
 
-* Is it possible to construct a classifier that has a lower error rate than the Bayes error rate?
-
----
 
 ```{r gauss4, echo=FALSE, fig.width=4, fig.height=3,fig.align = "center",out.width='60%'}
 taildnorm=function(x,upper,lower,mean,sd,faktor)
@@ -1152,7 +1159,8 @@ gg=ggplot(XY)+geom_line(aes(x=x, y=0.5*y1), col="darkgreen")+geom_line(aes(x=x, 
 gg+stat_function(fun=taildnorm,geom='area',fill="lightgreen",alpha=0.5,args=list(upper=6,lower=0,mean=-2,sd=1.5,faktor=0.5))+stat_function(fun=taildnorm,geom='area',fill="orange",alpha=0.5,args=list(upper=0,lower=-6,mean=2,sd=1.5,faktor=0.5))
 ```
 
-* The Bayes decision boundary is at $x=0$, and we would make a (Bayes) error of `round(2*0.5*pnorm(0,2,1.5))`=`r round(2*0.5*pnorm(0,2,1.5),2)`.
+* The Bayes decision boundary is at $x=0$. 
+* Bayes error rate: `round(pnorm(0,2,1.5))`=`r round(pnorm(0,2,1.5),2)`.
 
 * The Bayes classifier has the lowest test error rate.
 
@@ -1216,7 +1224,7 @@ $$\hat\delta_1(x) = \hat\delta_2(x)$$
 and resolve for $x$ to obtain a decision rule (boundary). 
 
 \vspace{2mm}
-Todo: Verify that the following code will give you the training and test error rates:
+**Exercise**: Verify that the following code will give you the training and test error rates:
 
 \scriptsize
 
@@ -1239,9 +1247,8 @@ This is a rather good performance, compared to the minimal Bayes error rate. But
 
 * The confusion matrix is a table that can show the performance of a classifier, given that the true values are known. 
 
-* We can make a confusion matrix from the training or test set, but will in most cases do so for the test set only.
+* We can make a confusion matrix from the training or test set
 
-* The rows represent the true classes, while the columns represent the predicted classes. Inside the table we have counts (just labelled "correct" and "wrong" below - but should be numbers).
 
 * The sum of the diagonal is the total number of correct classifications. The sum of all elements off the diagonal is the total number of misclassifications.
 
@@ -1261,25 +1268,20 @@ kable(rbind(row1, row2, row3,row4,row5), format=whichformat,row.names=FALSE)
 ```
 \end{center}
 
----
 
-The confusion matrix can be obtained in `R` by using the `table` function with the predicted classes and the true classes need to be given as function arguments, or directly using the `caret` package.
+* The confusion matrix can be obtained in `R` by using the `table` function, or directly using the `caret` package.
 
-We will soon come back to the special case of two classes - where we may think of this as 
-"-" (non disease) and "+" (disease). 
 
 ---
 
-### Multivariate LDA ($p>1$)
+# Multivariate LDA ($p>1$)
 
 \vspace{2mm}
-
-* So far: Only one variable $X$ ($p=1$) as predictor for $Y$.
 
 * LDA can be generalized to situations when $p>1$ covariates are used. The decision boundaries are still linear.
 
 * The multivariate normal distribution function:
-$$f(x) = \frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}\exp({-\frac{1}{2}({\bf x}-\boldsymbol\mu)^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol\mu)})$$
+$$f(x) = \frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}\exp({-\frac{1}{2}({\boldsymbol x}-\boldsymbol\mu)^T \boldsymbol{\Sigma}^{-1}({\boldsymbol x}-\boldsymbol\mu)})$$
 
 \centering
 ![ISLR Figure 4.5](../../ISLR/Figures/Chapter4/4.5.png){width=70%}
@@ -1288,7 +1290,7 @@ $$f(x) = \frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}\exp({-\frac{1}{2}({\
 ---
 
 * This gives the following expression for the discriminant function:
-$$\delta_k(x) = {\bf x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_k - \frac{1}{2}\boldsymbol\mu_k^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_k + \log \pi_k.$$
+$$\delta_k(x) = {\boldsymbol x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_k - \frac{1}{2}\boldsymbol\mu_k^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_k + \log \pi_k.$$
 
 * Note: $\delta_k(x) = c_{k0} + c_{k1}x_1 + \ldots + c_{kp}x_p$ is a linear function in $(x_1,\ldots ,x_p)$.
 
@@ -1296,31 +1298,30 @@ $$\delta_k(x) = {\bf x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_k - \frac{1}{2}
 
 Some details on the derivation of the discriminant function - when $K=2$ classes, and the classes are denoted $0$ and $1$
 
-$$\text{Pr}(Y=0 | X={\bf x}) = \text{Pr}(Y=1 | X={\bf x})$$
+$$\text{Pr}(Y=0 | X={\boldsymbol x}) = \text{Pr}(Y=1 | X={\boldsymbol x})$$
 $$\frac{\pi_0f_0(x)}{\pi_0f_0(x)+\pi_1f_1(x)} = \frac{\pi_1f_0(1)}{\pi_0f_0(x)+\pi_1f_1(x)} $$
-$$\pi_0 f_0({\bf x}) = \pi_1 f_1({\bf x})$$
+$$\pi_0 f_0({\boldsymbol x}) = \pi_1 f_1({\boldsymbol x})$$
 $$\pi_0\frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}
-e^{\frac{1}{2}({\bf x}-\boldsymbol{\mu}_0)^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol{\mu}_0)} =  \pi_1\frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}e^{\frac{1}{2}({\bf x}-\boldsymbol{\mu}_1)^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol{\mu}_1)} $$
-$$\log(\pi_0) -\frac{1}{2}({\bf x}-\boldsymbol{\mu}_0)^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol{\mu}_0) = 
-\log(\pi_1) -\frac{1}{2}({\bf x}-\boldsymbol{\mu}_1)^T \boldsymbol{\Sigma}^{-1}({\bf x}-\boldsymbol{\mu}_1) $$
-$$\log(\pi_0)  -\frac{1}{2}{\bf x}^T\boldsymbol{\Sigma}^{-1}{\bf x} + {\bf x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 - \frac{1}{2}\boldsymbol{\mu}_0^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 = \log(\pi_1)  -\frac{1}{2}{\bf x}^T\boldsymbol{\Sigma}^{-1}{\bf x} + {\bf x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 - \frac{1}{2}\boldsymbol{\mu}_1^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 $$
-$$\log(\pi_0) + {\bf x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 - \frac{1}{2}\boldsymbol{\mu}_0^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 = 
-\log(\pi_1) + {\bf x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 - \frac{1}{2}\mu_1^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1$$
-$$\delta_0({\bf x}) = \delta_1({\bf x}) $$
+e^{\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu}_0)^T \boldsymbol{\Sigma}^{-1}({\boldsymbol x}-\boldsymbol{\mu}_0)} =  \pi_1\frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}e^{\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu}_1)^T \boldsymbol{\Sigma}^{-1}({\boldsymbol x}-\boldsymbol{\mu}_1)} $$
+$$\log(\pi_0) -\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu}_0)^T \boldsymbol{\Sigma}^{-1}({\boldsymbol x}-\boldsymbol{\mu}_0) = 
+\log(\pi_1) -\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu}_1)^T \boldsymbol{\Sigma}^{-1}({\boldsymbol x}-\boldsymbol{\mu}_1) $$
+$$\log(\pi_0)  -\frac{1}{2}{\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}{\boldsymbol x} + {\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 - \frac{1}{2}\boldsymbol{\mu}_0^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 = \log(\pi_1)  -\frac{1}{2}{\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}{\boldsymbol x} + {\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 - \frac{1}{2}\boldsymbol{\mu}_1^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 $$
+$$\log(\pi_0) + {\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 - \frac{1}{2}\boldsymbol{\mu}_0^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 = 
+\log(\pi_1) + {\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 - \frac{1}{2}\mu_1^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1$$
+$$\delta_0({\boldsymbol x}) = \delta_1({\boldsymbol x}) $$
 
 
 ---
 
 ## Back to our synthetic example
 
-* Consider again our simulateion from a bivariate normal distribution with mean vectors $\mu_A  = (1, 1)^T$, $\mu_B = (3, 3)^T$, and covariance matrix $\Sigma_A = \Sigma_B = \begin{pmatrix} 2\hspace{2mm}   0 \\ 0 \hspace{2mm} 2 \end{pmatrix}$.  
+* Consider again our simulation from a bivariate normal distribution with mean vectors $\mu_A  = (1, 1)^T$, $\mu_B = (3, 3)^T$, and covariance matrix $\Sigma_A = \Sigma_B = \begin{pmatrix} 2\hspace{2mm}   0 \\ 0 \hspace{2mm} 2 \end{pmatrix}$.  
 
 * Aim: Use LDA to classify a new observation $x_0$ to class $A$ or $B$.
 
 
 ```{r synthAB2, echo=FALSE, fig.width=6, fig.height=4.5,fig.align = "center",out.width='60%'}
 library(mvtnorm)
-library(MASS)
 library(ggplot2)
 
 set.seed(9)
@@ -1338,20 +1339,20 @@ class = as.factor(class)
 
 df = data.frame(rbind(X1, X2), class)
 
-ggplot(df, aes(x=X1, y=X2, color=class))+geom_point(size=3) 
+ggplot(df, aes(x=X1, y=X2, color=class))+geom_point(size=3) +theme_bw()
 ```
 
 ---
 
 * Since the truth is known here we can calculate the Bayes boundary and the Bayes error. 
 
-* Since we have bivariate normal class distributions with common covariance matrix, the optimal boundary is given by LDA, with boundary given at $\delta_A({\bf x})=\delta_B({\bf x})$.
+* Since we have bivariate normal class distributions with common covariance matrix, the optimal boundary is given by LDA, with boundary given at $\delta_A({\boldsymbol x})=\delta_B({\boldsymbol x})$.
 
-<!-- where $\delta_A({\bf x})= {\bf x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A - \frac{1}{2}\boldsymbol\mu_A^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A + \log \pi_A$, and for $\delta_B({\bf x})$ with $\boldsymbol\mu_B$. -->
+<!-- where $\delta_A({\boldsymbol x})= {\boldsymbol x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A - \frac{1}{2}\boldsymbol\mu_A^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A + \log \pi_A$, and for $\delta_B({\boldsymbol x})$ with $\boldsymbol\mu_B$. -->
 
-$${\bf x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A - \frac{1}{2}\boldsymbol\mu_A^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A + \log \pi_A={\bf x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_B - \frac{1}{2}\boldsymbol\mu_B^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_B + \log \pi_B$$
+$${\boldsymbol x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A - \frac{1}{2}\boldsymbol\mu_A^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A + \log \pi_A={\boldsymbol x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_B - \frac{1}{2}\boldsymbol\mu_B^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_B + \log \pi_B$$
 
-$${\bf x}^T\boldsymbol{\Sigma}^{-1}(\boldsymbol\mu_A -\boldsymbol\mu_B)-\frac{1}{2}\boldsymbol\mu_A^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A +\frac{1}{2}\boldsymbol\mu_B^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_B +\log \pi_A-\log \pi_B=0$$
+$${\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}(\boldsymbol\mu_A -\boldsymbol\mu_B)-\frac{1}{2}\boldsymbol\mu_A^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_A +\frac{1}{2}\boldsymbol\mu_B^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_B +\log \pi_A-\log \pi_B=0$$
 
 Inserting numerical values gives $-x_1-x_2+4=0$, thus a boundary with functional form $$x_2=4-x_1 \ .$$
 
@@ -1373,11 +1374,13 @@ Inserting numerical values gives $-x_1-x_2+4=0$, thus a boundary with functional
 
 We can use the Bayes boundary
 
+\scriptsize
 ```{r}
 r.pred <- ifelse(df$X2<4-df$X1,"A","B")
 table(real=df$class, r.pred) 
 ```
 
+\normalsize
 However, again, the Bayes boundary is usually not known, and we must estimate it from the data.
 
 ---
@@ -1408,13 +1411,14 @@ Optional: [Proof that the estimator $\hat{\boldsymbol{\Sigma}}_k$ is unbiased fo
 
 To obtain parameters estimates and an estimated decision boundary, we can use the `lda()` function in R.
 
-
+\scriptsize
 ```{r}
 r.lda <- lda(class ~ X1 + X2, df)
 r.pred <- predict(r.lda, df)$class
 table(real=df$class, predicted = r.pred)  
 ```
 
+\normalsize
 Note: The training error is smaller than for the Bayes boundary. Why?
 
 ---
@@ -1426,8 +1430,9 @@ Note: The training error is smaller than for the Bayes boundary. Why?
 Solid line: Bayes boundary
 
 Dashed line: Estimated boundary
+$~$
 
-```{r synthAB3, echo=FALSE, fig.width=6, fig.height=4.5,fig.align = "center",out.width='60%'}
+```{r synthAB3, echo=FALSE, fig.width=6, fig.height=4.5,fig.align = "center",out.width='65%'}
 t.beta <- r.lda$scaling
 m.df <- colMeans(df[,1:2])
 
@@ -1436,7 +1441,7 @@ koeff <- -c(t.alpha,t.beta[1])/t.beta[2]
 
 ggplot(df, aes(x=X1, y=X2, color=class))+geom_point(size=3) + 
   geom_abline(intercept=4, slope=-1) +
-  geom_abline(intercept=koeff[1],slope=koeff[2],lty=2) 
+  geom_abline(intercept=koeff[1],slope=koeff[2],lty=2)  + theme_bw()
 ```
 
 ---
@@ -1461,7 +1466,7 @@ Sometimes the probability that an observation comes from a class $k$ is more int
 
 ---
 
-## Quadratic Discriminant Analysis (QDA)
+# Quadratic Discriminant Analysis (QDA)
 
 * In LDA we assumed that $\boldsymbol{\Sigma}_k  = \boldsymbol{\Sigma}$ for all classes.
 
@@ -1470,8 +1475,9 @@ Sometimes the probability that an observation comes from a class $k$ is more int
 $$X \sim N(\boldsymbol{\mu}_k, \boldsymbol{\Sigma}_k) \ .$$
 
 * The discriminant functions are now given by:
+\vspace{-3mm}
 \begin{align*} \delta_k({\boldsymbol x}) &= -\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu}_k)^T \boldsymbol{\Sigma}_k^{-1}({\boldsymbol x}-\boldsymbol{\mu}_k)-\frac{1}{2}\log |\boldsymbol{\Sigma}_k| + \log \pi_k \\ 
-&= -\frac{1}{2} {\boldsymbol x}^T \boldsymbol{\Sigma}_k^{-1}{\boldsymbol x} + {\boldsymbol x}^T \boldsymbol{\Sigma}_k^{-1}\boldsymbol{\mu}_k - \frac{1}{2} \boldsymbol{\mu}_k^T \boldsymbol{\Sigma}_k^{-1}\boldsymbol{\mu}_k - \frac{1}{2}\log |\boldsymbol{\Sigma}_k | + \log \pi_k.
+&= -\frac{1}{2} {\boldsymbol x}^T \boldsymbol{\Sigma}_k^{-1}{\boldsymbol x} + {\boldsymbol x}^T \boldsymbol{\Sigma}_k^{-1}\boldsymbol{\mu}_k - \frac{1}{2} \boldsymbol{\mu}_k^T \boldsymbol{\Sigma}_k^{-1}\boldsymbol{\mu}_k - \frac{1}{2}\log |\boldsymbol{\Sigma}_k | + \log \pi_k.\\
 \end{align*} 
 
 * These decision boundaries are *quadratic* functions of ${\boldsymbol x}$.
@@ -1512,6 +1518,7 @@ Therefore, LDA is less flexible than QDA and might therefore have much less vari
 ---
 
 ## LDA vs QDA -- Illustration
+\vspace{1mm}
 
 Bayes (purple dashed), LDA (black dotted) and QDA (green solid) decision boundaries for the cases where $\boldsymbol{\Sigma}_1 = \boldsymbol{\Sigma}_2$ (left) and $\boldsymbol{\Sigma}_1 \neq \boldsymbol{\Sigma}_2$ (right).
 
@@ -1528,14 +1535,14 @@ Bayes (purple dashed), LDA (black dotted) and QDA (green solid) decision boundar
 
 The `iris` flower data set was introduced by the British statistician and biologist Ronald Fisher in 1936. 
 
-* Three plant species \{setosa, virginica, versicolor\} (50 observation of each), and 
-* four features: `Sepal.Length`, `Sepal.Width`, `Petal.Length` and `Petal.Width`.   
+* **Three plant species**: \{setosa, virginica, versicolor\}.
+* **Four features**: `Sepal.Length`, `Sepal.Width`, `Petal.Length` and `Petal.Width`.   
 
 ```{r iris_pic, echo=FALSE, fig.cap="Iris plant with sepal and petal leaves", out.width = "30%"}
 knitr::include_graphics("iris.png")
 ```
-
-\scriptsize
+\vspace{-2mm}
+\tiny
 <http://blog.kaggle.com/2015/04/22/scikit-learn-video-3-machine-learning-first-steps-with-the-iris-dataset/>
 
 ---
@@ -1544,15 +1551,11 @@ knitr::include_graphics("iris.png")
 
 \vspace{2mm}
 
-We will use `sepal width` and `sepal length` to build a classificator, here 50 observations from each class available.
+We will use `sepal width` and `sepal length` to build a classificator. We have 50 observations from each class.
 
 \scriptsize
 ```{r irisex, echo=showsolA, warning=FALSE, message=FALSE}
 attach(iris)
-library(class)
-library(MASS)
-library(ggplot2)
-library(dplyr)
 head(iris)
 ```
 
@@ -1562,7 +1565,7 @@ head(iris)
 
 ```{r iris1, echo=FALSE, fig.width=5.5, fig.height=4,fig.align = "center",out.width='100%'}
 iris0_plot = ggplot(iris, aes(x=Sepal.Width, y=Sepal.Length, 
-                              color=Species))+geom_point(size=2.5)
+                              color=Species))+geom_point(size=2.5) + theme_bw()
 iris0_plot
 ```
 
@@ -1624,7 +1627,7 @@ irisqda_plot
 
 \vspace{2mm}
 
-We now want to compare the predictive performance of our two classifiers. We do this by dividing the original `iris` data set, randomly, into train and test samples of equal size:
+To compare the _predictive performance_ of our two classifiers we divide the original `iris` data set randomly into train and test samples of equal size:
 
 \scriptsize
 
@@ -1638,7 +1641,7 @@ iris_test = iris[-train, ]
 
 \normalsize
 
-Run LDA and QDA on the same (!!) training set:
+Run LDA and QDA _on the same training set_:
 
 \scriptsize
 
@@ -1717,7 +1720,7 @@ table(iris_qda2_predict$class, iris$Species[-train])
 But:
 
 1. Would another division of the data into training and test set give the same conclusion (that LDA is better than QDA for this data set)? (A: Not necessarily, but probably.)
-    + We will look into other choice than dividing into one training and one test set in Module 5 (crossvalidation).
+    + We will look into other choice than dividing into one training and one test set in Module 5 (cross-validation).
 
 \vspace{2mm}
 
@@ -1875,7 +1878,7 @@ like QDA, by explicitly including quadratic terms in the model.}, but
 
 ---
 
-# So: Which classification method is the best?
+## So: Which classification method is the best?
 
 \vspace{2mm}
 
@@ -1896,15 +1899,6 @@ when $K > 2$.
 Please read Section 4.5 of our coursebook [@james.etal].
 
 
-
-
----
-
-\vspace{2mm}
-Todo: Include exercise(s) that compares LDA, QDA, logreg and KNN!
-
-
-Compulsory Exercise 1, Problem 3a.
 
 
 ---
@@ -1944,10 +1938,11 @@ $2 \times 2$ table shows data from a simple diagnostic study:
 ---
 
 ## Example Continued: South African heart disease
+\vspace{2mm}
 
 We want to evaluate our multiple logistic model for the `SAheart` data set. In order to investigate the training error and the test error, we divide the original data set, randomly, into two samples of equal size.
 
-\small
+\scriptsize
 ```{r}
 set.seed(20)
 train_ID = sample(1:nrow(d.heart), nrow(d.heart)/2)
@@ -1955,34 +1950,39 @@ train_SA = d.heart[train_ID, ]
 test_SA = d.heart[-train_ID, ]
 ```
 
----
 
-We now fit a logistic regression model, using the training set only:
+\normalsize
+
+**Fit** a logistic regression model, **using the training set only**:
 
 \scriptsize
 
 ```{r,echo=showsolB}
 glm_SA = glm(chd~. , data=train_SA, family="binomial")
-summary(glm_SA)
+summary(glm_SA)$coef
 ```
-\normalsize
+
 
 ---
 
-* **Aim**: To estimate the probability of a `chd` event for the observations in the test set. 
-
-* To do this we can insert the estimated coefficient into the logistic equation, remembering that `famhist` is a categorical covariate, modeled by a dummy variable: 
-$$x_\text{famhist} = \begin{cases} 1, \quad \text{ if Present}, \\ 0, \quad \text{ if Absent}.\end{cases}$$
-
-* The estimated probability  of $Y=1$ if `famhist = "Present"`, given a vector $\mathbf{X}$ of covariate observations is:
+* The estimated probability of a `chd` event ($Y=1$) is then given as
 $$\hat{p}(\mathbf{X}) =\frac{e^\eta}{1+e^\eta} ,$$
-with $\eta=\beta_0 + \beta_1 x_{\text{sbp}} + \beta_2 x_{\text{tobacco}} + \beta_3 x_\text{ldh} + \beta_4 \cdot x_{famhist} +  \beta_5 x_\text{obesity} + \beta_6 x_\text{alcohol} + \beta_7 x_{\text{age}}$.
+with $\eta=\beta_0 + \beta_1 \cdot x_{\text{sbp}} + \beta_2\cdot x_{\text{tobacco}} + \beta_3 \cdot x_\text{ldh} + \beta_4  \cdot x_{famhist} +  \beta_5\cdot x_\text{obesity} + \beta_6\cdot x_\text{alcohol} + \beta_7\cdot x_{\text{age}}$. 
+
+\hspace{6mm} Remember that $x_{famhist} \in \{0,1\}$ is a binary covariate.
+
+\vspace{2mm}
+
+* We are interested in the **predictions for the test set** (although it is of course possible to calculate predictions for the training set, too). 
+
+
+
 
  
 
 ---
 
-The `predict` function does these calculations for us. When specifying `type="response"` the function returns the probabilities for $Y=1$.
+* The `predict` function does these calculations for us. When specifying `type="response"` the function returns the probabilities for $Y=1$.
 
 \scriptsize
 ```{r}
@@ -1991,7 +1991,7 @@ probs_SA = predict(glm_SA, newdata=test_SA, type="response")
 
 \normalsize
 
-From these probabilities we can obtain classifications, by specifying a threshold value. We have here chosen a threshold value of 0.5. By using the `ifelse` function we specify that all probabilities larger than 0.5 are to be classified as 1, while the remaining probabilities are to be classified as 0.
+* Classifications are obtained by specifying a threshold value. We have here chosen a threshold value of 0.5. By using the `ifelse` function we specify that all probabilities larger than 0.5 are to be classified as 1, while the remaining probabilities are to be classified as 0.
 
 ---
 
@@ -2006,28 +2006,32 @@ head(predictions_SA)
 
 ---
 
-We can now use the confusion matrix to count the number of misclassifications. The below confusion matrix is calculated using the test set and comparing the predicted classes with the true classes.
-```{r}
-table(predicted=pred_SA, true=d.heart[-train_ID,"chd"])
-```
-The logistic model has correctly classified 118+41 times, and misclassified 27+45 times. The misclassification test error rate is thus:
-$$\text{Test error} = \frac{27+45}{27+45+118+41} \approx 0.31$$
-
----
-
-The training error can be calculated in a similar fashion, but now we use the fitted model to make prediction for the training set. 
+The confusion matrix is used to count the number of misclassifications in the test set: 
 
 \scriptsize
 ```{r}
-SA_train_prob = glm_SA$fitted.values
-SA_train_pred = ifelse(SA_train_prob>0.5, 1, 0)
-conf_train = table(SA_train_pred, d.heart[train_ID, "chd"])
-misclas_train = (231-sum(diag(conf_train)))/231
-misclas_train
+table(predicted=pred_SA, true=d.heart[-train_ID,"chd"])
 ```
 
 \normalsize
-The train misclassification error rate is $\approx 23.8\%$.
+The logistic model has correctly classified 118+41 times, and misclassified 27+45 times. The misclassification test error rate is thus:
+$$\text{Test error} = \frac{27+45}{27+45+118+41} \approx 0.31$$
+
+<!-- --- -->
+
+<!-- The training error can be calculated in a similar fashion, but now we use the fitted model to make prediction for the training set.  -->
+
+<!-- \scriptsize -->
+<!-- ```{r} -->
+<!-- SA_train_prob = glm_SA$fitted.values -->
+<!-- SA_train_pred = ifelse(SA_train_prob>0.5, 1, 0) -->
+<!-- conf_train = table(SA_train_pred, d.heart[train_ID, "chd"]) -->
+<!-- misclas_train = (231-sum(diag(conf_train)))/231 -->
+<!-- misclas_train -->
+<!-- ``` -->
+
+<!-- \normalsize -->
+<!-- The train misclassification error rate is $\approx 23.8\%$. -->
 
 ---
 
@@ -2081,22 +2085,10 @@ The ROC-curve is made up of all possible cut-offs and their associated sensitivi
 
 ---
 
-## Extensions for classifications
 
-* Module 5: how to use cross-validation in model evaluation and model selection
-* (Module 6: model selection - but mainly regression)
-* Module 7: maybe a taste of nonlinear methods 
-* Module 8: classification trees (binary splits for the covariates)
-* Module 9: support vector machines
-* Module 11: neural nets
-
----
+#  Further reading  
 
 
-
-# <a id="further"> Further reading </a>
-
-* More on logistic regression from TMA4315 Generalized linear models H2018: [TMA4315M3: Binary regression](https://www.math.ntnu.no/emner/TMA4315/2018h/3BinReg.html)
 * [Videoes on YouTube by the authors of ISL, Chapter 4](https://www.youtube.com/playlist?list=PL5-da3qGB5IC4vaDba5ClatUmFppXLAhE)
 
 
@@ -2104,16 +2096,11 @@ The ROC-curve is made up of all possible cut-offs and their associated sensitivi
 
 ## Want to learn more (theory) about logistic regression?
 
-* In TMA4315 Generalized linear models there are 3 weeks with binary regression - mainly logistic regression. 
+* In TMA4315 Generalized linear models there are 3 weeks with binary regression - mainly logistic regression: [TMA4315M3: Binary regression](https://www.math.ntnu.no/emner/TMA4315/2018h/3BinReg.html).
 
 * The focus there is on all parts of the regression (not classification) with a mathematical focus on estimation, inference, model fit. 
 
 
----
-
-# Acknowledgements
-
-I thank Mette Langaas and Julia Debik, whose slides I modified and adapted to get this set of slides.
 
 ---
 
