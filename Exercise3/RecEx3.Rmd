@@ -26,7 +26,7 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 <!-- rmarkdown::render("RecEx3-sol.Rmd","html_document",encoding="UTF-8") -->
 <!-- rmarkdown::render("RecEx3-sol.Rmd","pdf_document",encoding="UTF-8") -->
 
-Last changes: 16.01.2020
+Last changes: 22.01.2020
 
 ---
 
@@ -41,8 +41,6 @@ install.packages("knitr") #probably already installed
 install.packages("rmarkdown") #probably already installed
 install.packages("GLMsData") #data set for Problem 3
 install.packages("ggplot2") #plotting with ggplot 
-install.packages("nortest") #test that data comes from normal distribution
-install.packages("car") #qqPlot function
 install.packages("ISLR") #data problem 1
 install.packages("ggfortify") #diagnostic plots for lm objects
 ```
@@ -78,7 +76,7 @@ iii. What does the coefficient for the year variable suggest?
 Use the `autoplot()` function from the `ggfortify` package to produce diagnostic plots of the linear regression fit by setting `smooth.colour = NA`, as sometimes the smoothed line can be misleading. Comment on any problems you see with the fit. Do the residual plots suggest any unusually large outliers? Does the leverage plot identify any observations with unusually high leverage?
 
 ####e)
-For beginners, it can be difficult to decide whether a certain QQ plot looks "good" or "bad", because we only look at it and do not test anything. A way to get a feeling for how "bad" a QQ plot may look, even when the normality assumption is perfectly ok, we can use simulations: We can simply draw from the normal distribution and plot the QQ plot. Use the following code to repeat this nine times:
+For beginners, it can be difficult to decide whether a certain QQ plot looks "good" or "bad", because we only look at it and do not test anything. A way to get a feeling for how "bad" a QQ plot may look, even when the normality assumption is perfectly ok, we can use simulations: We can simply draw from the normal distribution and plot the QQ plot. Use the following code to repeat this six times:
 
 ```{r, eval=FALSE}
 set.seed(2332)
