@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "January 24 and 27, 2020"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -55,7 +55,7 @@ Last update: January 24, 2020
 
 $~$
 
-* We need more statistical theory than is presented in the textbook, which you find on these module slides.
+* All the material presented on these module slides.
 
 
 
@@ -89,8 +89,7 @@ $~$
 
 * Naive Bayes - when and why?
 
-* That is the diagnostic paradigm and what is modelled then?
-
+* Sensitivity, specificity and ROC curves
 
 
 ---
@@ -99,8 +98,10 @@ $~$
 \vspace{3mm}
 
 * By now our responses $Y$ was assumed _continuous_, while covariates were allowed to be _categorical_.
+\vspace{1mm}
 
 * Now we allow the response to be _categorical_.
+\vspace{1mm}
 
 * This is even more common than continuous responses. Examples:
     + Spam filters `email` $\in$ \{spam, ham\},
@@ -197,6 +198,7 @@ $~$
 ---
 
 ## Linear regression for binary classification?
+\vspace{1mm}
 
 Suppose we have a binary outcome, for example whether a credit card user defaults $Y =$ `yes` or `no`, given covariates $X$ to predict $Y$. We could use _dummy encoding_ for $Y$ like
 
@@ -262,9 +264,9 @@ $~$
 ---
 
 ### However:
+\vspace{2mm}
 
-
-* It is still possible to use linear regression for classification problems with two classes. It is actually not even a bad idea, and works well under some conditions. If the conditional class densities are (multivariate) normal with equal covariance matrices then this linear regression (with 0 and 1 response) will in fact give the same classification as linear discriminatn analysis (LDA). 
+* It is still possible to use linear regression for classification problems with two classes. It is actually not even a bad idea, and works well under some conditions. If the conditional class densities are (multivariate) normal with equal covariance matrices then this linear regression (with 0 and 1 response) will in fact give the same classification as linear discriminant analysis (LDA). 
 
 * For categorical outcomes with more than two levels, it requires some extra work (multivariate $Y$ due to the dummy variable coding). 
 
@@ -316,6 +318,7 @@ to $p_i$. How?
 ---
 
 ### Logistic regression with one covariate
+\vspace{2mm}
 
 * Equation (1) can be rearranged and solved for $p_i$. Let's look at this for only one covariate: 
 
@@ -418,7 +421,7 @@ summary(glm_default)$coef
 
 \normalsize
 
-* The $z$-statistic is equal to $\frac{\hat\beta}{SE(\hat\beta)}$, and is approximately $N(0,1)$ distributed\footnote{With this knowledge we can construct confidence intervals and test hypotheses about the $\beta$s, with the aim to understand which covariate(s) contribute to our posterior probabilites and classification.}
+* The $z$-statistic is equal to $\frac{\hat\beta}{SE(\hat\beta)}$, and is approximately $N(0,1)$ distributed.\footnote{With this knowledge we can construct confidence intervals and test hypotheses about the $\beta$s, with the aim to understand which covariate(s) contribute to our posterior probabilites and classification.}
 
 * The $p$-value is $\text{Pr}(|Z| > |z|)$ for a $Z\sim N(0,1)$ random variable
 
@@ -446,6 +449,8 @@ thus
 The quantity $p_i/(1-p_i)$ is called the _\textcolor{red}{odds}_. Odds represent _\textcolor{red}{chances}_ (e.g. in betting).
 
 $~$
+
+**Q**:
 
 1. You think your football team will win tonight with a probability $p=80\%$. What is the odds that it will win?
 
@@ -550,9 +555,9 @@ Let's catch up. Why were we doing all this in the first place?
 $$\hat{p}({\boldsymbol x}_0) = \frac{e^{\hat{\eta}_0}}{1+e^{\hat{\eta}_0}} \ , $$
 
 with linear predictor
-$$\hat\eta_0 = \hat\beta_0 + \hat\beta_1 x_{01} + \ldots \hat\beta_p x_{0p} \ .$$
+$$\hat\eta_0 = \hat\beta_0 + \hat\beta_1 x_{01} + \ldots + \hat\beta_p x_{0p} \ .$$
 
-In the case of qualitative covariates, a dummy variable needs to be introduced. This is done as for linear regression. 
+In the case of qualitative covariates, a dummy variable needs to be introduced. This can be done as for linear regression. 
 
 
 ---
@@ -737,14 +742,15 @@ $$\text{I}(a\neq\hat{a}) = \begin{cases} 1 \text{ if } a \neq \hat{a} \ , \\
 ---
 
 ### Test error
+\vspace{2mm}
 
 * **Test error rate**: The fraction of misclassifications when our model is applied on a test set
 $$\text{Ave}(I(y_0\neq \hat{y}_0)) \ ,$$
 where the average is over all the test observations $(x_0,y_0)$.
 
-* Again, this gives a better indication of the true performance of the classifier (than the training error).
+* Again, this gives a better indication of the true performance of the classifier than the training error (remember why?).
 
-* We assume that a _good_ classifier is a classifier that has a _low_ test error.
+* We assume that a _good_ classifier is a classifier that has a _low test error_.
 
 
 

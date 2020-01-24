@@ -164,8 +164,7 @@ Last update: January 24, 2020
 \begin{itemize}
 \tightlist
 \item
-  We need more statistical theory than is presented in the textbook,
-  which you find on these module slides.
+  All the material presented on these module slides.
 \end{itemize}
 
 \end{block}
@@ -192,7 +191,7 @@ Last update: January 24, 2020
 \item
   Naive Bayes - when and why?
 \item
-  That is the diagnostic paradigm and what is modelled then?
+  Sensitivity, specificity and ROC curves
 \end{itemize}
 
 \end{block}
@@ -206,9 +205,9 @@ Last update: January 24, 2020
 \begin{itemize}
 \item
   By now our responses \(Y\) was assumed \emph{continuous}, while
-  covariates were allowed to be \emph{categorical}.
+  covariates were allowed to be \emph{categorical}. \vspace{1mm}
 \item
-  Now we allow the response to be \emph{categorical}.
+  Now we allow the response to be \emph{categorical}. \vspace{1mm}
 \item
   This is even more common than continuous responses. Examples:
 
@@ -320,6 +319,8 @@ error rate (training and test version).
 
 \begin{block}{Linear regression for binary classification?}
 
+\vspace{1mm}
+
 Suppose we have a binary outcome, for example whether a credit card user
 defaults \(Y =\) \texttt{yes} or \texttt{no}, given covariates \(X\) to
 predict \(Y\). We could use \emph{dummy encoding} for \(Y\) like
@@ -406,6 +407,8 @@ This suggests an ordering, but this is artificial.
 
 \begin{block}{However:}
 
+\vspace{2mm}
+
 \begin{itemize}
 \item
   It is still possible to use linear regression for classification
@@ -413,7 +416,7 @@ This suggests an ordering, but this is artificial.
   works well under some conditions. If the conditional class densities
   are (multivariate) normal with equal covariance matrices then this
   linear regression (with 0 and 1 response) will in fact give the same
-  classification as linear discriminatn analysis (LDA).
+  classification as linear discriminant analysis (LDA).
 \item
   For categorical outcomes with more than two levels, it requires some
   extra work (multivariate \(Y\) due to the dummy variable coding).
@@ -488,6 +491,8 @@ This suggests an ordering, but this is artificial.
 \begin{frame}
 
 \begin{block}{Logistic regression with one covariate}
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -652,7 +657,7 @@ Let's again look at the regression output:
 \item
   The \(z\)-statistic is equal to \(\frac{\hat\beta}{SE(\hat\beta)}\),
   and is approximately \(N(0,1)\)
-  distributed\footnote{With this knowledge we can construct confidence intervals and test hypotheses about the $\beta$s, with the aim to understand which covariate(s) contribute to our posterior probabilites and classification.}
+  distributed.\footnote{With this knowledge we can construct confidence intervals and test hypotheses about the $\beta$s, with the aim to understand which covariate(s) contribute to our posterior probabilites and classification.}
 \item
   The \(p\)-value is \(\text{Pr}(|Z| > |z|)\) for a \(Z\sim N(0,1)\)
   random variable
@@ -688,6 +693,8 @@ The quantity \(p_i/(1-p_i)\) is called the \emph{\textcolor{red}{odds}}.
 Odds represent \emph{\textcolor{red}{chances}} (e.g.~in betting).
 
 \(~\)
+
+\textbf{Q}:
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -835,10 +842,10 @@ probabilities of categories} \(Y\), \emph{given} certain covariates
 \[\hat{p}({\boldsymbol x}_0) = \frac{e^{\hat{\eta}_0}}{1+e^{\hat{\eta}_0}} \ , \]
 
 with linear predictor
-\[\hat\eta_0 = \hat\beta_0 + \hat\beta_1 x_{01} + \ldots \hat\beta_p x_{0p} \ .\]
+\[\hat\eta_0 = \hat\beta_0 + \hat\beta_1 x_{01} + \ldots + \hat\beta_p x_{0p} \ .\]
 
 In the case of qualitative covariates, a dummy variable needs to be
-introduced. This is done as for linear regression.
+introduced. This can be done as for linear regression.
 
 \end{block}
 
@@ -1153,6 +1160,8 @@ the correct classifications loss 0 - this is called \emph{0/1-loss}.
 
 \begin{block}{Test error}
 
+\vspace{2mm}
+
 \begin{itemize}
 \item
   \textbf{Test error rate}: The fraction of misclassifications when our
@@ -1161,10 +1170,10 @@ the correct classifications loss 0 - this is called \emph{0/1-loss}.
   the test observations \((x_0,y_0)\).
 \item
   Again, this gives a better indication of the true performance of the
-  classifier (than the training error).
+  classifier than the training error (remember why?).
 \item
   We assume that a \emph{good} classifier is a classifier that has a
-  \emph{low} test error.
+  \emph{low test error}.
 \end{itemize}
 
 \end{block}
