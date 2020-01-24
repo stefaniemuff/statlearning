@@ -849,7 +849,7 @@ test = expand.grid(x = seq(min(df[,1]-1), max(df[,1]+1), by=0.2), y=seq(min(df[,
 
 
 ## k = 1
-classif = class::knn(df[,1:2], test=test, cl=df[,3], k=1, prob=TRUE)
+classif = knn(df[,1:2], test=test, cl=df[,3], k=1, prob=TRUE)
 prob = attr(classif, "prob")
 
 dataf = bind_rows(mutate(test, prob=prob, class="A", prob_cls=ifelse(classif==class, 1, 0)),
@@ -861,7 +861,7 @@ gg = gg + geom_point(aes(x=x, y=y, col=class), size=2, data=data.frame(x=df[,1],
 gg = gg + ggtitle("k = 1")+xlab("X1")+ylab("X2")+theme_minimal()
 
 # k = 3
-classif3 = class::knn(df[,1:2], test=test, cl=df[,3], k=3, prob=TRUE)
+classif3 = knn(df[,1:2], test=test, cl=df[,3], k=3, prob=TRUE)
 prob3 = attr(classif3, "prob")
 
 dataf3 = bind_rows(mutate(test, prob=prob3, class="A", prob_cls=ifelse(classif3==class, 1, 0)),
@@ -874,7 +874,7 @@ gg3 = gg3 + ggtitle("k = 3")+xlab("X1")+ylab("X2")+theme_minimal()
 
 ## k = 10
 
-classif10 = class::knn(df[,1:2], test=test, cl=df[,3], k=10, prob=TRUE)
+classif10 = knn(df[,1:2], test=test, cl=df[,3], k=10, prob=TRUE)
 prob10 = attr(classif10, "prob")
 
 dataf10 = bind_rows(mutate(test, prob=prob10, class="A", prob_cls=ifelse(classif10==class, 1, 0)),
@@ -887,7 +887,7 @@ gg10 = gg10 + ggtitle("k = 10")+xlab("X1")+ylab("X2")+theme_minimal()
 
 ## k = 150
 
-classif150 = class::knn(df[,1:2], test=test, cl=df[,3], k=150, prob=TRUE)
+classif150 = knn(df[,1:2], test=test, cl=df[,3], k=150, prob=TRUE)
 prob150 = attr(classif150, "prob")
 
 dataf150 = bind_rows(mutate(test, prob=prob150, class="A", prob_cls=ifelse(classif150==class, 1, 0)),
@@ -976,7 +976,7 @@ $\rightarrow$ Critical to the success of the classifier to choose the correct le
 Two approaches to estimate $\text{Pr}(Y=k \mid X=x)$:
 \vspace{1mm}
 
-## **Diagnostic paradigm**
+### Diagnostic paradigm
 
 This is what we did so far: The focus was  _directly_ estimating the posterior distribution for the classes $$\text{Pr}(Y=k \mid X=x)\ .$$ 
  **Examples:**
@@ -985,10 +985,10 @@ This is what we did so far: The focus was  _directly_ estimating the posterior d
 
 \vspace{2mm}
 
-## **Sampling paradigm** 
+### Sampling paradigm
 
-* The focus is on estimating the prior probabilities $\pi_k=\text{Pr}(Y=k)$ for the classes and the class conditional distributions $f_k(x)=\text{Pr}(X=x \mid Y=k)$. 
-* We classify to the class with the maximal product $\pi_k f_k(x)$. In this paradigm, we need to model the pdf for each class. 
+* Indirect approach: Model the conditional distribution of predictors $f_k(x)=\text{Pr}(X=x \mid Y=k)$ for each class, and the prior probabilities $\pi_k=\text{Pr}(Y=k)$.
+* Then classify to the class with the maximal product $\pi_k f_k(x)$. In this paradigm, we need to model the pdf for each class. 
 * Popular: the multivariate normal distribution!
 
 ---
@@ -998,11 +998,11 @@ Given a continuous $X$ and categorical $Y$, and
 * the probability  _\textcolor{red}{density}_ function $f_k(x) = \text{Pr}(X=x \mid Y=k)$ for $X$ in class $k$.
 * the  _\textcolor{red}{prior}_ probability for class $k$ $\pi_k = \text{Pr}(Y=k)$ is the prior probability.
 
-How do we get $\text{Pr}(Y=k | X=x_0)$?
+How do we get $\text{Pr}(Y=k | X=x_0)$? That is, how can we "flip" the conditioning around?
 \vspace{4mm}
 
  
-**Bayes theorem**
+### **Bayes theorem** 
 \vspace{-3mm}
 \begin{align*}
 p_k(X) = \text{Pr}(Y=k \mid X= x) &= 
@@ -1243,7 +1243,7 @@ c((sum(train1>rule)+sum(train2<rule))/n, (sum(test1>rule)+sum(test2<rule))/n)
 \normalsize
 
 
-This is a rather good performance, compared to the minimal Bayes error rate. But keep in mind that we LDA classifier relies on the Normal assumption, and that $\sigma_k=\sigma$ for all classes is assumed.
+This is a rather good performance, compared to the minimal Bayes error rate. But keep in mind that the LDA classifier relies on the Normal assumption, and that $\sigma_k=\sigma$ for all classes is assumed\footnote{Both of which we knew were fulfilled here.}.
 
 ---
 
@@ -1302,19 +1302,13 @@ $$\delta_k(x) = {\boldsymbol x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_k - \fr
 
 ---
 
-Some details on the derivation of the discriminant function - when $K=2$ classes, and the classes are denoted $0$ and $1$
+In the compulsory 1 exercise you are going to show that the condition
 
-$$\text{Pr}(Y=0 | X={\boldsymbol x}) = \text{Pr}(Y=1 | X={\boldsymbol x})$$
-$$\frac{\pi_0f_0(x)}{\pi_0f_0(x)+\pi_1f_1(x)} = \frac{\pi_1f_0(1)}{\pi_0f_0(x)+\pi_1f_1(x)} $$
-$$\pi_0 f_0({\boldsymbol x}) = \pi_1 f_1({\boldsymbol x})$$
-$$\pi_0\frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}
-e^{\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu}_0)^T \boldsymbol{\Sigma}^{-1}({\boldsymbol x}-\boldsymbol{\mu}_0)} =  \pi_1\frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}e^{\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu}_1)^T \boldsymbol{\Sigma}^{-1}({\boldsymbol x}-\boldsymbol{\mu}_1)} $$
-$$\log(\pi_0) -\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu}_0)^T \boldsymbol{\Sigma}^{-1}({\boldsymbol x}-\boldsymbol{\mu}_0) = 
-\log(\pi_1) -\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu}_1)^T \boldsymbol{\Sigma}^{-1}({\boldsymbol x}-\boldsymbol{\mu}_1) $$
-$$\log(\pi_0)  -\frac{1}{2}{\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}{\boldsymbol x} + {\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 - \frac{1}{2}\boldsymbol{\mu}_0^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 = \log(\pi_1)  -\frac{1}{2}{\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}{\boldsymbol x} + {\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 - \frac{1}{2}\boldsymbol{\mu}_1^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 $$
-$$\log(\pi_0) + {\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 - \frac{1}{2}\boldsymbol{\mu}_0^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 = 
-\log(\pi_1) + {\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 - \frac{1}{2}\mu_1^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1$$
-$$\delta_0({\boldsymbol x}) = \delta_1({\boldsymbol x}) $$
+$$P(Y=0 \,|\, \boldsymbol{X}=\boldsymbol{x}) = P(Y=1  \,|\, \boldsymbol{X}=\boldsymbol{x}) $$
+
+can be expressed as 
+
+$$\delta_0({\boldsymbol x}) = \delta_1({\boldsymbol x}) \ .$$
 
 
 ---
@@ -1946,7 +1940,7 @@ $2 \times 2$ table shows data from a simple diagnostic study:
 ## Example Continued: South African heart disease
 \vspace{2mm}
 
-We want to evaluate our multiple logistic model for the `SAheart` data set. In order to investigate the training error and the test error, we divide the original data set, randomly, into two samples of equal size.
+We evaluate our multiple logistic model for the `SAheart` data set. To investigate the training error and the test error, we divide the original data set randomly into two samples of equal size.
 
 \scriptsize
 ```{r}
@@ -2095,7 +2089,7 @@ The ROC-curve is made up of all possible cut-offs and their associated sensitivi
 #  Further reading  
 
 
-* [Videoes on YouTube by the authors of ISL, Chapter 4](https://www.youtube.com/playlist?list=PL5-da3qGB5IC4vaDba5ClatUmFppXLAhE)
+* [Videoes on YouTube by the authors of ISL, Chapter 4, plus the videos for KNN in Chapter 2](https://www.youtube.com/playlist?list=PL5-da3qGB5IC4vaDba5ClatUmFppXLAhE)
 
 
 ---

@@ -1388,7 +1388,7 @@ correct level of flexibility (\(K\)).
 
 Two approaches to estimate \(\text{Pr}(Y=k \mid X=x)\): \vspace{1mm}
 
-\begin{block}{\textbf{Diagnostic paradigm}}
+\begin{block}{Diagnostic paradigm}
 
 This is what we did so far: The focus was \emph{directly} estimating the
 posterior distribution for the classes \[\text{Pr}(Y=k \mid X=x)\ .\]
@@ -1398,17 +1398,17 @@ posterior distribution for the classes \[\text{Pr}(Y=k \mid X=x)\ .\]
 
 \end{block}
 
-\begin{block}{\textbf{Sampling paradigm}}
+\begin{block}{Sampling paradigm}
 
 \begin{itemize}
 \tightlist
 \item
-  The focus is on estimating the prior probabilities
-  \(\pi_k=\text{Pr}(Y=k)\) for the classes and the class conditional
-  distributions \(f_k(x)=\text{Pr}(X=x \mid Y=k)\).
+  Indirect approach: Model the conditional distribution of predictors
+  \(f_k(x)=\text{Pr}(X=x \mid Y=k)\) for each class, and the prior
+  probabilities \(\pi_k=\text{Pr}(Y=k)\).
 \item
-  We classify to the class with the maximal product \(\pi_k f_k(x)\). In
-  this paradigm, we need to model the pdf for each class.
+  Then classify to the class with the maximal product \(\pi_k f_k(x)\).
+  In this paradigm, we need to model the pdf for each class.
 \item
   Popular: the multivariate normal distribution!
 \end{itemize}
@@ -1431,15 +1431,20 @@ Given a continuous \(X\) and categorical \(Y\), and
   \(\pi_k = \text{Pr}(Y=k)\) is the prior probability.
 \end{itemize}
 
-How do we get \(\text{Pr}(Y=k | X=x_0)\)? \vspace{4mm}
+How do we get \(\text{Pr}(Y=k | X=x_0)\)? That is, how can we ``flip''
+the conditioning around? \vspace{4mm}
 
-\textbf{Bayes theorem} \vspace{-3mm}
+\begin{block}{\textbf{Bayes theorem}}
+
+\vspace{-3mm}
 
 \begin{align*}
 p_k(X) = \text{Pr}(Y=k \mid X= x) &= 
 \frac{\text{Pr}(X=x \cap Y=k)}{f(x)}\\
 &= \frac{ f_k(x) \pi_k}{\sum_{l=1}^K  f_l(x) \pi_l}  \ .
 \end{align*}
+
+\end{block}
 
 \end{frame}
 
@@ -1717,8 +1722,9 @@ you the training and test error rates:
 \normalsize
 
 This is a rather good performance, compared to the minimal Bayes error
-rate. But keep in mind that we LDA classifier relies on the Normal
-assumption, and that \(\sigma_k=\sigma\) for all classes is assumed.
+rate. But keep in mind that the LDA classifier relies on the Normal
+assumption, and that \(\sigma_k=\sigma\) for all classes is
+assumed\footnote{Both of which we knew were fulfilled here.}.
 
 \end{frame}
 
@@ -1801,20 +1807,13 @@ True K & wrong & wrong & ... & correct\\
 
 \begin{frame}
 
-Some details on the derivation of the discriminant function - when
-\(K=2\) classes, and the classes are denoted \(0\) and \(1\)
+In the compulsory 1 exercise you are going to show that the condition
 
-\[\text{Pr}(Y=0 | X={\boldsymbol x}) = \text{Pr}(Y=1 | X={\boldsymbol x})\]
-\[\frac{\pi_0f_0(x)}{\pi_0f_0(x)+\pi_1f_1(x)} = \frac{\pi_1f_0(1)}{\pi_0f_0(x)+\pi_1f_1(x)} \]
-\[\pi_0 f_0({\boldsymbol x}) = \pi_1 f_1({\boldsymbol x})\]
-\[\pi_0\frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}
-e^{\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu}_0)^T \boldsymbol{\Sigma}^{-1}({\boldsymbol x}-\boldsymbol{\mu}_0)} =  \pi_1\frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}e^{\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu}_1)^T \boldsymbol{\Sigma}^{-1}({\boldsymbol x}-\boldsymbol{\mu}_1)} \]
-\[\log(\pi_0) -\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu}_0)^T \boldsymbol{\Sigma}^{-1}({\boldsymbol x}-\boldsymbol{\mu}_0) = 
-\log(\pi_1) -\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu}_1)^T \boldsymbol{\Sigma}^{-1}({\boldsymbol x}-\boldsymbol{\mu}_1) \]
-\[\log(\pi_0)  -\frac{1}{2}{\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}{\boldsymbol x} + {\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 - \frac{1}{2}\boldsymbol{\mu}_0^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 = \log(\pi_1)  -\frac{1}{2}{\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}{\boldsymbol x} + {\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 - \frac{1}{2}\boldsymbol{\mu}_1^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 \]
-\[\log(\pi_0) + {\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 - \frac{1}{2}\boldsymbol{\mu}_0^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_0 = 
-\log(\pi_1) + {\boldsymbol x}^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1 - \frac{1}{2}\mu_1^T\boldsymbol{\Sigma}^{-1}\boldsymbol{\mu}_1\]
-\[\delta_0({\boldsymbol x}) = \delta_1({\boldsymbol x}) \]
+\[P(Y=0 \,|\, \boldsymbol{X}=\boldsymbol{x}) = P(Y=1  \,|\, \boldsymbol{X}=\boldsymbol{x}) \]
+
+can be expressed as
+
+\[\delta_0({\boldsymbol x}) = \delta_1({\boldsymbol x}) \ .\]
 
 \end{frame}
 
@@ -2627,10 +2626,9 @@ The answer is: \textbf{it depends!}
 
 \vspace{2mm}
 
-We want to evaluate our multiple logistic model for the \texttt{SAheart}
-data set. In order to investigate the training error and the test error,
-we divide the original data set, randomly, into two samples of equal
-size.
+We evaluate our multiple logistic model for the \texttt{SAheart} data
+set. To investigate the training error and the test error, we divide the
+original data set randomly into two samples of equal size.
 
 \scriptsize
 
@@ -2873,7 +2871,8 @@ sensitivity and specificity.
 \tightlist
 \item
   \href{https://www.youtube.com/playlist?list=PL5-da3qGB5IC4vaDba5ClatUmFppXLAhE}{Videoes
-  on YouTube by the authors of ISL, Chapter 4}
+  on YouTube by the authors of ISL, Chapter 4, plus the videos for KNN
+  in Chapter 2}
 \end{itemize}
 
 \end{frame}
