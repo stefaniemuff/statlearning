@@ -2,7 +2,7 @@
 subtitle: "TMA4268 Statistical Learning V2020"
 title: "Module 5: Resampling"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "February xx, 2020"
+date: "January 31 and February 3, 2020"
 fontsize: 10pt
 output:
   beamer_presentation:
@@ -12,6 +12,10 @@ output:
     theme: "Singapore"
     colortheme: "default"
     font: "serif"
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
 urlcolor: blue
 bibliography: refs.bib
 header-includes: \usepackage{multirow}
@@ -28,18 +32,31 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 whichformat="latex"
 ```
 
+---
+
+Last update: January 27, 2020
+
+---
+
+# Acknowledgements
+
+* A lot of this material stems from Mette Langaas and her TAs. I would like to thank Mette for the permission to use her material!
+
+* Some of the figures and slides in this presentation are taken (or are inspired) from @james.etal.
+
+
 # Introduction
 
 ## Learning material for this module
 
-* James et al (2013): An Introduction to Statistical Learning. Chapter 5.
-* [Classnotes 04.02.2019](https://www.math.ntnu.no/emner/TMA4268/2019v/notes/M5L1notes.pdf) 
-
-Additional material for the interested reader: Chapter 7 (in particular 7.10) in Friedman et al (2001): Elements of Statistical learning.
-
 \vspace{2mm}
 
-Some of the figures and slides in this presentation are taken (or are inspired) from @james.etal.
+* James et al (2013): An Introduction to Statistical Learning, Chapter 5.  
+
+* All the material presented on these module slides.
+
+\vspace{2mm}
+Additional material for the interested reader: Chapter 7 (in particular 7.10) in Friedman et al (2001): Elements of Statistical learning.
 
 ---
 
@@ -53,19 +70,17 @@ Some of the figures and slides in this presentation are taken (or are inspired) 
     + $k$-fold CV 
 
 * Bootstrapping - how and why.
-* Summing up
-* The plan for the interactive lesson.
+
 
 ---
 
 # Performance of a learning method
 
-Our models are "good" when they can generalize $\rightarrow$ We want a learning method to perform well on new data. 
+* Our models are "good" when they can generalize.
 
-Why?
+* We want a learning method to perform well on new data (low test error). 
 
-* Prediction capacity on independent test data
-* Inference and understanding the true pattern (in contrast to overfitting)
+* Inference and understanding of the true pattern (in contrast to overfitting)
 
 This is important both for 
 
@@ -124,7 +139,8 @@ $$\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i) \ .$$
 
 ---
 
-### Example (from recommended exercises 2)
+### Example 
+\vspace{2mm}
 
 We aim to do _model selection_ in KNN-regression, where true curve is
 $f(x)=-x+x^2+x^3$ with $x \in [-3,3]$. $n=61$ for the training data.
@@ -134,19 +150,30 @@ $f(x)=-x+x^2+x^3$ with $x \in [-3,3]$. $n=61$ for the training data.
 \centering
 ![Regression problem: training data and true regression curve](Prob1f1.png){width=50%}
 
+---
 
+### KNN regression (chapter 3.5 in course book)
+\vspace{2mm}
+
+* The KNN regression method provides a prediction at a value $x_0$ by finding the closest $K$ points (Euclidean distance) and calculating the average of the observed $y$ values at the points in the respective neighborhood $\mathcal{N}_0$ 
+
+$$\hat{f}(x_0)=\frac{1}{K}\sum_{i\in \mathcal{N}_0} y_i \ .$$
+
+
+* We have considered $K=1,\ldots,25$, and repeated the experiment $M=1000$ times (that is, $M$ versions of training and test set). 
 
 
 ---
 
-# Remember: The bias-variance trade-off
+### Remember: The bias-variance trade-off
+\vspace{2mm}
 
 
 For KNN: $K$ small = high complexity; $K$ large = low complexity. 
 
 <!-- <figure><img src="Probl1fig4negK.png" height="250px" width="250px" align="right" /><figcaption>Regression problem: bias-variance traceoff</figure> -->
 \centering
-![Regression problem: bias-variance traceoff](Prob1f4.png){width=85%}
+![Regression problem: bias-variance traceoff](Prob1f4.png){width=75%}
 
 
 
@@ -201,13 +228,13 @@ We will look at _cross-validation_ and the _bootstrap_.
 
 # Cross-validation (CV)
 
-Consider the following "model selection" situation: We assume that test data is available (and has been put aside), and we want to use the rest of our data to both fit the data and to find the best model.
+"Model selection" situation: We assume that test data is available (and has been put aside), and we want to use the rest of our data to both fit the data and to find the best model.
 
 This can be done by:
 
-* the validation set approach (not strictly a _cross_-validation approach)
-* leave one out cross-validation (LOOCV)
-* $k$-fold cross-validation (CV), typically $k=5$ or $10$
+* the validation set approach (not strictly a _cross_-validation approach).
+* leave one out cross-validation (LOOCV).
+* $k$-fold cross-validation (CV), typically $k=5$ or $10$.
 
 
 We will also discuss that there is a "right and a wrong way" to to CV
@@ -244,7 +271,7 @@ Remember: The focus is on model selection (finding the model that performs "best
 Auto data set (library `ISLR`): predict `mpg` (miles pr gallon) using polynomial function of `horsepower` (of engine), $n=392$. What do you see?
  
 
-```{r auto, echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='70%'}
+```{r auto, echo=FALSE, fig.width=4, fig.height=3,fig.align = "center",out.width='70%'}
 library(ISLR)
 library(ggplot2)
 library(ggpubr)
@@ -273,9 +300,9 @@ g0+theme_minimal()
 ---
 
 
-But what if we select another split into two parts? Let's do this for many splits:
+But what if we select another split into two parts? Many splits:
 
-```{r auto2, echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='70%'}
+```{r auto2, echo=FALSE, fig.width=4, fig.height=3,fig.align = "center",out.width='70%'}
 cols=rainbow(10)
 g1=g0+geom_line(aes(x=1:10,y=testMSEmat[,2]),colour=cols[1])
 g1=g1+geom_line(aes(x=1:10,y=testMSEmat[,3]),colour=cols[2])
@@ -300,10 +327,11 @@ $\rightarrow$ No consensus which model really gives the lowest validation set MS
 
 \vspace{2mm}
 
-* High variability of validation set error due to dependency on the set of observation included in the training and validation set
+* _\textcolor{red}{High variability}_ of validation set error due to dependency on the set of observation included in the training and validation set.
 
+\vspace{2mm}
 
-* Smaller sample size for model fit, as only half of the observations are in the training set. Therefore, the validation set error may tend to overestimate the error rate on new observations for a model that is fit on the full data set (the more data, the lower the error).
+* _\textcolor{red}{Smaller sample size}_ for model fit, as only half of the observations are in the training set. Therefore, the validation set error may tend to overestimate the error rate on new observations for a model that is fit on the full data set (the more data, the lower the error).
 
 ---
 
@@ -358,10 +386,9 @@ g0=ggplot(plotdf,aes(x=degree,y=testMSE))+geom_line()+geom_point()+scale_y_conti
 g0+theme_minimal()
 ```
 
----
 
 \tiny
-```{r,echo=TRUE,eval=FALSE}
+```{r,echo=FALSE,eval=FALSE}
 library(ISLR) #for Auto data set
 library(boot) #for cv.glm
 library(ggplot2) #for plotting
@@ -499,11 +526,8 @@ g0=ggplot(plotdf,aes(x=degree,y=testMSE5))+geom_line()+geom_point()+scale_y_cont
 g0+geom_line(aes(y=testMSEvec10),colour="red")+geom_point(aes(y=testMSEvec10),colour="red")+ggtitle("5 fold (black), 10 fold (red)")+theme_minimal()
 ```
 
----
 
-\tiny
-
-```{r,echo=TRUE,eval=FALSE}
+```{r,echo=FALSE,eval=FALSE}
 library(ISLR)
 library(boot)
 library(ggplot2)
@@ -573,6 +597,8 @@ g1+theme_minimal()
 #ggarrange(g0,g1)
 ```
 
+There still _is_ variability, but _much less_ than for validation set approach.
+
 ---
 
 ### Issues with $k$-fold cross-validation
@@ -595,16 +621,17 @@ g1+theme_minimal()
 
 \vspace{2mm}
 
-* Remember that we _randomly divide_ the data into $k$ folds and then perform the CV for all possible model that we want to choose between.
+* There is a model parameter (maybe $K$ in KNN or the degree of the polynomial), say $\theta$, involved to calculate $\text{CV}_j$, $j=1,\ldots, k$
+\vspace{1mm}
 
-* We have not directly indicated that there is a model parameter (maybe $K$ in KNN or the degree of the polynomial), say $\theta$, involved to calculate $\text{CV}_j$, $j=1,\ldots, k$
+* Based on the CV vs $\theta$-plot we can choose the model with _the smallest ${\text{CV}_k}$_ as our best model.
+\vspace{1mm}
 
-$~$
-
-**Smallest CV-error:**
-
-* Based on the CV-plot we may choose the model with the smallest ${\text{CV}_k}$ as our best model (with corresponding $\theta$).
 * We then fit this model using the whole data set (not the test part, that is still kept away), and evaluate the performance on the test set.
+
+
+
+
 
 ---
 
@@ -651,7 +678,7 @@ $$\text{CV}_{n}=\frac{1}{n} \sum_{i=1}^n {\text{Err}_i}$$
 ### Can we use CV for model assessment?
 \vspace{2mm}
 
-* Assume that we have a method where we not need to perform model selection (maybe using the methods from Module 6), but want to perform model assessment based on all our data.
+* Assume we already have our model (maybe found by using the methods from Module 6), so we want to perform model assessment based on all our data.
 
 * Then we can use CV with all data (then the validation part is really the test part) and report on the model performance using the validation parts of the data as above.
 
@@ -696,7 +723,7 @@ $~$
 
 $~$
 
-Note: We will see in the Recommended Exercises that doing the wrong thing can give a misclassification error approximately 0 - even if the "true" rate is 50%. (todo: check)
+Note: We will see in the Recommended Exercises that doing the wrong thing can give a misclassification error approximately 0 - even if the "true" rate is 50%. (todo: modify this exercise back)
 
 ---
 
@@ -707,30 +734,29 @@ Note: We will see in the Recommended Exercises that doing the wrong thing can gi
 Article by [Christophe Ambroise and Geoffrey J. McLachlan, PNAS 2002](http://www.pnas.org/content/99/10/6562).
 
 
-\centering
-![Training vs test error](pnas.png){width=105%}
+
+![Training vs test error](pnas.png){width=105%, align=center}
 
 
 
 
----
+ 
+<!-- * In the context of cancer diagnosis and treatment, we consider the -->
+<!-- problem of constructing an accurate prediction rule on the basis of -->
+<!-- a relatively small number of tumor tissue samples of known type -->
+<!-- containing the expression data on very many (possibly thousands) -->
+<!-- genes.  -->
 
+<!-- * Recently, results have been presented in the literature -->
+<!-- suggesting that it is possible to construct a prediction rule from -->
+<!-- only a few genes such that it has a negligible prediction error rate. -->
 
-* In the context of cancer diagnosis and treatment, we consider the
-problem of constructing an accurate prediction rule on the basis of
-a relatively small number of tumor tissue samples of known type
-containing the expression data on very many (possibly thousands)
-genes. 
+<!-- * However, in these results the test error or the leave-one-out -->
+<!-- cross-validated error is calculated without allowance for the selection -->
+<!-- bias.  -->
 
-* Recently, results have been presented in the literature
-suggesting that it is possible to construct a prediction rule from
-only a few genes such that it has a negligible prediction error rate.
+\vspace{10mm}
 
-* However, in these results the test error or the leave-one-out
-cross-validated error is calculated without allowance for the selection
-bias. 
-
-\vspace{2mm}
 See also this nice [anecdote at about 7min 15 in the video](https://www.youtube.com/watch?v=S06JpVoNaA0).
 
 
@@ -794,7 +820,7 @@ up by his own bootstraps._
 
 * Assume that we observe a random sample $X_1, X_2, \ldots, X_n$ from an unknown probability distribution $f$. We are interesting in saying something about the population median, and to do that we calculate the sample median $\tilde{X}$. But, how accurate is $\tilde{X}$ as an estimator?
 
-* If we would know our distiribution $F$, we could sample from $F$, and use simulations to answer our question.
+* If we would know our distribution $F$, we could sample from $F$, and use simulations to answer our question.
 
 * However, without knowledge of the distribution, we cannot calculate the standard deviation of our estimator, thus $\text{SD}(\tilde{X})$.
 
@@ -841,18 +867,25 @@ ggplot(data=data.frame(x=estimator),aes(x=x))+
 
 ---
 
-\small
+Compare the sample median
+\scriptsize
 ```{r, eval=TRUE, echo=TRUE}
 set.seed(123)
 n=101
 original=rnorm(n)
 median(original)
+```
+
+\normalsize
+to the median from one bootstrap-sample: 
+\scriptsize
+```{r, eval=TRUE, echo=TRUE}
 boot1=sample(x=original,size=n,replace=TRUE)
-table(table(boot1))
-
-
 median(boot1)
 ```
+
+\normalsize
+However, drawing only _one_ such sample does not help much.
 
 ---
 
@@ -860,7 +893,7 @@ median(boot1)
 
 \vspace{2mm}
 
-1. Drawing $B$ bootstrap samples: drawn with replacement from the original data 
+1. Drawing $B$ bootstrap samples: drawn with replacement from the original data.
 
 \vspace{1mm}
 
@@ -875,8 +908,9 @@ which is the empirical standard deviation from the $B$ estimates  $\tilde{X}^*_b
 
 ---
 
-### With a for-loop in R
+### Illustration for the median example (with a for-loop in R)
 
+\scriptsize
 ```{r, eval=TRUE, echo=TRUE}
 set.seed(123)
 n=101
@@ -892,6 +926,7 @@ for (b in 1:B)
 sd(estimator)
 ```
 
+
 ---
 
 The distribution of the 1000 sampled estimates:
@@ -906,18 +941,9 @@ ggplot(data=data.frame(x=estimator),aes(x=x))+
 
 ### Alternative: the built-in `boot` function from library  `boot`
 
+\scriptsize
 ```{r, eval=TRUE, echo=TRUE}
 library(boot)
-set.seed(123)
-n=101
-original=rnorm(n)
-median(original)
-summary(original)
-```
-
----
-
-```{r}
 boot.median=function(data,index) return(median(data[index]))
 B=1000
 boot(original,boot.median,R=B)
@@ -955,7 +981,7 @@ The least squares estimator: $\hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\b
 has $\text{Cov}(\boldsymbol\beta)=\sigma^2({\bf X}^T{\bf X})^{-1}$.
 
 In the recommended exercises we will look at how to use bootstrapping to estimate the covariance of the estimator.\footnote{
-Why is that "needed" if we already know the mathematical formula for the standard deviation? Answer: not needed - but OK to look at an example}
+Why is that "needed" if we already know the mathematical formula for the standard deviation? Answer: not needed - but OK to look at an example where we know the "truth".}
 
 \vspace{2mm}
 \normalsize
@@ -1015,10 +1041,27 @@ $$\text{Var}(\bar{X})=\frac{\sigma^2}{B} \ .$$
 * [Videoes on YouTube by the authors of ISL, Chapter 5](https://www.youtube.com/playlist?list=PL5-da3qGB5IA6E6ZNXu7dp89_uv8yocmf), and corresponding [slides](https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/cv_boot.pdf)
 * [Solutions to exercises in the book, chapter 5](https://rstudio-pubs-static.s3.amazonaws.com/65561_43c0eaaa8565414eae333b47038f716c.html)
 
+
 ---
 
-# Acknowledgements
 
-I thank Mette Langaas, whose slides I modified and adapted to get this set of slides.
+## Interactive lecture (Monday February 3rd)
 
+\vspace{2mm}
 
+* You may work alone, in pairs or larger groups - lecturer and TA will supervise.
+
+* Please **bring your laptop**!
+
+---
+
+## Interactive lecture on Monday
+
+* **10:15-10:30:** [Introduction to R Markdown (by lecturer)](https://www.math.ntnu.no/emner/TMA4268/2019v/RMarkdownIntro.html) and the template to be used for Compulsory exercise 1 (approx 20 minutes). Download
+<https://www.math.ntnu.no/emner/TMA4268/2019v/CompEx1mal.Rmd> (todo: change link) and also install the packages listed at the beginning of the exercise sheet (todo).
+
+* **Rest of time:** Introduction to problems on cross-validation and bootstrap; work with problems and some discussion.
+
+* **11:45:** Summing up problems and start Clicker Exercise on Module 5 (and indirectly 1-4).
+
+---
