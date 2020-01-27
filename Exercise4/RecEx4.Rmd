@@ -4,11 +4,11 @@ author: Martina Hall, Michail Spitieris, Stefanie Muff, Department of Mathematic
   Sciences, NTNU
 date: "January 30, 2020"
 output:
-  pdf_document:
-    fig_caption: yes
-    keep_tex: yes
-    toc: no
-    toc_depth: 2
+  # pdf_document:
+  #   fig_caption: yes
+  #   keep_tex: yes
+  #   toc: no
+  #   toc_depth: 2
   html_document:
     df_print: paged
     toc: no
@@ -219,7 +219,7 @@ yourKNNProbs[down] = 1-yourKNNProbs[down]
 library(pROC)
 library(plotROC)
 
-yourRoc = roc(response = Weekly_test$Direction, predictor = yourModelsPredictedProb)
+yourRoc = roc(response = Weekly_test$Direction, predictor = yourModelsPredictedProb, direction = "<")
 #you can use this function for all your methods and plot them using plot(yourRoc)
 
 #or use ggplot2 
