@@ -34,7 +34,7 @@ whichformat="latex"
 
 ---
 
-Last update: January 24, 2020
+Last update: January 27, 2020
 
 ---
 
@@ -1344,7 +1344,7 @@ ggplot(df, aes(x=X1, y=X2, color=class))+geom_point(size=3) +theme_bw()
 
 ---
 
-* Since the truth is known here we can calculate the Bayes boundary and the Bayes error. 
+* Since _the truth is known here_, we can calculate the Bayes boundary and the Bayes error. 
 
 * Since we have bivariate normal class distributions with common covariance matrix, the optimal boundary is given by LDA, with boundary given at $\delta_A({\boldsymbol x})=\delta_B({\boldsymbol x})$.
 
@@ -1372,7 +1372,7 @@ Inserting numerical values gives $-x_1-x_2+4=0$, thus a boundary with functional
 
 \vspace{2mm}
 
-We can use the Bayes boundary
+We can use the Bayes boundary to find the error rate:
 
 \scriptsize
 ```{r}
@@ -1380,8 +1380,10 @@ r.pred <- ifelse(df$X2<4-df$X1,"A","B")
 table(real=df$class, r.pred) 
 ```
 
+\vspace{2mm}
 \normalsize
-However, again, the Bayes boundary is usually not known, and we must estimate it from the data.
+
+**However**, again, the Bayes boundary is usually not known, and we must estimate it from the data.
 
 ---
 
@@ -1450,7 +1452,9 @@ ggplot(df, aes(x=X1, y=X2, color=class))+geom_point(size=3) +
 
 \vspace{2mm}
 
-Sometimes the probability that an observation comes from a class $k$ is more interesting than the actual classification itself. These class probabilities can be estimated from the priors and class conditional distributions, or from the discriminant functions:
+* Sometimes the probability that an observation comes from a class $k$ is more interesting than the actual classification itself. 
+
+* These class probabilities can be estimated from the priors and class conditional distributions, or from the discriminant functions:
 \begin{align*}\hat{P}(Y=k | X=\boldsymbol{x})&=
 \frac{\hat{\pi}_k \cdot \frac{1}{(2 \pi)^{p/2}|\hat{\boldsymbol{\Sigma}}|^{1/2}} \exp(-\frac{1}{2}
 (\boldsymbol{x}-\hat{\boldsymbol\mu}_k)^T \hat{\boldsymbol{\Sigma}}^{-1}
@@ -1503,10 +1507,8 @@ QDA is more flexible than LDA, as it allows for group-specific covariance matric
 
 Explanation similar to a "Bias-variance trade-off": 
 
-If the assumption of equal covariance matrices is wrong
-
-* then LDA may suffer from high bias for the parameter estimators.
-* and QDA is better off. But, for small sample sizes the covariance matrices might be poorly estimated (high variance of estimators).
+* If the assumption of equal covariance matrices is wrong, then LDA may suffer from high bias for the parameter estimators.
+* But for small sample sizes the covariance matrices might be poorly estimated (high variance of estimators).
 
 If the number of covariates is high:
 
@@ -1816,13 +1818,20 @@ thus $\boldsymbol{\Sigma}_k$ is assumed diagonal, and only the diagonal elements
 
 * Logistic regression
 
+* KNN
+
 * Linear discriminant analysis
 
 * Quadratic discriminant analysis
 
 * Naive Bayes
 
-* KNN
+\vspace{4mm}
+
+Remember: 
+
+* Logistic regression and KNN _\textcolor{red}{directly estimate}_ $\text{Pr}(Y=k \mid X=x)$ (diagnostic paradigm).
+* LDA, QDA and naive Bayes _\textcolor{red}{indirectly estimate}_  $\text{Pr}(Y=k \mid X=x) \propto f_k(x) \cdot \pi_k$ (sampling paradigm). 
 
 \vspace{2mm}
 
@@ -1867,9 +1876,9 @@ $\text{Pr}(Y \mid X)$.
 very similar\footnote{logistic regression can also fit quadratic boundaries
 like QDA, by explicitly including quadratic terms in the model.}, but
 
-    + LDA is "more available" in the multi-class setting
-    + if the class conditional distributions are multivariate normal then LDA (or QDA) is preferred
-    + if the class conditional distributions are far from multivariate normal then logistic regression is preferred
+    + LDA is "more available" in the multi-class setting.
+    + if the class conditional distributions are multivariate normal then LDA (or QDA) is preferred.
+    + logistic regression makes no assumptions about the covariates and is therefore to be preferred in many practical applications.
     + in medicine for two-class problems logistic regression is often preferred (for interpretability) and (always) together with ROC and AUC (for model comparison).
     
 ### and KNN?
@@ -1893,7 +1902,7 @@ when $K > 2$.
 
 * Naive Bayes is useful when $p$ is very large.
 
-* KNN is completely different, as it makes no assumptions about the decision boundary nor the distribution of the variables (nonparametric). It is expected to work better than LDA and logistic regression when boundary is very non-linear.
+* KNN is completely different, as it makes no assumptions about the decision boundary nor the distribution of the variables (nonparametric). It is expected to work better than LDA and logistic regression when boundary is very non-linear. Caveat: No interpretation of the effect of the covariates possbile.
 
 \vspace{2mm}
 Please read Section 4.5 of our coursebook [@james.etal].
@@ -2014,8 +2023,11 @@ table(predicted=pred_SA, true=d.heart[-train_ID,"chd"])
 ```
 
 \normalsize
-The logistic model has correctly classified 118+41 times, and misclassified 27+45 times. The misclassification test error rate is thus:
-$$\text{Test error} = \frac{27+45}{27+45+118+41} \approx 0.31$$
+
+* The logistic model has correctly classified 118+41 times, and misclassified 27+45 times, thus
+$$\text{Test error rate} = \frac{27+45}{27+45+118+41} \approx 0.31 \ .$$
+* Sensitivity: $\frac{41}{41+27}=0.603$, specificity = $\frac{118}{118+45}=0.724.$
+
 
 <!-- --- -->
 
