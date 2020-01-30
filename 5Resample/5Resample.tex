@@ -128,7 +128,7 @@
 
 \begin{frame}
 
-Last update: January 27, 2020
+Last update: January 30, 2020
 
 \end{frame}
 
@@ -403,6 +403,8 @@ additional validation set?
 
 \textbf{A}: We have not discussed model selection before.
 
+\vspace{2mm}
+
 \textbf{Q}: Why can't we just use the training set for training, and
 then the test set both for model selection and for model evaluation?
 
@@ -434,7 +436,8 @@ We will look at \emph{cross-validation} and the \emph{bootstrap}.
 
 ``Model selection'' situation: We assume that test data is available
 (and has been put aside), and we want to use the rest of our data to
-both fit the data and to find the best model.
+find the model that performs ``best'', that is, \emph{with lowest test
+error}.
 
 This can be done by:
 
@@ -449,7 +452,7 @@ This can be done by:
   \(k\)-fold cross-validation (CV), typically \(k=5\) or \(10\).
 \end{itemize}
 
-We will also discuss that there is a ``right and a wrong way'' to to CV
+We will also discuss that there is a ``right and a wrong way'' to do CV
 
 \begin{itemize}
 \tightlist
@@ -486,8 +489,7 @@ We will also discuss that there is a ``right and a wrong way'' to to CV
 
 \vspace{4mm}
 
-Remember: The focus is on model selection (finding the model that
-performs ``best'', that is, with lowest test error).
+\includegraphics{../../ISLR/Figures/Chapter5/5.1.png}
 
 \end{block}
 
@@ -643,9 +645,9 @@ validation set approach.
   \end{itemize}
 \end{itemize}
 
-\tiny
+\vspace{5mm} \scriptsize
 \(^\star\) Recall that
-\[\text{Var}(\sum_{i=1}^na_iX_i+b)=\sum_{i=1}^n\sum_{j=1}^n a_ia_j\text{Cov}(X_i,X_j)\]
+\[\text{Var}(\sum_{i=1}^na_iX_i)=\sum_{i=1}^n\sum_{j=1}^n a_ia_j\text{Cov}(X_i,X_j)\]
 \[=\sum_{i=1}^na_i^2\text{Var}(X_i)+2\sum_{i=2}^n \sum_{j=1}^{i-1}
 a_ia_j\text{Cov}(X_i,X_j).\]
 
@@ -782,19 +784,21 @@ validation set approach.
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \item
-  As for the validation set, the result may vary according to how the
-  folds are made, but the variation is in general lower than for the
-  validation set approach.
+  The \emph{result may vary} according to how the folds are made, but
+  the variation is in general lower than for the validation set
+  approach.
 \item
-  Computational issues: less work with \(k=5\) or 10 than LOOCV.
+  Computational load lower with \(k=5\) or \(10\) than LOOCV.
 \item
-  The training set is \((k-1)/k\) of the original data set - the
-  estimate of the prediction error is biased upwards.
+  The training set is \((k-1)/k\) times the size of the original data
+  set - the estimate of the prediction error is biased upwards.
 \item
   This bias is the smallest when \(k=n\) (LOOCV), but we know that LOOCV
   has high variance.
 \item
-  Therefore, often \(k=5\) or \(k=10\) is used as a compromise.
+  Due to the \emph{bias-variance-trade-off}, \(k\)-fold CV often gives
+  more accurate estimates of the test error rate than does LOOCV.\\
+  \(\rightarrow\) \(k=5\) or \(k=10\) is used as a compromise.
 \end{enumerate}
 
 \end{block}
@@ -921,8 +925,8 @@ book slides, page 17}: model assessment.
   We have a two-class problem and would like to use a simple
   classification method, however,
 \item
-  we have many possible predictors \(p=5000\) and not so big sample size
-  \(n=50\).
+  we have many possible predictors (e.g., \(p=5000\)) and not a big
+  sample size (e.g., \(n=50\)).
 \end{itemize}
 
 We use this strategy to produce a classifier:
@@ -969,7 +973,7 @@ an honest estimate of the performance of the classifier.
 
 Note: We will see in the Recommended Exercises that doing the wrong
 thing can give a misclassification error approximately 0 - even if the
-``true'' rate is 50\%. (todo: modify this exercise back)
+``true'' rate is 50\%.
 
 \end{frame}
 
@@ -1085,7 +1089,7 @@ Let's first assume we would know \(f\), for example \(X\sim N(0,1)\).
 Then we can repeatedly take samples and calculate the standard deviation
 of all medians to obtain an estimate:
 
-\small
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1481,13 +1485,13 @@ Bagging (\emph{bootstrap aggregation}) is a special case of
 
 \begin{itemize}
 \item
-  \textbf{10:15-10:30:}
+  \textbf{10:15-10:35:}
   \href{https://www.math.ntnu.no/emner/TMA4268/2019v/RMarkdownIntro.html}{Introduction
   to R Markdown (by lecturer)} and the template to be used for
   Compulsory exercise 1 (approx 20 minutes). Download
   \url{https://www.math.ntnu.no/emner/TMA4268/2019v/CompEx1mal.Rmd}
   (todo: change link) and also install the packages listed at the
-  beginning of the exercise sheet (todo).
+  beginning of the exercise sheet.
 \item
   \textbf{Rest of time:} Introduction to problems on cross-validation
   and bootstrap; work with problems and some discussion.

@@ -256,7 +256,7 @@ div.tocify {
 
 
 <hr />
-<p>Last update: January 27, 2020</p>
+<p>Last update: January 30, 2020</p>
 <hr />
 <div id="acknowledgements" class="section level1">
 <h1>Acknowledgements</h1>
@@ -383,6 +383,7 @@ div.tocify {
 
 <p><strong>Q</strong>: Before we had just training and test. Why do we need the additional validation set?</p>
 <p><strong>A</strong>: We have not discussed model selection before.</p>
+
 <p><strong>Q</strong>: Why can’t we just use the training set for training, and then the test set both for model selection and for model evaluation?</p>
 <p><strong>A</strong>: We will be too optimistic if we report the error on the test set when we have already used the test set to choose the best model.</p>
 <hr />
@@ -397,14 +398,14 @@ div.tocify {
 </div>
 <div id="cross-validation-cv" class="section level1">
 <h1>Cross-validation (CV)</h1>
-<p>“Model selection” situation: We assume that test data is available (and has been put aside), and we want to use the rest of our data to both fit the data and to find the best model.</p>
+<p>“Model selection” situation: We assume that test data is available (and has been put aside), and we want to use the rest of our data to find the model that performs “best”, that is, <em>with lowest test error</em>.</p>
 <p>This can be done by:</p>
 <ul>
 <li>the validation set approach (not strictly a <em>cross</em>-validation approach).</li>
 <li>leave one out cross-validation (LOOCV).</li>
 <li><span class="math inline">\(k\)</span>-fold cross-validation (CV), typically <span class="math inline">\(k=5\)</span> or <span class="math inline">\(10\)</span>.</li>
 </ul>
-<p>We will also discuss that there is a “right and a wrong way” to to CV</p>
+<p>We will also discuss that there is a “right and a wrong way” to do CV</p>
 <ul>
 <li>selection bias - all elements of a model selection strategy need to be within the CV-loop</li>
 </ul>
@@ -421,7 +422,10 @@ div.tocify {
 </ul></li>
 </ul>
 
-<p>Remember: The focus is on model selection (finding the model that performs “best”, that is, with lowest test error).</p>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="ISLR Figure 5.1" />
+<p class="caption">ISLR Figure 5.1</p>
+</div>
 <hr />
 <div id="example-of-validation-set-approach" class="section level3">
 <h3>Example of validation set approach</h3>
@@ -488,7 +492,7 @@ div.tocify {
 <li>High variance since: two training sets only differ by one observation - which makes estimates from each fold highly correlated and this can lead to that their average can have high variance<span class="math inline">\(^\star\)</span>.</li>
 </ul></li>
 </ul>
-<p><span class="math inline">\(^\star\)</span> Recall that <span class="math display">\[\text{Var}(\sum_{i=1}^na_iX_i+b)=\sum_{i=1}^n\sum_{j=1}^n a_ia_j\text{Cov}(X_i,X_j)\]</span> <span class="math display">\[=\sum_{i=1}^na_i^2\text{Var}(X_i)+2\sum_{i=2}^n \sum_{j=1}^{i-1}
+<p> <span class="math inline">\(^\star\)</span> Recall that <span class="math display">\[\text{Var}(\sum_{i=1}^na_iX_i)=\sum_{i=1}^n\sum_{j=1}^n a_ia_j\text{Cov}(X_i,X_j)\]</span> <span class="math display">\[=\sum_{i=1}^na_i^2\text{Var}(X_i)+2\sum_{i=2}^n \sum_{j=1}^{i-1}
 a_ia_j\text{Cov}(X_i,X_j).\]</span></p>
 <hr />
 </div>
@@ -555,11 +559,12 @@ a_ia_j\text{Cov}(X_i,X_j).\]</span></p>
 <h3>Issues with <span class="math inline">\(k\)</span>-fold cross-validation</h3>
 
 <ol style="list-style-type: decimal">
-<li><p>As for the validation set, the result may vary according to how the folds are made, but the variation is in general lower than for the validation set approach.</p></li>
-<li><p>Computational issues: less work with <span class="math inline">\(k=5\)</span> or 10 than LOOCV.</p></li>
-<li><p>The training set is <span class="math inline">\((k-1)/k\)</span> of the original data set - the estimate of the prediction error is biased upwards.</p></li>
+<li><p>The <em>result may vary</em> according to how the folds are made, but the variation is in general lower than for the validation set approach.</p></li>
+<li><p>Computational load lower with <span class="math inline">\(k=5\)</span> or <span class="math inline">\(10\)</span> than LOOCV.</p></li>
+<li><p>The training set is <span class="math inline">\((k-1)/k\)</span> times the size of the original data set - the estimate of the prediction error is biased upwards.</p></li>
 <li><p>This bias is the smallest when <span class="math inline">\(k=n\)</span> (LOOCV), but we know that LOOCV has high variance.</p></li>
-<li><p>Therefore, often <span class="math inline">\(k=5\)</span> or <span class="math inline">\(k=10\)</span> is used as a compromise.</p></li>
+<li><p>Due to the <em>bias-variance-trade-off</em>, <span class="math inline">\(k\)</span>-fold CV often gives more accurate estimates of the test error rate than does LOOCV.<br />
+<span class="math inline">\(\rightarrow\)</span> <span class="math inline">\(k=5\)</span> or <span class="math inline">\(k=10\)</span> is used as a compromise.</p></li>
 </ol>
 <hr />
 </div>
@@ -618,7 +623,7 @@ a_ia_j\text{Cov}(X_i,X_j).\]</span></p>
 <p><a href="https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/cv_boot.pdf">ISL book slides, page 17</a>: model assessment.</p>
 <ul>
 <li>We have a two-class problem and would like to use a simple classification method, however,</li>
-<li>we have many possible predictors <span class="math inline">\(p=5000\)</span> and not so big sample size <span class="math inline">\(n=50\)</span>.</li>
+<li>we have many possible predictors (e.g., <span class="math inline">\(p=5000\)</span>) and not a big sample size (e.g., <span class="math inline">\(n=50\)</span>).</li>
 </ul>
 <p>We use this strategy to produce a classifier:</p>
 <ol style="list-style-type: decimal">
@@ -635,7 +640,7 @@ a_ia_j\text{Cov}(X_i,X_j).\]</span></p>
 <li>Right: Apply cross-validation to steps 1 and 2.</li>
 </ul>
 <p><span class="math inline">\(~\)</span></p>
-<p>Note: We will see in the Recommended Exercises that doing the wrong thing can give a misclassification error approximately 0 - even if the “true” rate is 50%. (todo: modify this exercise back)</p>
+<p>Note: We will see in the Recommended Exercises that doing the wrong thing can give a misclassification error approximately 0 - even if the “true” rate is 50%.</p>
 <hr />
 <div id="selection-bias-in-gene-extraction-on-the-basis-of-microarray-gene-expression-data" class="section level3">
 <h3>Selection bias in gene extraction on the basis of microarray gene-expression data</h3>
@@ -881,7 +886,7 @@ boot(original, boot.median, R = B)</code></pre>
 <div id="interactive-lecture-on-monday" class="section level2">
 <h2>Interactive lecture on Monday</h2>
 <ul>
-<li><p><strong>10:15-10:30:</strong> <a href="https://www.math.ntnu.no/emner/TMA4268/2019v/RMarkdownIntro.html">Introduction to R Markdown (by lecturer)</a> and the template to be used for Compulsory exercise 1 (approx 20 minutes). Download <a href="https://www.math.ntnu.no/emner/TMA4268/2019v/CompEx1mal.Rmd" class="uri">https://www.math.ntnu.no/emner/TMA4268/2019v/CompEx1mal.Rmd</a> (todo: change link) and also install the packages listed at the beginning of the exercise sheet (todo).</p></li>
+<li><p><strong>10:15-10:35:</strong> <a href="https://www.math.ntnu.no/emner/TMA4268/2019v/RMarkdownIntro.html">Introduction to R Markdown (by lecturer)</a> and the template to be used for Compulsory exercise 1 (approx 20 minutes). Download <a href="https://www.math.ntnu.no/emner/TMA4268/2019v/CompEx1mal.Rmd" class="uri">https://www.math.ntnu.no/emner/TMA4268/2019v/CompEx1mal.Rmd</a> (todo: change link) and also install the packages listed at the beginning of the exercise sheet.</p></li>
 <li><p><strong>Rest of time:</strong> Introduction to problems on cross-validation and bootstrap; work with problems and some discussion.</p></li>
 <li><p><strong>11:45:</strong> Summing up problems and start Clicker Exercise on Module 5 (and indirectly 1-4).</p></li>
 </ul>

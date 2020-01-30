@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "January 31 and February 3, 2020"
 fontsize: 10pt
 output:
-  # beamer_presentation:
-  #   keep_tex: yes
-  #   fig_caption: false
-  #   latex_engine: xelatex
-  #   theme: "Singapore"
-  #   colortheme: "default"
-  #   font: "serif"
+  #beamer_presentation:
+    # keep_tex: yes
+    # fig_caption: false
+    # latex_engine: xelatex
+    # theme: "Singapore"
+    # colortheme: "default"
+    # font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -34,7 +34,7 @@ whichformat="latex"
 
 ---
 
-Last update: January 27, 2020
+Last update: January 30, 2020
 
 ---
 
@@ -209,6 +209,8 @@ If we had a large amount of data we could divide our data into three parts:
 
 **A**: We have not discussed model selection before.
 
+\vspace{2mm}
+
 **Q**: Why can't we just use the training set for training, and then the test set both for model selection and for model evaluation?
 
 **A**: We will be too optimistic if we report the error on the test set when we have already used the test set to choose the best model.
@@ -228,7 +230,8 @@ We will look at _cross-validation_ and the _bootstrap_.
 
 # Cross-validation (CV)
 
-"Model selection" situation: We assume that test data is available (and has been put aside), and we want to use the rest of our data to both fit the data and to find the best model.
+"Model selection" situation: We assume that test data is available (and has been put aside), and we want to use the rest of our data to find the model that performs "best", that is, _with lowest test error_.
+
 
 This can be done by:
 
@@ -237,7 +240,7 @@ This can be done by:
 * $k$-fold cross-validation (CV), typically $k=5$ or $10$.
 
 
-We will also discuss that there is a "right and a wrong way" to to CV
+We will also discuss that there is a "right and a wrong way" to do CV
 
 * selection bias - all elements of a model selection strategy need to be within the CV-loop
 
@@ -260,7 +263,9 @@ We will also discuss that there is a "right and a wrong way" to to CV
 
 \vspace{4mm}
 
-Remember: The focus is on model selection (finding the model that performs "best", that is, with lowest test error).
+![ISLR Figure 5.1](../../ISLR/Figures/Chapter5/5.1.png){width=70%,centering}
+
+
 
 
 ---
@@ -424,9 +429,10 @@ g0+theme_minimal()
     + Expensive to implement -- need to fit $n$ different models.
     + High variance since: two training sets only differ by one observation - which makes estimates from each fold highly correlated and this can lead to that their average can have high variance$^\star$.
 
-\tiny
+\vspace{5mm}
+\scriptsize
 $^\star$ Recall that
-$$\text{Var}(\sum_{i=1}^na_iX_i+b)=\sum_{i=1}^n\sum_{j=1}^n a_ia_j\text{Cov}(X_i,X_j)$$
+$$\text{Var}(\sum_{i=1}^na_iX_i)=\sum_{i=1}^n\sum_{j=1}^n a_ia_j\text{Cov}(X_i,X_j)$$
 $$=\sum_{i=1}^na_i^2\text{Var}(X_i)+2\sum_{i=2}^n \sum_{j=1}^{i-1}
 a_ia_j\text{Cov}(X_i,X_j).$$ 
 
@@ -605,15 +611,16 @@ There still _is_ variability, but _much less_ than for validation set approach.
 
 \vspace{2mm}
 
-1. As for the validation set, the result may vary according to how the folds are made, but the variation is in general lower than for the validation set approach.
+1. The _result may vary_ according to how the folds are made, but the variation is in general lower than for the validation set approach.
 
-2. Computational issues: less work with $k=5$ or 10 than LOOCV.
+2. Computational load lower with $k=5$ or $10$ than LOOCV.
 
-3. The training set is $(k-1)/k$ of the original data set - the estimate of the prediction error is biased upwards.
+3. The training set is $(k-1)/k$ times the size of the original data set - the estimate of the prediction error is biased upwards.
 
 4. This bias is the smallest when $k=n$ (LOOCV), but we know that LOOCV has high variance.
 
-5. Therefore, often $k=5$ or $k=10$ is used as a compromise.
+5. Due to the _bias-variance-trade-off_, $k$-fold CV often gives more accurate estimates of the test error rate than does LOOCV.  
+$\rightarrow$ $k=5$ or $k=10$ is used as a compromise. 
 
 ---
 
@@ -699,7 +706,7 @@ $$\text{CV}_{n}=\frac{1}{n} \sum_{i=1}^n {\text{Err}_i}$$
 [ISL book slides, page 17](https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/cv_boot.pdf): model assessment.
 
 * We have a two-class problem and would like to use a simple classification method, however, 
-* we have many possible predictors $p=5000$ and not so big sample size $n=50$.
+* we have many possible predictors (e.g., $p=5000$) and not a big sample size (e.g., $n=50$).
 
 We use this strategy to produce a classifier:
 
@@ -723,7 +730,7 @@ $~$
 
 $~$
 
-Note: We will see in the Recommended Exercises that doing the wrong thing can give a misclassification error approximately 0 - even if the "true" rate is 50%. (todo: modify this exercise back)
+Note: We will see in the Recommended Exercises that doing the wrong thing can give a misclassification error approximately 0 - even if the "true" rate is 50%. 
 
 ---
 
@@ -830,7 +837,7 @@ up by his own bootstraps._
 
 Let's first assume we would know $f$, for example $X\sim N(0,1)$. Then we can repeatedly take samples and calculate the standard deviation of all medians to obtain an estimate:
 
-\small
+\scriptsize
 ```{r,eval=TRUE, echo=TRUE}
 set.seed(123)
 n=101
@@ -1057,8 +1064,8 @@ $$\text{Var}(\bar{X})=\frac{\sigma^2}{B} \ .$$
 
 ## Interactive lecture on Monday
 
-* **10:15-10:30:** [Introduction to R Markdown (by lecturer)](https://www.math.ntnu.no/emner/TMA4268/2019v/RMarkdownIntro.html) and the template to be used for Compulsory exercise 1 (approx 20 minutes). Download
-<https://www.math.ntnu.no/emner/TMA4268/2019v/CompEx1mal.Rmd> (todo: change link) and also install the packages listed at the beginning of the exercise sheet (todo).
+* **10:15-10:35:** [Introduction to R Markdown (by lecturer)](https://www.math.ntnu.no/emner/TMA4268/2019v/RMarkdownIntro.html) and the template to be used for Compulsory exercise 1 (approx 20 minutes). Download
+<https://www.math.ntnu.no/emner/TMA4268/2019v/CompEx1mal.Rmd> (todo: change link) and also install the packages listed at the beginning of the exercise sheet.
 
 * **Rest of time:** Introduction to problems on cross-validation and bootstrap; work with problems and some discussion.
 
