@@ -1,0 +1,422 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\hypersetup{unicode=true,
+            pdftitle={Module 5: Recommended Exercises},
+            pdfauthor={Martina Hall, Michail Spitieris, Stefanie Muff, Department of Mathematical Sciences, NTNU},
+            colorlinks=true,
+            linkcolor=Maroon,
+            citecolor=Blue,
+            urlcolor=blue,
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Module 5: Recommended Exercises}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \subtitle{TMA4268 Statistical Learning V2020}
+  \author{Martina Hall, Michail Spitieris, Stefanie Muff, Department of
+Mathematical Sciences, NTNU}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{February 06, 2020}
+
+
+\begin{document}
+\maketitle
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Recommended exercises on
+cross-validation}\label{recommended-exercises-on-cross-validation}
+
+\subsection{\texorpdfstring{Problem 1: Explain how \(k\)-fold
+cross-validation is
+implemented}{Problem 1: Explain how k-fold cross-validation is implemented}}\label{problem-1-explain-how-k-fold-cross-validation-is-implemented}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\item
+  Draw a figure
+\item
+  Specify algorithmically what is done, and in particular how the
+  ``results'' from each fold are aggregated
+\item
+  Relate to one example from regression. Ideas are the complexity w.r.t.
+  polynomials of increasing degree in multiple linear regression, or
+  \(K\) in KNN-regression.
+\item
+  Relate to one example from classification. Ideas are the complexity
+  w.r.t. polynomials of increasing degree in logistic regression, or
+  \(K\) in KNN-classification.
+\end{enumerate}
+
+Hint: the words ``loss function'', ``fold'', ``training'',
+``validation'' are central.
+
+\subsection{\texorpdfstring{Problem 2: Advantages and disadvantages of
+\(k\)-fold
+Cross-Validation}{Problem 2: Advantages and disadvantages of k-fold Cross-Validation}}\label{problem-2-advantages-and-disadvantages-of-k-fold-cross-validation}
+
+What are the advantages and disadvantages of \(k\)-fold cross-validation
+relative to
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\tightlist
+\item
+  The validation set approach
+\item
+  Leave one out cross-validation (LOOCV)
+\item
+  What are recommended values for \(k\), and why?
+\end{enumerate}
+
+Hint: the words ``bias'', ``variance'' and ``computational complexity''
+should be included.
+
+\subsection{\texorpdfstring{Problem 3: Selection bias and the ``wrong
+way to do
+CV''.}{Problem 3: Selection bias and the wrong way to do CV.}}\label{problem-3-selection-bias-and-the-wrong-way-to-do-cv.}
+
+The task here is to devise an algorithm to ``prove'' that the wrong way
+is wrong and that the right way is right.
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\item
+  What are the steps of such an algorithm? Write down a suggestion.
+  Hint: How do you generate data for predictors and class labels, how do
+  you do the classification task, where is the CV in the correct way and
+  wrong way inserted into your algorithm? Can you make a schematic
+  drawing of the right and the wrong way? Hint:
+  \href{https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/cv_boot.pdf}{ISL
+  book slides, page 20+21} - but you can do better?
+\item
+  We are now doing a simulation to illustrate the selection bias problem
+  in CV, when it is applied the wrong way. Here is what we are
+  (conceptually) going to do:
+\end{enumerate}
+
+Generate data
+
+\begin{itemize}
+\item
+  Simulate high dimensional data (\(p=5000\) predictors) from
+  independent or correlated normal variables, but with few samples
+  (\(n=50\)).
+\item
+  Randomly assign class labels (here only 2). This means that the
+  ``truth''" is that the misclassification rate can not get very small.
+  What is the expected misclassification rate (for this random set)?
+\end{itemize}
+
+Classification task:
+
+\begin{itemize}
+\tightlist
+\item
+  We choose a few (\(d=25\)) of the predictors (how? we just select
+  those with the highest correlation to the outcome).
+\item
+  Perform a classification rule (here: logistic empirical Bayes) on
+  these predictors.
+\item
+  Then we run CV (\(k=5\)) on either only the \(d\) (=wrong way), or on
+  all \(c+d\) (=right way) predictors.
+\item
+  Report misclassification errors for both situations.
+\end{itemize}
+
+One possible version of this is presented in the R-code below. Go
+through the code and explain what is done in each step, then run the
+code and observe if the results are in agreement with what you expected.
+Make changes to the R-code if you want to test out different strategies.
+
+We start by generating data for \(n=50\) observations
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(boot)}
+\CommentTok{# GENERATE DATA; use a seed for reproducibility}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
+\NormalTok{n =}\StringTok{ }\DecValTok{50}  \CommentTok{#number of observations}
+\NormalTok{p =}\StringTok{ }\DecValTok{5000}  \CommentTok{#number of predictors}
+\NormalTok{d =}\StringTok{ }\DecValTok{25}  \CommentTok{#top correlated predictors chosen}
+
+\CommentTok{# generating predictor data}
+\NormalTok{xs =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(n }\OperatorTok{*}\StringTok{ }\NormalTok{p, }\DecValTok{0}\NormalTok{, }\DecValTok{4}\NormalTok{), }\DataTypeTok{ncol =}\NormalTok{ p, }\DataTypeTok{nrow =}\NormalTok{ n)  }\CommentTok{#simple way to to uncorrelated predictors}
+\KeywordTok{dim}\NormalTok{(xs)  }\CommentTok{# n times p}
+\CommentTok{# generate class labels independent of predictors - so if all classifies as}
+\CommentTok{# class 1 we expect 50% errors in general}
+\NormalTok{ys =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{, n}\OperatorTok{/}\DecValTok{2}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, n}\OperatorTok{/}\DecValTok{2}\NormalTok{))  }\CommentTok{#now really 50% of each}
+\KeywordTok{table}\NormalTok{(ys)}
+\end{Highlighting}
+\end{Shaded}
+
+\textbf{WRONG CV}: Select the 25 most correlated predictors outside the
+CV.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corrs =}\StringTok{ }\KeywordTok{apply}\NormalTok{(xs, }\DecValTok{2}\NormalTok{, cor, }\DataTypeTok{y =}\NormalTok{ ys)}
+\KeywordTok{hist}\NormalTok{(corrs)}
+\NormalTok{selected =}\StringTok{ }\KeywordTok{order}\NormalTok{(corrs}\OperatorTok{^}\DecValTok{2}\NormalTok{, }\DataTypeTok{decreasing =} \OtherTok{TRUE}\NormalTok{)[}\DecValTok{1}\OperatorTok{:}\NormalTok{d]  }\CommentTok{#top d correlated selected}
+\NormalTok{data =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(ys, xs[, selected])}
+\end{Highlighting}
+\end{Shaded}
+
+Then run CV around the fitting of the classifier - use logistic
+regression and built in \texttt{cv.glm()} function
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{logfit =}\StringTok{ }\KeywordTok{glm}\NormalTok{(ys }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ data)}
+\NormalTok{cost <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(r, }\DataTypeTok{pi =} \DecValTok{0}\NormalTok{) }\KeywordTok{mean}\NormalTok{(}\KeywordTok{abs}\NormalTok{(r }\OperatorTok{-}\StringTok{ }\NormalTok{pi) }\OperatorTok{>}\StringTok{ }\FloatTok{0.5}\NormalTok{)}
+\NormalTok{kfold =}\StringTok{ }\DecValTok{10}
+\NormalTok{cvres =}\StringTok{ }\KeywordTok{cv.glm}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ data, }\DataTypeTok{cost =}\NormalTok{ cost, }\DataTypeTok{glmfit =}\NormalTok{ logfit, }\DataTypeTok{K =}\NormalTok{ kfold)}
+\NormalTok{cvres}\OperatorTok{$}\NormalTok{delta}
+\end{Highlighting}
+\end{Shaded}
+
+Observe a zero misclassification rate!
+
+\textbf{CORRECT CV}: Do not pre-select predictors outside the CV, but as
+part of the CV. We need to code this ourselves:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{reorder =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{n, }\DataTypeTok{replace =} \OtherTok{FALSE}\NormalTok{)}
+\NormalTok{validclass =}\StringTok{ }\OtherTok{NULL}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{kfold) \{}
+\NormalTok{    neach =}\StringTok{ }\NormalTok{n}\OperatorTok{/}\NormalTok{kfold}
+\NormalTok{    trainids =}\StringTok{ }\KeywordTok{setdiff}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{n, (((i }\OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{) }\OperatorTok{*}\StringTok{ }\NormalTok{neach }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)}\OperatorTok{:}\NormalTok{(i }\OperatorTok{*}\StringTok{ }\NormalTok{neach)))}
+\NormalTok{    traindata =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(xs[reorder[trainids], ], ys[reorder[trainids]])}
+\NormalTok{    validdata =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(xs[reorder[}\OperatorTok{-}\NormalTok{trainids], ], ys[reorder[}\OperatorTok{-}\NormalTok{trainids]])}
+    \KeywordTok{colnames}\NormalTok{(traindata) =}\StringTok{ }\KeywordTok{colnames}\NormalTok{(validdata) =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{paste}\NormalTok{(}\StringTok{"X"}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\NormalTok{p), }\StringTok{"y"}\NormalTok{)}
+\NormalTok{    foldcorrs =}\StringTok{ }\KeywordTok{apply}\NormalTok{(traindata[, }\DecValTok{1}\OperatorTok{:}\NormalTok{p], }\DecValTok{2}\NormalTok{, cor, }\DataTypeTok{y =}\NormalTok{ traindata[, p }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{])}
+\NormalTok{    selected =}\StringTok{ }\KeywordTok{order}\NormalTok{(foldcorrs}\OperatorTok{^}\DecValTok{2}\NormalTok{, }\DataTypeTok{decreasing =} \OtherTok{TRUE}\NormalTok{)[}\DecValTok{1}\OperatorTok{:}\NormalTok{d]  }\CommentTok{#top d correlated selected}
+\NormalTok{    data =}\StringTok{ }\NormalTok{traindata[, }\KeywordTok{c}\NormalTok{(selected, p }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)]}
+\NormalTok{    trainlogfit =}\StringTok{ }\KeywordTok{glm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{family =} \StringTok{"binomial"}\NormalTok{, }\DataTypeTok{data =}\NormalTok{ data)}
+\NormalTok{    pred =}\StringTok{ }\KeywordTok{plogis}\NormalTok{(}\KeywordTok{predict.glm}\NormalTok{(trainlogfit, }\DataTypeTok{newdata =}\NormalTok{ validdata[, selected]))}
+\NormalTok{    validclass =}\StringTok{ }\KeywordTok{c}\NormalTok{(validclass, }\KeywordTok{ifelse}\NormalTok{(pred }\OperatorTok{>}\StringTok{ }\FloatTok{0.5}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{))}
+\NormalTok{\}}
+\KeywordTok{table}\NormalTok{(ys[reorder], validclass)}
+\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(}\KeywordTok{table}\NormalTok{(ys[reorder], validclass)))}\OperatorTok{/}\NormalTok{n}
+\end{Highlighting}
+\end{Shaded}
+
+\section{Recommended exercises on
+bootstrapping}\label{recommended-exercises-on-bootstrapping}
+
+\subsection{Problem 4: Probability of being part of a bootstrap
+sample}\label{problem-4-probability-of-being-part-of-a-bootstrap-sample}
+
+We will calculate the probability that a given observation in our
+original sample is part of a bootstrap sample. This is useful for us to
+know in Module 8.
+
+Our sample size is \(n\).
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi}.}
+\tightlist
+\item
+  We draw one observation from our sample. What is the probability of
+  drawing observation \(i\) (i.e., \(x_i\))? And of not drawing
+  observation \(i\)?
+\item
+  We make \(n\) independent drawing (with replacement). What is the
+  probability of not drawing observation \(i\) in any of the \(n\)
+  drawings? What is then the probability that data point \(i\) is in our
+  bootstrap sample (that is, more than 0 times)?
+\item
+  When \(n\) is large \((1-\frac{1}{n})^n \approx \frac{1}{e}\). Use
+  this to give a numerical value for the probability that a specific
+  observation \(i\) is in our bootstrap sample.
+\item
+  Write a short R code chunk to check your result. (Hint: An example on
+  how to this is on page 198 in our ISLR book.) You may also study the
+  result in c. How good is the approximation as a function of \(n\)?
+\end{enumerate}
+
+\subsection{Problem 5: Estimate standard deviation and confidence
+intervals with
+bootstrapping}\label{problem-5-estimate-standard-deviation-and-confidence-intervals-with-bootstrapping}
+
+Explain with words and an algorithm how you would proceed to use
+bootstrapping to estimate the standard deviation and the 95\% confidence
+interval of one of the regression parameters in multiple linear
+regression. Comment on which assumptions you make for your regression
+model.
+
+\subsection{Problem 6: Implement problem
+5}\label{problem-6-implement-problem-5}
+
+Implement your algorithm from 5 both using for-loop and using the
+\texttt{boot} function. Hint: see page 195 of our ISLR book. Use our
+SLID data set and provide standard errors for the coefficient for age.
+Compare with the theoretical value
+\(({\bf X}^T{\bf X})^{-1}\hat{\sigma}^2\) that you find in the output
+from the regression model.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(car)}
+\KeywordTok{library}\NormalTok{(boot)}
+\NormalTok{SLID =}\StringTok{ }\KeywordTok{na.omit}\NormalTok{(SLID)}
+\NormalTok{n =}\StringTok{ }\KeywordTok{dim}\NormalTok{(SLID)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{SLID.lm =}\StringTok{ }\KeywordTok{lm}\NormalTok{(wages }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ SLID)}
+\KeywordTok{summary}\NormalTok{(SLID.lm)}\OperatorTok{$}\NormalTok{coeff[}\StringTok{"age"}\NormalTok{, ]}
+\end{Highlighting}
+\end{Shaded}
+
+Now go ahead and use bootstrap to estimate the 95\% CI. Compare your
+result to
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{confint}\NormalTok{(SLID.lm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\section{Summing up}\label{summing-up}
+
+\subsection{Take home messages}\label{take-home-messages}
+
+\begin{itemize}
+\tightlist
+\item
+  Use \(k=5\) or \(10\) fold cross-validation for model selection or
+  assessment.
+\item
+  Use bootstrapping to estimate the standard deviation of an estimator,
+  and understand how it is performed before module 8 on trees.
+\end{itemize}
+
+\section{Further reading}\label{further-reading}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://www.youtube.com/playlist?list=PL5-da3qGB5IA6E6ZNXu7dp89_uv8yocmf}{Videoes
+  on YouTube by the authors of ISL, Chapter 5}, and corresponding
+  \href{https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/cv_boot.pdf}{slides}
+\item
+  \href{https://rstudio-pubs-static.s3.amazonaws.com/65561_43c0eaaa8565414eae333b47038f716c.html}{Solutions
+  to exercises in the book, chapter 5}
+\end{itemize}
+
+
+\end{document}
