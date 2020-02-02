@@ -215,7 +215,7 @@ summary {
 <li>Maximal group size is 3 - join a group (self enroll) before handing in on Bb.</li>
 <li>If you did not find a group, you can email Stefanie (<a href="mailto:stefanie.muff@ntnu.no">stefanie.muff@ntnu.no</a>) and I will try to match you with others that are alone.</li>
 <li>Remember to write your names and group number on top of your submission.</li>
-<li>The exercise should be handed in as one R Markdown file and a pdf-compiled version of the R Markdown file (if you are not able to produce a pdf-file directly please make an html-file, open it in your browser and save as pdf - no, not landscape - but portrait please). We will read the pdf-file and use the Rmd file in case we need to check details in your submission.</li>
+<li>The exercise should be handed in as <em>one R Markdown file and a pdf-compiled version</em> of the R Markdown file (if you are not able to produce a pdf-file directly please make an html-file, open it in your browser and save as pdf - no, not landscape - but portrait please). We will read the pdf-file and use the Rmd file in case we need to check details in your submission.</li>
 <li>In the R-chunks please use both <code>echo=TRUE</code> and <code>eval=TRUE</code> to make it simpler for us to read and grade.</li>
 <li>Please do not include all the text from this file (that you are reading now) - we want your R code, plots and written solutions - use the template from the course page (<a href="https://wiki.math.ntnu.no/tma4268/2020v/subpage6" class="uri">https://wiki.math.ntnu.no/tma4268/2020v/subpage6</a>).</li>
 <li>Please not more than 12 pages in your pdf-file! (This is a request, not a requirement.)</li>
@@ -250,7 +250,7 @@ install.packages(&quot;dplyr&quot;)</code></pre>
 </div>
 <div id="b-2p" class="section level2">
 <h2>b) (2P)</h2>
-<p>Derive the decomposition of the expected test MSE into three terms. (Todo: Think about how to split the points)</p>
+<p>Derive the decomposition of the expected test MSE into three terms.</p>
 </div>
 <div id="c-1p" class="section level2">
 <h2>c) (1P)</h2>
@@ -308,7 +308,7 @@ install.packages(&quot;dplyr&quot;)</code></pre>
 </div>
 <div id="problem-2---15p" class="section level1">
 <h1>Problem 2 - 15P</h1>
-<p>We are looking at a linear regression problem. Biologists studied badgers in Switzerland, and these animals mainly eat earthworms. In their exctrements one can find an undigestable part of the earthworm (the muscular stomach), and in order to find out how much energy a badger took in by eating earthworms, the biologists wanted to figure out how the circumference of the muscular stomach can be used to predict to the weight of the earthworm that the badger ate. So they went to collect 143 earthworm, which they weighted and measured.</p>
+<p>We are looking at a linear regression problem. Biologists studied badgers in Switzerland, and these animals mainly eat earthworms. In their exctrements one can find an undigestable part of the earthworm (the muscular stomach), and in order to find out how much energy a badger took in by eating earthworms, the biologists wanted to figure out how the circumference of the muscular stomach can be used to predict to the weight of the earthworm that the badger ate. So they went to collect 143 earthworm, which they weighted and of which they measured the circumference of the muscular stomach.</p>
 <p>The earthworm dataset can be loaded as follows:</p>
 <pre class="r"><code>id &lt;- &quot;1nLen1ckdnX4P9n8ShZeU7zbXpLc7qiwt&quot;  # google file ID
 d.worm &lt;- read.csv(sprintf(&quot;https://docs.google.com/uc?id=%s&amp;export=download&quot;, 
@@ -328,7 +328,7 @@ d.worm &lt;- read.csv(sprintf(&quot;https://docs.google.com/uc?id=%s&amp;export=
 <div id="b-2p-1" class="section level2">
 <h2>b) (2P)</h2>
 <p>An important step before fitting a model is to look at the data to understand if the modelling assumptions are reasonable. In a linear regression setup, it is for example recommended to look at the relation of the variables to see if the linearity assumption makes sense. If this is not the case, you can try to transform the variables.</p>
-<p>Make a scatterplot of <code>GEWICHT</code> against <code>MAGENUMF</code>, where you color the points according to the three species (variable <code>Gattung</code>).</p>
+<p>Make a scatterplot of <code>GEWICHT</code> (weight) against <code>MAGENUMF</code> (circumference of stomach), where you color the points according to the three species (variable <code>Gattung</code>).</p>
 <p>Does this relationship look linear? If not, try out some transformations of <code>GEWICHT</code> and <code>MAGENUMF</code> until you are happy.</p>
 <p><strong>R-hint</strong>:</p>
 <pre class="r"><code>ggplot(d.worm, aes(x = ..., y = ..., colour = ...)) + geom_point() + theme_bw()</code></pre>
@@ -344,7 +344,7 @@ d.worm &lt;- read.csv(sprintf(&quot;https://docs.google.com/uc?id=%s&amp;export=
 </div>
 <div id="e-2p" class="section level2">
 <h2>e) (2P)</h2>
-<p>Carry out a residual analysis using the <code>autoplot()</code> function from the <code>ggfortify</code> package.</p>
+<p>Carry out a residual analysis using the <code>autoplot()</code> function from the <code>ggfortify</code> package. Use the model without interaction term.</p>
 <ul>
 <li>Do you think the assumptions are fulfilled? Explain why or why not.</li>
 <li>Compare to the residual plot that you would obtain when you would not use any variable transformations to fit the regression model.</li>
@@ -385,6 +385,8 @@ tennis &lt;- read.csv(sprintf(&quot;https://docs.google.com/uc?id=%s&amp;export=
 <div id="b-1p" class="section level2">
 <h2>b) (1P)</h2>
 <p>The model above has been fitted and gives the following output. Interpret the effect of <span class="math inline">\(\beta_1\)</span>, i.e. how will one more ace for player 1 affect the result of the tennis match?</p>
+<pre class="r"><code>r.tennis = glm(Result ~ ACE.1 + ACE.2 + UFE.1 + UFE.2, data = tennis, family = &quot;binomial&quot;)
+summary(r.tennis)</code></pre>
 <pre><code>## 
 ## Call:
 ## glm(formula = Result ~ ACE.1 + ACE.2 + UFE.1 + UFE.2, family = &quot;binomial&quot;, 
@@ -438,7 +440,7 @@ tennisTrain = tennis[train, ]</code></pre>
 <p>Next, we will use LDA and QDA to classify the result using the same covariates (<code>ACEdiff</code> and <code>UFEdiff</code>) from the tennis data. In linear discriminant analysis with <span class="math inline">\(K\)</span> classes, we assign a class to a new observation based on the posterior probability</p>
 <p><span class="math display">\[P(Y=k | {\bf X}={\boldsymbol x}) = \frac{\pi_k f_k({\boldsymbol x})}{\sum_{l=1}^K \pi_l f_l({\boldsymbol x})},\]</span> where <span class="math display">\[f_k({\boldsymbol x}) = \frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}e^{-\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu_k})^T \boldsymbol{\Sigma}^{-1}({\boldsymbol x}-\boldsymbol{\mu_k})}.\]</span></p>
 <ul>
-<li>Explain what is <span class="math inline">\(\pi_k\)</span>, <span class="math inline">\(\boldsymbol{\mu}_k\)</span>, <span class="math inline">\(\boldsymbol{\Sigma}\)</span> and <span class="math inline">\(f_k(x)\)</span> in our <code>tennis</code> problem with the two covariates.</li>
+<li>Explain what <span class="math inline">\(\pi_k\)</span>, <span class="math inline">\(\boldsymbol{\mu}_k\)</span>, <span class="math inline">\(\boldsymbol{\Sigma}\)</span> and <span class="math inline">\(f_k(x)\)</span> are in our <code>tennis</code> problem with the two covariates (no calculations, only explanations).</li>
 </ul>
 </div>
 <div id="e-3p" class="section level2">

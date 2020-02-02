@@ -58,7 +58,7 @@ General supervision:
 * Maximal group size is 3 - join a group (self enroll) before handing in on Bb.
 * If you did not find a group, you can email Stefanie (stefanie.muff@ntnu.no) and I will try to match you with others that are alone.
 * Remember to write your names and group number on top of your submission.
-* The exercise should be handed in as one R Markdown file and a pdf-compiled version of the R Markdown file (if you are not able to produce a pdf-file directly please make an html-file, open it in your browser and save as pdf - no, not landscape - but portrait please). We will read the pdf-file and use the Rmd file in case we need to check details in your submission.
+* The exercise should be handed in as _one R Markdown file and a pdf-compiled version_ of the R Markdown file (if you are not able to produce a pdf-file directly please make an html-file, open it in your browser and save as pdf - no, not landscape - but portrait please). We will read the pdf-file and use the Rmd file in case we need to check details in your submission.
 * In the R-chunks please use both `echo=TRUE` and `eval=TRUE` to make it simpler for us to read and grade.
 * Please do not include all the text from this file (that you are reading now) - we want your R code, plots and written solutions - use the template from the course page (https://wiki.math.ntnu.no/tma4268/2020v/subpage6).
 * Please not more than 12 pages in your pdf-file! (This is a request, not a requirement.)
@@ -97,7 +97,7 @@ where $f$ is the true regression function, and $\varepsilon_i$ is an unobserved 
 
 
 ## b) (2P)
-Derive the decomposition of the expected test MSE into three terms. (Todo: Think about how to split the points)
+Derive the decomposition of the expected test MSE into three terms. 
 
 
 ## c) (1P)
@@ -168,7 +168,7 @@ Answer:
 
 # Problem 2 - 15P
 
-We are looking at a linear regression problem. Biologists studied badgers in Switzerland, and these animals mainly eat earthworms. In their exctrements one can find an undigestable part of the earthworm (the muscular stomach), and in order to find out how much energy a badger took in by eating earthworms, the biologists wanted to figure out how the circumference of the muscular stomach can be used to predict to the weight of the earthworm that the badger ate. So they went to collect 143 earthworm, which they weighted and measured.
+We are looking at a linear regression problem. Biologists studied badgers in Switzerland, and these animals mainly eat earthworms. In their exctrements one can find an undigestable part of the earthworm (the muscular stomach), and in order to find out how much energy a badger took in by eating earthworms, the biologists wanted to figure out how the circumference of the muscular stomach can be used to predict to the weight of the earthworm that the badger ate. So they went to collect 143 earthworm, which they weighted and of which they measured the circumference of the muscular stomach.
 
 The earthworm dataset can be loaded as follows:
 
@@ -194,7 +194,8 @@ What is the dimension of the dataset (number of rows and columns)? Which of the 
 ## b) (2P)
 An important step before fitting a model is to look at the data to understand if the modelling assumptions are reasonable. In a linear regression setup, it is for example recommended to look at the relation of the variables to see if the linearity assumption makes sense. If this is not the case, you can try to transform the variables. 
 
-Make a scatterplot of `GEWICHT` against `MAGENUMF`, where you color the points according to the three species (variable `Gattung`).
+Make a scatterplot of `GEWICHT` (weight) against `MAGENUMF` (circumference of stomach), where you color the points according to the three species (variable `Gattung`).
+
 
 Does this relationship look linear? If not, try out some transformations of `GEWICHT` and `MAGENUMF` until you are happy.
 
@@ -217,7 +218,7 @@ In question c) it was assumed that there is no interaction between the species a
 
 ## e) (2P)
 
-Carry out a residual analysis using the `autoplot()` function from the `ggfortify` package. 
+Carry out a residual analysis using the `autoplot()` function from the `ggfortify` package. Use the model without interaction term.
   
   * Do you think the assumptions are fulfilled? Explain why or why not.
   * Compare to the residual plot that you would obtain when you would not use any variable transformations to fit the regression model.
@@ -265,9 +266,9 @@ Use the above expression to show that $\text{logit}(p_i) = \log(\frac{p_1}{1-p_i
 
 ## b) (1P)
 The model above has been fitted and gives the following output. Interpret the effect of $\beta_1$, i.e. how will one more ace for player 1 affect the result of the tennis match? 
-```{r, echo=F}
-mod = glm(Result~ACE.1 + ACE.2 + UFE.1 + UFE.2, data = tennis, family = "binomial")
-summary(mod)
+```{r, echo=T}
+r.tennis = glm(Result~ACE.1 + ACE.2 + UFE.1 + UFE.2, data = tennis, family = "binomial")
+summary(r.tennis)
 ```
 
 
@@ -304,7 +305,7 @@ $$P(Y=k | {\bf X}={\boldsymbol x}) = \frac{\pi_k f_k({\boldsymbol x})}{\sum_{l=1
 where 
 $$f_k({\boldsymbol x}) = \frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}e^{-\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu_k})^T \boldsymbol{\Sigma}^{-1}({\boldsymbol x}-\boldsymbol{\mu_k})}.$$
 
-* Explain what is $\pi_k$, $\boldsymbol{\mu}_k$, $\boldsymbol{\Sigma}$ and $f_k(x)$ in our `tennis` problem with the two covariates.
+* Explain what $\pi_k$, $\boldsymbol{\mu}_k$, $\boldsymbol{\Sigma}$ and $f_k(x)$ are in our `tennis` problem with the two covariates (no calculations, only explanations).
 
 
 ## e) (3P)
