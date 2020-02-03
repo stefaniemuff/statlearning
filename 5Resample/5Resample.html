@@ -256,7 +256,7 @@ div.tocify {
 
 
 <hr />
-<p>Last update: February 2nd, 2020</p>
+<p>Last update: February 3, 2020</p>
 <hr />
 <div id="acknowledgements" class="section level1">
 <h1>Acknowledgements</h1>
@@ -704,7 +704,8 @@ a_ia_j\text{Cov}(X_i,X_j).\]</span></p>
 <h2>Example: the standard deviation of the sample median?</h2>
 
 <ul>
-<li><p>Assume that we observe a random sample <span class="math inline">\(X_1, X_2, \ldots, X_n\)</span> from an unknown probability distribution <span class="math inline">\(f\)</span>. We are interesting in saying something about the population median, and to do that we calculate the sample median <span class="math inline">\(\tilde{X}\)</span>. But, how accurate is <span class="math inline">\(\tilde{X}\)</span> as an estimator?</p></li>
+<li><p>Assume that we observe a random sample <span class="math inline">\(X_1, X_2, \ldots, X_n\)</span> from an unknown probability distribution <span class="math inline">\(f\)</span>. We are interested in saying something about the population median, thus we calculate the sample median <span class="math inline">\(\tilde{X}\)</span>.<br />
+<span class="math inline">\(\rightarrow\)</span> Q: How accurate is <span class="math inline">\(\tilde{X}\)</span> as an estimator?</p></li>
 <li><p>If we would know our distribution <span class="math inline">\(F\)</span>, we could sample from <span class="math inline">\(F\)</span>, and use simulations to answer our question.</p></li>
 <li><p>However, without knowledge of the distribution, we cannot calculate the standard deviation of our estimator, thus <span class="math inline">\(\text{SD}(\tilde{X})\)</span>.</p></li>
 <li><p>That’s where the bootstrap method comes into play.</p></li>
@@ -742,7 +743,7 @@ n = 101
 original = rnorm(n)
 median(original)</code></pre>
 <pre><code>## [1] 0.05300423</code></pre>
-<p>to the median from one bootstrap-sample: </p>
+<p>to the median from <strong>one bootstrap-sample</strong>: </p>
 <pre class="r"><code>boot1 = sample(x = original, size = n, replace = TRUE)
 median(boot1)</code></pre>
 <pre><code>## [1] -0.02854676</code></pre>
@@ -757,7 +758,7 @@ median(boot1)</code></pre>
 </ol>
 
 <ol start="2" style="list-style-type: decimal">
-<li>Evaluate statistic: on each of the <span class="math inline">\(B\)</span> bootstrap samples to get <span class="math inline">\(\tilde{X}^*_b\)</span> for the <span class="math inline">\(b\)</span>th bootstrap sample.</li>
+<li>Evaluate the statistic of interest on <em>each of the <span class="math inline">\(B\)</span> bootstrap samples</em> to get <span class="math inline">\(\tilde{X}^*_b\)</span> for the <span class="math inline">\(b\)</span>th bootstrap sample.</li>
 </ol>
 
 <ol start="3" style="list-style-type: decimal">
@@ -823,7 +824,7 @@ boot(original, boot.median, R = B)</code></pre>
 <p>The least squares estimator: <span class="math inline">\(\hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y}\)</span> has <span class="math inline">\(\text{Cov}(\boldsymbol\beta)=\sigma^2({\bf X}^T{\bf X})^{-1}\)</span>.</p>
 <p>In the recommended exercises we will look at how to use bootstrapping to estimate the covariance of the estimator.</p>
 <p> </p>
-<p>Moreover: Our bootstrap samples can also be used to make confidence intervals for the regression coefficients or prediction intervals for new observations. This means that we do not have to rely on assuming that the error terms are normally distributed!</p>
+<p><strong>Note</strong>: Our bootstrap samples can also be used to make confidence intervals for the regression coefficients or prediction intervals for new observations. This means that we do not have to rely on assuming that the error terms are normally distributed!</p>
 <hr />
 </div>
 </div>
@@ -874,17 +875,14 @@ boot(original, boot.median, R = B)</code></pre>
 <li><a href="https://rstudio-pubs-static.s3.amazonaws.com/65561_43c0eaaa8565414eae333b47038f716c.html">Solutions to exercises in the book, chapter 5</a></li>
 </ul>
 <hr />
-<div id="interactive-lecture-monday-february-3rd" class="section level2">
-<h2>Interactive lecture (Monday February 3rd)</h2>
+<div id="interactive-lecture-rest-of-today" class="section level2">
+<h2>Interactive lecture (Rest of today)</h2>
 
 <ul>
 <li><p>You may work alone, in pairs or larger groups - lecturer and TA will supervise.</p></li>
 <li><p>Please <strong>bring your laptop</strong>!</p></li>
 </ul>
 <hr />
-</div>
-<div id="rest-of-today" class="section level2">
-<h2>Rest of today</h2>
 <ul>
 <li><p><strong>20min:</strong> <a href="https://htmlpreview.github.io/?https://github.com/stefaniemuff/statlearning/blob/master/5Resample/RMarkdownIntro.html">Introduction to R Markdown (by lecturer)</a> and the template to be used for Compulsory exercise 1 (approx 20 minutes). Download from <a href="https://wiki.math.ntnu.no/tma4268/2020v/subpage6">course page</a> and also install the packages listed at the beginning of the exercise sheet.</p></li>
 <li><p><strong>Rest of time:</strong> Introduction to problems on cross-validation and bootstrap; work with problems and some discussion.</p></li>
