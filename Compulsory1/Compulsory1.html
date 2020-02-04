@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -148,6 +147,7 @@ summary {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -380,7 +380,7 @@ tennis &lt;- read.csv(sprintf(&quot;https://docs.google.com/uc?id=%s&amp;export=
 <p>We will first create a logistic regression model where the probability to win for player 1 has the form <span class="math display">\[P(Y_i = 1| {\bf X}={\boldsymbol{x}}_i) = p_i = \frac{e^{\beta_0 + \beta_1x_{i1} + \beta_2 x_{i2} + \beta_3x_{i3} + \beta_4 x_{i4}}}{ 1+ e^{\beta_0 + \beta_1x_{i1} + \beta_2x_{i2}+ \beta_3x_{i3} + \beta_4 x_{i4}}} \ ,\]</span> where <span class="math inline">\(x_{i1}\)</span> is the number of aces for player 1 in match <span class="math inline">\(i\)</span>, <span class="math inline">\(x_{i2}\)</span> is the number of aces for player 2 in match <span class="math inline">\(i\)</span>, and <span class="math inline">\(x_{i3}\)</span> and <span class="math inline">\(x_{i4}\)</span> are the number of unforced errors commited by player 1 and 2 in match <span class="math inline">\(i\)</span>. <span class="math inline">\(Y_i=0\)</span> represents player 1 winning match <span class="math inline">\(i\)</span>, <span class="math inline">\(Y_i=0\)</span> represents player 1 loosing match <span class="math inline">\(i\)</span>.</p>
 <div id="a-1p-1" class="section level2">
 <h2>a) (1P)</h2>
-<p>Use the above expression to show that <span class="math inline">\(\text{logit}(p_i) = \log(\frac{p_1}{1-p_i})\)</span> is a linear function of the covariates.</p>
+<p>Use the above expression to show that <span class="math inline">\(\text{logit}(p_i) = \log(\frac{p_i}{1-p_i})\)</span> is a linear function of the covariates.</p>
 </div>
 <div id="b-1p" class="section level2">
 <h2>b) (1P)</h2>
