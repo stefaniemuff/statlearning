@@ -1,0 +1,636 @@
+---
+title: 'Chapter 6: Linear Model Selection and Regularization'
+author: "Thiago G. Martins | NTNU & Verizon"
+date: "Spring 2020"
+output:
+  beamer_presentation: default
+  ioslides_presentation:
+    css: presentation.css
+    widescreen: yes
+bibliography: references.bib
+---
+
+# Recap
+
+## Standard Linear Models
+
+$$ Y = \beta_0 + \beta_1X_1 + ... + \beta_pX_p + \epsilon  $$
+or in matrix form:
+
+$$ \boldsymbol{Y} = \boldsymbol{X} \boldsymbol \beta + \boldsymbol{\epsilon} $$
+
+<div class="notes">
+
+- So far, we have not made assumptions about $f$.
+    - But from now on we assume f to be linear on the coefs.
+
+- Assumptions:
+    - $(x_i^T,y_i)$ is independent from $(x_j^T,y_j)$, $\forall i \neq j$.
+    - The design matrix has full rank, $rank(\boldsymbol X) = p+1$, $n >> (p+1)$
+    - $\boldsymbol \epsilon \sim \mathcal{N}_n(\boldsymbol 0, \sigma^2 \boldsymbol I)$
+
+</div>
+
+## Standard Linear Models
+
+$$ Y = \beta_0 + \beta_1X_1 + ... + \beta_pX_p + \epsilon  $$
+or in matrix form:
+
+$$ \boldsymbol{Y} = \boldsymbol{X} \boldsymbol \beta + \boldsymbol{\epsilon} $$
+
+- Least Square Fitting: Minimize the RSS
+
+$$ RSS = \sum_{i=1}^n (y_i - \hat{y}_i)^2 = \sum _i^n (y_i - \boldsymbol x_i^T \boldsymbol \beta) = (\boldsymbol Y -  \boldsymbol X \hat{\boldsymbol \beta})^T(\boldsymbol Y -  \boldsymbol X \hat{\boldsymbol \beta})$$
+
+## Standard Linear Models
+
+$$ Y = \beta_0 + \beta_1X_1 + ... + \beta_pX_p + \epsilon  $$
+or in matrix form:
+
+$$ \boldsymbol{Y} = \boldsymbol{X} \boldsymbol \beta + \boldsymbol{\epsilon} $$
+
+- Least Square Fitting: Minimize the RSS
+
+$$ RSS = \sum_{i=1}^n (y_i - \hat{y}_i)^2 = \sum _i^n (y_i - \boldsymbol x_i^T \boldsymbol \beta) = (\boldsymbol Y -  \boldsymbol X \hat{\boldsymbol \beta})^T(\boldsymbol Y -  \boldsymbol X \hat{\boldsymbol \beta})$$
+
+- Least squares and maximum likelihood estimator for $\boldsymbol \beta$:
+
+$$ \hat{\boldsymbol \beta} =(\boldsymbol X^T \boldsymbol X)^{-1} \boldsymbol X^T \boldsymbol Y$$
+
+## Recommended exercise 1
+
+1. Show that the least square estimator of a standard linear model is given by
+$$ \hat{\boldsymbol \beta} =(\boldsymbol X^T \boldsymbol X)^{-1} \boldsymbol X^T \boldsymbol Y$$
+2. Show that the maximum likelihood estimator is equal to the least square estimator for the standard linear model.
+
+## Credit Dataset
+
+<center>
+<img src="imgs/credit_card_data.png" height="50%" width="50%" />
+</center>
+
+<div class="notes">
+
+- Balance: average credit card debt
+
+</div>
+
+## Recommended exercise 2
+
+Write R code to create a similar representation of the Credit data figure of the previous slide. That is, try to recreate a similar plot in R.
+
+# Introduction
+
+## Objective of the module
+
+<span class="bigger_text">Improve linear models **prediction accuracy** and/or **model interpretability** by replacing least square fitting with some alternative fitting procedures.</span>
+
+## Prediction accuracy ...
+
+... when using standard linear models
+
+<br>
+Assuming true relationship is approx. linear: **low bias**.
+
+- n >> p: **low variance**
+- n not much larger than p: **high variance**
+- n < p: multiple solutions available, **infinite variance**, model cannot be used. 
+
+## Prediction accuracy ...
+
+... when using standard linear models
+
+<br>
+Assuming true relationship is approx. linear: **low bias**.
+
+- n >> p: **low variance**
+- n not much larger than p: **high variance**
+- n < p: multiple solutions available, **infinite variance**, model cannot be used. 
+
+<br>
+By constraining or shrinking the estimated coefficients: 
+
+- often substantially reduce the variance at the cost of a negligible increase in bias. 
+- better generalization for out of sample prediction
+
+## Model Interpretability
+
+- Some or many of the variables might be irrelevant wrt the response variable
+
+- Some of the discussed approaches lead to automatically performing feature/variable selection.
+
+## Outline
+
+We will cover the following alternatives to using least squares to fit linear models
+
+- **Subset Selection**: Identifying a subset of the p predictors that we believe to be related to the response.
+
+## Outline
+
+We will cover the following alternatives to using least squares to fit linear models
+
+- **Subset Selection**: Identifying a subset of the p predictors that we believe to be related to the response.
+- **Shrinkage**: fitting a model involving all p predictors with the estimated coefficients shrunken towards zero relative to the least squares estimates.
+
+## Outline
+
+We will cover the following alternatives to using least squares to fit linear models
+
+- **Subset Selection**: Identifying a subset of the $p$ predictors that we believe to be related to the response.
+- **Shrinkage**: fitting a model involving all $p$ predictors with the estimated coefficients shrunken towards zero relative to the least squares estimates.
+- **Dimension Reduction**: This approach involves projecting the $p$ predictors into a $M$-dimensional subspace, where $M \lt p$.
+
+# Subset Selection
+
+## Subset Selection
+
+Identifying a subset of the $p$ predictors that we believe to be related to the response.
+
+## Subset Selection
+
+Identifying a subset of the $p$ predictors that we believe to be related to the response.
+
+Outline:
+
+- Best subset selection
+- Stepwise model selection
+
+## Best Subset Selection
+
+1. Fit a least square regression for each possible combination of the $p$ predictors.
+2. Look at all the resulting models and pick the best.
+
+## Best Subset Selection
+
+1. Fit a least square regression for each possible combination of the $p$ predictors.
+2. Look at all the resulting models and pick the best.
+
+<br>
+
+Number of models considered:
+
+$${{p}\choose{1}} + {{p}\choose{2}} + ... + {{p}\choose{2}} = 2^p $$
+
+## Best Subset Selection (Algorithm)
+
+<center>
+<img src="imgs/algo_6p1.png" height="90%" width="90%" />
+</center>
+
+<div class="notes">
+
+- Step 2 identifies the best model (on the training data) for each subset size
+    - Reduces the problem from $2^p$ to $p+1$ models to select from
+- Step 3 choose among the $p+1$ using the test error 
+    - Otherwise we would always choose the model with all parameters
+
+</div>
+
+## Best Subset Selection (Credit Data Example)
+
+<center>
+<img src="imgs/best_subset_selection_credit_data.png" height="90%" width="90%" />
+</center>
+
+<div class="notes">
+
+- The red frontier tracks the best model for a given number of predictors, according to RSS and $R^2$. 
+
+</div>
+
+## Recommended exercise 3
+
+1. For the Credit Dataset, pick the best model using Best Subset Selection according to $C_p$, $BIC$ and Adjusted $R^2$
+    + Hint: Use the `regsubsets()` of the `leaps` library, similar to what was done in Lab 1 of the book.
+2. For the Credit Dataset, pick the best model using Best Subset Selection according to a $10$-fold CV
+    + Hint: Use the output obtained in the previous step and build your own CV function to pick the best model.
+3. Compare the result obtained in Step 1 and Step 2.
+
+## Best Subset Selection (Drawbacks)
+
+- Does not scale well -> the number of models to consider explode as $p$ increases
+    - $p = 10$ leads to approx. $1000$ possibilities
+    - $p = 20$ leads to over $1$ million possibilities
+
+## Best Subset Selection (Drawbacks)
+
+- Does not scale well -> the number of models to consider explode as $p$ increases
+    - $p = 10$ leads to approx. $1000$ possibilities
+    - $p = 20$ leads to over $1$ million possibilities
+- Large search space might lead to overfitting on training data
+
+## Stepwise selection
+
+Add and/or remove one predictor at a time.
+
+## Stepwise selection
+
+Add and/or remove one predictor at a time.
+
+Methods outline:
+
+- Forward Stepwise Selection
+- Backward Stepwise Selection
+- Hybrid approaches
+
+## Forward Stepwise Selection
+
+- Starts with a model containing no predictors, $\mathcal{M}_0$
+- Adds predictors to the model, one at time, until all of the predictors are in the model
+    - $\mathcal{M}_1$, $\mathcal{M}_2$, ..., $\mathcal{M}_p$
+- Select the best model among $\mathcal{M}_0$, $\mathcal{M}_1$, ..., $\mathcal{M}_p$
+
+## Forward Stepwise Selection (Algorithm)
+
+<center>
+<img src="imgs/algo_6p2.png" height="90%" width="90%" />
+</center>
+
+## Forward Stepwise Selection (About the Algorithm)
+
+- Goes from fitting $2^p$ models to $1 + \sum_{k=0}^{p-1} (p-k) = 1 + p(p+1)/2$ models
+
+## Forward Stepwise Selection (About the Algorithm)
+
+- Goes from fitting $2^p$ models to $1 + \sum_{k=0}^{p-1} (p-k) = 1 + p(p+1)/2$ models
+- It is a guided search, we don’t choose $1 + p(p+1)/2$ models to consider at random.
+
+## Forward Stepwise Selection (About the Algorithm)
+
+- Goes from fitting $2^p$ models to $1 + \sum_{k=0}^{p-1} (p-k) = 1 + p(p+1)/2$ models
+- It is a guided search, we don’t choose $1 + p(p+1)/2$ models to consider at random.
+- Not guaranteed to yield the best model containing a subset of the $p$ predictors.
+
+## Forward Stepwise Selection (About the Algorithm)
+
+- Goes from fitting $2^p$ models to $1 + \sum_{k=0}^{p-1} (p-k) = 1 + p(p+1)/2$ models
+- It is a guided search, we don’t choose $1 + p(p+1)/2$ models to consider at random.
+- Not guaranteed to yield the best model containing a subset of the $p$ predictors.
+
+<br>
+
+- Forward stepwise selection can be applied even in the high-dimensional setting where $n < p$
+    - By limiting the algorithm to submodels $\mathcal{M}_0, . . . ,\mathcal{M}_{n−1}$ only
+
+## Forward Stepwise Selection (Credit Data Example)
+
+<center>
+<img src="imgs/best_subset_forward_Selection_credit_data.png" height="90%" width="90%" />
+</center>
+
+<div class="notes">
+
+- The first three models are identical but the fourth models differ.
+
+</div>
+
+## Backward Stepwise Selection
+
+- Starts with a model containing all predictors, $\mathcal{M}_p$.
+- Iteratively removes the least useful predictor, one-at-a-time, until all the predictors have been removed.
+    - $\mathcal{M}_{p-1}$, $\mathcal{M}_{p-2}$, ..., $\mathcal{M}_0$
+- Select the best model among $\mathcal{M}_0$, $\mathcal{M}_1$, ..., $\mathcal{M}_p$
+
+## Backward Stepwise Selection (Algorithm)
+
+<center>
+<img src="imgs/algo_6p3.png" height="90%" width="90%" />
+</center>
+
+## Backward Stepwise Selection (About the Algorithm)
+
+- Similar properties to the Forward algorithm
+    - Search $1 + p(p+1)/2$ models instead of $2^p$ models
+    - It is a guided search, we don’t choose $1 + p(p+1)/2$ models to consider at random.
+    - Not guaranteed to yield the best model containing a subset of the $p$ predictors.
+
+## Backward Stepwise Selection (About the Algorithm)
+
+- Similar properties to the Forward algorithm
+    - Search $1 + p(p+1)/2$ models instead of $2^p$ models
+    - It is a guided search, we don’t choose $1 + p(p+1)/2$ models to consider at random.
+    - Not guaranteed to yield the best model containing a subset of the $p$ predictors.
+
+<br>
+
+- However, Backward selection requires that the number of samples $n$ is larger than the number of variables $p$
+    - So that the full model can be fit.
+
+## Hybrid Approach
+
+- Similarly to forward selection, variables are added to the model sequentially.
+
+- However, after adding each new variable, the method may also remove any variables that no longer provide an improvement in the model fit. 
+
+- Better model space exploration while retaining computational advantages of stepwise selection.
+
+## Recommended exercise 4
+
+1. Select the best model for the Credit Data using Forward, Backward and Hybrid (sequential replacement) Stepwise Selection.
+    + Hint: Use the `regsubsets()` of the `leaps` library
+2. Compare with the results obtained with Best Subset Selection.
+
+# Shrinkage Methods
+
+## Shrinkage Methods
+
+- fit a model containing all p predictors 
+    - using a technique that constrains (or regularizes) the coefficient estimates 
+    - or equivalently, that shrinks the coefficient estimates towards zero.
+
+## Shrinkage Methods
+
+- fit a model containing all p predictors 
+    - using a technique that constrains (or regularizes) the coefficient estimates 
+    - or equivalently, that shrinks the coefficient estimates towards zero.
+
+- Reduce the number of effective parameters 
+    - While retaining the ability to capture the most interesting aspects of the problem.
+
+## Shrinkage Methods
+
+- fit a model containing all p predictors 
+    - using a technique that constrains (or regularizes) the coefficient estimates 
+    - or equivalently, that shrinks the coefficient estimates towards zero.
+
+- Reduce the number of effective parameters 
+    - While retaining the ability to capture the most interesting aspects of the problem.
+
+- The two best-known techniques for shrinking the regression coefficients towards zero are:
+    - the ridge regression.
+    - the lasso.
+
+## Ridge regression
+
+The ridge regression coefs $\beta^R$ are the ones that minimize 
+
+$$RSS + \lambda \sum _{j=1}^p \beta_j^2$$
+
+with $\lambda > 0$ being a tuning parameter. 
+
+## Ridge regression
+
+The ridge regression coefs $\beta^R$ are the ones that minimize 
+
+$$RSS + \lambda \sum _{j=1}^p \beta_j^2$$
+
+with $\lambda > 0$ being a tuning parameter. 
+
+- Note that the penalty is not applied to the intercept, $\beta_0$.
+    - If we included the intercept, $\beta^R$ would depend on the average of the response.
+    - We want to shrink the estimated association of each feature with the response.
+
+<div class="notes">
+
+- Intercept is the mean value of the response when the covariates are set to zero
+
+</div>
+
+## Ridge regression
+
+- Ridge regression are not scale-invariant
+    - The standard least square are scale-invariant
+
+<div class="notes">
+
+- multiplying $X_j$ by a constant $c$ simply leads to a scaling of the least squares coefficient estimates by a factor of $1/c$.
+
+</div>
+
+## Ridge regression
+
+- Ridge regression are not scale-invariant
+    - The standard least square are scale-invariant
+    - $\beta^R$ will not only depend on $\lambda$ but also on the scaling of the $j$th predictor
+
+## Ridge regression
+
+- Ridge regression are not scale-invariant
+    - The standard least square are scale-invariant
+    - $\beta^R$ will not only depend on $\lambda$ but also on the scaling of the $j$th predictor
+    - Apply Ridge regression after standardizing the predictors
+
+$$ \tilde{x}_{ij} = \frac{x_{ij}}{\sqrt{\frac{1}{n}\sum _{i=1}^{n}(x_{ij} - \bar{x}_j)^2}} $$
+
+## Ridge regression (Credit Data Example)
+
+<center>
+<img src="imgs/ridge_coefs.png" height="90%" width="90%" />
+</center>
+
+<div class="notes">
+
+The standardized ridge regression coefficients are displayed for
+the Credit data set.
+</div>
+
+## Ridge regression (Effectiveness)
+
+- Why does it work?
+    - As $\lambda$ increase, the flexibility of the fit decreases.
+    - Leading to a decrease variance but increased bias
+
+## Ridge regression (Effectiveness)
+
+- Why does it work?
+    - As $\lambda$ increase, the flexibility of the fit decreases.
+    - Leading to a decrease variance but increased bias
+    
+- MSE is a function of the variance and the squared bias
+    - Need to find sweet spot (see next Fig.)
+
+## Ridge regression (Effectiveness)
+
+- Why does it work?
+    - As $\lambda$ increase, the flexibility of the fit decreases.
+    - Leading to a decrease variance but increased bias
+    
+- MSE is a function of the variance and the squared bias
+    - Need to find sweet spot (see next Fig.)
+    
+- Therefore, ridge regression works best for the cases where 
+    - The relationship between covariates and response is close to linear (low bias)
+    - And the least square estimates have high variance (high $p$ in relation to $n$)
+
+## Ridge regression (MSE)
+
+<center>
+<img src="imgs/ridge_mse.png" height="90%" width="90%" />
+</center>
+
+<div class="notes">
+
+- Squared bias (black), variance (green), and test mean squared error (purple) for the ridge regression predictions on a simulated data set. 
+
+- The horizontal dashed lines indicate the minimum possible MSE. The purple crosses indicate the ridge regression models for which
+the MSE is smallest.
+
+</div>
+
+## Ridge regression (Computationally efficient)
+
+- The computations required to solve $\beta^R_\lambda$, simultaneously for all values of $\lambda$, are almost identical to those for fitting a model using least squares.
+    - See [@friedman2010regularization] and the references therein. 
+
+## Ridge regression (Disadvantages)
+
+- Unlike previous methods, ridge regression will include all $p$ predictors in the final model.
+    - The penalty $\lambda$ will shrink all of the coefficients towards zero.
+    - But it will not set any of them exactly to zero (unless $\lambda = \infty$). 
+
+## Ridge regression (Disadvantages)
+
+- Unlike previous methods, ridge regression will include all $p$ predictors in the final model.
+    - The penalty $\lambda$ will shrink all of the coefficients towards zero.
+    - But it will not set any of them exactly to zero (unless $\lambda = \infty$). 
+
+- This may not be a problem for prediction accuracy, but makes model interpretation hard for large $p$.
+
+## Recommended exercise 5
+
+1. Apply Ridge regression to the Credit Dataset.
+2. Compare the results with the standard linear regression.
+
+## Lasso
+
+- The Lasso regression coefs $\beta^L$ are the ones that minimize 
+
+$$RSS + \lambda \sum _{j=1}^p |\beta_j|$$
+
+with $\lambda > 0$ being a tuning parameter. 
+
+## Lasso
+
+- The Lasso regression coefs $\beta^L$ are the ones that minimize 
+
+$$RSS + \lambda \sum _{j=1}^p |\beta_j|$$
+
+with $\lambda > 0$ being a tuning parameter. 
+
+- Lasso also shrinks the coefficients towards zero 
+
+- In addition, the $\mathcal{l}_1$ penalty has the effect of forcing some of the coefficients to be exactly zero when $\lambda$ is large enough
+
+## Lasso
+
+- The Lasso regression coefs $\beta^L$ are the ones that minimize 
+
+$$RSS + \lambda \sum _{j=1}^p |\beta_j|$$
+
+with $\lambda > 0$ being a tuning parameter. 
+
+- Lasso also shrinks the coefficients towards zero 
+
+- In addition, the $\mathcal{l}_1$ penalty has the effect of forcing some of the coefficients to be exactly zero when $\lambda$ is large enough
+
+- A geometric explanation will be presented in a future slide.
+
+## Lasso regression (Credit Data Example)
+
+<center>
+<img src="imgs/lasso_coefs.png" height="90%" width="90%" />
+</center>
+
+<div class="notes">
+
+The standardized lasso coefficients are displayed for
+the Credit data set.
+</div>
+
+## Lasso regression (Simulated Data Example)
+
+- $p = 45$, $n = 50$ and $2$ out of $45$ predictors related to the response.
+
+<center>
+<img src="imgs/lasso_simulated_data.png" height="90%" width="90%" />
+</center>
+
+<div class="notes">
+- grey lines represent unrelated predictors
+
+- Minimum CV error points to only the two real predictors have coefs != zero
+
+- least-square estimate assign high value to one of the two predictors
+    - Many unrelated predictors have non-zero values 
+
+</div>
+
+## Ridge and Lasso (Different formulations)
+
+- Lasso
+
+$$ \underset{\beta}{\text{minimize}} \left\{\sum _{i=1}^n \left (y_i - \beta_0 - \sum_{j=1}^p \beta_jx_{ij} \right)^2 \right\}\text{ subject to }\sum_{j=1}^p |\beta_j| \le s$$
+
+- Ridge 
+
+$$ \underset{\beta}{\text{minimize}} \left\{\sum _{i=1}^n \left (y_i - \beta_0 - \sum_{j=1}^p \beta_jx_{ij} \right)^2 \right\}\text{ subject to }\sum_{j=1}^p \beta_j^2 \le s$$
+
+## Ridge and Lasso (Geometric intuition)
+
+<center>
+<img src="imgs/ridge_lasso_geometric_visualization.png" height="90%" width="90%" />
+</center>
+
+<div class="notes">
+
+- The red ellipses are the contours of the RSS.
+
+- The solid blue areas are the constraint regions, $|\beta_1| + |\beta_2| \le s$ and $\beta_1^2 + \beta_2^2 \le s$
+
+- the explanation holds for $p > 2$, just harder to visualize
+
+</div>
+
+## Comparison between Ridge and Lasso
+
+- Neither is universally better than the other
+
+- One expects lasso to perform better for cases where a relatively small number of predictors have coefs that are very small or zero
+
+## Comparison between Ridge and Lasso
+
+- Neither is universally better than the other
+
+- One expects lasso to perform better for cases where a relatively small number of predictors have coefs that are very small or zero
+
+- One expects ridge to be better when the response is a function of many predictors, all with roughly equal size
+
+## Comparison between Ridge and Lasso
+
+- Neither is universally better than the other
+
+- One expects lasso to perform better for cases where a relatively small number of predictors have coefs that are very small or zero
+
+- One expects ridge to be better when the response is a function of many predictors, all with roughly equal size
+
+- Hard to know a priori, techniques such as CV required
+
+## Recommended exercise 6
+
+1. Apply Lasso regression to the Credit Dataset.
+2. Compare the results with the standard linear regression and the Ridge regression.
+
+## Bayesian interpretation
+
+- Gaussian prior with zero mean and std. dev. as function of lambda 
+    - posterior mode is the ridge regression solution
+    
+- Laplace prior with zero mean and scale parameter as a function of lambda 
+    - posterior mode is the lasso solution
+
+<center>
+<img src="imgs/ridge_lasso_priors.png" height="60%" width="60%" />
+</center>
+
+<div class="notes">
+Left: Ridge regression is the posterior mode for $\beta$ under a Gaussian prior. 
+Right: The lasso is the posterior mode for $\beta$ under a double-exponential prior.
+</div>
+
+## Selecting $\lambda$
+
+- Pick $\lambda$ for which the cross-validation error is smallest. 
+
+- re-fit using all of the available observations and the selected value of $\lambda$.
+
+## References
