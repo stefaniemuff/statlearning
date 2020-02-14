@@ -1,31 +1,61 @@
 ---
 title: "TMA4268 Statistical Learning V2020"
-subtitle: "Module 6: Solution sketches"
 author: "Thiago G. Martins, Department of Mathematical Sciences, NTNU"
 date: "Spring 2020"
-output: #3rd letter intentation hierarchy
-#  beamer_presentation:
-###    incremental: true # or >* for one at a time
-#  slidy_presentation:
-#    font_adjustment: +1  
-   # prettydoc::html_pretty:
-   #  theme: architect
-   #  highlight: github
- pdf_document:
- toc: true
- toc_depth: 2
-
+output:
+  html_document:
+    df_print: paged
+    toc: no
+    toc_depth: '2'
+  pdf_document:
+    toc: no
+    toc_depth: '2'
+subtitle: 'Module 6: Recommended exercises - Solutions'
 ---
+
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+You might need to install the following packages to run this code:
+```{r, eval = F}
+install.packages("pls")
+install.packages("GGAlly")
+install.packages("ISLR")
+install.packages("leaps")
+install.packages("glmnet")
+```
+
 # Recommended exercise 1
 
+## 1) Least square estimator
 For the least square estimator, the solution can be found in the first session [here](https://en.wikipedia.org/wiki/Proofs_involving_ordinary_least_squares).
 
+We find the least square by minimizing the RSS with respect to the coefficients.
+$$ RSS = ||\mathbf{y}-\mathbf{X}\boldsymbol{\beta}||^2 = (\mathbf{y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{y}-\mathbf{X}\boldsymbol{\beta}) = \mathbf{y}^T\mathbf{y} - \boldsymbol{\beta}^T\mathbf{X}^T\mathbf{y} - \mathbf{y}^T\mathbf{X}\boldsymbol{\beta} + \boldsymbol{\beta}^T\mathbf{X}^T\mathbf{X}\boldsymbol{\beta}$$
+Here, all the terms have dimension $1\times 1$, so $\boldsymbol{\beta}^T\mathbf{X}^T\mathbf{y} = \mathbf{y}^T\mathbf{X}\boldsymbol{\beta}$ and the expression becomes
+$$ RSS =  \mathbf{y}^T\mathbf{y} - 2\boldsymbol{\beta}^T\mathbf{X}^T\mathbf{y} + \boldsymbol{\beta}^T\mathbf{X}^T\mathbf{X}\boldsymbol{\beta}$$
+We find the least square estimates by derivating this expression wrt. $\boldsymbol{\beta}$, setting the expression equal to 0 and solving for $\boldsymbol{\beta}$
+$$ \frac{RSS}{d\boldsymbol{\beta}} =  \frac{\mathbf{y}^T\mathbf{y}}{d\boldsymbol{\beta}} - \frac{2\boldsymbol{\beta}^T\mathbf{X}^T\mathbf{y}}{d\boldsymbol{\beta}} + \frac{\boldsymbol{\beta}^T\mathbf{X}^T\mathbf{X}\boldsymbol{\beta}}{d\boldsymbol{\beta}} = 0$$
+
+$$ - 2\mathbf{X}^T\mathbf{y} + 2(\mathbf{X}^T\mathbf{X})\boldsymbol{\beta} = 0$$
+$$ \hat{\boldsymbol{\beta}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}$$
+
+## 2) Maximum likelihood estimator
+
 For the maximum likelihood estimator, the solution can be found [here](https://en.wikipedia.org/wiki/Proofs_involving_ordinary_least_squares#Maximum_likelihood_approach).
+
+To find the maximum likelihood estimator, we minimize the likelihood wrt. the coefficients. For a linear model, we assume a normal distribution for the response where the expected value is $\mathbf{X}\boldsymbol{\beta}$, i.e. $\mathbf{y} \sim \mathcal{N}(\mathbf{X}\boldsymbol{\beta}, \sigma^2I)$
+
+$$ L(\boldsymbol{\beta}|\mathbf{y}) = \prod_{i=1}^n f(y_i, \boldsymbol{\beta}) = \prod_{i=1}^n\Big(\frac{1}{\sqrt{2\pi\sigma^2}}exp\{-\frac{1}{2\sigma^2}(y_i-X\beta)^2\}\Big) = \frac{1}{(2\pi\sigma^2)^{n/2}} exp\{-\frac{1}{2}(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})^T(\sigma^2I)^{-1}(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})\} $$
+Minimizing the log-likelihood by taking the log of the above function and derivating with respect to $\boldsymbol{\beta}$,
+
+$$ \frac{d\log(L)}{d\boldsymbol{\beta}} = -\frac{d}{d\beta}(\frac{n}{2}\log(2\pi\sigma^2)) - \frac{d}{d\beta}(\frac{1}{2\sigma^2}(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})) = 0$$
+The first term have no $\boldsymbol{\beta}$ and will cancel. The variance in the second term can be placed outside of the derivation, and can hance be removed. Then, we end up with the same expression as for the RSS-minimization, and we find the same $\hat{\boldsymbol{\beta}}$ as above.
+
+$$ \frac{d\log(L)}{d\boldsymbol{\beta}} =  \frac{\mathbf{y}^T\mathbf{y}}{d\boldsymbol{\beta}} - \frac{2\boldsymbol{\beta}^T\mathbf{X}^T\mathbf{y}}{d\boldsymbol{\beta}} + \frac{\boldsymbol{\beta}^T\mathbf{X}^T\mathbf{X}\boldsymbol{\beta}}{d\boldsymbol{\beta}} = 0 $$
+$$ \hat{\boldsymbol{\beta}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{y}$$
 
 # Recommended exercise 2
 
@@ -192,7 +222,20 @@ mean(bsm_squared_errors)
 
 # Recommended exercise 4
 
-Similar analysis as previous exercise, simply replace Best Subset Selection (`best_subset_method=regsubsets(Balance~.,credit_data,nvmax=credit_data_number_predictors)`) by Forward Stepwise Selection (`regfit.fwd=regsubsets(Balance~.,credit_data,nvmax=credit_data_number_predictors,method="forward")`), Backward Stepwise Selection (`regfit.fwd=regsubsets(Balance~.,credit_data,nvmax=credit_data_number_predictors,method="backward")`) and Hybrid Stepwise Selection 
+Similar analysis as previous exercise, simply replace Best Subset Selection
+
+(`best_subset_method=regsubsets(Balance~.,credit_data,nvmax=credit_data_number_predictors)`)
+
+by Forward Stepwise Selection
+
+(`regfit.fwd=regsubsets(Balance~.,credit_data,nvmax=credit_data_number_predictors,method="forward")`)
+
+, Backward Stepwise Selection
+
+(`regfit.fwd=regsubsets(Balance~.,credit_data,nvmax=credit_data_number_predictors,method="backward")`)
+
+and Hybrid Stepwise Selection 
+
 (`regfit.fwd=regsubsets(Balance~.,credit_data,nvmax=credit_data_number_predictors,method="seqrep")`)
 
 # Recommended exercise 5
