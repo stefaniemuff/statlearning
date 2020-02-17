@@ -48,7 +48,7 @@ For the maximum likelihood estimator, the solution can be found [here](https://e
 
 To find the maximum likelihood estimator, we minimize the likelihood wrt. the coefficients. For a linear model, we assume a normal distribution for the response where the expected value is $\mathbf{X}\boldsymbol{\beta}$, i.e. $\mathbf{y} \sim \mathcal{N}(\mathbf{X}\boldsymbol{\beta}, \sigma^2I)$
 
-$$ L(\boldsymbol{\beta}|\mathbf{y}) = \prod_{i=1}^n f(y_i, \boldsymbol{\beta}) = \prod_{i=1}^n\Big(\frac{1}{\sqrt{2\pi\sigma^2}}exp\{-\frac{1}{2\sigma^2}(y_i-X\beta)^2\}\Big) = \frac{1}{(2\pi\sigma^2)^{n/2}} exp\{-\frac{1}{2}(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})^T(\sigma^2I)^{-1}(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})\} $$
+$$ L(\boldsymbol{\beta}|\mathbf{y}) = \prod_{i=1}^n f(y_i, \boldsymbol{\beta}) = \prod_{i=1}^n\Big(\frac{1}{\sqrt{2\pi\sigma^2}}\exp\{-\frac{1}{2\sigma^2}(y_i-X\beta)^2\}\Big) = \frac{1}{(2\pi\sigma^2)^{n/2}} \exp\{-\frac{1}{2}(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})^T(\sigma^2I)^{-1}(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})\} $$
 Minimizing the log-likelihood by taking the log of the above function and derivating with respect to $\boldsymbol{\beta}$,
 
 $$ \frac{d\log(L)}{d\boldsymbol{\beta}} = -\frac{d}{d\beta}(\frac{n}{2}\log(2\pi\sigma^2)) - \frac{d}{d\beta}(\frac{1}{2\sigma^2}(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})^T(\mathbf{y}-\mathbf{X}\boldsymbol{\beta})) = 0$$
@@ -252,6 +252,7 @@ y_train <- credit_data_training$Balance
 x_test <- model.matrix(Balance~.,credit_data_testing)[,-1]
 y_test <- credit_data_testing$Balance
 
+# Use alpha=0 for the ridge penalty:
 ridge_mod <- glmnet(x_train,y_train,alpha=0)
 
 set.seed(1)
@@ -270,6 +271,7 @@ squared_errors <- data.frame(ridge_square_errors = ridge_square_errors, squared_
 # Recommended exercise 6
 
 ```{r, message=FALSE, warning=FALSE}
+# Now alpha=1, which gives the lasso penalty
 lasso_mod <- glmnet(x_train,y_train,alpha=1)
 
 set.seed(1)
