@@ -29,7 +29,7 @@
 }{}
 \newif\ifbibliography
 \hypersetup{
-            pdftitle={Module 8: Tree-based Mthods},
+            pdftitle={Module 8: Tree-based Methods},
             pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
             colorlinks=true,
             linkcolor=Maroon,
@@ -118,17 +118,38 @@
 \setcounter{secnumdepth}{0}
 \usepackage{multirow}
 
-\title{Module 8: Tree-based Mthods}
+\title{Module 8: Tree-based Methods}
 \subtitle{TMA4268 Statistical Learning V2020}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{March xx, 2020}
+\date{February 28 and March 2, 2020}
 
 \begin{document}
 \frame{\titlepage}
 
+\begin{frame}
+
+Last update: February 19, 2020
+
+\end{frame}
+
+\begin{frame}{Acknowledgements}
+
+\begin{itemize}
+\item
+  A lot of this material stems from Mette Langaas and her TAs. I would
+  like to thank Mette for the permission to use her material!
+\item
+  Some of the figures and slides in this presentation are taken (or are
+  inspired) from James et al. (2013).
+\end{itemize}
+
+\end{frame}
+
 \begin{frame}{Introduction}
 
 \begin{block}{Learning material for this module}
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -136,11 +157,8 @@
   James et al (2013): An Introduction to Statistical Learning. Chapter
   8.\\
 \item
-  Classnotes (todo: give link, or write on board)
+  All the material presented on these module slides.
 \end{itemize}
-
-Some of the figures in this presentation are taken (or are inspired)
-from James et al. (2013).
 
 \end{block}
 
@@ -157,11 +175,15 @@ You will get to know
 \begin{itemize}
 \tightlist
 \item
-  Decision trees\\
-\item
-  Regression trees\\
-\item
-  Classification trees\\
+  Decision trees
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Regression trees\\
+  \item
+    Classification trees\\
+  \end{itemize}
 \item
   Pruning a tree
 \item
@@ -207,19 +229,20 @@ and learn how to apply all that.
 
 \begin{block}{Main idea of tree-based methods}
 
+\vspace{2mm}
+
 \begin{itemize}
 \item
-  We can divide the area into rectangles with similar salaries.
+  Divide the area into rectangles with similar salaries.
 \item
-  Do this by deriving a set of decision (splitting) rules for segmenting
-  the predictor space into a number of finer and finer regions.
+  Idea: Derive a set of decision (splitting) rules for segmenting the
+  predictor space into a number of finer and finer regions.
 \item
   All points in the same region will be given the same predictive value
   (the mean of all values in that square, or a majority vote).
 \end{itemize}
 
-In two dimensions (for two variables) a three-region partition may look
-like this:
+Visualisaztion in two dimensions:
 
 \centering
 \includegraphics[width=0.50000\textwidth]{../../ISLR/Figures/Chapter8/8.2.png}
@@ -276,7 +299,8 @@ nodes}:
 \begin{itemize}
 \item
   Data from patients that enter hospital. The aim is to quickly assess
-  whether a patient as a brain injury or not.
+  whether a patient as a brain injury or not (binary outcome =
+  classification problem).
 \item
   Patients are investigated and (possible) asked questions.
 \item
@@ -339,8 +363,8 @@ smaller version of the (simulated) dataset \texttt{headInjury} from the
 \begin{itemize}
 \tightlist
 \item
-  The variable \texttt{brain.injury} will be the response of our model:
-  It has value 1 if a person has an acute brain injury, and 0 otherwise.
+  The variable \texttt{brain.injury} will be the response of our model
+  (=1 if a person has an acute brain injury, =0 otherwise).
 \end{itemize}
 
 \vspace{0mm}
@@ -460,7 +484,7 @@ right.
 
 \begin{frame}
 
-\begin{block}{Glossary}
+\begin{block}{Some terminology}
 
 \begin{itemize}
 \item
@@ -468,12 +492,11 @@ right.
   down, where the top node is called the \emph{root}.
 \item
   The \emph{terminal nodes} or \emph{leaf nodes} are the nodes at the
-  bottom, with no splitting criteria. These represent the final
-  predicted class (for classification trees) or predicted response value
-  (for regression trees) and are written symbolically as \(R_j\) for
+  bottom. These are written symbolically as \(R_j\) for
   \(j = 1, 2, ..., J\)
 \item
-  The \(R_j\) will be referred to as \emph{non-overlapping regions}.
+  The \(R_j\) will be referred to as \emph{non-overlapping regions} and
+  are high-dimensional rectangles (boxes).
 \item
   \emph{Internal nodes} are all nodes between the root and the terminal
   nodes. These nodes correspond to the partitions of the predictor
@@ -482,19 +505,15 @@ right.
   \emph{Branches}: segment of the tree connecting the nodes.
 \end{itemize}
 
-We will consider only binary splits on one variable, but multiway splits
-and linear combination of variabes are possible - but not so common.
+\vspace{2mm} We will consider only binary splits on one variable, but
+multiway splits and linear combination of variabes are possible - but
+not so common.
 
 \end{block}
 
 \end{frame}
 
-\begin{frame}{Constructing a decision tree}
-
-You can construct decision trees for both classification and regression
-problems, first we focus on constructing a regression tree.
-
-\begin{block}{Regression tree (continous outcome)}
+\begin{frame}{Regression tree (continous outcome)}
 
 Assume that we have a dataset consisting of \(n\) pairs
 \((\boldsymbol{x}_i,y_i)\), \(i=1,\ldots,n\), and each predictor is
@@ -519,8 +538,6 @@ Assume that we have a dataset consisting of \(n\) pairs
 \textbf{But}: How to divide the predictor space into non-overlapping
 regions \(R_1,R_2,\ldots,R_J\)?
 
-\end{block}
-
 \end{frame}
 
 \begin{frame}
@@ -540,8 +557,8 @@ To do this we need to consider every partition of the predictor space,
 and compute the RSS for each partition.
 
 \textbf{But}: An exhaustive search over possible splits is
-\emph{computationally infeasible}! In fact, constructing optimal binary
-decision tress is an NP-complete problem (Hyafil and Rivest 1976).
+\emph{computationally infeasible}!
+\footnote{In fact, constructing optimal binary decision trees is an NP-complete problem (Hyafil and Rivest, 1976).}
 
 \end{frame}
 
@@ -554,8 +571,8 @@ decision tress is an NP-complete problem (Hyafil and Rivest 1976).
 \begin{itemize}
 \item
   A \emph{greedy} approach is taken (aka top-down) - called
-  \emph{recursive binary splitting.} The idea is to find a split that
-  minimizes RSS at each step.
+  \emph{recursive binary splitting}: Find a split that minimizes RSS at
+  each step.
 \item
   We start at the top of the tree and divide the predictor space into
   two regions, \(R_1\) and \(R_2\) by making a decision rule for one of
@@ -622,6 +639,10 @@ variables:
   \texttt{wind} : wind speed in mph
 \end{itemize}
 
+\vspace{2mm}
+
+\scriptsize
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{head}\NormalTok{(myozone)}
@@ -656,7 +677,7 @@ to see). This gives us the following regression tree.
 
 \begin{frame}[fragile]
 
-\footnotesize
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1225,8 +1246,7 @@ entropy criterion.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tree.HIClassG =}\StringTok{ }\KeywordTok{tree}\NormalTok{(brain.injury }\OperatorTok{~}\StringTok{ }\NormalTok{., headInjury2, }\DataTypeTok{subset =}\NormalTok{ train, }
-    \DataTypeTok{split =} \StringTok{"gini"}\NormalTok{)}
+\NormalTok{tree.HIClassG =}\StringTok{ }\KeywordTok{tree}\NormalTok{(brain.injury }\OperatorTok{~}\StringTok{ }\NormalTok{., headInjury2, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{split =} \StringTok{"gini"}\NormalTok{)}
 \KeywordTok{summary}\NormalTok{(tree.HIClassG)}
 \end{Highlighting}
 \end{Shaded}
@@ -1938,8 +1958,8 @@ We can do bagging by using the function \texttt{randomForest()} in the
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(randomForest)}
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{r.brain.bag <-}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(brain.injury }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ headInjury2, }
-    \DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{mtry =} \DecValTok{10}\NormalTok{, }\DataTypeTok{ntree =} \DecValTok{500}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{r.brain.bag <-}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(brain.injury }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ headInjury2, }\DataTypeTok{subset =}\NormalTok{ train, }
+    \DataTypeTok{mtry =} \DecValTok{10}\NormalTok{, }\DataTypeTok{ntree =} \DecValTok{500}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
 \NormalTok{r.brain.bag}\OperatorTok{$}\NormalTok{confusion}
 \end{Highlighting}
 \end{Shaded}
@@ -1952,8 +1972,7 @@ We can do bagging by using the function \texttt{randomForest()} in the
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(r.brain.bag}\OperatorTok{$}\NormalTok{confusion))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(r.brain.bag}\OperatorTok{$}\NormalTok{confusion[}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{, }
-    \DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{])}
+\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(r.brain.bag}\OperatorTok{$}\NormalTok{confusion))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(r.brain.bag}\OperatorTok{$}\NormalTok{confusion[}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{])}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2216,8 +2235,8 @@ with \texttt{type=2}.
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
-\NormalTok{ozone.rf <-}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(ozone }\OperatorTok{~}\StringTok{ }\NormalTok{temp }\OperatorTok{+}\StringTok{ }\NormalTok{wind, }\DataTypeTok{data =}\NormalTok{ ozone.train, }
-    \DataTypeTok{ntree =} \DecValTok{500}\NormalTok{, }\DataTypeTok{mtry =} \DecValTok{2}\NormalTok{, }\DataTypeTok{keep.forest =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{ozone.rf <-}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(ozone }\OperatorTok{~}\StringTok{ }\NormalTok{temp }\OperatorTok{+}\StringTok{ }\NormalTok{wind, }\DataTypeTok{data =}\NormalTok{ ozone.train, }\DataTypeTok{ntree =} \DecValTok{500}\NormalTok{, }
+    \DataTypeTok{mtry =} \DecValTok{2}\NormalTok{, }\DataTypeTok{keep.forest =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
 \KeywordTok{varImpPlot}\NormalTok{(ozone.rf, }\DataTypeTok{type =} \DecValTok{2}\NormalTok{, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -2799,10 +2818,10 @@ at boosting.
 ## Variables actually used in tree construction:
 ## [1] "rm"    "lstat" "crim"  "age"  
 ## Number of terminal nodes:  7 
-## Residual mean deviance:  10.4 = 2550 / 246 
+## Residual mean deviance:  10.38 = 2555 / 246 
 ## Distribution of residuals:
-##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## -10.200  -1.780  -0.177   0.000   1.920  16.600
+##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+## -10.1800  -1.7770  -0.1775   0.0000   1.9230  16.5800
 \end{verbatim}
 
 \end{block}
@@ -2905,7 +2924,7 @@ one.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 35.2869
+## [1] 35.28688
 \end{verbatim}
 
 \end{block}
@@ -2928,8 +2947,8 @@ but include all variables (here \texttt{mtry=13}).
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(randomForest)}
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{bag.boston =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Boston, }\DataTypeTok{subset =}\NormalTok{ train, }
-    \DataTypeTok{mtry =} \DecValTok{13}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{bag.boston =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Boston, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{mtry =} \DecValTok{13}\NormalTok{, }
+    \DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
 \NormalTok{bag.boston}
 \end{Highlighting}
 \end{Shaded}
@@ -2972,8 +2991,8 @@ but include all variables (here \texttt{mtry=13}).
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{bag.boston =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Boston, }\DataTypeTok{subset =}\NormalTok{ train, }
-    \DataTypeTok{mtry =} \DecValTok{13}\NormalTok{, }\DataTypeTok{ntree =} \DecValTok{25}\NormalTok{)}
+\NormalTok{bag.boston =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Boston, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{mtry =} \DecValTok{13}\NormalTok{, }
+    \DataTypeTok{ntree =} \DecValTok{25}\NormalTok{)}
 \NormalTok{yhat.bag =}\StringTok{ }\KeywordTok{predict}\NormalTok{(bag.boston, }\DataTypeTok{newdata =}\NormalTok{ Boston[}\OperatorTok{-}\NormalTok{train, ])}
 \KeywordTok{mean}\NormalTok{((yhat.bag }\OperatorTok{-}\StringTok{ }\NormalTok{boston.test)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
 \end{Highlighting}
@@ -3002,8 +3021,8 @@ randomly selected predictors for each tree:
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{rf.boston =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Boston, }\DataTypeTok{subset =}\NormalTok{ train, }
-    \DataTypeTok{mtry =} \DecValTok{6}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{rf.boston =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Boston, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{mtry =} \DecValTok{6}\NormalTok{, }
+    \DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
 \NormalTok{yhat.rf =}\StringTok{ }\KeywordTok{predict}\NormalTok{(rf.boston, }\DataTypeTok{newdata =}\NormalTok{ Boston[}\OperatorTok{-}\NormalTok{train, ])}
 \KeywordTok{mean}\NormalTok{((yhat.rf }\OperatorTok{-}\StringTok{ }\NormalTok{boston.test)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
 \end{Highlighting}
@@ -3245,11 +3264,6 @@ University Press.
 Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2009. \emph{The
 Elements of Statistical Learning}. Vol. 2. Springer series in statistics
 New York.
-
-\hypertarget{ref-hyafilrivest1976}{}
-Hyafil, L., and R.L. Rivest. 1976. ``Constructing Optimal Binary
-Decision Trees Is Np-Complete.'' \emph{Information Processing Letters}
-5: 15--17.
 
 \hypertarget{ref-james.etal}{}
 James, G., D. Witten, T. Hastie, and R. Tibshirani. 2013. \emph{An

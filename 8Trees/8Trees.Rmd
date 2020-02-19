@@ -1,8 +1,8 @@
 ---
 subtitle: "TMA4268 Statistical Learning V2020"
-title: "Module 8: Tree-based Mthods"
+title: "Module 8: Tree-based Methods"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "March xx, 2020"
+date: "February 28 and March 2, 2020"
 fontsize: 10pt
 output:
   beamer_presentation:
@@ -12,6 +12,10 @@ output:
     theme: "Singapore"
     colortheme: "default"
     font: "serif"
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
 urlcolor: blue
 bibliography: refs.bib
 header-includes: \usepackage{multirow}
@@ -19,28 +23,41 @@ header-includes: \usepackage{multirow}
 ---
 
 ```{r setup, include=FALSE}
-showsolA<-TRUE
-showsolB<-TRUE
 showsol<-TRUE
 library(knitr)
-opts_chunk$set(tidy.opts=list(width.cutoff=65),tidy=TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE)
 knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
                       cache=TRUE, size="scriptsize")
 whichformat="latex"
 ```
 
+---
+
+Last update: February 19, 2020
+
+--- 
+
+# Acknowledgements
+
+* A lot of this material stems from Mette Langaas and her TAs. I would like to thank Mette for the permission to use her material!
+
+* Some of the figures and slides in this presentation are taken (or are inspired) from @james.etal.
+
+---
+
 # Introduction 
 
 ## Learning material for this module
 
+\vspace{2mm}
+
 * James et al (2013): An Introduction to Statistical Learning. Chapter 8.  
-* Classnotes (todo: give link, or write on board)
+* All the material presented on these module slides.
 
 <!-- * [Classnotes 04.03.2019](https://www.math.ntnu.no/emner/TMA4268/2019v/notes/M8L1notes.pdf)  -->
 <!-- * [Classnotes 07.03.2019](https://www.math.ntnu.no/emner/TMA4268/2019v/notes/M8L2notes.pdf)  -->
 
-Some of the figures in this presentation are taken (or are inspired) from @james.etal.
-
+ 
 ---
 
 ## What will you learn?
@@ -49,9 +66,9 @@ Some of the figures in this presentation are taken (or are inspired) from @james
 
 You will get to know
 
-* Decision trees  
-* Regression trees  
-* Classification trees  
+* Decision trees
+    * Regression trees  
+    * Classification trees  
 * Pruning a tree
 * Bagging
 * Variable importance
@@ -75,17 +92,18 @@ and learn how to apply all that.
 ---
 
 ## Main idea of tree-based methods
+\vspace{2mm}
 
-* We can divide the area into rectangles with similar salaries. 
+* Divide the area into rectangles with similar salaries. 
 
-* Do this by deriving a set of decision (splitting) rules for segmenting the predictor space into a number of finer and finer regions. 
+* Idea: Derive a set of decision (splitting) rules for segmenting the predictor space into a number of finer and finer regions. 
 
 
 * All points in the same region will be given the same predictive value (the mean of all values in that square, or a majority vote).
 
 
  
-In two dimensions (for two variables) a three-region partition may look like this:
+Visualisaztion in two dimensions:
 
 \centering
 ![ISLR Figure 8.1](../../ISLR/Figures/Chapter8/8.2.png){width=50%}
@@ -129,7 +147,7 @@ $~$
 
 \normalsize
 
-* Data from patients that enter hospital. The aim is to quickly assess whether a patient as a brain injury or not.
+* Data from patients that enter hospital. The aim is to quickly assess whether a patient as a brain injury or not (binary outcome = classification problem).
 
 * Patients are investigated and (possible) asked questions.
 
@@ -178,7 +196,7 @@ head(headInjury2)
 ---
 
 
-* The variable `brain.injury` will be the response of our model: It has value 1 if a person has an acute brain injury, and 0 otherwise. 
+* The variable `brain.injury` will be the response of our model (=1 if a person has an acute brain injury, =0 otherwise). 
 
 \vspace{0mm}
 
@@ -247,25 +265,24 @@ print(headtree)
 
 ---
 
-## Glossary
+## Some terminology 
+
 * CARTs (Classification and regression trees) are usually drawn upside down, where the top node is called the *root*.
 
-* The *terminal nodes* or *leaf nodes* are the nodes at the bottom, with no splitting criteria. These represent the final predicted class (for classification trees) or predicted response value (for regression trees) and are written symbolically as $R_j$ for $j = 1, 2, ..., J$ 
+* The *terminal nodes* or *leaf nodes* are the nodes at the bottom. These are written symbolically as $R_j$ for $j = 1, 2, ..., J$ 
 
-* The $R_j$ will be referred to as _non-overlapping regions_.
+* The $R_j$ will be referred to as _non-overlapping regions_ and are high-dimensional rectangles (boxes).
 
 * *Internal nodes* are all nodes between the root and the terminal nodes. These nodes correspond to the partitions of the predictor space.
 
 * *Branches*: segment of the tree connecting the nodes.
 
+\vspace{2mm}
 We will consider only binary splits on one variable, but multiway splits and linear combination of variabes are possible - but not so common.
 
 ---
 
-# Constructing a decision tree 
-You can construct decision trees for both classification and regression problems, first we focus on constructing a regression tree. 
-
-## Regression tree (continous outcome)
+# Regression tree (continous outcome)
 
 Assume that we have a dataset consisting of $n$ pairs $(\boldsymbol{x}_i,y_i)$, $i=1,\ldots,n$, and each predictor is ${\boldsymbol{x}}_i=(x_{i1},x_{i2},...,x_{ip})$. The aim is to predict $y_i$.
 
@@ -292,7 +309,7 @@ where $\hat{y}_{R_j}$ is the mean response for the training observations in regi
 
 To do this we need to consider every partition of the predictor space, and compute the RSS for each partition.
 
-**But**: An exhaustive search over possible splits is _computationally infeasible_! In fact, constructing optimal binary decision tress is an NP-complete problem [@hyafilrivest1976].
+**But**: An exhaustive search over possible splits is _computationally infeasible_! \footnote{In fact, constructing optimal binary decision trees is an NP-complete problem (Hyafil and Rivest, 1976).}
 
 ---
 
@@ -306,7 +323,7 @@ To do this we need to consider every partition of the predictor space, and compu
 
 \vspace{2mm}
 
-* A _greedy_ approach is taken (aka top-down) - called _recursive binary splitting._ The idea is to find a split that minimizes RSS at each step.
+* A _greedy_ approach is taken (aka top-down) - called _recursive binary splitting_: Find a split that minimizes RSS at each step.
 
 * We start at the top of the tree and divide the predictor space into two regions, $R_1$ and $R_2$ by making a decision rule for one of the predictors $x_1, x_2,...,x_p$. If we define the two regions by $R_1(j,s)=\{x \mid x_j<s\}$ and $R_2(j,s)=\{x \mid x_j\geq s\}$, it means that we need to find the (predictor) $j$ and (splitting point) $s$ that minimize
 $$\sum_{i: x_i \in R_1(j,s)}(y_i-\hat{y}_{R_1})^2+\sum_{i: x_i \in R_2(j,s)}(y_i -\hat{y}_{R_2})^2 \ ,$$
@@ -350,6 +367,9 @@ myozone=ElemStatLearn::ozone
 colnames(myozone)=c("ozone","radi","temp","wind")
 ```
 
+\vspace{2mm}
+
+\scriptsize
 ```{r, echo=TRUE}
 head(myozone)
 ```
@@ -364,7 +384,7 @@ $\rightarrow$ We can fit a regression tree to the data, with `ozone` as our resp
 
 ---
 
-\footnotesize
+\scriptsize
 ```{r,echo=c(2:6,7)}
 set.seed(300)
 ozone.trainID = sample(1:111, 75)
