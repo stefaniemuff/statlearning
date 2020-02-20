@@ -1,0 +1,342 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\PassOptionsToPackage{usenames,dvipsnames}{color} % color is loaded by hyperref
+\hypersetup{unicode=true,
+            pdftitle={Module 7: Recommended Exercises},
+            pdfauthor={Andreas Strand, Martina Hall, Michail Spitieris, Stefanie Muff, Department of Mathematical Sciences, NTNU},
+            colorlinks=true,
+            linkcolor=Maroon,
+            citecolor=Blue,
+            urlcolor=blue,
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Module 7: Recommended Exercises}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+  \subtitle{TMA4268 Statistical Learning V2020}
+  \author{Andreas Strand, Martina Hall, Michail Spitieris, Stefanie Muff,
+Department of Mathematical Sciences, NTNU}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{February 27, 2020}
+
+
+\begin{document}
+\maketitle
+
+\subsection{Problem 1}\label{problem-1}
+
+Let us take a look at the \texttt{Auto} data set. We want to model miles
+per gallon \texttt{mpg} by engine horsepower \texttt{horsepower}.
+Separate the observations into training and test. A training set is
+plotted below.
+
+Perform polynomial regression of degree 1, 2, 3 and 4. Use
+\texttt{lines()} to add the fitted values to the plot below.
+
+Also plot the test error by polynomial degree.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(ISLR)}
+\CommentTok{# extract only the two variables from Auto}
+\NormalTok{ds =}\StringTok{ }\NormalTok{Auto[}\KeywordTok{c}\NormalTok{(}\StringTok{"horsepower"}\NormalTok{, }\StringTok{"mpg"}\NormalTok{)]}
+\NormalTok{n =}\StringTok{ }\KeywordTok{nrow}\NormalTok{(ds)}
+\CommentTok{# which degrees we will look at}
+\NormalTok{deg =}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{4}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\CommentTok{# training ids for training set}
+\NormalTok{tr =}\StringTok{ }\KeywordTok{sample.int}\NormalTok{(n, n}\OperatorTok{/}\DecValTok{2}\NormalTok{)}
+\CommentTok{# plot of training data}
+\KeywordTok{plot}\NormalTok{(ds[tr, ], }\DataTypeTok{col =} \StringTok{"darkgrey"}\NormalTok{, }\DataTypeTok{main =} \StringTok{"Polynomial regression"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{RecEx7_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+\subsection{Problem 2}\label{problem-2}
+
+We will continue working with the \texttt{Auto} data set. The variable
+\texttt{origin} is 1,2 or 3, corresponding to American, European or
+Japanese origin. Use \texttt{factor(origin)} for conversion to a factor
+variable. Predict \texttt{mpg} by origin with a linear model. Plot the
+fitted values and approximative 95 percent confidence intervals.
+Selecting \texttt{se\ =\ T} in \texttt{predict()} gives standard errors
+of the prediction.
+
+\begin{itemize}
+\item
+  Hint: make a new dataframe of the three origins (as factors) and use
+  this new data in your predict function.
+\item
+  Hint: to plot the confidence intervals, you can add
+  \texttt{geom\_segment(aes(x=origin,\ y=lwr,\ xend\ =\ origin,\ yend=upr))}
+  to your ggplot, where \texttt{origin}, \texttt{lwr} and \texttt{upr}
+  comes from a dataframe with \texttt{lwr} as the lower bound and
+  \texttt{upr} as the upper bound.
+\end{itemize}
+
+\subsection{Problem 3}\label{problem-3}
+
+Now, let us look at the \texttt{Wage} data set. The section on
+\href{https://htmlpreview.github.io/?https://github.com/stefaniemuff/statlearning/blob/master/7BeyondLinear/7BeyondLinear.html}{Additive
+Models} explains how we can create an AM by adding components together.
+One component we saw is a natural spline in \texttt{year} with one knot.
+Derive the expression for the design matrix \(\mathbf X_2\) from the
+natural spline basis: \[
+b_1(x_i) = x_i, \quad b_{k+2}(x_i) = d_k(x_i)-d_K(x_i),\; k = 0, \ldots, K - 1,\\
+\] \[
+d_k(x_i) = \frac{(x_i-c_k)^3_+-(x_i-c_{K+1})^3_+}{c_{K+1}-c_k}.
+\]
+
+\subsection{Problem 4}\label{problem-4}
+
+We will continue working with the same AM as in problem 3. The R call
+\texttt{model.matrix(\textasciitilde{}\ bs(age,knots=c(40,60))\ +\ ns(year,knots=2006)\ +\ education)}
+gives a design matrix for the AM. This matrix is what \texttt{gam()}
+uses. However, it does not equal our design matrix for AM
+\(\mathbf X = (\mathbf{1}, \mathbf{X}_1, \mathbf{X}_2, \mathbf{X}_3)\).
+The predicted responses will still be the same.
+
+Write code that produces \(\mathbf X\). The code below may be useful.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# X_1}
+\NormalTok{mybs =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x, knots) \{}
+    \KeywordTok{cbind}\NormalTok{(x, x}\OperatorTok{^}\DecValTok{2}\NormalTok{, x}\OperatorTok{^}\DecValTok{3}\NormalTok{, }\KeywordTok{sapply}\NormalTok{(knots, }\ControlFlowTok{function}\NormalTok{(y) }\KeywordTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{, x }\OperatorTok{-}\StringTok{ }\NormalTok{y)}\OperatorTok{^}\DecValTok{3}\NormalTok{))}
+\NormalTok{\}}
+
+\NormalTok{d =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(c, cK, x) (}\KeywordTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{, x }\OperatorTok{-}\StringTok{ }\NormalTok{c)}\OperatorTok{^}\DecValTok{3} \OperatorTok{-}\StringTok{ }\KeywordTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{, x }\OperatorTok{-}\StringTok{ }\NormalTok{cK)}\OperatorTok{^}\DecValTok{3}\NormalTok{)}\OperatorTok{/}\NormalTok{(cK }\OperatorTok{-}\StringTok{ }\NormalTok{c)}
+\CommentTok{# X_2}
+\NormalTok{myns =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x, knots) \{}
+\NormalTok{    kn =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{min}\NormalTok{(x), knots, }\KeywordTok{max}\NormalTok{(x))}
+\NormalTok{    K =}\StringTok{ }\KeywordTok{length}\NormalTok{(kn)}
+\NormalTok{    sub =}\StringTok{ }\KeywordTok{d}\NormalTok{(kn[K }\OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{], kn[K], x)}
+    \KeywordTok{cbind}\NormalTok{(x, }\KeywordTok{sapply}\NormalTok{(kn[}\DecValTok{1}\OperatorTok{:}\NormalTok{(K }\OperatorTok{-}\StringTok{ }\DecValTok{2}\NormalTok{)], d, kn[K], x) }\OperatorTok{-}\StringTok{ }\NormalTok{sub)}
+\NormalTok{\}}
+\CommentTok{# X_3}
+\NormalTok{myfactor =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x) }\KeywordTok{model.matrix}\NormalTok{(}\OperatorTok{~}\NormalTok{x)[, }\OperatorTok{-}\DecValTok{1}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+If the code is valid, the predicted response
+\(\hat{\mathbf y} = \mathbf X(\mathbf X^\mathsf{T} \mathbf X)^{-1} \mathbf X^\mathsf{T} \mathbf y\)
+should be the same as when using the built-in R function.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# install.packages('gam'')}
+\KeywordTok{library}\NormalTok{(gam)}
+\KeywordTok{library}\NormalTok{(ISLR)}
+\CommentTok{# your X-matrix}
+\NormalTok{X =}\StringTok{ }\CommentTok{# fitted model with our X}
+\NormalTok{myhat =}\StringTok{ }\KeywordTok{lm}\NormalTok{(wage }\OperatorTok{~}\StringTok{ }\NormalTok{X }\OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{)}\OperatorTok{$}\NormalTok{fit}
+\CommentTok{# fitted model with gam}
+\NormalTok{yhat =}\StringTok{ }\KeywordTok{gam}\NormalTok{(wage }\OperatorTok{~}\StringTok{ }\KeywordTok{bs}\NormalTok{(age, }\DataTypeTok{knots =} \KeywordTok{c}\NormalTok{(}\DecValTok{40}\NormalTok{, }\DecValTok{60}\NormalTok{)) }\OperatorTok{+}\StringTok{ }\KeywordTok{ns}\NormalTok{(year, }\DataTypeTok{knots =} \DecValTok{2006}\NormalTok{) }\OperatorTok{+}\StringTok{ }\NormalTok{education)}\OperatorTok{$}\NormalTok{fit}
+\CommentTok{# are they equal?}
+\KeywordTok{all.equal}\NormalTok{(myhat, yhat)}
+\end{Highlighting}
+\end{Shaded}
+
+How can \texttt{myhat} equal \texttt{yhat} when the design matrices
+differ?
+
+\subsection{Problem 5}\label{problem-5}
+
+In this exercise we take a quick look at different non-linear regression
+methods. We continue using the Auto dataset from above, but with more
+variables.
+
+Fit an additive model using the function \texttt{gam} from package
+\texttt{gam}. Call the result \texttt{gamobject}.
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{mpg} is the response,
+\item
+  \texttt{displace} is a cubic spline (hint: \texttt{bs}) with one knot
+  at 290,
+\item
+  \texttt{horsepower} is a polynomial of degree 2 (hint: \texttt{poly}),
+\item
+  \texttt{weight} is a linear function,
+\item
+  \texttt{acceleration} is a smoothing spline with \texttt{df=3} (hint:
+  \texttt{s}),
+\item
+  \texttt{origin} is a step function (what we previously have called
+  dummy variable coding).
+\end{itemize}
+
+Plot the resulting curves (hint: first set \texttt{par(mfrow=c(2,3)} and
+then \texttt{plot(gamobject,se=TRUE,col="blue")}). Comment on what you
+see.
+
+\subsection{Problem 6 (Advanced)}\label{problem-6-advanced}
+
+Back to Wage-data. In the part where we discussed smoothing splines
+there is a section explaining how to compute \(\mathbf S\), where
+\(\hat{\mathbf y} = \mathbf S \mathbf y\). This is implemented below,
+with \(\mathbf x\) as unique observations of \texttt{age} and
+\(\mathbf y\) the coresponding \texttt{wage}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{K =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x) \{}
+\NormalTok{    xi =}\StringTok{ }\KeywordTok{sort}\NormalTok{(}\KeywordTok{unique}\NormalTok{(x))}
+\NormalTok{    n =}\StringTok{ }\KeywordTok{length}\NormalTok{(xi)}
+\NormalTok{    h =}\StringTok{ }\NormalTok{xi[}\OperatorTok{-}\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{xi[}\OperatorTok{-}\NormalTok{n]}
+\NormalTok{    i =}\StringTok{ }\KeywordTok{seq.int}\NormalTok{(n }\OperatorTok{-}\StringTok{ }\DecValTok{2}\NormalTok{)}
+\NormalTok{    D =}\StringTok{ }\KeywordTok{diag}\NormalTok{(}\DecValTok{1}\OperatorTok{/}\NormalTok{h[i], }\DataTypeTok{ncol =}\NormalTok{ n)}
+\NormalTok{    D[}\KeywordTok{cbind}\NormalTok{(i, i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{)] =}\StringTok{ }\OperatorTok{-}\DecValTok{1}\OperatorTok{/}\NormalTok{h[i] }\OperatorTok{-}\StringTok{ }\DecValTok{1}\OperatorTok{/}\NormalTok{h[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{]}
+\NormalTok{    D[}\KeywordTok{cbind}\NormalTok{(i, i }\OperatorTok{+}\StringTok{ }\DecValTok{2}\NormalTok{)] =}\StringTok{ }\DecValTok{1}\OperatorTok{/}\NormalTok{h[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{]}
+\NormalTok{    W =}\StringTok{ }\KeywordTok{diag}\NormalTok{(h[i] }\OperatorTok{+}\StringTok{ }\NormalTok{h[i }\OperatorTok{+}\StringTok{ }\DecValTok{1}\NormalTok{]}\OperatorTok{/}\DecValTok{3}\NormalTok{)}
+\NormalTok{    W[}\KeywordTok{cbind}\NormalTok{(i[}\OperatorTok{-}\DecValTok{1}\NormalTok{], i[}\OperatorTok{-}\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{)] =}\StringTok{ }\NormalTok{h[i[}\OperatorTok{-}\DecValTok{1}\NormalTok{]]}\OperatorTok{/}\DecValTok{6}
+\NormalTok{    W[}\KeywordTok{cbind}\NormalTok{(i[}\OperatorTok{-}\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{, i[}\OperatorTok{-}\DecValTok{1}\NormalTok{])] =}\StringTok{ }\NormalTok{h[i[}\OperatorTok{-}\DecValTok{1}\NormalTok{]]}\OperatorTok{/}\DecValTok{6}
+    \KeywordTok{t}\NormalTok{(D) }\OperatorTok{%*%}\StringTok{ }\KeywordTok{solve}\NormalTok{(W) }\OperatorTok{%*%}\StringTok{ }\NormalTok{D}
+\NormalTok{\}}
+
+\NormalTok{x =}\StringTok{ }\KeywordTok{sort}\NormalTok{(}\KeywordTok{unique}\NormalTok{(age))}
+\NormalTok{y =}\StringTok{ }\NormalTok{wage[}\KeywordTok{order}\NormalTok{(age[}\OperatorTok{!}\KeywordTok{duplicated}\NormalTok{(age)])]}
+\NormalTok{eig =}\StringTok{ }\KeywordTok{eigen}\NormalTok{(}\KeywordTok{K}\NormalTok{(x))}
+\NormalTok{U =}\StringTok{ }\NormalTok{eig}\OperatorTok{$}\NormalTok{vectors}
+\NormalTok{d =}\StringTok{ }\NormalTok{eig}\OperatorTok{$}\NormalTok{values}
+\NormalTok{lambda =}\StringTok{ }\DecValTok{2000}
+\NormalTok{S =}\StringTok{ }\NormalTok{U }\OperatorTok{%*%}\StringTok{ }\KeywordTok{diag}\NormalTok{(}\DecValTok{1}\OperatorTok{/}\NormalTok{(}\DecValTok{1} \OperatorTok{+}\StringTok{ }\NormalTok{lambda }\OperatorTok{*}\StringTok{ }\NormalTok{d)) }\OperatorTok{%*%}\StringTok{ }\KeywordTok{t}\NormalTok{(U)}
+\end{Highlighting}
+\end{Shaded}
+
+Use \(\mathbf S\) from this code to compute \(\hat{\mathbf y}\). Also
+compute \(\hat{\mathbf y}\) using \texttt{smooth.spline()} with the
+correct degrees of freedom. Finally, plot both sets of fitted values and
+observe that they are equal.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{myhat =}\StringTok{ }\NormalTok{yhat =}\StringTok{ }\KeywordTok{smooth.spline}\NormalTok{(x, y, }\DataTypeTok{df =}\NormalTok{ )}\OperatorTok{$}\NormalTok{y}
+
+\KeywordTok{plot}\NormalTok{(x, y, }\DataTypeTok{main =} \StringTok{"Comparison of fitted values"}\NormalTok{)}
+\NormalTok{co =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"blue"}\NormalTok{, }\StringTok{"red"}\NormalTok{)}
+\NormalTok{w =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{2}\NormalTok{)}
+\CommentTok{# add lines of fitted values to the plot}
+\KeywordTok{lines}\NormalTok{(x, myhat, }\DataTypeTok{lwd =}\NormalTok{ w[}\DecValTok{1}\NormalTok{], }\DataTypeTok{col =}\NormalTok{ co[}\DecValTok{1}\NormalTok{])  }\CommentTok{#lwd = linewidth}
+\KeywordTok{lines}\NormalTok{(x, yhat, }\DataTypeTok{lwd =}\NormalTok{ w[}\DecValTok{2}\NormalTok{], }\DataTypeTok{col =}\NormalTok{ co[}\DecValTok{2}\NormalTok{])}
+\KeywordTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\DataTypeTok{legend =} \KeywordTok{c}\NormalTok{(}\StringTok{"myhat"}\NormalTok{, }\StringTok{"yhat"}\NormalTok{), }\DataTypeTok{col =}\NormalTok{ co, }\DataTypeTok{lwd =}\NormalTok{ w, }\DataTypeTok{inset =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }
+    \OperatorTok{-}\FloatTok{0.19}\NormalTok{), }\DataTypeTok{xpd =}\NormalTok{ T)}
+\end{Highlighting}
+\end{Shaded}
+
+
+\end{document}
