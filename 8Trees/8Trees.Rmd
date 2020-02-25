@@ -39,7 +39,7 @@ Last update: February 19, 2020
 
 # Acknowledgements
 
-* A lot of this material stems from Mette Langaas and her TAs. I would like to thank Mette for the permission to use her material!
+* A lot of this material stems from Mette Langaas and her TAs (in particular Thea Roksv\aa g, who developed the set of slides, but also Mette Langaas and Julia Debik). Thanks to Mette for the permission to use the material!
 
 * Some of the figures and slides in this presentation are taken (or are inspired) from @james.etal.
 
@@ -1184,7 +1184,7 @@ $$
 
 * When an observation is left out of the bootstrap sample it is not used to build the tree, and we can use this observation as a part of a "test set" to measure the predictive performance and error of the fitted model, $\hat{f}^{*b}(x)$. 
 
-* For $B$ bootstrap samples, observation $i$ will be outside the bootstrap sample in approximately $B/3$ of the fitted trees. Obtain a single prediction by averaging (regression problem) or taking the majority vote (classification problem) of the $B/3$ predictions.
+* For $B$ bootstrap samples, observation $i$ will be outside the bootstrap sample in approximately $B/3$ of the fitted trees. Obtain a single prediction by averaging (regression problem) or taking the majority vote/mean probability (classification problem) of the $B/3$ predictions.
 
 \vspace{2mm}
 
@@ -1241,25 +1241,25 @@ Note: The misclassification rate has increased slightly for the bagged tree (as 
 
 ---
 
-## Prediction by majority vote vs. by averaging the probabilities 
+<!-- ## Prediction by majority vote vs. by averaging the probabilities  -->
 
-\vspace{1mm}
+<!-- \vspace{1mm} -->
 
-* Consider the case when you have grown $B$ classification tree with a binary response with classes 0 and 1. You might wonder which approach to choose to make a final prediction: majority vote or an average of the probabilities? Or would the prediction be the same in each case? 
+<!-- * Consider the case when you have grown $B$ classification tree with a binary response with classes 0 and 1. You might wonder which approach to choose to make a final prediction: majority vote or an average of the probabilities? Or would the prediction be the same in each case?  -->
 
-\vspace{1mm}
+<!-- \vspace{1mm} -->
 
-* The difference between these two procedures can be compared to the difference between the mean value and median of a set of numbers. If we average the probabilities and make a classification thereafter, we have the mean value. If we sort all of our classifications, so that the classifications corresponding to one class would be lined up after each other, followed by the classifications corresponding to the other class we obtain the median value. 
+<!-- * The difference between these two procedures can be compared to the difference between the mean value and median of a set of numbers. If we average the probabilities and make a classification thereafter, we have the mean value. If we sort all of our classifications, so that the classifications corresponding to one class would be lined up after each other, followed by the classifications corresponding to the other class we obtain the median value.  -->
 
----
+<!-- --- -->
 
-We examine this by an example: 
+<!-- We examine this by an example:  -->
 
-Suppose we have $B=5$ (no, $B$ should be higher - this is only for illustration) classification tree and have obtained the following 5 estimated probabilities: \{0.4, 0.4, 0.4, 0.4, 0.9 \}. If we average the probabilities, we get 0.5, and if we use a cut-off value of 0.5, our predicted class is 1. However, if we take a majority vote, using the same cut of value, the predicted classes will be \{0, 0, 0, 0, 1 \}. The predicted class, based on a majority vote, would accordingly be 0.
+<!-- Suppose we have $B=5$ (no, $B$ should be higher - this is only for illustration) classification tree and have obtained the following 5 estimated probabilities: \{0.4, 0.4, 0.4, 0.4, 0.9 \}. If we average the probabilities, we get 0.5, and if we use a cut-off value of 0.5, our predicted class is 1. However, if we take a majority vote, using the same cut of value, the predicted classes will be \{0, 0, 0, 0, 1 \}. The predicted class, based on a majority vote, would accordingly be 0. -->
 
-The two procedures thus have their pros and cons: By averaging the predictions no information is lost. We do not only get the  final classification, but the probability for belonging to the class 0 or 1. However, this method is not robust to outliers. By taking a majority vote, outliers have a smaller influence on the result. 
+<!-- The two procedures thus have their pros and cons: By averaging the predictions no information is lost. We do not only get the  final classification, but the probability for belonging to the class 0 or 1. However, this method is not robust to outliers. By taking a majority vote, outliers have a smaller influence on the result.  -->
 
----
+<!-- --- -->
 
 ## When should we use bagging?
 
@@ -1291,9 +1291,11 @@ However, bagging is not suitable for nearest neighbour classification, since the
 
 * Bagging typically (but not always) improves accuracy of predictions.
 
-* Drawback: It becomes difficult to interpret the results. Instead of having one tree, the resulting model consists of many trees. So, which predictors are (how) important?
+\vspace{1mm}
 
-<!-- Bagging is an example of an _ensemble method_, so is boosting and random forests (to come next). For all of these methods many trees are grown and combined, and the predictive power can be highly improved. However, this comes at a cost of interpretability.  -->
+* Drawback: It becomes difficult to interpret the results. Instead of having one tree, the resulting model consists of many trees (it is an _ensemble method_). So, which predictors are (how) important?
+
+\vspace{1mm}
 
 * _\textcolor{red}{Variable importance plots}_ show _the relative importance of the predictors:_ the predictors are sorted according to their importance, such that the top variables have a higher importance than the bottom variables. 
 
@@ -1319,23 +1321,24 @@ The term *important* relates to _total decrease in the node impurity, over split
 
 * The importance of each predictor is calculated using the RSS. 
 * The algorithm records the total amount that the RSS is decreased due to splits for each predictor (there may be many splits for one predictor for each tree). 
-* This decrease in RSS is then averaged over the $B$ trees. The higher the decrease, the more important the predictor.
+* This decrease in RSS is then averaged over the $B$ trees.
 
----
-
+\vspace{1mm}
 **Classification trees:** 
 
 * The importance of each predictor is calculated using the Gini index. 
 * The importance is the mean decrease (over all $B$ trees) in the Gini index by splits of a predictor.
 
 
-**Doing this in R**
-
-`varImpPlot` (or `importance`) in `randomForest` with `type=2`.
+\vspace{3mm}
+**R-hint**: `varImpPlot()` function (or `importance`) in `randomForest` with `type=2`.
 
 ---
 
 ### Example 1: Ozone data (regression tree)
+
+
+
 
 \scriptsize
 ```{r ozoneImp, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='50%'}
@@ -1393,10 +1396,13 @@ Variable importance based on randomization is calculated using the OOB sample.
      + If $x_j$ is important, permuting its observations will decrease the predictive performance. 
 * The difference between the two is averaged over all trees (and normalized by the standard deviation of the differences). 
 
-R: `varImpPlot` (or `importance`) in `randomForest` with `type=1`.
+
+\vspace{4mm}
+**R-hint**: `varImpPlot()` (or `importance()`) function with `type=1`.
 
 ---
 
+\scriptsize
 ```{r autoImp2, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='50%'}
 varImpPlot(mtcars.rf,type=1,pch=20)
 ```
@@ -1406,6 +1412,7 @@ varImpPlot(mtcars.rf,type=1,pch=20)
 
 The two types together: do they agree?
 
+\scriptsize
 ```{r autoImp3, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='70%'}
 varImpPlot(mtcars.rf,pch=20,main="")
 ```
@@ -1420,7 +1427,9 @@ varImpPlot(mtcars.rf,pch=20,main="")
 
 * We have seen this for our example trees for the minor head injury example, the predictor `GCS.15` was chosen in the top split every time. This is probably the case for a large amount of the bagged trees as well.
 
-* Not optimal, as we get $B$ trees that are highly correlated. We don't get a large reduction in variance by averaging $\hat{f}^{*b}(x)$ when the correlation between the trees is high. In the previous section we actually even saw a (marginal) decrease in the predictive performance for the bagged tree compared to the pruned tree and the full tree.
+* Not optimal, as we get $B$ trees that are highly correlated. We don't get a large reduction in variance by averaging $\hat{f}^{*b}(x)$ when the correlation between the trees is high. 
+
+* We actually even saw a decrease in the predictive performance for the bagged tree compared to the pruned tree and the full tree.
 
 
 ---
@@ -1438,13 +1447,15 @@ $$\text{Cov}(X_i, X_j) = \rho \sigma^2, \quad i \neq j.$$
 
 The variance of the average is 
 $$\begin{aligned} \text{Var}(\bar{X}) &= \text{Var}\Big( \frac{1}{B}\sum_{i=1}^B X_i \Big) \\
-&= \sum_{i=1}^B \frac{1}{B^2} \text{Var} (X_i) + 2 \sum_{i=2}^B \sum_{j=1}^{i-1} \frac{1}{B} \frac{1}{B} \text{Cov} (X_i, X_j) \\
+&= \sum_{i=1}^B \frac{1}{B^2} \text{Var} (X_i) + 2 \sum_{i=2}^B \sum_{j=1}^{i-1} \frac{1}{B^2} \text{Cov} (X_i, X_j) \\
 &= \frac{1}{B} \sigma^2 + 2 \frac{B(B-1)}{2}\frac{1}{B^2} \rho \sigma^2 \\
 &= \frac{1}{B} \sigma^2 + \rho \sigma^2 - \frac{1}{B} \rho \sigma^2 \\
 &= \rho \sigma^2 + \frac{1-\rho}{B}\sigma^2\\
 &= \frac{1-(1-B)\rho}{B} \sigma^2\\ \end{aligned}$$
 
-Check: $\rho=0$ and $\rho=1$? (Most negative values of $\rho$ will not give a positive definite covariance matrix. The covariance matrix is positive definite if $\rho>-1/(B-1)$.)
+Check: $\rho=0$ and $\rho=1$? 
+
+<!-- (Most negative values of $\rho$ will not give a positive definite covariance matrix. The covariance matrix is positive definite if $\rho>-1/(B-1)$.) -->
 
 ```{r,eval=FALSE,echo=FALSE}
 varmean=function(B=100,rho,sigma2=1) return(sigma2*(1-(1-B)*rho)/B)
@@ -1455,18 +1466,17 @@ plot(rhovec,varmean(rho=rhovec),type="b")
 
 ---
 
-* _Random forests_ provide an improvement over bagged trees by a small tweak that decorrelates the trees. This
+* _Random forests_ provide an improvement over bagged trees by a small tweak that _\textcolor{red}{decorrelates the trees}_. This
 reduces the variance when we average the trees.
 
 * As in bagging, we build a number of decision trees on bootstrapped training samples.
 
-* But when building these decision trees, each time a split in
-a tree is considered, a _random selection_ of $m$ predictors is
-chosen as split candidates from the full set of p predictors.
+* But each time a split in a tree is considered, a _random selection_ of $m$ predictors is
+chosen as split candidates from the full set of $p$ predictors.
 The split is allowed to use only one of those m predictors.
 
 * A fresh selection of $m$ predictors is taken at each split, typically 
-    * $m\approx \sqrt p$ (classificaton),  
+    * $m\approx \sqrt p$ (classification),  
     * $m=p/3$ (regression).
 
 \vspace{2mm}
@@ -1477,9 +1487,11 @@ The general idea is that for very correlated predictors $m$ is chosen to be smal
 
 ---
 
-The number of trees, $B$, is not a tuning parameter, and the best is to choose it large enough. 
+### How many trees?
 
-If $B$ is sufficiently large (three times the number needed for the random forest to stabilize), the OOB error estimate is equvalent to LOOCV [see @Efron_Hastie2016, p. 330].
+* The number of trees, $B$, is not a tuning parameter, and the best is to choose it large enough. 
+
+* If $B$ is sufficiently large (three times the number needed for the random forest to stabilize), the OOB error estimate is equivalent to LOOCV [see @Efron_Hastie2016, p. 330].
 
 ---
 
@@ -1549,12 +1561,6 @@ As expected `GCS.15` (GCS=15 at 2h) is a strong predictor along with `bskullf` (
 
 \vspace{1mm}
 
-\normalsize
-Variable importance plot for bagging
-
-
-
-
 \scriptsize
 
 ```{r, echo=FALSE}
@@ -1566,7 +1572,9 @@ rf_out <- randomForest(Species ~ ., data=iris, mtry=4, ntree=500)
 rf_out$confusion
 ```
 
-```{r iris, echo=FALSE, fig.width=8, fig.height=3.5,fig.align = "center",out.width='70%'}
+\vspace{3mm}
+
+```{r iris, echo=FALSE, fig.width=8, fig.height=4,fig.align = "center",out.width='60%'}
 # Extracts variable importance (Mean Decrease in Gini Index)
 # Sorts by variable importance and relevels factors to match ordering
 var_importance <- data_frame(variable=setdiff(colnames(iris), "Species"),
@@ -1594,10 +1602,8 @@ p
 \tiny
 (borrowed from \url{https://gist.github.com/ramhiser/6dec3067f087627a7a85})
 
-\vspace{1mm}
+\vspace{3mm}
 
-\normalsize
-Variable importance plot for random forest:
 
 \scriptsize
 
@@ -1606,7 +1612,9 @@ rf_out=randomForest(Species~.,data=iris,mtry=2,ntree=500)
 rf_out$confusion
 ```
 
-```{r iris2, echo=FALSE, fig.width=8, fig.height=3.5,fig.align = "center",out.width='70%'}
+\vspace{3mm}
+
+```{r iris2, echo=FALSE, fig.width=8, fig.height=4,fig.align = "center",out.width='60%'}
 var_importance <- data_frame(variable=setdiff(colnames(iris), "Species"),
                              importance=as.vector(importance(rf_out)))
 var_importance <- arrange(var_importance, desc(importance))
@@ -1917,15 +1925,11 @@ with a Kahoot quiz or another online tool (SRS?)
  
 # Further reading
 
-* [Videoes on YouTube by the authors of ISL, Chapter 8](https://www.youtube.com/playlist?list=PL5-da3qGB5IB23TLuA8ZgVGC8hV8ZAdGh), and corresponding [slides](https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/trees.pdf)
+* [Videoes on YouTube by the authors of ISL, Chapter 8](https://www.youtube.com/playlist?list=PL5-da3qGB5IB23TLuA8ZgVGC8hV8ZAdGh), and corresponding [slides](https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/trees.pdf).
+
 * [Solutions to exercises in the book, chapter 8](https://rstudio-pubs-static.s3.amazonaws.com/65564_925dfde884e14ef9b5735eddd16c263e.html)
 
 
----
-
-# Acknowledgements
-
-I thank Thea Roksv{\aa}g, who developed the set of slides that I modified to get this set of slides. In addition, Mette Langaas and Julia Debik have contributed to the original version.
 
 ---
 
