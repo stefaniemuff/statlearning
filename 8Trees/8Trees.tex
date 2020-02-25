@@ -572,7 +572,8 @@ and compute the RSS for each partition.
 \item
   A \emph{greedy} approach is taken (aka top-down) - called
   \emph{recursive binary splitting}: Find a split that minimizes RSS at
-  each step.
+  each
+  step\footnote{This does not necessarily give the optimal global solution, but will give the best solution at each split, given what is done previously.}.
 \item
   We start at the top of the tree and divide the predictor space into
   two regions, \(R_1\) and \(R_2\) by making a decision rule for one of
@@ -604,6 +605,10 @@ and compute the RSS for each partition.
   that gives the
   \emph{\textcolor{red}{best split at that particular step}},
   \emph{i.e.,} the split that gives the smallest RSS.
+\item
+  However, this time, instead of splitting the entire predictor space,
+  we split only
+  \emph{\textcolor{red}{one of the previously identified regions}}.
 \item
   Continue splitting the predictor space until we reach some
   \emph{stopping criterion}. For example we stop when a region contains
@@ -665,17 +670,8 @@ variables:
 
 \begin{frame}[fragile]
 
-Suppose we want to get an estimate of the ozone concentration based on
-the measurement of wind speed and the daily maximum temperature.
-
-\(\rightarrow\) We can fit a regression tree to the data, with
-\texttt{ozone} as our response variable and \texttt{temperature} and
-\texttt{wind} as predictors (not including radiation to make this easier
-to see). This gives us the following regression tree.
-
-\end{frame}
-
-\begin{frame}[fragile]
+Let's fit a regression tree with \texttt{ozone} as our response variable
+and \texttt{temperature} and \texttt{wind} as predictors.
 
 \scriptsize
 
@@ -684,7 +680,14 @@ to see). This gives us the following regression tree.
 \NormalTok{ozone.trainID =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{111}\NormalTok{, }\DecValTok{75}\NormalTok{)}
 \NormalTok{ozone.train =}\StringTok{ }\NormalTok{myozone[ozone.trainID, ]}
 \NormalTok{ozone.test =}\StringTok{ }\NormalTok{myozone[}\OperatorTok{-}\NormalTok{ozone.trainID, ]}
-\CommentTok{# use the default settings in the tree function:}
+\end{Highlighting}
+\end{Shaded}
+
+\normalsize
+Use the default settings in the tree function: \scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \NormalTok{ozone.tree =}\StringTok{ }\KeywordTok{tree}\NormalTok{(ozone }\OperatorTok{~}\StringTok{ }\NormalTok{temp }\OperatorTok{+}\StringTok{ }\NormalTok{wind, }\DataTypeTok{data =}\NormalTok{ ozone.train)}
 \end{Highlighting}
 \end{Shaded}
@@ -702,75 +705,32 @@ to see). This gives us the following regression tree.
   the same variable several times.
 \item
   Focus on the regions \(R_j\), \(j=1,\ldots, J\). What is \(J\) here?
-  Answer: \(J=6\) (= the number of leaf nodes).
-\end{itemize}
-
-\vspace{2mm} Below we see the partition of the \texttt{ozone} data set
-given in the \texttt{ozone.tree}, where
-
-\begin{itemize}
-\tightlist
-\item
-  the ozone levels have been color-coded, where a darker color
-  corresponds to a higher ozone concentration.
-\item
-  each rectangle corresponds to one leaf node.
-\item
-  each number corresponding to a leaf node has been found by taking an
-  average of all observations (in the training set) in the corresponding
-  region (rectangle).
-\item
-  each partition line corresponds to one internal node of a binary
-  partition.
 \end{itemize}
 
 \end{frame}
 
 \begin{frame}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-6-1.pdf}
+\begin{block}{Tree- vs region plot}
 
-\textbf{Q}:
+\vspace{2mm}
+
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-7-1.pdf}
+
+\vspace{-2mm} \textbf{Q}:
 
 \begin{itemize}
 \tightlist
 \item
   Explain the connection between the tree and the region plot.
 \item
-  Why is recursive binary splitting classified as a greedy algorithm?
+  Advantages and disadvantages of letting each single split depend on
+  only one of the predictors?
 \item
-  Discuss the advantages and disadvantages of letting each single split
-  depend on only one of the predictors.
-\item
-  Does our tree automatically include interactions between variables?
+  Does our tree include interactions between variables?
 \end{itemize}
 
-\end{frame}
-
-\begin{frame}
-
-\textbf{A:}
-
-\begin{itemize}
-\tightlist
-\item
-  Each leaf node correspons to one region with prediction
-  \(\hat{y}_{R_j}\), and each internal note corresponds to a vertical or
-  a horizontal line.
-\item
-  Recursive splitting does not necessarily give the optimal global
-  solution, but will give the best solution at each split (given what is
-  done previously).
-\item
-  If the true connection between the response onzone and temperature and
-  wind was so that splits should have been made on the diagonal of the
-  temperature and wind space, that would take many splits on each of
-  temperature and wind to produce. (See more below where we ask the same
-  question for the classification setting.)
-\item
-  Yes, we may have different effect of wind for different values of
-  temperature.
-\end{itemize}
+\end{block}
 
 \end{frame}
 
@@ -819,7 +779,8 @@ given in the \texttt{ozone.tree}, where
 \item
   For example, the default in \texttt{tree()}: is given by
   \texttt{mincut=5,\ minsize=10,\ mindev=0.01}, thus a minimal size of 5
-  nodes and the minimal reduction in deviance (RSS) equal to 0.01.
+  nodes, the smallest nodes that are potentially split is 10, and the
+  minimal reduction in deviance (RSS) equal to 0.01.
 \item
   We could make the ozone tree much deeper by decreasing the minimal
   size of a region and chanding the minimum reduction in RSS:
@@ -852,10 +813,17 @@ With the above command, the tree would become very fine. Overfitting?
 
 \vspace{2mm}
 
-To test the predictive performance of our regression tree, we have
-randomly divided our observations into a test and a training set (here
-1/3 test). For the two trees (the shallow and the deep one from above),
-we get the following test MSEs:
+\begin{itemize}
+\tightlist
+\item
+  Test the predictive performance of our regression tree by using a
+  training and a test set.
+\item
+  For the two trees (the shallow and the deep one from above), we get
+  the following test MSEs:
+\end{itemize}
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -866,7 +834,7 @@ we get the following test MSEs:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 384.491
+## [1] 384.4906
 \end{verbatim}
 
 \begin{Shaded}
@@ -878,13 +846,13 @@ we get the following test MSEs:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 491.266
+## [1] 491.2656
 \end{verbatim}
 
 \vspace{1mm}
 
-\textbf{How do we know if our tree performs good, or if there would be
-trees with a better predictive performance?}
+\normalsize
+\emph{\textcolor{red}{How do we know if our tree performs good, or if there would be trees with a better predictive performance?}}
 
 \end{block}
 
@@ -908,10 +876,10 @@ trees with a better predictive performance?}
   tree only so long as the decrease in the RSS due to each split exceeds
   some (high) threshold.
 \item
-  This strategy will result in smaller trees, but is too short-sighted:
-  a seemingly worthless split early on in the tree might be followed by
-  a very good split --- that is, a split that leads to a large reduction
-  in RSS later on.
+  This strategy will result in smaller trees, but is
+  \emph{\textcolor{red}{too short-sighted}}: a seemingly worthless split
+  early on in the tree might be followed by a very good split --- that
+  is, a split that leads to a large reduction in RSS later on.
 \end{itemize}
 
 \end{frame}
@@ -923,7 +891,8 @@ trees with a better predictive performance?}
 \begin{itemize}
 \item
   Better idea: to grow a very large tree \(T_0\), and then
-  \emph{\textcolor{red}{prune}} it back in order to obtain a subtree
+  \emph{\textcolor{red}{prune}} it back in order to obtain a
+  \emph{\textcolor{red}{subtree}}.
 \item
   \emph{\textcolor{red}{Cost complexity pruning}} is used for this: We
   try to find a subtree \(T\subset T_0\) that (for a given value of
@@ -934,10 +903,8 @@ trees with a better predictive performance?}
   parameter penalizing the number of terminal nodes, ensuring that the
   tree does not get too many branches.
 \item
-  For regression trees we choose
-  \[Q(T)=\sum_{m=1}^{|T|}\sum_{x_i\in R_m}(y_i - \hat{y}_{R_m})^2 \ ,\]
-  and adapted cost functions for classification trees (the entropy
-  (deviance), Gini or misclassification rate, see below).
+  For regression trees (continous outcome) we choose
+  \[Q(T)=\sum_{m=1}^{|T|}\sum_{x_i\in R_m}(y_i - \hat{y}_{R_m})^2 \ .\]
 \end{itemize}
 
 \end{block}
@@ -948,11 +915,12 @@ trees with a better predictive performance?}
 
 \begin{itemize}
 \item
-  Given a value of \(\alpha\) we get a pruned tree (note: the same
-  pruned tree within a small range of \(\alpha\)).
+  For \(\alpha>0\) we get a pruned tree (note: the same pruned tree
+  within a small range of \(\alpha\)).
 \item
-  For \(\alpha=0\) we get \(T_0\) and as \(\alpha\) increases we get
-  shorter and shorter trees.
+  For \(\alpha=0\) we get \(T_0\).
+\item
+  As \(\alpha\) increases we get shorter and shorter trees.
 \end{itemize}
 
 So, which value of \(\alpha\) is best?
@@ -1069,7 +1037,7 @@ corresponds to the original choice.
 \item
   In the regression case we use the mean value of the responses in
   \(R_j\) as a prediction for an observation that falls into region
-  \(R_j\).
+  \(R_j\). \vspace{2mm}
 \item
   For the \emph{\textcolor{red}{classification case}}, however, we have
   two possibilities:
@@ -1077,14 +1045,16 @@ corresponds to the original choice.
   \begin{itemize}
   \tightlist
   \item
-    Majority vote: Predict that the observation belongs to the most
-    commonly occurring class of the training observations in \(R_j\).\\
+    \textbf{Majority vote}: Predict that the observation belongs to the
+    most commonly occurring class of the training observations in
+    \(R_j\).\\
   \item
-    Estimate the probability that an observation \(x_i\) belongs to a
-    class \(k\), \(\hat{p}_{jk}(x_i)\), and then classify according to a
-    threshold value. This estimated probability is the proportion of
-    class \(k\) training observations in region \(R_j\), with \(n_{jk}\)
-    observations. Region \(j\) has \(N_j\) observations.
+    Estimate the \textbf{probability} that an observation \(x_i\)
+    belongs to a class \(k\), \(\hat{p}_{jk}(x_i)\), and then classify
+    according to a \textbf{threshold value}. This estimated probability
+    is the proportion of class \(k\) training observations in region
+    \(R_j\), with \(n_{jk}\) observations. Region \(j\) has \(N_j\)
+    observations.
     \[\hat{p}_{jk} = \frac{1}{N_j} \sum_{i:x_i \in R_j} I(y_i = k)=\frac{n_{jk}}{N_j}.\]
   \end{itemize}
 \end{itemize}
@@ -1192,15 +1162,12 @@ We use the 850 training samples to get a tree using cross-entropy
 ## Variables actually used in tree construction:
 ## [1] "GCS.15"  "bskullf" "risk"    "age"     "GCS.13" 
 ## Number of terminal nodes:  9 
-## Residual mean deviance:  0.66 = 555 / 841 
-## Misclassification error rate: 0.126 = 107 / 850
+## Residual mean deviance:  0.6604 = 555.4 / 841 
+## Misclassification error rate: 0.1259 = 107 / 850
 \end{verbatim}
 
-\normalsize
-
-\small
-\vspace{1mm} \textbf{Remark}: the deviance is a scaled version of the
-cross entropy:
+\vspace{1mm} \textbf{Remark}: the deviance (\(-2\log(L)\)) is a scaled
+version of the cross entropy:
 \[-2\sum_{k=1}^K n_{jk} \log\hat{p}_{jk}\ , \text{where} \quad   \hat{p}_{jk}=\frac{n_{jk}}{N_j}\ , \]
 thus \texttt{split="deviance"} implies that we split according to the
 entropy criterion.
@@ -1240,7 +1207,9 @@ entropy criterion.
 
 \begin{block}{Minor head injury - split with Gini index}
 
-\vspace{1mm} The same analysis with the Gini index:
+\vspace{2mm}
+
+The same analysis with the Gini index:
 
 \scriptsize
 
@@ -1260,8 +1229,8 @@ entropy criterion.
 ## [1] "GCS.15"  "bskullf" "risk"    "age"     "oskullf" "vomit"   "amnesia"
 ## [8] "consc"   "GCS.13" 
 ## Number of terminal nodes:  75 
-## Residual mean deviance:  0.52 = 403 / 775 
-## Misclassification error rate: 0.109 = 93 / 850
+## Residual mean deviance:  0.5202 = 403.2 / 775 
+## Misclassification error rate: 0.1094 = 93 / 850
 \end{verbatim}
 
 \end{block}
@@ -1327,7 +1296,7 @@ With the deviance:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.140127
+## [1] 0.1401274
 \end{verbatim}
 
 \end{block}
@@ -1364,7 +1333,7 @@ With the Gini-index:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.154989
+## [1] 0.1549894
 \end{verbatim}
 
 \end{frame}
@@ -1408,8 +1377,11 @@ Study the confusion matrices on the previous slide:
 
 \begin{block}{Finding an optimal classification tree}
 
+\vspace{2mm}
+
 We prune the classification tree that was built with the deviance
-criterion. We use the misclassification error to do so:
+criterion. We use the misclassification error to do
+so\footnote{While trees should be built using the deviance or the Gini index, pruning is typically done with the misclassification criterion.}:
 
 \scriptsize
 
@@ -1423,12 +1395,6 @@ criterion. We use the misclassification error to do so:
 \end{Shaded}
 
 \begin{center}\includegraphics[width=0.6\linewidth]{8Trees_files/figure-beamer/headInjury3-1} \end{center}
-
-\tiny
-(Todo: Exercise with
-\texttt{cv.head=cv.tree(tree.HIClass,FUN=prune.tree)} , that is, pruning
-according to deviance; Note: I think it is not possible to prune
-according to the Gini index - why??)
 
 \end{block}
 
@@ -1534,56 +1500,25 @@ How is the predictive performance of the model affected?
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.140127
+## [1] 0.1401274
 \end{verbatim}
 
 \normalsize
 
-We see that the misclassification rate is as small as before, thus the
-pruned tree is as good as the original tree for the test data.
+\(\rightarrow\) We see that the misclassification rate is as small as
+before, thus the pruned tree is as good as the original tree for the
+test data.
 
-\end{frame}
+\vspace{2mm}
 
-\begin{frame}[fragile]
-
-The same repeated for the Gini-grown tree - comment on what is done.
-
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{10}\NormalTok{)}
-\NormalTok{cv.headG =}\StringTok{ }\KeywordTok{cv.tree}\NormalTok{(tree.HIClassG, }\DataTypeTok{FUN =}\NormalTok{ prune.misclass)}
-\KeywordTok{plot}\NormalTok{(cv.headG}\OperatorTok{$}\NormalTok{size, cv.headG}\OperatorTok{$}\NormalTok{dev, }\DataTypeTok{type =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{xlab =} \StringTok{"Terminal nodes"}\NormalTok{, }
-    \DataTypeTok{ylab =} \StringTok{"Misclassifications"}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{center}\includegraphics[width=0.6\linewidth]{8Trees_files/figure-beamer/headInjury5-1} \end{center}
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{prune.HIClassG =}\StringTok{ }\KeywordTok{prune.misclass}\NormalTok{(tree.HIClassG, }\DataTypeTok{best =} \DecValTok{7}\NormalTok{)}
-\KeywordTok{plot}\NormalTok{(prune.HIClassG)}
-\KeywordTok{text}\NormalTok{(prune.HIClassG, }\DataTypeTok{pretty =} \DecValTok{1}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{center}\includegraphics[width=0.7\linewidth]{8Trees_files/figure-beamer/headInjury6-1} \end{center}
-
-\normalsize
-
-Compare this tree to the one from pruning the deviance-based tree.
+\(\rightarrow\) If you want, you can apply the same pruning procedure to
+the very bushy Gini-grown tree.
 
 \end{frame}
 
 \begin{frame}
+
+\vspace{2mm}
 
 \begin{block}{Questions:}
 
@@ -1698,8 +1633,6 @@ In addition:
 
 \begin{frame}
 
-But first:
-
 \begin{block}{Leo Breiman - the inventor of CART, bagging and random
 forests}
 
@@ -1712,39 +1645,15 @@ Leo Breiman (January 27, 1928 – July 5, 2005) was a distinguished statistician
 Breiman's work helped to bridge the gap between statistics and computer science, particularly in the field of machine learning. His most important contributions were his work on classification and regression trees and ensembles of trees fit to bootstrap samples. Bootstrap aggregation was given the name bagging by Breiman. Another of Breiman's ensemble approaches is the random forest.
 \end{quote}
 
+See also
+\href{https://www.berkeley.edu/news/media/releases/2005/07/07_breiman.shtml}{Breimans
+obituary}
+
 \end{block}
 
 \end{frame}
 
-\begin{frame}
-
-From
-\href{https://www.berkeley.edu/news/media/releases/2005/07/07_breiman.shtml}{Breimans
-obituary} \vspace{1mm}
-
-\begin{quote}
-BERKELEY – Leo Breiman, professor emeritus of statistics at the University of California, Berkeley.
-
-"It is trite to say so, but Leo Breiman was indeed a Renaissance man, and we shall miss him greatly," said Peter Bickel, professor of statistics and chairman this summer of UC Berkeley's statistics department.
-
-Breiman retired in 1993, but as a Professor in the Graduate School, he continued to get substantial National Science Foundation grants and supervised three Ph.D. students. Bickel said that some of Breiman's best work was done after retirement.
-
-\end{quote}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{quote}
-"In particular," said Bickel, "he developed one of the most successful state-of-the-art classification programs, 'Random Forest.' This method was based on a series of new ideas that he developed in papers during the last seven years, and it is extensively used in government and industry."
-
-Breiman's best known work is considered to be "Classification and Regression Trees," a work in collaboration with three other scholars that facilitates practical applications, such as the diagnosis of diseases, from a multitude of symptoms.
-
-\end{quote}
-
-\end{frame}
-
-\begin{frame}{Bagging}
+\begin{frame}[fragile]{Bagging}
 
 \vspace{2mm}
 
@@ -1761,43 +1670,28 @@ Breiman's best known work is considered to be "Classification and Regression Tre
 
 \vspace{2mm}
 
-Let's draw a new training set for our data and see what happens if we
-fit our full classification tree (deviance grown).
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{33}\NormalTok{)}
-\NormalTok{N =}\StringTok{ }\KeywordTok{dim}\NormalTok{(headInjury2)[}\DecValTok{1}\NormalTok{]}
-\NormalTok{train2 =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{N, }\DecValTok{850}\NormalTok{)  }\CommentTok{# Draw a new training sample (same size).}
-\NormalTok{tree.HIClass2 =}\StringTok{ }\KeywordTok{tree}\NormalTok{(brain.injury }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ headInjury2, }\DataTypeTok{subset =}\NormalTok{ train2, }
-    \DataTypeTok{split =} \StringTok{"deviance"}\NormalTok{)}
-\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow =} \KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{))}
-\KeywordTok{plot}\NormalTok{(tree.HIClass)}
-\KeywordTok{text}\NormalTok{(tree.HIClass, }\DataTypeTok{pretty =} \DecValTok{0}\NormalTok{)}
-\KeywordTok{plot}\NormalTok{(tree.HIClass2)}
-\KeywordTok{text}\NormalTok{(tree.HIClass2, }\DataTypeTok{pretty =} \DecValTok{0}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{center}\includegraphics[width=0.9\linewidth]{8Trees_files/figure-beamer/headInjury7-1} \end{center}
+Let's draw a new training set (\texttt{train2}) for our data and see
+what happens if we fit our full classification tree (deviance grown).
 
 \end{frame}
 
 \begin{frame}
 
-This classification tree is constructed by using \(850\) observations,
-just like the tree in the classification trees section, but we get two
-different trees that will give different predictions for a test set.
+The two classification trees contructed from \(850\) observations each
+(different random subsets):
 
-To reduce the variance of decision trees we can apply \emph{bootstrap
-aggregating} (\emph{bagging}), invented by Leo Breiman in 1996 (Breiman
-1996).
+\begin{center}\includegraphics[width=0.9\linewidth]{8Trees_files/figure-beamer/headInjury7-1} \end{center}
+
+\begin{itemize}
+\tightlist
+\item
+  We get two different trees that will give different predictions for a
+  test set.
+\end{itemize}
+
+\(\rightarrow\) To reduce the variance of decision trees we can apply
+\emph{bootstrap aggregating} (\emph{bagging}), invented by Leo Breiman
+in 1996 (Breiman 1996).
 
 \end{frame}
 
@@ -1809,10 +1703,10 @@ aggregating} (\emph{bagging}), invented by Leo Breiman in 1996 (Breiman
 
 \begin{itemize}
 \item
-  Assume we have \(B\) i.i.d. observations of a random variable \(X\)
-  each with the same mean and with variance \(\sigma^2\). We calculate
-  the mean \(\bar{X} = \frac{1}{B} \sum_{b=1}^B X_b\). The variance of
-  the mean is
+  Assume we have \(B\) \emph{i.i.d.} observations of a random variable
+  \(X\) each with the same mean and with variance \(\sigma^2\). We
+  calculate the mean \(\bar{X} = \frac{1}{B} \sum_{b=1}^B X_b\). The
+  variance of the mean is
   \[\text{Var}(\bar{X}) = \text{Var}\Big(\frac{1}{B}\sum_{b=1}^B X_b \Big) = \frac{1}{B^2} \sum_{b=1}^B \text{Var}(X_b) = \frac{\sigma^2}{B}.\]
   By averaging we get reduced variance. This is the basic idea!
 \item
@@ -1888,11 +1782,18 @@ However, we do not have many independent data set - so we use
 \begin{frame}
 
 \begin{itemize}
+\tightlist
 \item
   Originally, Breiman (1996) suggested to prune each tree, but later
   research has found that it is better to leave the trees at maximal
   size (a bushy tree), to make the trees as different from each other as
-  possible.
+  possible\footnote{Note also that deeper trees have smaller bias}.
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
 \item
   The number \(B\) is chosen to be as large as ``necessary''. An
   increase in \(B\) will not lead to overfitting, and \(B\) is not
@@ -1900,6 +1801,12 @@ However, we do not have many independent data set - so we use
   plotted as a function of \(B\) (soon) we see that (given that \(B\) is
   large enough) increasing \(B\) will not change the goodness of fit
   measure.
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
 \item
   To find out which number \(B\) is sufficient, we do \emph{not} need to
   run cross-validation, but can do something smarter (next slide).
@@ -1915,15 +1822,18 @@ However, we do not have many independent data set - so we use
 
 \begin{itemize}
 \item
-  We use a subset of the observations in each bootstrap sample. Recall
-  (module 5) that the probability that an observation is in the
-  bootstrap sample is approximately \(1-e^{-1}\)=0.6321206
-  (\(\approx 2/3\)).
+  Recall (module 5) that the probability that an observation is in the
+  bootstrap sample is approximately \(1-e^{-1}\)=0.63 (\(\approx 2/3\)).
 \item
   When an observation is left out of the bootstrap sample it is not used
   to build the tree, and we can use this observation as a part of a
   ``test set'' to measure the predictive performance and error of the
   fitted model, \(\hat{f}^{*b}(x)\).
+\item
+  For \(B\) bootstrap samples, observation \(i\) will be outside the
+  bootstrap sample in approximately \(B/3\) of the fitted trees. Obtain
+  a single prediction by averaging (regression problem) or taking the
+  majority vote (classification problem) of the \(B/3\) predictions.
 \end{itemize}
 
 \vspace{2mm}
@@ -1932,11 +1842,11 @@ However, we do not have many independent data set - so we use
 
 \begin{itemize}
 \item
-  The observations left out are referred to as the \emph{out-of-bag}
-  (OOB) observations.
+  The observations left out are referred to as the
+  \emph{\textcolor{red}{out-of-bag}} (OOB) observations.
 \item
   The measured error of the \(B/3\) predictions is called the
-  \emph{out-of-bag error}.
+  \emph{\textcolor{red}{out-of-bag error}}.
 \end{itemize}
 
 \end{block}
@@ -1966,8 +1876,8 @@ We can do bagging by using the function \texttt{randomForest()} in the
 
 \begin{verbatim}
 ##     0  1 class.error
-## 0 637 54   0.0781476
-## 1  76 83   0.4779874
+## 0 637 54  0.07814761
+## 1  76 83  0.47798742
 \end{verbatim}
 
 \begin{Shaded}
@@ -1977,7 +1887,7 @@ We can do bagging by using the function \texttt{randomForest()} in the
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.152941
+## [1] 0.1529412
 \end{verbatim}
 
 \normalsize
@@ -2021,7 +1931,7 @@ Predictive performance of the bagged tree on unseen test data:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.154989
+## [1] 0.1549894
 \end{verbatim}
 
 \normalsize
@@ -2523,8 +2433,8 @@ We check the predictive performance as before:
 
 \begin{verbatim}
 ##     0  1 class.error
-## 0 662 29   0.0419682
-## 1  93 66   0.5849057
+## 0 662 29  0.04196816
+## 1  93 66  0.58490566
 \end{verbatim}
 
 \begin{Shaded}
@@ -2535,7 +2445,7 @@ We check the predictive performance as before:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.143529
+## [1] 0.1435294
 \end{verbatim}
 
 \begin{Shaded}

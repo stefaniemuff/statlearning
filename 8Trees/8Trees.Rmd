@@ -323,7 +323,7 @@ To do this we need to consider every partition of the predictor space, and compu
 
 \vspace{2mm}
 
-* A _greedy_ approach is taken (aka top-down) - called _recursive binary splitting_: Find a split that minimizes RSS at each step.
+* A _greedy_ approach is taken (aka top-down) - called _recursive binary splitting_: Find a split that minimizes RSS at each step\footnote{This does not necessarily give the optimal global solution, but will give the best solution at each split, given what is done previously.}.
 
 * We start at the top of the tree and divide the predictor space into two regions, $R_1$ and $R_2$ by making a decision rule for one of the predictors $x_1, x_2,...,x_p$. If we define the two regions by $R_1(j,s)=\{x \mid x_j<s\}$ and $R_2(j,s)=\{x \mid x_j\geq s\}$, it means that we need to find the (predictor) $j$ and (splitting point) $s$ that minimize
 $$\sum_{i: x_i \in R_1(j,s)}(y_i-\hat{y}_{R_1})^2+\sum_{i: x_i \in R_2(j,s)}(y_i -\hat{y}_{R_2})^2 \ ,$$
@@ -336,6 +336,9 @@ where $\hat{y}_{R_1}$ and $\hat{y}_{R_2}$ are the mean responses for the trainin
 * For every iteration we let each single split depend on _only one of the predictors_, giving us two new branches. 
 
 * This is done _successively_ and in each step we choose the split that gives the _\textcolor{red}{best split at that particular step}_, _i.e.,_ the split that gives the smallest RSS. 
+
+* However, this time, instead of splitting the entire predictor
+space, we split only _\textcolor{red}{one of the previously identified regions}_.
 
 * Continue splitting the predictor space until we reach some _stopping criterion_. For example we stop when a region contains less than 10 observations or when the reduction in the RSS is smaller than a specified limit.
 
@@ -374,15 +377,10 @@ colnames(myozone)=c("ozone","radi","temp","wind")
 head(myozone)
 ```
 
----
-
-Suppose we want to get an estimate of the ozone concentration based on the measurement of wind speed and the daily maximum temperature.
-
-
-
-$\rightarrow$ We can fit a regression tree to the data, with `ozone` as our response variable and `temperature` and `wind` as predictors (not including radiation to make this easier to see). This gives us the following regression tree.
 
 ---
+
+Let's fit a regression tree with `ozone` as our response variable and `temperature` and `wind` as predictors.
 
 \scriptsize
 ```{r,echo=c(2:6,7)}
@@ -390,7 +388,12 @@ set.seed(300)
 ozone.trainID = sample(1:111, 75)
 ozone.train = myozone[ozone.trainID, ]
 ozone.test = myozone[-ozone.trainID,]
-# use the default settings in the tree function:
+```
+
+\normalsize
+Use the default settings in the tree function:
+\scriptsize
+```{r}
 ozone.tree = tree(ozone~temp+wind, data=ozone.train)
 ```
 
@@ -408,21 +411,26 @@ text(ozone.tree)
 * We see that `temperature` is the "most important" predictor for predicting the ozone concentration. 
 Observe that we can split on the same variable several times.
 
-* Focus on the regions $R_j$, $j=1,\ldots, J$. What is $J$ here? Answer: $J=6$ (= the number of leaf nodes).
+* Focus on the regions $R_j$, $j=1,\ldots, J$. What is $J$ here? 
 
-\vspace{2mm}
-Below we see the partition of the `ozone` data set given in the `ozone.tree`, where 
+<!-- Answer: $J=5$ (= the number of leaf nodes). -->
 
-* the ozone levels have been color-coded, where a darker color corresponds to a higher ozone concentration. 
-* each rectangle corresponds to one leaf node. 
-* each number corresponding to a leaf node has been found by taking an average of all observations (in the training set) in the corresponding region (rectangle). 
-* each partition line corresponds to one internal node of a binary partition.
+<!-- \vspace{2mm} -->
+<!-- Below we see the partition of the `ozone` data set given in the `ozone.tree`, where  -->
+
+<!-- * the ozone levels have been color-coded, where a darker color corresponds to a higher ozone concentration.  -->
+<!-- * each rectangle corresponds to one leaf node.  -->
+<!-- * each number corresponding to a leaf node has been found by taking an average of all observations (in the training set) in the corresponding region (rectangle).  -->
+<!-- * each partition line corresponds to one internal node of a binary partition. -->
 
 
 
 ---
 
-```{r, eval=TRUE,echo=FALSE}
+### Tree- vs region plot
+\vspace{2mm}
+
+```{r, eval=TRUE,echo=FALSE,fig.width=8, fig.height=5}
 # to make two figures next to eachother
 par(mfrow=c(1,2),pty="s")
 o.class = cut(ozone.train$ozone, breaks= 7)
@@ -434,22 +442,21 @@ plot(wind~temp, col=o.class, data=ozone.train, pch=20)
 partition.tree(ozone.tree, add=TRUE,cex=0.8)
 ```
 
-
+\vspace{-2mm}
 **Q**:
 
 * Explain the connection between the tree and the region plot.
-* Why is recursive binary splitting classified as a greedy algorithm?
-* Discuss the advantages and disadvantages of letting each single split depend on only one of the predictors. 
-* Does our tree automatically include interactions between variables?
+* Advantages and disadvantages of letting each single split depend on only one of the predictors?
+* Does our tree include interactions between variables?
 
----
+<!-- --- -->
 
-**A:** 
+<!-- **A:**  -->
 
-* Each leaf node correspons to one region with prediction $\hat{y}_{R_j}$, and each internal note corresponds to a vertical or a horizontal line.
-* Recursive splitting does not necessarily give the optimal global solution, but will give the best solution at each split (given what is done previously). 
-* If the true connection between the response onzone and temperature and wind was so that splits should have been made on the diagonal of the temperature and wind space, that would take many splits on each of temperature and wind to produce. (See more below where we ask the same question for the classification setting.)
-* Yes, we may have different effect of wind for different values of temperature.
+<!-- * Each leaf node correspons to one region with prediction $\hat{y}_{R_j}$, and each internal note corresponds to a vertical or a horizontal line. -->
+
+<!-- * If the true connection between the response onzone and temperature and wind was so that splits should have been made on the diagonal of the temperature and wind space, that would take many splits on each of temperature and wind to produce. (See more below where we ask the same question for the classification setting.) -->
+<!-- * Yes, we may have different effect of wind for different values of temperature. -->
 
 ---
 
@@ -480,7 +487,7 @@ partition.tree(ozone.tree, add=TRUE,cex=0.8)
 * When building the tree, we can (in principle) split until each leaf corresponds to one data point.
 * Usually we use a less stringent stopping criterion, like the minimal number of nodes per region and/or the minimum reduction in the RSS.
 
-* For example, the default in `tree()`: is given by `mincut=5, minsize=10, mindev=0.01`, thus a minimal size of 5 nodes and the minimal reduction in deviance (RSS) equal to 0.01. 
+* For example, the default in `tree()`: is given by `mincut=5, minsize=10, mindev=0.01`, thus a minimal size of 5 nodes, the smallest nodes that are potentially split is 10, and the minimal reduction in deviance (RSS) equal to 0.01. 
 * We could make the ozone tree much deeper by decreasing the minimal size of a region and chanding the minimum reduction in RSS:
 
 \scriptsize
@@ -509,8 +516,10 @@ text(ozone.tree2,cex=0.8)
 
 \vspace{2mm}
 
-To test the predictive performance of our regression tree, we have randomly divided our observations into a test and a training set (here 1/3 test). For the two trees (the shallow and the deep one from above), we get the following test MSEs:
+* Test the predictive performance of our regression tree by using a training and a test set. 
+* For the two trees (the shallow and the deep one from above), we get the following test MSEs:
 
+\scriptsize
 ```{r}
 ozone.pred = predict(ozone.tree, newdata=ozone.test)
 ozone.MSE = mean((ozone.pred-ozone.test$ozone)^2)
@@ -523,7 +532,8 @@ ozone.MSE2
 
 \vspace{1mm}
 
-**How do we know if our tree performs good, or if there would be trees with a better predictive performance?**
+\normalsize
+_\textcolor{red}{How do we know if our tree performs good, or if there would be trees with a better predictive performance?}_
 
 ---
 
@@ -537,14 +547,14 @@ ozone.MSE2
 
 * One possible alternative to the process described above is to grow the tree only so long as the decrease in the RSS due to each split exceeds some (high) threshold.
 
-* This strategy will result in smaller trees, but is too short-sighted: a seemingly worthless split early on in the tree might be followed by a very good split — that is, a split that leads to a large reduction in RSS later on.
+* This strategy will result in smaller trees, but is _\textcolor{red}{too short-sighted}_: a seemingly worthless split early on in the tree might be followed by a very good split — that is, a split that leads to a large reduction in RSS later on.
 
 
 ---
 
 ## Cost complexity pruning 
 
-* Better idea: to grow a very large tree $T_0$, and then _\textcolor{red}{prune}_ it back in order to obtain a subtree
+* Better idea: to grow a very large tree $T_0$, and then _\textcolor{red}{prune}_ it back in order to obtain a _\textcolor{red}{subtree}_.
 
 
 * _\textcolor{red}{Cost complexity pruning}_ is used for this: We try to find a subtree $T\subset T_0$ that (for a given value of $\alpha$) minimizes
@@ -554,17 +564,18 @@ $$
 where $Q(T)$ is our cost function, $|T|$ is the number of terminal nodes in tree $T$. The parameter $\alpha$ is then a parameter penalizing the number of terminal nodes, ensuring that the tree does not get too many branches. 
 
 
-* For regression trees we choose 
-$$Q(T)=\sum_{m=1}^{|T|}\sum_{x_i\in R_m}(y_i - \hat{y}_{R_m})^2 \ ,$$ 
-and adapted cost functions for classification trees (the entropy (deviance), Gini or misclassification rate, see below).
+* For regression trees (continous outcome) we choose 
+$$Q(T)=\sum_{m=1}^{|T|}\sum_{x_i\in R_m}(y_i - \hat{y}_{R_m})^2 \ .$$
 
 
 
 ---
 
-* Given a value of $\alpha$ we get a pruned tree (note: the same pruned tree within a small range of $\alpha$).
+* For $\alpha>0$ we get a pruned tree (note: the same pruned tree within a small range of $\alpha$).
 
-* For $\alpha=0$ we get $T_0$ and as $\alpha$ increases we get shorter and shorter trees.
+* For $\alpha=0$ we get $T_0$. 
+
+* As $\alpha$ increases we get shorter and shorter trees.
 
 
 So, which value of $\alpha$ is best?
@@ -622,7 +633,7 @@ Interestingly, it seems like a tree with 5 leaves performs best - which correspo
 
 <!-- In the [classification tree](classtree2) (grown with deviance) we saw that we got several unnecessary splits. This is also something that can be avoided by pruning.  -->
 
-<!-- In the [classification tree](classtree3) (grown with Gini index) there were 78 leafs - maybe we want a more easy interpretable tree? -->
+<!-- In the [classification tree](classtree3) (grown with Gini index) there were 78 leafs - maybe we want a more easily interpretable tree? -->
 
 <!-- But, there are many possible pruned versions of our full tree. Can we investigate all of these? -->
 
@@ -649,11 +660,12 @@ Interestingly, it seems like a tree with 5 leaves performs best - which correspo
 **1) The prediction:**   
 
 * In the regression case we use the mean value of the responses in $R_j$ as a prediction for an observation that falls into region $R_j$. 
+\vspace{2mm}
 
 * For the _\textcolor{red}{classification case}_, however, we have two possibilities: 
 
-    * Majority vote: Predict that the observation belongs to the most commonly occurring class of the training observations in $R_j$.  
-    * Estimate the probability that an observation $x_i$ belongs to a class $k$, $\hat{p}_{jk}(x_i)$, and then classify according to a threshold value. This estimated probability is the proportion of class $k$ training observations in region $R_j$, with $n_{jk}$ observations. Region $j$ has $N_j$ observations. 
+    * **Majority vote**: Predict that the observation belongs to the most commonly occurring class of the training observations in $R_j$.  
+    * Estimate the **probability** that an observation $x_i$ belongs to a class $k$, $\hat{p}_{jk}(x_i)$, and then classify according to a **threshold value**. This estimated probability is the proportion of class $k$ training observations in region $R_j$, with $n_{jk}$ observations. Region $j$ has $N_j$ observations. 
     $$\hat{p}_{jk} = \frac{1}{N_j} \sum_{i:x_i \in R_j} I(y_i = k)=\frac{n_{jk}}{N_j}.$$ 
 
 ---
@@ -727,14 +739,13 @@ summary(tree.HIClass)
 
 ```
 
-\normalsize
+ 
 
 <!-- Deviance=$-2 \sum_{j}\sum_{k}n_{jk}\log(\hat{p}_{jk})$ for all nodes $j$ and classes $k$. -->
 <!-- (Formula on page 255 of @MASS.) -->
-
-\small
+ 
 \vspace{1mm}
-**Remark**: the deviance is a scaled version of the cross entropy: 
+**Remark**: the deviance ($-2\log(L)$) is a scaled version of the cross entropy: 
 $$-2\sum_{k=1}^K n_{jk} \log\hat{p}_{jk}\ , \text{where} \quad   \hat{p}_{jk}=\frac{n_{jk}}{N_j}\ , $$ thus `split="deviance"` implies that we split according to the entropy criterion.
 
 ---
@@ -756,7 +767,8 @@ text(tree.HIClass,pretty=1)
 
 ### Minor head injury - split with Gini index
 
-\vspace{1mm}
+\vspace{2mm}
+
 The same analysis with the Gini index:
 
 \scriptsize
@@ -843,8 +855,9 @@ Study the confusion matrices on the previous slide:
 
 
 ### Finding an optimal classification tree 
+\vspace{2mm}
 
-We prune the classification tree that was built with the deviance criterion. We use the misclassification error to do so:
+We prune the classification tree that was built with the deviance criterion. We use the misclassification error to do so\footnote{While trees should be built using the deviance or the Gini index, pruning is typically done with the misclassification criterion.}:
 
 \scriptsize
 
@@ -856,8 +869,8 @@ plot(cv.head$size,cv.head$dev,type="b",
 ```
 
 
-\tiny
-(Todo: Exercise with `cv.head=cv.tree(tree.HIClass,FUN=prune.tree)` , that is, pruning according to deviance; Note: I think it is not possible to prune according to the Gini index - why??)
+ 
+<!-- I think it is not possible to prune according to the Gini index - why?? -->
 
 
 ---
@@ -907,59 +920,48 @@ tree.pred.prune <- predict(prune.HIClass,headInjury2[test,],type="class")
 
 \normalsize
 
-We see that the misclassification rate is as small as before, thus the pruned tree is as good as the original tree for the test data.
+$\rightarrow$ We see that the misclassification rate is as small as before, thus the pruned tree is as good as the original tree for the test data.
+
+\vspace{2mm}
+
+$\rightarrow$ If you want, you can apply the same pruning procedure to the very bushy Gini-grown tree.
 
 ---
 
-The same repeated for the Gini-grown tree - comment on what is done.
-
-\scriptsize
-
-```{r headInjury5, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='60%'}
-set.seed(10)
-cv.headG=cv.tree(tree.HIClassG,FUN=prune.misclass)
-plot(cv.headG$size,cv.headG$dev,type="b",
-                   xlab="Terminal nodes",ylab="Misclassifications")
-
-```
-
-
----
-
-<!-- Check which tree has the lowest misclassification: -->
 
 <!-- \scriptsize -->
 
-<!-- ```{r} -->
-<!-- print(cv.headG) -->
+<!-- ```{r headInjury5, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='60%'} -->
+<!-- set.seed(10) -->
+<!-- cv.headG=cv.tree(tree.HIClassG,FUN=prune.misclass) -->
+<!-- plot(cv.headG$size,cv.headG$dev,type="b", -->
+<!--                    xlab="Terminal nodes",ylab="Misclassifications") -->
+
 <!-- ``` -->
 
-\scriptsize
-
-```{r headInjury6, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
-prune.HIClassG=prune.misclass(tree.HIClassG,best=7) 
-plot(prune.HIClassG)
-text(prune.HIClassG,pretty=1)
-```
-
-
-\normalsize
-
-Compare this tree to the one from pruning the deviance-based tree.
 
 <!-- --- -->
 
-<!-- Misclassification rate -->
 
-<!-- ```{r} -->
-<!-- tree.pred.pruneG = predict(prune.HIClassG,headInjury2[test,],type="class") -->
-<!-- confusionMatrix(tree.pred.pruneG,headInjury2[test,]$brain.injury)$table -->
+<!-- \scriptsize -->
+
+<!-- ```{r headInjury6, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'} -->
+<!-- prune.HIClassG=prune.misclass(tree.HIClassG,best=7)  -->
+<!-- plot(prune.HIClassG) -->
+<!-- text(prune.HIClassG,pretty=1) -->
 <!-- ``` -->
 
 
+<!-- \normalsize -->
+
+<!-- Compare this tree to the one from pruning the deviance-based tree. -->
 
 
----
+
+
+
+\vspace{2mm}
+
 
 ### Questions: 
 
@@ -1036,8 +1038,6 @@ In addition:
 
 ---
 
-But first:
-
 ## Leo Breiman - the inventor of CART, bagging and random forests
 
 \vspace{1mm}
@@ -1050,28 +1050,32 @@ Leo Breiman (January 27, 1928 – July 5, 2005) was a distinguished statistician
 Breiman's work helped to bridge the gap between statistics and computer science, particularly in the field of machine learning. His most important contributions were his work on classification and regression trees and ensembles of trees fit to bootstrap samples. Bootstrap aggregation was given the name bagging by Breiman. Another of Breiman's ensemble approaches is the random forest.
 \end{quote}
 
----
+See also [Breimans obituary](https://www.berkeley.edu/news/media/releases/2005/07/07_breiman.shtml)
 
-From [Breimans obituary](https://www.berkeley.edu/news/media/releases/2005/07/07_breiman.shtml)
-\vspace{1mm}
+<!-- --- -->
 
-\begin{quote}
-BERKELEY – Leo Breiman, professor emeritus of statistics at the University of California, Berkeley.
+<!-- From [Breimans obituary](https://www.berkeley.edu/news/media/releases/2005/07/07_breiman.shtml) -->
+<!-- \vspace{1mm} -->
 
-"It is trite to say so, but Leo Breiman was indeed a Renaissance man, and we shall miss him greatly," said Peter Bickel, professor of statistics and chairman this summer of UC Berkeley's statistics department.
+<!-- \begin{quote} -->
+<!-- BERKELEY – Leo Breiman, professor emeritus of statistics at the University of California, Berkeley. -->
 
-Breiman retired in 1993, but as a Professor in the Graduate School, he continued to get substantial National Science Foundation grants and supervised three Ph.D. students. Bickel said that some of Breiman's best work was done after retirement.
+<!-- "It is trite to say so, but Leo Breiman was indeed a Renaissance man, and we shall miss him greatly," said Peter Bickel, professor of statistics and chairman this summer of UC Berkeley's statistics department. -->
 
-\end{quote}
+<!-- Breiman retired in 1993, but as a Professor in the Graduate School, he continued to get substantial National Science Foundation grants and supervised three Ph.D. students. Bickel said that some of Breiman's best work was done after retirement. -->
 
----
+<!-- \end{quote} -->
 
-\begin{quote}
-"In particular," said Bickel, "he developed one of the most successful state-of-the-art classification programs, 'Random Forest.' This method was based on a series of new ideas that he developed in papers during the last seven years, and it is extensively used in government and industry."
+<!-- --- -->
 
-Breiman's best known work is considered to be "Classification and Regression Trees," a work in collaboration with three other scholars that facilitates practical applications, such as the diagnosis of diseases, from a multitude of symptoms.
+<!-- \begin{quote} -->
+<!-- "In particular," said Bickel, "he developed one of the most successful state-of-the-art classification programs, 'Random Forest.' This method was based on a series of new ideas that he developed in papers during the last seven years, and it is extensively used in government and industry." -->
 
-\end{quote}
+<!-- Breiman's best known work is considered to be "Classification and Regression Trees," a work in collaboration with three other scholars that facilitates practical applications, such as the diagnosis of diseases, from a multitude of symptoms. -->
+
+<!-- \end{quote} -->
+
+<!-- --- -->
 
 ---
 
@@ -1085,13 +1089,15 @@ Breiman's best known work is considered to be "Classification and Regression Tre
 
 \vspace{2mm}
 
-Let's draw a new training set for our data and see what happens if we fit our full classification tree (deviance grown).
+Let's draw a new training set (`train2`) for our data and see what happens if we fit our full classification tree (deviance grown).
 
 ---
 
-\scriptsize
+The two classification trees contructed from $850$ observations each (different random subsets):
 
-```{r headInjury7, echo=TRUE, fig.width=9, fig.height=5,fig.align = "center",out.width='90%'}
+ 
+
+```{r headInjury7, echo=FALSE, fig.width=9, fig.height=5,fig.align = "center",out.width='90%'}
 set.seed(33)
 N=dim(headInjury2)[1]
 train2=sample(1:N,850) # Draw a new training sample (same size).
@@ -1103,11 +1109,10 @@ plot(tree.HIClass2);text(tree.HIClass2,pretty=0)
 
 ```
 
----
 
-This classification tree is constructed by using $850$ observations, just like the tree in the classification trees section, but we get two different trees that will give different predictions for a test set.
+* We get two different trees that will give different predictions for a test set.
 
-To reduce the variance of decision trees we can apply _bootstrap aggregating_ (_bagging_), invented by Leo Breiman in 1996 [@Breiman1996].
+$\rightarrow$ To reduce the variance of decision trees we can apply _bootstrap aggregating_ (_bagging_), invented by Leo Breiman in 1996 [@Breiman1996].
 
 ---
 
@@ -1115,7 +1120,7 @@ To reduce the variance of decision trees we can apply _bootstrap aggregating_ (_
 
 \vspace{2mm}
 
-* Assume we have $B$ i.i.d. observations of a random variable $X$ each with the same mean and with variance $\sigma^2$. We calculate the mean $\bar{X} = \frac{1}{B} \sum_{b=1}^B X_b$. The variance of the mean is
+* Assume we have $B$ _i.i.d._ observations of a random variable $X$ each with the same mean and with variance $\sigma^2$. We calculate the mean $\bar{X} = \frac{1}{B} \sum_{b=1}^B X_b$. The variance of the mean is
 $$\text{Var}(\bar{X}) = \text{Var}\Big(\frac{1}{B}\sum_{b=1}^B X_b \Big) = \frac{1}{B^2} \sum_{b=1}^B \text{Var}(X_b) = \frac{\sigma^2}{B}.$$
 By averaging we get reduced variance. This is the basic idea!
 
@@ -1158,10 +1163,13 @@ $$
 
 ---
 
-* Originally, @Breiman1996 suggested to prune each tree, but later research has found that it is better to leave the trees at maximal size (a bushy tree), to make the trees as different from each other as possible.
+* Originally, @Breiman1996 suggested to prune each tree, but later research has found that it is better to leave the trees at maximal size (a bushy tree), to make the trees as different from each other as possible\footnote{Note also that deeper trees have smaller bias}.
+
+\vspace{1mm}
 
 * The number $B$ is chosen to be as large as "necessary". An increase in $B$ will not lead to overfitting, and $B$ is not regarded as a tuning parameter. If a goodness of fit measure is plotted as a function of $B$ (soon) we see that (given that $B$ is large enough) increasing $B$ will not change the goodness of fit measure.
 
+\vspace{1mm}
 
 * To find out which number $B$ is sufficient, we do _not_ need to run cross-validation, but can do something smarter (next slide).
 
@@ -1172,19 +1180,19 @@ $$
 
 \vspace{1mm}
 
-* We use a subset of the observations in each bootstrap sample. Recall (module 5) that the probability that an observation is in the bootstrap sample is approximately $1-e^{-1}$=`r 1-exp(-1)` ($\approx 2/3$).
+* Recall (module 5) that the probability that an observation is in the bootstrap sample is approximately $1-e^{-1}$=`r round(1-exp(-1),2)` ($\approx 2/3$).
 
 * When an observation is left out of the bootstrap sample it is not used to build the tree, and we can use this observation as a part of a "test set" to measure the predictive performance and error of the fitted model, $\hat{f}^{*b}(x)$. 
 
-<!-- In other words: Since each observation $i$ has a probability of approximately 2/3 to be in a bootstrap sample, and we make $B$ bootstrap samples, then observation $i$ will be outside the bootstrap sample in approximately $B/3$ of the fitted trees.  -->
+* For $B$ bootstrap samples, observation $i$ will be outside the bootstrap sample in approximately $B/3$ of the fitted trees. Obtain a single prediction by averaging (regression problem) or taking the majority vote (classification problem) of the $B/3$ predictions.
 
 \vspace{2mm}
 
 **Terminology:**
 
-* The observations left out are referred to as the _out-of-bag_ (OOB) observations.
+* The observations left out are referred to as the _\textcolor{red}{out-of-bag}_ (OOB) observations.
 
-* The measured error of the $B/3$ predictions is called the _out-of-bag error_. 
+* The measured error of the $B/3$ predictions is called the _\textcolor{red}{out-of-bag error}_. 
 
 
 <!-- Based on these $B/3$ predictions we can make one single prediction (_OOB prediction_) and measure the prediction error (_OOB error_).  -->
