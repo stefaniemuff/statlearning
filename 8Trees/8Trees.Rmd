@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "February 28 and March 2, 2020"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -1677,7 +1677,7 @@ Boosting has three tuning parameters which need to be set ($B$, $\lambda$, $d$),
 (ISLR book, Sections 8.3.2 to 8.3.4.)
 
 \normalsize
-Remember the data set: The aim is to predict the median value of woner occupied homes (in 1000\$)
+Remember the data set: The aim is to predict the median value of owner-occupied homes (in 1000\$)
 
 We first run through trees, bagging and random forests - before arriving at boosting. 
 
@@ -1703,13 +1703,17 @@ summary(tree.boston);
 
 ---
 
-```{r boston1, echo=TRUE, fig.width=8, fig.height=6,fig.align = "center",out.width='70%'}
+\scriptsize
+```{r boston1, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
 plot(tree.boston)
 text(tree.boston,pretty=0)
 ```
 
-\small
-Remember: the `tree()` function has a built-in default stopping criterion to decide when to stop enlarging the tree. You can change this with the `control` option, for example by setting `control = tree.control(mincut = 2, minsize = 4, mindev = 0.001)`. You can then continue with the following steps from there.
+\normalsize
+Remember: 
+
+* The `tree()` function has a built-in default stopping criterion. 
+* You can change this with the `control` option, for example by setting `control = tree.control(mincut = 2, minsize = 4, mindev = 0.001)`. 
 
 ---
 
@@ -1731,7 +1735,7 @@ It looks like the most complex tree was selected.
 ### Pruning
 \vspace{1mm}
 
-Want to prune anyway (even if most complex tree was selected)?
+Want to prune anyway (even if most complex tree was selected)? For example, pruning to a node-5 tree works as follows:
 
 \scriptsize
 
@@ -1813,7 +1817,7 @@ mean((yhat.bag-boston.test)^2)
 
 \vspace{2mm}
 
-Let's changing from bagging to a random forest (n.b., why are we now speaking of a _forst_ and no longer of a _tree_?), using 6 randomly selected predictors for each tree:
+Let's go from bagging to a random forest\footnote{n.b., why are we now speaking of a forest and no longer of a tree?}, using 6 randomly selected predictors for each tree:
 
 \scriptsize
 ```{r}
@@ -1891,7 +1895,9 @@ plot(boost.boston,i="lstat",ylab="medv")
 
 **Prediction on test set**
 
-First for model with $\lambda=0.001$ (default), then with $\lambda=0.2$, to calculae the MSE on the test set. We could have done cross-validation to find the best $\lambda$ over a grid.
+* Calculate the MSE on the test set, first for the model with $\lambda=0.001$ (default), then with $\lambda=0.2$.
+
+* We could have done cross-validation to find the best $\lambda$ over a grid, but it seems not to make a big difference.
 
 \scriptsize
 
