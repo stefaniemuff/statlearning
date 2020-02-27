@@ -1,0 +1,249 @@
+---
+title: 'Module 8: Solutions to Recommended Exercises'
+author: Martina Hall, Michail Spitieris, Stefanie Muff, Department of Mathematical
+  Sciences, NTNU
+date: "March 05, 2020"
+output:
+  pdf_document:
+    toc: no
+    toc_depth: '2'
+  html_document:
+    df_print: paged
+    toc: no
+    toc_depth: '2'
+subtitle: TMA4268 Statistical Learning V2020
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
+                      cache=TRUE, size="scriptsize")
+```
+
+
+```{r, eval=FALSE,echo=FALSE}
+install.packages("gamlss.data")
+install.packages("tidyverse")
+install.packages("GGally")
+install.packages("Matrix")
+```
+
+## Problem 1
+
+See Module 5 Recommended exercise solution for the bootstrap result.
+
+## Problem 2
+
+See solutions to exercise Q1 and Q4 here: <https://rstudio-pubs-static.s3.amazonaws.com/65564_925dfde884e14ef9b5735eddd16c263e.html>
+
+See solutions to 2c-f:
+<https://www.math.ntnu.no/emner/TMA4268/2019v/8Trees/TMA4268M8RecEx2ctof.pdf>
+
+
+## Problem 5
+
+###a) 
+We have 4601 observations and 58 variables, 57 of them will be used as covariates.
+
+```{r}
+library(kernlab)
+?spam
+```
+
+### b) 
+We use approximately $2/3$ of the observations as the train set and  $1/3$ as the test set.
+
+```{r}
+library(tree)
+
+set.seed(1)
+
+data(spam)
+N=dim(spam)[1]
+
+train=sample(1:N,3000)
+test=(1:N)[-train]
+```
+
+###c)  
+We fit a classification tree to the training data.
+
+```{r}
+tree.spam=tree(type~.,spam,subset=train)
+
+plot(tree.spam)
+
+text(tree.spam,pretty=1)
+```
+
+For this training set we have 11 terminal nodes.
+
+```{r}
+summary(tree.spam)
+```
+
+###d) 
+We predict the response for the test data.
+
+```{r}
+yhat=predict(tree.spam,spam[test,],type="class")
+response.test=spam$type[test]
+```
+
+and make a confusion table:
+```{r}
+misclass=table(yhat,response.test)
+print(misclass)
+```
+
+The misclassification rate is given by:
+
+```{r}
+
+1-sum(diag(misclass))/sum(misclass)
+```
+
+###e)  
+We use _cv.tree()_ to find the optimal tree size.
+
+```{r}
+set.seed(1)
+
+cv.spam=cv.tree(tree.spam,FUN=prune.misclass)
+
+plot(cv.spam$size,cv.spam$dev,type="b")
+```
+
+According to the plot the optimal number of terminal nodes is 7 (or larger). We choose 7 as this gives the simplest tree, and prune the tree according to this value.
+
+```{r}
+prune.spam=prune.misclass(tree.spam,best=7)
+
+plot(prune.spam)
+text(prune.spam,pretty=1)
+```
+
+We predict the response for the test data:
+
+```{r}
+yhat.prune=predict(prune.spam,spam[test,],type="class")
+
+misclass.prune=table(yhat.prune,response.test)
+print(misclass.prune)
+```
+
+The misclassification rate is
+
+```{r}
+1-sum(diag(misclass.prune))/sum(misclass.prune)
+```
+
+
+### f) 
+We create a decision tree by bagging.
+
+```{r}
+library(randomForest)
+bag.spam=randomForest(type~.,data=spam,subset=train,mtry=dim(spam)[2]-1,ntree=500,importance=TRUE)
+```
+
+We predict the response for the test data as before:
+
+```{r}
+yhat.bag=predict(bag.spam,newdata=spam[test,])
+
+misclass.bag=table(yhat.bag,response.test)
+print(misclass.bag)
+```
+
+The misclassification rate is
+```{r}
+1-sum(diag(misclass.bag))/sum(misclass.bag)
+```
+
+### g) 
+We now use the random forest-algorithm and consider only $\sqrt{57}\approx 8$ of the predictors at each split. This is specified in _mtry_. 
+
+```{r}
+set.seed(1)
+
+rf.spam=randomForest(type~.,data=spam,subset=train,mtry=round(sqrt(dim(spam)[2]-1)),ntree=500,importance=TRUE)
+```
+
+We study the importance of each variable
+
+```{r}
+importance(rf.spam)
+```
+
+If _MeanDecreaseAccuracy_ and _MeanDecreaseGini_ are large, the corresponding covariate is important.
+
+```{r}
+varImpPlot(rf.spam)
+```
+
+In this plot we see that _charExclamation_ is the most important covariate, followed by _remove_ and _charDollar_. This is as expected as these variables are used in the top splits in the classification trees we have seen so far.
+
+We now predict the response for the test data.
+
+```{r}
+yhat.rf=predict(rf.spam,newdata=spam[test,])
+
+misclass.rf=table(yhat.rf,response.test)
+1-sum(diag(misclass.rf))/sum(misclass.rf)
+```
+
+The misclassification rate is given by
+
+```{r}
+print(misclass.rf)
+```
+
+### h) 
+Finally, we create a tree by using the boosting algorithm. The _gbm()_ function does not allow factors in the response, so we have to use "1" and "0" instead of "spam" and "nonspam":
+
+```{r}
+library(gbm)
+set.seed(1)
+
+spamboost=spam
+spamboost$type=c()
+spamboost$type[spam$type=="spam"]=1
+spamboost$type[spam$type=="nonspam"]=0
+
+boost.spam=gbm(type~.,data=spamboost[train,],distribution="bernoulli",n.trees=5000,interaction.depth=4,shrinkage=0.001)
+```
+
+We predict the response for the test data:
+
+```{r}
+yhat.boost=predict(boost.spam,newdata=spamboost[-train,],n.trees=5000,distribution="bernoulli",type="response")
+
+yhat.boost=ifelse(yhat.boost>0.5,1,0) #Transform to 0 and 1 (nonspam and spam).
+
+misclass.boost=table(yhat.boost,spamboost$type[test])
+
+print(misclass.boost)
+```
+
+The misclassification rate is
+
+```{r}
+1-sum(diag(misclass.boost))/sum(misclass.boost)
+```
+
+### i) 
+We get lower misclassification rates for bagging, boosting and random forest as expected.
+
+## Problem 6  
+
+Problem 1 - Classification with trees: <https://www.math.ntnu.no/emner/TMA4268/2018v/CompEx/Compulsory3solutions.html>
+
+
+# Problem 7
+
+Classification of diabetes cases c), with Q20, Q21, Q22.
+
+<https://www.math.ntnu.no/emner/TMA4268/Exam/e2018sol.pdf>
+

@@ -1,0 +1,310 @@
+---
+title: 'Module 8: Recommended Exercises'
+author: Martina Hall, Michail Spitieris, Stefanie Muff, Department of Mathematical
+  Sciences, NTNU
+date: "March 05, 2020"
+output:
+  # pdf_document:
+  #   fig_caption: yes
+  #   keep_tex: yes
+  #   toc: no
+  #   toc_depth: 2
+  html_document:
+    df_print: paged
+    toc: no
+    toc_depth: '2'
+subtitle: TMA4268 Statistical Learning V2020
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
+                      cache=TRUE, size="scriptsize")
+```
+
+---
+
+## Problem 1 
+
+We recommend that you work throught he lab in the course book (Section 8.3).
+
+## Problem 2 -- Theoretical
+
+a) Provide a detailed explanation of the algorithm that is used to fit a regression tree. What is different for a classification tree? 
+
+b) What are the advantages and disadvantages of regression and classification trees?
+
+c) What is the idea behind bagging and what is the role of bootstap? How do random forests improve that idea?
+
+d) What is an out-of bag (OOB) error estimator and what percentage of observations are included in an OOB sample? (Hint: The result from RecEx5-Problem 4c can be used)
+
+e) Bagging and Random Forests typically improve the prediction accuracy of a single tree, but it can be difficult to interpret, for example in terms of understanding which predictors are how relevant. 
+How can we evaluate the importance of the different predictors for these methods? 
+
+
+
+## Problem 3 -- Regression (Book Ex. 8)
+
+In the lab, a classification tree was applied to the Carseats data set after converting Sales into a qualitative response variable. 
+Now we will seek to predict Sales using regression trees and related approaches, treating the response as a quantitative variable.
+
+a) Split the data set into a training set and a test set \textcolor{red}{(todo: say which proportions; should it be half-half, or 80:20, 2:1?)}.
+
+b) Fit a regression tree to the training set. Plot the tree, and interpret the results. What test MSE do you obtain?
+
+c) Use cross-validation in order to determine the optimal level of tree complexity. Does pruning the tree improve the test MSE?
+
+d) Use the bagging approach in order to analyze this data. What test MSE do you obtain? Use the `importance()` function to determine which variables are most important.
+
+e) Use random forests to analyze this data. What test MSE do you obtain? Use the `importance()` function to determine which variables are most important. Describe the effect of m, the number of variables considered at each split, on the error rate obtained.
+
+f) What is the effect of the number of trees (`ntree`) on the test error? Plot the test MSE as a function of `ntree` for both the bagging and the random forest method.
+
+
+## Problem 4 -- Classification
+
+In this exercise you are going to implement a spam filter for e-mails by using tree-based methods. Data from 4601 e-mails are collected and can be uploaded from the kernlab library as follows:
+```{r}
+library(kernlab)
+data(spam)
+```
+Each e-mail is classified by `type` ( `spam` or `nonspam`), and this will be the response in our model. In addition there are 57 predictors in the dataset. The predictors describe the frequency of different words in the e-mails and orthography (capitalization, spelling, punctuation and so on).
+
+a) Study the dataset by writing `?spam` in R.
+
+b) Create a training set and a test set for the dataset \textcolor{red}{(todo: please say which proportion should be in the training/test sets)}.
+
+c) Fit a tree to the training data with `type` as the response and the rest of the variables as predictors. Study the results by using the `summary()` function. Also create a plot of the tree. How many terminal nodes does it have?
+  
+d) Predict the response on the test data. What is the misclassification rate?
+  
+e) Use the `cv.tree()` function to find the optimal tree size. Prune the tree according to the optimal tree size by using the `prune.misclass()` function and plot the result. Predict the response on the test data by using the pruned tree. What is the misclassification rate in this case?
+  
+f) Create a decision tree by using the bagging approach. Use the function `randomForest()` and consider all of the predictors in each split. Predict the response on the test data and report the misclassification rate.
+
+g) Apply the `randomForest()` function again, but this time consider only a subset of the predictors in each split. This corresponds to the random forest-algorithm. Study the importance of each variable by using the function `importance()`. Are the results as expected based on earlier results? Again, predict the response for the test data and report the misclassification rate.
+
+h) Use `gbm()` to construct a boosted classification tree. Predict the response for the test data and report the misclassification rate.
+
+i) Compare the misclassification rates in d-h. Which method gives the lowest misclassification rate for the test data? Are the results as expected?
+
+
+
+
+<!--
+# Theoretical questions
+
+## Problem 1 
+
+
+Show that each bootstrap sample will contain on average approximately $2/3$ of the observations.
+
+## Problem 2 
+
+Do Exercise 1 in our book (page 332)
+
+Draw an example (of your own invention) of a partition of two-dimensional feature space that could result from recursive binary splitting. Your example should contain at least six regions. Draw a decision tree corresponding to this partition. Be sure to label all aspects of your figures, including the regions R1,R2,..., the cutpoints t1,t2,..., and so forth.
+
+If the class border of the two dimensional space is linear, how can that be done with recursive binary splitting?
+
+## Problem 3
+
+Do Exercise 4 in the book (page 332).
+
+Suppose that we want to build a regression tree based on the following dataset:
+
+| $i$ 	| $(x_{i1},x_{i2})$ 	| $y$ 	|
+|:----:	|:------------:	|:----:	|
+| 1 	| (1,3) 	| 2 	|
+| 2 	| (2,2) 	| 5 	|
+| 3 	| (3,2) 	| 3 	|
+| 4 	| (3,4) 	| 7 	|
+
+
+## Problem 4
+
+Answer the following questions without using $R$:
+
+a) Find the optimal splitting variable and split point for the first binary splitting for these data according to the recursive binary splitting algorithm. 
+$Hint$: Draw a figure and look at possible divisions.
+
+b) Continue the tree construction for the toy data until each terminal node in the tree corresponds to one single observation. Let the resulting tree be denoted $T_0$.
+
+c) For what values of $\alpha$ in the cost-complexity criterion $C_{\alpha}(T)$ will the unpruned tree $T_0$ be the optimal tree? 
+$Hint:$ Prune the tree by cost complexity pruning.
+
+d) Suppose that we want to predict the response $y$ for a new observation at __x__=(2,3). What is the predicted value when using the tree $T_0$ constructed above?
+
+# Applied problems
+
+## Problem 5
+
+In this exercise you are going to implement a spam filter for e-mails by using tree-based methods. Data from 4601 e-mails are collected and can be uploaded from the kernlab library as follows:
+```{r}
+library(kernlab)
+data(spam)
+```
+Each e-mail is classified by _type_ (_spam_ or _nonspam_), and this will be the response in our model. In addition there are 57 predictors in the dataset. The predictors describe the frequency of different words in the e-mails and orthography (capitalization, spelling, punctuation and so on).
+
+a) Study the dataset by writing _?spam_ in R.
+
+b) Create a training set and a test set for the dataset.
+
+c) Fit a tree to the training data with _type_ as the response and the rest of the variables as predictors. Study the results by using the _summary()_ function. Also create a plot of the tree. How many terminal nodes does it have?
+
+d) Predict the response on the test data. What is the misclassification rate?
+
+e) Use the _cv.tree()_ function to find the optimal tree size. Prune the tree according to the optimal tree size by using the _prune.misclass()_ function and plot the result. Predict the response on the test data by using the pruned tree. What is the misclassification rate in this case?
+
+f) Create a decision tree by using the bagging approach. Use the function _randomForest()_ and consider all of the predictors in each split. Predict the response on the test data and report the misclassification rate.
+
+g) Apply the _randomForest()_ function again, but this time consider only a subset of the predictors in each split. This corresponds to the random forest-algorithm. Study the importance of each variable by using the function _importance()_. Are the results as expected based on earlier results? Again, predict the response for the test data and report the misclassification rate.
+
+h) Use _gbm()_ to construct a boosted classification tree. Predict the response for the test data and report the misclassification rate.
+
+i) Compare the misclassification rates in d-h. Which method gives the lowest misclassification rate for the test data? Are the results as expected?
+
+
+## Problem 6 (Compulsory exercise from 2018)
+
+We will use the _German credit data set_ from the [UC Irvine machine learning repository](https://archive.ics.uci.edu/ml/index.php). Our aim is to classify a customer as _good_ or _bad_ with respect to credit risk. A set of 20 covariates (attributes) are available (both numerical and categorical) for 300 customers with bad credit risk and 700 customers with good credit risk.
+
+More information on the 20 covariates are found that the UCI archive [data set description](https://archive.ics.uci.edu/ml/datasets/Statlog+%28German+Credit+Data%29)
+
+
+```{r,echo=TRUE,eval=TRUE}
+library(caret) 
+#read data, divide into train and test
+germancredit = read.table("http://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/german.data")
+colnames(germancredit) = c("checkaccount", "duration", "credithistory", "purpose", "amount", "saving", "presentjob", "installmentrate", "sexstatus", "otherdebtor", "resident", "property", "age", "otherinstall", "housing", "ncredits", "job", "npeople", "telephone", "foreign", "response")
+germancredit$response = as.factor(germancredit$response) #2=bad
+table(germancredit$response)
+str(germancredit) # to see factors and integers, numerics
+set.seed(4268) #keep this -easier to grade work
+in.train <- createDataPartition(germancredit$response, p=0.75, list=FALSE)
+# 75% for training, one split
+germancredit.train <- germancredit[in.train,]; dim(germancredit.train)
+germancredit.test <- germancredit[-in.train,];dim(germancredit.test)
+```
+
+We will now look at classification trees, bagging, and random forests.
+
+Remark: in description of the data set it is hinted that we may use unequal cost of misclassification for the two classes, but we have not covered unequal misclassification costs in this course, and will therefore not address that in this problem set.
+
+### a) Full classification tree [1 point]
+
+```{r,echo=TRUE,eval=FALSE}
+# construct full tree
+library(tree)
+library(pROC)
+fulltree=tree(response~.,germancredit.train,split="deviance")
+summary(fulltree)
+plot(fulltree)
+text(fulltree)
+print(fulltree)
+fullpred=predict(fulltree,germancredit.test,type="class")
+testres=confusionMatrix(data=fullpred,reference=germancredit.test$response)
+print(testres)
+1-sum(diag(testres$table))/(sum(testres$table))
+predfulltree = predict(fulltree,germancredit.test, type = "vector")
+testfullroc=roc(germancredit.test$response == "2", predfulltree[,2])
+auc(testfullroc)
+plot(testfullroc)
+```
+
+Run the code and study the output.
+
+* Q1. Explain briefly how `fulltree` is constructed. The explanation should include the words: greedy, binary, deviance, root, leaves.
+
+### b) Pruned classification tree [1 point]
+
+```{r, echo=TRUE, eval=FALSE}
+# prune the full tree
+set.seed(4268)
+fullcv=cv.tree(fulltree,FUN=prune.misclass,K=5)
+plot(fullcv$size,fullcv$dev,type="b", xlab="Terminal nodes",ylab="misclassifications")
+print(fullcv)
+prunesize=fullcv$size[which.min(fullcv$dev)]
+prunetree=prune.misclass(fulltree,best=prunesize) 
+plot(prunetree)
+text(prunetree,pretty=1)
+predprunetree = predict(prunetree,germancredit.test, type = "class")
+prunetest=confusionMatrix(data=predprunetree,reference=germancredit.test$response)
+print(prunetest)
+1-sum(diag(prunetest$table))/(sum(prunetest$table))
+predprunetree = predict(prunetree,germancredit.test, type = "vector")
+testpruneroc=roc(germancredit.test$response == "2", predprunetree[,2])
+auc(testpruneroc)
+plot(testpruneroc)
+```
+
+Run the code and study the output.
+
+* Q2. Why do we want to prune the full tree? 
+* Q3. How is amount of pruning decided in the code? 
+* Q4. Compare the the full and pruned tree classification method with focus on interpretability and the ROC curves (AUC).
+
+### c) Bagged trees [1 point]
+
+```{r,echo=TRUE,eval=FALSE}
+library(randomForest)
+set.seed(4268)
+bag=randomForest(response~., data=germancredit,subset=in.train,
+                 mtry=20,ntree=500,importance=TRUE)
+bag$confusion
+1-sum(diag(bag$confusion))/sum(bag$confusion[1:2,1:2])
+yhat.bag=predict(bag,newdata=germancredit.test)
+misclass.bag=confusionMatrix(yhat.bag,germancredit.test$response)
+print(misclass.bag)
+1-sum(diag(misclass.bag$table))/(sum(misclass.bag$table))
+predbag = predict(bag,germancredit.test, type = "prob")
+testbagroc=roc(germancredit.test$response == "2", predbag[,2])
+auc(testbagroc)
+plot(testbagroc)
+varImpPlot(bag,pch=20)
+```
+
+Run the code and study the output.
+
+* Q5. What is the main motivation behind bagging?
+* Q6. Explain what the importance plots show, and give your interpretation for the data set.
+* Q7. Compare the performance of bagging with the best of the full and pruned tree model above with focus on interpretability and the ROC curves (AUC).
+
+### d) Random forest [1 point]
+
+```{r,echo=TRUE,eval=FALSE}
+set.seed(4268)
+rf=randomForest(response~.,
+                 data=germancredit,subset=in.train,
+                 mtry=4,ntree=500,importance=TRUE)
+rf$confusion
+1-sum(diag(rf$confusion))/sum(rf$confusion[1:2,1:2])
+yhat.rf=predict(rf,newdata=germancredit.test)
+misclass.rf=confusionMatrix(yhat.rf,germancredit.test$response)
+print(misclass.rf)
+1-sum(diag(misclass.rf$table))/(sum(misclass.rf$table))
+predrf = predict(rf,germancredit.test, type = "prob")
+testrfroc=roc(germancredit.test$response == "2", predrf[,2])
+auc(testrfroc)
+plot(testrfroc)
+varImpPlot(rf,pch=20)
+```
+
+Run the code and study the output.
+
+* Q8. The parameter `mtry=4` is used. What does this parameter mean, and what is the motivation behind choosing exactly this value?
+* Q9. The value of the parameter `mtry` is the only difference between bagging and random forest. What is the effect of choosing `mtry` to be a value less than the number of covariates?
+* Q10. Would you prefer to use bagging or random forest to classify the credit risk data?
+
+
+
+## Problem 7 (an exam problem from 2018)  
+
+a) Explain how we build a bagged set of trees, and why we would want to fit more than one tree.  
+b) Assume we have a data set of size $n$, calculate the probability that a given observation is in a given bootstrap sample.  
+c) What is an OOB sample?--> 
+
+
+
+
