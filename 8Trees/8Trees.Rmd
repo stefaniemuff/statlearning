@@ -33,7 +33,7 @@ whichformat="latex"
 
 ---
 
-Last update: February 27, 2020
+Last update: February 28, 2020
 
 --- 
 
@@ -615,7 +615,8 @@ observations into $k$ folds. For each $k = 1,\ldots, K$:
 
 Let us start with the tree with many leaves, and then prune it with 5-fold CV. We can then plot the CV error as a function of tree size (instead of $\alpha$ -- why?):
 
-```{r ozone.cv, echo=FALSE, fig.width=6, fig.height=5,fig.align = "center",out.width='60%'}
+\scriptsize
+```{r ozone.cv, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='50%'}
 set.seed(563)
 ozone.tree <- tree(ozone~temp+wind, 
                   data=ozone.train, 
@@ -625,7 +626,8 @@ cv.ozone <- cv.tree(ozone.tree,K=5)
 plot(cv.ozone$dev ~  cv.ozone$size,type= "b", lwd=2, col="red", xlab="Tree Size", ylab="Deviance")
 ```
 
-Interestingly, it seems like a tree with 5 leaves performs best - which corresponds to the original choice.
+\normalsize
+Interestingly, a tree with 5 leaves performs best - which corresponds to the original choice.
 
 <!-- --- -->
 
@@ -665,7 +667,7 @@ Interestingly, it seems like a tree with 5 leaves performs best - which correspo
 * For the _\textcolor{red}{classification case}_, however, we have two possibilities: 
 
     * **Majority vote**: Predict that the observation belongs to the most commonly occurring class of the training observations in $R_j$.  
-    * Estimate the **probability** that an observation $x_i$ belongs to a class $k$, $\hat{p}_{jk}(x_i)$, and then classify according to a **threshold value**. This estimated probability is the proportion of class $k$ training observations in region $R_j$, with $n_{jk}$ observations. Region $j$ has $N_j$ observations. 
+    * Estimate the **probability** that an observation $x_i$ belongs to a class $k$, $\hat{p}_{jk}(x_i)$, and then classify according to a **threshold value**. This estimated probability is the proportion of class $k$ training observations in region $R_j$, with $n_{jk}$ observations. Region $j$ has $N_j$ observations
     $$\hat{p}_{jk} = \frac{1}{N_j} \sum_{i:x_i \in R_j} I(y_i = k)=\frac{n_{jk}}{N_j}.$$ 
 
 ---
@@ -744,7 +746,7 @@ summary(tree.HIClass)
 <!-- Deviance=$-2 \sum_{j}\sum_{k}n_{jk}\log(\hat{p}_{jk})$ for all nodes $j$ and classes $k$. -->
 <!-- (Formula on page 255 of @MASS.) -->
  
-\vspace{1mm}
+\vspace{6mm}
 **Remark**: the deviance ($-2\log(L)$) is a scaled version of the cross entropy: 
 $$-2\sum_{k=1}^K n_{jk} \log\hat{p}_{jk}\ , \text{where} \quad   \hat{p}_{jk}=\frac{n_{jk}}{N_j}\ , $$ thus `split="deviance"` implies that we split according to the entropy criterion.
 
@@ -770,6 +772,8 @@ text(tree.HIClass,pretty=1)
 \vspace{2mm}
 
 The same analysis with the Gini index:
+
+\vspace{2mm}
 
 \scriptsize
 ```{r}
@@ -821,6 +825,8 @@ tree.pred=predict(tree.HIClass,headInjury2[test,],type="class")
 
 With the Gini-index:
 
+$~$
+
 \tiny
 
 ```{r}
@@ -839,6 +845,7 @@ Study the confusion matrices on the previous slide:
 
 * Discuss if/how it is possible to change the algorithm in order to decrease the number of severe mistakes.
 
+<!-- Idea: If one type of errors is more severe, can change the threshold for prediction. -->
 
 
 ---
@@ -859,9 +866,11 @@ Study the confusion matrices on the previous slide:
 
 We prune the classification tree that was built with the deviance criterion. We use the misclassification error to do so\footnote{While trees should be built using the deviance or the Gini index, pruning is typically done with the misclassification criterion.}:
 
+\vspace{3mm}
+
 \scriptsize
 
-```{r headInjury3, echo=TRUE, fig.width=5, fig.height=4,fig.align = "center",out.width='60%'}
+```{r headInjury3, echo=TRUE, fig.width=5, fig.height=4,fig.align = "center",out.width='50%'}
 set.seed(1)
 cv.head=cv.tree(tree.HIClass, FUN= prune.misclass)
 plot(cv.head$size,cv.head$dev,type="b",
@@ -877,6 +886,8 @@ plot(cv.head$size,cv.head$dev,type="b",
 
 The function `cv.tree` automatically does $10$-fold cross-validation. `dev` is here the number of misclassifications.
 
+\vspace{3mm}
+
 \scriptsize
 
 ```{r}
@@ -888,6 +899,8 @@ print(cv.head)
 * We have done cross-validation on our training set of 850 observations. According to the plot, the number of misclassifications is as low for 7, 8 or 9 nodes, so we choose 7 terminal nodes as the smallest model (lowest variance). 
 
 * We prune the classification tree according to this value:
+
+\vspace{4mm}
 
 \scriptsize
 ```{r}
@@ -919,6 +932,8 @@ tree.pred.prune <- predict(prune.HIClass,headInjury2[test,],type="class")
 ```
 
 \normalsize
+
+\vspace{4mm}
 
 $\rightarrow$ We see that the misclassification rate is as small as before, thus the pruned tree is as good as the original tree for the test data.
 
@@ -968,6 +983,8 @@ $\rightarrow$ If you want, you can apply the same pruning procedure to the very 
 \vspace{2mm}
 
 Discuss the bias-variance tradeoff of a regression tree when increasing/decreasing the number of terminal nodes, i.e: 
+
+\vspace{2mm}
 
 * What happens to the bias?
 * What happens to the variance of a prediction if we reduce the tree size? 
@@ -1022,6 +1039,8 @@ Discuss the bias-variance tradeoff of a regression tree when increasing/decreasi
 \vspace{2mm}
 
 Several of the above listed disadvantages can be addressed by 
+\vspace{2mm}
+
 
 * **Bagging**: grow many trees (from bootstrapped data) and average - to get rid of the non-robustness and high variance by averaging.
 
@@ -1029,9 +1048,11 @@ Several of the above listed disadvantages can be addressed by
 
 * **Boosting**: make one tree, then another based on the residuals from the previous, repeat. The final predictor is a weighted sum of these trees.
 
-\vspace{1mm}
+\vspace{2mm}
 
 In addition:
+
+\vspace{2mm}
 
 * **Variable importance** - to see which variables make a difference (now that we have many trees).
 
