@@ -153,7 +153,7 @@
 
 \begin{frame}
 
-Last update: February 28, 2020
+Last update: March 1, 2020
 
 \end{frame}
 
@@ -1840,6 +1840,8 @@ However, we do not have many independent data set - so we use
 
 \begin{block}{Bagging = Bootstrap aggregating}
 
+\vspace{2mm}
+
 \begin{itemize}
 \item
   Idea: For each bootstrap sample \(b=1,\ldots, B\) we construct a
@@ -1870,7 +1872,7 @@ However, we do not have many independent data set - so we use
   Originally, Breiman (1996) suggested to prune each tree, but later
   research has found that it is better to leave the trees at maximal
   size (a bushy tree), to make the trees as different from each other as
-  possible\footnote{Note also that deeper trees have smaller bias}.
+  possible\footnote{Note also that deeper trees have smaller bias.}.
 \end{itemize}
 
 \vspace{1mm}
@@ -1946,6 +1948,8 @@ However, we do not have many independent data set - so we use
 We can do bagging by using the function \texttt{randomForest()} in the
 \texttt{randomForest} library.
 
+\vspace{2mm}
+
 \scriptsize
 
 \begin{Shaded}
@@ -1976,12 +1980,11 @@ We can do bagging by using the function \texttt{randomForest()} in the
 
 \normalsize
 
+\vspace{4mm}
+
 The variable \texttt{mtry=10} because we want to consider all \(10\)
 predictors in each split of the tree. The variable \texttt{ntree=500}
 because we want to average over \(500\) trees.
-
-Todo (Exercise): Make a similar example, and let students plot the error
-rate against ntree (e.g.~from 1 to 500, like figure 8.8).
 
 \end{block}
 
@@ -1990,6 +1993,8 @@ rate against ntree (e.g.~from 1 to 500, like figure 8.8).
 \begin{frame}[fragile]
 
 Predictive performance of the bagged tree on unseen test data:
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -2049,24 +2054,22 @@ classification) that are not trees.
   \end{itemize}
 \end{itemize}
 
-\vspace{1mm}
+\vspace{4mm}
 
 Breiman (1996) suggests that these methods should be suitable for
 bagging:
 
+\vspace{2mm}
+
 \begin{itemize}
 \tightlist
 \item
-  Neural nets, classification and regression trees, subset selection in
-  linear regression.
+  Neural nets
+\item
+  Classification and regression trees
+\item
+  Subset selection in linear regression
 \end{itemize}
-
-\vspace{1mm}
-
-However, bagging is not suitable for nearest neighbour classification,
-since the stability of these methods with respect to perturbations of
-the data distinguishes them from competitors such as trees and neural
-nets.
 
 \end{block}
 
@@ -2176,6 +2179,8 @@ in \texttt{randomForest} with \texttt{type=2}.
 
 \begin{block}{Example 1: Ozone data (regression tree)}
 
+\vspace{1mm}
+
 \scriptsize
 
 \begin{Shaded}
@@ -2189,6 +2194,7 @@ in \texttt{randomForest} with \texttt{type=2}.
 
 \begin{center}\includegraphics[width=0.5\linewidth]{8Trees_files/figure-beamer/ozoneImp-1} \end{center}
 
+\vspace{2mm}
 \normalsize
 
 This is a bit boring (only two predictors). More interesting example?
@@ -2205,6 +2211,8 @@ This is a bit boring (only two predictors). More interesting example?
 
 The data relates fuel consumption (\texttt{mpg}) to 10 aspects of
 automobile desing and performance.
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -2251,7 +2259,7 @@ randomization}
 \vspace{2mm}
 
 Variable importance based on randomization is calculated using the OOB
-sample.
+sample. \vspace{1mm}
 
 \begin{itemize}
 \tightlist
@@ -2345,7 +2353,7 @@ The two types together: do they agree?
 
 \begin{block}{The effect of correlation on the variance of the mean}
 
-\vspace{2mm}
+\vspace{3mm}
 
 \begin{itemize}
 \item
@@ -2416,6 +2424,8 @@ to be small.
 
 \begin{block}{How many trees?}
 
+\vspace{2mm}
+
 \begin{itemize}
 \item
   The number of trees, \(B\), is not a tuning parameter, and the best is
@@ -2433,11 +2443,11 @@ to be small.
 \begin{frame}
 
 ISLR Figure 8.10, gene expression data set with 15 classes and 500
-predictors:
+predictors: \vspace{-3mm}
 
 \centering
 
-\includegraphics{../../ISLR/Figures/Chapter8/8.10.png}
+\includegraphics[width=0.8\textwidth,height=\textheight]{../../ISLR/Figures/Chapter8/8.10.png}
 
 \end{frame}
 
@@ -2453,6 +2463,8 @@ We decorrelate the brain injury classification trees by using the
 algorithm only considers three of the predictors in each split. We
 choose \(3\) because we have \(10\) predictors in total and
 \(\sqrt{10}\approx 3\).
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -2473,7 +2485,7 @@ choose \(3\) because we have \(10\) predictors in total and
 
 We check the predictive performance as before:
 
-\tiny
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2563,7 +2575,7 @@ that most of the trees will have these predictors in the top split.
 (borrowed from
 \url{https://gist.github.com/ramhiser/6dec3067f087627a7a85})
 
-\vspace{1mm}
+\vspace{3mm}
 
 \scriptsize
 
@@ -2624,9 +2636,8 @@ that most of the trees will have these predictors in the top split.
 
 \end{frame}
 
-\begin{frame}
-
-\#Boosting
+\begin{frame}{Boosting}
+\protect\hypertarget{boosting}{}
 
 \emph{Boosting} is an alternative approach for improving the predictions
 resulting from a decision tree. We will only consider the description of
@@ -2766,6 +2777,8 @@ at boosting.
 
 \begin{block}{Regression tree}
 
+\(~\)
+
 \scriptsize
 
 \begin{Shaded}
@@ -2825,6 +2838,8 @@ Remember:
 \begin{frame}[fragile]
 
 \begin{block}{Need to prune?}
+
+\(~\)
 
 \scriptsize
 
@@ -3020,7 +3035,9 @@ respect to simple bagging.
 
 \begin{frame}[fragile]
 
-Variable importance
+\begin{block}{Variable importance}
+
+\(~\)
 
 \scriptsize
 
@@ -3051,6 +3068,8 @@ Variable importance
 
 Interpretation?
 
+\end{block}
+
 \end{frame}
 
 \begin{frame}[fragile]
@@ -3080,7 +3099,11 @@ variables by typing \texttt{?Boston}.
 
 \vspace{2mm}
 
-And finally, we are boosing the Boston trees!
+And finally, we are boosing the Boston trees! We boost with 5000 trees
+and allow the interaction depth (number of splits per tree) to be of
+degree 4:
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -3158,6 +3181,8 @@ predictors see Hastie, Tibshirani, and Friedman (2009), Section 10.13.2.
   We could have done cross-validation to find the best \(\lambda\) over
   a grid, but it seems not to make a big difference.
 \end{itemize}
+
+\(~\)
 
 \scriptsize
 

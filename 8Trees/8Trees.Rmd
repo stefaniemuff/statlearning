@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "February 28 and March 2, 2020"
 fontsize: 10pt
 output:
-  # beamer_presentation:
-  #   keep_tex: yes
-  #   fig_caption: false
-  #   latex_engine: xelatex
-  #   theme: "Singapore"
-  #   colortheme: "default"
-  #   font: "serif"
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+    theme: "Singapore"
+    colortheme: "default"
+    font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -33,7 +33,7 @@ whichformat="latex"
 
 ---
 
-Last update: February 28, 2020
+Last update: March 1, 2020
 
 --- 
 
@@ -1156,7 +1156,6 @@ However, we do not have many independent data set - so we use _bootstrapping_ to
 
 ## Recall: Bootstrapping 
 
-
 \vspace{2mm}
 
 * Problem: we want to draw samples from a population with distribution $f$.
@@ -1173,6 +1172,8 @@ However, we do not have many independent data set - so we use _bootstrapping_ to
 
 ## Bagging = Bootstrap aggregating 
 
+\vspace{2mm}
+
 * Idea: For each bootstrap sample $b=1,\ldots, B$ we construct a decision tree, $\hat{f}^{*b}(x)$, and we then use information from all of the trees to draw inference. 
 
 * For a _regression tree_, we take the average of all of the predictions and use this as the final result:
@@ -1184,7 +1185,7 @@ $$
 
 ---
 
-* Originally, @Breiman1996 suggested to prune each tree, but later research has found that it is better to leave the trees at maximal size (a bushy tree), to make the trees as different from each other as possible\footnote{Note also that deeper trees have smaller bias}.
+* Originally, @Breiman1996 suggested to prune each tree, but later research has found that it is better to leave the trees at maximal size (a bushy tree), to make the trees as different from each other as possible\footnote{Note also that deeper trees have smaller bias.}.
 
 \vspace{1mm}
 
@@ -1226,6 +1227,8 @@ $$
 
 We can do bagging by using the function `randomForest()` in the `randomForest` library.
 
+\vspace{2mm}
+
 \scriptsize
 
 ```{r}
@@ -1239,13 +1242,16 @@ r.brain.bag$confusion
 ```
 \normalsize
 
+\vspace{4mm}
+
 The variable `mtry=10` because we want to consider all $10$ predictors in each split of the tree. The variable `ntree=500` because we want to average over $500$ trees.
 
-Todo (Exercise): Make a similar example, and let students plot the error rate against ntree (e.g. from 1 to 500, like figure 8.8).
 
 ---
 
 Predictive performance of the bagged tree on unseen test data:
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -1293,15 +1299,19 @@ Bagging can also be used for prediction methods (regression and classification) 
     * the vital element is the instability of the prediction method.
     * perturbing the learning set can cause significant changes in the predictor constructed.
 
-\vspace{1mm}
+\vspace{4mm}
 
 @Breiman1996 suggests that these methods should be suitable for bagging:
 
-* Neural nets, classification and regression trees, subset selection in linear regression.
+\vspace{2mm}
 
-\vspace{1mm}
+* Neural nets
+* Classification and regression trees
+* Subset selection in linear regression
 
-However, bagging is not suitable for nearest neighbour classification, since the stability of these methods with respect to perturbations of the data distinguishes them from competitors such as trees and neural nets.
+<!-- \vspace{1mm} -->
+
+<!-- However, bagging is not suitable for nearest neighbour classification, since the stability of these methods with respect to perturbations of the data distinguishes them from competitors such as trees and neural nets. -->
 
 ---
 
@@ -1358,7 +1368,7 @@ The term *important* relates to _total decrease in the node impurity, over split
 
 ### Example 1: Ozone data (regression tree)
 
-
+\vspace{1mm}
 
 
 \scriptsize
@@ -1368,6 +1378,7 @@ ozone.rf <- randomForest(ozone~temp+wind, data=ozone.train, ntree=500, mtry=2,ke
 varImpPlot(ozone.rf,type=2,pch=20)
 ```
 
+\vspace{2mm}
 \normalsize
 This is a bit boring (only two predictors). More interesting example?
 
@@ -1378,6 +1389,8 @@ This is a bit boring (only two predictors). More interesting example?
 \vspace{1mm}
 
 The data relates fuel consumption (`mpg`) to 10 aspects of automobile desing and performance.
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -1409,6 +1422,7 @@ varImpPlot(r.brain.bag,type=2,pch=20)
 \vspace{2mm}
 
 Variable importance based on randomization is calculated using the OOB sample. 
+\vspace{1mm}
 
 * Computations are carried out for one bootstrap sample at a time. 
 * Each time a tree is grown the OOB sample is used to test the predictive power of the tree. 
@@ -1457,7 +1471,7 @@ varImpPlot(mtcars.rf,pch=20,main="")
 
 ## The effect of correlation on the variance of the mean
 
-\vspace{2mm}
+\vspace{3mm}
 
 * The variance of the average of $B$ observations of _i.i.d._ random variables $X$, each with variance $\sigma^2$ is $\frac{\sigma^2}{B}$. Now, suppose we have $B$ observations of a random variable $X$ which are identically distributed, each with mean $\mu$ and variance $\sigma^2$, but not independent. 
 
@@ -1510,6 +1524,8 @@ The general idea is that for very correlated predictors $m$ is chosen to be smal
 
 ### How many trees?
 
+\vspace{2mm}
+
 * The number of trees, $B$, is not a tuning parameter, and the best is to choose it large enough. 
 
 * If $B$ is sufficiently large (three times the number needed for the random forest to stabilize), the OOB error estimate is equivalent to LOOCV [see @Efron_Hastie2016, p. 330].
@@ -1517,9 +1533,10 @@ The general idea is that for very correlated predictors $m$ is chosen to be smal
 ---
 
 ISLR Figure 8.10, gene expression data set with 15 classes and 500 predictors:
+\vspace{-3mm}
 
 \centering
-![ISLR Figure 8.10, gene expression data set with 15 classes and 500 predictors](../../ISLR/Figures/Chapter8/8.10.png)
+![ISLR Figure 8.10, gene expression data set with 15 classes and 500 predictors](../../ISLR/Figures/Chapter8/8.10.png){width=80%}
 
 ---
 
@@ -1528,6 +1545,8 @@ ISLR Figure 8.10, gene expression data set with 15 classes and 500 predictors:
 \vspace{2mm}
 
 We decorrelate the brain injury classification trees by using the `randomForest()` function again, but this time we set `mtry=3` (instead for `mtry=10`). This means that the algorithm only considers three of the predictors in each split. We choose $3$ because we have $10$ predictors in total and $\sqrt{10}\approx 3$. 
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -1544,7 +1563,7 @@ r.brain.rf = randomForest(brain.injury~.,
 
 We check the predictive performance as before:
 
-\tiny
+\scriptsize
 
 ```{r}
 r.brain.rf$confusion
@@ -1580,7 +1599,7 @@ As expected `GCS.15` (GCS=15 at 2h) is a strong predictor along with `bskullf` (
 \tiny
 (borrowed from \url{https://gist.github.com/ramhiser/6dec3067f087627a7a85})
 
-\vspace{1mm}
+\vspace{3mm}
 
 \scriptsize
 
@@ -1656,7 +1675,7 @@ pp
 
 ---
 
-#<a id="boost">Boosting</a>
+# Boosting 
 
 _Boosting_ is an alternative approach for improving the predictions resulting from a decision tree. 
 We will only consider the description of boosting regression trees (and not classification trees) in this course.
@@ -1715,6 +1734,7 @@ head(Boston)
 ---
 
 ### Regression tree
+$~$
 
 \scriptsize
 ```{r}
@@ -1739,6 +1759,7 @@ Remember:
 ---
 
 ### Need to prune?
+$~$
 
 \scriptsize
 
@@ -1854,7 +1875,8 @@ It's interesting to see how the prediction error further decreased with respect 
 
 ---
 
-Variable importance
+### Variable importance
+$~$
 
 \scriptsize
 
@@ -1885,7 +1907,9 @@ To understand what this means, please check again the meaning of the variables b
 
 \vspace{2mm}
 
-And finally, we are boosing the Boston trees!
+And finally, we are boosing the Boston trees! We boost with 5000 trees and allow the interaction depth (number of splits per tree) to be of degree 4:
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -1919,6 +1943,8 @@ plot(boost.boston,i="lstat",ylab="medv")
 * Calculate the MSE on the test set, first for the model with $\lambda=0.001$ (default), then with $\lambda=0.2$.
 
 * We could have done cross-validation to find the best $\lambda$ over a grid, but it seems not to make a big difference.
+
+$~$
 
 \scriptsize
 
