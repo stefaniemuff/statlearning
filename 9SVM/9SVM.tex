@@ -1,8 +1,46 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
 \documentclass[10pt,ignorenonframetext,]{beamer}
+\usepackage{pgfpages}
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
 \setbeamercolor{caption name}{fg=normal text.fg}
 \beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+\centering
+\begin{beamercolorbox}[sep=16pt,center]{part title}
+  \usebeamerfont{part title}\insertpart\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+\centering
+\begin{beamercolorbox}[sep=12pt,center]{part title}
+  \usebeamerfont{section title}\insertsection\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+\centering
+\begin{beamercolorbox}[sep=8pt,center]{part title}
+  \usebeamerfont{subsection title}\insertsubsection\par
+\end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -10,12 +48,9 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
+  \usepackage{unicode-math}
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 \usetheme[]{Singapore}
@@ -24,19 +59,28 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
 \IfFileExists{microtype.sty}{%
-\usepackage{microtype}
+\usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\newif\ifbibliography
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{xcolor}
+\usepackage{hyperref}
 \hypersetup{
             pdftitle={Module 9: Support Vector Machines},
             pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
             colorlinks=true,
             linkcolor=Maroon,
+            filecolor=Maroon,
             citecolor=Blue,
             urlcolor=blue,
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+\newif\ifbibliography
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -46,95 +90,95 @@
 \usepackage{framed}
 \definecolor{shadecolor}{RGB}{248,248,248}
 \newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\ImportTok}[1]{#1}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
-\newcommand{\BuiltInTok}[1]{#1}
-\newcommand{\ExtensionTok}[1]{#1}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
-\newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight0.8\textheight\else\Gin@nat@height\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
 \makeatother
 % Scale images if necessary, so that they will not overflow the page
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-
-% Prevent slide breaks in the middle of a paragraph:
-\widowpenalties 1 10000
-\raggedbottom
-
-\AtBeginPart{
-  \let\insertpartnumber\relax
-  \let\partname\relax
-  \frame{\partpage}
-}
-\AtBeginSection{
-  \ifbibliography
-  \else
-    \let\insertsectionnumber\relax
-    \let\sectionname\relax
-    \frame{\sectionpage}
-  \fi
-}
-\AtBeginSubsection{
-  \let\insertsubsectionnumber\relax
-  \let\subsectionname\relax
-  \frame{\subsectionpage}
-}
-
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{0}
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
 \usepackage{multirow}
 
 \title{Module 9: Support Vector Machines}
+\providecommand{\subtitle}[1]{}
 \subtitle{TMA4268 Statistical Learning V2020}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{March xx, 2020}
+\date{March 6 and 9, 2020}
 
 \begin{document}
 \frame{\titlepage}
 
+\begin{frame}
+
+Last update: March 2, 2020
+
+\end{frame}
+
+\begin{frame}{Acknowledgements}
+\protect\hypertarget{acknowledgements}{}
+
+\begin{itemize}
+\item
+  A lot of this material stems from Mette Langaas and her TAs (in
+  particular Thea Roksv\aa g, who developed the set of slides, but also
+  Mette Langaas and Julia Debik). Thanks to Mette for the permission to
+  use the material!
+\item
+  Some of the figures and slides in this presentation are taken (or are
+  inspired) from James et al. (2013).
+\end{itemize}
+
+\end{frame}
+
 \begin{frame}{Introduction}
-
-This field dates back to the 1990s in computer science, and in this
-presentation we put emphasis on the underlying motivation and
-connections to linear algebra, optimization theory and statistics.
-
-We will only cover classification, and in particular two-class problems.
+\protect\hypertarget{introduction}{}
 
 \begin{block}{Learning material for this module}
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -142,15 +186,8 @@ We will only cover classification, and in particular two-class problems.
   James et al (2013): An Introduction to Statistical Learning. Chapter
   9.\\
 \item
-  \href{https://www.math.ntnu.no/emner/TMA4268/2019v/notes/M9notes.pdf}{Classnotes
-  11.03.2019} (Todo: Replace this by saying there will be classnotes
-  e.g.~on the board)
+  All the material presented on these module slides and in class.
 \end{itemize}
-
-\vspace{2mm} \small
-Some of the figures in this presentation are taken from (or are inspired
-by) James et al. (2013) with permission from the authors: G. James, D.
-Witten, T. Hastie and R. Tibshirani.
 
 \end{block}
 
@@ -158,12 +195,14 @@ Witten, T. Hastie and R. Tibshirani.
 
 \begin{frame}
 
-\begin{block}{Topics}
+\begin{block}{What will you learn?}
+
+\vspace{2mm}
+
+You will get to know
 
 \begin{itemize}
 \tightlist
-\item
-  Motivation
 \item
   Maximal margin classifier
 \item
@@ -174,9 +213,9 @@ Witten, T. Hastie and R. Tibshirani.
   Extensions
 \item
   Comparisons
-\item
-  Summing up
 \end{itemize}
+
+and learn how to apply all that.
 
 \end{block}
 
@@ -185,6 +224,8 @@ Witten, T. Hastie and R. Tibshirani.
 \begin{frame}
 
 \begin{block}{Motivating example}
+
+\vspace{2mm}
 
 \begin{itemize}
 \item
@@ -200,7 +241,7 @@ Witten, T. Hastie and R. Tibshirani.
 
 \begin{center}\includegraphics[width=0.8\linewidth]{9SVM_files/figure-beamer/trees-1} \end{center}
 
-\vspace{-4mm}
+\vspace{0mm}
 
 \begin{itemize}
 \tightlist
@@ -303,7 +344,7 @@ but extensions to more than two classes are briefly mentioned.
 
 \begin{itemize}
 \item
-  We will use the three forests example throughout this module.
+  We will use the three forest examples throughout this module.
 \item
   The two covaraites (\(x_1\), \(x_2\)) are the coordinates of the
   trees.
@@ -328,11 +369,14 @@ but extensions to more than two classes are briefly mentioned.
   the test set.
 \end{itemize}
 
+\vspace{4mm}
+
 \begin{center}\includegraphics[width=0.9\linewidth]{9SVM_files/figure-beamer/trees2-1} \end{center}
 
 \end{frame}
 
 \begin{frame}{Maximal Margin Classifier}
+\protect\hypertarget{maximal-margin-classifier}{}
 
 \begin{block}{Hyperplane}
 
@@ -341,7 +385,9 @@ but extensions to more than two classes are briefly mentioned.
 A \textbf{hyperplane} in p-dimensions is defined as
 
 \[\beta_0+\beta_1 X_1 + \beta_2 X_2 +...+\beta_p X_p=\beta_0+{\boldsymbol x}^T {\boldsymbol \beta}=0.\]
-and is a \(p-1\) dimensional subspace of \(\mathbb{R}^p\). \vspace{3mm}
+and is a \(p-1\) dimensional subspace of \(\mathbb{R}^p\).
+
+\vspace{5mm}
 
 \textbf{Recap}:
 
@@ -385,9 +431,10 @@ If a point \({\boldsymbol x}\) satisfies
   is given by
   \[\frac{1}{||{\boldsymbol\beta}||} (\beta_0 + {\boldsymbol \beta}^\top {\boldsymbol x} )\ ,\]
   where \(||{\boldsymbol\beta}||^2 = \sum_{j=1}^p \beta_j^2=1\) is the
-  (squared) length of \(\boldsymbol \beta\) (Euclidian norm).
+  (squared) length of \(\boldsymbol \beta\) (Euclidian norm), see also
+  \href{https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_plane}{here}.
 \item
-  See board for a graphical description (todo).
+  See board for a graphical description.
 \end{itemize}
 
 \end{frame}
@@ -402,18 +449,18 @@ If a point \({\boldsymbol x}\) satisfies
 \item
   Assume that we have \(n\) training observations with \(p\) predictors
   \[{\boldsymbol x}_1=\left(
-  \begin{array}{c}
-    x_{11} \\
-    \vdots \\
-    x_{1p}
-    \end{array}
-    \right), \ldots, {\boldsymbol x}_n=\left(
-  \begin{array}{c}
-    x_{n1} \\
-    \vdots \\
-    x_{np}
-    \end{array}
-    \right)\]
+    \begin{array}{c}
+      x_{11} \\
+      \vdots \\
+      x_{1p}
+      \end{array}
+  \right), \ldots, {\boldsymbol x}_n=\left(
+    \begin{array}{c}
+      x_{n1} \\
+      \vdots \\
+      x_{np}
+      \end{array}
+  \right)\]
 \item
   The responses \(\boldsymbol{y}\) fall into two classes
   \(y_1,...,y_n \in \{-1,1\}\).
@@ -430,7 +477,9 @@ If a point \({\boldsymbol x}\) satisfies
 
 \begin{block}{Possible hyperplanes (Forest 1)}
 
-\vspace{2mm} Which is ``best''?
+\vspace{2mm}
+
+Which is ``best''?
 
 \begin{center}\includegraphics[width=0.6\linewidth]{9SVM_files/figure-beamer/forest1.1-1} \end{center}
 
@@ -466,25 +515,25 @@ This means that for all observations (all are correctly classified)
 
 \[y_i (\beta_0+{\boldsymbol x}_i^T {\boldsymbol \beta})>0 \ .\]
 
-\vspace{2mm} The hyperplane thus leads to a
+\vspace{2mm}
+
+The hyperplane thus leads to a
 \emph{\textcolor{red}{natural classifier}}, depending on the side of the
 hyperplane where the new observation lies.
 
 The class \(y^*\) of a new observation
 \({\boldsymbol x}^*=(x_1^*,...,x_n^*)\) is assigned depending on the
 value
-\(f({\boldsymbol x}^*)=\beta_0+\beta_1 x_1^* + \beta_2 x_{2}^*+...+\beta_p x_{p}^*\)
+\(f({\boldsymbol x}^*)=\beta_0+\beta_1 x_1^* + \beta_2 x_{2}^*+...+\beta_p x_{p}^*.\)
 
-\begin{center}
-\colorbox{lightgray}{\begin{minipage}{8cm}
-{\bf Hyperplane classifier:}
+\vspace{2mm}
 
-$$y^* = \left\{ \begin{array}{ll}
+\textbf{Hyperplane classifier:}
+
+\[y^* = \left\{ \begin{array}{ll}
 1 \ , & \text{if } f({\boldsymbol x}^*) >0 \ ,\\
 -1 \ , & \text{if } f({\boldsymbol x}^*) < 0 \ .
-\end{array}\right.$$
- \end{minipage}}
-\end{center}
+\end{array}\right.\]
 
 \end{frame}
 
@@ -530,7 +579,8 @@ We have an \textbf{optimization problem} to maximize the width of the
 margin:
 
 \centering
-\includegraphics[width=0.50000\textwidth]{../../ISLR/Figures/Chapter9/9.3.png}
+
+\includegraphics[width=0.5\textwidth,height=\textheight]{../../ISLR/Figures/Chapter9/9.3.png}
 \small
 
 ISLR Figure 9.3
@@ -557,10 +607,9 @@ Observe: \vspace{-2mm}
 \item
   \(y_i(\beta_0+{\boldsymbol x}^T {\boldsymbol \beta})\) is the (signed)
   distance from the \(i\)th point to the hyperplane defined by the
-  \(\beta\)s
-  \footnote{(Todo: Perhaps add exercise about that, or make drawing)}.
+  \(\beta\)s.
 \item
-  We want to find the hyperplane, where each observaton is at least
+  We want to find the hyperplane, where each observation is at least
   \(M\) units away - on the correct side, where \(M\) is as big as
   possible.
 \end{itemize}
@@ -588,31 +637,22 @@ Observe: \vspace{-2mm}
 \begin{itemize}
 \tightlist
 \item
-  It can be shown, see for example Friedman, Hastie, and Tibshirani
-  (2001) Section 4.5.2 (\emph{Optimal Separating Hyperplanes}), that the
+  It can be shown, see for example Hastie, Tibshirani, and Friedman
+  (2009) Section 4.5.2 (\emph{Optimal Separating Hyperplanes}), that the
   optimization problem can be reformulated using Lagrange multipliers
   (primal and dual problem) into a quadratic convex optimization problem
-  that can be solved efficiently.
+  that can be solved
+  efficiently\footnote{Since we in TMA4268 Statistical learning do not require a course in optimization - we do not go into details here.}.
 \end{itemize}
 
-\vspace{2mm}
+\vspace{4mm}
 
-\begin{itemize}
-\tightlist
-\item
-  However, we do of course have to solve the optimization problem to
-  identify the support vectors and the unknown parameters for the
-  separating hyperplane.
-\end{itemize}
+\textbf{Q}: But why do we need to solve the optimization problem, if the
+solution only depends on a few support vectors?
 
-\vspace{2mm}
-
-\begin{itemize}
-\tightlist
-\item
-  Since we in TMA4268 Statistical learning do not require a course in
-  optimization - we do not go into details here.
-\end{itemize}
+\textbf{A}: We do of course have to solve the optimization problem to
+identify the support vectors and the unknown parameters for the
+separating hyperplane.
 
 \end{frame}
 
@@ -620,25 +660,31 @@ Observe: \vspace{-2mm}
 
 \begin{block}{Questions}
 
+\vspace{2mm}
+
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \item
   Explain briefly the idea behind the maximal margin classifier.
 \item
   Is there any tuning parameters that needs to be chosen?
 \item
-  Look at the figure below (Figure 9.5 from ISRL). What could be the
-  problem with the (maximal margin) hyperplane idea?
+  Look at the figure below. What could be the problem with the (maximal
+  margin) hyperplane idea?
 \end{enumerate}
 
 \centering
-\includegraphics[width=0.80000\textwidth]{../../ISLR/Figures/Chapter9/9.5.png}
+
+\includegraphics[width=0.8\textwidth,height=\textheight]{../../ISLR/Figures/Chapter9/9.5.png}
+\small
+
+ISLR Figure 9.5
 
 \end{block}
 
 \end{frame}
 
 \begin{frame}{Support Vector Classifiers}
+\protect\hypertarget{support-vector-classifiers}{}
 
 For some data sets a separating hyperplane does not exist, the data set
 is \emph{non-separable}. What then? Forest 2:
@@ -660,7 +706,7 @@ training data.
   overfitting).
 \item
   Even when the data are linear
-  separable\footnote{in particular when $n\leq p+1$, we can always find a separating hyperplane, unless there are exact feature ties across the class barrier, see Efron and Hastie, 2016},
+  separable\footnote{in particular when $n\leq p+1$, we can always find a separating hyperplane, unless there are exact feature ties across the class barrier, see Efron and Hastie, 2016.},
   the separating hyperplane might not be the ``best'' hyperplane for us
   in terms of robustness.
 \item
@@ -731,7 +777,8 @@ representation of the soft margin classifier idea, where the violations
 (estimates of \(\epsilon_i\)) are shown in green:
 
 \centering
-\includegraphics[width=0.80000\textwidth]{../../casi/19.3.png}
+
+\includegraphics[width=0.8\textwidth,height=\textheight]{../../casi/19.3.png}
 
 \end{frame}
 
@@ -750,8 +797,8 @@ before:
   If \(f({\boldsymbol x}^*)>0\) then \(y^*=1\).
 \end{itemize}
 
-More on solving the optimization problem: Friedman, Hastie, and
-Tibshirani (2001) Section 12.2.1 (primal and dual Lagrange problem,
+More on solving the optimization problem: Hastie, Tibshirani, and
+Friedman (2009) Section 12.2.1 (primal and dual Lagrange problem,
 quadratic convex problem).
 
 \end{frame}
@@ -777,8 +824,9 @@ quadratic convex problem).
 
 \begin{block}{Questions}
 
+\vspace{2mm}
+
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \item
   Should the variables be standardized before used with this method?
 \item
@@ -808,7 +856,8 @@ right). As C decreases the tolerance for observations being on the wrong
 side of the margin decreases and the marin narrows.
 
 \centering
-\includegraphics[width=0.60000\textwidth]{../../ISLR/Figures/Chapter9/9.7.png}
+
+\includegraphics[width=0.6\textwidth,height=\textheight]{../../ISLR/Figures/Chapter9/9.7.png}
 
 \end{block}
 
@@ -1101,6 +1150,7 @@ can access it as follows:
 \end{Shaded}
 
 \normalsize
+
 Next, we want to predict the class label of the seeds in the test set.
 We use the \texttt{predict} function and make a confusion table:
 
@@ -1141,6 +1191,7 @@ points. Why?
 \end{frame}
 
 \begin{frame}{Support Vector Machines}
+\protect\hypertarget{support-vector-machines}{}
 
 \begin{itemize}
 \item
@@ -1209,7 +1260,8 @@ points. Why?
 (ISRL Figure 9.9)
 
 \centering
-\includegraphics[width=0.80000\textwidth]{../../ISLR/Figures/Chapter9/9.9.png}
+
+\includegraphics[width=0.8\textwidth,height=\textheight]{../../ISLR/Figures/Chapter9/9.9.png}
 
 \flushleft
 
@@ -1441,7 +1493,8 @@ Study Figures 19.5 and 19.6 (page 383) in Efron and Hastie (2016) to see
 how the radial kernel can make smooth functions.
 
 \centering
-\includegraphics[width=0.70000\textwidth]{../../casi/19.6.png}
+
+\includegraphics[width=0.7\textwidth,height=\textheight]{../../casi/19.6.png}
 
 \flushleft
 \small
@@ -1492,7 +1545,7 @@ Training errors as ROC and AUC.
 
 \centering
 
-\includegraphics[width=0.90000\textwidth]{../../ISLR/Figures/Chapter9/9.10.png}
+\includegraphics[width=0.9\textwidth,height=\textheight]{../../ISLR/Figures/Chapter9/9.10.png}
 
 \textbf{Q}: How are the ROC curves formed?
 
@@ -1505,7 +1558,8 @@ Training errors as ROC and AUC.
 Heart data - test error.
 
 \centering
-\includegraphics[width=0.90000\textwidth]{../../ISLR/Figures/Chapter9/9.11.png}
+
+\includegraphics[width=0.9\textwidth,height=\textheight]{../../ISLR/Figures/Chapter9/9.11.png}
 
 \end{frame}
 
@@ -1566,8 +1620,8 @@ non-linear decision boundary:
 \begin{verbatim}
 ## 
 ## Call:
-## svm(formula = y ~ ., data = train3, kernel = "radial", gamma = 1, 
-##     cost = 10, scale = FALSE)
+## svm(formula = y ~ ., data = train3, kernel = "radial", cost = 10, 
+##     scale = FALSE)
 ## 
 ## 
 ## Parameters:
@@ -1575,9 +1629,9 @@ non-linear decision boundary:
 ##  SVM-Kernel:  radial 
 ##        cost:  10 
 ## 
-## Number of Support Vectors:  31
+## Number of Support Vectors:  42
 ## 
-##  ( 16 15 )
+##  ( 22 20 )
 ## 
 ## 
 ## Number of Classes:  2 
@@ -1598,8 +1652,8 @@ We could also try with a polynomial kernel with degree 4 as follows:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{svmfit_kernel2 =}\StringTok{ }\KeywordTok{svm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ train3, }\DataTypeTok{kernel =} \StringTok{"polynomial"}\NormalTok{, }
-    \DataTypeTok{degree =} \DecValTok{4}\NormalTok{, }\DataTypeTok{cost =} \FloatTok{1e+05}\NormalTok{, }\DataTypeTok{scale =} \OtherTok{FALSE}\NormalTok{)}
+\NormalTok{svmfit_kernel2 =}\StringTok{ }\KeywordTok{svm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ train3, }\DataTypeTok{kernel =} \StringTok{"polynomial"}\NormalTok{, }\DataTypeTok{degree =} \DecValTok{4}\NormalTok{, }
+    \DataTypeTok{cost =} \FloatTok{1e+05}\NormalTok{, }\DataTypeTok{scale =} \OtherTok{FALSE}\NormalTok{)}
 \KeywordTok{plot}\NormalTok{(svmfit_kernel2, train3, }\DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"lightcoral"}\NormalTok{, }\StringTok{"lightgreen"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
@@ -1733,11 +1787,14 @@ plot the results:
 ##      1   1 5
 \end{verbatim}
 
-\normalsize  Only one seed is misclassified.
+\normalsize
+
+Only one seed is misclassified.
 
 \end{frame}
 
 \begin{frame}[fragile]{Extensions}
+\protect\hypertarget{extensions}{}
 
 \begin{block}{More than two classes}
 
@@ -1763,6 +1820,7 @@ What if we have \(k\) classes? Two popular approaches:
 \end{frame}
 
 \begin{frame}{Comparisons: SVM and logistic regression}
+\protect\hypertarget{comparisons-svm-and-logistic-regression}{}
 
 It is possible to write the optimization problem for the support vector
 classifier as a ``loss''+``penalty'':
@@ -1796,7 +1854,8 @@ regression using the same set of predictors \emph{look very similar}:
 \vspace{-2mm}
 
 \centering
-\includegraphics[width=0.90000\textwidth]{../../ISLR/Figures/Chapter9/9.12.png}
+
+\includegraphics[width=0.9\textwidth,height=\textheight]{../../ISLR/Figures/Chapter9/9.12.png}
 
 \end{frame}
 
@@ -1818,8 +1877,8 @@ For comparison a logistic regression (with ridge penalty) would be
   \(p_i(1-p_i)\) (where \(p_i\) is probability for class 1), that fade
   smoothly with distance to the decision boundary
 \item
-  Note: It is possible to extend the logistic regression to include
-  non-linear terms, and ridge penalty.
+  Of course, is possible to extend the logistic regression to include
+  non-linear terms, and also a ridge penalty.
 \end{itemize}
 
 \end{frame}
@@ -1840,8 +1899,8 @@ For comparison a logistic regression (with ridge penalty) would be
   class.\footnote{Todo: It could be nice to have an exercise that compares SVM with logistic regression, with and without ridge penalty, and perhaps also LD; or this can be saved for compulsory exercise 2}
 \item
   If class boundaries are non-linear then SVM is more popular, but
-  kernel versions of logistic regression is possible, but more
-  computationally expensive.
+  \emph{kernel versions of logistic regression} are also possible, but
+  more computationally expensive (and traditionally less used).
 \end{itemize}
 
 \end{block}
@@ -1849,15 +1908,15 @@ For comparison a logistic regression (with ridge penalty) would be
 \end{frame}
 
 \begin{frame}{Summing up}
+\protect\hypertarget{summing-up}{}
 
 \begin{itemize}
-\tightlist
 \item
-  We use methods from computer science, not probability models - but
-  looks for a separating hyperplane in (an extended) feature space in
-  the classification setting.
+  We use methods from computer science, not probability models, but it
+  also looks for a separating hyperplane in (an extended) feature space
+  in the classification setting.
 \item
-  SVM is a widely successful and a ``must have tool''
+  SVM is a widely successful and a ``must have tool''.
 \item
   Interpretation of SVM: all features are included and maybe not so easy
   to interpret (remember ridge-type penalty does not shrink to zero).
@@ -1872,6 +1931,7 @@ For comparison a logistic regression (with ridge penalty) would be
 \end{frame}
 
 \begin{frame}{Further reading}
+\protect\hypertarget{further-reading}{}
 
 \begin{itemize}
 \item
@@ -1882,7 +1942,7 @@ For comparison a logistic regression (with ridge penalty) would be
   \href{https://rpubs.com/ppaquay/65566}{Solutions to exercises in the
   book, chapter 9}
 \item
-  Chapters 12.1-12.3 in Friedman, Hastie, and Tibshirani (2001)
+  Chapters 12.1-12.3 in Hastie, Tibshirani, and Friedman (2009)
 \item
   Chapter 19 (Support-Vector Machines and Kernel Methods) in Efron and
   Hastie (2016).
@@ -1891,21 +1951,22 @@ For comparison a logistic regression (with ridge penalty) would be
 \end{frame}
 
 \begin{frame}{References}
+\protect\hypertarget{references}{}
 
 \hypertarget{refs}{}
-\hypertarget{ref-casi}{}
+\leavevmode\hypertarget{ref-casi}{}%
 Efron, Bradley, and Trevor Hastie. 2016. \emph{Computer Age Statistical
 Inference - Algorithms, Evidence, and Data Science}. Cambridge
 University Press.
 
-\hypertarget{ref-ESL}{}
-Friedman, Jerome, Trevor Hastie, and Robert Tibshirani. 2001. \emph{The
-Elements of Statistical Learning}. Vol. 1. Springer series in statistics
-New York.
+\leavevmode\hypertarget{ref-ESL}{}%
+Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2009. \emph{The
+Elements of Statistical Learning}. 2nd ed. Vol. 1. Springer series in
+statistics New York.
 
-\hypertarget{ref-ISL}{}
-James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani.
-2013. \emph{An Introduction to Statistical Learning}. Vol. 112.
+\leavevmode\hypertarget{ref-james.etal}{}%
+James, G., D. Witten, T. Hastie, and R. Tibshirani. 2013. \emph{An
+Introduction to Statistical Learning with Applications in R}. New York:
 Springer.
 
 \end{frame}
