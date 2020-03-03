@@ -153,7 +153,7 @@
 
 \begin{frame}
 
-Last update: March 2, 2020
+Last update: March 3, 2020
 
 \end{frame}
 
@@ -809,9 +809,12 @@ quadratic convex problem).
 \item
   The hyperplane has the property that it \textbf{only} depends on the
   observations that \textbf{either lie on the margin or on the wrong
-  side of the margin}.
+  side of the margin}. In fact, a noteworthy property of the solution is
+  that \[\hat{\beta}= \sum_{i\in \mathcal{S}} \hat\alpha_i x_i \ ,\]
+  where \(\mathcal{S}\) is a \emph{\textcolor{red}{support set}}.
 \item
-  These observations are called our \textbf{support vectors}.
+  The observations \(x_i, i \in \mathcal{S}\) are called our
+  \textbf{support vectors}.
 \item
   The observations on the correct side of the margin do not affect the
   support vectors. The length of distance for the support vectors to the
@@ -1090,7 +1093,8 @@ Next, we set \texttt{cost=100}: \vspace{2mm}
 \normalsize
 
 Thus with \texttt{cost=100} we have 31 support vectors, i.e the width of
-the margin is decreased.
+the margin is decreased (remember: higher cost = lower budget to violate
+the boundaries).
 
 \end{frame}
 
@@ -1103,6 +1107,8 @@ the margin is decreased.
 The \texttt{cost} is a tuning parameter. By using the \texttt{tune()}
 function we can perform 10-fold cross-validation and find the
 cost-parameter that gives the lowest cross-validation error:
+
+\vspace{2mm}
 
 \tiny
 
@@ -1272,6 +1278,8 @@ points. Why?
 
 \flushleft
 
+\vspace{2mm}
+
 \begin{itemize}
 \item
   \textbf{Left}: expanding feature space to include cubic polynomials
@@ -1290,22 +1298,13 @@ points. Why?
 
 \begin{block}{Inner products}
 
-\begin{itemize}
-\item
-  Remember the the optimisation problem of finding the support vector
-  classifier hyperplane. We have \emph{not} explained how to solve the
-  problem because this is outside the scope of this course.
-\item
-  Remember classification rule \(f({\boldsymbol x}^*)<0\) versus
-  \(f({\boldsymbol x}^*)>0\) to classify as \(y^* = -1\) or \(1\),
-  respectively.
-\item
-  It can be \emph{shown} (using optimization theory) that the solution
-  to the support vector classifier problem at a new observation
-  \({\boldsymbol x}^*\), can be expressed as \[
-  f({\boldsymbol x}^*)=\beta_0 + \sum_{i=1}^n \alpha_i \langle {\boldsymbol x}^*,{\boldsymbol x}_i \rangle
-  \] where \(\alpha_i\) is some parameter and \(i=1,...,n\).
-\end{itemize}
+\vspace{2mm}
+
+The \emph{\textcolor{red}{inner product}} between two observations \(i\)
+and \(i'\) is defined as \[
+\langle {\boldsymbol x}_i , {\boldsymbol x}_{i'}\rangle =\sum_{j=1}^p x_{ij} x_{i' j} \ .
+\] The inner product encodes for the \emph{\textcolor{red}{similarity}}
+between observations.
 
 \end{block}
 
@@ -1313,49 +1312,56 @@ points. Why?
 
 \begin{frame}
 
-\begin{center}
-\colorbox{lightgray}{\begin{minipage}{10cm}
-The {\bf inner product} between two observations $i$ and $i'$ is defined as
-$$
-\langle {\boldsymbol x}_i , {\boldsymbol x}_{i'}\rangle =\sum_{j=1}^p x_{ij} x_{i' j} \ .
-$$
-The inner product encodes for the \emph{similarity} between observations.
-\end{minipage}}
-\end{center}
-
 \begin{itemize}
 \item
-  Thus all we need is to know to classify a new observations is the
-  \textbf{similarity} to all the training observations.
+  Remember the the optimisation problem of finding the support vector
+  classifier hyperplane. We have \emph{not} explained how to solve the
+  problem because this is outside the scope of this course. \vspace{1mm}
 \item
-  Moreover, it then turns out that to estimate the parameters
-  \(\beta_0,\alpha_1,...,\alpha_n\) this can be based on the
-  \({n \choose 2}\) inner products
-  \(\langle {\boldsymbol x}_i,{\boldsymbol x}_i' \rangle\) between all
-  pair of training observations (and their correct
-  class)\footnote{For the interested reader: See Section 12.2.1 in James et al (2013), or Eq. 19.22 and 19.23 of Efron and Hastie (2016).}.
+  But we said that
+  \[\hat{\beta}= \sum_{i\in \mathcal{S}} \hat\alpha_i x_i \] for a
+  support set \(\mathcal{S}\). \vspace{1mm}
+\end{itemize}
+
+\begin{itemize}
+\tightlist
+\item
+  Thus the solution function \(\hat{f}\) to the support vector
+  classifier problem at a new observation \({\boldsymbol x}\), can be
+  expressed as \begin{align*}
+  \hat{f}(x) & = \hat{\beta}_0 + x^\top \hat\beta  \\
+   & = \hat\beta_0 + \sum_{i \in \mathcal{S}} \hat\alpha_i \langle x,x_i \rangle \ ,
+  \end{align*} where \(\alpha_i\) is some parameter and \(i=1,...,n\).
 \end{itemize}
 
 \end{frame}
 
 \begin{frame}
 
-Even better\ldots{}
-
 \begin{itemize}
 \item
-  It turns out that \(\alpha_i=0\) for observations \(i\) that are
-  \emph{not} the support vectors. Alternatively, we could say that
-  \(\alpha_i \neq 0\) define the support vectors.
+  This implies that to estimate the parameters
+  \(\beta_0,\alpha_1,...,\alpha_n\) we only need to know the
+  \({n \choose 2}\) inner products
+  \(\langle {\boldsymbol x}_i,{\boldsymbol x}_i' \rangle\) between all
+  pair of training observations (and their correct
+  class)\footnote{For the interested reader: See Section 12.2.1 in James et al (2013), or Eq. 19.22 and 19.23 of Efron and Hastie (2016).}.
 \item
-  Thus, we only need the inner product between the new observation and
-  the observations corresponding to support vectors to classify a new
-  observation, and
+  Even better, \(\alpha_i \neq 0\) for the support vectors \(x_i\)
+  (\(i \in \mathcal{S}\)), while \(\alpha_i=0\) for all the rest.
 \end{itemize}
 
-\[
-f({\boldsymbol x})=\beta_0 + \sum_{i \in \mathcal{S}} \alpha_i \langle {\boldsymbol x}, {\boldsymbol x}_i\rangle,
-\] where \(\mathcal{S}\) contains the indices of the support points.
+\(~\)
+
+This will bring us to another idea:
+
+\begin{itemize}
+\tightlist
+\item
+  All we need is to know to classify a new observations is the
+  \textbf{similarity} to all the training observations, where similarity
+  could be defined in any way.
+\end{itemize}
 
 \end{frame}
 
@@ -1380,23 +1386,22 @@ f({\boldsymbol x})=\beta_0 + \sum_{i \in \mathcal{S}} \alpha_i \langle {\boldsym
 
 \begin{block}{Kernels}
 
+\(~\)
+
 \begin{itemize}
 \tightlist
 \item
   Idea: replace the innerproduct
   \(\langle {\boldsymbol x}_i, {\boldsymbol x}_{i'}\rangle\) as measure
-  of similarity by a more general concept:
+  of similarity by a more general concept: Replace
+  \(\langle {\boldsymbol x}_i, {\boldsymbol x}_{i'}\rangle\) by a
+  \emph{\textcolor{red}{kernel}}
+  \(K({\boldsymbol x}_i,{\boldsymbol x}_{i'})\), such that \[
+  f({\boldsymbol x})=\beta_0 + \sum_{i \in \mathcal{S}} \alpha_i K({\boldsymbol x},{\boldsymbol x}_i).
+  \]
 \end{itemize}
 
-\begin{center}
-\colorbox{lightgray}{\begin{minipage}{10cm}
-Replace $\langle {\boldsymbol x}_i, {\boldsymbol x}_{i'}\rangle$ by a {\bf kernel} 
-$K({\boldsymbol x}_i,{\boldsymbol x}_{i'})$, such that
-$$
-f({\boldsymbol x})=\beta_0 + \sum_{i \in \mathcal{S}} \alpha_i K({\boldsymbol x},{\boldsymbol x}_i).
-$$
-\end{minipage}}
-\end{center}
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -1432,7 +1437,7 @@ $$
 \item
   We only need to compute \(K(x_i,x_{i'})\) for the \({n \choose 2}\)
   distinct pairs -- without explicitly working in an enlarged feature
-  space. This is very useful when there are \emph{many featuers}, i.e.,
+  space. This is very useful when there are \emph{many features}, i.e.,
   \(p\geq n\).
 \end{itemize}
 
@@ -1441,6 +1446,8 @@ $$
 \begin{frame}
 
 \begin{block}{The radial kernel}
+
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -1521,12 +1528,14 @@ Age Statistical Inference}
 
 We now merge our optimization problem (from our support vector
 classifier) with our kernel representation \(f({\boldsymbol x})\) to get
-the \vspace{2mm}
+the
 
-\{\bf Support Vector Machine (SVM)\}
+\vspace{4mm}
+
+\textbf{Support Vector Machine (SVM)}
 
 \[\mathrm{maximize}_{\beta_0,\alpha_1,...,\alpha_n,\epsilon_1,...,\epsilon_n,} \quad M \]
-\[y_i(f({\boldsymbol x}_i))\geq M(1-\epsilon_i) \quad  \forall i=1,...,n \ ,\]
+\[y_i \cdot f({\boldsymbol x}_i)\geq M(1-\epsilon_i) \quad  \forall i=1,...,n \ ,\]
 \[\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C \ ,\]
 
 where
@@ -1548,9 +1557,13 @@ Training errors as ROC and AUC.
 
 \vspace{1mm}
 
-\centering
+\(~\) \centering
 
-\includegraphics[width=0.9\textwidth,height=\textheight]{../../ISLR/Figures/Chapter9/9.10.png}
+\includegraphics[width=0.8\textwidth,height=\textheight]{../../ISLR/Figures/Chapter9/9.10.png}
+
+\(~\)
+
+\flushleft
 
 \textbf{Q}: How are the ROC curves formed?
 
@@ -1564,7 +1577,7 @@ Heart data - test error.
 
 \centering
 
-\includegraphics[width=0.9\textwidth,height=\textheight]{../../ISLR/Figures/Chapter9/9.11.png}
+\includegraphics[width=0.8\textwidth,height=\textheight]{../../ISLR/Figures/Chapter9/9.11.png}
 
 \end{frame}
 
@@ -1579,6 +1592,8 @@ To illustrate the SVM we use the third training dataset
 \texttt{svm} function as before. However, we now set
 \texttt{kernel=\textquotesingle{}radial\textquotesingle{}} as we want a
 non-linear decision boundary:
+
+\(~\)
 
 \footnotesize
 
@@ -1653,6 +1668,8 @@ non-linear decision boundary:
 
 We could also try with a polynomial kernel with degree 4 as follows:
 
+\(~\)
+
 \scriptsize
 
 \begin{Shaded}
@@ -1711,6 +1728,8 @@ decision boundary seems like a good idea. Thus, we proceed with
 \texttt{kernel=\textquotesingle{}radial\textquotesingle{}}, and use the
 \texttt{tune()} function to find the optimal tuning parameter \(C\):
 
+\(~\)
+
 \tiny
 
 \begin{Shaded}
@@ -1756,6 +1775,8 @@ The optimal \(C\) is 100. Next, we predict the class label of the seeds
 in the test set with a model with \(C=100\), make a confusion table and
 plot the results:
 
+\(~\)
+
 \scriptsize
 
 \begin{Shaded}
@@ -1765,11 +1786,7 @@ plot the results:
 \end{Highlighting}
 \end{Shaded}
 
-\end{frame}
-
-\begin{frame}
-
-\scriptsize
+\(~\)
 
 \begin{center}\includegraphics[width=0.9\linewidth]{9SVM_files/figure-beamer/forest3.5-1} \end{center}
 
@@ -1805,19 +1822,19 @@ Only one seed is misclassified.
 
 \vspace{2mm}
 
-What if we have \(k\) classes? Two popular approaches:
+What if we have \(k\) classes? Two popular approaches: \vspace{1mm}
 
 \begin{itemize}
 \item
-  OVA: one-versus-all. Fit \(k\) different two-class SVMs
-  \(f_k({\boldsymbol x})\) where, each time, one class is compared to
-  the ensemble of all other classes. Classify a test observation to the
-  class where \(f_k({\boldsymbol x}^*)\) is largest.
+  OVA: \emph{\textcolor{red}{one-versus-all}}. Fit \(k\) different
+  two-class SVMs \(f_k({\boldsymbol x})\) where, each time, one class is
+  compared to the ensemble of all other classes. Classify a test
+  observation to the class where \(f_k({\boldsymbol x}^*)\) is largest.
 \item
-  OVO: one-versus-one. \texttt{libsvm} uses this approach, in which
-  \(k(k-1)/2\) binary classifiers are trained; the appropriate class is
-  found by a voting scheme (the class that wins the most pairwise
-  competitions are chosen).
+  OVO: \emph{\textcolor{red}{one-versus-one}}. \texttt{libsvm} uses this
+  approach, in which \(k(k-1)/2\) binary classifiers are trained; the
+  appropriate class is found by a voting scheme (the class that wins the
+  most pairwise competitions are chosen).
 \end{itemize}
 
 \end{block}
@@ -1860,7 +1877,7 @@ regression using the same set of predictors \emph{look very similar}:
 
 \centering
 
-\includegraphics[width=0.9\textwidth,height=\textheight]{../../ISLR/Figures/Chapter9/9.12.png}
+\includegraphics[width=0.6\textwidth,height=\textheight]{../../ISLR/Figures/Chapter9/9.12.png}
 
 \end{frame}
 
@@ -1882,7 +1899,7 @@ For comparison a logistic regression (with ridge penalty) would be
   \(p_i(1-p_i)\) (where \(p_i\) is probability for class 1), that fade
   smoothly with distance to the decision boundary
 \item
-  Of course, is possible to extend the logistic regression to include
+  Of course, it is possible to extend the logistic regression to include
   non-linear terms, and also a ridge penalty.
 \end{itemize}
 
@@ -1891,6 +1908,8 @@ For comparison a logistic regression (with ridge penalty) would be
 \begin{frame}
 
 \begin{block}{When to use SVM?}
+
+\(~\)
 
 \begin{itemize}
 \item
@@ -1947,10 +1966,12 @@ For comparison a logistic regression (with ridge penalty) would be
   \href{https://rpubs.com/ppaquay/65566}{Solutions to exercises in the
   book, chapter 9}
 \item
-  Chapters 12.1-12.3 in Hastie, Tibshirani, and Friedman (2009)
+  \href{https://web.stanford.edu/~hastie/ElemStatLearn}{Chapters
+  12.1-12.3} in Hastie, Tibshirani, and Friedman (2009).
 \item
-  Chapter 19 (Support-Vector Machines and Kernel Methods) in Efron and
-  Hastie (2016).
+  \href{https://web.stanford.edu/~hastie/CASI/}{Chapter 19
+  (Support-Vector Machines and Kernel Methods)} in Efron and Hastie
+  (2016).
 \end{itemize}
 
 \end{frame}

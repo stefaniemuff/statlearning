@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "March 6 and 9, 2020"
 fontsize: 10pt
 output:
-  # beamer_presentation:
-  #   keep_tex: yes
-  #   fig_caption: false
-  #   latex_engine: xelatex
-  #   theme: "Singapore"
-  #   colortheme: "default"
-  #   font: "serif"
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+    theme: "Singapore"
+    colortheme: "default"
+    font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -33,7 +33,7 @@ whichformat="latex"
 
 ---
 
-Last update: March 2, 2020
+Last update: March 3, 2020
 
 --- 
 
@@ -548,9 +548,11 @@ More on solving the optimization problem: @ESL Section 12.2.1 (primal and dual L
 ---
 
 
-* The hyperplane has the property that it **only** depends on the observations that **either lie on the margin or on the wrong side of the margin**. 
+* The hyperplane has the property that it **only** depends on the observations that **either lie on the margin or on the wrong side of the margin**. In fact, a noteworthy property of the solution is that 
+$$\hat{\beta}= \sum_{i\in \mathcal{S}} \hat\alpha_i x_i \ ,$$
+where $\mathcal{S}$ is a _\textcolor{red}{support set}_.
 
-* These observations are called our **support vectors**. 
+* The observations $x_i, i \in \mathcal{S}$ are called our **support vectors**. 
 
 * The observations on the correct side of the margin do not affect the support vectors. The length of distance for the support vectors to the class boundary is proportional to the slacks.
 
@@ -687,9 +689,10 @@ plot(svmfit_linear2,train2,col=c("lightcoral","lightgreen"))
 ```{r}
 summary(svmfit_linear2)
 ```
+
 \normalsize
 
-Thus with `cost=100` we have 31 support vectors, i.e the width of the margin is decreased. 
+Thus with `cost=100` we have 31 support vectors, i.e the width of the margin is decreased (remember: higher cost = lower budget to violate the boundaries). 
 
 ---
 
@@ -698,6 +701,8 @@ Thus with `cost=100` we have 31 support vectors, i.e the width of the margin is 
 \vspace{2mm}
 
 The `cost` is a tuning parameter. By using the `tune()` function we can perform 10-fold cross-validation and find the cost-parameter that gives the lowest cross-validation error:
+
+\vspace{2mm}
 
 \tiny
 
@@ -810,6 +815,8 @@ points(forest3[forest3[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
 
 \flushleft
 
+\vspace{2mm}
+
 * **Left**: expanding feature space to include cubic polynomials ($x_1,x_2,x_1x_2,x_1^2,x_2^2,x_1^2x_2,x_1x_2^2x_1^3,x_2^3$, 9 parameters to estimate in addition to intercept), and also observe the margins (interpretation?).
 
 * **Right**: radial basis function kernel - wait a bit.
@@ -820,47 +827,59 @@ points(forest3[forest3[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
 
 ## Inner products
 
-* Remember the the optimisation problem of finding the support vector classifier hyperplane. We have _not_ explained how to solve the problem because this is outside the scope of this course. 
-
-* Remember classification rule  $f({\boldsymbol x}^*)<0$ versus $f({\boldsymbol x}^*)>0$ to classify as $y^* = -1$ or $1$, respectively.
-
-* It can be _shown_ (using optimization theory) that the solution to the support vector classifier problem at a new observation ${\boldsymbol x}^*$, can be expressed as
-$$
-f({\boldsymbol x}^*)=\beta_0 + \sum_{i=1}^n \alpha_i \langle {\boldsymbol x}^*,{\boldsymbol x}_i \rangle
-$$
-where $\alpha_i$ is some parameter and $i=1,...,n$. 
+\vspace{2mm}
 
 
-
----
-
-\begin{center}
-\colorbox{lightgray}{\begin{minipage}{10cm}
-The {\bf inner product} between two observations $i$ and $i'$ is defined as
+The _\textcolor{red}{inner product}_ between two observations $i$ and $i'$ is defined as
 $$
 \langle {\boldsymbol x}_i , {\boldsymbol x}_{i'}\rangle =\sum_{j=1}^p x_{ij} x_{i' j} \ .
 $$
-The inner product encodes for the \emph{similarity} between observations.
-\end{minipage}}
-\end{center}
-
-* Thus all we need is to know to classify a new observations is the **similarity** to all the training observations. 
-
-* Moreover, it then turns out that to estimate the parameters $\beta_0,\alpha_1,...,\alpha_n$ this can be based on the ${n \choose 2}$ inner products $\langle {\boldsymbol x}_i,{\boldsymbol x}_i' \rangle$ between all pair of training observations (and their correct class)\footnote{For the interested reader: See Section 12.2.1 in James et al (2013), or Eq. 19.22 and 19.23 of Efron and Hastie (2016).}.
+The inner product encodes for the _\textcolor{red}{similarity}_ between observations.
 
 ---
 
-Even better...
+* Remember the the optimisation problem of finding the support vector classifier hyperplane. We have _not_ explained how to solve the problem because this is outside the scope of this course. 
+\vspace{1mm}
 
-* It turns out that $\alpha_i=0$ for observations $i$ that are _not_ the support vectors. Alternatively, we could say that $\alpha_i \neq 0$ define the support vectors.
+* But we said that $$\hat{\beta}= \sum_{i\in \mathcal{S}} \hat\alpha_i x_i $$
+for a support set $\mathcal{S}$.
+\vspace{1mm}
+
+<!-- * Remember classification rule  $f({\boldsymbol x}^*)<0$ versus $f({\boldsymbol x}^*)>0$ to classify as $y^* = -1$ or $1$, respectively. -->
+
+* Thus the solution function $\hat{f}$ to the support vector classifier problem at a new observation ${\boldsymbol x}$, can be expressed as
+\begin{align*}
+\hat{f}(x) & = \hat{\beta}_0 + x^\top \hat\beta  \\
+ & = \hat\beta_0 + \sum_{i \in \mathcal{S}} \hat\alpha_i \langle x,x_i \rangle \ ,
+\end{align*}
+where $\alpha_i$ is some parameter and $i=1,...,n$. 
+
+<!-- * It can be _shown_ (using optimization theory) that the solution to the support vector classifier problem at a new observation ${\boldsymbol x}^*$, can be expressed as -->
+<!-- $$ -->
+<!-- f({\boldsymbol x}^*)=\beta_0 + \sum_{i=1}^n \alpha_i \langle {\boldsymbol x}^*,{\boldsymbol x}_i \rangle -->
+<!-- $$ -->
 
 
-* Thus, we only need the inner product between the new observation and the observations corresponding to support vectors to classify a new observation, and
 
-$$
-f({\boldsymbol x})=\beta_0 + \sum_{i \in \mathcal{S}} \alpha_i \langle {\boldsymbol x}, {\boldsymbol x}_i\rangle,
-$$
-where $\mathcal{S}$ contains the indices of the support points. 
+
+---
+
+* This implies that to estimate the parameters $\beta_0,\alpha_1,...,\alpha_n$ we only need to know the ${n \choose 2}$ inner products $\langle {\boldsymbol x}_i,{\boldsymbol x}_i' \rangle$ between all pair of training observations (and their correct class)\footnote{For the interested reader: See Section 12.2.1 in James et al (2013), or Eq. 19.22 and 19.23 of Efron and Hastie (2016).}.
+
+* Even better,  $\alpha_i \neq 0$ for the support vectors $x_i$ ($i \in \mathcal{S}$), while $\alpha_i=0$ for all the rest.
+
+$~$
+
+This will bring us to another idea:
+
+* All we need is to know to classify a new observations is the **similarity** to all the training observations, where similarity could be defined in any way.
+
+<!-- * Thus, we only need the inner product between the new observation and the observations corresponding to support vectors to classify a new observation, and -->
+
+<!-- $$ -->
+<!-- f({\boldsymbol x})=\beta_0 + \sum_{i \in \mathcal{S}} \alpha_i \langle {\boldsymbol x}, {\boldsymbol x}_i\rangle, -->
+<!-- $$ -->
+<!-- where $\mathcal{S}$ contains the indices of the support points.  -->
 
 
 ---
@@ -878,17 +897,15 @@ where $\mathcal{S}$ contains the indices of the support points.
 
 ## Kernels
 
-* Idea: replace the innerproduct $\langle {\boldsymbol x}_i, {\boldsymbol x}_{i'}\rangle$ as measure of similarity by a more general concept:
+$~$
 
-\begin{center}
-\colorbox{lightgray}{\begin{minipage}{10cm}
-Replace $\langle {\boldsymbol x}_i, {\boldsymbol x}_{i'}\rangle$ by a {\bf kernel} 
+* Idea: replace the innerproduct $\langle {\boldsymbol x}_i, {\boldsymbol x}_{i'}\rangle$ as measure of similarity by a more general concept: Replace $\langle {\boldsymbol x}_i, {\boldsymbol x}_{i'}\rangle$ by a _\textcolor{red}{kernel}_
 $K({\boldsymbol x}_i,{\boldsymbol x}_{i'})$, such that
 $$
 f({\boldsymbol x})=\beta_0 + \sum_{i \in \mathcal{S}} \alpha_i K({\boldsymbol x},{\boldsymbol x}_i).
 $$
-\end{minipage}}
-\end{center}
+
+$~$
 
 * For the familiar linear case, the kernel is simply the inner product (_linear kernel_) $K({\boldsymbol x}_i,{\boldsymbol x}_i')=\sum_{j=1}^p x_{ij}x_{i'j}$. 
 
@@ -910,11 +927,13 @@ which computes the inner products needed for $d$-dimensional polynomials. Try it
 
 * The nice thing here is that we only need to calculate the kernels, _not the basis functions_.
 
-* We only need to compute $K(x_i,x_{i'})$ for the ${n \choose 2}$ distinct pairs -- without explicitly working in an enlarged feature space. This is very useful when there are _many featuers_, i.e., $p\geq n$.
+* We only need to compute $K(x_i,x_{i'})$ for the ${n \choose 2}$ distinct pairs -- without explicitly working in an enlarged feature space. This is very useful when there are _many features_, i.e., $p\geq n$.
 
 ---
 
 ### The radial kernel
+
+$~$
 
 * A very popular choice is the _radial kernel_,
 $$
@@ -957,16 +976,17 @@ If you want to download the whole book you can do this here:
 ---
 
 ## Kernels and our optimization
+
 \vspace{2mm}
 
-We now merge our optimization problem (from our support vector classifier) with our kernel representation $f({\boldsymbol x})$ to get the 
-\vspace{2mm}
+We now merge our optimization problem (from our support vector classifier) with our kernel representation $f({\boldsymbol x})$ to get the
 
+\vspace{4mm}
 
-{\bf Support Vector Machine (SVM)}
+**Support Vector Machine (SVM)**
 
 $$\mathrm{maximize}_{\beta_0,\alpha_1,...,\alpha_n,\epsilon_1,...,\epsilon_n,} \quad M $$
-$$y_i(f({\boldsymbol x}_i))\geq M(1-\epsilon_i) \quad  \forall i=1,...,n \ ,$$
+$$y_i \cdot f({\boldsymbol x}_i)\geq M(1-\epsilon_i) \quad  \forall i=1,...,n \ ,$$
 $$\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C \ ,$$
 
 where 
@@ -985,10 +1005,14 @@ Training errors as ROC and AUC.
 
 \vspace{1mm}
 
+$~$
 \centering
 
-![ISLR Figure 9.10](../../ISLR/Figures/Chapter9/9.10.png){width=90%}
+![ISLR Figure 9.10](../../ISLR/Figures/Chapter9/9.10.png){width=80%}
 
+$~$
+
+\flushleft
 **Q**: How are the ROC curves formed?
 
 ---
@@ -996,7 +1020,7 @@ Training errors as ROC and AUC.
 Heart data - test error.
 
 \centering
-![ISLR Figure 9.11](../../ISLR/Figures/Chapter9/9.11.png){width=90%}
+![ISLR Figure 9.11](../../ISLR/Figures/Chapter9/9.11.png){width=80%}
 
 ---
 
@@ -1005,6 +1029,7 @@ Heart data - test error.
 
 To illustrate the SVM we use the third training dataset (`forest3`) and the third test set (`seeds3`). We use the `svm` function as before. However, we now set `kernel='radial'` as we want a non-linear decision boundary:
 
+$~$
 
 \footnotesize
 
@@ -1037,6 +1062,8 @@ summary(svmfit_kernel1)
 
 We could also try with a polynomial kernel with degree 4 as follows:
 
+$~$
+
 \scriptsize
 
 ```{r forest3.4, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
@@ -1057,6 +1084,8 @@ summary(svmfit_kernel2)
 
 For this dataset a radial kernel is a natural choice: A circular decision boundary seems like a good idea. Thus, we proceed with `kernel='radial'`, and use the `tune()` function to find the optimal tuning parameter $C$:
 
+$~$
+
 \tiny
 
 ```{r}
@@ -1071,15 +1100,15 @@ summary(CV_kernel)
 
 The optimal $C$ is 100. Next, we predict the class label of the seeds in the test set with a model with $C=100$, make a confusion table and plot the results:
 
+$~$
+
 \scriptsize
 ```{r}
 bestmod_kernel=CV_kernel$best.model
 ypred_kernel=predict(bestmod_kernel,test3)
 ```
 
----
-
-\scriptsize
+$~$
 
 ```{r forest3.5, echo=FALSE, fig.width=7, fig.height=5,fig.align = "center",out.width='90%'}
 par(mfrow=c(1,2),pty="s",mar=c(1,4,1,1),oma=c(0,2,0,0))
@@ -1109,13 +1138,16 @@ Only one seed is misclassified.
 # Extensions 
 
 ## More than two classes
+
+
 \vspace{2mm}
 
 What if we have $k$ classes? Two popular approaches:
+\vspace{1mm}
 
-* OVA: one-versus-all. Fit $k$ different two-class SVMs $f_k({\boldsymbol x})$ where, each time, one class is compared to the ensemble of all other classes. Classify a test observation to the class where $f_k({\boldsymbol x}^*)$ is largest.
+* OVA: _\textcolor{red}{one-versus-all}_. Fit $k$ different two-class SVMs $f_k({\boldsymbol x})$ where, each time, one class is compared to the ensemble of all other classes. Classify a test observation to the class where $f_k({\boldsymbol x}^*)$ is largest.
 
-* OVO: one-versus-one. `libsvm` uses this approach, in which $k(k-1)/2$ binary classifiers are trained; the appropriate class is found by a voting scheme (the class that wins the most pairwise competitions are chosen).
+* OVO: _\textcolor{red}{one-versus-one}_. `libsvm` uses this approach, in which $k(k-1)/2$ binary classifiers are trained; the appropriate class is found by a voting scheme (the class that wins the most pairwise competitions are chosen).
 
 ---
 
@@ -1137,9 +1169,9 @@ $$\text{minimize}_{\boldsymbol \beta} \left\{ \underbrace{\sum_{i=1}^n \max(0,1-
 
 Interestingly, the loss functions for a support-vector classifier with $f(X)=\beta_0 + \beta_1X_1 +\ldots + \beta_pX_p$ and for logistic regression using the same set of predictors _look very similar_:
 \vspace{-2mm}
-
+ 
 \centering
-![ISLR Figure 9.12: hinge loss - loss 0 for observations on the correct side of the margin](../../ISLR/Figures/Chapter9/9.12.png){width=90%}
+![ISLR Figure 9.12: hinge loss - loss 0 for observations on the correct side of the margin](../../ISLR/Figures/Chapter9/9.12.png){width=60%}
 
 ---
 
@@ -1154,11 +1186,13 @@ $$ \log(1+\exp(-y_i f({\boldsymbol x}_i)))$$
 
 * In logistic regression all observations contribute weighted by $p_i(1-p_i)$ (where $p_i$ is probability for class 1), that fade smoothly with distance to the decision boundary
 
-* Of course, is possible to extend the logistic regression to include non-linear terms, and also a ridge penalty.
+* Of course, it is possible to extend the logistic regression to include non-linear terms, and also a ridge penalty.
 
 ---
 
 ## When to use SVM?
+
+$~$
 
 * If classes are nearly separable SVM will perform better than logistic regression. (Also LDA will perform better than logistic regression; what is the problem with logistic regression?)
 
@@ -1192,9 +1226,9 @@ $$ \log(1+\exp(-y_i f({\boldsymbol x}_i)))$$
 
 * [Solutions to exercises in the book, chapter 9](https://rpubs.com/ppaquay/65566)
 
-* Chapters 12.1-12.3 in @ESL
+* [Chapters 12.1-12.3](https://web.stanford.edu/~hastie/ElemStatLearn) in @ESL.
 
-* Chapter 19 (Support-Vector Machines and Kernel Methods) in @casi. 
+* [Chapter 19 (Support-Vector Machines and Kernel Methods)](https://web.stanford.edu/~hastie/CASI/) in @casi. 
 
 ---
 
