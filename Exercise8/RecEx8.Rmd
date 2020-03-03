@@ -23,11 +23,7 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 ---
 
-## Problem 1 
-
-We recommend that you work throught he lab in the course book (Section 8.3).
-
-## Problem 2 -- Theoretical
+## Problem 1 -- Theoretical
 
 a) Provide a detailed explanation of the algorithm that is used to fit a regression tree. What is different for a classification tree? 
 
@@ -42,25 +38,78 @@ How can we evaluate the importance of the different predictors for these methods
 
 
 
-## Problem 3 -- Regression (Book Ex. 8)
+## Problem 2 -- Regression (Book Ex. 8)
 
-In the lab, a classification tree was applied to the Carseats data set after converting Sales into a qualitative response variable. 
-Now we will seek to predict Sales using regression trees and related approaches, treating the response as a quantitative variable.
+In the lab, a classification tree was applied to the Carseats data set after converting the variable `Sales` into a qualitative response variable. Now we will seek to predict `Sales` using regression trees and related approaches, treating the response as a quantitative variable.
 
 a) Split the data set into a training set and a test set. (Hint: Use 70% of the data as training set and the rest 30% as testing set)
 
+**R-hints**
+```{r,eval=F,echo=T}
+library(ISLR)
+data("Carseats")
+set.seed(4268)
+n = nrow(Carseats)
+train = sample(1:n, 0.7*nrow(Carseats), replace = F)
+test = ...
+Carseats.train = ...
+Carseats.test = ...
+```
+
 b) Fit a regression tree to the training set. Plot the tree, and interpret the results. What test MSE do you obtain?
+
+**R-hints**
+
+```{r,eval=F,echo=T}
+library(tree)
+tree.mod = tree(Sales~., ..., data = ...)
+```
 
 c) Use cross-validation in order to determine the optimal level of tree complexity. Does pruning the tree improve the test MSE?
 
-d) Use the bagging approach in order to analyze this data. What test MSE do you obtain? Use the `importance()` function to determine which variables are most important.
+**R-hints**
 
-e) Use random forests to analyze this data. What test MSE do you obtain? Use the `importance()` function to determine which variables are most important. Describe the effect of m, the number of variables considered at each split, on the error rate obtained.
+```{r, eval=F, echo=T}
+set.seed(4268)
+cv.Carseats  = cv.tree(...) 
+tree.min =  which.min(...)
+best = cv.Carseats$size[...]
+```
 
-f) What is the effect of the number of trees (`ntree`) on the test error? Plot the test MSE as a function of `ntree` for both the bagging and the random forest method.
+d) Use the bagging approach with 500 trees in order to analyze the data. What test MSE do you obtain? Use the `importance()` function to determine which variables are most important.
+
+**R-hints**
+
+```{r, eval=F, echo=T}
+library(randomForest)
+dim(Carseats)
+bag.Carseats = randomForest(Sales~., ... , ntree = 500, importance = TRUE)
+```
+
+e) Use random forests and to analyze the data. Include 500 trees and select 3 variables for each split. What test MSE do you obtain? Use the `importance()` function to determine which variables are most important. Describe the effect of m, the number of variables considered at each split, on the error rate obtained.
+
+**R-hints**
+
+```{r, eval=F, echo=T}
+rf.Carseats = randomForest(Sales~., ... , mtry = 3, ntree = 500, importance = TRUE)
+```
 
 
-## Problem 4 -- Classification
+f) Finally use boosting with 500 trees and an interaction depth $d=4$ on our data. Compare the MSE to all other methods.
+
+**R-hints**
+
+```{r, eval=F, echo=T}
+library(gbm)
+r.boost=gbm(Sales~., Carseats.train,
+                 distribution=...,
+                 n.trees= ... ,interaction.depth= ...)
+```
+
+g) What is the effect of the number of trees (`ntree`) on the test error? Plot the test MSE as a function of `ntree` for both the bagging and the random forest method.
+
+
+## Problem 3 -- Classification
 
 In this exercise you are going to implement a spam filter for e-mails by using tree-based methods. Data from 4601 e-mails are collected and can be uploaded from the kernlab library as follows:
 ```{r}
@@ -79,10 +128,10 @@ d) Predict the response on the test data. What is the misclassification rate?
   
 e) Use the `cv.tree()` function to find the optimal tree size. Prune the tree according to the optimal tree size by using the `prune.misclass()` function and plot the result. Predict the response on the test data by using the pruned tree. What is the misclassification rate in this case?
   
-f) Create a decision tree by using the bagging approach. Use the function `randomForest()` and consider all of the predictors in each split. Predict the response on the test data and report the misclassification rate.
+f) Create a decision tree by using the bagging approach with $B=500$. Use the function `randomForest()` and consider all of the predictors in each split. Predict the response on the test data and report the misclassification rate.
 
-g) Apply the `randomForest()` function again, but this time consider only a subset of the predictors in each split. This corresponds to the random forest-algorithm. Study the importance of each variable by using the function `importance()`. Are the results as expected based on earlier results? Again, predict the response for the test data and report the misclassification rate.
+g) Apply the `randomForest()` function again with 500 trees, but this time consider only a subset of the predictors in each split. This corresponds to the random forest-algorithm. Study the importance of each variable by using the function `importance()`. Are the results as expected based on earlier results? Again, predict the response for the test data and report the misclassification rate.
 
-h) Use `gbm()` to construct a boosted classification tree. Predict the response for the test data and report the misclassification rate.
+h) Use `gbm()` to construct a boosted classification tree using 5000 trees, an interaction depth of $d=3$ and a shrinkage parameter of $\lambda=0.001$. Predict the response for the test data and report the misclassification rate.
 
 i) Compare the misclassification rates in d-h. Which method gives the lowest misclassification rate for the test data? Are the results as expected?

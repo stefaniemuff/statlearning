@@ -18,7 +18,7 @@ urlcolor: blue
 ```{r setup, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
-                      cache=TRUE, size="scriptsize")
+                      cache=TRUE, size="scriptsize",fig.width=5, fig.height=4,fig.align = "center")
 ```
 
 
@@ -29,96 +29,274 @@ install.packages("GGally")
 install.packages("Matrix")
 ```
 
-## Problem 1
-
-See Module 5 Recommended exercise solution for the bootstrap result.
-
-## Problem 2
-
-See solutions to exercise Q1 and Q4 here: <https://rstudio-pubs-static.s3.amazonaws.com/65564_925dfde884e14ef9b5735eddd16c263e.html>
-
-See solutions to 2c-f:
-<https://www.math.ntnu.no/emner/TMA4268/2019v/8Trees/TMA4268M8RecEx2ctof.pdf>
+---
 
 
-## Problem 5
+## Problem 1 -- Theoretical
 
-###a) 
-We have 4601 observations and 58 variables, 57 of them will be used as covariates.
+a) Provide a detailed explanation of the algorithm that is used to fit a regression tree. What is different for a classification tree? 
 
+1. _Recursive binary splitting_: We find the best single partitioning of the data such that the reduction of RSS is the greatest. This process is applied sequencially to each of the split parts until a predefined minimum number of leave observation is reached.
+
+2. _Cost complexity pruning_ of the large tree from previoius step, in order to obtain a sequence of best trees as a function of a parameter $\alpha$. Each value of $\alpha$ corresponds to a subtree that minimize the following equation (several $\alpha$s for the same tree):
+
+$$\sum_{m=1}^{|T|}\sum_{i:x_i\in R_m}(y_i - \hat y_{R_m})^2 + \alpha |T|,$$
+
+where $|T|$ is the numb er of terminal nodes.
+
+3. _$K$-fold cross-validation_ to choose $\alpha$. For each fold:
+
+* Repeat Steps 1 and 2 on all but the kth folds of the training data.
+* Evaluate the mean squared prediction on the data in the left-out kth fold, as a function of $\alpha$.
+* Average the results for each value of $\alpha$ and choose $\alpha$ to minimize the average error.
+
+4. Return the subtree from Step 2 that corresponds to the chosen value of $\alpha.$
+
+For a **classification** tree we replace RSS with Gini index or entropy.
+
+b) What are the advantages and disadvantages of regression and classification trees?
+
+$\color{green}{\text{Advantages}}$
+
+* Very easy to explain
+
+* Can be displayed graphically
+
+* Can handle both quantitative and qualitative predictors without the need to create dummy variables
+
+$\color{red}{\text{Disadvantages}}$
+
+* The predictive accuracy is usualy not very high
+
+* They are non-robust. That is a small change in the data can cause a large change in the estimated tree
+
+
+c) What is the idea behind bagging and what is the role of bootstap? How do random forests improve that idea?
+
+Decision trees suffer from high variance. Recall that if we have $B$ $i.i.d$ observations of a random variable $X$ with the same mean and variance $\sigma^2.$
+We calculate the mean $\bar{X} = \frac{1}{B} \sum_{b=1}^B X_b,$ and the variance of the mean is $\text{Var}(\bar{X}) = \frac{\sigma^2}{B}.$
+That is by averaging we get reduced variance. 
+
+For decision trees, if we have $B$ training  sets, we could estimate $\hat{f}_1({\boldsymbol x}),\hat{f}_2({\boldsymbol x}),\ldots, \hat{f}_B({\boldsymbol x})$ and average them as
+$$\hat{f}_{avg}({\boldsymbol x})=\frac{1}{B}\sum_{b=1}^B \hat{f}_b({\boldsymbol x}) \ .$$
+However we do not have many data independent data sets, and we bootstraping to create $B$ datasets. These datasets are however not completely independent and the reduction in variance is therefore not as large as for independent training sets.
+
+To make the different trees that are built from each bootstrapped dataset more different, random forests use a random subset of the predictors to split the tree into new branches at each step. This decorrelates the different trees that are built from the $B$ bootstrapped datasets, and consequently reduces variance.
+
+d) What is an out-of bag (OOB) error estimator and what percentage of observations are included in an OOB sample? (Hint: The result from RecEx5-Problem 4c can be used)
+
+An OOB is the set of observations that were not chosen to be in a specific bootstrap sample. From RecEx5-Problem 4c we have that on average $1-0.632 = 0.368$ are included in the OOB sample.
+
+e) Bagging and Random Forests typically improve the prediction accuracy of a single tree, but it can be difficult to interpret, for example in terms of understanding which predictors are how relevant. 
+How can we evaluate the importance of the different predictors for these methods? 
+
+**Variable importance based on node impurity**
+
+**Regression Trees**: The total amount that the RSS is decreased due to splits of each predictor, averaged over the B trees.
+
+**Classification Trees**: The importance is the mean decrease (over all B trees) in the Gini index by splits of a predictor.
+
+**Variable importance based on randomization**
+
+This measure is based on how much the predictive accuracy (MSE or gini indiex) is decreased when the variable is replaced by a permuted version of it. You find a drawing [here](https://github.com/stefaniemuff/statlearning/blob/master/8Trees/M8_variableImportanceRandomization.pdf). 
+
+## Problem 2 -- Regression (Book Ex. 8)
+
+In the lab, a classification tree was applied to the Carseats data set after converting the variable `Sales` into a qualitative response variable. Now we will seek to predict `Sales` using regression trees and related approaches, treating the response as a quantitative variable.
+
+a) Split the data set into a training set and a test set. (Hint: Use 70% of the data as training set and the rest 30% as testing set)
+
+
+```{r}
+library(ISLR)
+data("Carseats")
+set.seed(4268)
+n = nrow(Carseats)
+train = sample(1:n, 0.7*nrow(Carseats), replace = F)
+test = (1:n)[-train]
+Carseats.train = Carseats[train,]
+Carseats.test = Carseats[-train,]
+```
+
+b) Fit a regression tree to the training set. Plot the tree, and interpret the results. What test MSE do you obtain?
+
+```{r,fig.width=10, fig.height=8,out.width='70%'}
+library(tree)
+tree.mod = tree(Sales~., Carseats, subset = train)
+summary(tree.mod)
+plot(tree.mod)
+text(tree.mod, pretty = 0)
+
+yhat = predict(tree.mod, newdata = Carseats.test)
+mse = mean((yhat - Carseats.test$Sales)^2)
+mse
+```
+
+c) Use cross-validation in order to determine the optimal level of tree complexity. Does pruning the tree improve the test MSE?
+
+```{r}
+set.seed(4268)
+cv.Carseats  = cv.tree(tree.mod) 
+tree.min =  which.min(cv.Carseats$dev)
+best = cv.Carseats$size[tree.min]
+plot(cv.Carseats$size, cv.Carseats$dev, type = "b")
+points(cv.Carseats$size[tree.min], cv.Carseats$dev[tree.min], col = "red", pch = 20)
+```
+
+We see that trees with sizes 11, 12, 16 and 17 have similar deviance values. We might choose the tree of size 11 as it gives the simpler tree.
+
+
+```{r,fig.width=10, fig.height=8,out.width='70%'}
+pr.tree = prune.tree(tree.mod, best = 11)
+plot(pr.tree)
+text(pr.tree, pretty = 0)
+```
+
+
+
+```{r}
+yhat = predict(pr.tree, newdata = Carseats.test)
+mse = mean((yhat - Carseats.test$Sales)^2) 
+mse
+```
+
+There is a slight reducten in MSE for the pruned tree with 11 leaves.
+
+d) Use the bagging approach with 500 trees in order to analyze the data. What test MSE do you obtain? Use the `importance()` function to determine which variables are most important.
+
+
+```{r}
+library(randomForest)
+dim(Carseats)
+bag.Carseats = randomForest(Sales~., Carseats.train, mtry=ncol(Carseats)-1, ntree = 500, importance = TRUE)
+yhat.bag = predict(bag.Carseats, newdata = Carseats.test)
+mse.bag = mean((yhat.bag - Carseats.test$Sales)^2)
+mse.bag
+```
+
+Bagging decreases the test MSE significantly to `r round(mse.bag,2)`. From the importance plots we might conclude that `Price`and `ShelveLoc` are the most important Variables.
+
+```{r,fig.width=8, fig.height=5,out.width='80%'}
+importance(bag.Carseats)
+varImpPlot(bag.Carseats)
+```
+
+
+
+e) Use random forests and to analyze the data. Include 500 trees and select 3 variables for each split. What test MSE do you obtain? Use the `importance()` function to determine which variables are most important. Describe the effect of m, the number of variables considered at each split, on the error rate obtained.
+
+```{r}
+rf.Carseats = randomForest(Sales~., data = Carseats.train, mtry = 3, ntree = 500, importance = TRUE)
+yhat.rf = predict(rf.Carseats, newdata = Carseats.test)
+mse_forest <- mean((yhat.rf - Carseats.test$Sales)^2)
+mse_forest
+```
+
+We use $\sqrt{p} = \sqrt{10}  \approx  3$ trees, and we obtain an MSE of `r round(mse_forest,2)` which is slightly larger than Bagging MSE. The two most important Variables are again `Price`and `ShelveLoc`.
+
+```{r,fig.width=8, fig.height=5,out.width='80%'}
+importance(rf.Carseats)
+varImpPlot(rf.Carseats)
+```
+
+f) Finally use boosting with 500 trees and an interaction depth $d=4$ on our data. Compare the MSE to all other methods.
+
+```{r}
+library(gbm)
+r.boost=gbm(Sales~., Carseats.train,
+                 distribution="gaussian",
+                 n.trees=500,interaction.depth=4)
+yhat.boost = predict(r.boost, newdata = Carseats.test,n.trees=500)
+mse_boost <- mean((yhat.boost - Carseats.test$Sales)^2)
+mse_boost
+```
+
+We see a further decrease in MSE by boosing our trees.
+
+
+g) What is the effect of the number of trees (`ntree`) on the test error? Plot the test MSE as a function of `ntree` for both the bagging and the random forest method.
+
+
+```{r,fig.width=4.5, fig.height=4,out.width='70%'}
+train.predictors = Carseats.train[,-1]
+test.predictors = Carseats.test[,-1]
+Y.train = Carseats.train[,1]
+Y.test = Carseats.test[,1]
+
+bag.Car = randomForest(train.predictors, y = Y.train, xtest = test.predictors, ytest = Y.test, mtry = 10, ntree = 500)
+rf.Car = randomForest(train.predictors, y = Y.train, xtest = test.predictors, ytest = Y.test, mtry = 3, ntree = 500)
+plot(1:500, bag.Car$test$mse, col = "blue", type = "l", xlab = "Number of Trees", ylab = "Test MSE",ylim=c(2,2.8))
+lines(1:500, rf.Car$test$mse, col = "green")
+
+legend("topright", c("m = p", "m = sqrt(p)"), col = c("blue", "green"), cex = 1, lty = 1)
+```
+
+
+
+
+## Problem 3 -- Classification
+
+In this exercise you are going to implement a spam filter for e-mails by using tree-based methods. Data from 4601 e-mails are collected and can be uploaded from the kernlab library as follows:
 ```{r}
 library(kernlab)
+data(spam)
+```
+Each e-mail is classified by `type` ( `spam` or `nonspam`), and this will be the response in our model. In addition there are 57 predictors in the dataset. The predictors describe the frequency of different words in the e-mails and orthography (capitalization, spelling, punctuation and so on).
+
+a) Study the dataset by writing `?spam` in R.
+
+```{r}
 ?spam
 ```
-
-### b) 
-We use approximately $2/3$ of the observations as the train set and  $1/3$ as the test set.
+b) Create a training set and a test set for the dataset. (Hint: Use 70% of the data as training set and the rest 30% as testing set)
 
 ```{r}
-library(tree)
-
-set.seed(1)
-
-data(spam)
-N=dim(spam)[1]
-
-train=sample(1:N,3000)
-test=(1:N)[-train]
+library(ISLR)
+set.seed(4268)
+n = nrow(spam)
+train = sample(1:n, 0.7*n, replace = F)
+test = (1:n)[-train]
+spam.train = spam[train,]
+spam.test = spam[-train,]
 ```
 
-###c)  
-We fit a classification tree to the training data.
+c) Fit a tree to the training data with `type` as the response and the rest of the variables as predictors. Study the results by using the `summary()` function. Also create a plot of the tree. How many terminal nodes does it have?
 
-```{r}
-tree.spam=tree(type~.,spam,subset=train)
+```{r,fig.width=10, fig.height=8,out.width='70%'}
+spam.tree=tree(type~.,spam,subset=train)
 
-plot(tree.spam)
+plot(spam.tree)
+text(spam.tree,pretty=1)
 
-text(tree.spam,pretty=1)
+summary(spam.tree)
 ```
-
-For this training set we have 11 terminal nodes.
-
-```{r}
-summary(tree.spam)
-```
-
-###d) 
-We predict the response for the test data.
+  
+d) Predict the response on the test data. What is the misclassification rate?
 
 ```{r}
-yhat=predict(tree.spam,spam[test,],type="class")
+yhat=predict(spam.tree,spam[test,],type="class")
 response.test=spam$type[test]
-```
 
-and make a confusion table:
-```{r}
 misclass=table(yhat,response.test)
-print(misclass)
-```
-
-The misclassification rate is given by:
-
-```{r}
+misclass
 
 1-sum(diag(misclass))/sum(misclass)
 ```
+  
+e) Use the `cv.tree()` function to find the optimal tree size. Prune the tree according to the optimal tree size by using the `prune.misclass()` function and plot the result. Predict the response on the test data by using the pruned tree. What is the misclassification rate in this case?
 
-###e)  
-We use _cv.tree()_ to find the optimal tree size.
+```{r,fig.width=6, fig.height=5,out.width='70%'}
+set.seed(4268)
 
-```{r}
-set.seed(1)
-
-cv.spam=cv.tree(tree.spam,FUN=prune.misclass)
+cv.spam=cv.tree(spam.tree,FUN=prune.misclass)
 
 plot(cv.spam$size,cv.spam$dev,type="b")
 ```
 
-According to the plot the optimal number of terminal nodes is 7 (or larger). We choose 7 as this gives the simplest tree, and prune the tree according to this value.
+According to the plot the optimal number of terminal nodes is 6 (or larger). We choose 6 as this gives the simplest tree, and prune the tree according to this value.
 
-```{r}
-prune.spam=prune.misclass(tree.spam,best=7)
+```{r,fig.width=8, fig.height=6,out.width='70%'}
+prune.spam=prune.misclass(spam.tree,best=6)
 
 plot(prune.spam)
 text(prune.spam,pretty=1)
@@ -130,7 +308,7 @@ We predict the response for the test data:
 yhat.prune=predict(prune.spam,spam[test,],type="class")
 
 misclass.prune=table(yhat.prune,response.test)
-print(misclass.prune)
+misclass.prune
 ```
 
 The misclassification rate is
@@ -139,14 +317,13 @@ The misclassification rate is
 1-sum(diag(misclass.prune))/sum(misclass.prune)
 ```
 
-
-### f) 
-We create a decision tree by bagging.
+f) Create a decision tree by using the bagging approach. Use the function `randomForest()` and consider all of the predictors in each split. Predict the response on the test data and report the misclassification rate.
 
 ```{r}
 library(randomForest)
-bag.spam=randomForest(type~.,data=spam,subset=train,mtry=dim(spam)[2]-1,ntree=500,importance=TRUE)
+bag.spam=randomForest(type~.,data=spam,subset=train,mtry=ncol(spam)-1,ntree=500,importance=TRUE)
 ```
+
 
 We predict the response for the test data as before:
 
@@ -154,36 +331,37 @@ We predict the response for the test data as before:
 yhat.bag=predict(bag.spam,newdata=spam[test,])
 
 misclass.bag=table(yhat.bag,response.test)
-print(misclass.bag)
+misclass.bag
 ```
 
 The misclassification rate is
+
 ```{r}
 1-sum(diag(misclass.bag))/sum(misclass.bag)
 ```
 
-### g) 
-We now use the random forest-algorithm and consider only $\sqrt{57}\approx 8$ of the predictors at each split. This is specified in _mtry_. 
+g) Apply the `randomForest()` function again, but this time consider only a subset of the predictors in each split. This corresponds to the random forest-algorithm. Study the importance of each variable by using the function `importance()`. Are the results as expected based on earlier results? Again, predict the response for the test data and report the misclassification rate.
+
+We now use the random forest-algorithm and consider only $\sqrt{57}\approx 8$ of the predictors at each split. This is specified in `mtry`. 
 
 ```{r}
-set.seed(1)
-
-rf.spam=randomForest(type~.,data=spam,subset=train,mtry=round(sqrt(dim(spam)[2]-1)),ntree=500,importance=TRUE)
+set.seed(4268)
+rf.spam=randomForest(type~.,data=spam,subset=train,mtry=round(sqrt(ncol(spam)-1)),ntree=500,importance=TRUE)
 ```
 
 We study the importance of each variable
 
-```{r}
+```{r,eval=F}
 importance(rf.spam)
 ```
 
-If _MeanDecreaseAccuracy_ and _MeanDecreaseGini_ are large, the corresponding covariate is important.
+If `MeanDecreaseAccuracy` and `MeanDecreaseGini` are large, the corresponding covariate is important.
 
-```{r}
+```{r,fig.width=9, fig.height=6,out.width='90%'}
 varImpPlot(rf.spam)
 ```
 
-In this plot we see that _charExclamation_ is the most important covariate, followed by _remove_ and _charDollar_. This is as expected as these variables are used in the top splits in the classification trees we have seen so far.
+In this plot we see that `charExclamation` is the most important covariate, followed by `remove` and `charDollar`. This is as expected as these variables are used in the top splits in the classification trees we have seen so far.
 
 We now predict the response for the test data.
 
@@ -197,53 +375,46 @@ misclass.rf=table(yhat.rf,response.test)
 The misclassification rate is given by
 
 ```{r}
-print(misclass.rf)
+misclass.rf
 ```
 
-### h) 
-Finally, we create a tree by using the boosting algorithm. The _gbm()_ function does not allow factors in the response, so we have to use "1" and "0" instead of "spam" and "nonspam":
+h) Use `gbm()` to construct a boosted classification tree using 5000 trees, an interaction depth of $d=3$ and a shrinkage parameter of $\lambda=0.001$. Predict the response for the test data and report the misclassification rate.
+
+The `gbm()` function does not allow factors, so we have to use '1' and '0' instead of `spam` and `nonspam`
 
 ```{r}
 library(gbm)
-set.seed(1)
+set.seed(4268)
 
-spamboost=spam
-spamboost$type=c()
-spamboost$type[spam$type=="spam"]=1
-spamboost$type[spam$type=="nonspam"]=0
+spamboost = spam
+spamboost$type = c()
+spamboost$type[spam$type == "spam"] = 1
+spamboost$type[spam$type == "nonspam"] = 0
 
-boost.spam=gbm(type~.,data=spamboost[train,],distribution="bernoulli",n.trees=5000,interaction.depth=4,shrinkage=0.001)
+boost.spam = gbm(type ~ ., data = spamboost[train, ], distribution = "bernoulli", 
+    n.trees = 5000, interaction.depth = 3, shrinkage = 0.001)
 ```
 
-We predict the response for the test data:
+We predict the response for the test data
 
 ```{r}
-yhat.boost=predict(boost.spam,newdata=spamboost[-train,],n.trees=5000,distribution="bernoulli",type="response")
+yhat.boost = predict(boost.spam, newdata = spamboost[-train, ], n.trees = 5000, 
+    distribution = "bernoulli", type = "response")
 
-yhat.boost=ifelse(yhat.boost>0.5,1,0) #Transform to 0 and 1 (nonspam and spam).
+yhat.boost = ifelse(yhat.boost > 0.5, 1, 0)  #Transform to 0 and 1 (nonspam and spam).
 
-misclass.boost=table(yhat.boost,spamboost$type[test])
+misclass.boost = table(yhat.boost, spamboost$type[test])
 
-print(misclass.boost)
+misclass.boost
+
 ```
 
-The misclassification rate is
+and the misclassification rate is
 
 ```{r}
-1-sum(diag(misclass.boost))/sum(misclass.boost)
+1 - sum(diag(misclass.boost))/sum(misclass.boost)
 ```
 
-### i) 
-We get lower misclassification rates for bagging, boosting and random forest as expected.
+i) Compare the misclassification rates in d-h. Which method gives the lowest misclassification rate for the test data? Are the results as expected?
 
-## Problem 6  
-
-Problem 1 - Classification with trees: <https://www.math.ntnu.no/emner/TMA4268/2018v/CompEx/Compulsory3solutions.html>
-
-
-# Problem 7
-
-Classification of diabetes cases c), with Q20, Q21, Q22.
-
-<https://www.math.ntnu.no/emner/TMA4268/Exam/e2018sol.pdf>
-
+We get lower missclassification rates for bagging, random forest and boosting than for a simple tree, which is expected.
