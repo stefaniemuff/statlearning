@@ -95,7 +95,7 @@ rf.Carseats = randomForest(Sales~., ... , mtry = 3, ntree = 500, importance = TR
 ```
 
 
-f) Finally use boosting with 500 trees and an interaction depth $d=4$ on our data. Compare the MSE to all other methods.
+f) Finally use boosting with 500 trees, an interaction depth $d=4$ and a shrinkage factor $\lambda=0.1$ (default in the `gbm()` function) on our data. Compare the MSE to all other methods.
 
 **R-hints**
 
@@ -103,7 +103,7 @@ f) Finally use boosting with 500 trees and an interaction depth $d=4$ on our dat
 library(gbm)
 r.boost=gbm(Sales~., Carseats.train,
                  distribution=...,
-                 n.trees= ... ,interaction.depth= ...)
+                 n.trees= ... ,interaction.depth= ..., shrinkage = ...)
 ```
 
 g) What is the effect of the number of trees (`ntree`) on the test error? Plot the test MSE as a function of `ntree` for both the bagging and the random forest method.

@@ -199,13 +199,13 @@ importance(rf.Carseats)
 varImpPlot(rf.Carseats)
 ```
 
-f) Finally use boosting with 500 trees and an interaction depth $d=4$ on our data. Compare the MSE to all other methods.
+f) Finally use boosting with 500 trees, an interaction depth $d=4$ and a shrinkage factor $\lambda=0.1$ (default in the `gbm()` function) on our data. Compare the MSE to all other methods.
 
 ```{r}
 library(gbm)
 r.boost=gbm(Sales~., Carseats.train,
                  distribution="gaussian",
-                 n.trees=500,interaction.depth=4)
+                 n.trees=500,interaction.depth=4, shrinkage =0.1)
 yhat.boost = predict(r.boost, newdata = Carseats.test,n.trees=500)
 mse_boost <- mean((yhat.boost - Carseats.test$Sales)^2)
 mse_boost
