@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "March 6 and 9, 2020"
 fontsize: 10pt
 output:
-  # beamer_presentation:
-  #   keep_tex: yes
-  #   fig_caption: false
-  #   latex_engine: xelatex
-  #   theme: "Singapore"
-  #   colortheme: "default"
-  #   font: "serif"
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+    theme: "Singapore"
+    colortheme: "default"
+    font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -528,7 +528,7 @@ $$\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C.$$
      + if $\epsilon_i>0$ observation $i$ is on the wrong side of the margin, and 
      + if $\epsilon_i>1$ observation $i$ is on the wrong side of the hyperplane. 
      
-* $C$ is a _\textcolor{red}{tuning (regularization) parameter}_ (chosen by cross-validation) giving the _\textcolor{red}{budget for slacks}_. It restricts the number of the training observations that can be on the wrong side of the hyperplane. Less than $C$ of the observations can at maximum be on the wrong side. 
+* $C$ is a _\textcolor{red}{tuning (regularization) parameter}_ (chosen by cross-validation) giving the _\textcolor{red}{budget for slacks}_. It restricts the number of the training observations that can be on the wrong side of the hyperplane. Less than $C$ of the observations can be on the wrong side. 
 
 
 
@@ -778,7 +778,7 @@ The two misclassified observations are marked with a black circle. Unsurprisingl
 # Support Vector Machines 
 
 
-* For some datasets a non-linear decicion boundary between the classes is more suitable than a linear decision boundary. 
+* For some datasets a _\textcolor{red}{non-linear decicion boundary}_ between the classes is more suitable than a linear decision boundary. 
 
 * In such cases you can use a **Support Vector Machine** (SVM). This is an extension of the support vector classifier. 
 
@@ -796,18 +796,24 @@ points(forest3[forest3[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
 
 \vspace{2mm}
 
-* Recall from Module 7: We could fit non-linear regression curves by using a polynomial basis - adding polynomials of different order as covariates. This was a **linear regression in the transformed variables**, but non-linear in the original variables. 
+* Recall from Module 7: We could fit non-linear regression curves by using a polynomial basis. This was a **linear regression in the transformed variables**, but non-linear in the original variables. 
 
 \vspace{2mm}
 
-* **Idea**: Find a nice linear boundary in that high-dimensional space using
+* **Idea**: Find a linear boundary in that high-dimensional space using
     + higher-order terms $X_i^k$
     + interaction terms $X_i X_{i'}$
-    + other functions of $X_i$.
+    + other functions of $X_i$.   
 
 \vspace{2mm}
 
-* **Problem**: Computation becomes unmanageable (too many possibilities!)
+* This leads to a non-linear boundary in the original space.
+
+\vspace{2mm}
+
+* **Example**: 
+$$\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1X_2 + \beta_4 X_1^2 + \beta_5 X_2^2 =0 \ .$$
+
 
 ---
 
@@ -827,6 +833,22 @@ points(forest3[forest3[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
 
 * **Right**: radial basis function kernel - wait a bit.
 
+
+---
+
+### Problems and better ideas
+
+$~$
+
+* Computation using polynomials quickly becomes unmanageable.
+
+$~$
+
+* More elegant idea is the use of _\textcolor{red}{kernels}_.
+
+$~$
+
+* But first we have to understand the role of _\textcolor{red}{inner products}_ in Support Vector Classifiers.
 
 
 ---
@@ -919,9 +941,9 @@ $~$
 
 * If we  want a more flexible decision boundary we could instead use a _polynomial kernel_ of degree $d>1$:
 $$
-K({\boldsymbol x}_i,{\boldsymbol x}_i')=(1+\sum_{j1}^p x_{ij} x_{i'j})^d \ , 
+K({\boldsymbol x}_i,{\boldsymbol x}_i')=(1+\sum_{j}^p x_{ij} x_{i'j})^d \ , 
 $$
-which computes the inner products needed for $d$-dimensional polynomials. Try it for $p=2$ and $d=2$ (see board).
+which computes the inner products needed for $d$-dimensional polynomials. Try it for $p=2$ and $d=2$ (see exercises).
 
 <!-- This gives $\binom{p+d}{d}$ possible basis functions. -->
 
@@ -1020,6 +1042,7 @@ $~$
 
 \flushleft
 **Q**: How are the ROC curves formed?
+<!-- **A**: Use different $t$ to classify $\hat{f}(X)>t$. -->
 
 ---
 
@@ -1184,13 +1207,13 @@ Interestingly, the loss functions for a support-vector classifier with $f(X)=\be
 **Hinge loss:**
 $$\max(0,1-y_if({\boldsymbol x}_i))$$
 
-For comparison a logistic regression (with ridge penalty) would be (binomial deviance with $-1,1$ coding of $y$)
+For comparison a logistic regression would be (binomial deviance with $-1,1$ coding of $y$)
 
 $$ \log(1+\exp(-y_i f({\boldsymbol x}_i)))$$
 
 * In logistic regression all observations contribute weighted by $p_i(1-p_i)$ (where $p_i$ is probability for class 1), that fade smoothly with distance to the decision boundary
 
-* Of course, it is possible to extend the logistic regression to include non-linear terms, and also a ridge penalty.
+* Of course, it is possible to extend the logistic regression to include non-linear terms, and _also a ridge penalty_.
 
 ---
 
