@@ -153,7 +153,7 @@
 
 \begin{frame}
 
-Last update: March 3, 2020
+Last update: March 5, 2020
 
 \end{frame}
 
@@ -181,12 +181,14 @@ Last update: March 3, 2020
 \vspace{2mm}
 
 \begin{itemize}
-\tightlist
 \item
   James et al (2013): An Introduction to Statistical Learning. Chapter
-  9.\\
+  9.
 \item
   All the material presented on these module slides and in class.
+\item
+  Check also the ``Further reading'' slide at the end of these module
+  slides.
 \end{itemize}
 
 \end{block}
@@ -201,6 +203,8 @@ Last update: March 3, 2020
 
 You will get to know
 
+\(~\)
+
 \begin{itemize}
 \tightlist
 \item
@@ -214,6 +218,8 @@ You will get to know
 \item
   Comparisons
 \end{itemize}
+
+\(~\)
 
 and learn how to apply all that.
 
@@ -382,7 +388,7 @@ but extensions to more than two classes are briefly mentioned.
 
 \vspace{2mm}
 
-A \textbf{hyperplane} in p-dimensions is defined as
+A \textbf{hyperplane} in \(p\) dimensions is defined as
 
 \[\beta_0+\beta_1 X_1 + \beta_2 X_2 +...+\beta_p X_p=\beta_0+{\boldsymbol x}^T {\boldsymbol \beta}=0.\]
 and is a \(p-1\) dimensional subspace of \(\mathbb{R}^p\).
@@ -427,9 +433,9 @@ If a point \({\boldsymbol x}\) satisfies
 
 \begin{itemize}
 \item
-  The signed distance of any point \(\boldsymbol x\) to the hyperplane
-  is given by
-  \[\frac{1}{||{\boldsymbol\beta}||} (\beta_0 + {\boldsymbol \beta}^\top {\boldsymbol x} )\ ,\]
+  The signed distance \(d\) of any point \(\boldsymbol x\) to the
+  hyperplane is given by
+  \[d=\frac{1}{||{\boldsymbol\beta}||} (\beta_0 + {\boldsymbol \beta}^\top {\boldsymbol x} )\ ,\]
   where \(||{\boldsymbol\beta}||^2 = \sum_{j=1}^p \beta_j^2=1\) is the
   (squared) length of \(\boldsymbol \beta\) (Euclidian norm), see also
   \href{https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_plane}{here}.
@@ -460,7 +466,7 @@ If a point \({\boldsymbol x}\) satisfies
       \vdots \\
       x_{np}
       \end{array}
-  \right)\]
+  \right) \ .\]
 \item
   The responses \(\boldsymbol{y}\) fall into two classes
   \(y_1,...,y_n \in \{-1,1\}\).
@@ -541,7 +547,7 @@ value
 
 \begin{block}{Which hyperplane is best?}
 
-\vspace{2mm}
+\vspace{3mm}
 
 \begin{itemize}
 \item
@@ -554,7 +560,7 @@ value
   maximises the distance from the training observations.
 \end{itemize}
 
-\vspace{2mm}
+\vspace{4mm}
 
 \textbf{Procedure}:
 
@@ -627,7 +633,7 @@ Observe: \vspace{-2mm}
   hyperplane will move.
 \item
   This is a property of the maximal margin hyperplane: It only depends
-  on the support vectors, and not on the other observations.
+  on the support vectors, and \emph{not on the other observations}.
 \end{itemize}
 
 \end{frame}
@@ -692,8 +698,8 @@ is \emph{non-separable}. What then? Forest 2:
 \begin{center}\includegraphics[width=0.45\linewidth]{9SVM_files/figure-beamer/forest2.1-1} \end{center}
 
 It is still possible to construct a hyperplane and use it for
-classification, but then we have to allow some misclassification in the
-training data.
+classification, but then we have to \emph{allow some misclassification}
+in the training data.
 
 \end{frame}
 
@@ -705,7 +711,7 @@ training data.
   class boundaries more robust to future observations (avoid
   overfitting).
 \item
-  Even when the data are linear
+  Even when the data are linearly
   separable\footnote{in particular when $n\leq p+1$, we can always find a separating hyperplane, unless there are exact feature ties across the class barrier, see Efron and Hastie, 2016.},
   the separating hyperplane might not be the ``best'' hyperplane for us
   in terms of robustness.
@@ -762,8 +768,8 @@ that we had for the maximal margin hyperplane by allowing for a
   (chosen by cross-validation) giving the
   \emph{\textcolor{red}{budget for slacks}}. It restricts the number of
   the training observations that can be on the wrong side of the
-  hyperplane. No more than \(C\) of the observations can be on the wrong
-  side.
+  hyperplane. Less than \(C\) of the observations can at maximum be on
+  the wrong side.
 \end{itemize}
 
 \end{frame}
@@ -1034,8 +1040,6 @@ are due to implementation, nothing for us to worry.)
   margin width is given by \texttt{svm()}. Want to see how to find this?
   See the recommended exercises.
 \end{itemize}
-
-Todo: Need to make sure this exercise is included also this year.
 
 \end{frame}
 
@@ -1891,9 +1895,6 @@ For comparison a logistic regression (with ridge penalty) would be
 \[ \log(1+\exp(-y_i f({\boldsymbol x}_i)))\]
 
 \begin{itemize}
-\item
-  Todo: Perhaps a conceptual exercise to show that this loss is the
-  deviance for the \(y=-1,1\) encoding.
 \item
   In logistic regression all observations contribute weighted by
   \(p_i(1-p_i)\) (where \(p_i\) is probability for class 1), that fade

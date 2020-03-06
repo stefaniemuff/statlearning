@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "March 6 and 9, 2020"
 fontsize: 10pt
 output:
-  # beamer_presentation:
-  #   keep_tex: yes
-  #   fig_caption: false
-  #   latex_engine: xelatex
-  #   theme: "Singapore"
-  #   colortheme: "default"
-  #   font: "serif"
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+    theme: "Singapore"
+    colortheme: "default"
+    font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -33,7 +33,7 @@ whichformat="latex"
 
 ---
 
-Last update: March 3, 2020
+Last update: March 5, 2020
 
 --- 
 
@@ -52,7 +52,10 @@ Last update: March 3, 2020
 \vspace{2mm}
 
 * James et al (2013): An Introduction to Statistical Learning. Chapter 9.  
+
 * All the material presented on these module slides and in class.
+
+* Check also the "Further reading" slide at the end of these module slides.
 
 
 ---
@@ -63,12 +66,15 @@ Last update: March 3, 2020
 
 You will get to know
 
+$~$
+
 * Maximal margin classifier
 * Support vector classifier
 * Support vector machines
 * Extensions
 * Comparisons 
 
+$~$
 
 and learn how to apply all that.
 
@@ -234,7 +240,7 @@ points(seeds3[seeds3[,3]==1,1:2],pch=21,bg="darkseagreen",col="black",cex=1.2)
 ## Hyperplane
 \vspace{2mm}
 
-A **hyperplane** in p-dimensions is defined as
+A **hyperplane** in $p$ dimensions is defined as
 
 $$\beta_0+\beta_1 X_1 + \beta_2 X_2 +...+\beta_p X_p=\beta_0+{\boldsymbol x}^T {\boldsymbol \beta}=0.$$
 and is a $p-1$ dimensional subspace of $\mathbb{R}^p$.
@@ -261,8 +267,8 @@ If a point ${\boldsymbol x}$ satisfies
 
 \vspace{2mm}
 
-* The signed distance of any point $\boldsymbol x$ to the hyperplane is given by
-$$\frac{1}{||{\boldsymbol\beta}||} (\beta_0 + {\boldsymbol \beta}^\top {\boldsymbol x} )\ ,$$ where $||{\boldsymbol\beta}||^2 = \sum_{j=1}^p \beta_j^2=1$ is the (squared) length of $\boldsymbol \beta$ (Euclidian norm), see also [here](https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_plane). 
+* The signed distance $d$ of any point $\boldsymbol x$ to the hyperplane is given by
+$$d=\frac{1}{||{\boldsymbol\beta}||} (\beta_0 + {\boldsymbol \beta}^\top {\boldsymbol x} )\ ,$$ where $||{\boldsymbol\beta}||^2 = \sum_{j=1}^p \beta_j^2=1$ is the (squared) length of $\boldsymbol \beta$ (Euclidian norm), see also [here](https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_plane). 
 
 * See board for a graphical description.
 
@@ -285,7 +291,7 @@ $${\boldsymbol x}_1=\left(
       \vdots \\
       x_{np}
       \end{array}
-  \right)$$
+  \right) \ .$$
   
 * The responses $\boldsymbol{y}$ fall into two classes $y_1,...,y_n \in \{-1,1\}$. 
 
@@ -357,7 +363,8 @@ $$y^* = \left\{ \begin{array}{ll}
 ---
 
 ## Which hyperplane is best?
-\vspace{2mm}
+
+\vspace{3mm}
 
 * In the above figure we plotted three possible hyperplanes.
 
@@ -365,7 +372,7 @@ $$y^* = \left\{ \begin{array}{ll}
 
 * Natural choice: the **maximal margin hyperplane**, which maximises the distance from the training observations. 
 
-\vspace{2mm}
+\vspace{4mm}
 
 **Procedure**: 
 
@@ -413,7 +420,7 @@ Observe:
 
 * If one of the support vectors changes its position, the whole hyperplane will move. 
 
-* This is a property of the maximal margin hyperplane: It only depends on the support vectors, and not on the other observations.
+* This is a property of the maximal margin hyperplane: It only depends on the support vectors, and _not on the other observations_.
 
 
 
@@ -486,13 +493,13 @@ points(forest2[forest2[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
 points(forest2[forest2[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
 ```
 
-It is still possible to construct a hyperplane and use it for classification, but then we have to allow some misclassification in the training data. 
+It is still possible to construct a hyperplane and use it for classification, but then we have to _allow some misclassification_ in the training data. 
 
 ---
 
 * In some situations allowing for some misclassifications makes the class boundaries more robust to future observations (avoid overfitting).
 
-* Even when the data are linear separable\footnote{in particular when $n\leq p+1$, we can always find a separating hyperplane, unless there are exact feature ties across the class barrier, see Efron and Hastie, 2016.}, the separating hyperplane might not be the "best" hyperplane for us in terms of robustness.
+* Even when the data are linearly separable\footnote{in particular when $n\leq p+1$, we can always find a separating hyperplane, unless there are exact feature ties across the class barrier, see Efron and Hastie, 2016.}, the separating hyperplane might not be the "best" hyperplane for us in terms of robustness.
 
 * We relax the maximal margin classifier to allow for a _soft margin classifier_ (=support vector classifier). 
 
@@ -521,7 +528,7 @@ $$\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C.$$
      + if $\epsilon_i>0$ observation $i$ is on the wrong side of the margin, and 
      + if $\epsilon_i>1$ observation $i$ is on the wrong side of the hyperplane. 
      
-* $C$ is a _\textcolor{red}{tuning (regularization) parameter}_ (chosen by cross-validation) giving the _\textcolor{red}{budget for slacks}_. It restricts the number of the training observations that can be on the wrong side of the hyperplane. No more than $C$ of the observations can be on the wrong side. 
+* $C$ is a _\textcolor{red}{tuning (regularization) parameter}_ (chosen by cross-validation) giving the _\textcolor{red}{budget for slacks}_. It restricts the number of the training observations that can be on the wrong side of the hyperplane. Less than $C$ of the observations can at maximum be on the wrong side. 
 
 
 
@@ -670,7 +677,6 @@ svmfit_linear1$index #support vectors id in data set
 
 * However, no explicit output for the linear decision boundary, and no margin width is given by `svm()`. Want to see how to find this? See the recommended exercises. 
 
-Todo: Need to make sure this exercise is included also this year.
 
 ---
 
@@ -1181,8 +1187,6 @@ $$\max(0,1-y_if({\boldsymbol x}_i))$$
 For comparison a logistic regression (with ridge penalty) would be (binomial deviance with $-1,1$ coding of $y$)
 
 $$ \log(1+\exp(-y_i f({\boldsymbol x}_i)))$$
-
-* Todo: Perhaps a conceptual exercise to show that this loss is the deviance for the $y=-1,1$ encoding.
 
 * In logistic regression all observations contribute weighted by $p_i(1-p_i)$ (where $p_i$ is probability for class 1), that fade smoothly with distance to the decision boundary
 
