@@ -1644,9 +1644,9 @@ div.tocify {
 </div>
 <div id="assumptions" class="section level2">
 <h2>Assumptions</h2>
-
+<p><span class="math inline">\(~\)</span></p>
 <ul>
-<li><p>Assume that we have <span class="math inline">\(n\)</span> training observations with <span class="math inline">\(p\)</span> predictors <span class="math display">\[{\boldsymbol x}_1=\left(
+<li>Assume that we have <span class="math inline">\(n\)</span> training observations with <span class="math inline">\(p\)</span> predictors <span class="math display">\[{\boldsymbol x}_1=\left(
   \begin{array}{c}
     x_{11} \\
     \vdots \\
@@ -1658,9 +1658,15 @@ div.tocify {
     \vdots \\
     x_{np}
     \end{array}
-\right) \ .\]</span></p></li>
-<li><p>The responses <span class="math inline">\(\boldsymbol{y}\)</span> fall into two classes <span class="math inline">\(y_1,...,y_n \in \{-1,1\}\)</span>.</p></li>
-<li><p>It is possible to separate the training observations perfectly according to their class.</p></li>
+\right) \ .\]</span></li>
+</ul>
+<p><span class="math inline">\(~\)</span></p>
+<ul>
+<li>The responses <span class="math inline">\(\boldsymbol{y}\)</span> fall into two classes <span class="math inline">\(y_1,...,y_n \in \{-1,1\}\)</span>.</li>
+</ul>
+<p><span class="math inline">\(~\)</span></p>
+<ul>
+<li>It is possible to separate the training observations perfectly according to their class.</li>
 </ul>
 <hr />
 </div>
@@ -1675,16 +1681,16 @@ div.tocify {
 <h2>Classification with a simple hyperplane</h2>
 
 <p>The three lines displayed in the figure are three possible separating hyperplanes for this dataset which contains two predictors <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> (<span class="math inline">\(p=2\)</span>). The hyperplanes have the property that</p>
-<p><span class="math display">\[\beta_0+\beta_1 x_{i1} + \beta_2 x_{i2}+...+\beta_p x_{ip}=\beta_0+{\boldsymbol x}_i^T {\boldsymbol \beta}&gt;0\]</span></p>
+<p><span class="math display">\[\beta_0+\beta_1 x_{i1} + \beta_2 x_{i2} =\beta_0+{\boldsymbol x}_i^T {\boldsymbol \beta}&gt;0\]</span></p>
 <p>if <span class="math inline">\(y_i=1\)</span> (green points) and</p>
-<p><span class="math display">\[\beta_0+\beta_1 x_{i1} + \beta_2 x_{i2}+...+\beta_p x_{ip}=\beta_0+{\boldsymbol x}_i^T {\boldsymbol \beta}&lt;0\]</span></p>
+<p><span class="math display">\[\beta_0+\beta_1 x_{i1} + \beta_2 x_{i2} =\beta_0+{\boldsymbol x}_i^T {\boldsymbol \beta}&lt;0\]</span></p>
 <p>if <span class="math inline">\(y_i=-1\)</span> (orange points).</p>
 <hr />
 <p>This means that for all observations (all are correctly classified)</p>
 <p><span class="math display">\[y_i (\beta_0+{\boldsymbol x}_i^T {\boldsymbol \beta})&gt;0 \ .\]</span></p>
 
 <p>The hyperplane thus leads to a <em></em>, depending on the side of the hyperplane where the new observation lies.</p>
-<p>The class <span class="math inline">\(y^*\)</span> of a new observation <span class="math inline">\({\boldsymbol x}^*=(x_1^*,...,x_n^*)\)</span> is assigned depending on the value <span class="math inline">\(f({\boldsymbol x}^*)=\beta_0+\beta_1 x_1^* + \beta_2 x_{2}^*+...+\beta_p x_{p}^*.\)</span></p>
+<p>Analogous for <span class="math inline">\(p\)</span> predictors: The class <span class="math inline">\(y^*\)</span> of a new observation <span class="math inline">\({\boldsymbol x}^*=(x_1^*,...,x_p^*)\)</span> is assigned depending on the value <span class="math inline">\(f({\boldsymbol x}^*)=\beta_0+\beta_1 x_1^* + \beta_2 x_{2}^*+...+\beta_p x_{p}^*.\)</span></p>
 
 <p><strong>Hyperplane classifier:</strong></p>
 <p><span class="math display">\[y^* = \left\{ \begin{array}{ll}
@@ -1715,7 +1721,8 @@ div.tocify {
 <p>ISLR Figure 9.3</p>
 <hr />
 <p>The process of finding the maximal margin hyperplane for a dataset with <span class="math inline">\(p\)</span> covariates and <span class="math inline">\(n\)</span> training observations can be formulated through the following <strong>optimization problem</strong>:</p>
-
+<p><span class="math display">\[\mathrm{maximize}_{\beta_0,\beta_1,...,\beta_p}  M \]</span> <span class="math display">\[\text{subject to} \sum_{j=1}^p \beta_j^2=1,\]</span> <span class="math display">\[y_i(\beta_0+\beta_1 x_{i1}+\beta_2 x_{i2}+...+\beta_p x_{ip})\geq M \quad  \forall i=1,...,n\]</span> where <span class="math inline">\(M\)</span> is the width of the margin.</p>
+<p><span class="math inline">\(~\)</span></p>
 <p>Observe: </p>
 <ul>
 <li><span class="math inline">\(y_i(\beta_0+{\boldsymbol x}^T {\boldsymbol \beta})\)</span> is the (signed) distance from the <span class="math inline">\(i\)</span>th point to the hyperplane defined by the <span class="math inline">\(\beta\)</span>s.</li>
