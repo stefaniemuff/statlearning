@@ -33,7 +33,7 @@ whichformat="latex"
 
 ---
 
-Last update: March 6, 2020
+Last update: March 8, 2020
 
 --- 
 
@@ -1023,38 +1023,7 @@ $$y_i \cdot f({\boldsymbol x}_i)\geq M(1-\epsilon_i) \quad  \forall i=1,...,n \ 
 $$\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C \ ,$$
 
 where 
-$$f({\boldsymbol x}_i)=\beta_0 +\sum_{l=1}^n \alpha_l K({\boldsymbol x}_i,{\boldsymbol x}_l)$$
-
-
----
-
-## Tuning parameter example
-
-\vspace{2mm}
-
-Heart data - predict heart disease from $p=13$ predictors.
-
-Training errors as ROC and AUC.
-
-\vspace{1mm}
-
-$~$
-\centering
-
-![ISLR Figure 9.10](../../ISLR/Figures/Chapter9/9.10.png){width=80%}
-
-$~$
-
-\flushleft
-**Q**: How are the ROC curves formed?
-<!-- **A**: Use different $t$ to classify $\hat{f}(X)>t$. -->
-
----
-
-Heart data - test error.
-
-\centering
-![ISLR Figure 9.11](../../ISLR/Figures/Chapter9/9.11.png){width=80%}
+$$f({\boldsymbol x}_i)=\beta_0 +\sum_{l=1}^n \alpha_l K({\boldsymbol x}_i,{\boldsymbol x}_l) \ .$$
 
 ---
 
@@ -1101,7 +1070,7 @@ $~$
 \scriptsize
 
 ```{r forest3.4, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
-svmfit_kernel2=svm(y ~ ., data=train3, kernel='polynomial', degree=4, cost=100000, scale=FALSE)
+svmfit_kernel2=svm(y ~ ., data=train3, kernel='polynomial', degree=4, cost=10000, scale=FALSE)
 plot(svmfit_kernel2,train3,col=c("lightcoral","lightgreen"))
 ```
 
@@ -1167,6 +1136,38 @@ table(predict=ypred_kernel,truth=test3[,3])
 \normalsize 
 Only one seed is misclassified.
 
+
+---
+
+## Tuning parameter example
+
+\vspace{2mm}
+
+Heart data - predict heart disease from $p=13$ predictors.
+
+Training errors as ROC and AUC.
+
+\vspace{1mm}
+
+$~$
+\centering
+
+![ISLR Figure 9.10](../../ISLR/Figures/Chapter9/9.10.png){width=80%}
+
+$~$
+
+\flushleft
+**Q**: How are the ROC curves formed?
+<!-- **A**: Use different $t$ to classify $\hat{f}(X)>t$. -->
+
+---
+
+Heart data - test error.
+
+\centering
+![ISLR Figure 9.11](../../ISLR/Figures/Chapter9/9.11.png){width=80%}
+
+
 ---
 
 # Extensions 
@@ -1193,7 +1194,7 @@ It is possible to write the optimization problem for the support vector classifi
 $$\text{minimize}_{\boldsymbol \beta} \left\{ \underbrace{\sum_{i=1}^n \max(0,1-y_i f({\boldsymbol x}_i))}_{=L(\boldsymbol x, \boldsymbol{y},\boldsymbol\beta)}+ \underbrace{\lambda \sum_{j=1}^p \beta_j^2}_{\text{Penalty}} \right\}$$
 
 * The margin now corresponds to $M=1$, and its width is determined by $\sum_{j=1}^p \beta_j^2$.
-* The loss is called _\textcolor{red}{hinge loss}_ - observe the max and 0 to explain why only support vectors contribute
+* The loss is called _\textcolor{red}{hinge loss}_ - observe the max and 0 to explain why only support vectors contribute.
 * The penalty is a ridge penalty. 
 
 * Large $\lambda$ gives small $\beta$s and more violations=high bias, but low variance.
@@ -1212,9 +1213,8 @@ Interestingly, the loss functions for a support-vector classifier with $f(X)=\be
 **Hinge loss:**
 $$\max(0,1-y_if({\boldsymbol x}_i))$$
 
-For comparison a logistic regression would be (binomial deviance with $-1,1$ coding of $y$)
-
-$$ \log(1+\exp(-y_i f({\boldsymbol x}_i)))$$
+* For comparison a logistic regression loss function would be (binomial deviance with $-1,1$ coding of $y$)
+$$ \log(1+\exp(-y_i f({\boldsymbol x}_i)))\ .$$
 
 * In logistic regression all observations contribute weighted by $p_i(1-p_i)$ (where $p_i$ is probability for class 1), that fade smoothly with distance to the decision boundary
 
@@ -1228,9 +1228,11 @@ $~$
 
 * If classes are nearly separable SVM will perform better than logistic regression. (Also LDA will perform better than logistic regression; what is the problem with logistic regression?)
  
+\vspace{2mm}
  
 * Otherwise, a ridge penalty version of logistic regression is **very** similar to SVM, and logistic regression will also give you probabilities for each class.
 
+\vspace{2mm}
 
 <!-- \footnote{Todo: It could be nice to have an exercise that compares SVM with logistic regression, with and without ridge penalty, and perhaps also LD; or this can be saved for compulsory exercise 2} -->
 
