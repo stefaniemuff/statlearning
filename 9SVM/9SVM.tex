@@ -153,7 +153,7 @@
 
 \begin{frame}
 
-Last update: March 8, 2020
+Last update: March 9, 2020
 
 \end{frame}
 
@@ -1546,9 +1546,15 @@ This will bring us to another idea:
 \begin{frame}
 
 \begin{itemize}
+\tightlist
 \item
   The radial kernel is convenient if we want a circular decision
-  boundary.
+  boundary. See Figure 19.5 in Efron and Hastie (2016): \vspace{2mm}
+\end{itemize}
+
+\includegraphics{casi19.5.png}
+
+\begin{itemize}
 \item
   \(\gamma\) and our budget can be chosen by cross-validation.
 \item
@@ -1880,19 +1886,29 @@ Heart data - test error.
 
 \vspace{2mm}
 
-What if we have \(k\) classes? Two popular approaches: \vspace{1mm}
+What if we have \(k\) classes? Two popular approaches:
+
+\(~\)
 
 \begin{itemize}
+\tightlist
 \item
   OVA: \emph{\textcolor{red}{one-versus-all}}. Fit \(k\) different
   two-class SVMs \(f_k({\boldsymbol x})\) where, each time, one class is
   compared to the ensemble of all other classes. Classify a test
   observation to the class where \(f_k({\boldsymbol x}^*)\) is largest.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   OVO: \emph{\textcolor{red}{one-versus-one}}. \texttt{libsvm} uses this
   approach, in which \(k(k-1)/2\) binary classifiers are trained; the
   appropriate class is found by a voting scheme (the class that wins the
-  most pairwise competitions are chosen).
+  most pairwise competitions for a given \({\boldsymbol x}^*\) is
+  chosen).
 \end{itemize}
 
 \end{block}

@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "March 6 and 9, 2020"
 fontsize: 10pt
 output:
-  # beamer_presentation:
-  #   keep_tex: yes
-  #   fig_caption: false
-  #   latex_engine: xelatex
-  #   theme: "Singapore"
-  #   colortheme: "default"
-  #   font: "serif"
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+    theme: "Singapore"
+    colortheme: "default"
+    font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -33,7 +33,7 @@ whichformat="latex"
 
 ---
 
-Last update: March 8, 2020
+Last update: March 9, 2020
 
 --- 
 
@@ -986,11 +986,16 @@ where $\gamma$ is a positive constant (a tuning parameter).
 ---
 
 
-* The radial kernel is convenient if we want a circular decision boundary.
+* The radial kernel is convenient if we want a circular decision boundary. See Figure 19.5 in @casi:
+\vspace{2mm}
+
+![](casi19.5.png)
 
 * $\gamma$ and our budget can be chosen by cross-validation.
 
 * Remark: the mathematics behind this is based on _reproducing-kernel Hilbert spaces_ (see page 384 of @casi for a glimpse of the theory).
+
+
 
 ---
 
@@ -1178,11 +1183,14 @@ Heart data - test error.
 \vspace{2mm}
 
 What if we have $k$ classes? Two popular approaches:
-\vspace{1mm}
+
+$~$
 
 * OVA: _\textcolor{red}{one-versus-all}_. Fit $k$ different two-class SVMs $f_k({\boldsymbol x})$ where, each time, one class is compared to the ensemble of all other classes. Classify a test observation to the class where $f_k({\boldsymbol x}^*)$ is largest.
 
-* OVO: _\textcolor{red}{one-versus-one}_. `libsvm` uses this approach, in which $k(k-1)/2$ binary classifiers are trained; the appropriate class is found by a voting scheme (the class that wins the most pairwise competitions are chosen).
+\vspace{2mm}
+
+* OVO: _\textcolor{red}{one-versus-one}_. `libsvm` uses this approach, in which $k(k-1)/2$ binary classifiers are trained; the appropriate class is found by a voting scheme (the class that wins the most pairwise competitions for a given ${\boldsymbol x}^*$ is chosen).
 
 ---
 
