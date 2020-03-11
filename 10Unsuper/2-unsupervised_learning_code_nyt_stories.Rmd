@@ -1,0 +1,109 @@
+---
+title: "TMA4268 Statistical Learning"
+subtitle: "Chapter 10: Unsupervised Learning - NYT Stories"
+author: "Thiago G. Martins, Department of Mathematical Sciences, NTNU"
+date: "Spring 2020"
+output: #3rd letter intentation hierarchy
+#  beamer_presentation:
+###    incremental: true # or >* for one at a time
+#  slidy_presentation:
+#    font_adjustment: +1  
+   prettydoc::html_pretty:
+    theme: architect
+    highlight: github
+#  pdf_document:
+  #  toc: true
+  #  toc_depth: 2
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# PCA on New York Times stories
+
+This example (code and data) are based on the [lecture](http://www.stat.cmu.edu/~cshalizi/490/10/) of Brian Junker and Cosma Shalizi about Principal components and factor analysis.
+
+You can download the `pca-examples.Rdata` on our course website.
+
+## Data Exploration
+
+New stories randomly selected from the [New York Times Annotated Corpus](https://catalog.ldc.upenn.edu/ldc2008t19). There are 57 stories about art and 45 about music on the dataset available.
+
+```{r, message=FALSE, warning=FALSE}
+# Modify the location based on your filesystem
+load("../10_unsupervised_learning/datasets/pca-examples.Rdata")
+
+# We will work with nyt.frame
+nyt_data = nyt.frame
+```
+
+The `nyt_data` is a dataset containing 102 observations (102 new stories) and columns containing class labels of the stories (art and music) and the count of each word in a given story (weight by the inverse document frequency and normalized by vector length).
+
+```{r, message=FALSE, warning=FALSE}
+str(nyt_data)
+summary(nyt_data$class.labels)
+```
+
+Let's check some word samples:
+
+```{r, message=FALSE, warning=FALSE}
+colnames(nyt_data)[sample(ncol(nyt_data),30)]
+```
+
+Let's check some values in the dataset. We have many zeroes, as most words do not appear in most stories.
+
+```{r, message=FALSE, warning=FALSE}
+signif(nyt_data[sample(nrow(nyt_data),5),sample(ncol(nyt_data),10)],3)
+```
+
+## PCA
+
+We will now perform PCA. We exclude the first column since it is related to the response of the data. We did not set `scale=TRUE` because the data has already been normalized.
+
+```{r, message=FALSE, warning=FALSE}
+nyt_pca = prcomp(nyt_data[,-1])
+```
+
+### Loadings
+
+Note that we can have at most 102 PCs in this case.
+
+```{r, message=FALSE, warning=FALSE}
+nyt_loading = nyt_pca$rotation
+dim(nyt_loading)
+signif(nyt_loading[sample(nrow(nyt_loading),5),sample(ncol(nyt_loading),10)],3)
+```
+
+Show the 30 words with the biggest positive loading on PC1:
+
+```{r, message=FALSE, warning=FALSE}
+signif(sort(nyt_loading[,1],decreasing=TRUE)[1:30],2)
+```
+Show the 30 words with the biggest negative loading on PC1:
+
+```{r, message=FALSE, warning=FALSE}
+signif(sort(nyt_loading[,1],decreasing=FALSE)[1:30],2)
+```
+
+Show the 30 words with the biggest positive loading on PC2:
+
+```{r, message=FALSE, warning=FALSE}
+signif(sort(nyt_loading[,2],decreasing=TRUE)[1:30],2)
+```
+
+Show the 30 words with the biggest negative loading on PC1:
+
+```{r, message=FALSE, warning=FALSE}
+signif(sort(nyt_loading[,2],decreasing=FALSE)[1:30],2)
+```
+
+Plot the projection of the stories on to the first 2 components. Arts stories with red As and music stories with blue Ms.
+The separation is very good, even with only two components.
+
+```{r, message=FALSE, warning=FALSE}
+plot(nyt_pca$x[,1:2],type="n")
+points(nyt_pca$x[nyt_data[,"class.labels"]=="art",1:2],pch="A",col="red")
+points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],pch="M",col="blue")
+```

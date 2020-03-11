@@ -1,0 +1,202 @@
+---
+title: "TMA4268 Statistical Learning"
+subtitle: "Chapter 10: Unsupervised Learning"
+author: "Thiago G. Martins, Department of Mathematical Sciences, NTNU"
+date: "Spring 2020"
+output: #3rd letter intentation hierarchy
+#  beamer_presentation:
+###    incremental: true # or >* for one at a time
+#  slidy_presentation:
+#    font_adjustment: +1  
+   prettydoc::html_pretty:
+    theme: architect
+    highlight: github
+#  pdf_document:
+  #  toc: true
+  #  toc_depth: 2
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Lab 3: NCI60 Data Example
+
+## The NCI60 data
+
+The `NCI60` cancer cell line microarray data consists of 6,830 gene expression 
+measurements on 64 cancer cell lines.
+
+```{r, message=FALSE, warning=FALSE}
+library(ISLR)
+nci.labs=NCI60$labs
+nci.data=NCI60$data
+```
+
+The data has 64 rows and 6,830 columns.
+
+```{r, message=FALSE, warning=FALSE}
+dim(nci.data)
+```
+
+Each cell line is labeled with a cancer type. We begin by examining the cancer types for the cell lines.
+
+```{r, message=FALSE, warning=FALSE}
+nci.labs[1:4]
+table(nci.labs)
+```
+
+## PCA on the NCI60 Data
+
+We first perform PCA on the data after scaling the variables (genes) to
+have standard deviation one, although one could reasonably argue that it
+is better not to scale the genes.
+
+```{r, message=FALSE, warning=FALSE}
+pr.out=prcomp(nci.data, scale=TRUE)
+```
+
+We now plot the first few principal component score vectors, in order to
+visualize the data. The observations (cell lines) corresponding to a given
+cancer type will be plotted in the same color, so that we can see to what
+extent the observations within a cancer type are similar to each other.
+
+```{r, message=FALSE, warning=FALSE}
+Cols=function(vec){
+    cols=rainbow(length(unique(vec)))
+    return(cols[as.numeric(as.factor(vec))])
+}
+```
+
+```{r, message=FALSE, warning=FALSE}
+par(mfrow=c(1,2))
+plot(pr.out$x[,1:2], col=Cols(nci.labs), pch=19,xlab="Z1",ylab="Z2")
+plot(pr.out$x[,c(1,3)], col=Cols(nci.labs), pch=19,xlab="Z1",ylab="Z3")
+```
+
+On the whole, cell lines corresponding to a single cancer type do tend to have similar values on the
+first few principal component score vectors. This indicates that cell lines from the same cancer type tend to have pretty similar gene expression levels.
+
+```{r, message=FALSE, warning=FALSE}
+summary(pr.out)
+```
+
+```{r, message=FALSE, warning=FALSE}
+plot(pr.out)
+```
+
+Note that the height of each bar in the bar plot is given by squaring the
+corresponding element of `pr.out$sdev`. However, it is more informative to
+plot the PVE of each principal component (i.e. a scree plot) and the cumulative
+PVE of each principal component. This can be done with just a
+little work. (Note that the elements of pve can also be computed directly from the summary,
+`summary(pr.out)$importance[2,]`, and the elements of `cumsum(pve)`
+are given by `summary(pr.out)$importance[3,]`.)
+
+```{r, message=FALSE, warning=FALSE}
+pve=100*pr.out$sdev^2/sum(pr.out$sdev^2)
+par(mfrow=c(1,2))
+plot(pve,  type="o", ylab="PVE", xlab="Principal Component", col="blue")
+plot(cumsum(pve), type="o", ylab="Cumulative PVE", xlab="Principal Component", col="brown3")
+```
+
+We see that together, the first seven principal components
+explain around 40% of the variance in the data. This is not a huge amount
+of the variance. However, looking at the scree plot, we see that while each
+of the first seven principal components explain a substantial amount of
+variance, there is a marked decrease in the variance explained by further
+principal components. That is, there is an elbow in the plot after approximately
+the seventh principal component. This suggests that there may
+be little benefit to examining more than seven or so principal components
+(though even examining seven principal components may be difficult).
+
+## Clustering the Observations of the NCI60 Data
+
+To begin, we standardize the variables to have
+mean zero and standard deviation one. As mentioned earlier, this step is
+optional and should be performed only if we want each gene to be on the
+same scale.
+
+```{r, message=FALSE, warning=FALSE}
+sd.data=scale(nci.data)
+```
+
+We now perform hierarchical clustering of the observations using complete,
+single, and average linkage. Euclidean distance is used as the dissimilarity
+measure.
+
+```{r, message=FALSE, warning=FALSE}
+par(mfrow=c(1,3))
+data.dist=dist(sd.data)
+plot(hclust(data.dist), labels=nci.labs, main="Complete Linkage", xlab="", sub="",ylab="")
+plot(hclust(data.dist, method="average"), labels=nci.labs, main="Average Linkage", xlab="", sub="",ylab="")
+plot(hclust(data.dist, method="single"), labels=nci.labs,  main="Single Linkage", xlab="", sub="",ylab="")
+```
+
+Typically, single linkage will tend
+to yield trailing clusters: very large clusters onto which individual observations
+attach one-by-one. On the other hand, complete and average linkage
+tend to yield more balanced, attractive clusters. We will use complete linkage hierarchical clustering
+for the analysis that follows.
+
+We can cut the dendrogram at the height that will yield a particular
+number of clusters, say four:
+
+```{r, message=FALSE, warning=FALSE}
+hc.out=hclust(dist(sd.data))
+hc.clusters=cutree(hc.out,4)
+table(hc.clusters,nci.labs)
+```
+
+There are some clear patterns. All the leukemia cell lines fall in cluster 3,
+while the breast cancer cell lines are spread out over three different clusters.
+
+We can plot the cut on the dendrogram that produces these four clusters:
+
+```{r, message=FALSE, warning=FALSE}
+par(mfrow=c(1,1))
+plot(hc.out, labels=nci.labs)
+abline(h=139, col="red")
+```
+
+Printing the output of `hclust` gives a useful brief summary of the object:
+
+```{r, message=FALSE, warning=FALSE}
+hc.out
+```
+
+We claimed earlier that K-means clustering and hierarchical
+clustering with the dendrogram cut to obtain the same number
+of clusters can yield very different results. How do these NCI60 hierarchical
+clustering results compare to what we get if we perform K-means clustering
+with K = 4?
+
+```{r, message=FALSE, warning=FALSE}
+set.seed(2)
+km.out=kmeans(sd.data, 4, nstart=20)
+km.clusters=km.out$cluster
+table(km.clusters,hc.clusters)
+```
+
+We see that the four clusters obtained using hierarchical clustering and Kmeans
+clustering are somewhat different.
+
+Rather than performing hierarchical clustering on the entire data matrix,
+we can simply perform hierarchical clustering on the first few principal
+component score vectors, as follows:
+
+```{r, message=FALSE, warning=FALSE}
+hc.out=hclust(dist(pr.out$x[,1:5]))
+plot(hc.out, labels=nci.labs, main="Hier. Clust. on First Five Score Vectors")
+table(cutree(hc.out,4), nci.labs)
+```
+
+Not surprisingly, these results are different from the ones that we obtained
+when we performed hierarchical clustering on the full data set. 
+
+Sometimes
+performing clustering on the first few principal component score vectors
+can give better results than performing clustering on the full data. In this
+situation, we might view the principal component step as one of denoising
+the data.

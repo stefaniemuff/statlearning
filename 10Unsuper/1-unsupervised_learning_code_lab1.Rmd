@@ -1,0 +1,173 @@
+---
+title: "TMA4268 Statistical Learning"
+subtitle: "Chapter 10: Unsupervised Learning - Lab 1"
+author: "Thiago G. Martins, Department of Mathematical Sciences, NTNU"
+date: "Spring 2020"
+output: #3rd letter intentation hierarchy
+#  beamer_presentation:
+###    incremental: true # or >* for one at a time
+#  slidy_presentation:
+#    font_adjustment: +1  
+   prettydoc::html_pretty:
+    theme: architect
+    highlight: github
+#  pdf_document:
+  #  toc: true
+  #  toc_depth: 2
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Lab 1: Principal Components Analysis
+
+We are going to use the `USArrests` dataset. It contains crime statistics per 100000 residents in 50 states of the USA. The crime types included are Assault, Murder and Rape. In addition, it contains information about the percent of the population in each state living in urban areas.
+
+## Data Exploration
+
+### Data rows
+
+The rows of the data contains the 50 states, in alphabetical order.
+
+```{r, message=FALSE, warning=FALSE}
+states=row.names(USArrests) # part of the base R package
+states
+```
+
+### Data columns
+
+The columns of the data contain the four variables
+
+```{r, message=FALSE, warning=FALSE}
+names(USArrests)
+```
+
+### Mean and variance
+
+The variables have vastly different means
+
+```{r, message=FALSE, warning=FALSE}
+apply(USArrests, 2, mean)
+```
+
+The same is true for the variances
+
+```{r, message=FALSE, warning=FALSE}
+apply(USArrests, 2, var)
+```
+
+If we failed to scale the variables before performing PCA, then most of the principal components
+that we observed would be driven by the Assault variable, since it has by 
+far the largest mean and variance.
+
+### PCA
+
+We now go on to apply PCA on the standardized variables (mean 0 and std. dev. 1).
+By default, the `prcomp()` function centers the variables to have mean zero.
+By using the option `scale=TRUE`, we scale the variables to have standard
+deviation one.
+
+```{r, message=FALSE, warning=FALSE}
+pr.out=prcomp(USArrests, scale=TRUE)
+```
+
+### PCA output
+
+The output from `prcomp()` contains a number of useful quantities.
+
+```{r, message=FALSE, warning=FALSE}
+names(pr.out)
+```
+
+#### `center` and `scale`
+
+The `center` and `scale` components correspond to the means and standard
+deviations of the variables that were used for scaling prior to implementing
+PCA.
+
+```{r, message=FALSE, warning=FALSE}
+pr.out$center
+pr.out$scale
+```
+
+#### `rotation`
+
+The rotation matrix provides the principal component loadings; each column
+of `pr.out$rotation` contains the corresponding principal component loading vector.
+
+```{r, message=FALSE, warning=FALSE}
+pr.out$rotation
+```
+
+#### Score vectors
+
+The $50 \times 4$ matrix `x` has as its columns the principal component score vectors. 
+That is, the $k$th column is the $k$-th principal component score vector.
+
+```{r, message=FALSE, warning=FALSE}
+dim(pr.out$x)
+```
+
+#### Biplot
+
+We can plot the first two principal components as follows:
+
+```{r, message=FALSE, warning=FALSE}
+biplot(pr.out, scale=0)
+```
+
+The `scale=0` argument to `biplot()` ensures that the arrows are scaled to
+represent the loadings; other values for scale give slightly different biplots
+with different interpretations.
+
+Remember that the PCs are unique up to a sign change, so the code below should give
+equivalent results
+
+```{r, message=FALSE, warning=FALSE}
+pr.out$rotation=-pr.out$rotation
+pr.out$x=-pr.out$x
+biplot(pr.out, scale=0)
+```
+
+#### Proportion of variance explained (PVE)
+
+The `prcomp()` function also outputs the standard deviation of each principal
+component.
+
+```{r, message=FALSE, warning=FALSE}
+pr.out$sdev
+```
+
+The variance explained by each principal component is obtained by squaring
+these:
+
+```{r, message=FALSE, warning=FALSE}
+pr.var=pr.out$sdev^2
+pr.var
+```
+
+We can then compute the proportion of variance explained by each principal component
+
+```{r, message=FALSE, warning=FALSE}
+pve=pr.var/sum(pr.var)
+pve
+```
+
+We can plot the PVE explained by each component, as well
+as the cumulative PVE, as follows:
+
+```{r, message=FALSE, warning=FALSE}
+plot(pve, 
+     xlab="Principal Component", 
+     ylab="Proportion of Variance Explained", 
+     ylim=c(0,1),
+     type='b')
+plot(cumsum(pve), 
+     xlab="Principal Component", 
+     ylab="Cumulative Proportion of Variance Explained", 
+     ylim=c(0,1),
+     type='b')
+```
+

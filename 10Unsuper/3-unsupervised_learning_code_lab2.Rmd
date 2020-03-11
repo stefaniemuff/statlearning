@@ -1,0 +1,201 @@
+---
+title: "TMA4268 Statistical Learning"
+subtitle: "Chapter 10: Unsupervised Learning"
+author: "Thiago G. Martins, Department of Mathematical Sciences, NTNU"
+date: "Spring 2020"
+output: #3rd letter intentation hierarchy
+#  beamer_presentation:
+###    incremental: true # or >* for one at a time
+#  slidy_presentation:
+#    font_adjustment: +1  
+   prettydoc::html_pretty:
+    theme: architect
+    highlight: github
+#  pdf_document:
+  #  toc: true
+  #  toc_depth: 2
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Lab 2: Clustering
+
+## K-Means Clustering
+
+### Simulate data
+
+Lets simulate data with the intention to create two clusters:
+
+```{r, message=FALSE, warning=FALSE}
+set.seed(2)
+x=matrix(rnorm(50*2), ncol=2)
+x[1:25,1]=x[1:25,1]+3
+x[1:25,2]=x[1:25,2]-4
+```
+
+### Perform k-means
+
+The function `kmeans()` performs K-means clustering in R. We now perform K-means clustering with K = 2.
+
+```{r, message=FALSE, warning=FALSE}
+km.out=kmeans(x,2,nstart=20)
+```
+
+To run the `kmeans()` function in R with multiple initial cluster assignments,
+we use the `nstart` argument. The `kmeans()` function will report only the best results.
+
+### Cluster assignments
+
+The cluster assignments of the 50 observations are contained in `km.out$cluster`:
+
+```{r, message=FALSE, warning=FALSE}
+km.out$cluster
+```
+
+### Plot the data
+
+We can plot the data, with each observation colored according to its cluster assignment.
+
+```{r, message=FALSE, warning=FALSE}
+plot(x, 
+     col=(km.out$cluster+1), 
+     main="K-Means Clustering Results with K=2", 
+     xlab="", ylab="", pch=20, cex=2)
+```
+
+### kmeans with k = 3
+
+However, for real data, in general we do not know
+the true number of clusters. We could instead have performed K-means
+clustering on this example with K = 3.
+
+```{r, message=FALSE, warning=FALSE}
+set.seed(4)
+km.out=kmeans(x,3,nstart=20)
+km.out
+plot(x, col=(km.out$cluster+1), main="K-Means Clustering Results with K=3", xlab="", ylab="", pch=20, cex=2)
+```
+
+### Multiple starting points
+
+We compare using nstart=1 to nstart=20.
+
+```{r, message=FALSE, warning=FALSE}
+set.seed(3)
+km.out=kmeans(x,3,nstart=1)
+km.out$tot.withinss
+km.out=kmeans(x,3,nstart=20)
+km.out$tot.withinss
+```
+
+Note that `km.out$tot.withinss` is the total within-cluster sum of squares,
+which we seek to minimize by performing K-means clustering.
+
+We strongly recommend always running K-means clustering with a large
+value of nstart, such as 20 or 50, since otherwise an undesirable local
+optimum may be obtained.
+
+## Hierarchical Clustering
+
+The `hclust()` function implements hierarchical clustering in R.
+We will use the data simulated in the K-means section.
+
+Next, we will compute hierarchical
+clustering dendrogram using complete, single, and average linkage clustering,
+with Euclidean distance as the dissimilarity measure.
+
+### Perform hierarchical clustering
+
+The `dist()` function is used
+to compute the $50 \times 50$ inter-observation Euclidean distance matrix.
+
+```{r, message=FALSE, warning=FALSE}
+hc.complete=hclust(dist(x), method="complete")
+hc.average=hclust(dist(x), method="average")
+hc.single=hclust(dist(x), method="single")
+```
+
+### Plot dendograms
+
+We can now plot the dendrograms obtained using the usual `plot()` function.
+The numbers at the bottom of the plot identify each observation.
+
+```{r, message=FALSE, warning=FALSE}
+par(mfrow=c(1,3))
+plot(hc.complete,main="Complete Linkage", xlab="", sub="", cex=.9)
+plot(hc.average, main="Average Linkage", xlab="", sub="", cex=.9)
+plot(hc.single, main="Single Linkage", xlab="", sub="", cex=.9)
+```
+
+### Cluster assignment
+
+To determine the cluster labels for each observation associated with a
+given cut of the dendrogram, we can use the `cutree()` function:
+
+```{r, message=FALSE, warning=FALSE}
+cutree(hc.complete, 2)
+cutree(hc.average, 2)
+cutree(hc.single, 2)
+```
+
+For this data, complete and average linkage generally separate the observations
+into their correct groups. 
+
+#### Single linkage singletons
+
+However, single linkage identifies one point
+as belonging to its own cluster. A more sensible answer is obtained when
+four clusters are selected, although there are still two singletons.
+
+```{r, message=FALSE, warning=FALSE}
+cutree(hc.single, 4)
+```
+
+### Scaling the variables
+
+To scale the variables before performing hierarchical clustering of the
+observations, we use the `scale()` function:
+
+```{r, message=FALSE, warning=FALSE}
+xsc=scale(x)
+plot(hclust(dist(xsc), method="complete"), main="Hierarchical Clustering with Scaled Features")
+```
+
+### Correlation-based distance
+
+Correlation-based distance can be computed using the `as.dist()` function, 
+which converts an arbitrary square symmetric matrix into a form that
+the `hclust()` function recognizes as a distance matrix. 
+
+However, this only
+makes sense for data with at least three features since the absolute correlation
+between any two observations with measurements on two features is
+always 1. 
+
+```{r, message=FALSE, warning=FALSE}
+# Code below is to check the statement above.
+
+x=matrix(rnorm(5*2), ncol=2)
+dd=as.dist(1-cor(t(x)))
+dd
+
+x=matrix(rnorm(5*3), ncol=3)
+dd=as.dist(1-cor(t(x)))
+dd
+```
+
+Hence, we will cluster a three-dimensional data set.
+
+```{r, message=FALSE, warning=FALSE}
+# Simulate data
+x=matrix(rnorm(30*3), ncol=3)
+# Compute correlation-distance matrix
+dd=as.dist(1-cor(t(x)))
+# Plot dendogram
+plot(hclust(dd, method="complete"), 
+     main="Complete Linkage with Correlation-Based Distance", 
+     xlab="", sub="")
+```
