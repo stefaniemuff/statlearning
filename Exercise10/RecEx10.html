@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Thiago G. Martins, Department of Mathematical Sciences, NTNU" />
+<meta name="author" content="Thiago G. Martins, Martina Hall, Stefanie Muff, Department of Mathematical Sciences, NTNU" />
 
 <meta name="date" content="2020-03-14" />
 
@@ -1636,20 +1636,45 @@ summary {
 
 <h1 class="title toc-ignore">Module 10: Recommended Exercises</h1>
 <h3 class="subtitle">TMA4268 Statistical Learning V2020</h3>
-<h4 class="author">Thiago G. Martins, Department of Mathematical Sciences, NTNU</h4>
+<h4 class="author">Thiago G. Martins, Martina Hall, Stefanie Muff, Department of Mathematical Sciences, NTNU</h4>
 <h4 class="date">March 14, 2020</h4>
 
 </div>
 
 
-<p>a</p>
-<div id="recommended-exercise-1" class="section level1">
-<h1>Recommended exercise 1</h1>
+<div id="pca-on-new-york-times-stories" class="section level1">
+<h1>PCA on New York Times stories</h1>
+<p>This exercise is based on the New York Time stories example (code and data) on the <a href="http://www.stat.cmu.edu/~cshalizi/490/10/">lecture</a> of Brian Junker and Cosma Shalizi about Principal components and factor analysis.</p>
+<div id="data-exploration" class="section level2">
+<h2>Data Exploration</h2>
+<p>New stories were randomly selected from the <a href="https://catalog.ldc.upenn.edu/LDC2008T19">New York Times Annotated Corpus</a>. There are 57 stories about art and 45 about music on the dataset available.</p>
+<p>The <code>nyt_data</code> is a dataset containing these 102 stories, which represent the 102 observations. The first column contains class labels of the stories (art and music) and, and the other stories contain the counts of each word in a given story (weight by the inverse document frequency and normalized by vector length).</p>
 <p>The New York Times stories dataset are contained in the file <code>pca-exampes.rdata</code>, which you can load from google drive (<a href="https://drive.google.com/open?id=1vaK9GDvMw4Hsuv0T1jHeq9ZyrqLhJ6MR" class="uri">https://drive.google.com/open?id=1vaK9GDvMw4Hsuv0T1jHeq9ZyrqLhJ6MR</a>) and store in the directory of your Rmd file. The pca-examples.rdata can be loaded with the following code.</p>
 <pre class="r"><code>load(&quot;pca-examples.rdata&quot;)
 
 # We will work with nyt.frame
 nyt_data = nyt.frame</code></pre>
+<pre class="r"><code>str(nyt_data)
+summary(nyt_data$class.labels)</code></pre>
+<p>Let’s check some word samples:</p>
+<pre class="r"><code>colnames(nyt_data)[sample(ncol(nyt_data), 30)]</code></pre>
+<pre><code>##  [1] &quot;penchant&quot;  &quot;brought&quot;   &quot;structure&quot; &quot;willing&quot;   &quot;yielding&quot; 
+##  [6] &quot;bare&quot;      &quot;school&quot;    &quot;halls&quot;     &quot;challenge&quot; &quot;step&quot;     
+## [11] &quot;largest&quot;   &quot;lovers&quot;    &quot;intense&quot;   &quot;borders&quot;   &quot;mall&quot;     
+## [16] &quot;classic&quot;   &quot;conducted&quot; &quot;mirrors&quot;   &quot;hole&quot;      &quot;location&quot; 
+## [21] &quot;desperate&quot; &quot;published&quot; &quot;head&quot;      &quot;paints&quot;    &quot;another&quot;  
+## [26] &quot;starts&quot;    &quot;familiar&quot;  &quot;window&quot;    &quot;thats&quot;     &quot;broker&quot;</code></pre>
+<p>Let’s check some values in the dataset. We have many zeroes, as most words do not appear in most stories.</p>
+<pre class="r"><code>signif(nyt_data[sample(nrow(nyt_data), 5), sample(ncol(nyt_data), 10)], 3)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["jacket"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["patch"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["tapes"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["want"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["ford"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["failed"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["condemn"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["intentional"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["confined"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["destroyed"],"name":[10],"type":["dbl"],"align":["right"]}],"data":[{"1":"0","2":"0","3":"0","4":"0.0000","5":"0.0000","6":"0.0000","7":"0","8":"0","9":"0","10":"0","_rn_":"24"},{"1":"0","2":"0","3":"0","4":"0.0275","5":"0.0704","6":"0.0000","7":"0","8":"0","9":"0","10":"0","_rn_":"2"},{"1":"0","2":"0","3":"0","4":"0.0482","5":"0.0000","6":"0.0000","7":"0","8":"0","9":"0","10":"0","_rn_":"85"},{"1":"0","2":"0","3":"0","4":"0.0000","5":"0.0000","6":"0.0000","7":"0","8":"0","9":"0","10":"0","_rn_":"59"},{"1":"0","2":"0","3":"0","4":"0.0000","5":"0.0000","6":"0.0215","7":"0","8":"0","9":"0","10":"0","_rn_":"76"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div id="recommended-exercise-1" class="section level1">
+<h1>Recommended exercise 1</h1>
 <ul>
 <li>For the New York Times stories (<code>nyt_data</code>) dataset:
 <ul>

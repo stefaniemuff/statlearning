@@ -32,7 +32,7 @@
 \usepackage{hyperref}
 \hypersetup{
             pdftitle={Module 10: Recommended Exercises},
-            pdfauthor={Thiago G. Martins, Department of Mathematical Sciences, NTNU},
+            pdfauthor={Thiago G. Martins, Martina Hall, Stefanie Muff, Department of Mathematical Sciences, NTNU},
             colorlinks=true,
             linkcolor=Maroon,
             filecolor=Maroon,
@@ -119,16 +119,35 @@
 \title{Module 10: Recommended Exercises}
 \providecommand{\subtitle}[1]{}
 \subtitle{TMA4268 Statistical Learning V2020}
-\author{Thiago G. Martins, Department of Mathematical Sciences, NTNU}
+\author{Thiago G. Martins, Martina Hall, Stefanie Muff, Department of
+Mathematical Sciences, NTNU}
 \date{March 14, 2020}
 
 \begin{document}
 \maketitle
 
-a
+\hypertarget{pca-on-new-york-times-stories}{%
+\section{PCA on New York Times
+stories}\label{pca-on-new-york-times-stories}}
 
-\hypertarget{recommended-exercise-1}{%
-\section{Recommended exercise 1}\label{recommended-exercise-1}}
+This exercise is based on the New York Time stories example (code and
+data) on the \href{http://www.stat.cmu.edu/~cshalizi/490/10/}{lecture}
+of Brian Junker and Cosma Shalizi about Principal components and factor
+analysis.
+
+\hypertarget{data-exploration}{%
+\subsection{Data Exploration}\label{data-exploration}}
+
+New stories were randomly selected from the
+\href{https://catalog.ldc.upenn.edu/LDC2008T19}{New York Times Annotated
+Corpus}. There are 57 stories about art and 45 about music on the
+dataset available.
+
+The \texttt{nyt\_data} is a dataset containing these 102 stories, which
+represent the 102 observations. The first column contains class labels
+of the stories (art and music) and, and the other stories contain the
+counts of each word in a given story (weight by the inverse document
+frequency and normalized by vector length).
 
 The New York Times stories dataset are contained in the file
 \texttt{pca-exampes.rdata}, which you can load from google drive
@@ -144,6 +163,57 @@ be loaded with the following code.
 \NormalTok{nyt_data =}\StringTok{ }\NormalTok{nyt.frame}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{str}\NormalTok{(nyt_data)}
+\KeywordTok{summary}\NormalTok{(nyt_data}\OperatorTok{$}\NormalTok{class.labels)}
+\end{Highlighting}
+\end{Shaded}
+
+Let's check some word samples:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{colnames}\NormalTok{(nyt_data)[}\KeywordTok{sample}\NormalTok{(}\KeywordTok{ncol}\NormalTok{(nyt_data), }\DecValTok{30}\NormalTok{)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "penchant"  "brought"   "structure" "willing"   "yielding" 
+##  [6] "bare"      "school"    "halls"     "challenge" "step"     
+## [11] "largest"   "lovers"    "intense"   "borders"   "mall"     
+## [16] "classic"   "conducted" "mirrors"   "hole"      "location" 
+## [21] "desperate" "published" "head"      "paints"    "another"  
+## [26] "starts"    "familiar"  "window"    "thats"     "broker"
+\end{verbatim}
+
+Let's check some values in the dataset. We have many zeroes, as most
+words do not appear in most stories.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{signif}\NormalTok{(nyt_data[}\KeywordTok{sample}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(nyt_data), }\DecValTok{5}\NormalTok{), }\KeywordTok{sample}\NormalTok{(}\KeywordTok{ncol}\NormalTok{(nyt_data), }\DecValTok{10}\NormalTok{)], }\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    jacket patch tapes   want   ford failed condemn intentional confined
+## 24      0     0     0 0.0000 0.0000 0.0000       0           0        0
+## 2       0     0     0 0.0275 0.0704 0.0000       0           0        0
+## 85      0     0     0 0.0482 0.0000 0.0000       0           0        0
+## 59      0     0     0 0.0000 0.0000 0.0000       0           0        0
+## 76      0     0     0 0.0000 0.0000 0.0215       0           0        0
+##    destroyed
+## 24         0
+## 2          0
+## 85         0
+## 59         0
+## 76         0
+\end{verbatim}
+
+\hypertarget{recommended-exercise-1}{%
+\section{Recommended exercise 1}\label{recommended-exercise-1}}
 
 \begin{itemize}
 \tightlist
