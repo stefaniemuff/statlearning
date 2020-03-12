@@ -1,0 +1,206 @@
+---
+title: 'Module 10: Recommended Exercises - Solutions'
+author: "Thiago G. Martins, Department of Mathematical Sciences, NTNU"
+date: "March 14, 2020"
+output:
+   pdf_document:
+     fig_caption: yes
+     keep_tex: yes
+     toc: no
+     toc_depth: 2
+   html_document:
+    df_print: paged
+    toc: no
+    toc_depth: '2'
+subtitle: TMA4268 Statistical Learning V2020
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
+                      cache=TRUE, size="scriptsize",fig.width=6, fig.height=4,fig.align = "center")
+
+```
+
+# Recommended exercise 1
+
+Get the data by loading it
+```{r, message=FALSE, warning=FALSE, eval = T}
+
+load("pca-examples.rdata")
+
+# We will work with nyt.frame
+nyt_data = nyt.frame
+```
+
+Compute the PCA
+
+```{r, message=FALSE, warning=FALSE}
+nyt_pca = prcomp(nyt_data[,-1])
+```
+
+## Default biplot
+
+Too much information on the graph, we should select only a few loading vectors to display.
+
+```{r,fig.height=5.5,fig.width=5.5}
+biplot(nyt_pca, scale=0)
+```
+
+Lets pick some words with high PC1 weight and some words with high PC2 weight. Only looking at the graph we can see that PC1 is associated with music and PC2 with art.
+
+```{r,fig.height=5.5,fig.width=5.5}
+nyt_loading = nyt_pca$rotation[, 1:2]
+informative_loadings = rbind(
+  head(nyt_loading[order(nyt_loading[,1], decreasing = TRUE),]),
+  head(nyt_loading[order(nyt_loading[,2], decreasing = TRUE),])
+)
+
+biplot(x = nyt_pca$x[,1:2], y= informative_loadings, scale=0)
+```
+
+## Proportion of variance explained (PVE) 
+
+The numbers below show that although the graphs based on PC1 and PC2 give some insight about document types, the first two PCs explain only small portion of the variability contained in the data.
+
+```{r, message=FALSE, warning=FALSE}
+pr.var=nyt_pca$sdev^2
+pr.var
+```
+
+We can then compute the proportion of variance explained by each principal component
+
+```{r, message=FALSE, warning=FALSE}
+pve=pr.var/sum(pr.var)
+pve
+```
+
+We can plot the PVE explained by each component, as well
+as the cumulative PVE, as follows:
+
+```{r, message=FALSE, warning=FALSE}
+plot(pve, 
+     xlab="Principal Component", 
+     ylab="Proportion of Variance Explained", 
+     ylim=c(0,1),
+     type='b')
+plot(cumsum(pve), 
+     xlab="Principal Component", 
+     ylab="Cumulative Proportion of Variance Explained", 
+     ylim=c(0,1),
+     type='b')
+```
+
+# Recommended exercise 2
+
+The answer is on page 388 of the book, with the explanation around Equation (10.12).
+
+# Recommended exercise 3
+
+$k$-means clustering:
+
+```{r, message=FALSE, warning=FALSE}
+km.out=kmeans(nyt_data[,-1],2,nstart=20)
+```
+
+## Cluster assignments
+
+```{r, message=FALSE, warning=FALSE}
+km.out$cluster
+```
+
+## Plot the data
+
+To plot the data we need to use the PCA projections. Below we will use the plot based on PCA with true labels (A for art and M for music) and compare with the plot that color the points according to the $k$-means clustering.
+
+```{r, message=FALSE, warning=FALSE,fig.height=6}
+# PCA with true labels
+plot(nyt_pca$x[,1:2],type="n")
+points(nyt_pca$x[nyt_data[,"class.labels"]=="art",1:2],pch="A")
+points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],pch="M")
+```
+
+
+PCA with true labels but colored by $k$-means clustering
+```{r, message=FALSE, warning=FALSE,fig.height=6}
+plot(nyt_pca$x[,1:2],type="n")
+points(nyt_pca$x[nyt_data[,"class.labels"]=="art",1:2],pch="A",col=(km.out$cluster+1)[nyt_data[,"class.labels"]=="art"])
+points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],pch="M",col=(km.out$cluster+1)[nyt_data[,"class.labels"]=="music"])
+```
+
+# Recommended exercise 4
+
+## Perform hierarchical clustering
+
+I will use euclidean distance and complete linkage
+
+```{r, message=FALSE, warning=FALSE}
+hc.complete=hclust(dist(nyt_data[,-1]), method="complete")
+str(hc.complete)
+```
+
+## Plot dendograms
+
+```{r, message=FALSE, warning=FALSE,fig.height=6}
+plot(hc.complete,main="Complete Linkage", labels=as.character(nyt_data[,1]), xlab="", sub="", cex=.9)
+```
+
+## Cluster assignment
+
+```{r, message=FALSE, warning=FALSE}
+hc.clusters=cutree(hc.complete, 2)
+```
+
+## Plot the data
+
+Based on the cluster assignment above and the plots below we see that hierarchical clustering performs worse than $k$-means for the same number of clusters (K=2)
+
+
+```{r, message=FALSE, warning=FALSE,fig.height=6}
+# PCA with true labels
+plot(nyt_pca$x[,1:2],type="n")
+points(nyt_pca$x[nyt_data[,"class.labels"]=="art",1:2],pch="A")
+points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],pch="M")
+```
+
+
+PCA with true labels but colored by $k$-means clustering
+```{r, message=FALSE, warning=FALSE,fig.height=6}
+plot(nyt_pca$x[,1:2],type="n")
+points(nyt_pca$x[nyt_data[,"class.labels"]=="art",1:2],pch="A",col=(hc.clusters+1)[nyt_data[,"class.labels"]=="art"])
+points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],pch="M",col=(hc.clusters+1)[nyt_data[,"class.labels"]=="music"])
+```
+
+Lets see if single linkage or average linkage performs better.
+
+```{r, message=FALSE, warning=FALSE}
+#hierachical clustering
+hc.single=hclust(dist(nyt_data[,-1]), method="single")
+hc.average=hclust(dist(nyt_data[,-1]), method="average")
+```
+
+
+#plot dendogram
+```{r, message=FALSE, warning=FALSE,fig.height=6}
+par(mfrow=c(1,2))
+plot(hc.single,main="Single Linkage", labels=as.character(nyt_data[,1]), xlab="", sub="", cex=.9)
+plot(hc.average,main="Average Linkage", labels=as.character(nyt_data[,1]), xlab="", sub="", cex=.9)
+
+#divide into clusters
+hc.clustersSingle=cutree(hc.single, 2)
+hc.clustersAverage=cutree(hc.average, 2)
+```
+
+Plot clusters in PC1 and PC2-dimension
+```{r, message=FALSE, warning=FALSE,fig.height=8}
+par(mfrow=c(2,1))
+plot(nyt_pca$x[,1:2],type="n")
+points(nyt_pca$x[nyt_data[,"class.labels"]=="art",1:2],pch="A",col=(hc.clustersSingle+1)[nyt_data[,"class.labels"]=="art"])
+points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],pch="M",col=(hc.clustersSingle+1)[nyt_data[,"class.labels"]=="music"])
+plot(nyt_pca$x[,1:2],type="n")
+points(nyt_pca$x[nyt_data[,"class.labels"]=="art",1:2],pch="A",col=(hc.clustersAverage+1)[nyt_data[,"class.labels"]=="art"])
+points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],pch="M",col=(hc.clustersAverage+1)[nyt_data[,"class.labels"]=="music"])
+```
+
+Doesn't seem to provide a better fit than complete. 

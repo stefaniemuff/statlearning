@@ -1,0 +1,63 @@
+---
+title: 'Module 10: Recommended Exercises'
+author: "Thiago G. Martins, Department of Mathematical Sciences, NTNU"
+date: "March 14, 2020"
+output:
+   pdf_document:
+     fig_caption: yes
+     keep_tex: yes
+     toc: no
+     toc_depth: 2
+   html_document:
+    df_print: paged
+    toc: no
+    toc_depth: '2'
+subtitle: TMA4268 Statistical Learning V2020
+urlcolor: blue
+---
+a
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
+                      cache=TRUE, size="scriptsize",fig.width=4, fig.height=3,fig.align = "center")
+
+```
+
+# Recommended exercise 1
+
+The New York Times stories dataset are contained in the file `pca-exampes.rdata`, which you can load from google drive (https://drive.google.com/open?id=1vaK9GDvMw4Hsuv0T1jHeq9ZyrqLhJ6MR) and store in the directory of your Rmd file. The pca-examples.rdata can be loaded with the following code.
+```{r, eval = F}
+load("pca-examples.rdata")
+
+# We will work with nyt.frame
+nyt_data = nyt.frame
+```
+
+- For the New York Times stories (`nyt_data`) dataset:
+    - Create a biplot and explain the type of information that you can extract from the plot.
+    - Create plots for the proportion of variance explained (PVE) and cumulative PVE. Describe what type of information you can extract from the plots.
+    
+
+
+# Recommended exercise 2
+
+Show that the algorithm below is guaranteed to decrease the value of the objective
+
+$$\underset{C_1, \ldots, C_k}{\text{minimize}}\left\{\sum_{k=1}^{K} \frac{1}{|C_k|} \sum_{i, i' \in C_k} \sum_{j=1}^{p}(x_{ij} - x_{i'j})^2 \right\}$$
+
+at each step. 
+
+\center
+![](kmeans_algo.pdf){width='80%'}
+
+\flushleft
+
+# Recommended exercise 3
+
+Perform $k$-means clustering in the New York Times stories dataset. 
+
+
+# Recommended exercise 4
+
+Perform hierarchical clustering in the New York Times stories dataset. 
+
