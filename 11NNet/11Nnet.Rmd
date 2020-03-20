@@ -2,7 +2,7 @@
 subtitle: "TMA4268 Statistical Learning V2020"
 title: "Module 11: Neural Networks"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "April xx, 2020"
+date: "March 27 and 30, 2020"
 fontsize: 10pt
 output:
   beamer_presentation:
@@ -12,23 +12,80 @@ output:
     theme: "Singapore"
     colortheme: "default"
     font: "serif"
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
 urlcolor: blue
 bibliography: refs.bib
-header-includes: \usepackage{multirow}
+#header-includes: \usepackage{xcolor}
 
 ---
 
 ```{r setup, include=FALSE}
-showsolA<-TRUE
-showsolB<-TRUE
 showsol<-TRUE
 library(knitr)
-opts_chunk$set(tidy.opts=list(width.cutoff=65),tidy=TRUE)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE)
 knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
                       cache=TRUE, size="scriptsize")
 whichformat="latex"
 ```
 
+---
+
+Last update: March 19, 2020
+
+--- 
+
+# Acknowledgements
+
+* A lot of this material stems from Mette Langaas and her TAs (in particular Thea Roksv\aa g, who developed the set of slides, but also Mette Langaas and Julia Debik). Thanks to Mette for the permission to use the material!
+
+---
+
+## Learning material for this module
+
+
+Todo
+
+\vspace{2mm}
+
+<!-- * [Classnotes 25.03.2019](https://www.math.ntnu.no/emner/TMA4268/2019v/notes/M11L1notes.pdf) -->
+<!-- * [Classnotes 28.03.2019](https://www.math.ntnu.no/emner/TMA4268/2019v/notes/M11L2notes.pdf) -->
+
+See also _References and further reading_ (last slide), for further reading material.
+
+
+
+
+
+---
+
+## What will you learn?
+
+$~$
+
+* Translating from statistical to neural networks language
+    + linear regression
+    + logistic regression
+    + multiclass (multinomial) regression
+
+$~$    
+    
+* Feedforward networks
+ 
+$~$
+
+* Neural network parts: model -- method -- algorithm -- recent developents
+
+$~$
+
+* Deep learning
+    + the timeline
+    + Keras
+ 
+
+---
 
 
 # Introduction
@@ -45,56 +102,24 @@ whichformat="latex"
 
 ---
 
-## Learning material for this module
-(on the reading list)
-
-\vspace{2mm}
-
-* [Classnotes 25.03.2019](https://www.math.ntnu.no/emner/TMA4268/2019v/notes/M11L1notes.pdf)
-* [Classnotes 28.03.2019](https://www.math.ntnu.no/emner/TMA4268/2019v/notes/M11L2notes.pdf)
-
-See also _References and further reading_ (last slide), for further reading material.
-
----
-
-## What will you learn?
-
-* Why a module on neural networks?
-* Translating from statistical to neural networks language
-    + linear regression
-    + logistic regression
-    + multiclass (multinomial) regression
-* Feedforward networks
-    + one hidden layer
-    + universal approximation theorem
-
----
-
-* Neural network parts
-    + model: architecture, activation functions
-    + method: loss fuction
-    + algorithm: how to estimate parameters, gradient descent and back-propagation
-    + recent developents
-* Deep learning
-    + the timeline
-    + Keras
-* References
-
----
-
 ## Why a module on neural networks?
 
-* Every day you read about the success of AI, machine learning — and in particular deep learning.
-* In the last five years the field of deep learning has gone from low level performance to excellent performance — particularly in image recognition and speech transcription.
+$~$
+
+* Every day you read about the success of AI, machine learning -- and in particular _\textcolor{red}{deep learning}_.
+
+$~$
+
+* In the last five years the field of deep learning has gone from low level performance to excellent performance -- particularly in image recognition and speech transcription.
 
 
-<!-- Image recognition (car, person, animal) figure 1.2 of @goodfellow  -->
-
----
+$~$
 
 * Deep learning is based on a layered artificial neural network structure.
 
-But, what is a _neural network_?
+$~$
+
+So we first need to understand: what is a _neural network_?
 
 ---
 
@@ -104,11 +129,6 @@ But, what is a _neural network_?
 
 Neuron and myelinated axon, with signal flow from inputs at dendrites to outputs at axon terminals. Image credits: By Egm4313.s12 (Prof. Loc Vu-Quoc) <https://commons.wikimedia.org/w/index.php?curid=72816083>
 
----
-
-* Understanding the basic building blocks of artificial neural network, and how they are connected to concepts in mathematical statistics might be useful!
-* The focus here will mainly be to relate what we have learned from regression and classification in this course to the basic framework of artificial neural network,
-* and we will touch upon the new and hot stuff.
 
 ---
 
@@ -125,24 +145,48 @@ Neuron and myelinated axon, with signal flow from inputs at dendrites to outputs
 
 ## AI, machine learning and statistics
 
-* Artificial intelligence dates back to the 1950s, and can be seen as _the effort to automate intellectual tasks normally performed by humans_ (page 4, @kerasR). 
 
-* AI was first based on hardcoded rules, but turned out to be intractable for solving more complex, fuzzy problems.
+\includegraphics[angle=-90]{AI_ML_DL.png}
+
+---
+
+
+* Artificial intelligence (AI) dates back to the 1950s, and can be seen as _the effort to automate intellectual tasks normally performed by humans_ (page 4, @kerasR). 
+
+$~$
+
+* AI was first based on hardcoded rules (like in chess programs), but turned out to be intractable for solving more complex, fuzzy problems.
+
+$~$
 
 * With the field of _machine learning_ the shift is that a system is _trained_ rather than explicitly programmed.
 
+
+<!-- ![](AI_ML_DL.png) -->
 
 ---
 
 ## Machine learning
 
-* Machine learning is related to mathematical statistics, but differ in many ways (as we will soon see). 
+$~$
 
-* In short, machine learning attachs much larger, and more complex data sets than what is usually done in statistics. 
+* Machine learning is related to mathematical statistics, but differs in many ways.
 
-* The focus in machine learning is not on mathematical theory, but is more oriented towards _engineering_, and ideas are proven _empirically_ rather than theoretically (which is the case in mathematical statistics).
+$~$
 
-* According to @kerasR (page 19): \begin{quote}Machine learning isn't mathematics or physics, where major advancements can be done with a pen and a piece of paper. It's an engineering science.\end{quote}
+* ML deals with much larger and more complex data sets than what is usually done in statistics. 
+
+$~$
+
+* The focus in ML is oriented towards _\textcolor{red}{engineering}_, and ideas are proven _empirically_ rather than theoretically (which is the case in mathematical statistics).
+
+$~$
+
+According to @kerasR (page 19): 
+\vspace{2mm}
+\begin{quote}
+Machine learning isn't mathematics or physics, where major advancements can be done with a pen and a piece of paper. It's an engineering science.
+\end{quote}
 
 ---
 
@@ -178,13 +222,11 @@ Let $n$ be the number of observations in the training set, here $n=243$.
 $~$
 
 We assume 
-\begin{equation}
- Y_i=\beta_0 + \beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_p x_{ip}+\varepsilon_i={\boldsymbol x}_i^T{\boldsymbol \beta}+\varepsilon_i \ ,
-\end{equation}
+$$
+ Y_i=\beta_0 + \beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_p x_{ip}+\varepsilon_i={\boldsymbol x}_i^T{\boldsymbol\beta}+\varepsilon_i \ ,
+$$
 
-for $i=1,\ldots,n$, where $x_{ij}$ is the value $j$th predictor for the $i$th datapoint, and $\boldsymbol{\beta}^\top = (\beta_0,\beta_1,\ldots,\beta_p)$ the regression coeffficients.
-
-$~$
+for $i=1,\ldots,n$, where $x_{ij}$ is the value $j$th predictor for the $i$th datapoint, and ${\boldsymbol\beta}^\top = (\beta_0,\beta_1,\ldots,\beta_p)$ the regression coeffficients.
 
 $~$
 
@@ -197,35 +239,47 @@ $${\boldsymbol Y}={\boldsymbol {X}} \boldsymbol{\beta}+{\boldsymbol{\varepsilon}
 
 Assumptions:
 
-1. $\text{E}(\boldsymbol{\varepsilon})=\bf{0}$.
-2. $\text{Cov}(\boldsymbol{\varepsilon})=\text{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\bf{I}$.
-3. The design matrix has full rank, $\text{rank}({\boldsymbol X})=p+1$. (We assume $n>>(p+1)$.)
+1. $\text{E}(\boldsymbol{\varepsilon})=\boldsymbol{0}$.
+2. $\text{Cov}(\boldsymbol{\varepsilon})=\text{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\boldsymbol{I}$.
+3. The design matrix has full rank, $\text{rank}({\bf X})=p+1$. (We assume $n>>(p+1)$.)
 
 The classical _normal_ linear regression model is obtained if additionally
 
-4. $\boldsymbol\varepsilon\sim N_n({\boldsymbol 0},\sigma^2 {\boldsymbol I})$ holds. Here $N_n$ denotes the $n$-dimensional multivarate normal distribution.
+4. $\boldsymbol\varepsilon\sim N_n({\boldsymbol 0},\sigma^2 {\bf I})$ holds. Here $N_n$ denotes the $n$-dimensional multivarate normal distribution.
 
 ---
 
 ### From statistical model to network architecture
 
-<!-- How can our statistical model be represented as a network? -->
+$~$
+
+How can our statistical model be represented as a network?
 
 $~$
 
-We need _new concepts_:
+We need _\textcolor{red}{new concepts}_:
 
-* Our covariates are now presented as _input nodes_ in an _input layer_.
+$~$
 
-* The intercept is presented as a node, and is called a _bias_ node. (New meaning to us!)
+* Covariates $\rightarrow$ _input nodes_ in an _input layer_.
 
-* The response is presented as one _output node_ in an _output layer_.
+$~$
 
-* The regression coefficients are called _weights_ and are often written on the lines (arrows) from the inputs to the output node.
+* The intercept $\rightarrow$  _bias_ node. 
 
-* All lines going into the output node signifies that we multiply the covariate values in the input nodes with the weights (regression coefficients), and then sum. This sum can be sent through a socalled _activition function_. The activation function for linear regression is just the identity function.
+$~$
+
+* The response $\rightarrow$ _output node_ in an _output layer_.
+
+$~$
+
+* The regression coefficients $\rightarrow$ _weights_ (often written on the arrows from the inputs to the output layer).
+
+
 
 ---
+
+\vspace{-20mm}
 
 \scriptsize
 ```{r, echo=F}
@@ -245,25 +299,30 @@ fitnnet=nnet(bodyfat~ age + weight + height + bmi + neck + abdomen + hip,data=d.
 # NB default is one hidden layer but avoided with size=0, but then skip=TRUE is needed,
 ```
 
-```{r motivating, echo=FALSE, fig.width=7, fig.height=9,fig.align = "center",out.width='80%'}
+```{r motivating, echo=FALSE, fig.width=7, fig.height=7,fig.align = "center",out.width='80%'}
 plotnet(fitnnet)
 ```
 
+
+\normalsize
+* All lines going into the output node signifies that we multiply the covariate values in the input nodes with the weights (regression coefficients), and then sum. 
+* This sum can be sent through a socalled _activition function_ (here just the identity function).
+
 ---
 
-The regression function is then rewritten from the linear regression case
+* _\textcolor{red}{Regression notation:}_
 
 \begin{equation*}
- Y_i=\beta_0 + \beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_p x_{ip}+\varepsilon_i \ ,
+ Y_i=\beta_0 + \beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_p x_{ip}+\varepsilon_i \ .
 \end{equation*}
 
-to the neural network case
+$~$
 
+* _\textcolor{red}{Neural network notation:}_
 \begin{equation*}
 y_1({\boldsymbol x}_i)=\phi_o(w_0+w_1 x_{i1}+\cdots + w_p x_{ip}) \ ,
 \end{equation*}
-
-where $\phi_o(x)=x$.
+where $\phi_o(x)=x$ (identity function).
 
 ---
 
@@ -281,13 +340,16 @@ The only difference to our MLR model is then that we would have called the $w$s 
 ### Statistical parameter estimation
 \vspace{2mm}
 
-In multiple linear regression, the parameters $\boldsymbol\beta$ are estimated with maximum likelihood and least squares. These two methods give the same estimator when we assume the normal linear regression model.
+* In multiple linear regression, the parameters $\boldsymbol\beta$ are estimated with maximum likelihood and least squares (equivalent under Normal assumption).
 
-The estimator $\hat{\boldsymbol \beta}$ is found by minimizing the RSS for a multiple linear regression model:
-$$\begin{aligned} \text{RSS} &=\sum_{i=1}^n (y_i - \hat y_i)^2 = \sum_{i=1}^n (y_i - \hat \beta_0 - \hat \beta_1 x_{i1} - \hat \beta_2 x_{i2} -...-\hat \beta_p x_{ip} )^2 \\
-&= \sum_{i=1}^n (y_i-{\boldsymbol x}_i^T \boldsymbol \beta)^2=({\boldsymbol Y}-{\boldsymbol X}\hat{\boldsymbol{\beta}})^T({\boldsymbol Y}-{\boldsymbol X}\hat{\boldsymbol{\beta}}) \ .\end{aligned}$$
+$~$ 
 
-This problem has a solution given on closed form:
+* **Remember**: The estimator $\hat{\boldsymbol \beta}$ is found by minimizing the RSS for a multiple linear regression model:
+$$
+\begin{aligned} \text{RSS} &=\sum_{i=1}^n (y_i - \hat y_i)^2 = \sum_{i=1}^n (y_i - \hat \beta_0 - \hat \beta_1 x_{i1} - \hat \beta_2 x_{i2} -...-\hat \beta_p x_{ip} )^2 \\
+&= \sum_{i=1}^n (y_i-{\boldsymbol x}_i^T \boldsymbol \beta)^2=({\boldsymbol Y}-{\boldsymbol X}\hat{\boldsymbol{\beta}})^T({\boldsymbol Y}-{\boldsymbol X}\hat{\boldsymbol{\beta}}) \ .\end{aligned}
+$$
+Solution:
 $$ \hat{\boldsymbol\beta}=({\boldsymbol X}^T{\boldsymbol X})^{-1} {\boldsymbol X}^T {\boldsymbol Y} \ .$$
 
 ---
@@ -310,12 +372,15 @@ where $J({\boldsymbol w})$ indicates that the unknown parameters are the weights
      + calculate the derivative of the loss function with respect to each of our parameters
      + solve the $(p+1)$ linear equations.
      
+     $~$
+     
      $\rightarrow$ _\textcolor{red}{more general minization procedures}_ that work also when the loss function does not have a closed form.
 
 ---
 
 ### Finding optimal weights (schematic description)
 
+$~$
 
 1. Initialize weights by random numerical values.
 
@@ -333,15 +398,33 @@ where $J({\boldsymbol w})$ indicates that the unknown parameters are the weights
 
 ---
 
-Figures that give good illustration of the optimization problem.
+### Gradient descent and local minima
 
-@kerasR:
+$~$
+
+
+\center
+<!-- ![](Gradient_descent_local_minima.jpg){width=50%} -->
+![](gradient_descent.png){width=60%}
+
+\tiny (https://github.com/SoojungHong/MachineLearning/wiki/Gradient-Descent)
+
+$~$
+$~$
+
+\flushleft
+\normalsize
+Other figures that give good illustration of the optimization problem in @kerasR:
+
+$~$
 
 * 2.11: SGD down a 1D loess curve
 * 2.12: Gradient descent down a 2D loss surface
 * 2.13: local and global minimum
 
-(see board)
+
+
+
 
 ---
 
@@ -769,7 +852,7 @@ For more on multinomial regression with R, check [here](https://www.r-bloggers.c
 
 # Feedforward networks
 
-In feedforward networks we have only connections (weights) forward in the network, and no feedback connctions that sends the output of the model back into the network. The word _multi-layer perceptron_ (MLP) and _sequentially layered_ networks are also used
+In feedforward networks we have only connections (weights) forward in the network, and no feedback connections that sends the output of the model back into the network. The word _multi-layer perceptron_ (MLP) and _sequentially layered_ networks are also used
 
 The examples of MLR, logistic regression and multiclass regression are examples of feedfeedward networks without any socalled _hidden layers_ (between the input and output layers).
 
@@ -966,6 +1049,8 @@ This data set is both available in the `MASS` and `keras` R package.
 
 ---
 
+\scriptsize
+
 ```{r}
 library(keras)
 dataset <- dataset_boston_housing()
@@ -982,6 +1067,7 @@ colnames(test_data)=colnames(Boston)[-13]
 
 A widespread best practice to deal with such data is to do feature-wise normalization. This is to make the optimization easier with gradient based methods.
 
+\scriptsize
 ```{r, message=FALSE, warning=FALSE}
 org_train=train_data
 mean <- apply(train_data, 2, mean)
@@ -990,11 +1076,14 @@ train_data <- scale(train_data, center = mean, scale = std)
 test_data <- scale(test_data, center = mean, scale = std)
 ```
 
+\normalsize
 Note that the quantities used for normalizing the test data are computed using the training data. You should never use in your workflow any quantity computed on the test data, even for something as simple as data normalization. This also means that we need to do this standardization again (from scratch) if we need to do cross-validation.
 
 ---
 
 Just checking out one hidden layer with 5 units to get going.
+
+\scriptsize
 
 ```{r}
 library(nnet)
@@ -1009,6 +1098,7 @@ mean(abs(pred[,1]-test_targets))
 
 Now, use cross-validation to find the best number of hidden nodes — but that took some time, so only results shown below. Remember the scaling need to be done within the loop.
 
+\scriptsize
 
 ```{r,eval=FALSE}
 grid=c(5,10,15,20,25,30,50)
@@ -1045,6 +1135,7 @@ for (j in 1:k)
 
 The best model here was the model with 50 nodes, the largest model we tried. Fitting that model on the full training set and testing on the test set
 
+\scriptsize
 ```{r}
 library(nnet)
 fit50<- nnet(train_targets~., data=train_data,size=50,linout=TRUE,maxit=5000)
@@ -1055,6 +1146,7 @@ mae=mean(abs(pred[,1]-test_targets))
 mae
 ```
 
+\normalsize
 See here: <https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural_networks_boston_housing.html> for running two hidden layers of 64 nodes each with `keras`. (This gave a mean absolute error on the test set of 2.682524 after early stopping.)
 
 ---
@@ -1106,6 +1198,8 @@ Remark: it is important that the output activation is matched with an appropriat
 
 ---
 
+\scriptsize
+
 ```{r,echo=FALSE}
 library(ggplot2); library(ggpubr)
 x=seq(-6,6,length=3)
@@ -1122,6 +1216,8 @@ ggarrange(p,pp)
 ---
 
 * Sigmoid: $g(a)=1/(1+\exp(-a))$. The previous standard choice. These units were found to saturate at a high value when the input was very positive and at a low value when the input was very negative, and that they were only strongly sensitive when the input was close to 0. This saturation lead to problems in the gradient descent routines.
+
+Todo: We may use the problem mentioned here in our recommended exercises:
 
 **However, for our Compulsory exercise 2, Problem 3, there should be quite ok to use sigmoid hidden layer activation in the `nnet` R package (default hidden layer activation is sigmoid, and that can not be changed).**
 
@@ -1159,7 +1255,7 @@ Other possible choices for hidden layer activation functions are:
 
 
 \centering
-![ ](Action_potential.png){width=80%}
+![ ](Action_potential.png){width=70%}
 
 <https://commons.wikimedia.org/wiki/File:Action_potential.svg>
 
@@ -1337,7 +1433,7 @@ Named variants: In `keras` the "default optimizer" is RMSprop.
 
 ---
 
-###Further reading on optimizers
+### Further reading on optimizers
 
 * [Keras documentation for Optimizers](https://keras.io/optimizers/)
 * [An overview of gradient descent optimization algorithms](http://ruder.io/optimizing-gradient-descent/index.html)
@@ -1385,7 +1481,7 @@ Why is early stopping a regularization technique? By early stopping the optimiza
 
 ---
 
-### <a id="Hyperparameter">Hyperparameter optimization</a>
+### Hyperparameter optimization
 
 How to avoid overfitting:
 
@@ -1409,6 +1505,9 @@ Example on DOE:hyperparameter optimization with boosting (which of cause also ca
 ---
 
 ### Dropout
+
+$~$
+
 (Based on @goodfellow, Section 7.12, and @kerasR 4.4.3)
 
 Dropout was developed by Geoff Hinton and his students.
@@ -1564,6 +1663,7 @@ An advanced version using convolutional neural nets is found here: <https://www.
 Objective: classify the digit contained in an image (128 $\times$ 128 greyscale).
 Problem type: Multiclass classification based on image data.
 
+\scriptsize
 ```{r, echo=FALSE}
 library(keras)
 mnist <- dataset_mnist()
@@ -1598,6 +1698,8 @@ table(train_labels)
 
 60 000 images for training and 10 000 images for testing.
 
+\scriptsize
+
 ```{r}
 # Training data
 train_images <- mnist$train$x
@@ -1609,6 +1711,7 @@ test_labels <- mnist$test$y
 org_testlabels<- test_labels
 ```
 
+\normalsize 
 The `train_images` is a tensor (generalization of a matrix) with 3 axis, `(samples, height, width)`.
 
 ---
@@ -1617,6 +1720,8 @@ The `train_images` is a tensor (generalization of a matrix) with 3 axis, `(sampl
 
 In this case we are using a `layer_dense` (fully connected) which expects an input tensor of rank equal to two `(sample, features)` where each `sample` should contain `28*28=784` pixels. Adding a bias term (intercept) is default for `layer_dense`.
 
+\scriptsize
+
 ```{r}
 network <- keras_model_sequential() %>%
   layer_dense(units = 512, activation = "relu", input_shape = c(28*28)) %>%
@@ -1624,6 +1729,7 @@ network <- keras_model_sequential() %>%
 summary(network)
 ```
 
+\normalsize
 As activation function we use `relu` for the hidden layer, and `softmax` for the output layer - since we have 10 classes (where one is correct each time). We could have included more layers in our model - and then maybe used early stopping if our model was chosen too big.
 
 ---
@@ -1632,6 +1738,7 @@ As activation function we use `relu` for the hidden layer, and `softmax` for the
 
 We next need to choose the loss function we will use, which is cross-entropy, and then the version of the optimizer. Here htis is RMSprop. Finally, which measure - metrics - do we want to monitor in our training phase? Here we choose accuracy (=percentage correctly classified).
 
+\scriptsize
 ```{r, message=FALSE, warning=FALSE}
 network %>% compile(
   optimizer = "rmsprop",
@@ -1643,13 +1750,14 @@ network %>% compile(
 
 ---
 
-###4. Preprocessing to match with model inputs and outputs
+### 4. Preprocessing to match with model inputs and outputs
 
 The training data is scored in an array of dimension (60000, 28, 28) of type integer with values in the [0, 255] interval.
 The data must be reshaped into the shape the network expects (28*28). In addition the grey scale values are scales to be in the [0, 1] interval.
 
 Also, the response must be transformed from 0-10 to a vector of 0s and 1s (dummy variable coding) aka one-hot-coding.
 
+\scriptsize
 ```{r}
 train_images <- array_reshape(train_images, c(60000, 28 * 28))
 train_images <- train_images / 255
@@ -1664,6 +1772,7 @@ test_labels <- to_categorical(test_labels)
 
 ###5. Fit the model
 
+\scriptsize
 ```{r, eval=FALSE,tidy=FALSE}
 fitted<-network %>% fit(train_images, train_labels,
  epochs = 30, batch_size = 128)
@@ -1680,6 +1789,7 @@ plot(fitted)+ggtitle("Fitted model")
 
 ###6. Evaluation and prediction
 
+\scriptsize
 ```{r,eval=FALSE}
 network %>% evaluate(test_images,test_labels)
 testres=network %>% predict_classes(test_images)
@@ -1718,32 +1828,7 @@ Overall Statistics
 
 ```
 
-<!-- --- -->
 
-<!-- Other suggstion from the R keras cheat sheet -->
-
-<!-- ```{r,eval=FALSE} -->
-<!-- # from keras cheat sheet -->
-<!-- model <- keras_model_sequential()  -->
-<!-- model %>%  -->
-<!--   layer_dense(units = 256, activation = 'relu', input_shape = c(784)) %>%  -->
-<!--   layer_dropout(rate = 0.4) %>%  -->
-<!--   layer_dense(units = 128, activation = 'relu') %>% -->
-<!--   layer_dropout(rate = 0.3) %>% -->
-<!--   layer_dense(units = 10, activation = 'softmax') -->
-<!-- summary(model) -->
-<!-- model %>% compile( -->
-<!--   loss = 'categorical_crossentropy', -->
-<!--   optimizer = optimizer_rmsprop(), -->
-<!--   metrics = c('accuracy') -->
-<!-- ) -->
-<!-- history <- model %>% fit( -->
-<!--   train_images, train_labels,  -->
-<!--   epochs = 30, batch_size = 128,  -->
-<!--   validation_split = 0.2 -->
-<!-- ) -->
-<!-- model %>% evaluate(test_images, test_labels) -->
-<!-- ```  -->
 
 ---
 
@@ -1768,18 +1853,6 @@ taken from @kerasR: <https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural
 
 # Summing up
 
-<!-- Note to self: -->
-<!-- * Example from OCL -->
-<!-- * Garson algorithm `NeuralNetTools` R package -->
-<!-- * Investigating the state space of the hidden layers? -->
-
-<!-- Explainable AI: -->
-
-<!-- * LIME -->
-<!-- * DALEX -->
-<!-- * Sharpley -->
-
-<!-- * Handling missing values (replace by 0) — very different from what is done in statistics. -->
 
 * Feedforward network architecture: mathematical formula - layers of multivariate transformed (`relu`, `linear`, `sigmoid`) inner products - sequentially connected.
 * What is the number of parameters that need to be estimated? Intercept term (for each layer) is possible and is referred to as "bias term".

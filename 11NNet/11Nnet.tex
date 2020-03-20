@@ -1,8 +1,46 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
 \documentclass[10pt,ignorenonframetext,]{beamer}
+\usepackage{pgfpages}
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
 \setbeamercolor{caption name}{fg=normal text.fg}
 \beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+\centering
+\begin{beamercolorbox}[sep=16pt,center]{part title}
+  \usebeamerfont{part title}\insertpart\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+\centering
+\begin{beamercolorbox}[sep=12pt,center]{part title}
+  \usebeamerfont{section title}\insertsection\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+\centering
+\begin{beamercolorbox}[sep=8pt,center]{part title}
+  \usebeamerfont{subsection title}\insertsubsection\par
+\end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -10,12 +48,9 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
+  \usepackage{unicode-math}
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 \usetheme[]{Singapore}
@@ -24,19 +59,28 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
 \IfFileExists{microtype.sty}{%
-\usepackage{microtype}
+\usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\newif\ifbibliography
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{xcolor}
+\usepackage{hyperref}
 \hypersetup{
             pdftitle={Module 11: Neural Networks},
             pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
             colorlinks=true,
             linkcolor=Maroon,
+            filecolor=Maroon,
             citecolor=Blue,
             urlcolor=blue,
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+\newif\ifbibliography
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -46,37 +90,37 @@
 \usepackage{framed}
 \definecolor{shadecolor}{RGB}{248,248,248}
 \newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\ImportTok}[1]{#1}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
-\newcommand{\BuiltInTok}[1]{#1}
-\newcommand{\ExtensionTok}[1]{#1}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
-\newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{longtable,booktabs}
 \usepackage{caption}
 % These lines are needed to make table captions work with longtable:
@@ -86,53 +130,128 @@
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight0.8\textheight\else\Gin@nat@height\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
 \makeatother
 % Scale images if necessary, so that they will not overflow the page
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-
-% Prevent slide breaks in the middle of a paragraph:
-\widowpenalties 1 10000
-\raggedbottom
-
-\AtBeginPart{
-  \let\insertpartnumber\relax
-  \let\partname\relax
-  \frame{\partpage}
-}
-\AtBeginSection{
-  \ifbibliography
-  \else
-    \let\insertsectionnumber\relax
-    \let\sectionname\relax
-    \frame{\sectionpage}
-  \fi
-}
-\AtBeginSubsection{
-  \let\insertsubsectionnumber\relax
-  \let\subsectionname\relax
-  \frame{\subsectionpage}
-}
-
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{0}
-\usepackage{multirow}
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
 
 \title{Module 11: Neural Networks}
+\providecommand{\subtitle}[1]{}
 \subtitle{TMA4268 Statistical Learning V2020}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{April xx, 2020}
+\date{March 27 and 30, 2020}
 
 \begin{document}
 \frame{\titlepage}
 
+\begin{frame}
+
+Last update: March 19, 2020
+
+\end{frame}
+
+\begin{frame}{Acknowledgements}
+\protect\hypertarget{acknowledgements}{}
+
+\begin{itemize}
+\tightlist
+\item
+  A lot of this material stems from Mette Langaas and her TAs (in
+  particular Thea Roksv\aa g, who developed the set of slides, but also
+  Mette Langaas and Julia Debik). Thanks to Mette for the permission to
+  use the material!
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Learning material for this module}
+
+Todo
+
+\vspace{2mm}
+
+See also \emph{References and further reading} (last slide), for further
+reading material.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{What will you learn?}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Translating from statistical to neural networks language
+
+  \begin{itemize}
+  \tightlist
+  \item
+    linear regression
+  \item
+    logistic regression
+  \item
+    multiclass (multinomial) regression
+  \end{itemize}
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Feedforward networks
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Neural network parts: model -- method -- algorithm -- recent
+  developents
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Deep learning
+
+  \begin{itemize}
+  \tightlist
+  \item
+    the timeline
+  \item
+    Keras
+  \end{itemize}
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
 \begin{frame}{Introduction}
+\protect\hypertarget{introduction}{}
 
 \begin{itemize}
 \item
@@ -156,120 +275,28 @@
 
 \begin{frame}
 
-\begin{block}{Learning material for this module}
-
-(on the reading list)
-
-\vspace{2mm}
-
-\begin{itemize}
-\tightlist
-\item
-  \href{https://www.math.ntnu.no/emner/TMA4268/2019v/notes/M11L1notes.pdf}{Classnotes
-  25.03.2019}
-\item
-  \href{https://www.math.ntnu.no/emner/TMA4268/2019v/notes/M11L2notes.pdf}{Classnotes
-  28.03.2019}
-\end{itemize}
-
-See also \emph{References and further reading} (last slide), for further
-reading material.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{What will you learn?}
-
-\begin{itemize}
-\tightlist
-\item
-  Why a module on neural networks?
-\item
-  Translating from statistical to neural networks language
-
-  \begin{itemize}
-  \tightlist
-  \item
-    linear regression
-  \item
-    logistic regression
-  \item
-    multiclass (multinomial) regression
-  \end{itemize}
-\item
-  Feedforward networks
-
-  \begin{itemize}
-  \tightlist
-  \item
-    one hidden layer
-  \item
-    universal approximation theorem
-  \end{itemize}
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{itemize}
-\tightlist
-\item
-  Neural network parts
-
-  \begin{itemize}
-  \tightlist
-  \item
-    model: architecture, activation functions
-  \item
-    method: loss fuction
-  \item
-    algorithm: how to estimate parameters, gradient descent and
-    back-propagation
-  \item
-    recent developents
-  \end{itemize}
-\item
-  Deep learning
-
-  \begin{itemize}
-  \tightlist
-  \item
-    the timeline
-  \item
-    Keras
-  \end{itemize}
-\item
-  References
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}
-
 \begin{block}{Why a module on neural networks?}
 
+\(~\)
+
 \begin{itemize}
 \tightlist
 \item
-  Every day you read about the success of AI, machine learning --- and
-  in particular deep learning.
+  Every day you read about the success of AI, machine learning -- and in
+  particular \emph{\textcolor{red}{deep learning}}.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
   In the last five years the field of deep learning has gone from low
-  level performance to excellent performance --- particularly in image
+  level performance to excellent performance -- particularly in image
   recognition and speech transcription.
 \end{itemize}
 
-\end{block}
-
-\end{frame}
-
-\begin{frame}
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -278,36 +305,23 @@ reading material.
   structure.
 \end{itemize}
 
-But, what is a \emph{neural network}?
+\(~\)
+
+So we first need to understand: what is a \emph{neural network}?
+
+\end{block}
 
 \end{frame}
 
 \begin{frame}
 
 \centering
-\includegraphics[width=0.50000\textwidth]{Neuron3.png}
+
+\includegraphics[width=0.5\textwidth,height=\textheight]{Neuron3.png}
 
 Neuron and myelinated axon, with signal flow from inputs at dendrites to
 outputs at axon terminals. Image credits: By Egm4313.s12 (Prof.~Loc
 Vu-Quoc) \url{https://commons.wikimedia.org/w/index.php?curid=72816083}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{itemize}
-\tightlist
-\item
-  Understanding the basic building blocks of artificial neural network,
-  and how they are connected to concepts in mathematical statistics
-  might be useful!
-\item
-  The focus here will mainly be to relate what we have learned from
-  regression and classification in this course to the basic framework of
-  artificial neural network,
-\item
-  and we will touch upon the new and hot stuff.
-\end{itemize}
 
 \end{frame}
 
@@ -327,8 +341,9 @@ Vu-Quoc) \url{https://commons.wikimedia.org/w/index.php?curid=72816083}
 \end{itemize}
 
 \centering
-\includegraphics[width=0.30000\textwidth]{DeepLearningwithR.jpeg}
-\includegraphics[width=0.30000\textwidth]{DeepLearning.jpeg}
+
+\includegraphics[width=0.3\textwidth,height=\textheight]{DeepLearningwithR.jpeg}
+\includegraphics[width=0.3\textwidth,height=\textheight]{DeepLearning.jpeg}
 
 \end{frame}
 
@@ -336,18 +351,7 @@ Vu-Quoc) \url{https://commons.wikimedia.org/w/index.php?curid=72816083}
 
 \begin{block}{AI, machine learning and statistics}
 
-\begin{itemize}
-\item
-  Artificial intelligence dates back to the 1950s, and can be seen as
-  \emph{the effort to automate intellectual tasks normally performed by
-  humans} (page 4, Chollet and Allaire (2018)).
-\item
-  AI was first based on hardcoded rules, but turned out to be
-  intractable for solving more complex, fuzzy problems.
-\item
-  With the field of \emph{machine learning} the shift is that a system
-  is \emph{trained} rather than explicitly programmed.
-\end{itemize}
+\includegraphics[angle=-90]{AI_ML_DL.png}
 
 \end{block}
 
@@ -355,31 +359,81 @@ Vu-Quoc) \url{https://commons.wikimedia.org/w/index.php?curid=72816083}
 
 \begin{frame}
 
-\begin{block}{Machine learning}
+\begin{itemize}
+\tightlist
+\item
+  Artificial intelligence (AI) dates back to the 1950s, and can be seen
+  as \emph{the effort to automate intellectual tasks normally performed
+  by humans} (page 4, Chollet and Allaire (2018)).
+\end{itemize}
+
+\(~\)
 
 \begin{itemize}
+\tightlist
 \item
-  Machine learning is related to mathematical statistics, but differ in
-  many ways (as we will soon see).
+  AI was first based on hardcoded rules (like in chess programs), but
+  turned out to be intractable for solving more complex, fuzzy problems.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
-  In short, machine learning attachs much larger, and more complex data
-  sets than what is usually done in statistics.
+  With the field of \emph{machine learning} the shift is that a system
+  is \emph{trained} rather than explicitly programmed.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Machine learning}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
-  The focus in machine learning is not on mathematical theory, but is
-  more oriented towards \emph{engineering}, and ideas are proven
+  Machine learning is related to mathematical statistics, but differs in
+  many ways.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  ML deals with much larger and more complex data sets than what is
+  usually done in statistics.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  The focus in ML is oriented towards
+  \emph{\textcolor{red}{engineering}}, and ideas are proven
   \emph{empirically} rather than theoretically (which is the case in
   mathematical statistics).
-\item
-  According to Chollet and Allaire (2018) (page 19):
-
-  \begin{quote}Machine learning isn't mathematics or physics, where major advancements can be done with a pen and a piece of paper. It's an engineering science.\end{quote}
 \end{itemize}
+
+\(~\)
+
+According to Chollet and Allaire (2018) (page 19): \vspace{2mm}
+
+\begin{quote}
+Machine learning isn't mathematics or physics, where major advancements can be done with a pen and a piece of paper. It's an engineering science.
+\end{quote}
 
 \end{block}
 
 \end{frame}
 
 \begin{frame}[fragile]{From statistics to artificial neural networks}
+\protect\hypertarget{from-statistics-to-artificial-neural-networks}{}
 
 Recapitulate from Module 3 with the bodyfat dataset that contained the
 following variables.
@@ -434,18 +488,14 @@ Let \(n\) be the number of observations in the training set, here
 
 \(~\)
 
-We assume
-
-\begin{equation}
- Y_i=\beta_0 + \beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_p x_{ip}+\varepsilon_i={\boldsymbol x}_i^T{\boldsymbol \beta}+\varepsilon_i \ ,
-\end{equation}
+We assume \[
+ Y_i=\beta_0 + \beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_p x_{ip}+\varepsilon_i={\boldsymbol x}_i^T{\boldsymbol\beta}+\varepsilon_i \ ,
+\]
 
 for \(i=1,\ldots,n\), where \(x_{ij}\) is the value \(j\)th predictor
 for the \(i\)th datapoint, and
-\(\boldsymbol{\beta}^\top = (\beta_0,\beta_1,\ldots,\beta_p)\) the
+\({\boldsymbol\beta}^\top = (\beta_0,\beta_1,\ldots,\beta_p)\) the
 regression coeffficients.
-
-\(~\)
 
 \(~\)
 
@@ -462,26 +512,24 @@ We used the compact matrix notation for all observations
 Assumptions:
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  \(\text{E}(\boldsymbol{\varepsilon})=\bf{0}\).
+  \(\text{E}(\boldsymbol{\varepsilon})=\boldsymbol{0}\).
 \item
-  \(\text{Cov}(\boldsymbol{\varepsilon})=\text{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\bf{I}\).
+  \(\text{Cov}(\boldsymbol{\varepsilon})=\text{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\boldsymbol{I}\).
 \item
-  The design matrix has full rank, \(\text{rank}({\boldsymbol X})=p+1\).
-  (We assume \(n>>(p+1)\).)
+  The design matrix has full rank, \(\text{rank}({\bf X})=p+1\). (We
+  assume \(n>>(p+1)\).)
 \end{enumerate}
 
 The classical \emph{normal} linear regression model is obtained if
 additionally
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{3}
 \tightlist
 \item
-  \(\boldsymbol\varepsilon\sim N_n({\boldsymbol 0},\sigma^2 {\boldsymbol I})\)
+  \(\boldsymbol\varepsilon\sim N_n({\boldsymbol 0},\sigma^2 {\bf I})\)
   holds. Here \(N_n\) denotes the \(n\)-dimensional multivarate normal
   distribution.
 \end{enumerate}
@@ -494,27 +542,45 @@ additionally
 
 \(~\)
 
-We need \emph{new concepts}:
+How can our statistical model be represented as a network?
+
+\(~\)
+
+We need \emph{\textcolor{red}{new concepts}}:
+
+\(~\)
 
 \begin{itemize}
+\tightlist
 \item
-  Our covariates are now presented as \emph{input nodes} in an
-  \emph{input layer}.
-\item
-  The intercept is presented as a node, and is called a \emph{bias}
-  node. (New meaning to us!)
-\item
-  The response is presented as one \emph{output node} in an \emph{output
+  Covariates \(\rightarrow\) \emph{input nodes} in an \emph{input
   layer}.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
-  The regression coefficients are called \emph{weights} and are often
-  written on the lines (arrows) from the inputs to the output node.
+  The intercept \(\rightarrow\) \emph{bias} node.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
-  All lines going into the output node signifies that we multiply the
-  covariate values in the input nodes with the weights (regression
-  coefficients), and then sum. This sum can be sent through a socalled
-  \emph{activition function}. The activation function for linear
-  regression is just the identity function.
+  The response \(\rightarrow\) \emph{output node} in an \emph{output
+  layer}.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  The regression coefficients \(\rightarrow\) \emph{weights} (often
+  written on the arrows from the inputs to the output layer).
 \end{itemize}
 
 \end{block}
@@ -523,36 +589,56 @@ We need \emph{new concepts}:
 
 \begin{frame}[fragile]
 
+\vspace{-20mm}
+
 \scriptsize
 
 \begin{verbatim}
 ## # weights:  8
-## initial  value 3867668.136237 
-## iter  10 value 4470.341961
+## initial  value 1991903.253654 
+## iter  10 value 4471.049702
 ## final  value 4415.453729 
 ## converged
 \end{verbatim}
 
 \begin{center}\includegraphics[width=0.8\linewidth]{11Nnet_files/figure-beamer/motivating-1} \end{center}
 
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  All lines going into the output node signifies that we multiply the
+  covariate values in the input nodes with the weights (regression
+  coefficients), and then sum.
+\item
+  This sum can be sent through a socalled \emph{activition function}
+  (here just the identity function).
+\end{itemize}
+
 \end{frame}
 
 \begin{frame}
 
-The regression function is then rewritten from the linear regression
-case
+\begin{itemize}
+\tightlist
+\item
+  \emph{\textcolor{red}{Regression notation:}}
+\end{itemize}
 
 \begin{equation*}
- Y_i=\beta_0 + \beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_p x_{ip}+\varepsilon_i \ ,
+ Y_i=\beta_0 + \beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_p x_{ip}+\varepsilon_i \ .
 \end{equation*}
 
-to the neural network case
+\(~\)
 
-\begin{equation*}
-y_1({\boldsymbol x}_i)=\phi_o(w_0+w_1 x_{i1}+\cdots + w_p x_{ip}) \ ,
-\end{equation*}
-
-where \(\phi_o(x)=x\).
+\begin{itemize}
+\tightlist
+\item
+  \emph{\textcolor{red}{Neural network notation:}} \begin{equation*}
+  y_1({\boldsymbol x}_i)=\phi_o(w_0+w_1 x_{i1}+\cdots + w_p x_{ip}) \ ,
+  \end{equation*} where \(\phi_o(x)=x\) (identity function).
+\end{itemize}
 
 \end{frame}
 
@@ -582,18 +668,26 @@ the \(w\)s \(\hat{\beta}\)s instead.
 
 \vspace{2mm}
 
-In multiple linear regression, the parameters \(\boldsymbol\beta\) are
-estimated with maximum likelihood and least squares. These two methods
-give the same estimator when we assume the normal linear regression
-model.
+\begin{itemize}
+\tightlist
+\item
+  In multiple linear regression, the parameters \(\boldsymbol\beta\) are
+  estimated with maximum likelihood and least squares (equivalent under
+  Normal assumption).
+\end{itemize}
 
-The estimator \(\hat{\boldsymbol \beta}\) is found by minimizing the RSS
-for a multiple linear regression model:
-\[\begin{aligned} \text{RSS} &=\sum_{i=1}^n (y_i - \hat y_i)^2 = \sum_{i=1}^n (y_i - \hat \beta_0 - \hat \beta_1 x_{i1} - \hat \beta_2 x_{i2} -...-\hat \beta_p x_{ip} )^2 \\
-&= \sum_{i=1}^n (y_i-{\boldsymbol x}_i^T \boldsymbol \beta)^2=({\boldsymbol Y}-{\boldsymbol X}\hat{\boldsymbol{\beta}})^T({\boldsymbol Y}-{\boldsymbol X}\hat{\boldsymbol{\beta}}) \ .\end{aligned}\]
+\(~\)
 
-This problem has a solution given on closed form:
-\[ \hat{\boldsymbol\beta}=({\boldsymbol X}^T{\boldsymbol X})^{-1} {\boldsymbol X}^T {\boldsymbol Y} \ .\]
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Remember}: The estimator \(\hat{\boldsymbol \beta}\) is found
+  by minimizing the RSS for a multiple linear regression model: \[
+  \begin{aligned} \text{RSS} &=\sum_{i=1}^n (y_i - \hat y_i)^2 = \sum_{i=1}^n (y_i - \hat \beta_0 - \hat \beta_1 x_{i1} - \hat \beta_2 x_{i2} -...-\hat \beta_p x_{ip} )^2 \\
+  &= \sum_{i=1}^n (y_i-{\boldsymbol x}_i^T \boldsymbol \beta)^2=({\boldsymbol Y}-{\boldsymbol X}\hat{\boldsymbol{\beta}})^T({\boldsymbol Y}-{\boldsymbol X}\hat{\boldsymbol{\beta}}) \ .\end{aligned}
+  \] Solution:
+  \[ \hat{\boldsymbol\beta}=({\boldsymbol X}^T{\boldsymbol X})^{-1} {\boldsymbol X}^T {\boldsymbol Y} \ .\]
+\end{itemize}
 
 \end{block}
 
@@ -609,7 +703,6 @@ We now translate what we did for the regression setup into the neural
 networks world: \vspace{2mm}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \item
   Replace the parameters \(\boldsymbol\beta\) with \emph{network
   weights} \(\boldsymbol w\).
@@ -628,7 +721,6 @@ networks world: \vspace{2mm}
 \begin{frame}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{2}
 \tightlist
 \item
@@ -643,6 +735,8 @@ networks world: \vspace{2mm}
     solve the \((p+1)\) linear equations.
   \end{itemize}
 
+  \(~\)
+
   \(\rightarrow\)
   \emph{\textcolor{red}{more general minization procedures}} that work
   also when the loss function does not have a closed form.
@@ -654,8 +748,9 @@ networks world: \vspace{2mm}
 
 \begin{block}{Finding optimal weights (schematic description)}
 
+\(~\)
+
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \item
   Initialize weights by random numerical values.
 \item
@@ -685,9 +780,25 @@ networks world: \vspace{2mm}
 
 \begin{frame}
 
-Figures that give good illustration of the optimization problem.
+\begin{block}{Gradient descent and local minima}
 
+\(~\)
+
+\center
+
+\includegraphics[width=0.6\textwidth,height=\textheight]{gradient_descent.png}
+
+\tiny (\url{https://github.com/SoojungHong/MachineLearning/wiki/Gradient-Descent})
+
+\(~\) \(~\)
+
+\flushleft
+\normalsize
+
+Other figures that give good illustration of the optimization problem in
 Chollet and Allaire (2018):
+
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -699,7 +810,7 @@ Chollet and Allaire (2018):
   2.13: local and global minimum
 \end{itemize}
 
-(see board)
+\end{block}
 
 \end{frame}
 
@@ -708,7 +819,6 @@ Chollet and Allaire (2018):
 \begin{block}{Finding optimal weights: Algorithm}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
   Let \(t=0\) and denote the given initial values for the weights
@@ -779,8 +889,8 @@ Here we compare
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{fit =}\StringTok{ }\KeywordTok{lm}\NormalTok{(bodyfat }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{weight }\OperatorTok{+}\StringTok{ }\NormalTok{height }\OperatorTok{+}\StringTok{ }\NormalTok{bmi }\OperatorTok{+}\StringTok{ }\NormalTok{neck }\OperatorTok{+}\StringTok{ }\NormalTok{abdomen }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\NormalTok{hip, }\DataTypeTok{data =}\NormalTok{ d.bodyfat)}
+\NormalTok{fit =}\StringTok{ }\KeywordTok{lm}\NormalTok{(bodyfat }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{weight }\OperatorTok{+}\StringTok{ }\NormalTok{height }\OperatorTok{+}\StringTok{ }\NormalTok{bmi }\OperatorTok{+}\StringTok{ }\NormalTok{neck }\OperatorTok{+}\StringTok{ }\NormalTok{abdomen }\OperatorTok{+}\StringTok{ }\NormalTok{hip, }
+    \DataTypeTok{data =}\NormalTok{ d.bodyfat)}
 \NormalTok{fitnnet =}\StringTok{ }\KeywordTok{nnet}\NormalTok{(bodyfat }\OperatorTok{~}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{weight }\OperatorTok{+}\StringTok{ }\NormalTok{height }\OperatorTok{+}\StringTok{ }\NormalTok{bmi }\OperatorTok{+}\StringTok{ }\NormalTok{neck }\OperatorTok{+}\StringTok{ }\NormalTok{abdomen }\OperatorTok{+}\StringTok{ }
 \StringTok{    }\NormalTok{hip, }\DataTypeTok{data =}\NormalTok{ d.bodyfat, }\DataTypeTok{linout =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{size =} \DecValTok{0}\NormalTok{, }\DataTypeTok{skip =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{maxit =} \DecValTok{1000}\NormalTok{, }
     \DataTypeTok{entropy =} \OtherTok{FALSE}\NormalTok{)}
@@ -789,8 +899,8 @@ Here we compare
 
 \begin{verbatim}
 ## # weights:  8
-## initial  value 749757.662821 
-## iter  10 value 4471.140893
+## initial  value 4026626.427762 
+## iter  10 value 4471.098000
 ## final  value 4415.453729 
 ## converged
 \end{verbatim}
@@ -803,14 +913,14 @@ Here we compare
 
 \begin{verbatim}
 ##                      [,1]          [,2]
-## (Intercept) -9.748914e+01 -9.748903e+01
-## age         -9.607573e-04 -9.607669e-04
-## weight      -6.292827e-01 -6.292820e-01
-## height       3.974891e-01  3.974884e-01
-## bmi          1.785333e+00  1.785330e+00
-## neck        -4.945730e-01 -4.945725e-01
-## abdomen      8.945188e-01  8.945189e-01
-## hip         -1.255551e-01 -1.255549e-01
+## (Intercept) -9.748903e+01 -9.748903e+01
+## age         -9.607672e-04 -9.607669e-04
+## weight      -6.292820e-01 -6.292820e-01
+## height       3.974884e-01  3.974884e-01
+## bmi          1.785330e+00  1.785330e+00
+## neck        -4.945725e-01 -4.945725e-01
+## abdomen      8.945189e-01  8.945189e-01
+## hip         -1.255549e-01 -1.255549e-01
 \end{verbatim}
 
 \end{block}
@@ -1005,7 +1115,7 @@ often denoted \(\sigma(x)\). Again, we prefer to use
 
 \begin{block}{Parameter estimation vs.~network weights}
 
-\tiny 
+\tiny
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1093,6 +1203,7 @@ often denoted \(\sigma(x)\). Again, we prefer to use
 \end{verbatim}
 
 \normalsize
+
 In the \texttt{nnet} R package a slightly different version is used,
 \texttt{entropy=maximum\ conditional\ likelihood} which is half the
 deviance for the logistic regression model.
@@ -1154,6 +1265,7 @@ But, there may also exist local minima.
 \end{frame}
 
 \begin{frame}[fragile]{Multiclass regression}
+\protect\hypertarget{multiclass-regression}{}
 
 \textbf{Which type of iris species?}
 
@@ -1340,6 +1452,7 @@ First select a training sample
 \end{Shaded}
 
 \normalsize
+
 Then fit the \texttt{nnet()} (by default using the softmax activation
 function)
 
@@ -1354,20 +1467,20 @@ function)
 
 \begin{verbatim}
 ## # weights:  15
-## initial  value 56.193086 
-## iter  10 value 4.700163
-## iter  20 value 1.483907
-## iter  30 value 1.369780
-## iter  40 value 1.316379
-## iter  50 value 1.300036
-## iter  60 value 1.296889
-## iter  70 value 1.296349
-## iter  80 value 1.296154
-## iter  90 value 1.295839
-## iter 100 value 1.295822
-## iter 110 value 1.295808
-## iter 120 value 1.295798
-## final  value 1.295798 
+## initial  value 54.342987 
+## iter  10 value 3.381835
+## iter  20 value 0.880015
+## iter  30 value 0.586218
+## iter  40 value 0.530655
+## iter  50 value 0.507949
+## iter  60 value 0.505374
+## iter  70 value 0.503999
+## iter  80 value 0.503624
+## iter  90 value 0.503554
+## iter 100 value 0.503517
+## iter 110 value 0.503510
+## iter 120 value 0.503506
+## final  value 0.503505 
 ## converged
 \end{verbatim}
 
@@ -1391,11 +1504,11 @@ How many weights have been estimated? What does the graph look like?
 ## a 4-0-3 network with 15 weights
 ## options were - skip-layer connections  softmax modelling  decay=5e-04
 ##  b->o1 i1->o1 i2->o1 i3->o1 i4->o1 
-##  17.10  -1.04   0.25   2.68 -11.43 
+##   8.15   3.53  -0.67  -3.65  -3.76 
 ##  b->o2 i1->o2 i2->o2 i3->o2 i4->o2 
-##   2.03   3.64   5.52  -8.30  -5.39 
+##   1.33   3.36   6.47  -8.36  -5.19 
 ##  b->o3 i1->o3 i2->o3 i3->o3 i4->o3 
-## -19.13  -2.60  -5.78   5.63  16.82
+##  -9.48  -6.90  -5.80  12.01   8.95
 \end{verbatim}
 
 \end{frame}
@@ -1489,9 +1602,9 @@ offset note (B):
 \begin{verbatim}
 ##           Reference
 ## Prediction  c  s  v
-##          c 38  0  4
-##          s  0 28  0
-##          v  0  0 30
+##          c 28  0  0
+##          s  0 36  0
+##          v  4  0 32
 \end{verbatim}
 
 \begin{Shaded}
@@ -1503,9 +1616,9 @@ offset note (B):
 \begin{verbatim}
 ##    
 ##      c  s  v
-##   c 37  0  4
-##   s  0 28  0
-##   v  1  0 30
+##   c 29  0  0
+##   s  0 36  0
+##   v  3  0 32
 \end{verbatim}
 
 \end{block}
@@ -1610,9 +1723,10 @@ For more on multinomial regression with R, check
 \end{frame}
 
 \begin{frame}{Feedforward networks}
+\protect\hypertarget{feedforward-networks}{}
 
 In feedforward networks we have only connections (weights) forward in
-the network, and no feedback connctions that sends the output of the
+the network, and no feedback connections that sends the output of the
 model back into the network. The word \emph{multi-layer perceptron}
 (MLP) and \emph{sequentially layered} networks are also used
 
@@ -1652,7 +1766,6 @@ weights.
 We use the following notation:
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
   Inputs (input layer nodes), \(j=1,\dots p\):
@@ -1674,7 +1787,6 @@ We use the following notation:
 \begin{frame}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{2}
 \tightlist
 \item
@@ -1718,7 +1830,8 @@ given as
 \begin{frame}
 
 \centering
-\includegraphics[width=0.80000\textwidth]{drawNNp3h2o3.png}
+
+\includegraphics[width=0.8\textwidth,height=\textheight]{drawNNp3h2o3.png}
 
 \end{frame}
 
@@ -1948,6 +2061,7 @@ classes and a softmax output stage for more levels.
 \end{frame}
 
 \begin{frame}[fragile]{Examples}
+\protect\hypertarget{examples}{}
 
 \begin{block}{Boston house prices}
 
@@ -1981,6 +2095,8 @@ R package.
 \end{frame}
 
 \begin{frame}[fragile]
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2045,6 +2161,8 @@ A widespread best practice to deal with such data is to do feature-wise
 normalization. This is to make the optimization easier with gradient
 based methods.
 
+\scriptsize
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{org_train =}\StringTok{ }\NormalTok{train_data}
@@ -2054,6 +2172,8 @@ based methods.
 \NormalTok{test_data <-}\StringTok{ }\KeywordTok{scale}\NormalTok{(test_data, }\DataTypeTok{center =}\NormalTok{ mean, }\DataTypeTok{scale =}\NormalTok{ std)}
 \end{Highlighting}
 \end{Shaded}
+
+\normalsize
 
 Note that the quantities used for normalizing the test data are computed
 using the training data. You should never use in your workflow any
@@ -2067,6 +2187,8 @@ again (from scratch) if we need to do cross-validation.
 
 Just checking out one hidden layer with 5 units to get going.
 
+\scriptsize
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(nnet)}
@@ -2077,59 +2199,39 @@ Just checking out one hidden layer with 5 units to get going.
 
 \begin{verbatim}
 ## # weights:  76
-## initial  value 245152.741465 
-## iter  10 value 12420.525228
-## iter  20 value 6902.467151
-## iter  30 value 5723.819800
-## iter  40 value 5177.095194
-## iter  50 value 4689.188029
-## iter  60 value 4451.205619
-## iter  70 value 4357.164555
-## iter  80 value 4254.337102
-## iter  90 value 4118.662278
-## iter 100 value 4026.432205
-## iter 110 value 3918.047699
-## iter 120 value 3738.715855
-## iter 130 value 3406.126780
-## iter 140 value 3168.917490
-## iter 150 value 3084.137765
-## iter 160 value 3069.231409
-## iter 170 value 3061.111815
-## iter 180 value 3048.847428
-## iter 190 value 3021.014988
-## iter 200 value 2992.050465
-## iter 210 value 2984.054015
-## iter 220 value 2978.747128
-## iter 230 value 2971.909234
-## iter 240 value 2951.028001
-## iter 250 value 2936.939591
-## iter 260 value 2934.430484
-## iter 270 value 2932.502517
-## iter 280 value 2931.194886
-## iter 290 value 2930.713119
-## iter 300 value 2930.496846
-## iter 310 value 2930.072463
-## iter 320 value 2927.357698
-## iter 330 value 2925.042771
-## iter 340 value 2924.214962
-## iter 350 value 2924.019369
-## iter 360 value 2922.190825
-## iter 370 value 2921.733842
-## iter 380 value 2921.709770
-## iter 390 value 2921.673054
-## iter 400 value 2921.586000
-## iter 410 value 2921.087768
-## iter 420 value 2920.013649
-## iter 430 value 2918.119987
-## iter 440 value 2917.580537
-## iter 450 value 2917.529205
-## iter 460 value 2917.478376
-## iter 470 value 2917.428053
-## iter 480 value 2917.255010
-## iter 490 value 2917.232905
-## iter 500 value 2917.193604
-## iter 510 value 2916.542979
-## final  value 2916.377014 
+## initial  value 239347.513180 
+## iter  10 value 10541.346246
+## iter  20 value 7744.379575
+## iter  30 value 6423.076335
+## iter  40 value 5753.439036
+## iter  50 value 5429.080461
+## iter  60 value 5315.618454
+## iter  70 value 5232.399804
+## iter  80 value 4894.587344
+## iter  90 value 4710.231051
+## iter 100 value 4544.261240
+## iter 110 value 4464.326885
+## iter 120 value 4384.501554
+## iter 130 value 4341.697154
+## iter 140 value 4321.737531
+## iter 150 value 4247.610601
+## iter 160 value 4176.769283
+## iter 170 value 4150.492584
+## iter 180 value 4122.494685
+## iter 190 value 4116.483936
+## iter 200 value 4114.633958
+## iter 210 value 4112.536296
+## iter 220 value 4112.322697
+## iter 230 value 4112.167369
+## iter 240 value 4112.027717
+## iter 250 value 4112.007176
+## iter 260 value 4112.002130
+## iter 270 value 4111.992358
+## iter 280 value 4111.981256
+## iter 290 value 4111.928541
+## iter 300 value 4111.838021
+## iter 310 value 4111.760980
+## final  value 4111.741716 
 ## converged
 \end{verbatim}
 
@@ -2142,28 +2244,28 @@ Just checking out one hidden layer with 5 units to get going.
 \begin{verbatim}
 ## a 13-5-1 network with 76 weights
 ## options were - linear output units 
-##    b->h1   i1->h1   i2->h1   i3->h1   i4->h1   i5->h1   i6->h1   i7->h1 
-##  -132.12   -78.30    -9.02    19.32     5.10    14.23    59.89     7.00 
-##   i8->h1   i9->h1  i10->h1  i11->h1  i12->h1  i13->h1 
-##    21.03    64.26   -60.43    -3.87     7.50   -51.93 
-##    b->h2   i1->h2   i2->h2   i3->h2   i4->h2   i5->h2   i6->h2   i7->h2 
-##    -3.85    -1.01     0.56    -0.03     0.12    -0.51     0.54    -0.07 
-##   i8->h2   i9->h2  i10->h2  i11->h2  i12->h2  i13->h2 
-##    -1.24     1.26     1.27    -0.48     0.36    -1.88 
-##    b->h3   i1->h3   i2->h3   i3->h3   i4->h3   i5->h3   i6->h3   i7->h3 
-##    25.84    -0.73    41.04    -4.75    -2.00    -8.34    -6.28    -3.93 
-##   i8->h3   i9->h3  i10->h3  i11->h3  i12->h3  i13->h3 
-##   -23.34    -4.65    -5.50    -1.82     2.61   -14.67 
-##    b->h4   i1->h4   i2->h4   i3->h4   i4->h4   i5->h4   i6->h4   i7->h4 
-## -1124.48  -773.24  -102.16  -329.55   748.05  -657.22  1618.86 -1292.65 
-##   i8->h4   i9->h4  i10->h4  i11->h4  i12->h4  i13->h4 
-## -2108.62  1346.05 -1746.72  -541.44  1736.48   -43.50 
-##    b->h5   i1->h5   i2->h5   i3->h5   i4->h5   i5->h5   i6->h5   i7->h5 
-## -1120.64   683.80  -142.16    61.33 -6226.81  -497.87  -446.33     4.21 
-##   i8->h5   i9->h5  i10->h5  i11->h5  i12->h5  i13->h5 
-##  -255.20  -278.21   826.66   257.90   438.04    -3.16 
-##     b->o    h1->o    h2->o    h3->o    h4->o    h5->o 
-##    14.28     7.49    24.48     7.41     3.51    -2.83
+##   b->h1  i1->h1  i2->h1  i3->h1  i4->h1  i5->h1  i6->h1  i7->h1  i8->h1 
+## -448.11 -206.60  -95.35  106.57   -8.28   18.27  263.03   -7.27  -97.35 
+##  i9->h1 i10->h1 i11->h1 i12->h1 i13->h1 
+##  229.35  -67.20   31.92  235.64 -297.97 
+##   b->h2  i1->h2  i2->h2  i3->h2  i4->h2  i5->h2  i6->h2  i7->h2  i8->h2 
+## -200.43    4.07   14.93   26.55   31.37    3.96   70.47  -36.93  -20.09 
+##  i9->h2 i10->h2 i11->h2 i12->h2 i13->h2 
+##   40.27   17.95  -44.07   59.92  -78.21 
+##   b->h3  i1->h3  i2->h3  i3->h3  i4->h3  i5->h3  i6->h3  i7->h3  i8->h3 
+##    0.05 -169.96  215.98  153.31    3.69   48.56  158.11   35.22 -259.38 
+##  i9->h3 i10->h3 i11->h3 i12->h3 i13->h3 
+##  223.50 -126.85   26.97 -167.35  -16.59 
+##   b->h4  i1->h4  i2->h4  i3->h4  i4->h4  i5->h4  i6->h4  i7->h4  i8->h4 
+##   15.70   -1.35   16.27   -9.18   -0.36   -3.80   -2.47    0.63   -9.61 
+##  i9->h4 i10->h4 i11->h4 i12->h4 i13->h4 
+##    0.40   -4.04    0.63    2.09   -6.32 
+##   b->h5  i1->h5  i2->h5  i3->h5  i4->h5  i5->h5  i6->h5  i7->h5  i8->h5 
+## -122.18   29.09   60.87  -83.69  151.98  -43.81  204.30 -361.53  -88.02 
+##  i9->h5 i10->h5 i11->h5 i12->h5 i13->h5 
+##  320.29 -213.48 -179.39   76.52  -84.35 
+##    b->o   h1->o   h2->o   h3->o   h4->o   h5->o 
+##    8.44    7.45   11.10    5.28   10.46    4.44
 \end{verbatim}
 
 \begin{Shaded}
@@ -2174,7 +2276,7 @@ Just checking out one hidden layer with 5 units to get going.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 4.977579
+## [1] 6.08271
 \end{verbatim}
 
 \begin{Shaded}
@@ -2184,7 +2286,7 @@ Just checking out one hidden layer with 5 units to get going.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 3.29981
+## [1] 4.483676
 \end{verbatim}
 
 \end{frame}
@@ -2195,6 +2297,8 @@ Now, use cross-validation to find the best number of hidden nodes ---
 but that took some time, so only results shown below. Remember the
 scaling need to be done within the loop.
 
+\scriptsize
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{grid =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{25}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{50}\NormalTok{)}
@@ -2203,8 +2307,8 @@ scaling need to be done within the loop.
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
 \NormalTok{indices <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(train_data))}
 \NormalTok{folds <-}\StringTok{ }\KeywordTok{cut}\NormalTok{(indices, }\DataTypeTok{breaks =}\NormalTok{ k, }\DataTypeTok{labels =} \OtherTok{FALSE}\NormalTok{)}
-\CommentTok{# have now assigned the traning data to 4 diffeent folds all of}
-\CommentTok{# the same size (101)}
+\CommentTok{# have now assigned the traning data to 4 diffeent folds all of the}
+\CommentTok{# same size (101)}
 
 \NormalTok{resmat =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\OtherTok{NA}\NormalTok{, }\DataTypeTok{ncol =}\NormalTok{ k, }\DataTypeTok{nrow =} \KeywordTok{length}\NormalTok{(grid))}
 \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{k) \{}
@@ -2216,8 +2320,8 @@ scaling need to be done within the loop.
     \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(grid)) \{}
 \NormalTok{        thissize =}\StringTok{ }\NormalTok{grid[i]}
         
-\NormalTok{        fit =}\StringTok{ }\KeywordTok{nnet}\NormalTok{(train_targets }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ new, }\DataTypeTok{size =}\NormalTok{ thissize, }
-            \DataTypeTok{linout =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{maxit =} \DecValTok{5000}\NormalTok{)}
+\NormalTok{        fit =}\StringTok{ }\KeywordTok{nnet}\NormalTok{(train_targets }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ new, }\DataTypeTok{size =}\NormalTok{ thissize, }\DataTypeTok{linout =} \OtherTok{TRUE}\NormalTok{, }
+            \DataTypeTok{maxit =} \DecValTok{5000}\NormalTok{)}
 \NormalTok{        pred =}\StringTok{ }\KeywordTok{predict}\NormalTok{(fit, }\DataTypeTok{newdata =}\NormalTok{ new[thisvalid, ], }\DataTypeTok{type =} \StringTok{"raw"}\NormalTok{)}
 \NormalTok{        resmat[i, j] =}\StringTok{ }\KeywordTok{sum}\NormalTok{((pred[, }\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{train_targets[thisvalid])}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
 \NormalTok{    \}}
@@ -2238,6 +2342,8 @@ The best model here was the model with 50 nodes, the largest model we
 tried. Fitting that model on the full training set and testing on the
 test set
 
+\scriptsize
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(nnet)}
@@ -2248,48 +2354,43 @@ test set
 
 \begin{verbatim}
 ## # weights:  751
-## initial  value 270057.408487 
-## iter  10 value 7120.629568
-## iter  20 value 1912.248122
-## iter  30 value 1045.291511
-## iter  40 value 654.075165
-## iter  50 value 483.020417
-## iter  60 value 381.456615
-## iter  70 value 303.378804
-## iter  80 value 206.528830
-## iter  90 value 117.599100
-## iter 100 value 75.531273
-## iter 110 value 48.326269
-## iter 120 value 31.066476
-## iter 130 value 20.833693
-## iter 140 value 14.263621
-## iter 150 value 10.101553
-## iter 160 value 7.434405
-## iter 170 value 5.503605
-## iter 180 value 4.199943
-## iter 190 value 3.403191
-## iter 200 value 2.654316
-## iter 210 value 1.858079
-## iter 220 value 1.304752
-## iter 230 value 0.863482
-## iter 240 value 0.594627
-## iter 250 value 0.404327
-## iter 260 value 0.292482
-## iter 270 value 0.206237
-## iter 280 value 0.142111
-## iter 290 value 0.101128
-## iter 300 value 0.075254
-## iter 310 value 0.053798
-## iter 320 value 0.037321
-## iter 330 value 0.024749
-## iter 340 value 0.013239
-## iter 350 value 0.006591
-## iter 360 value 0.003741
-## iter 370 value 0.001995
-## iter 380 value 0.000971
-## iter 390 value 0.000412
-## iter 400 value 0.000122
-## final  value 0.000096 
+## initial  value 233099.999499 
+## iter  10 value 6257.318468
+## iter  20 value 2127.357085
+## iter  30 value 1232.394451
+## iter  40 value 793.836689
+## iter  50 value 553.773477
+## iter  60 value 395.203521
+## iter  70 value 276.229647
+## iter  80 value 226.183478
+## iter  90 value 172.337520
+## iter 100 value 122.628340
+## iter 110 value 74.053788
+## iter 120 value 45.371268
+## iter 130 value 30.288713
+## iter 140 value 20.444793
+## iter 150 value 13.569410
+## iter 160 value 8.492179
+## iter 170 value 5.441793
+## iter 180 value 3.404754
+## iter 190 value 2.299248
+## iter 200 value 1.568135
+## iter 210 value 0.961154
+## iter 220 value 0.725597
+## iter 230 value 0.426690
+## iter 240 value 0.221992
+## iter 250 value 0.111660
+## iter 260 value 0.056740
+## iter 270 value 0.027980
+## iter 280 value 0.015006
+## iter 290 value 0.007944
+## iter 300 value 0.004088
+## iter 310 value 0.002282
+## iter 320 value 0.001293
+## iter 330 value 0.000670
+## iter 340 value 0.000295
+## iter 350 value 0.000115
+## final  value 0.000095 
 ## converged
 \end{verbatim}
 
@@ -2362,7 +2463,7 @@ test set
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 5.155742
+## [1] 5.46124
 \end{verbatim}
 
 \begin{Shaded}
@@ -2373,8 +2474,10 @@ test set
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 3.894279
+## [1] 3.953229
 \end{verbatim}
+
+\normalsize
 
 See here:
 \url{https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural_networks_boston_housing.html}
@@ -2415,6 +2518,7 @@ Problem 3.}
 \end{frame}
 
 \begin{frame}{Neural network parts}
+\protect\hypertarget{neural-network-parts}{}
 
 We now focus on the different elements of neural networks.
 
@@ -2475,6 +2579,8 @@ function.
 
 \begin{frame}
 
+\scriptsize
+
 \includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-21-1.pdf}
 
 \end{frame}
@@ -2490,6 +2596,9 @@ function.
   they were only strongly sensitive when the input was close to 0. This
   saturation lead to problems in the gradient descent routines.
 \end{itemize}
+
+Todo: We may use the problem mentioned here in our recommended
+exercises:
 
 \textbf{However, for our Compulsory exercise 2, Problem 3, there should
 be quite ok to use sigmoid hidden layer activation in the \texttt{nnet}
@@ -2566,7 +2675,8 @@ Other possible choices for hidden layer activation functions are:
 \begin{block}{Neural motivation for squashing functions}
 
 \centering
-\includegraphics[width=0.80000\textwidth]{Action_potential.png}
+
+\includegraphics[width=0.7\textwidth,height=\textheight]{Action_potential.png}
 
 \url{https://commons.wikimedia.org/wiki/File:Action_potential.svg}
 
@@ -2811,7 +2921,6 @@ This means that for (mini-batch) stochastic gradient descent we do as
 follows:
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
   Divide all the training samples randomly into mini-batches.
@@ -3092,6 +3201,8 @@ Expert Systems with Applications, Volume 109,
 
 \begin{block}{Dropout}
 
+\(~\)
+
 (Based on Goodfellow, Bengio, and Courville (2016), Section 7.12, and
 Chollet and Allaire (2018) 4.4.3)
 
@@ -3193,6 +3304,7 @@ training.
 \end{frame}
 
 \begin{frame}{Deep learning}
+\protect\hypertarget{deep-learning}{}
 
 \begin{block}{Timeline}
 
@@ -3355,7 +3467,6 @@ Cheat-sheet for R Keras:
 \begin{block}{Simple data analysis workflow}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
   Select training and test data
@@ -3421,6 +3532,8 @@ convolutional neural nets is found here:
 Objective: classify the digit contained in an image (128 \(\times\) 128
 greyscale). Problem type: Multiclass classification based on image data.
 
+\scriptsize
+
 \includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-22-1.pdf}
 
 \end{frame}
@@ -3443,6 +3556,8 @@ Labels for the training data:
 
 60 000 images for training and 10 000 images for testing.
 
+\scriptsize
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{# Training data}
@@ -3455,6 +3570,8 @@ Labels for the training data:
 \NormalTok{org_testlabels <-}\StringTok{ }\NormalTok{test_labels}
 \end{Highlighting}
 \end{Shaded}
+
+\normalsize
 
 The \texttt{train\_images} is a tensor (generalization of a matrix) with
 3 axis, \texttt{(samples,\ height,\ width)}.
@@ -3472,6 +3589,8 @@ which expects an input tensor of rank equal to two
 \texttt{(sample,\ features)} where each \texttt{sample} should contain
 \texttt{28*28=784} pixels. Adding a bias term (intercept) is default for
 \texttt{layer\_dense}.
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3496,6 +3615,8 @@ which expects an input tensor of rank equal to two
 ## ___________________________________________________________________________
 \end{verbatim}
 
+\normalsize
+
 As activation function we use \texttt{relu} for the hidden layer, and
 \texttt{softmax} for the output layer - since we have 10 classes (where
 one is correct each time). We could have included more layers in our
@@ -3515,6 +3636,8 @@ cross-entropy, and then the version of the optimizer. Here htis is
 RMSprop. Finally, which measure - metrics - do we want to monitor in our
 training phase? Here we choose accuracy (=percentage correctly
 classified).
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3539,6 +3662,8 @@ grey scale values are scales to be in the {[}0, 1{]} interval.
 Also, the response must be transformed from 0-10 to a vector of 0s and
 1s (dummy variable coding) aka one-hot-coding.
 
+\scriptsize
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{train_images <-}\StringTok{ }\KeywordTok{array_reshape}\NormalTok{(train_images, }\KeywordTok{c}\NormalTok{(}\DecValTok{60000}\NormalTok{, }\DecValTok{28} \OperatorTok{*}\StringTok{ }\DecValTok{28}\NormalTok{))}
@@ -3557,7 +3682,9 @@ Also, the response must be transformed from 0-10 to a vector of 0s and
 
 \begin{frame}[fragile]
 
-\begin{block}{5. Fit the model}
+\#\#\#5. Fit the model
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3569,15 +3696,16 @@ Also, the response must be transformed from 0-10 to a vector of 0s and
 \end{Shaded}
 
 \centering
-\includegraphics[width=0.50000\textwidth]{mnistex.png}
 
-\end{block}
+\includegraphics[width=0.5\textwidth,height=\textheight]{mnistex.png}
 
 \end{frame}
 
 \begin{frame}[fragile]
 
-\begin{block}{6. Evaluation and prediction}
+\#\#\#6. Evaluation and prediction
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3616,8 +3744,6 @@ Also, the response must be transformed from 0-10 to a vector of 0s and
 \NormalTok{ Mcnemar}\StringTok{'s Test P-Value : NA}
 \end{Highlighting}
 \end{Shaded}
-
-\end{block}
 
 \end{frame}
 
@@ -3665,6 +3791,7 @@ taken from Chollet and Allaire (2018):
 \end{frame}
 
 \begin{frame}[fragile]{Summing up}
+\protect\hypertarget{summing-up-1}{}
 
 \begin{itemize}
 \tightlist
@@ -3722,6 +3849,7 @@ different socalled \emph{explainers}
 \end{frame}
 
 \begin{frame}{References and further reading}
+\protect\hypertarget{references-and-further-reading}{}
 
 \begin{itemize}
 \tightlist
@@ -3750,23 +3878,24 @@ different socalled \emph{explainers}
 \end{frame}
 
 \begin{frame}{Acknowledgements}
+\protect\hypertarget{acknowledgements-1}{}
 
 \hypertarget{refs}{}
-\hypertarget{ref-kerasR}{}
+\leavevmode\hypertarget{ref-kerasR}{}%
 Chollet, François, and J. J. Allaire. 2018. \emph{Deep Learning with R}.
 Manning Press. \url{https://www.manning.com/books/deep-learning-with-r}.
 
-\hypertarget{ref-casi}{}
+\leavevmode\hypertarget{ref-casi}{}%
 Efron, Bradley, and Trevor Hastie. 2016. \emph{Computer Age Statistical
 Inference - Algorithms, Evidence, and Data Science}. Cambridge
 University Press.
 
-\hypertarget{ref-ESL}{}
+\leavevmode\hypertarget{ref-ESL}{}%
 Friedman, Jerome, Trevor Hastie, and Robert Tibshirani. 2001. \emph{The
 Elements of Statistical Learning}. Vol. 1. Springer series in statistics
 New York.
 
-\hypertarget{ref-goodfellow}{}
+\leavevmode\hypertarget{ref-goodfellow}{}%
 Goodfellow, Ian, Yoshua Bengio, and Aaron Courville. 2016. \emph{Deep
 Learning}. MIT Press.
 
