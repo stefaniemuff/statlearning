@@ -376,25 +376,44 @@ where $J({\boldsymbol w})$ indicates that the unknown parameters are the weights
      
      $\rightarrow$ _\textcolor{red}{more general minization procedures}_ that work also when the loss function does not have a closed form.
 
+
 ---
 
-### Finding optimal weights (schematic description)
+## Finding optimal weights: Algorithm
 
-$~$
+\vspace{2mm}
 
-1. Initialize weights by random numerical values.
+1. Let $t=0$ and denote the given initial values for the weights ${\boldsymbol w}^{(t)}$,
+\vspace{2mm}
+2. Until convergence, repeat
+    a) Calculate the predictions ${\hat{y}_1({\boldsymbol x}_i)}$
+    b) calculate the loss function $J({\boldsymbol w}^{(t)})$,
+    c) find the gradient (direction) in the $(p+1)$-dimensional space of the weights, and evaluate this at the current weight values $\nabla J({\boldsymbol w}^{(0)})={\frac{\partial J}{\partial {\boldsymbol w}}}({\boldsymbol w}^{(0)})$
+    d) go with a given step length (learning rate) $\lambda$ in the direction of the negative of the gradient of the loss function to get 
+$${\boldsymbol w}^{(t+1)}={\boldsymbol w}^{(t)} - \lambda \nabla J({\boldsymbol w}^{(t)})$$
+    e) Set $t=t+1$, go to a) and continue to e) several times until you arrive at a (local) optimum
+\vspace{2mm}
+3. The final values of the weights in that $(p+1)$ dimensional space are our parameter estimates and your network is _trained_.
 
-2. Calculate the predicted values $\hat{y}_1({\boldsymbol x}_i)$ for each observation.
+<!-- ### Finding optimal weights (schematic description) -->
 
-3. Calculate the loss function $J(\boldsymbol{w})$, which we want to minimize.
+<!-- $~$ -->
 
-4. Calculate the _gradient of a function_ (it gives the _direction of the steepest ascent_) in the $(p+1)$- dimensional space of real numbers (for $p+1$ weights). 
+<!-- 1. Initialize weights by random numerical values. -->
 
-5. Update weights in our $p+1$-dimensional in the direction of the _negative of the gradient_ we _decreases the loss function_ most quickly. The _step length_ ("_learning rate_") determines how far we go in an iteration. 
+<!-- 2. Calculate the predicted values $\hat{y}_1({\boldsymbol x}_i)$ for each observation. -->
 
-6. Iterate steps 2--6 until convergence.
+<!-- 3. Calculate the loss function $J(\boldsymbol{w})$, which we want to minimize. -->
 
-7. Return final weights.
+<!-- 4. Calculate the _gradient of a function_ (it gives the _direction of the steepest ascent_) in the $(p+1)$- dimensional space of real numbers (for $p+1$ weights).  -->
+
+<!-- 5. Update weights in our $p+1$-dimensional in the direction of the _negative of the gradient_ we _decreases the loss function_ most quickly. The _step length_ ("_learning rate_") determines how far we go in an iteration.  -->
+
+<!-- 6. Iterate steps 2--6 until convergence. -->
+
+<!-- 7. Return final weights. -->
+
+<!-- --- -->
 
 ---
 
@@ -425,20 +444,6 @@ $~$
 
 
 
-
----
-
-## Finding optimal weights: Algorithm
-
-1. Let $t=0$ and denote the given initial values for the weights ${\boldsymbol w}^{(t)}$,
-2. _propagate_ the observations through the network and calculate the predictions ${\hat{y}_1({\boldsymbol x}_i)}$
-3. calculate the loss function $J({\boldsymbol w}^{(0)})$,
-4. find the gradient (direction) in the $(p+1)$-dimensional space of the weights, and evaluate this at the current weight values $\nabla J({\boldsymbol w}^{(0)})={\frac{\partial J}{\partial {\boldsymbol w}}}({\boldsymbol w}^{(0)})$
-5. go with a given step length (learning rate) $\lambda$ in the direction of the negative of the gradient of the loss function to get updated values for the weights
-$${\boldsymbol w}^{(t+1)}={\boldsymbol w}^{(t)} - \lambda \nabla J({\boldsymbol w}^{(t)})$$
-6. Set $t=t+1$, go to 2. and continue to 6. several times until you arrive at a (local) optimum
-7. The final values of the weights in that $(p+1)$ dimensional space are our parameter estimates and your network is _trained_ and can be used for prediction on a test set.
-
 ---
 
 ### Backpropagation
@@ -451,12 +456,17 @@ $${\boldsymbol w}^{(t+1)}={\boldsymbol w}^{(t)} - \lambda \nabla J({\boldsymbol 
 Here we compare 
 
 * the MLR solution with `lm` 
-* the neural network solution with `nnet` \footnote{which in fact improves upon the gradient descent with Hessian information and the BFGS-algorithmBFGS is a quasi-Newton method (also known as a variable metric algorithm), specifically that published simultaneously in 1970 by Broyden, Fletcher, Goldfarb and Shanno. This uses function values and gradients to build up a picture of the surface to be optimized.}
+* the neural network solution with `nnet` \footnote{which in fact improves upon the gradient descent with Hessian information and the BFGS-algorithm. BFGS is a quasi-Newton method (also known as a variable metric algorithm), specifically that published simultaneously in 1970 by Broyden, Fletcher, Goldfarb and Shanno. This uses function values and gradients to build up a picture of the surface to be optimized.}
 
 ---
 
-### Parameter estimation vs. network weights
+### Continuous outcome
 
+$~$
+
+Linear regression vs.\ neural networks: an example.
+
+$~$
 
 \scriptsize
 
@@ -470,10 +480,12 @@ cbind(fitnnet$wts,fit$coefficients)
 
 ---
 
-## Logistic regression: Diabetes
+## Binary outcome: Diabetes
 \vspace{2mm}
 
-Aim is to predict if a person has diabetes\footnote{Logistic regression is the "hello world" of machine learning.}. The data is from a population of women of Pima Indian heritage in the US, available in the R `MASS` package. The following information is available for each woman:
+Aim is to predict if a person has diabetes\footnote{Logistic regression is the "hello world" of machine learning.}. The data stem from a population of women of Pima Indian heritage in the US, available in the R `MASS` package. The following information is available for each woman:
+
+$~$
 
 * `diabetes`: `0`= not present, `1`= present
 * `npreg`: number of pregnancies
@@ -488,25 +500,29 @@ Aim is to predict if a person has diabetes\footnote{Logistic regression is the "
 
 ---
 
-### The statistical model
+### The statistical model: Logistic regression
 
-\vspace{2mm}
+$~$
 
 * $i=1,\ldots, n$ observations in the training set. We will use $r$ (instead of $p$) to be the number of covariates, to avoid confusion with the probability $p$.
 
+$~$
 
-* The reponse $Y_i$ is coded ($\mathcal{C} = \{1, 0\}$ or \{success, failure\}) with 
-
-$$Y_i = \begin{cases} 1 \text{ with probability } p_i, \\ 0 \text{ with probability } 1-p_i. \end{cases}$$
-
-In logistic regression we _link_ together our covariates ${\boldsymbol x}_i$ with this probability $p_i$ using a _logistic function_.
+* The binary reponse $Y_i \in \{1, 0\}$ with
+$$\text{P}(Y_i =1 ) = p_i$$
+and $$\log \Big ( \frac{p_i}{1-p_i}\Big ) = \beta^\top {\boldsymbol x}_i \ ,$$
+where $\log(\frac{x}{1-x})$ is the _logistic function_ .
 
 ---
 
-\begin{align*}p_i&= \frac{\exp(\beta_0+\beta_1 x_{i1}+\cdots + \beta_r x_{ir})}{1 + \exp(\beta_0 + \beta_1 x_{i1}+\cdots+\beta_r x_{ir})}\\=&\frac{1}{1+\exp(-\beta_0 - \beta_1 x_{i1}-\cdots-\beta_r x_{ir})}
-\end{align*}
+* Therefore 
+$$
+p_i = \frac{\exp(\beta^\top {\boldsymbol x}_i)}{1+\exp(\beta^\top {\boldsymbol x}_i)} = \frac{1}{1+\exp(-\beta^\top {\boldsymbol x}_i)} \ .
+$$
 
-This function is S-shaped, and ranges between 0 and 1 (so the $p_i$ is between 0 and 1).
+$~$
+
+* This function is S-shaped, and ranges between 0 and 1 (so the $p_i$ is between 0 and 1).
 
 
 ```{r,echo=FALSE, fig.width=5, fig.height=3,fig.align = "center",out.width='60%'}
@@ -514,7 +530,7 @@ library(ggplot2)
 ggplot(data.frame(x=c(-6,5)), aes(x))+
   xlab(expression(x))+
   ylab(expression(p))+
-    stat_function(fun=function(x) exp(x)/(1+exp(x)), geom="line", colour="red")
+    stat_function(fun=function(x) exp(x)/(1+exp(x)), geom="line", colour="red",lwd=2)
 #    stat_function(fun=function(x) exp(2*x)/(1+exp(2*x)), geom="line", colour="orange")+
 #          stat_function(fun=function(x) exp(0.8*x)/(1+exp(0.8*x)), geom="line", colour="blue")+
 #    stat_function(fun=function(x) exp(1+x)/(1+exp(1+x)), geom="line", colour="red",linetype="dashed")+
@@ -532,43 +548,54 @@ ggplot(data.frame(x=c(-6,5)), aes(x))+
 (Maximum likelihood)
 \vspace{2mm}
 
-We assume that pairs of covariates and responses  $\{x_i, y_i\}$ are measured independently of each other. Given $n$ such observation pairs, the likelihood function of a logistic regression model can be written as:
-$$L(\boldsymbol{\beta}) = \prod_{i=1}^n L_i(\boldsymbol{\beta}) = \prod_{i=1}^n f(y_i; \boldsymbol{\beta}) = \prod_{i=1}^n (p_i)^{y_i}(1-p_i)^{1-y_i},$$
-where $\boldsymbol{\beta} = (\beta_0, \beta_1, \beta_2, \ldots, \beta_r)^T$ enters into $p_i$.
+* Given $n$ independent pairs of covariates and responses  $\{x_i, y_i\}$, the log-likelihood function of a logistic regression model can be written as:
+\vspace{-2mm}
 
-It is easier (and equivalent) to maximize the log-likelihood:
+<!-- $$L(\boldsymbol{\beta}) = \prod_{i=1}^n L_i(\boldsymbol{\beta}) = \prod_{i=1}^n f(y_i; \boldsymbol{\beta}) = \prod_{i=1}^n (p_i)^{y_i}(1-p_i)^{1-y_i},$$ -->
+<!-- where $\boldsymbol{\beta} = (\beta_0, \beta_1, \beta_2, \ldots, \beta_r)^T$ enters into $p_i$. -->
+
+<!-- * It is easier (and equivalent) to maximize the log-likelihood: -->
 
 <!-- \begin{align*} \ln(L(\boldsymbol{\beta}))&=l(\boldsymbol{\beta}) =\sum_{i=1}^n \Big ( y_i \ln p_i + (1-y_i) \ln(1 - p_i )\Big ) \\ &= \sum_{i=1}^n \Big ( y_i \ln \Big (\frac{p_i}{1-p_i} \Big) + \ln(1-p_i) \Big ) \\ -->
 <!-- &= \sum_{i=1}^n \Big (y_i (\beta_0 + \beta_1 x_{i1}+\cdots + \beta_r x_{ir}) - \ln(1 + e^{\beta_0 + \beta_1 x_{i1}+\cdots + \beta_p x_{ir}} \Big ).\end{align*} -->
 
 $$ \ln(L(\boldsymbol{\beta}))=l(\boldsymbol{\beta}) =\sum_{i=1}^n \Big ( y_i \ln p_i + (1-y_i) \ln(1 - p_i )\Big ) \ .$$
 
----
+* Maximiation: set the $r+1$ partial derivatives (to form the gradient) to 0.
 
-* To maximize the log-likelihood function we find the $r+1$ partial derivatives (to form the gradient), and set equal til 0.
-* This gives us a set of $r+1$ non-linear equations in the $\beta_j$s.
-* This set of equations does not have a closed form solution.
-* These equations are therefore solved numerically, using the _Newton-Raphson algorithm_ (or Fisher Scoring):
-$$\beta^{(t+1)}=\beta^{(t)} + {\boldsymbol F}({\boldsymbol \beta}{(t)})^{-1} s(\beta^{(t)}) \ ,$$
-where the gradient of the log-likelihood ${\boldsymbol s}({\boldsymbol \beta})=\frac{\partial l}{\partial \boldsymbol \beta}$ is called the score vector, and here the new quantity ${\boldsymbol F}({\boldsymbol \beta}^{(t)})^{-1}$ is called the inverse _expected Fisher information matrix_ and is the expected value of the negative of the gradient of the score vector (the negative of the Hessian matrix of the loglikelihood), and also the covariance matrix of the score vector (graphical description on the board).\footnote{Observe that we here are maximizing so we are going in the direction of the gradient, not the negative of the direction which is needed when we minimize.}
+<!-- * This gives us a set of $r+1$ non-linear equations in the $\beta_j$s. -->
+<!-- * This set of equations does not have a closed form solution. -->
+
+
+\small
+
+* No closed form solution, thus we use a _\textcolor{red}{gradient-based method}_ (the Newton-Raphson or [Fisher scoring algorithm](https://en.wikipedia.org/wiki/Scoring_algorithm) to find $\hat\beta$ and $SD(\hat\beta)$:
+$$
+\beta^{(t+1)}=\beta^{(t)} + {\boldsymbol F}({\boldsymbol \beta}^{(t)})^{-1} s(\beta^{(t)}) \ ,
+$$
+where the gradient of the log-likelihood ${\boldsymbol s}({\boldsymbol \beta})=\frac{\partial l}{\partial \boldsymbol \beta}$ is called the score vector, and here the new quantity ${\boldsymbol F}({\boldsymbol \beta}^{(t)})^{-1}$ is called the inverse _expected Fisher information matrix_. 
+
+<!-- and is the expected value of the negative of the gradient of the score vector (the negative of the Hessian matrix of the loglikelihood), and also the covariance matrix of the score vector. -->
 
 
 ---
 
 ### The neural network model: architecture and activation function
-\vspace{2mm}
 
-* Remember: in the neural network (NN) version of the MLR, we had:
-$$ y_1({\boldsymbol x}_i)=\phi_o(w_0+w_1 x_{i1}+\cdots + w_r x_{ir}) \ , $$
-where $\phi_o(x)=x$.
+$~$
 
-* In the NN version of logistic regression we instead have the logistic function as the function $\phi_o$, that is
+* Remember: in the neural network (NN) version of _linear regression_, we had:
+$$ y_1({\boldsymbol x}_i)=w_0+w_1 x_{i1}+\cdots + w_r x_{ir} \ , $$
+with activation function $\phi_o(x)=x$.
 
-$$ \phi_o(x)=\frac{1}{1+\exp(-x)} \ .$$
+$~$
 
-This is now referred to as the _sigmoid_ activation function and is often denoted $\sigma(x)$. Again, we prefer to use $\hat{y}_1({\boldsymbol x}_i)$ and get:
+* In the NN version of _logistic regression_ we instead have the _\textcolor{red}{sigmoid activation function}_
+$\phi_o(x)=\frac{1}{1+\exp(-x)}$, often denoted as $\sigma(x)$. Again, we prefer to use $\hat{y}_1({\boldsymbol x}_i)$ and get:
 
-$$ \hat{y}_1({\boldsymbol x}_i)=\frac{1}{1+\exp(-(w_0+w_1 x_{i1}+\cdots + w_r x_{ir}))} \in (0,1) \ . $$
+$$ 
+\hat{y}_1({\boldsymbol x}_i)=\frac{1}{1+\exp(-(w_0+w_1 x_{i1}+\cdots + w_r x_{ir}))} \in (0,1) \ . 
+$$
  
 
 ---
@@ -577,21 +604,25 @@ $$ \hat{y}_1({\boldsymbol x}_i)=\frac{1}{1+\exp(-(w_0+w_1 x_{i1}+\cdots + w_r x_
 
 \vspace{2mm}
 
-* For parameter estimation we looked at maximizing the log-likelihood of the statistical model. 
+* For NNs we use _\textcolor{red}{binomial cross-entropy loss}_
+$$ J({\boldsymbol w})=-\frac{1}{n}\sum_{i=1}^n (y_i\ln({\hat{y}_1({\boldsymbol x}_i)})+(1-y_i)\ln(1-{\hat{y}_1({\boldsymbol x}_i)}) \ , $$
+which is a scaled version of the negative of the binomial loglikelihood!
 
-* For neural networks the negative of the binomial loglikelihood is a scaled version of the _\textcolor{red}{binomial cross-entropy loss}_
-$$ J({\boldsymbol w})=-\frac{1}{n}\sum_{i=1}^n (y_i\ln({\hat{y}_1({\boldsymbol x}_i)})+(1-y_i)\ln(1-{\hat{y}_1({\boldsymbol x}_i)}) \ . $$
+$~$
 
 * Optimization is done also with gradient descent, but we need the chain rule (due to the activation function) to get the partial derivatives for the gradient direction. 
 
-* Same algorithm as for the linear case is also applicable now, with the modification to the activation and loss function given here.
+$~$
+
+* Same backpropagation algorithm is again applicable, using the activation and loss functions given here.
 
 ---
 
 ### Parameter estimation vs. network weights
 
+$~$
 
-\tiny 
+\scriptsize
 ```{r,echo=FALSE}
 library(MASS)
 Pima.tr$diabetes=as.numeric(Pima.tr$type)-1
@@ -620,8 +651,10 @@ fitnnet=nnet(diabetes~npreg+glu+bp+skin+bmi+ped+age,
 cbind(fitnnet$wts,fitlogist$coefficients)
 ```
 
+$~$
+
 \normalsize
-In the `nnet` R package a slightly different version is used, `entropy=maximum conditional likelihood` which is half the deviance for the logistic regression model.
+By setting `entropy=TRUE` we minimize the cross-entropy loss.
 
 ---
 
@@ -632,6 +665,8 @@ plotnet(fitnnet)
 ---
 
 But, there may also exist local minima.
+
+$~$
 
 \scriptsize
 ```{r}
@@ -644,42 +679,57 @@ cbind(fitnnet$wts,fitlogist$coefficients)
 
 ---
 
+Why can NN and logistic regression lead to such different results?
+
+<!-- At least when using no hidden layer, they optimize the same thing. However, the optimization approaches are different, with the Fisher scoring algorithm being more reliable. -->
+
+---
+
 # Multiclass regression
 
 \textbf{Which type of iris species?}
 
-The `iris` flower data set was introduced by the British statistician and biologist Ronald Fisher in 1936, and we studied that in module 4 on classification.
+$~$
 
-* Three plant species \{setosa, virginica, versicolor\} (50 observation of each), and
-* Four features: `Sepal.Length`, `Sepal.Width`, `Petal.Length` and `Petal.Width`.
+The `iris` flower data set was introduced by the British statistician and biologist Ronald Fisher in 1936. 
+
+* **Three plant species**: \{setosa, virginica, versicolor\}.
+* **Four features**: `Sepal.Length`, `Sepal.Width`, `Petal.Length` and `Petal.Width`.  
+
+$~$ 
 
 The aim is to predict the species of an iris plant.
 
 ---
 
-### Statistical model
-\vspace{2mm}
+### The statistical model
 
-& We only briefly mentioned this method in module 4 (there our focus was on LDA and QDA when we had more than two classes)\footnote{The full theoretical treatment is given in the statistics course TMA4315 Generalized linear models, Module 6 on categorical regression (nominal response)}.
+$~$
+
+We only briefly mentioned multiclass regression in module 4.
 
 \vspace{4mm}
 
-**Assumptions:**
 
-* We have independent observation pairs $(Y_i,{\boldsymbol x}_i)$, where the covariate vector ${\boldsymbol x}_i$ consists of the same measurements for each response category (that is, not different covariate types that are measured for each response category.
+* Assume we have independent observation pairs $({\boldsymbol x}_i, Y_i)$, where the covariate vector ${\boldsymbol x}_i$ consists of the same measurements for each response category.
 
-* Each observation can only belong to one response class, $Y_i=c$ for $c=1,\ldots, C$.
+$~$
 
-_\textcolor{red}{Dummy variable coding}_ of the response in a $C$-dimensional vector: ${\boldsymbol y}_i=(0,0,\ldots,0,1,0,\ldots,0)$ with a value of $1$ in the $c^{th}$ element of ${\boldsymbol y}_i$ if the class is $c$.
+* Each observation can only belong to one response class, $Y_i \in \{1, \ldots ,C\}$.
+
+$~$
+
+* _\textcolor{red}{Dummy variable coding}_ of the response in a $C$-dimensional vector: ${\boldsymbol y}_i=(0,0,\ldots,0,1,0,\ldots,0)$ with a value of $1$ in the $c^{th}$ element of ${\boldsymbol y}_i$ if the class is $c$.
 
 ---
 
 * Probabilities that the response is category $c$ for subject $i$
 $$p_{ic}=P(Y_i=c)  \ ,$$
-where $\sum_{c=1}^C p_{ic}=1$. Note that in statistics we don't include $p_{i1}$
-in the modelling because $p_{i1}=1-\sum_{c=2}^{C} p_{ic}$, and $\beta_1=0$.
+where $\sum_{c=1}^C p_{ic}=1$. In statistics we do not model $p_{i1}$, because $p_{i1}=1-\sum_{c=2}^{C} p_{ic}$, and $\beta_1=0$.
 
-* A generalization of the logistic regression model (for two classes) can be used. The model we fit is:
+$~$
+
+* Generalization of the logistic regression model:
 $$p_{ic}=P(Y_i=c)= \frac{\exp({\boldsymbol x}_i^T{\boldsymbol \beta}_c)}{1+\sum_{s=2}^{C}\exp({\boldsymbol x}_i^T{\boldsymbol \beta}_s)}$$
 
 <!-- See the difference to $p_i=P(Y_i=1)= \frac{\exp({\boldsymbol x}_i^T{\boldsymbol \beta})}{1+\exp({\boldsymbol x}_i^T{\boldsymbol \beta})}$ for two classes. -->
