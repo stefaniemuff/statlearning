@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "March 27 and 30, 2020"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -1041,29 +1041,37 @@ $~$
 
 ## Universal approximation property
 
-We may think of the goal of a feedforward network to approximate some function $f$, mapping our input vector ${\boldsymbol x}$ to an output value ${\boldsymbol y}$ (as we saw with regression and classification).
+$~$
 
-What type of mathematical function can a feedforward neural network with one hidden layer and linear output activation represent?
+* Think of the goal of a feedforward network to approximate some function $f$, mapping our input vector ${\boldsymbol x}$ to an output value ${\boldsymbol y}$.
 
----
+$~$
 
-According to @goodfellow, page 198: The _universal approximation theorem_ (<https://www.deeplearningbook.org>) says that a feedforward network with
+* What type of mathematical function can a feedforward neural network with one hidden layer and linear output activation represent?
 
-* a _linear output layer_
-* at least one hidden layer with a "squashing" activation function and "enough" hidden units
+$~$
+
+The _\textcolor{red}{universal approximation theorem}_\footnote{Goodfellow et al 2016, p.198, https://www.deeplearningbook.org} says that a feedforward network with
+  
+  * a _linear output layer_
+  * at least one hidden layer with a "squashing" activation function and "enough" hidden units   
 
 can approximate any (Borel measurable) function from one finite-dimensional space (our input layer) to another (our output layer) with any desired non-zero amount of error.
 
-The theorem has been shown both for the sigmoid (logistic) and ReLU activation functions in the hidden layer.
-
 ---
+
+The universal approximation theorem holds for the sigmoid (logistic) and ReLU activation functions in the hidden layer.
+
+$~$
+
 
 **The rectified linear unit ReLU** $\phi_h(a)=\max(0,a)$
 
-```{r,echo=FALSE}
+\center
+```{r,echo=FALSE,fig.width=4,fig.height=3.5,out.width="60%"}
 x=seq(-3,3,length=3)
 y=pmax(0,x)
-qplot(x,y,geom="line",main="ReLU")
+qplot(x,y,geom="line",main="")
 ```
 
 ---
