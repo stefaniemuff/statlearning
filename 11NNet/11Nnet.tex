@@ -595,9 +595,9 @@ We need \emph{\textcolor{red}{new concepts}}:
 
 \begin{verbatim}
 ## # weights:  8
-## initial  value 1991903.253654 
-## iter  10 value 4471.049702
-## final  value 4415.453729 
+## initial  value 5391851.936145 
+## iter  10 value 4470.930460
+## final  value 4415.453739 
 ## converged
 \end{verbatim}
 
@@ -878,8 +878,8 @@ Linear regression vs.~neural networks: an example.
 
 \begin{verbatim}
 ## # weights:  8
-## initial  value 4026626.427762 
-## iter  10 value 4471.098000
+## initial  value 1730433.495727 
+## iter  10 value 4471.516449
 ## final  value 4415.453729 
 ## converged
 \end{verbatim}
@@ -892,14 +892,14 @@ Linear regression vs.~neural networks: an example.
 
 \begin{verbatim}
 ##                      [,1]          [,2]
-## (Intercept) -9.748903e+01 -9.748903e+01
-## age         -9.607672e-04 -9.607669e-04
-## weight      -6.292820e-01 -6.292820e-01
-## height       3.974884e-01  3.974884e-01
-## bmi          1.785330e+00  1.785330e+00
-## neck        -4.945725e-01 -4.945725e-01
-## abdomen      8.945189e-01  8.945189e-01
-## hip         -1.255549e-01 -1.255549e-01
+## (Intercept) -9.748931e+01 -9.748903e+01
+## age         -9.607523e-04 -9.607669e-04
+## weight      -6.292838e-01 -6.292820e-01
+## height       3.974902e-01  3.974884e-01
+## bmi          1.785338e+00  1.785330e+00
+## neck        -4.945734e-01 -4.945725e-01
+## abdomen      8.945187e-01  8.945189e-01
+## hip         -1.255554e-01 -1.255549e-01
 \end{verbatim}
 
 \end{block}
@@ -1359,11 +1359,21 @@ We only briefly mentioned multiclass regression in module 4.
 
 \(~\)
 
-*Generalization of the logistic regression model:
-\[p_{ic}=P(Y_i=c)= \frac{\exp({\boldsymbol x}_i^T{\boldsymbol \beta}_c)}{1+\sum_{s=2}^{C}\exp({\boldsymbol x}_i^T{\boldsymbol \beta}_s)}\]
+\begin{itemize}
+\tightlist
+\item
+  Generalization of the logistic regression model:
+  \[p_{ic}=P(Y_i=c)= \frac{\exp({\boldsymbol x}_i^T{\boldsymbol \beta}_c)}{1+\sum_{s=2}^{C}\exp({\boldsymbol x}_i^T{\boldsymbol \beta}_s)}\]
+\end{itemize}
 
-An observation is classified to the class with the highest probability,
-\(\underset{c}{\text{argmax}}(p_{ic})\).
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Classification to the class with the highest probability,
+  \(\underset{c}{\text{argmax}}(p_{ic})\).
+\end{itemize}
 
 \end{frame}
 
@@ -1371,18 +1381,31 @@ An observation is classified to the class with the highest probability,
 
 \begin{block}{Parameter estimation in the statistical model}
 
-\vspace{2mm}
+\(~\)
 
 \begin{itemize}
+\tightlist
 \item
   The likelihood of the multinomial regression model can be written as
   \[ \ln(L({\boldsymbol \beta})\propto \sum_{i=1}^n \sum_{c=1}^C y_{ic}\ln(p_{ic}) \ ,\]
   where \(p_{iC}=1-p_{i1}-p_{i2}-\cdots -p_{i,C-1}\), and the regression
   parameters enter via the \(p_{ic}\)s.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
   Parameter estimation is done in the same way as for the logistic
   regression, with the Fisher scoring algorithm (with score vector and
   Fisher information matrix).
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
   However (and this might be confusing), an efficient function in R also
   relies on neural networks for optimization (see below).
@@ -1399,21 +1422,14 @@ An observation is classified to the class with the highest probability,
 \vspace{4mm}
 
 \begin{itemize}
-\item
-  The neural network uses the dummy variable coding of the responses,
-  called \emph{\textcolor{red}{one-hot coding}}.
+\tightlist
 \item
   Builds an output layer with \(C\) nodes and corresponding 0/1 targets
-  (responses).
+  (responses) using the dummy variable coding of the responses, called
+  \emph{\textcolor{red}{one-hot coding}}.
 \end{itemize}
 
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Softmax}
+\(~\)
 
 \begin{itemize}
 \item
@@ -1427,6 +1443,12 @@ An observation is classified to the class with the highest probability,
   Note: there is some redundancy here, since
   \(\sum_{c=1}^C {\hat y}_{c}({\boldsymbol x}_i)=1\), so we could have
   had \(C-1\) output nodes, but this is not done.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
   The focus of neural networks is not to interpret the weights, and
   there is no need to assume full rank of a matrix with output nodes.
@@ -1442,13 +1464,22 @@ An observation is classified to the class with the highest probability,
 
 \begin{block}{Neural networks: loss function and gradient descent}
 
+\(~\)
+
 \begin{itemize}
+\tightlist
 \item
   For parameter estimation we looked at maximizing the log-likelihood of
   the statistical model. For neural networks the negative of the
-  multinomial loglikelihood is a scaled version of the \emph{categorical
-  cross-entropy loss}
+  multinomial loglikelihood is a scaled version of the
+  \emph{\textcolor{red}{categorical cross-entropy loss}}
   \[ J({\boldsymbol w})=-\frac{1}{n}\sum_{i=1}^n\frac{1}{C} \sum_{c=1}^C (y_{ic}\ln({\hat{y}_c({\boldsymbol x}_i)}) \ .\]
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
   The optimization is done using gradient descent, with minor changes
   from what was done for the logistic regression due to the added sum
@@ -1463,9 +1494,13 @@ An observation is classified to the class with the highest probability,
 
 \begin{block}{Fitting multinomial regression vs a neural network}
 
+\(~\)
+
 First select a training sample
 
 \scriptsize
+
+\(~\)
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1486,27 +1521,18 @@ function)
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
 \NormalTok{iris.nnet <-}\StringTok{ }\KeywordTok{nnet}\NormalTok{(species }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ ird, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{size =} \DecValTok{0}\NormalTok{, }
-    \DataTypeTok{skip =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{rang =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{decay =} \FloatTok{5e-04}\NormalTok{, }\DataTypeTok{maxit =} \DecValTok{200}\NormalTok{)}
+    \DataTypeTok{skip =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{rang =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{maxit =} \DecValTok{200}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## # weights:  15
-## initial  value 54.342987 
-## iter  10 value 3.381835
-## iter  20 value 0.880015
-## iter  30 value 0.586218
-## iter  40 value 0.530655
-## iter  50 value 0.507949
-## iter  60 value 0.505374
-## iter  70 value 0.503999
-## iter  80 value 0.503624
-## iter  90 value 0.503554
-## iter 100 value 0.503517
-## iter 110 value 0.503510
-## iter 120 value 0.503506
-## final  value 0.503505 
+## initial  value 56.732848 
+## iter  10 value 2.748260
+## iter  20 value 0.012982
+## final  value 0.000093 
 ## converged
 \end{verbatim}
 
@@ -1516,7 +1542,14 @@ function)
 
 \begin{frame}[fragile]
 
-How many weights have been estimated? What does the graph look like?
+\begin{itemize}
+\item
+  How many weights have been estimated?
+\item
+  What does the graph look like?
+\end{itemize}
+
+\(~\)
 
 \scriptsize
 
@@ -1528,13 +1561,13 @@ How many weights have been estimated? What does the graph look like?
 
 \begin{verbatim}
 ## a 4-0-3 network with 15 weights
-## options were - skip-layer connections  softmax modelling  decay=5e-04
-##  b->o1 i1->o1 i2->o1 i3->o1 i4->o1 
-##   8.15   3.53  -0.67  -3.65  -3.76 
-##  b->o2 i1->o2 i2->o2 i3->o2 i4->o2 
-##   1.33   3.36   6.47  -8.36  -5.19 
-##  b->o3 i1->o3 i2->o3 i3->o3 i4->o3 
-##  -9.48  -6.90  -5.80  12.01   8.95
+## options were - skip-layer connections  softmax modelling 
+##   b->o1  i1->o1  i2->o1  i3->o1  i4->o1 
+##  113.44   -0.36   -4.82  -11.51   -6.65 
+##   b->o2  i1->o2  i2->o2  i3->o2  i4->o2 
+##    7.56   20.19   23.17  -38.05  -36.15 
+##   b->o3  i1->o3  i2->o3  i3->o3  i4->o3 
+## -121.04  -19.78  -18.26   49.66   42.79
 \end{verbatim}
 
 \end{frame}
@@ -1548,15 +1581,15 @@ How many weights have been estimated? What does the graph look like?
 \begin{frame}[fragile]
 
 Fitting the multinomial regression. This is also done with nnet, but
-using a wrapper \texttt{multinom}, which uses the \texttt{entropy}
-activation function.
+using a wrapper \texttt{multinom} (this has it's own settings, so
+results are not necessarily the same as above).
 
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(caret)}
-\NormalTok{fit=}\KeywordTok{multinom}\NormalTok{(species}\OperatorTok{~}\StringTok{ }\DecValTok{-1} \OperatorTok{+}\StringTok{ }\NormalTok{.,}\DataTypeTok{family=}\NormalTok{multinomial, }\DataTypeTok{data=}\NormalTok{iris_train)}
+\NormalTok{fit =}\StringTok{ }\KeywordTok{multinom}\NormalTok{(species }\OperatorTok{~}\StringTok{ }\DecValTok{-1} \OperatorTok{+}\StringTok{ }\NormalTok{., }\DataTypeTok{family =}\NormalTok{ multinomial, }\DataTypeTok{data =}\NormalTok{ iris_train)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1579,26 +1612,14 @@ activation function.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(fit)}
+\KeywordTok{coef}\NormalTok{(fit)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## Call:
-## multinom(formula = species ~ -1 + ., data = iris_train, family = multinomial)
-## 
-## Coefficients:
 ##    Sepal.L.  Sepal.W.  Petal.L.  Petal.W.
 ## s  -5.91976  21.30247 -12.52073 -2.774511
 ## v -39.93182 -28.07162  53.73326 41.264390
-## 
-## Std. Errors:
-##    Sepal.L.  Sepal.W.  Petal.L.  Petal.W.
-## s 238.30648 1379.5893 2899.4977 1920.9997
-## v  74.52076   87.7303  111.8998   85.5753
-## 
-## Residual Deviance: 0.01817959 
-## AIC: 16.01818
 \end{verbatim}
 
 \end{frame}
@@ -1606,7 +1627,8 @@ activation function.
 \begin{frame}[fragile]
 
 Problem: \texttt{multinom()} seems to fit an intercept \emph{plus} an
-offset note (B):
+offset node (B), thus we have to remove the intercept manually (by
+saying \texttt{-1} in the above formula).
 
 \begin{center}\includegraphics[width=0.8\linewidth]{11Nnet_files/figure-beamer/iris_fit-1} \end{center}
 
@@ -1615,6 +1637,8 @@ offset note (B):
 \begin{frame}[fragile]
 
 \begin{block}{The performance of multinomial regression vs nnet}
+
+\(~\)
 
 \scriptsize
 
@@ -1633,6 +1657,8 @@ offset note (B):
 ##          v  4  0 32
 \end{verbatim}
 
+\(~\)
+
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{table}\NormalTok{(}\KeywordTok{predict}\NormalTok{(iris.nnet, iris_test, }\DataTypeTok{type =} \StringTok{"class"}\NormalTok{), iris_test}\OperatorTok{$}\NormalTok{species)}
@@ -1642,9 +1668,9 @@ offset note (B):
 \begin{verbatim}
 ##    
 ##      c  s  v
-##   c 29  0  0
+##   c 31  0  7
 ##   s  0 36  0
-##   v  3  0 32
+##   v  1  0 25
 \end{verbatim}
 
 \end{block}
@@ -1662,122 +1688,105 @@ For more on multinomial regression with R, check
 
 \begin{block}{Summing up}
 
-\begin{itemize}
+\(~\)
+
+\begin{enumerate}
 \tightlist
 \item
-  Fitting a \emph{multiple linear regression}
+  \emph{Multiple linear regression}
 
   \begin{itemize}
   \tightlist
   \item
-    can be achived by building a neural network with one input layer and
-    one node in the output layer,
+    NN with one input layer and one node in the output layer,
   \item
     linear activation function,
   \item
-    and mean squared loss,
+    mean squared loss.
   \end{itemize}
+\end{enumerate}
+
+\(~\)
+
+\begin{enumerate}
+\setcounter{enumi}{1}
+\tightlist
 \item
-  \emph{Classification with two classes} can be performed using logistic
-  regression, and this
+  \emph{Logistic regression} (2 classes)
 
   \begin{itemize}
   \tightlist
   \item
-    by building a neural network with one input layer and one node in
-    the output layer,
+    NN with one input layer and one node in the output layer,
   \item
     sigmoid activation function,
   \item
     and binary cross-entropy loss.
-  \item
-    Remember: this will only give linear boundaries between the classes
-    (in the output space).
   \end{itemize}
+\end{enumerate}
+
+\(~\)
+
+\begin{enumerate}
+\setcounter{enumi}{2}
+\tightlist
+\item
+  \emph{Multinomial regression} (\(C>2\) classes)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    NN with one input layer and \(C\) nodes in the output layer,
+  \item
+    softmax activation function,
+  \item
+    categorical cross-entropy loss.
+  \end{itemize}
+\end{enumerate}
+
+\(~\) \textbf{But:}
+
+\begin{itemize}
+\item
+  These are only linear models (linear boundaries).
+\item
+  Parameters (weights) found using gradient descent algorithms where the
+  learning rate (step length) must be set.
 \end{itemize}
 
 \end{block}
 
 \end{frame}
 
-\begin{frame}
-
-\begin{itemize}
-\tightlist
-\item
-  Classification with \(C\) classes, \(C>2\), can be performed using
-  multinomial regression,
-
-  \begin{itemize}
-  \tightlist
-  \item
-    by building a neural network with one input layer and \(C\) nodes in
-    the output layer,
-  \item
-    softmax activation function,
-  \item
-    and categorical cross-entropy loss.
-  \item
-    Also here: this will only give linear boundaries between the classes
-    (in the output space).
-  \end{itemize}
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{itemize}
-\tightlist
-\item
-  We have seen that parameters (weights) can be found using gradient
-  descent algorithms:
-
-  \begin{itemize}
-  \tightlist
-  \item
-    activation function ``must'' be differentiable
-  \item
-    step length (learning rate) must be set
-  \end{itemize}
-\item
-  But, we have now only looked at linear models --- which give linar
-  boundaries in the classification case --- now we need to move on to
-  allow for non-linearities!
-\end{itemize}
-
-\end{frame}
-
 \begin{frame}{Feedforward networks}
 \protect\hypertarget{feedforward-networks}{}
 
-In feedforward networks we have only connections (weights) forward in
-the network, and no feedback connections that sends the output of the
-model back into the network. The word \emph{multi-layer perceptron}
-(MLP) and \emph{sequentially layered} networks are also used
-
-The examples of MLR, logistic regression and multiclass regression are
-examples of feedfeedward networks without any socalled \emph{hidden
-layers} (between the input and output layers).
-
-We may have no hidden layer, one (to be studied next), or many.
-
-The number of hidden layers is called the \emph{depth} of the network,
-and the number of nodes in a layer is called the \emph{width} of the
-layer.
+\begin{itemize}
+\item
+  Connections are only forward in the network, but no feedback
+  connections that sends the output of the model back into the network.
+\item
+  Examples: Linear, logistic and multinomial regression with without any
+  \emph{hidden layers} (between the input and output layers).
+\item
+  We may have no hidden layer, one (to be studied next), or many.
+\item
+  Adding \emph{hidden layers} with \emph{non-linear activation
+  functions} between the input and output layer will make nonlinear
+  statistical models.
+\item
+  The number of hidden layers is called the \emph{depth} of the network,
+  and the number of nodes in a layer is called the \emph{width} of the
+  layer.
+\end{itemize}
 
 \end{frame}
 
 \begin{frame}
 
-The idea of using many layers of many nodes is inspired from
-neuroscience, but today we don't have the goal to model the brain ---
-but instead to approximate function to perform statistical
-generalizations and maybe also insight into the problem at hand.
+\centering
 
-Now we will see how adding \emph{hidden layers} with \emph{non-linear
-activation functions} between the input and output layer will make
-nonlinear statistical models.
+\includegraphics[width=0.8\textwidth,height=\textheight]{drawNNp3h2o3.png}
 
 \end{frame}
 
@@ -1785,11 +1794,15 @@ nonlinear statistical models.
 
 \begin{block}{The single hidden layer feedforward network}
 
-The word neuron and node can be used interchangeably. We stick with
-greek letters \(\alpha\) and \(\beta\) for parameters, but call them
-weights.
+\(~\)
 
-We use the following notation:
+The nodes are also called \emph{neurons}.
+
+\(~\)
+
+\textbf{Notation}
+
+\(~\)
 
 \begin{enumerate}
 \tightlist
@@ -1801,9 +1814,11 @@ We use the following notation:
   \(z_1, z_2, \ldots, z_m\), or as vector \({\boldsymbol z}\), and the
   hidden layer activation function \(\phi_h\). \[
   z_m({\boldsymbol x})=\phi_h(\alpha_{0m}+\sum_{j=1}^p \alpha_{jm}x_{j})
-  \] where \(\alpha_{jm}\) is the weight from input \(j\) to hidden node
-  \(m\), and \(\alpha_{0m}\) is the bias term for the \(m\)th hidden
-  node. The hidden nodes can be thought of as \emph{latent variables}.
+  \] where \(\alpha_{jm}\) is the
+  weight\footnote{We stick with greek letters $\alpha$ and $\beta$ for parameters, but call them weights.}
+  from input \(j\) to hidden node \(m\), and \(\alpha_{0m}\) is the bias
+  term for the \(m\)th hidden node. The hidden nodes can be thought of
+  as \emph{latent variables}.
 \end{enumerate}
 
 \end{block}
@@ -1825,84 +1840,78 @@ We use the following notation:
   node.
 \end{enumerate}
 
+\(~\)
+
+\begin{enumerate}
+\setcounter{enumi}{3}
+\tightlist
+\item
+  Taken together \[
+  \hat{y}_c({\boldsymbol x})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}z_{m})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}\phi_h(\alpha_{0m}+\sum_{j=1}^p \alpha_{jm}x_{j}))
+  \]
+\end{enumerate}
+
 \end{frame}
 
 \begin{frame}
 
-To sum up: \(c=1,\ldots C\): \(y_1, y_2, \ldots, y_C\), where \(y_c\) is
-given as
-
-\[
-\hat{y}_c({\boldsymbol x})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}z_{m})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}\phi_h(\alpha_{0m}+\sum_{j=1}^p \alpha_{jm}x_{j}))
-\]
-
 \textbf{Hands on:}
+
+\(~\)
 
 \begin{itemize}
 \tightlist
 \item
-  Identify p, M, C in the network figure below, and relate that to the
-  \(y_{c}({\boldsymbol x})\) equation.
+  Identify \(p, M, C\) in the network figure above, and relate that to
+  the \(y_{c}({\boldsymbol x})\) equation.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
   How many parameters need to be estimated for this network?
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
-  What decides the value of \(p\) and \(C\)?
+  What determines the values of \(p\) and \(C\)?
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
-  What is the connection between problem, \(\phi_o\) and \(C\)?
+  How is \(M\) determined?
 \end{itemize}
 
 \end{frame}
 
 \begin{frame}
 
-\centering
+\begin{block}{Special case: linear activation function for the hidden
+layer}
 
-\includegraphics[width=0.8\textwidth,height=\textheight]{drawNNp3h2o3.png}
+\(~\)
 
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Special case with linear activation function for the
-hidden layer}
-
-\[
-\hat{y}_c({\boldsymbol x})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}z_{m})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}\phi_h(\alpha_{0m}+\sum_{j=1}^p \alpha_{jm}x_{j}))
-\]
-
-Here we assume that \(\phi_h(z)=z\), called linear or identity
-activiation:
+If we assume that \(\phi_h(z)=z\) (linear or identity activiation):
 
 \[
 \hat{y}_c({\boldsymbol x})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}(\alpha_{0m}+\sum_{j=1}^p \alpha_{jm}x_{j}))
 \]
 
+\(~\)
+
 \textbf{Q:} Does this look like something you have seen before?
 
+\textbf{A:}
+
 \end{block}
-
-\end{frame}
-
-\begin{frame}
-
-For regression (linear output activation also) we have looked at a
-similar model in Module 6: principal component regression. Then the
-weights \(\alpha_{jm}\) were not estimated, but were defined to be the
-eigenvectors corresponding to the of the \(m\)th largest eigenvalue of
-the estimated covariance matrix of the covariates \({\boldsymbol x}_i\).
-Therefore we may think of the hidden nodes as \emph{latent variables}.
-In PCR only the \(\beta\)s were estimated using the responses (and the
-latent variables).
-
-In Module 6 we also touched upon Partial least squares, where the latent
-variables were found with the help of the response \(y\). Here both the
-\(\alpha\)s and \(\beta\)s were estimated.
-
-In Module 4 we only considered ``ordinary logistic regression'', but we
-could have used the principal components in place of the original
-covariates --- which then could have been depictured as a feedforward
-network with one hidden layer, but where only the \(\beta\)s were
-estimated.
 
 \end{frame}
 
@@ -1925,7 +1934,8 @@ one hidden layer and linear output activation represent?
 \begin{frame}
 
 According to Goodfellow, Bengio, and Courville (2016), page 198: The
-\emph{universal approximation theorem} says that a feedforward network
+\emph{universal approximation theorem}
+(\url{https://www.deeplearningbook.org}) says that a feedforward network
 with
 
 \begin{itemize}
@@ -1950,7 +1960,7 @@ activation functions in the hidden layer.
 
 \textbf{The rectified linear unit ReLU} \(\phi_h(a)=\max(0,a)\)
 
-\includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-15-1.pdf}
+\includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-16-1.pdf}
 
 \end{frame}
 
@@ -2225,39 +2235,35 @@ Just checking out one hidden layer with 5 units to get going.
 
 \begin{verbatim}
 ## # weights:  76
-## initial  value 239347.513180 
-## iter  10 value 10541.346246
-## iter  20 value 7744.379575
-## iter  30 value 6423.076335
-## iter  40 value 5753.439036
-## iter  50 value 5429.080461
-## iter  60 value 5315.618454
-## iter  70 value 5232.399804
-## iter  80 value 4894.587344
-## iter  90 value 4710.231051
-## iter 100 value 4544.261240
-## iter 110 value 4464.326885
-## iter 120 value 4384.501554
-## iter 130 value 4341.697154
-## iter 140 value 4321.737531
-## iter 150 value 4247.610601
-## iter 160 value 4176.769283
-## iter 170 value 4150.492584
-## iter 180 value 4122.494685
-## iter 190 value 4116.483936
-## iter 200 value 4114.633958
-## iter 210 value 4112.536296
-## iter 220 value 4112.322697
-## iter 230 value 4112.167369
-## iter 240 value 4112.027717
-## iter 250 value 4112.007176
-## iter 260 value 4112.002130
-## iter 270 value 4111.992358
-## iter 280 value 4111.981256
-## iter 290 value 4111.928541
-## iter 300 value 4111.838021
-## iter 310 value 4111.760980
-## final  value 4111.741716 
+## initial  value 222875.445564 
+## iter  10 value 9625.869446
+## iter  20 value 7008.319688
+## iter  30 value 5889.493080
+## iter  40 value 4914.814874
+## iter  50 value 4116.546650
+## iter  60 value 3860.485941
+## iter  70 value 3705.511019
+## iter  80 value 3660.347303
+## iter  90 value 3616.529740
+## iter 100 value 3566.523287
+## iter 110 value 3549.835275
+## iter 120 value 3519.659951
+## iter 130 value 3450.648101
+## iter 140 value 3359.604509
+## iter 150 value 3313.298120
+## iter 160 value 3281.887294
+## iter 170 value 3256.471450
+## iter 180 value 3239.303308
+## iter 190 value 3205.304637
+## iter 200 value 3180.026739
+## iter 210 value 3166.982443
+## iter 220 value 3165.194791
+## iter 230 value 3164.924614
+## iter 240 value 3164.431322
+## iter 250 value 3164.319839
+## iter 250 value 3164.319818
+## iter 250 value 3164.319818
+## final  value 3164.319818 
 ## converged
 \end{verbatim}
 
@@ -2271,27 +2277,27 @@ Just checking out one hidden layer with 5 units to get going.
 ## a 13-5-1 network with 76 weights
 ## options were - linear output units 
 ##   b->h1  i1->h1  i2->h1  i3->h1  i4->h1  i5->h1  i6->h1  i7->h1  i8->h1 
-## -448.11 -206.60  -95.35  106.57   -8.28   18.27  263.03   -7.27  -97.35 
+##   -9.54   14.52   39.89    3.83   92.85 -159.44  111.11  -96.54 -112.98 
 ##  i9->h1 i10->h1 i11->h1 i12->h1 i13->h1 
-##  229.35  -67.20   31.92  235.64 -297.97 
+##  -19.04  -73.75  -46.80   24.26   21.85 
 ##   b->h2  i1->h2  i2->h2  i3->h2  i4->h2  i5->h2  i6->h2  i7->h2  i8->h2 
-## -200.43    4.07   14.93   26.55   31.37    3.96   70.47  -36.93  -20.09 
+##   -2.01   -0.54    0.14    0.03    0.07   -0.24    0.12   -0.06   -0.58 
 ##  i9->h2 i10->h2 i11->h2 i12->h2 i13->h2 
-##   40.27   17.95  -44.07   59.92  -78.21 
+##    0.85    0.03   -0.13    0.27   -1.08 
 ##   b->h3  i1->h3  i2->h3  i3->h3  i4->h3  i5->h3  i6->h3  i7->h3  i8->h3 
-##    0.05 -169.96  215.98  153.31    3.69   48.56  158.11   35.22 -259.38 
+##  101.33    8.06   84.39   -4.25   26.14    0.96   14.74  -66.93  -19.00 
 ##  i9->h3 i10->h3 i11->h3 i12->h3 i13->h3 
-##  223.50 -126.85   26.97 -167.35  -16.59 
+##  -64.05   -3.34  -15.21   13.91  -18.71 
 ##   b->h4  i1->h4  i2->h4  i3->h4  i4->h4  i5->h4  i6->h4  i7->h4  i8->h4 
-##   15.70   -1.35   16.27   -9.18   -0.36   -3.80   -2.47    0.63   -9.61 
+## -263.73   20.74    2.84  -49.76   21.23   81.77  127.22  -30.61   10.17 
 ##  i9->h4 i10->h4 i11->h4 i12->h4 i13->h4 
-##    0.40   -4.04    0.63    2.09   -6.32 
+##   48.43  -35.78  -33.23   29.71 -111.64 
 ##   b->h5  i1->h5  i2->h5  i3->h5  i4->h5  i5->h5  i6->h5  i7->h5  i8->h5 
-## -122.18   29.09   60.87  -83.69  151.98  -43.81  204.30 -361.53  -88.02 
+## -277.75  -61.39   41.17  -20.95    9.33  -79.87   25.11   76.91  -74.78 
 ##  i9->h5 i10->h5 i11->h5 i12->h5 i13->h5 
-##  320.29 -213.48 -179.39   76.52  -84.35 
+##   89.30   99.20  -29.04  -40.58 -210.38 
 ##    b->o   h1->o   h2->o   h3->o   h4->o   h5->o 
-##    8.44    7.45   11.10    5.28   10.46    4.44
+##   10.97    3.03   25.68    5.50    7.12    8.62
 \end{verbatim}
 
 \begin{Shaded}
@@ -2302,7 +2308,7 @@ Just checking out one hidden layer with 5 units to get going.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 6.08271
+## [1] 5.695772
 \end{verbatim}
 
 \begin{Shaded}
@@ -2312,7 +2318,7 @@ Just checking out one hidden layer with 5 units to get going.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 4.483676
+## [1] 3.490978
 \end{verbatim}
 
 \end{frame}
@@ -2380,43 +2386,52 @@ test set
 
 \begin{verbatim}
 ## # weights:  751
-## initial  value 233099.999499 
-## iter  10 value 6257.318468
-## iter  20 value 2127.357085
-## iter  30 value 1232.394451
-## iter  40 value 793.836689
-## iter  50 value 553.773477
-## iter  60 value 395.203521
-## iter  70 value 276.229647
-## iter  80 value 226.183478
-## iter  90 value 172.337520
-## iter 100 value 122.628340
-## iter 110 value 74.053788
-## iter 120 value 45.371268
-## iter 130 value 30.288713
-## iter 140 value 20.444793
-## iter 150 value 13.569410
-## iter 160 value 8.492179
-## iter 170 value 5.441793
-## iter 180 value 3.404754
-## iter 190 value 2.299248
-## iter 200 value 1.568135
-## iter 210 value 0.961154
-## iter 220 value 0.725597
-## iter 230 value 0.426690
-## iter 240 value 0.221992
-## iter 250 value 0.111660
-## iter 260 value 0.056740
-## iter 270 value 0.027980
-## iter 280 value 0.015006
-## iter 290 value 0.007944
-## iter 300 value 0.004088
-## iter 310 value 0.002282
-## iter 320 value 0.001293
-## iter 330 value 0.000670
-## iter 340 value 0.000295
-## iter 350 value 0.000115
-## final  value 0.000095 
+## initial  value 241589.974327 
+## iter  10 value 5613.385593
+## iter  20 value 2044.139404
+## iter  30 value 1228.682801
+## iter  40 value 814.368935
+## iter  50 value 601.968652
+## iter  60 value 434.755615
+## iter  70 value 280.598202
+## iter  80 value 176.464325
+## iter  90 value 109.361567
+## iter 100 value 72.645796
+## iter 110 value 47.089811
+## iter 120 value 31.023641
+## iter 130 value 20.256250
+## iter 140 value 12.870380
+## iter 150 value 8.162568
+## iter 160 value 5.195619
+## iter 170 value 3.508714
+## iter 180 value 2.356100
+## iter 190 value 1.962084
+## iter 200 value 1.422774
+## iter 210 value 1.037496
+## iter 220 value 0.763227
+## iter 230 value 0.595779
+## iter 240 value 0.447179
+## iter 250 value 0.349084
+## iter 260 value 0.268816
+## iter 270 value 0.218619
+## iter 280 value 0.182905
+## iter 290 value 0.149677
+## iter 300 value 0.119838
+## iter 310 value 0.093532
+## iter 320 value 0.065722
+## iter 330 value 0.041928
+## iter 340 value 0.027514
+## iter 350 value 0.018011
+## iter 360 value 0.013190
+## iter 370 value 0.007777
+## iter 380 value 0.003298
+## iter 390 value 0.001426
+## iter 400 value 0.000706
+## iter 410 value 0.000283
+## iter 420 value 0.000103
+## iter 420 value 0.000090
+## iter 420 value 0.000089
+## final  value 0.000089 
 ## converged
 \end{verbatim}
 
@@ -2489,7 +2504,7 @@ test set
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 5.46124
+## [1] 5.090128
 \end{verbatim}
 
 \begin{Shaded}
@@ -2500,7 +2515,7 @@ test set
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 3.953229
+## [1] 3.535428
 \end{verbatim}
 
 \normalsize
@@ -2588,18 +2603,9 @@ appropriate loss function.
 \textbf{Q:} Why can we not just use linar activation function in all
 hidden layers?
 
+\textbf{A:}
+
 \end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\textbf{A:} Then each layer would only be able to do linear
-transformations of the input data and a deep stack of linear layers
-would still implement a linear operation. The activation functions
-sigmoid and relu add non-linearity to the model. And, the universial
-approximation property is dependent on a squashing type activation
-function.
 
 \end{frame}
 
@@ -2607,7 +2613,7 @@ function.
 
 \scriptsize
 
-\includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-21-1.pdf}
+\includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-22-1.pdf}
 
 \end{frame}
 
@@ -3560,7 +3566,7 @@ greyscale). Problem type: Multiclass classification based on image data.
 
 \scriptsize
 
-\includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-22-1.pdf}
+\includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-23-1.pdf}
 
 \end{frame}
 
@@ -3893,6 +3899,7 @@ different socalled \emph{explainers}
   Chollet and Allaire (2018)
 \item
   Goodfellow, Bengio, and Courville (2016) (to be used in IT3030)
+  \url{https://www.deeplearningbook.org/}
 \item
   Explaining backpropagation
   \url{http://neuralnetworksanddeeplearning.com/chap2.html}

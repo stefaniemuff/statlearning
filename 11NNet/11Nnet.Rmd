@@ -734,20 +734,27 @@ $$p_{ic}=P(Y_i=c)= \frac{\exp({\boldsymbol x}_i^T{\boldsymbol \beta}_c)}{1+\sum_
 
 <!-- See the difference to $p_i=P(Y_i=1)= \frac{\exp({\boldsymbol x}_i^T{\boldsymbol \beta})}{1+\exp({\boldsymbol x}_i^T{\boldsymbol \beta})}$ for two classes. -->
 
-An observation is classified to the class with the highest probability, $\underset{c}{\text{argmax}}(p_{ic})$.
+$~$
+
+* Classification to the class with the highest probability, $\underset{c}{\text{argmax}}(p_{ic})$.
 
 <!-- **Q**: How many parameters are we estimating? -->
 
 ---
 
 ### Parameter estimation in the statistical model
-\vspace{2mm}
+
+$~$
 
 * The likelihood of the multinomial regression model can be written as
 $$ \ln(L({\boldsymbol \beta})\propto \sum_{i=1}^n \sum_{c=1}^C y_{ic}\ln(p_{ic}) \ ,$$
 where $p_{iC}=1-p_{i1}-p_{i2}-\cdots -p_{i,C-1}$, and the regression parameters enter via the $p_{ic}$s.
 
+$~$
+
 * Parameter estimation is done in the same way as for the logistic regression, with the Fisher scoring algorithm (with score vector and Fisher information matrix).
+
+$~$
 
 * However (and this might be confusing), an efficient function in R also relies on neural networks for optimization (see below).
 
@@ -757,13 +764,10 @@ where $p_{iC}=1-p_{i1}-p_{i2}-\cdots -p_{i,C-1}$, and the regression parameters 
 ### Neural network architecture and activation function
 \vspace{4mm}
 
-* The neural network uses the dummy variable coding of the responses, called _\textcolor{red}{one-hot coding}_.
 
-* Builds an output layer with $C$ nodes and corresponding 0/1 targets (responses).
+* Builds an output layer with $C$ nodes and corresponding 0/1 targets (responses) using the dummy variable coding of the responses, called _\textcolor{red}{one-hot coding}_.
 
----
-
-### Softmax
+$~$
 
 * The activation function for the ouput layer is called _\textcolor{red}{softmax}_. For each class $c=1,\ldots, C$ it is given as
 $$
@@ -771,9 +775,14 @@ $$
 $$
 where each ${\boldsymbol w}_s$ is a $r+1$ dimensional vector of weights.
 
+
+
 * Note: there is some redundancy here, since $\sum_{c=1}^C {\hat y}_{c}({\boldsymbol x}_i)=1$, so we could have had $C-1$ output nodes, but this is not done.
 
+$~$
+
 * The focus of neural networks is not to interpret the weights, and there is no need to assume full rank of a matrix with output nodes.
+
 
 **Q:** How many parameters are we estimating?
 
@@ -781,8 +790,12 @@ where each ${\boldsymbol w}_s$ is a $r+1$ dimensional vector of weights.
 
 ### Neural networks: loss function and gradient descent
 
-* For parameter estimation we looked at maximizing the log-likelihood of the statistical model. For neural networks the negative of the multinomial loglikelihood is a scaled version of the _categorical cross-entropy loss_
+$~$
+
+* For parameter estimation we looked at maximizing the log-likelihood of the statistical model. For neural networks the negative of the multinomial loglikelihood is a scaled version of the _\textcolor{red}{categorical cross-entropy loss}_
 $$ J({\boldsymbol w})=-\frac{1}{n}\sum_{i=1}^n\frac{1}{C} \sum_{c=1}^C (y_{ic}\ln({\hat{y}_c({\boldsymbol x}_i)}) \ .$$
+
+$~$
 
 * The optimization is done using gradient descent, with minor changes from what was done for the logistic regression due to the added sum and the small change in the activation function.
 
@@ -791,14 +804,19 @@ $$ J({\boldsymbol w})=-\frac{1}{n}\sum_{i=1}^n\frac{1}{C} \sum_{c=1}^C (y_{ic}\l
 
 ### Fitting multinomial regression vs a neural network
 
+$~$
+
 First select a training sample
 
+\scriptsize
 ```{r,echo=F}
 ird <- data.frame(rbind(iris3[,,1], iris3[,,2], iris3[,,3]),
         species = factor(c(rep("s",50), rep("c", 50), rep("v", 50))))
 ```
 
-\scriptsize
+$~$
+
+
 ```{r}
 library(nnet)
 set.seed(123)
@@ -809,16 +827,20 @@ iris_test = ird[-train, ]
 
 \normalsize
 Then fit the `nnet()` (by default using the softmax activation function)
-<!-- using the `softmax` activation function: -->
 
 \scriptsize
 ```{r}
-iris.nnet <- nnet(species ~ ., data = ird, subset = train, size = 0, skip=TRUE,rang = 0.1, decay = 5e-4, maxit = 200)
+set.seed(123)
+iris.nnet <- nnet(species ~ ., data = ird, subset=train,  size = 0, skip=TRUE, rang = 0.1, maxit = 200)
 ```
 
 ---
 
-How many weights have been estimated? What does the graph look like?
+* How many weights have been estimated? 
+
+* What does the graph look like?
+
+$~$
 
 \scriptsize
 ```{r}
@@ -835,18 +857,20 @@ plotnet(iris.nnet)
 
 ---
 
-Fitting the multinomial regression. This is also done with nnet, but using a wrapper `multinom`, which uses the `entropy` activation function.
+Fitting the multinomial regression. This is also done with nnet, but using a wrapper `multinom` (this has it's own settings, so results are not necessarily the same as above).
+
 
 \scriptsize
-```{r,tidy=FALSE}
+
+```{r}
 library(caret)
 fit=multinom(species~ -1 + .,family=multinomial, data=iris_train)
-summary(fit)
+coef(fit)
 ```
 
 ---
 
-Problem: `multinom()` seems to fit an intercept _plus_ an offset note (B):
+Problem: `multinom()` seems to fit an intercept _plus_ an offset node (B), thus we have to remove the intercept manually (by saying `-1` in the above formula).
 
 ```{r iris_fit, echo=FALSE, fig.width=9, fig.height=9,fig.align = "center",out.width='80%'}
 plotnet(fit)
@@ -858,11 +882,17 @@ plotnet(fit)
 
 ### The performance of multinomial regression vs nnet
 
+$~$
+
 \scriptsize
 ```{r}
 testclass=predict(fit,new=iris_test)
 confusionMatrix(data=testclass,reference=iris_test$species)$table
+```
 
+$~$
+
+```{r}
 table(predict(iris.nnet, iris_test, type = "class"),iris_test$species)
 ```
 
@@ -874,63 +904,75 @@ For more on multinomial regression with R, check [here](https://www.r-bloggers.c
 
 ## Summing up
 
-* Fitting a _multiple linear regression_
-     + can be achived by building a neural network with one input layer and one node in the output layer,
+$~$
+
+1. _Multiple linear regression_
+     + NN with one input layer and one node in the output layer,
      + linear activation function,
-     + and mean squared loss,
+     + mean squared loss.
      
-* _Classification with two classes_ can be performed using logistic regression, and this
-     + by building a neural network with one input layer and one node in the output layer,
+$~$     
+     
+2. _Logistic regression_ (2 classes)
+     + NN with one input layer and one node in the output layer,
      + sigmoid activation function,
      + and binary cross-entropy loss.
-     + Remember: this will only give linear boundaries between the classes (in the output space).
 
----
-
-* Classification with $C$ classes, $C>2$, can be performed using multinomial regression,
-     + by building a neural network with one input layer and $C$ nodes in the output layer,
+$~$  
+  
+3. _Multinomial regression_ ($C>2$ classes)
+     + NN with one input layer and $C$ nodes in the output layer,
      + softmax activation function,
-     + and categorical cross-entropy loss.
-     + Also here: this will only give linear boundaries between the classes (in the output space).
+     + categorical cross-entropy loss.
+
+$~$
+**But:**
+
+* These are only linear models (linear boundaries).
+
+* Parameters (weights) found using gradient descent algorithms where the learning rate (step length) must be set. 
 
 ---
-
-* We have seen that parameters (weights) can be found using gradient descent algorithms:
-     + activation function "must" be differentiable
-     + step length (learning rate) must be set
-* But, we have now only looked at linear models — which give linar boundaries in the classification case — now we need to move on to allow for non-linearities!
 
 # Feedforward networks
 
-In feedforward networks we have only connections (weights) forward in the network, and no feedback connections that sends the output of the model back into the network. The word _multi-layer perceptron_ (MLP) and _sequentially layered_ networks are also used
+* Connections are only forward in the network, but no feedback connections that sends the output of the model back into the network.  
 
-The examples of MLR, logistic regression and multiclass regression are examples of feedfeedward networks without any socalled _hidden layers_ (between the input and output layers).
+* Examples: Linear, logistic and multinomial regression with without any _hidden layers_ (between the input and output layers).
 
-We may have no hidden layer, one (to be studied next), or many.
+* We may have no hidden layer, one (to be studied next), or many.
 
-The number of hidden layers is called the _depth_ of the network, and the number of nodes in a layer is called the _width_ of the layer.
+* Adding _hidden layers_ with _non-linear activation functions_ between the input and output layer will make nonlinear statistical models.
+
+* The number of hidden layers is called the _depth_ of the network, and the number of nodes in a layer is called the _width_ of the layer.
 
 ---
 
-The idea of using many layers of many nodes is inspired from neuroscience, but today we don't have the goal to model the brain — but instead to approximate function to perform statistical generalizations and maybe also insight into the problem at hand.
 
-Now we will see how adding _hidden layers_ with _non-linear activation functions_ between the input and output layer will make nonlinear statistical models.
+\centering
+![test](drawNNp3h2o3.png){width=80%}
 
 ---
 
 ## The single hidden layer feedforward network
 
+$~$
 
-The word neuron and node can be used interchangeably. We stick with greek letters $\alpha$ and $\beta$ for parameters, but call them weights.
+The nodes are also called _neurons_.
 
-We use the following notation:
+$~$
+
+**Notation**
+
+$~$
+
 
 1. Inputs (input layer nodes), $j=1,\dots p$: $x_1, x_2, \ldots, x_p$, or as a vector ${\boldsymbol x}$.
 2. The nodes in the hidden layer, $m=1,\ldots, M$: $z_1, z_2, \ldots, z_m$, or as vector ${\boldsymbol z}$, and the hidden layer activation function $\phi_h$.
 $$
 z_m({\boldsymbol x})=\phi_h(\alpha_{0m}+\sum_{j=1}^p \alpha_{jm}x_{j})
 $$
-where $\alpha_{jm}$ is the weight from input $j$ to hidden node $m$, and $\alpha_{0m}$ is the bias term for the $m$th hidden node. The hidden nodes can be thought of as _latent variables_.
+where $\alpha_{jm}$ is the weight\footnote{We stick with greek letters $\alpha$ and $\beta$ for parameters, but call them weights.} from input $j$ to hidden node $m$, and $\alpha_{0m}$ is the bias term for the $m$th hidden node. The hidden nodes can be thought of as _latent variables_.
 
 ---
 
@@ -941,52 +983,59 @@ $$
 $$
 where $\beta_{mc}$ is from hidden neuron $m$ to ouput node $c$, and $\beta_{0c}$ is the bias term for the $c$th output node.
 
----
+$~$
 
-To sum up: $c=1,\ldots C$: $y_1, y_2, \ldots, y_C$, where $y_c$ is given as
-
+4. Taken together 
 $$
 \hat{y}_c({\boldsymbol x})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}z_{m})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}\phi_h(\alpha_{0m}+\sum_{j=1}^p \alpha_{jm}x_{j}))
 $$
+
+---
 
 **Hands on:**
 
-* Identify p, M, C in the network figure below, and relate that to the $y_{c}({\boldsymbol x})$ equation.
+$~$
+
+* Identify $p, M, C$ in the network figure above, and relate that to the $y_{c}({\boldsymbol x})$ equation.
+
+$~$
+
 * How many parameters need to be estimated for this network?
-* What decides the value of $p$ and $C$?
-* What is the connection between problem, $\phi_o$ and $C$?
+
+$~$
+
+* What determines the values of $p$ and $C$?
+
+$~$
+
+* How is $M$ determined?
+
+
 
 ---
 
 
-\centering
-![test](drawNNp3h2o3.png){width=80%}
+### Special case: linear activation function for the hidden layer
 
----
+$~$
 
-
-### Special case with linear activation function for the hidden layer
-
-
-$$
-\hat{y}_c({\boldsymbol x})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}z_{m})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}\phi_h(\alpha_{0m}+\sum_{j=1}^p \alpha_{jm}x_{j}))
-$$
-
-Here we assume that $\phi_h(z)=z$, called linear or identity activiation:
+If we assume that $\phi_h(z)=z$ (linear or identity activiation):
 
 $$
 \hat{y}_c({\boldsymbol x})=\phi_o(\beta_{0c}+\sum_{m=1}^M \beta_{mc}(\alpha_{0m}+\sum_{j=1}^p \alpha_{jm}x_{j}))
 $$
 
+$~$
+$~$
+
 **Q:** Does this look like something you have seen before?
 
----
 
-For regression (linear output activation also) we have looked at a similar model in Module 6: principal component regression. Then the weights $\alpha_{jm}$ were not estimated, but were defined to be the eigenvectors corresponding to the of the $m$th largest eigenvalue of the estimated covariance matrix of the covariates ${\boldsymbol x}_i$. Therefore we may think of the hidden nodes as _latent variables_. In PCR only the $\beta$s were estimated using the responses (and the latent variables).
+**A:**
 
-In Module 6 we also touched upon Partial least squares, where the latent variables were found with the help of the response $y$. Here both the $\alpha$s and $\beta$s were estimated.
+<!-- * Principal component regression.  -->
+<!-- * Partial least squares. -->
 
-In Module 4 we only considered "ordinary logistic regression", but we could have used the principal components in place of the original covariates — which then could have been depictured as a feedforward network with one hidden layer, but where only the $\beta$s were estimated.
 
 ---
 
@@ -998,7 +1047,7 @@ What type of mathematical function can a feedforward neural network with one hid
 
 ---
 
-According to @goodfellow, page 198: The _universal approximation theorem_ says that a feedforward network with
+According to @goodfellow, page 198: The _universal approximation theorem_ (<https://www.deeplearningbook.org>) says that a feedforward network with
 
 * a _linear output layer_
 * at least one hidden layer with a "squashing" activation function and "enough" hidden units
@@ -1242,9 +1291,8 @@ Remark: it is important that the output activation is matched with an appropriat
 
 **Q:** Why can we not just use linar activation function in all hidden layers?
 
----
-
-**A:** Then each layer would only be able to do linear transformations of the input data and a deep stack of linear layers would still implement a linear operation. The activation functions sigmoid and relu add non-linearity to the model. And, the universial approximation property is dependent on a squashing type activation function.
+**A:** 
+<!-- Then each layer would only be able to do linear transformations of the input data and a deep stack of linear layers would still implement a linear operation. The activation functions sigmoid and relu add non-linearity to the model. And, the universial approximation property is dependent on a squashing type activation function. -->
 
 ---
 
@@ -1935,7 +1983,7 @@ Explanable AI (XAI): how to use methods on the network or the predictions of the
 * @ESL,Chapter 11: Neural Networks
 * @casi, Chapter 18: Neural Networks and Deep Learning
 * @kerasR
-* @goodfellow (to be used in IT3030)
+* @goodfellow (to be used in IT3030) <https://www.deeplearningbook.org/>
 * Explaining backpropagation <http://neuralnetworksanddeeplearning.com/chap2.html>
 * Slides from MA8701 (Thiago Martins) <https://www.math.ntnu.no/emner/MA8701/2019v/DeepLearning/>
 
