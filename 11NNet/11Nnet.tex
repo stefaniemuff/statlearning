@@ -158,7 +158,7 @@
 
 \begin{frame}
 
-Last update: March 19, 2020
+Last update: March 24, 2020
 
 \end{frame}
 
@@ -756,7 +756,7 @@ networks world: \vspace{2mm}
   Let \(t=0\) and denote the given initial values for the weights
   \({\boldsymbol w}^{(t)}\), \vspace{2mm}
 \item
-  Until convergence, repeat
+  Until convergence, repeat a) to d)
 
   \begin{enumerate}
   [a)]
@@ -2712,8 +2712,10 @@ parameter at the next step as:
 where \(\lambda\) is the \emph{learning rate} (usually a small value).
 In \texttt{keras} the default learning rate is \(0.01\).
 
-\(~\) \textbf{Q}: Why are we moving in the direction of the negative of
-the gradient? Why not the positive?
+\vspace{6mm}
+
+\textbf{Q}: Why are we moving in the direction of the negative of the
+gradient? Why not the positive?
 
 \end{block}
 
@@ -2723,18 +2725,22 @@ the gradient? Why not the positive?
 
 \begin{block}{Mini-batch stochastic gradient descent (SGD)}
 
-The loss function is computed as a mean over all training examples.
-
-\[J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n J({\boldsymbol x}_i, y_i)\]
-
-This means that the gradient will also be a mean over the gradient
-contribution from each training example.
-
-\[\nabla_{\boldsymbol \theta} J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n \nabla_{\boldsymbol \theta} J({\boldsymbol x}_i, y_i)\]
-
-To build a network that generalizes well, it is important to have many
-training examples, but that would make us spend a lot of time and
-computer resources at calculating each gradient descent step.
+\begin{itemize}
+\item
+  In full gradient descent, the loss function is computed as a mean over
+  all training examples. \[
+  J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n J({\boldsymbol x}_i, y_i) \ .
+  \]
+\item
+  This means that the gradient will also be a mean over the gradient
+  contribution from each training example. \[
+  \nabla_{\boldsymbol \theta} J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n \nabla_{\boldsymbol \theta} J({\boldsymbol x}_i, y_i) \ .
+  \]
+\item
+  To build a network that generalizes well, it is important to have many
+  training examples, but that would make us spend a lot of time and
+  computer resources at calculating each gradient descent step.
+\end{itemize}
 
 \end{block}
 
@@ -2742,68 +2748,87 @@ computer resources at calculating each gradient descent step.
 
 \begin{frame}
 
-We observe that we may see the gradient as an average over many
-individual gradients, and think of this as an estimator for an
-expectation. This expectation can we (also) approximate by the average
-gradient over just a \emph{mini-batch} (random sample) of the
-observations.
+\begin{itemize}
+\item
+  The gradient as \emph{an average over many individual gradients}, and
+  think of this as an estimator for an expectation. This expectation can
+  be approximated by the average gradient over just a \emph{mini-batch}
+  (random sample) of the observations.
+\item
+  Idea: the optimizer will converge much faster if they can rapidly
+  compute approximate estimates of the gradient, instead of slowly
+  computing the exact gradient (using all training data).
+\item
+  Mini-batches may be processed \emph{in parallel}, and the batch size
+  is often a power of 2 (32 or 256).
+\item
+  Additional benefit: It also turns out that small batches also serves
+  as a regularization effect maybe due to the variability they bring to
+  the optimization process.
+\end{itemize}
 
-The idea here is that the optimizer will converge much faster if they
-can rapidly compute approximate estimates of the gradient, instead of
-slowly computing the exact gradient (using all training data).
-
-In addition with multicore systems, mini-batches may be processed in
-parallell and the batch size is often a power of 2 (32 or 256).
-
-It also turns out that small batches also serves as a regularization
-effect maybe due to the variability they bring to the optimization
-process.
+In the 3th video (on backpropagation) from 3Blue1Brown there is nice
+example of one trajectory from gradient decent and one from SGD (10:10
+minutes into the video):
+\url{https://www.youtube.com/watch?v=tIeHLnjs5U8}
 
 \end{frame}
 
 \begin{frame}
 
-This means that for (mini-batch) stochastic gradient descent we do as
-follows:
+\textbf{Mini-batch stochastic gradient descent}
+
+\vspace{1mm}
 
 \begin{enumerate}
 \tightlist
 \item
-  Divide all the training samples randomly into mini-batches.
-\item
-  For each mini-batch: Make predictions of the reponses in the
-  mini-batch in a \emph{forward pass}.
-\item
-  Compute the loss for the training data in this batch.
-\item
-  Compute the gradient of the loss with regard to the model's parameters
-  (\emph{backward pass}) based on the training data in the batch.
-  \(\nabla_{\boldsymbol \theta}^* J({\boldsymbol \theta}^{(t)})\)
-\item
-  Update all weighs, but just using the average gradient from the
-  mini-batch
-  \({\boldsymbol \theta}^{(t+1)}={\boldsymbol \theta}^{(t)} - \lambda \nabla_{\boldsymbol \theta} ^* J({\boldsymbol \theta}^{(t)})\)
-\item
-  Repeat 2-5 until convergence. (Could have gone back to 1, but often
-  not done.)
+  Divide all the training samples randomly into \emph{mini-batches}.
 \end{enumerate}
 
-\end{frame}
+\vspace{1mm}
 
-\begin{frame}
-
-\begin{itemize}
+\begin{enumerate}
+\setcounter{enumi}{1}
 \tightlist
 \item
-  The algorithm defined above is called mini-batch SGD. The Stochastic
-  part comes from the fact that we are randomly sampling batches from
-  the training data.
+  Until convergence, repeat a) to d)
+
+  \begin{enumerate}
+  [a)]
+  \tightlist
+  \item
+    For each mini-batch: Make predictions of the reponses in the
+    mini-batch in a \emph{forward pass}.
+  \item
+    Compute the loss for the training data in this batch.
+  \item
+    Compute the gradient of the loss with regard to the model's
+    parameters (\emph{backward pass}) based on the training data in the
+    batch.
+    \(\nabla_{\boldsymbol \theta}^* J({\boldsymbol \theta}^{(t)})\)
+  \item
+    Update all weighs, but just using the average gradient from the
+    mini-batch
+    \({\boldsymbol \theta}^{(t+1)}={\boldsymbol \theta}^{(t)} - \lambda \nabla_{\boldsymbol \theta} ^* J({\boldsymbol \theta}^{(t)})\)
+  \end{enumerate}
+\end{enumerate}
+
+\vspace{1mm}
+
+\begin{enumerate}
+\setcounter{enumi}{2}
+\tightlist
 \item
-  Stochastic gradient descent (SGD) for size equals to 1.
-\item
-  Mini-batch SGD is a compromise between SGD (one sample per iteration)
-  and full gradient descent (full dataset per iteration)
-\end{itemize}
+  Network is \emph{trained}; return parameter estimates.
+\end{enumerate}
+
+\vspace{6mm}
+
+\textbf{Special case}: Stochastic gradient descent (SGD) for only one
+sample (mini-batch size 1). Mini-batch SGD is a compromise between SGD
+(one sample per iteration) and full gradient descent (full dataset per
+iteration)
 
 \end{frame}
 
@@ -2811,19 +2836,44 @@ follows:
 
 \begin{block}{Backpropagation algorithm}
 
-Computing the analytical expression for the gradient \(\nabla J\) is not
-difficult, but the numerical evaluation may be expensive. The
-Backpropagation algorithm is an simple and inexpensive way to calculate
-the gradient.
+\(~\)
 
-The chain rue is used to compute derivatives of functions of other
-functions where the derivatives are known, this is done efficiently with
-backpropagation.
+\begin{itemize}
+\tightlist
+\item
+  Computing the analytical expression for the gradient \(\nabla J\) is
+  not difficult, but the numerical evaluation may be expensive.
+\end{itemize}
 
-Backpropagation starts with the value of the loss function and works
-backward from the top layers to the bottom layers, applying the chain
-rule to compute the contribution that each parameter have in the loss
-value.
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{\textcolor{red}{Backpropagation}} is a simple and inexpensive
+  way to calculate the gradient.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  The \emph{\textcolor{red}{chain rule}} is used to compute derivatives
+  of functions of other functions where the derivatives are known, this
+  is done efficiently with backpropagation.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Backpropagation starts with the value of the loss function and works
+  backward from the top layers to the bottom layers, applying the chain
+  rule to compute the contribution that each parameter have in the loss
+  value.
+\end{itemize}
 
 \end{block}
 
@@ -2831,73 +2881,64 @@ value.
 
 \begin{frame}
 
-More information:
+More background:
+
+\(~\)
 
 \begin{itemize}
 \tightlist
 \item
-  Mathematical details in Goodfellow, Bengio, and Courville (2016)
-  Section 6.5 (pages 204-238),
+  Mathematical details: Goodfellow, Bengio, and Courville (2016) Section
+  6.5 (pages 204-238).
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
-  3Blue1Brown: video overview:
-  \url{https://www.youtube.com/watch?v=Ilg3gGewQ5U} and chain rule maths
-  \url{https://www.youtube.com/watch?v=tIeHLnjs5U8}
+  3Blue1Brown videos: \url{https://www.youtube.com/watch?v=Ilg3gGewQ5U}
+  and \url{https://www.youtube.com/watch?v=tIeHLnjs5U8}
 \end{itemize}
 
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}
 
 \begin{block}{Variations of SDG --- with adaptive learning rates}
 
-General concept:
+\vspace{1mm}
+
+The learning rate \(\lambda\) is difficult to set. Some ideas for
+adaptive learning rates (Goodfellow et al, Chapter 8.5).
+
+\(~\)
 
 \begin{itemize}
 \tightlist
 \item
-  momentum term: previous gradients are allowed to contribute.
+  Momentum term: previous gradients are allowed to contribute.
 \end{itemize}
 
-Named variants: In \texttt{keras} the ``default optimizer'' is RMSprop.
+\(~\)
 
 \begin{itemize}
 \tightlist
 \item
-  AdaGrad: individually adapt the learning rates of all model parameters
-  by scaling them inversely proportional to the square root of the sum
-  of all their historical squared values. (Nice properties for convex
-  problems, but with non-linear hidden activation function we do not
-  have a convex problem.)
+  AdaGrad: individually adapt the learning rates (\(\lambda\)) of all
+  model parameters. The parameters with the largest partial derivative
+  of the loss have a correspondingly rapid decrease in their learning
+  rate. Nice properties when optimization is convec.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
   RMSprop: modification to AdaGrad in non-convex setting. Scales with
   exponentially weighted moving average instead of all historical
   squared gradient values.
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Further reading on optimizers}
-
-\begin{itemize}
-\tightlist
-\item
-  \href{https://keras.io/optimizers/}{Keras documentation for
-  Optimizers}
-\item
-  \href{http://ruder.io/optimizing-gradient-descent/index.html}{An
-  overview of gradient descent optimization algorithms}
-\item
-  \href{http://www.cs.toronto.edu/~tijmen/csc321/slides/lecture_slides_lec6.pdf}{Overview
-  of mini-batch gradient descent}
-\item
-  Andrew Ng explains about RMSprop in Coursera course:
-  \href{https://www.coursera.org/learn/deep-neural-network/lecture/BhJlm/rmsprop}{Improving
-  Deep Neural Networks: Hyperparameter tuning, Regularization and
-  Optimization}
 \end{itemize}
 
 \end{block}
@@ -3047,15 +3088,18 @@ Expert Systems with Applications, Volume 109,
 
 \begin{block}{Dropout}
 
-\(~\)
+\tiny
 
-(Based on Goodfellow, Bengio, and Courville (2016), Section 7.12, and
-Chollet and Allaire (2018) 4.4.3)
+Based on Goodfellow, Bengio, and Courville (2016), Section 7.12, and
+Chollet and Allaire (2018) 4.4.3
+
+\normalsize
+
+\(~\)
 
 Dropout was developed by Geoff Hinton and his students.
 
 \begin{itemize}
-\tightlist
 \item
   During training: randomly \emph{dropout} (set to zero) outputs in a
   layer. Drop-out rates may be chosen between 0.2 and 0.5.
@@ -3063,66 +3107,18 @@ Dropout was developed by Geoff Hinton and his students.
   During test: not dropout, but scale done the layer output values by a
   factor equal to the drop-out rate (since now more units are active
   than we had during training)
+\item
+  Alternatively, the drop-out and scaling (now upscaling) can be done
+  during training.
+\item
+  One way to look at dropout is on the lines of what we did in Module 8
+  when we used bootstrapping to produced many data sets and then fitted
+  a model to each of them and then took the average (bagging). But
+  randomly dropping out outputs in a layer, this can be looked as
+  mimicking bagging --- in an efficient way.
 \end{itemize}
 
-Alternatively, the drop-out and scaling (now upscaling) can be done
-during training.
-
 \end{block}
-
-\end{frame}
-
-\begin{frame}
-
-One way to look at dropout is on the lines of what we did in Module 8
-when we used bootstrapping to produced many data sets and then fitted a
-model to each of them and then took the average (bagging). But randomly
-dropping out outputs in a layer, this can be looked as mimicking bagging
---- in an efficient way.
-
-See Goodfellow, Bengio, and Courville (2016), Section 7.12 for more
-insight into the mathematics behind drop-out.
-
-\end{frame}
-
-\begin{frame}
-
-\url{https://www.reddit.com/r/MachineLearning/comments/4w6tsv/ama_we_are_the_google_brain_team_wed_love_to/}
-
-The following is a direct quotation.
-
-figplucker: \textbf{How was `Dropout' conceived? Was there an `aha'
-moment?}
-
-geoffhinton (2 years ago)
-
-There were actually three aha moments. One was in about 2004 when
-Radford Neal suggested to me that the brain might be big because it was
-learning a large ensemble of models. I thought this would be a very
-inefficient use of hardware since the same features would need to be
-invented separately by different models. Then I realized that the
-``models'' could just be the subset of active neurons. This would allow
-combinatorially many models and might explain why randomness in spiking
-was helpful.
-
-Soon after that I went to my bank. The tellers kept changing and I asked
-one of them why. He said he didn't know but they got moved around a lot.
-I figured it must be because it would require cooperation between
-employees to successfully defraud the bank. \textbf{This made me realize
-that randomly removing a different subset of neurons on each example
-would prevent conspiracies and thus reduce overfitting.}
-
-I tried this out rather sloppily (I didn't have an adviser) in 2004 and
-it didn't seem to work any better than keeping the squared weights small
-so I forgot about it.
-
-Then in 2011, Christos Papadimitriou gave a talk at Toronto in which he
-said that the whole point of sexual reproduction was to break up complex
-co-adaptations. He may not have said it quite like that, but that's what
-I heard. It was clearly the same abstract idea as randomly removing
-subsets of the neurons. So I went back and tried harder and in
-collaboration with my grad students we showed that it worked really
-well.
 
 \end{frame}
 
