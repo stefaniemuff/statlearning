@@ -847,7 +847,7 @@ Here we compare
   the MLR solution with \texttt{lm}
 \item
   the neural network solution with \texttt{nnet}
-  \footnote{which in fact improves upon the gradient descent with Hessian information and the BFGS-algorithm. BFGS is a quasi-Newton method (also known as a variable metric algorithm), specifically that published simultaneously in 1970 by Broyden, Fletcher, Goldfarb and Shanno. This uses function values and gradients to build up a picture of the surface to be optimized.}
+  \footnote{Uses an improved gradient descent with Hessian information and the BFGS-algorithm. BFGS is a quasi-Newton method (also known as a variable metric algorithm), specifically that published simultaneously in 1970 by Broyden, Fletcher, Goldfarb and Shanno. This uses function values and gradients to build up a picture of the surface to be optimized.}
 \end{itemize}
 
 \end{block}
@@ -1963,62 +1963,64 @@ with any desired non-zero amount of error.
 
 \begin{frame}
 
-The universal approximation theorem holds for the sigmoid (logistic) and
-ReLU activation functions in the hidden layer.
-
-\(~\)
-
-\textbf{The rectified linear unit ReLU} \(\phi_h(a)=\max(0,a)\)
-
-\center
-
-\includegraphics[width=0.6\linewidth]{11Nnet_files/figure-beamer/unnamed-chunk-16-1}
-
-\end{frame}
-
-\begin{frame}
-
-Earlier, the default activation function for the hiddan layer was the
-sigmoid, but now the ReLU is default activiation function to be used in
-the hidden layer(s) of a feedforward network --- in particular when more
-than one hidden layer is used. The ReLU function is piecewise linear,
-but in total non-linear.
-
-\end{frame}
-
-\begin{frame}
-
-Even though a large feedforward network with one hidden layer may be
-able to represent a desired function, we may not be able to estimate the
-parameters of the function,
+The universal approximation theorem holds for
 
 \begin{itemize}
 \tightlist
 \item
-  we may choose a too many or too few nodes in the hidden layer
+  The \textbf{sigmoid} \(\phi(a)=1/(1+\exp(-a))\) (logistic) activation
+  functions.
 \item
-  our optimization routine may fail
-\item
-  we may overfit/underfit the training data
+  The \textbf{rectified linear unit (ReLU)} \(\phi_h(a)=\max(0,a)\)
+  activation functions
 \end{itemize}
 
-Therefore, sometimes networks with more than one hidden layer is used
---- with fewer total number of nodes but more layers. A network with
-many hidden layers is called a \emph{deep network}.
+in the hidden layer.
+
+\center
+
+\includegraphics[width=0.9\linewidth]{11Nnet_files/figure-beamer/unnamed-chunk-16-1}
 
 \end{frame}
 
 \begin{frame}
 
-In module 7 we looked at additive models of ``complex'' functions
-(splines) of one covariate each.
+\begin{itemize}
+\tightlist
+\item
+  The ReLU activiation function has replaced the sigmoid function as
+  default in the hidden layer(s) of a feedforward network.
+\end{itemize}
 
-Now we look at many rather simple non-linear function of linear
-combinations of covariates, and non-linear functions of non-linear
-functions of linear combinations of covariates.
+\(~\)
 
-\textbf{Q:} Is one better than the other when it comes to
-interpretation, and to prediction?
+\begin{itemize}
+\tightlist
+\item
+  Even though a large feedforward network with one hidden layer may be
+  able to represent a desired function, we may not be able to estimate
+  the parameters of the function:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    we may choose a too many or too few nodes in the hidden layer.
+  \item
+    our optimization routine may fail.
+  \item
+    we may overfit/underfit the training data.
+  \end{itemize}
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Alternative: networks with more than one hidden layer, but fewer total
+  number of nodes but more layers. A network with \emph{many hidden
+  layers} is called a \emph{\textcolor{red}{deep network}}.
+\end{itemize}
 
 \end{frame}
 
@@ -2026,85 +2028,33 @@ interpretation, and to prediction?
 
 \begin{block}{The \texttt{nnet} R package}
 
-In order to not make this too complex (since we only have one week to
-work with this module), we will use the \texttt{nnet} R package by Brian
-Ripley (instead of the currently very popular \texttt{keras} package for
-deep learning --- however, we will also present the \texttt{keras}
-package for completeness).
+\(~\)
 
-\texttt{nnet} fits one hidden layer with sigmoid activiation function.
-The implementation is not gradient descent, but instead BFGS using
-\texttt{optim}.
+\begin{itemize}
+\item
+  For simplicity (since we only have one week to work with this module),
+  we will use the \texttt{nnet} R package by Brian Ripley instead of the
+  currently very popular \texttt{keras} package for deep learning (the
+  \texttt{keras} package will be presented for completeness).
+  \vspace{2mm}
+\item
+  \texttt{nnet} fits \emph{one hidden layer} with \emph{sigmoid
+  activiation function}. The implementation is not gradient descent, but
+  instead BFGS using \texttt{optim}. \vspace{2mm}
+\end{itemize}
 
-\textbf{Description:} Fit single-hidden-layer neural network, possibly
-with skip-layer connections.
-
-Usage: (for formula class):
-\texttt{nnet(formula,\ data,\ weights,\ ...,\ subset,\ na.action,\ contrasts\ =\ NULL)}
-
-\texttt{nnet(x,\ y,\ ...)}
+\begin{itemize}
+\item
+  Type \texttt{?nnet()} into your R-console to see the arguments of
+  \texttt{nnet()}. \vspace{2mm}
+\item
+  If the response in formula is a factor, an appropriate classification
+  network is constructed; this has one output and entropy fit if the
+  number of levels is two, and a number of outputs equal to the number
+  of classes and a softmax output stage for more levels.
+\end{itemize}
 
 \end{block}
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-Some arguments to \texttt{nnet()}
-
-\begin{itemize}
-\tightlist
-\item
-  formula, or x and y
-\item
-  x= input variables, matrix or data frame
-\item
-  y= response (target) values, if factor=classification
-\item
-  size: number of units in the hidden layer. Can be zero if there are
-  skip-layer units.
-\item
-  data: the dataset to be used
-\item
-  subset: index of entries in data that is the training sample
-\end{itemize}
-
-If the response in formula is a factor, an appropriate classification
-network is constructed; this has one output and entropy fit if the
-number of levels is two, and a number of outputs equal to the number of
-classes and a softmax output stage for more levels.
-
-\end{frame}
-
-\begin{frame}
-
-\begin{itemize}
-\tightlist
-\item
-  linout: switch for linear output units. Default logistic output units.
-\item
-  entropy: switch for entropy (= maximum conditional likelihood)
-  fitting. Default by least-squares.
-\item
-  softmax switch for softmax (log-linear model) and maximum conditional
-  likelihood fitting. linout, entropy, softmax and censored are mutually
-  exclusive.
-\item
-  censored: A variant on softmax, in which non-zero targets mean
-  possible classes. Thus for softmax a row of (0, 1, 1) means one
-  example each of classes 2 and 3, but for censored it means one example
-  whose class is only known to be 2 or 3.
-\item
-  skip: switch to add skip-layer connections from input to output.
-\item
-  decay: parameter for weight decay. Default 0.
-\item
-  maxit: maximum number of iterations. Default 100.
-\item
-  MaxNWts: The maximum allowable number of weights. There is no
-  intrinsic limit in the code, but increasing MaxNWts will probably
-  allow fits that are very slow and time-consuming.
-\end{itemize}
 
 \end{frame}
 
@@ -2113,27 +2063,26 @@ classes and a softmax output stage for more levels.
 
 \begin{block}{Boston house prices}
 
-The objective here is to predict the median price of homes in a given
-Boston suburb in the mid-1970s, and 10 input variables are given.
+\textbf{Objective}: To predict the median price of owner-occupied homes
+in a given Boston suburb in the mid-1970s using 10 input variables.
 
 This data set is both available in the \texttt{MASS} and \texttt{keras}
 R package.
+
+\(~\)
 
 \begin{block}{Preparing the data}
 
 \begin{itemize}
 \tightlist
 \item
-  Few data points: only 506, split between 404 training samples and 102
-  test samples (this split already done in the \texttt{keras} library)
+  Only 506, split between 404 training samples and 102 test samples
+  (this split already done in the \texttt{keras} library)
 \item
   Each feature in the input data (for example, the crime rate) has a
   different scale, some values are proportions, which take values
   between 0 and 1; others take values between 1 and 12, others between 0
   and 100, and so on.
-\item
-  The targets are the median values of owner-occupied homes, in
-  thousands of dollars.
 \end{itemize}
 
 \end{block}
@@ -2182,32 +2131,25 @@ R package.
 ## [6,] 391.13 11.74
 \end{verbatim}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(MASS)  }\CommentTok{#no names for columns - take that from other source}
-\KeywordTok{colnames}\NormalTok{(Boston)}
-\end{Highlighting}
-\end{Shaded}
+\(~\)
 
-\begin{verbatim}
-##  [1] "crim"    "zn"      "indus"   "chas"    "nox"     "rm"      "age"    
-##  [8] "dis"     "rad"     "tax"     "ptratio" "black"   "lstat"   "medv"
-\end{verbatim}
+\normalsize
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{colnames}\NormalTok{(train_data) =}\StringTok{ }\KeywordTok{colnames}\NormalTok{(Boston)[}\OperatorTok{-}\DecValTok{13}\NormalTok{]}
-\KeywordTok{colnames}\NormalTok{(test_data) =}\StringTok{ }\KeywordTok{colnames}\NormalTok{(Boston)[}\OperatorTok{-}\DecValTok{13}\NormalTok{]}
-\end{Highlighting}
-\end{Shaded}
+The column names are missing (could get them by using the Boston dataset
+loaded from the MASS library).
 
 \end{frame}
 
 \begin{frame}[fragile]
 
-A widespread best practice to deal with such data is to do feature-wise
-normalization. This is to make the optimization easier with gradient
-based methods.
+\begin{itemize}
+\tightlist
+\item
+  To make the optimization easier with gradient based methods do
+  feature-wise normalization.
+\end{itemize}
+
+\(~\)
 
 \scriptsize
 
@@ -2221,13 +2163,20 @@ based methods.
 \end{Highlighting}
 \end{Shaded}
 
+\(~\)
+
 \normalsize
 
-Note that the quantities used for normalizing the test data are computed
-using the training data. You should never use in your workflow any
-quantity computed on the test data, even for something as simple as data
-normalization. This also means that we need to do this standardization
-again (from scratch) if we need to do cross-validation.
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Note}: the quantities used for normalizing the test data are
+  computed using the training data. You should never use in your
+  workflow any quantity computed on the test data, even for something as
+  simple as data normalization. This also means that we need to do this
+  standardization again (from scratch) if we need to do
+  cross-validation.
+\end{itemize}
 
 \end{frame}
 
@@ -2337,46 +2286,30 @@ Just checking out one hidden layer with 5 units to get going.
 
 \begin{frame}[fragile]
 
-Now, use cross-validation to find the best number of hidden nodes ---
-but that took some time, so only results shown below. Remember the
-scaling need to be done within the loop.
+\begin{block}{How to find best number of hidden nodes?}
+
+\(~\)
+
+\(\rightarrow\) Cross-validation! (Time-consumring, so only results
+shown below.)
+
+\(~\)
 
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{grid =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{25}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{50}\NormalTok{)}
-
-\NormalTok{k <-}\StringTok{ }\DecValTok{4}
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
-\NormalTok{indices <-}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(train_data))}
-\NormalTok{folds <-}\StringTok{ }\KeywordTok{cut}\NormalTok{(indices, }\DataTypeTok{breaks =}\NormalTok{ k, }\DataTypeTok{labels =} \OtherTok{FALSE}\NormalTok{)}
-\CommentTok{# have now assigned the traning data to 4 diffeent folds all of the}
-\CommentTok{# same size (101)}
-
-\NormalTok{resmat =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\OtherTok{NA}\NormalTok{, }\DataTypeTok{ncol =}\NormalTok{ k, }\DataTypeTok{nrow =} \KeywordTok{length}\NormalTok{(grid))}
-\ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{k) \{}
-\NormalTok{    thistrain =}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{dim}\NormalTok{(train_data)[}\DecValTok{1}\NormalTok{])[folds }\OperatorTok{!=}\StringTok{ }\NormalTok{j]}
-\NormalTok{    thisvalid =}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{dim}\NormalTok{(train_data)[}\DecValTok{1}\NormalTok{])[folds }\OperatorTok{==}\StringTok{ }\NormalTok{j]}
-\NormalTok{    mean <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(org_train[thistrain, ], }\DecValTok{2}\NormalTok{, mean)}
-\NormalTok{    std <-}\StringTok{ }\KeywordTok{apply}\NormalTok{(org_train[thistrain, ], }\DecValTok{2}\NormalTok{, sd)}
-\NormalTok{    new <-}\StringTok{ }\KeywordTok{scale}\NormalTok{(org_train, }\DataTypeTok{center =}\NormalTok{ mean, }\DataTypeTok{scale =}\NormalTok{ std)}
-    \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\KeywordTok{length}\NormalTok{(grid)) \{}
-\NormalTok{        thissize =}\StringTok{ }\NormalTok{grid[i]}
-        
-\NormalTok{        fit =}\StringTok{ }\KeywordTok{nnet}\NormalTok{(train_targets }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ new, }\DataTypeTok{size =}\NormalTok{ thissize, }\DataTypeTok{linout =} \OtherTok{TRUE}\NormalTok{, }
-            \DataTypeTok{maxit =} \DecValTok{5000}\NormalTok{)}
-\NormalTok{        pred =}\StringTok{ }\KeywordTok{predict}\NormalTok{(fit, }\DataTypeTok{newdata =}\NormalTok{ new[thisvalid, ], }\DataTypeTok{type =} \StringTok{"raw"}\NormalTok{)}
-\NormalTok{        resmat[i, j] =}\StringTok{ }\KeywordTok{sum}\NormalTok{((pred[, }\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{train_targets[thisvalid])}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
-\NormalTok{    \}}
-\NormalTok{\}}
-\NormalTok{mse =}\StringTok{ }\KeywordTok{apply}\NormalTok{(resmat, }\DecValTok{1}\NormalTok{, sum)}\OperatorTok{/}\KeywordTok{nrow}\NormalTok{(train_data)}
-\KeywordTok{plot}\NormalTok{(grid, mse, }\DataTypeTok{type =} \StringTok{"l"}\NormalTok{)}
-\NormalTok{mse}
-\CommentTok{# 7.727735e+00 2.550359e+00 9.582672e-01 3.458643e-01 4.290271e-01}
-\CommentTok{# 1.337877e-03 1.786437e-07}
 \end{Highlighting}
 \end{Shaded}
+
+\(~\)
+
+\center
+
+\includegraphics[width=0.6\linewidth]{11Nnet_files/figure-beamer/unnamed-chunk-23-1}
+
+\end{block}
 
 \end{frame}
 
@@ -2384,7 +2317,9 @@ scaling need to be done within the loop.
 
 The best model here was the model with 50 nodes, the largest model we
 tried. Fitting that model on the full training set and testing on the
-test set
+test set:
+
+\(~\)
 
 \scriptsize
 
@@ -2392,124 +2327,8 @@ test set
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(nnet)}
 \NormalTok{fit50 <-}\StringTok{ }\KeywordTok{nnet}\NormalTok{(train_targets }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ train_data, }\DataTypeTok{size =} \DecValTok{50}\NormalTok{, }\DataTypeTok{linout =} \OtherTok{TRUE}\NormalTok{, }
-    \DataTypeTok{maxit =} \DecValTok{5000}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## # weights:  751
-## initial  value 241589.974327 
-## iter  10 value 5613.385593
-## iter  20 value 2044.139404
-## iter  30 value 1228.682801
-## iter  40 value 814.368935
-## iter  50 value 601.968652
-## iter  60 value 434.755615
-## iter  70 value 280.598202
-## iter  80 value 176.464325
-## iter  90 value 109.361567
-## iter 100 value 72.645796
-## iter 110 value 47.089811
-## iter 120 value 31.023641
-## iter 130 value 20.256250
-## iter 140 value 12.870380
-## iter 150 value 8.162568
-## iter 160 value 5.195619
-## iter 170 value 3.508714
-## iter 180 value 2.356100
-## iter 190 value 1.962084
-## iter 200 value 1.422774
-## iter 210 value 1.037496
-## iter 220 value 0.763227
-## iter 230 value 0.595779
-## iter 240 value 0.447179
-## iter 250 value 0.349084
-## iter 260 value 0.268816
-## iter 270 value 0.218619
-## iter 280 value 0.182905
-## iter 290 value 0.149677
-## iter 300 value 0.119838
-## iter 310 value 0.093532
-## iter 320 value 0.065722
-## iter 330 value 0.041928
-## iter 340 value 0.027514
-## iter 350 value 0.018011
-## iter 360 value 0.013190
-## iter 370 value 0.007777
-## iter 380 value 0.003298
-## iter 390 value 0.001426
-## iter 400 value 0.000706
-## iter 410 value 0.000283
-## iter 420 value 0.000103
-## iter 420 value 0.000090
-## iter 420 value 0.000089
-## final  value 0.000089 
-## converged
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{head}\NormalTok{(}\KeywordTok{summary}\NormalTok{(fit50))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## $n
-## [1] 13 50  1
-## 
-## $nunits
-## [1] 65
-## 
-## $nconn
-##  [1]   0   0   0   0   0   0   0   0   0   0   0   0   0   0   0  14  28
-## [18]  42  56  70  84  98 112 126 140 154 168 182 196 210 224 238 252 266
-## [35] 280 294 308 322 336 350 364 378 392 406 420 434 448 462 476 490 504
-## [52] 518 532 546 560 574 588 602 616 630 644 658 672 686 700 751
-## 
-## $conn
-##   [1]  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8
-##  [24]  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3
-##  [47]  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12
-##  [70] 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7
-##  [93]  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2
-## [116]  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11
-## [139] 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6
-## [162]  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1
-## [185]  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10
-## [208] 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5
-## [231]  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0
-## [254]  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9
-## [277] 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4
-## [300]  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13
-## [323]  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8
-## [346]  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3
-## [369]  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12
-## [392] 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7
-## [415]  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2
-## [438]  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11
-## [461] 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6
-## [484]  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1
-## [507]  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10
-## [530] 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5
-## [553]  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0
-## [576]  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9
-## [599] 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4
-## [622]  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13
-## [645]  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3  4  5  6  7  8
-## [668]  9 10 11 12 13  0  1  2  3  4  5  6  7  8  9 10 11 12 13  0  1  2  3
-## [691]  4  5  6  7  8  9 10 11 12 13  0 14 15 16 17 18 19 20 21 22 23 24 25
-## [714] 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48
-## [737] 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63
-## 
-## $nsunits
-## [1] 64
-## 
-## $decay
-## [1] 0
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
+    \DataTypeTok{maxit =} \DecValTok{5000}\NormalTok{, }\DataTypeTok{trace =}\NormalTok{ F)}
+\CommentTok{# head(summary(fit50))}
 \NormalTok{pred =}\StringTok{ }\KeywordTok{predict}\NormalTok{(fit50, }\DataTypeTok{newdata =}\NormalTok{ test_data, }\DataTypeTok{type =} \StringTok{"raw"}\NormalTok{)}
 \KeywordTok{sqrt}\NormalTok{(}\KeywordTok{mean}\NormalTok{((pred[, }\DecValTok{1}\NormalTok{] }\OperatorTok{-}\StringTok{ }\NormalTok{test_targets)}\OperatorTok{^}\DecValTok{2}\NormalTok{))}
 \end{Highlighting}
@@ -2530,64 +2349,56 @@ test set
 ## [1] 3.535428
 \end{verbatim}
 
-\normalsize
-
-See here:
-\url{https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural_networks_boston_housing.html}
-for running two hidden layers of 64 nodes each with \texttt{keras}.
-(This gave a mean absolute error on the test set of 2.682524 after early
-stopping.)
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\begin{block}{Using \texttt{nnet}}
+\(~\)
 
 \begin{itemize}
 \tightlist
 \item
-  only one hidden layer available
-\item
-  only sigmoid hidden layer activation function
-\item
-  optimization done with an optimization method where the learning rate
-  is automatically calculated
-\item
-  weight decay (\(L_2\) regularization as for the ridge regression) is
-  available (see below)
-\item
-  optimization is supposed to be done until convergence
-\item
-  the possible choice of hyper parameter is the number of notes in the
-  hidden layer
+  See here:
+  \url{https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural_networks_boston_housing.html}
+  for running two hidden layers of 64 nodes each with \texttt{keras}.
+  (This gave a mean absolute error on the test set of 2.68 after early
+  stopping.)
 \end{itemize}
-
-\textbf{We suggest you use \texttt{nnet} in Compulsory exercise 2,
-Problem 3.}
-
-\end{block}
 
 \end{frame}
 
 \begin{frame}{Neural network parts}
 \protect\hypertarget{neural-network-parts}{}
 
+\(~\)
+
 We now focus on the different elements of neural networks.
 
-Illustration drawn in class, motivated from Figure 1.9/3.1 from Chollet
-and Allaire (2018).
+\(~\)
+
+\begin{enumerate}
+[1)]
+\tightlist
+\item
+  Output layer activation
+\item
+  Hidden layer activation
+\item
+  Network architecture
+\item
+  Loss function
+\item
+  Optimizers
+\end{enumerate}
 
 \end{frame}
 
 \begin{frame}
 
-\begin{block}{Model}
+\begin{block}{1) Output layer activation}
 
-\begin{block}{Output layer activation}
+\(~\)
 
 These choices have been guided by solutions in statistics (multiple
 linear regression, logistic regression, multiclass regression)
+
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -2599,73 +2410,82 @@ linear regression, logistic regression, multiclass regression)
   Softmax: for more than two classes classification problems
 \end{itemize}
 
+\(~\)
+
 Remark: it is important that the output activation is matched with an
 appropriate loss function.
 
 \end{block}
 
-\end{block}
-
 \end{frame}
 
 \begin{frame}
 
-\begin{block}{Hidden layer activation}
+\begin{block}{2) Hidden layer activation}
 
-\textbf{Q:} Why can we not just use linar activation function in all
-hidden layers?
-
-\textbf{A:}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\scriptsize
-
-\includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-22-1.pdf}
-
-\end{frame}
-
-\begin{frame}[fragile]
+\(~\)
 
 \begin{itemize}
 \tightlist
 \item
-  Sigmoid: \(g(a)=1/(1+\exp(-a))\). The previous standard choice. These
-  units were found to saturate at a high value when the input was very
-  positive and at a low value when the input was very negative, and that
-  they were only strongly sensitive when the input was close to 0. This
-  saturation lead to problems in the gradient descent routines.
-\end{itemize}
-
-Todo: We may use the problem mentioned here in our recommended
-exercises:
-
-\textbf{However, for our Compulsory exercise 2, Problem 3, there should
-be quite ok to use sigmoid hidden layer activation in the \texttt{nnet}
-R package (default hidden layer activation is sigmoid, and that can not
-be changed).}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{itemize}
-\tightlist
-\item
-  ReLU: \(\phi_h(a)=\max(0,a)\). The standard choice for deep networks
+  ReLU (\(\phi_h(a)=\max(0,a)\)) is standard choice for deep networks
   (many hidden layers and many nodes) today.
 \end{itemize}
 
-The function is piecewise linear, but in total non-linear. It has shown
-to be easy to use with gradient descent --- even though the function is
-not differentiable at 0. As we will touch upon later, we don't expect to
-train a network until the gradient is 0. The derivative from the left at
-0 is 0, and the derivative from the right is 1. See Goodfellow, Bengio,
-and Courville (2016) page 192 for a discussion on this topic.
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Sigmoid
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Radial basis functions: as we looked at in Module 9.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Softplus: \(\phi_h(a)=\ln(1+\exp(a))\)
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Hard tanh: \(\phi_h(a)=\max(-1,\min(1,a))\)
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+Among all the possibilities, ReLU is nowadays the most popular one. Why?
+
+\begin{itemize}
+\item
+  The function is piecewise linear, but \emph{in total non-linear}.
+\item
+  Replacing sigmoid with ReLU is reported to be one of the major changes
+  that have improved the performance of the feedforward
+  networks\footnote{Goodfellow et al, page 226}.
+\item
+  Easy to use with gradient descent -- even though the function is not
+  differentiable at 0. As we will touch upon later, we don't expect to
+  train a network until the gradient is 0. The derivative from the left
+  at 0 is 0, and the derivative from the right is 1. See Goodfellow,
+  Bengio, and Courville (2016) page 192 for a discussion on this topic.
+\end{itemize}
 
 When initializing the parameter going into a ReLU node, the advice is to
 set weight of the bias node to be small and positive, e.g.~0.1, which
@@ -2675,10 +2495,6 @@ in the training set.
 \end{frame}
 
 \begin{frame}
-
-Goodfellow, Bengio, and Courville (2016), page 226, reports this
-(replacing sigmoid with ReLU) to be one of the major changes that have
-improved the performance of the feedforward networks.
 
 ReLU can also be motivated from biology.
 
@@ -2696,52 +2512,57 @@ ReLU can also be motivated from biology.
 According to Goodfellow, Bengio, and Courville (2016), page 197, hidden
 unit design is an \emph{active area of research.}
 
+\centering
+\includegraphics[width=0.45\textwidth,height=\textheight]{Action_potential.png}
+\small
+\url{https://commons.wikimedia.org/wiki/File:Action_potential.svg}
+
 \end{frame}
 
 \begin{frame}
 
-Other possible choices for hidden layer activation functions are:
+\textbf{Q:} Why can we not just use linar activation function in all
+hidden layers?
+
+\textbf{A:}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{3) Network architecture}
+
+\(~\)
+
+Network architecture contains three components:
+
+\(~\)
+
+\begin{itemize}
+\item
+  \emph{\textcolor{red}{Width}}: How many nodes are in each layer of the
+  network?
+\item
+  \emph{\textcolor{red}{Depth}}: How deep is the network (how many
+  hidden layers)?
+\item
+  \emph{\textcolor{red}{Connectivity}}: How are the nodes connected to
+  each other?
+\end{itemize}
+
+\(~\)
+
+This depends on the problem, and here experience is important.
+
+\(~\)
 
 \begin{itemize}
 \tightlist
 \item
-  Radial basis functions: as we looked at in Module 9.
-\item
-  Softplus: \(\phi_h(a)=\ln(1+\exp(a))\)
-\item
-  Hard tanh: \(\phi_h(a)=\max(-1,\min(1,a))\)
+  We will only consider \emph{feedforward networks}, where all nodes in
+  one layer are connected to all the nodes in the next layer. The layers
+  are then \emph{fully connected} and \emph{dense}.
 \end{itemize}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Neural motivation for squashing functions}
-
-\centering
-
-\includegraphics[width=0.7\textwidth,height=\textheight]{Action_potential.png}
-
-\url{https://commons.wikimedia.org/wiki/File:Action_potential.svg}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Network architecture}
-
-How many nodes in the network and how are the nodes connected to
-eachother? This depends on the problem, and here experience is
-important.
-
-We will only consider feedforward networks, where all nodes in one layer
-is connected to all the nodes in the next layer. The layers are then
-\emph{fully connected} and \emph{dense}.
-
-Choosing architecture to us is to chose the \emph{depth of the network
-(how many hidden layers)} and the \emph{width of each layer}.
 
 \end{block}
 
@@ -2752,6 +2573,8 @@ Choosing architecture to us is to chose the \emph{depth of the network
 However, the recent practice, see e.g. Chollet and Allaire (2018),
 Section 4.5.6 and Goodfellow, Bengio, and Courville (2016), page 229, is
 to
+
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -2764,20 +2587,27 @@ to
   and hyperparameter optimization).
 \end{itemize}
 
-This makes the choice of network architecture to be to \emph{choose a
-large enough network}. See also Hyperparameter optimization below.
+\(~\)
+
+This simplifies the choice of network architecture to \emph{choose a
+large enough network}.
 
 \end{frame}
 
 \begin{frame}[fragile]
 
-\begin{block}{Method}
+\begin{block}{4) Loss function (``Method'')}
 
-The method part is to choose the loss function for the output layer.
+\(~\)
 
-The choice of loss function is closely related to the output layer
-activation function. To sum up, the popular problem types, output
-activation and loss functions are:
+\begin{itemize}
+\item
+  The choice of loss function is closely related to the output layer
+  activation function.
+\item
+  To sum up, the popular problem types, output activation and loss
+  functions are:
+\end{itemize}
 
 \begin{longtable}[]{@{}lll@{}}
 \toprule
@@ -2791,49 +2621,6 @@ Classification (C\textgreater{}2) & \texttt{softmax} &
 \texttt{categorical\_crossentropy}\tabularnewline
 \bottomrule
 \end{longtable}
-
-where the mathematical formulas are given for \(n\) training samples.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-Let all network parameters (weights) be denoted by
-\({\boldsymbol \theta}\).
-
-\begin{block}{Mean squared error}
-
-\[ J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n (y_i-{\hat{y}_1({\boldsymbol x}_i)})^2\]
-\(\hat{y}_1({\boldsymbol x}_i)\) is the output from the linear output
-node, and \(y_i\) is the response.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Binary cross-entropy}
-
-\[ J({\boldsymbol \theta})=-\frac{1}{n}\sum_{i=1}^n (y_i\ln({\hat{y}_1({\boldsymbol x}_i)})+(1-y_i)\ln(1-{\hat{y}_1({\boldsymbol x}_i)})\]
-
-where \(\hat{y}_1({\boldsymbol x}_i)\) is the output from the sigmoid
-output node, and \(y_i\) is the 0/1 observed class.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Categorical cross-entropy}
-
-\[ J({\boldsymbol \theta})=-\frac{1}{n}\sum_{i=1}^n\frac{1}{C} \sum_{c=1}^C (y_{ic}\ln({\hat{y}_c({\boldsymbol x}_i)})\]
-where \(\hat{y}_c({\boldsymbol x}_i)\) is the output from the softmax
-output node \(c\) and \(y_{ic}\) is the observed one-hot coding (0/1)
-for class \(c\).
 
 \end{block}
 
@@ -2872,7 +2659,7 @@ give the loss functions as related to the negative of the loglikelihood.
 
 \begin{frame}
 
-\begin{block}{Optimizors}
+\begin{block}{5) Optimizors}
 
 Let the unknown parameters be denoted \({\boldsymbol \theta}\) (what we
 have previously denotes as \(\alpha\)s and \(\beta\)s), and the loss
@@ -3578,7 +3365,7 @@ greyscale). Problem type: Multiclass classification based on image data.
 
 \scriptsize
 
-\includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-23-1.pdf}
+\includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-25-1.pdf}
 
 \end{frame}
 

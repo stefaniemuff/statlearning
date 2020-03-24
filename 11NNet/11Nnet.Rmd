@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "March 27 and 30, 2020"
 fontsize: 10pt
 output:
-  # beamer_presentation:
-  #   keep_tex: yes
-  #   fig_caption: false
-  #   latex_engine: xelatex
-  #   theme: "Singapore"
-  #   colortheme: "default"
-  #   font: "serif"
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+    theme: "Singapore"
+    colortheme: "default"
+    font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -456,7 +456,7 @@ $~$
 Here we compare 
 
 * the MLR solution with `lm` 
-* the neural network solution with `nnet` \footnote{which in fact improves upon the gradient descent with Hessian information and the BFGS-algorithm. BFGS is a quasi-Newton method (also known as a variable metric algorithm), specifically that published simultaneously in 1970 by Broyden, Fletcher, Goldfarb and Shanno. This uses function values and gradients to build up a picture of the surface to be optimized.}
+* the neural network solution with `nnet` \footnote{Uses an improved gradient descent with Hessian information and the BFGS-algorithm. BFGS is a quasi-Newton method (also known as a variable metric algorithm), specifically that published simultaneously in 1970 by Broyden, Fletcher, Goldfarb and Shanno. This uses function values and gradients to build up a picture of the surface to be optimized.}
 
 ---
 
@@ -1060,83 +1060,68 @@ can approximate any (Borel measurable) function from one finite-dimensional spac
 
 ---
 
-The universal approximation theorem holds for the sigmoid (logistic) and ReLU activation functions in the hidden layer.
+The universal approximation theorem holds for 
 
-$~$
+* The **sigmoid** $\phi(a)=1/(1+\exp(-a))$ (logistic) activation functions. 
+* The **rectified linear unit (ReLU)** $\phi_h(a)=\max(0,a)$ activation functions 
 
+in the hidden layer.
 
-**The rectified linear unit ReLU** $\phi_h(a)=\max(0,a)$
 
 \center
-```{r,echo=FALSE,fig.width=4,fig.height=3.5,out.width="60%"}
-x=seq(-3,3,length=3)
+```{r,echo=FALSE,fig.width=7,fig.height=3.5,out.width="90%"}
+library(ggplot2); library(ggpubr)
+x=seq(-6,6,length=3)
 y=pmax(0,x)
-qplot(x,y,geom="line",main="")
+p=qplot(x,y,geom="line",main="ReLU")
+pp=ggplot(data.frame(x=c(-6,6)), aes(x))+
+  xlab(expression(x))+
+  ylab(expression(mu))+
+    stat_function(fun=function(x) exp(x)/(1+exp(x)), geom="line", colour="red")+
+  ggtitle("Sigmoid")
+ggarrange(pp,p)
+# x=seq(-3,3,length=3)
+# y=pmax(0,x)
+# qplot(x,y,geom="line",main="")
 ```
 
 ---
 
-Earlier, the default activation function for the hiddan layer was the sigmoid, but now the ReLU is default activiation function to be used in the hidden layer(s) of a feedforward network — in particular when more than one hidden layer is used. The ReLU function is piecewise linear, but in total non-linear.
+* The ReLU activiation function has replaced the sigmoid function as default in the hidden layer(s) of a feedforward network.
 
----
+$~$
 
-Even though a large feedforward network with one hidden layer may be able to represent a desired function, we may not be able to estimate the parameters of the function,
+* Even though a large feedforward network with one hidden layer may be able to represent a desired function, we may not be able to estimate the parameters of the function:
+    * we may choose a too many or too few nodes in the hidden layer.
+    * our optimization routine may fail.
+    * we may overfit/underfit the training data.
 
-* we may choose a too many or too few nodes in the hidden layer
-* our optimization routine may fail
-* we may overfit/underfit the training data
+$~$
 
-Therefore, sometimes networks with more than one hidden layer is used — with fewer total number of nodes but more layers. A network with many hidden layers is called a _deep network_.
+* Alternative: networks with more than one hidden layer, but fewer total number of nodes but more layers. A network with _many hidden layers_ is called a _\textcolor{red}{deep network}_.
 
----
-
-In module 7 we looked at additive models of "complex" functions (splines) of one covariate each.
-
-Now we look at many rather simple non-linear function of linear combinations of covariates, and non-linear functions of non-linear functions of linear combinations of covariates.
-
-**Q:** Is one better than the other when it comes to interpretation, and to prediction?
 
 
 ---
 
 ### The `nnet` R package
 
-In order to not make this too complex (since we only have one week to work with this module), we will use the `nnet` R package by Brian Ripley (instead of the currently very popular `keras` package for deep learning — however, we will also present the `keras` package for completeness).
+$~$
 
-`nnet` fits one hidden layer with sigmoid activiation function. The implementation is not gradient descent, but instead BFGS using `optim`.
+* For simplicity (since we only have one week to work with this module), we will use the `nnet` R package by Brian Ripley instead of the currently very popular `keras` package for deep learning (the `keras` package will be presented for completeness).
+\vspace{2mm}
+
+* `nnet` fits _one hidden layer_ with _sigmoid activiation function_. The implementation is not gradient descent, but instead BFGS using `optim`.
+\vspace{2mm}
 
 <!-- The function `nnetHess`can be used to check if a local minimum has been found. -->
 
-**Description:** Fit single-hidden-layer neural network, possibly with skip-layer connections.
+* Type `?nnet()` into your R-console to see the arguments of `nnet()`.
+\vspace{2mm}
 
-Usage:
-(for formula class): `nnet(formula, data, weights, ..., subset, na.action, contrasts = NULL)`
+* If the response in formula is a factor, an appropriate classification network is constructed; this has one output and entropy fit if the number of levels is two, and a number of outputs equal to the number of classes and a softmax output stage for more levels.
 
-`nnet(x, y, ...)`
 
----
-
-Some arguments to `nnet()`
-
-* formula, or x and y
-* x= input variables, matrix or data frame
-* y= response (target) values, if factor=classification
-* size: number of units in the hidden layer. Can be zero if there are skip-layer units.
-* data: the dataset to be used
-* subset: index of entries in data that is the training sample
-
-If the response in formula is a factor, an appropriate classification network is constructed; this has one output and entropy fit if the number of levels is two, and a number of outputs equal to the number of classes and a softmax output stage for more levels.
-
----
-
-* linout: switch for linear output units. Default logistic output units.
-* entropy: switch for entropy (= maximum conditional likelihood) fitting. Default by least-squares.
-* softmax	switch for softmax (log-linear model) and maximum conditional likelihood fitting. linout, entropy, softmax and censored are mutually exclusive.
-* censored: A variant on softmax, in which non-zero targets mean possible classes. Thus for softmax a row of (0, 1, 1) means one example each of classes 2 and 3, but for censored it means one example whose class is only known to be 2 or 3.
-* skip: switch to add skip-layer connections from input to output.
-* decay: parameter for weight decay. Default 0.
-* maxit: maximum number of iterations. Default 100.
-* MaxNWts: The maximum allowable number of weights. There is no intrinsic limit in the code, but increasing MaxNWts will probably allow fits that are very slow and time-consuming.
 
 ---
 
@@ -1144,15 +1129,17 @@ If the response in formula is a factor, an appropriate classification network is
 
 ## Boston house prices
 
-The objective here is to predict the median price of homes in a given Boston suburb in the mid-1970s, and 10 input variables are given.
+**Objective**: To predict the median price of owner-occupied homes in a given Boston suburb in the mid-1970s using 10 input variables.
 
 This data set is both available in the `MASS` and `keras` R package.
 
+$~$
+
 ### Preparing the data
 
-* Few data points: only 506, split between 404 training samples and 102 test samples (this split already done in the `keras` library)
+* Only 506, split between 404 training samples and 102 test samples (this split already done in the `keras` library)
 * Each feature in the input data (for example, the crime rate) has a different scale, some values are proportions, which take values between 0 and 1; others take values between 1 and 12, others between 0 and 100, and so on.
-* The targets are the median values of owner-occupied homes, in thousands of dollars.
+
 
 ---
 
@@ -1164,15 +1151,29 @@ dataset <- dataset_boston_housing()
 c(c(train_data, train_targets), c(test_data, test_targets)) %<-% dataset
 str(train_targets)
 head(train_data)
-library(MASS) #no names for columns - take that from other source
-colnames(Boston)
-colnames(train_data)=colnames(Boston)[-13]
-colnames(test_data)=colnames(Boston)[-13]
 ```
+
+$~$
+
+\normalsize
+The column names are missing (could get them by using the Boston dataset loaded from the MASS library).
+
+<!-- \normalsize -->
+<!-- The column names are missing, so we take them from the `MASS` library: -->
+
+<!-- \scriptsize -->
+<!-- ```{r} -->
+<!-- library(MASS)   -->
+<!-- colnames(Boston) -->
+<!-- colnames(train_data)=colnames(Boston)[-14] -->
+<!-- colnames(test_data)=colnames(Boston)[-14] -->
+<!-- ``` -->
 
 ---
 
-A widespread best practice to deal with such data is to do feature-wise normalization. This is to make the optimization easier with gradient based methods.
+* To make the optimization easier with gradient based methods do feature-wise normalization.
+
+$~$
 
 \scriptsize
 ```{r, message=FALSE, warning=FALSE}
@@ -1183,8 +1184,11 @@ train_data <- scale(train_data, center = mean, scale = std)
 test_data <- scale(test_data, center = mean, scale = std)
 ```
 
+$~$
+
 \normalsize
-Note that the quantities used for normalizing the test data are computed using the training data. You should never use in your workflow any quantity computed on the test data, even for something as simple as data normalization. This also means that we need to do this standardization again (from scratch) if we need to do cross-validation.
+
+* **Note**: the quantities used for normalizing the test data are computed using the training data. You should never use in your workflow any quantity computed on the test data, even for something as simple as data normalization. This also means that we need to do this standardization again (from scratch) if we need to do cross-validation.
 
 ---
 
@@ -1203,19 +1207,26 @@ mean(abs(pred[,1]-test_targets))
 
 ---
 
-Now, use cross-validation to find the best number of hidden nodes — but that took some time, so only results shown below. Remember the scaling need to be done within the loop.
+### How to find best number of hidden nodes?
+
+$~$
+
+$\rightarrow$ Cross-validation! (Time-consumring, so only results shown below.)
+
+$~$
+
 
 \scriptsize
 
-```{r,eval=FALSE}
+```{r}
 grid=c(5,10,15,20,25,30,50)
+```
 
-k <- 4
+```{r,echo=F,eval=F}
 set.seed(123)
 indices <- sample(1:nrow(train_data))
-folds <- cut(indices, breaks = k, labels = FALSE)
+folds <- cut(indices, breaks = 4, labels = FALSE)
 # have now assigned the traning data to 4 diffeent folds all of the same size (101)
-
 resmat=matrix(NA,ncol=k,nrow=length(grid))
 for (j in 1:k)
 {
@@ -1233,111 +1244,116 @@ for (j in 1:k)
     resmat[i,j]=sum((pred[,1]-train_targets[thisvalid])^2)
   }}
  mse=apply(resmat,1,sum)/nrow(train_data)
- plot(grid,mse,type="l")
- mse
-# 7.727735e+00 2.550359e+00 9.582672e-01 3.458643e-01 4.290271e-01 1.337877e-03 1.786437e-07
+```
+ 
+```{r,echo=F}
+ mse <- c(6.441470, 2.185833, 7.800200e-01, 1.521461e-01, 1.284062e-01,7.692416e-04, 2.451387e-07)
+```
+ 
+ $~$
+ 
+ \center
+```{r,fig.width=4.5,fig.height=4,out.width="60%",echo=F}
+ plot(grid,mse,type="l",xlab="No of nodes in hidden layer",ylab="MSE")
 ```
 
 ---
 
-The best model here was the model with 50 nodes, the largest model we tried. Fitting that model on the full training set and testing on the test set
+The best model here was the model with 50 nodes, the largest model we tried. Fitting that model on the full training set and testing on the test set:
+
+$~$
 
 \scriptsize
-```{r}
+```{r, echo=T, eval=T}
 library(nnet)
-fit50<- nnet(train_targets~., data=train_data,size=50,linout=TRUE,maxit=5000)
-head(summary(fit50))
+fit50<- nnet(train_targets~., data=train_data,size=50,linout=TRUE,maxit=5000,trace=F)
+# head(summary(fit50))
 pred=predict(fit50,newdata=test_data,type="raw")
 sqrt(mean((pred[,1]-test_targets)^2))
 mae=mean(abs(pred[,1]-test_targets))
 mae
 ```
 
-\normalsize
-See here: <https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural_networks_boston_housing.html> for running two hidden layers of 64 nodes each with `keras`. (This gave a mean absolute error on the test set of 2.682524 after early stopping.)
+$~$
+ 
+* See here: <https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural_networks_boston_housing.html> for running two hidden layers of 64 nodes each with `keras`. (This gave a mean absolute error on the test set of 2.68 after early stopping.)
 
----
-
-## Using `nnet`
-
-* only one hidden layer available
-* only sigmoid hidden layer activation function
-* optimization done with an optimization method where the learning rate is automatically calculated
-* weight decay ($L_2$ regularization as for the ridge regression) is available (see below)
-* optimization is supposed to be done until convergence
-* the possible choice of hyper parameter is the number of notes in the hidden layer
-
-**We suggest you use `nnet` in Compulsory exercise 2, Problem 3.**
 
 ---
 
 
 # Neural network parts
 
+$~$
+
 We now focus on the different elements of neural networks.
 
-Illustration drawn in class, motivated from Figure 1.9/3.1 from @kerasR.
+$~$
+
+1) Output layer activation
+2) Hidden layer activation
+3) Network architecture
+4) Loss function
+5) Optimizers
+
 
 ---
 
-## Model
+## 1) Output layer activation
 
-### Output layer activation
+$~$
 
 These choices have been guided by solutions in statistics (multiple linear regression, logistic regression, multiclass regression)
+
+$~$
 
 * Linear: for regression problems
 * Sigmoid: for two-class classification problems
 * Softmax: for more than two classes classification problems
 
+$~$
+
 Remark: it is important that the output activation is matched with an appropriate loss function.
 
 ---
 
-### Hidden layer activation
+## 2) Hidden layer activation
 
+$~$
 
-**Q:** Why can we not just use linar activation function in all hidden layers?
+* ReLU  ($\phi_h(a)=\max(0,a)$) is standard choice for deep networks (many hidden layers and many nodes) today.
 
-**A:** 
-<!-- Then each layer would only be able to do linear transformations of the input data and a deep stack of linear layers would still implement a linear operation. The activation functions sigmoid and relu add non-linearity to the model. And, the universial approximation property is dependent on a squashing type activation function. -->
+$~$
 
----
+* Sigmoid
 
-\scriptsize
+$~$
 
-```{r,echo=FALSE}
-library(ggplot2); library(ggpubr)
-x=seq(-6,6,length=3)
-y=pmax(0,x)
-p=qplot(x,y,geom="line",main="ReLU")
-pp=ggplot(data.frame(x=c(-6,6)), aes(x))+
-  xlab(expression(x))+
-  ylab(expression(mu))+
-    stat_function(fun=function(x) exp(x)/(1+exp(x)), geom="line", colour="red")+
-  ggtitle("Sigmoid")
-ggarrange(p,pp)
-```
+* Radial basis functions: as we looked at in Module 9.
+
+$~$
+
+* Softplus: $\phi_h(a)=\ln(1+\exp(a))$
+
+$~$
+
+* Hard tanh: $\phi_h(a)=\max(-1,\min(1,a))$
 
 ---
 
-* Sigmoid: $g(a)=1/(1+\exp(-a))$. The previous standard choice. These units were found to saturate at a high value when the input was very positive and at a low value when the input was very negative, and that they were only strongly sensitive when the input was close to 0. This saturation lead to problems in the gradient descent routines.
+Among all the possibilities, ReLU is nowadays the most popular one. Why?
 
-Todo: We may use the problem mentioned here in our recommended exercises:
+* The function is piecewise linear, but _in total non-linear_. 
 
-**However, for our Compulsory exercise 2, Problem 3, there should be quite ok to use sigmoid hidden layer activation in the `nnet` R package (default hidden layer activation is sigmoid, and that can not be changed).**
+* Replacing sigmoid with ReLU is reported to be one of the major changes that have improved the performance of the feedforward networks\footnote{Goodfellow et al, page 226}.
 
----
-
-* ReLU: $\phi_h(a)=\max(0,a)$. The standard choice for deep networks (many hidden layers and many nodes) today.
-
-The function is piecewise linear, but in total non-linear. It has shown to be easy to use with gradient descent — even though the function is not differentiable at 0. As we will touch upon later, we don't expect to train a network until the gradient is 0. The derivative from the left at 0 is 0, and the derivative from the right is 1. See @goodfellow page 192 for a discussion on this topic.
+* Easy to use with gradient descent -- even though the function is not differentiable at 0. As we will touch upon later, we don't expect to train a network until the gradient is 0. The derivative from the left at 0 is 0, and the derivative from the right is 1. See @goodfellow page 192 for a discussion on this topic.
 
 When initializing the parameter going into a ReLU node, the advice is to set weight of the bias node to be small and positive, e.g. 0.1, which makes it likely that node will be active (larger than 0) for most inputs in the training set.
 
 ---
 
-@goodfellow, page 226, reports this (replacing sigmoid with ReLU) to be one of the major changes that have improved the performance of the feedforward networks.
+
 
 ReLU can also be motivated from biology.
 
@@ -1347,51 +1363,72 @@ ReLU can also be motivated from biology.
 
 According to @goodfellow, page 197, hidden unit design is an _active area of research._
 
----
-
-Other possible choices for hidden layer activation functions are:
-
-* Radial basis functions: as we looked at in Module 9.
-* Softplus: $\phi_h(a)=\ln(1+\exp(a))$
-* Hard tanh: $\phi_h(a)=\max(-1,\min(1,a))$
-
----
-
-### Neural motivation for squashing functions
-
-
-\centering
-![ ](Action_potential.png){width=70%}
-
+ \centering
+![ ](Action_potential.png){width=45%}
+\small
 <https://commons.wikimedia.org/wiki/File:Action_potential.svg>
 
+
 ---
 
-### Network architecture
+**Q:** Why can we not just use linar activation function in all hidden layers?
+
+**A:** 
+<!-- Then each layer would only be able to do linear transformations of the input data and a deep stack of linear layers would still implement a linear operation. The activation functions sigmoid and relu add non-linearity to the model. And, the universial approximation property is dependent on a squashing type activation function. -->
 
 
-How many nodes in the network and how are the nodes connected to eachother? This depends on the problem, and here experience is important.
 
-We will only consider feedforward networks, where all nodes in one layer is connected to all the nodes in the next layer. The layers are then _fully connected_ and _dense_.
 
-Choosing architecture to us is to chose the _depth of the network (how many hidden layers)_ and the _width of each layer_.
+---
+
+## 3) Network architecture
+
+$~$
+
+Network architecture contains three components:
+
+$~$
+
+* _\textcolor{red}{Width}_: How many nodes are in each layer of the network? 
+
+* _\textcolor{red}{Depth}_: How deep is the network (how many hidden layers)?
+
+* _\textcolor{red}{Connectivity}_: How are the nodes connected to each other? 
+
+
+$~$
+
+This depends on the problem, and here experience is important.
+
+$~$
+
+* We will only consider _feedforward networks_, where all nodes in one layer are connected to all the nodes in the next layer. The layers are then _fully connected_ and _dense_.
+
+
 
 ---
 
 However, the recent practice, see e.g. @kerasR, Section 4.5.6 and @goodfellow, page 229, is to
 
+$~$
+
 * choose a too large network (too many nodes and/or too many layers) so that if trained until convergence (optimum) then the this would result in overfitting, and
 * then use other means to avoid this (various variants of regularization and hyperparameter optimization).
 
-This makes the choice of network architecture to be to _choose a large enough network_. See also Hyperparameter optimization below.
+$~$
+
+This simplifies the choice of network architecture to _choose a large enough network_.
+
 
 ---
 
-## Method
+## 4) Loss function ("Method")
 
-The method part is to choose the loss function for the output layer.
+$~$
 
-The choice of loss function is closely related to the output layer activation function. To sum up, the popular problem types, output activation and loss functions are:
+* The choice of loss function is closely related to the output layer activation function. 
+
+* To sum up, the popular problem types, output activation and loss functions are:
 
 | Problem | Output activation | Loss function |
 |--------------|-----------------------|---------------|
@@ -1399,29 +1436,37 @@ The choice of loss function is closely related to the output layer activation fu
 | Classification (C=2)| `sigmoid` | `binary_crossentropy` |
 | Classification (C>2)| `softmax` | `categorical_crossentropy` |
 
-where the mathematical formulas are given for $n$ training samples.
+<!-- where the mathematical formulas are given for $n$ training samples. -->
 
----
+<!-- --- -->
 
-Let all network parameters (weights) be denoted by ${\boldsymbol \theta}$.
+<!-- ### Mean squared error -->
 
-### Mean squared error
-$$ J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n (y_i-{\hat{y}_1({\boldsymbol x}_i)})^2$$
-$\hat{y}_1({\boldsymbol x}_i)$ is the output from the linear output node, and $y_i$ is the response.
+<!-- $~$ -->
 
----
+<!-- $$ J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n (y_i-{\hat{y}_1({\boldsymbol x}_i)})^2$$ -->
+<!-- $\hat{y}_1({\boldsymbol x}_i)$ is the output from the linear output node, and $y_i$ is the response.  -->
 
-### Binary cross-entropy
-$$ J({\boldsymbol \theta})=-\frac{1}{n}\sum_{i=1}^n (y_i\ln({\hat{y}_1({\boldsymbol x}_i)})+(1-y_i)\ln(1-{\hat{y}_1({\boldsymbol x}_i)})$$
+<!-- All network parameters (weights) are denoted by ${\boldsymbol \theta}$. -->
 
-where $\hat{y}_1({\boldsymbol x}_i)$ is the output from the sigmoid output node, and $y_i$ is the 0/1 observed class.
+<!-- --- -->
 
----
+<!-- ### Binary cross-entropy -->
 
-### Categorical cross-entropy
+<!-- $~$ -->
 
-$$ J({\boldsymbol \theta})=-\frac{1}{n}\sum_{i=1}^n\frac{1}{C} \sum_{c=1}^C (y_{ic}\ln({\hat{y}_c({\boldsymbol x}_i)})$$
-where $\hat{y}_c({\boldsymbol x}_i)$ is the output from the softmax output node $c$ and $y_{ic}$ is the observed one-hot coding (0/1) for class $c$.
+<!-- $$ J({\boldsymbol \theta})=-\frac{1}{n}\sum_{i=1}^n (y_i\ln({\hat{y}_1({\boldsymbol x}_i)})+(1-y_i)\ln(1-{\hat{y}_1({\boldsymbol x}_i)})$$ -->
+
+<!-- where $\hat{y}_1({\boldsymbol x}_i)$ is the output from the sigmoid output node, and $y_i$ is the 0/1 observed class. -->
+
+<!-- --- -->
+
+<!-- ### Categorical cross-entropy -->
+
+<!-- $~$ -->
+
+<!-- $$ J({\boldsymbol \theta})=-\frac{1}{n}\sum_{i=1}^n\frac{1}{C} \sum_{c=1}^C (y_{ic}\ln({\hat{y}_c({\boldsymbol x}_i)})$$ -->
+<!-- where $\hat{y}_c({\boldsymbol x}_i)$ is the output from the softmax output node $c$ and $y_{ic}$ is the observed one-hot coding (0/1) for class $c$. -->
 
 ---
 
@@ -1438,7 +1483,7 @@ Observe that we have only given the formula for the loss function, and not expli
 
 ---
 
-## Optimizors
+## 5) Optimizors
 
 Let the unknown parameters be denoted ${\boldsymbol \theta}$ (what we have previously denotes as $\alpha$s and $\beta$s), and the loss function to be minimized $J({\boldsymbol \theta})$.
 
