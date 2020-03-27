@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "March 27 and 30, 2020"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -33,7 +33,7 @@ whichformat="latex"
 
 ---
 
-Last update: March 24, 2020
+Last update: March 27, 2020
 
 --- 
 
@@ -45,13 +45,29 @@ Last update: March 24, 2020
 
 ## Learning material for this module
 
+$~$
 
-Todo
+**Primary material:** 
+
+These slides 
+
+$~$
+
+**Secondary material:**
+\vspace{2mm}
+
+* Videos on neural networsk and back propagation
+    + [Video 1](https://www.youtube.com/watch?v=aircAruvnKk)
+    + [Video 2](https://www.youtube.com/watch?v=IHZwWFHWa-w)
+    + [Video 3](https://www.youtube.com/watch?v=Ilg3gGewQ5U)
+    + [Video 4](https://www.youtube.com/watch?v=tIeHLnjs5U8)
 
 \vspace{2mm}
 
-<!-- * [Classnotes 25.03.2019](https://www.math.ntnu.no/emner/TMA4268/2019v/notes/M11L1notes.pdf) -->
-<!-- * [Classnotes 28.03.2019](https://www.math.ntnu.no/emner/TMA4268/2019v/notes/M11L2notes.pdf) -->
+* Background material: Chapters 6-8 @goodfellow 
+<https://www.deeplearningbook.org>
+
+$~$
 
 See also _References and further reading_ (last slide), for further reading material.
 
@@ -81,7 +97,7 @@ $~$
 $~$
 
 * Deep learning
-    + the timeline
+    + The timeline
     + Keras
  
 
@@ -159,7 +175,7 @@ $~$
 
 $~$
 
-* With the field of _machine learning_ the shift is that a system is _trained_ rather than explicitly programmed.
+
 
 
 <!-- ![](AI_ML_DL.png) -->
@@ -167,6 +183,10 @@ $~$
 ---
 
 ## Machine learning
+
+$~$
+
+* With the field of _\textcolor{red}{machine learning}_ the shift is that a system is _\textcolor{red}{trained}_ rather than explicitly programmed.
 
 $~$
 
@@ -184,9 +204,26 @@ $~$
 
 According to @kerasR (page 19): 
 \vspace{2mm}
-\begin{quote}
-Machine learning isn't mathematics or physics, where major advancements can be done with a pen and a piece of paper. It's an engineering science.
-\end{quote}
+
+_Machine learning isn't mathematics or physics, where major advancements can be done with a pen and a piece of paper. It's an engineering science._
+
+
+---
+
+## Deep learning
+
+$~$
+
+* _Deep_ does not refer to a deeper understanding.
+
+$~$
+
+* Rather, deep referes to the _layers of representation_, for example in a neural network. 
+
+$~$
+
+\center
+![](deep.png){width=80%}
 
 ---
 
@@ -306,7 +343,7 @@ plotnet(fitnnet)
 
 \normalsize
 * All lines going into the output node signifies that we multiply the covariate values in the input nodes with the weights (regression coefficients), and then sum. 
-* This sum can be sent through a socalled _activition function_ (here just the identity function).
+* This sum can be sent through a so-called _activition function_ (here just the identity function).
 
 ---
 
@@ -331,7 +368,9 @@ where $\phi_o(x)=x$ (identity function).
 * In the statistics world we would have written $\hat{y}_1({\boldsymbol x}_i)$ to specify that we are estimating a predicted  value of the response for the given covariate value. To be able to distinguish this predicted response from the observed response we use the notation:
 $$ \hat{y}_1({\boldsymbol x}_i)=\phi_o(w_0+w_1 x_{i1}+\cdots + w_p x_{ip})$$
 
-The only difference to our MLR model is then that we would have called the $w$s $\hat{\beta}$s instead.
+$~$
+
+The only difference to our multiple linear regression (MLR) model is then that we would have called the $w$s $\hat{\beta}$s instead.
 
 
 
@@ -362,6 +401,8 @@ We now translate what we did for the regression setup into the neural networks w
 
 1. Replace the parameters $\boldsymbol\beta$ with _network weights_ $\boldsymbol w$.
 
+$~$
+
 2. Replace the RSS in our _training data set_ with the following _\textcolor{red}{loss function}_  (_mean squared error_)
 $$ J({\boldsymbol w})=\frac{1}{n}\sum_{i=1}^n (y_i-{\hat{y}_1({\boldsymbol x}_i)})^2 \ ,$$
 where $J({\boldsymbol w})$ indicates that the unknown parameters are the weights ${\boldsymbol w}$.
@@ -369,29 +410,30 @@ where $J({\boldsymbol w})$ indicates that the unknown parameters are the weights
 ---
 
 3.  Replace _minimizing_ the loss function (RSS) via
+\vspace{2mm}
      + calculate the derivative of the loss function with respect to each of our parameters
-     + solve the $(p+1)$ linear equations.
+     + _\textcolor{red}{more general minization procedures}_ that work also when the loss function does not have a closed form.
      
      $~$
      
-     $\rightarrow$ _\textcolor{red}{more general minization procedures}_ that work also when the loss function does not have a closed form.
+     Main idea: The gradient descent algorithm
 
 
 ---
 
-## Finding optimal weights: Algorithm
+## Finding optimal weights: Gradient descent algorithm
 
 \vspace{2mm}
 
 1. Let $t=0$ and denote the given initial values for the weights ${\boldsymbol w}^{(t)}$,
 \vspace{2mm}
-2. Until convergence, repeat a) to d)
-    a) Calculate the predictions ${\hat{y}_1({\boldsymbol x}_i)}$
-    b) calculate the loss function $J({\boldsymbol w}^{(t)})$,
-    c) find the gradient (direction) in the $(p+1)$-dimensional space of the weights, and evaluate this at the current weight values $\nabla J({\boldsymbol w}^{(0)})={\frac{\partial J}{\partial {\boldsymbol w}}}({\boldsymbol w}^{(0)})$
-    d) go with a given step length (learning rate) $\lambda$ in the direction of the negative of the gradient of the loss function to get 
-$${\boldsymbol w}^{(t+1)}={\boldsymbol w}^{(t)} - \lambda \nabla J({\boldsymbol w}^{(t)})$$
-    e) Set $t=t+1$, go to a) and continue to e) several times until you arrive at a (local) optimum
+2. Until finding a (local) optimum, repeat a) to e)
+    a) Calculate the predictions ${\hat{y}_1({\boldsymbol x}_i)}$.
+    b) Calculate the loss function $J({\boldsymbol w}^{(t)})$.
+    c) Find the gradient (direction) in the $(p+1)$-dimensional space of the weights, and evaluate this at the current weight values $\nabla J({\boldsymbol w}^{(t)})={\frac{\partial J}{\partial {\boldsymbol w}}}({\boldsymbol w}^{(t)})$.
+    d) Go with a given step length (learning rate) $\lambda$ in the direction of the negative of the gradient of the loss function to get 
+$${\boldsymbol w}^{(t+1)}={\boldsymbol w}^{(t)} - \lambda \nabla J({\boldsymbol w}^{(t)}) \ .$$
+    e) Set $t=t+1$.
 \vspace{2mm}
 3. The final values of the weights in that $(p+1)$ dimensional space are our parameter estimates and your network is _trained_.
 
@@ -460,7 +502,7 @@ Here we compare
 
 ---
 
-### Continuous outcome
+## Example 1: Continuous outcome (linear regression)
 
 $~$
 
@@ -480,7 +522,7 @@ cbind(fitnnet$wts,fit$coefficients)
 
 ---
 
-## Binary outcome: Diabetes
+## Example 2: Binary outcome (logistic regression)
 \vspace{2mm}
 
 Aim is to predict if a person has diabetes\footnote{Logistic regression is the "hello world" of machine learning.}. The data stem from a population of women of Pima Indian heritage in the US, available in the R `MASS` package. The following information is available for each woman:
@@ -594,7 +636,7 @@ $~$
 $\phi_o(x)=\frac{1}{1+\exp(-x)}$, often denoted as $\sigma(x)$. Again, we prefer to use $\hat{y}_1({\boldsymbol x}_i)$ and get:
 
 $$ 
-\hat{y}_1({\boldsymbol x}_i)=\frac{1}{1+\exp(-(w_0+w_1 x_{i1}+\cdots + w_r x_{ir}))} \in (0,1) \ . 
+\hat{y}_1({\boldsymbol x}_i)= \sigma({\boldsymbol x}_i) = \frac{1}{1+\exp(-(w_0+w_1 x_{i1}+\cdots + w_r x_{ir}))} \in (0,1) \ . 
 $$
  
 
@@ -610,11 +652,11 @@ which is a scaled version of the negative of the binomial loglikelihood!
 
 $~$
 
-* Optimization is done also with gradient descent, but we need the chain rule (due to the activation function) to get the partial derivatives for the gradient direction. 
+* Optimization is done also with _\textcolor{red}{gradient descent}_, but we need the chain rule (due to the activation function) to get the partial derivatives for the gradient direction. 
 
 $~$
 
-* Same backpropagation algorithm is again applicable, using the activation and loss functions given here.
+* We need the _\textcolor{red}{backpropagation algorithm}_, using the activation and loss functions given here.
 
 ---
 
@@ -622,7 +664,7 @@ $~$
 
 $~$
 
-\scriptsize
+\tiny
 ```{r,echo=FALSE}
 library(MASS)
 Pima.tr$diabetes=as.numeric(Pima.tr$type)-1
@@ -685,13 +727,15 @@ Why can NN and logistic regression lead to such different results?
 
 ---
 
-# Multiclass regression
+## Example 3: Categorical outcome (multiclass regression)
 
 \textbf{Which type of iris species?}
 
 $~$
 
 The `iris` flower data set was introduced by the British statistician and biologist Ronald Fisher in 1936. 
+
+$~$
 
 * **Three plant species**: \{setosa, virginica, versicolor\}.
 * **Four features**: `Sepal.Length`, `Sepal.Width`, `Petal.Length` and `Petal.Width`.  
@@ -752,7 +796,7 @@ where $p_{iC}=1-p_{i1}-p_{i2}-\cdots -p_{i,C-1}$, and the regression parameters 
 
 $~$
 
-* Parameter estimation is done in the same way as for the logistic regression, with the Fisher scoring algorithm (with score vector and Fisher information matrix).
+* Parameter estimation is done in the same way as for the logistic regression, with the Fisher scoring algorithm.
 
 $~$
 
@@ -767,7 +811,7 @@ $~$
 
 * Builds an output layer with $C$ nodes and corresponding 0/1 targets (responses) using the dummy variable coding of the responses, called _\textcolor{red}{one-hot coding}_.
 
-$~$
+\vspace{2mm}
 
 * The activation function for the ouput layer is called _\textcolor{red}{softmax}_. For each class $c=1,\ldots, C$ it is given as
 $$
@@ -775,14 +819,15 @@ $$
 $$
 where each ${\boldsymbol w}_s$ is a $r+1$ dimensional vector of weights.
 
-
+\vspace{2mm}
 
 * Note: there is some redundancy here, since $\sum_{c=1}^C {\hat y}_{c}({\boldsymbol x}_i)=1$, so we could have had $C-1$ output nodes, but this is not done.
 
-$~$
+\vspace{2mm}
 
 * The focus of neural networks is not to interpret the weights, and there is no need to assume full rank of a matrix with output nodes.
 
+\vspace{2mm}
 
 **Q:** How many parameters are we estimating?
 
@@ -825,13 +870,15 @@ iris_train = ird[train, ]
 iris_test = ird[-train, ]
 ```
 
+$~$
+
 \normalsize
 Then fit the `nnet()` (by default using the softmax activation function)
 
 \scriptsize
 ```{r}
-set.seed(123)
-iris.nnet <- nnet(species ~ ., data = ird, subset=train,  size = 0, skip=TRUE, rang = 0.1, maxit = 200)
+set.seed(1234)
+iris.nnet <- nnet(species ~ ., data = ird, subset=train,  size = 0, skip=TRUE, maxit = 100)
 ```
 
 ---
@@ -857,7 +904,7 @@ plotnet(iris.nnet)
 
 ---
 
-Fitting the multinomial regression. This is also done with nnet, but using a wrapper `multinom` (this has it's own settings, so results are not necessarily the same as above).
+Fitting the multinomial regression. This is also done with nnet, but using a wrapper `multinom` (this has its own default settings, so results are not necessarily the same as above).
 
 
 \scriptsize
@@ -938,7 +985,7 @@ $~$
 
 * Connections are only forward in the network, but no feedback connections that sends the output of the model back into the network.  
 
-* Examples: Linear, logistic and multinomial regression with without any _hidden layers_ (between the input and output layers).
+* Examples: Linear, logistic and multinomial regression with or without any _hidden layers_ (between the input and output layers).
 
 * We may have no hidden layer, one (to be studied next), or many.
 
@@ -1050,17 +1097,21 @@ $~$
 * What type of mathematical function can a feedforward neural network with one hidden layer and linear output activation represent?
 
 $~$
+\pause
 
-The _\textcolor{red}{universal approximation theorem}_\footnote{Goodfellow et al 2016, p.198, https://www.deeplearningbook.org} says that a feedforward network with
+The _\textcolor{red}{universal approximation theorem}_\footnote{Goodfellow et al 2016, p.194, https://www.deeplearningbook.org} says that a feedforward network with
+\vspace{2mm}
   
   * a _linear output layer_
   * at least one hidden layer with a "squashing" activation function and "enough" hidden units   
+
+\vspace{2mm}
 
 can approximate any (Borel measurable) function from one finite-dimensional space (our input layer) to another (our output layer) with any desired non-zero amount of error.
 
 ---
 
-The universal approximation theorem holds for 
+In particular, the universal approximation theorem holds for 
 
 * The **sigmoid** $\phi(a)=1/(1+\exp(-a))$ (logistic) activation functions. 
 * The **rectified linear unit (ReLU)** $\phi_h(a)=\max(0,a)$ activation functions 
@@ -1089,14 +1140,14 @@ ggarrange(pp,p)
 
 * The ReLU activiation function has replaced the sigmoid function as default in the hidden layer(s) of a feedforward network.
 
-$~$
+\vspace{2mm}
 
 * Even though a large feedforward network with one hidden layer may be able to represent a desired function, we may not be able to estimate the parameters of the function:
     * we may choose a too many or too few nodes in the hidden layer.
     * our optimization routine may fail.
     * we may overfit/underfit the training data.
 
-$~$
+\vspace{2mm}
 
 * Alternative: networks with more than one hidden layer, but fewer total number of nodes but more layers. A network with _many hidden layers_ is called a _\textcolor{red}{deep network}_.
 
@@ -1125,7 +1176,7 @@ $~$
 
 ---
 
-# Examples
+# An example
 
 ## Boston house prices
 
@@ -1266,7 +1317,7 @@ $~$
 \scriptsize
 ```{r, echo=T, eval=T}
 library(nnet)
-fit50<- nnet(train_targets~., data=train_data,size=50,linout=TRUE,maxit=5000,trace=F)
+fit50 <- nnet(train_targets~., data=train_data,size=50,linout=TRUE,maxit=5000,trace=F)
 # head(summary(fit50))
 pred=predict(fit50,newdata=test_data,type="raw")
 sqrt(mean((pred[,1]-test_targets)^2))
@@ -1657,63 +1708,69 @@ $~$
 
 ## Regularization
 
-@goodfellow, Chapter 7, define regularization as _any modification we make to a learning algorithm that is intended to reduce its generalization error but not its training error_.
+$~$
 
-We looked at regularization in Module 6, where our aim was to trade _increased bias_ for _reduced variance_. Another way of looking at this is we need not focus entirely on finding the model of "correct size", but instead find a large model that has been regularized properly.
+* @goodfellow, Chapter 7, define regularization as _any modification we make to a learning algorithm that is intended to reduce its generalization error but not its training error_.
 
-In Module 6 we looked in particular at adding a penalty to the loss function. The penalties we looked at were of type absolute value of parameter ($L_1$, lasso, where we looked at this as model selection) and square value of parameter ($L_2$, ridge regression). This can also done for neural networks.
+\vspace{2mm}
 
-In neural networks, _weight decay_ is the expression for adding a $L_2$-penalty to the loss function, and is available in the `nnet` R package.
+* Remember (module 6): The aim of regularization was to trade _increased bias_ for _reduced variance_.  The ideas was to add a penalty to the loss function. 
+
+\vspace{2mm}
+
+* The penalties we looked at were of type absolute value of parameter ($L_1$, lasso, where we looked at this as model selection) and square value of parameter ($L_2$, ridge regression). This can also done for neural networks.
+
+\vspace{2mm}
+
+
 
 ---
 
-Other versions of regularization are _dataset augmentation_ and _label smoothing_:
+### Regularization in neural networks
 
-* Dataset augmentation means adding fake data to the dataset, in order that the trained model will generalize better. For some learning task it is straightforward to create the new fake data — for image data this can be done by rotating and scaling the images.
+$~$
 
-* Label smoothing is motivated by the fact that the training data may contain errors in the reponses recorded, and replaced the one-hot coding for $C$ classes with $\epsilon/(C-1)$ and $1-\epsilon$ for some small $\epsilon$.
+* _Weight decay_: In neural networks this means adding a $L_2$-penalty to the loss function (see chapter 7.1.1 in Goodfellow et al), and is available in the `nnet` R package.
+
+\vspace{2mm}
+
+* _Dataset augmentation_: Adding fake data to the dataset, in order that the trained model will generalize better. For some learning task it is straightforward to create the new fake data. For image data this can be done by rotating and scaling the images.
+
+\vspace{2mm}
+
+* _Label smoothing_: Motivated by the fact that the training data may contain errors in the reponses recorded, and replaced the one-hot coding for $C$ classes with $\epsilon/(C-1)$ and $1-\epsilon$ for some small $\epsilon$.
+
+\vspace{2mm}
+
+* _Early stopping_
+
+\vspace{2mm}
+
+* _Dropout_ 
+
 
 ---
 
 ### Early stopping
- (Based on @goodfellow, Section 7.8)
+ \tiny
+Based on @goodfellow, Section 7.8
 
-The most commonly used for of regularization is _early stopping_.
+\normalsize
+$~$
 
-If we have chosen a sufficiently large model with the capacity to overfit the training data, we would observe that the training error decreases steadily during training, but the error on the validation set at some point begins to increase.
+* The most commonly used for of regularization is _early stopping_.
 
-If we stop the learning early and return the parameters giving the test performance on the validation set, this model would hopefully be a better model than if we trained the model until convergence — and this model will then also give a better test set error.
+\vspace{2mm}
 
----
+* If we have chosen a sufficiently large model with the capacity to overfit the training data, we would observe that the training error decreases steadily during training, but the error on the validation set at some point begins to increase.
 
-It is possible to think of the number of _training steps_ as a hyperparameter. This hyperparameter can easily be set, and the cost is just that we need to monitor the performance on the validation set during training. Alternatively, cross-validation can be used.
+\vspace{2mm}
 
-One strategy is to first find the optimal stopping time for the training based on the valiation set (or with cross-validation with small data sets), and then retrain the full training set (including the validation part) and stop at the selected stopping time.
+* If we stop the learning early and return the parameters giving the test performance on the validation set, this model would hopefully be a better model than if we trained the model until convergence.
 
-Why is early stopping a regularization technique? By early stopping the optimization procedure has only seen a relatively small part of the parameter space in the neighbourhood of the intitial parameter value. See @goodfellow, page 250 for a relationship with $L_2$ regularization.
+\vspace{2mm}
 
----
-
-### Hyperparameter optimization
-
-How to avoid overfitting:
-
-* reduce network size,
-* collect more observations,
-* regularization (including early stopping and drop-out)
-
-The network architacture, the number of batches to run before terminating the optimzation, the drop-out rate, are all examples of hyperparameters that need to be chosen in a sensible way before fitting the final model.
-
-It is important that the hyperparameters are chosen on a validation set or by cross-validation.
-
-However, a "popular" term is _validation-set overfitting_ and refers to using the validation set to decide many hyperparameters, so many that you may effectively overfit the validation set.
-
----
-
-In statistics we use design of experiments to explore these hyperparameters, and just using marginal grids (one hyperparameter at a time) is common in machine learning.
-
-Example on DOE:hyperparameter optimization with boosting (which of cause also can be used for neural networks). Article: Design of experiments and response surface methodology to tune machine learning hyperparameters, with a random forest case-study (2018), Gustavo A. Lujan-Moreno, Phillip R. Howard, Omar G. Rojas, Douglas Montgomery, Expert Systems with Applications, Volume 109, <https://doi.org/10.1016/j.eswa.2018.05.024>
-
+* It is possible to think of the number of _training steps_ as a hyperparameter. This hyperparameter can easily be set, and the cost is just the performance on the validation set during training. Alternatively, cross-validation can be used.
 
 ---
 
@@ -1727,6 +1784,8 @@ $~$
 
 
 Dropout was developed by Geoff Hinton and his students.
+
+$~$
 
 * During training: randomly _dropout_ (set to zero) outputs in a layer. Drop-out rates may be chosen between 0.2 and 0.5.
 
@@ -1758,46 +1817,37 @@ Dropout was developed by Geoff Hinton and his students.
 
 ---
 
-## Metrics
+## Hyperparameter optimization
 
-Provides different forms to measure how well the predictions are compared with the true values.
+$~$
 
-* `accuracy`: Percentage of correct classifications
-* `mae`: Mean absolute error.
+**Hyperparameters**: The network architecture, the number of batches to run before terminating the optimzation, the drop-out rate.
 
-These metrics can be monitored during training (on validation set) or in the end on the test set, and can be the basis for the choice when to top training.
+$~$
+
+Ways to avoid overfitting:
+
+\vspace{2mm}
+
+* Reduce network size.
+\vspace{2mm}
+
+* Collect more observations.
+\vspace{2mm}
+
+* Regularization.
+
+$~$
+
+It is important that the hyperparameters are chosen on a validation set or by cross-validation.
+
+\vspace{2mm}
+
+However, a "popular" term is _validation-set overfitting_ and refers to using the validation set to decide many hyperparameters, so many that you may effectively overfit the validation set.
+
+---
 
 # Deep learning
-
-## Timeline
-(based on @kerasR)
-
-Neural networks were investigated in "toy form" in the 1950s.
-The first big step was taken in the 1980s when the backpropagation algorithm were developed (rediscovered) to perform gradient descent in an efficient way.
-
-In 1989 (Bell Labs, Yann LeCun) used convolutional neural networks to classifying handwritten digits, and _LeNet_ was used in the US Postal Service for reading ZIP codes in the 1990s.
-
-Not so much seen (?) activity in the neural network field in the 2000s.
-
----
-
-In 2011 neural networks with many layers (and trained with GPUs) were performing well on image classification tasks. The [_ImageNet_](http://www.image-net.org/) classification challenge (classify high resolution colour images into 1k different categories after training on 1.4M images) was won by solutions with deep convolutional neural networks (convnets). In 2011 the accuracy was 74.3%, in 2012 83.6% and in 2015 96.4%.
-
-From 2012, convnets is the general solution for computer vision tasks. Other application areas are natural language processing.
-
----
-
-## Deep?
-
-Deep learning does not mean a deeper understanding, but refers to sucessive layers of representations - where the number of layers gives the _depth_ of the model. Often tens to hundreds of layers are used.
-
-Deep neural networks are not seen as models of the brain, and are not related to neurobiology.
-
-A deep network can be seen as many stages of _information-destillation_ (@kerasR, page 9), where each stage performes a simple data transformation. These transformations are not curated by the data analyst, but is estimated in the network.
-
-In statistics we first select a set of inputs, then look at how these inputs should be transformed (projections in simple form or high-dimensional and nonlinear forms), before we apply some statistical methods. This transformation step can be called _feature engineering_ and has been automated in deep learning.
-
----
 
 _Deep Learning is an algorithm which has no theoretical limitations of what it can learn; the more data you give and the more computational time you provide, the better it is._
 
@@ -1805,21 +1855,88 @@ Geoffrey Hinton (Google)
 
 ---
 
-In addition, this built-in feature engineering of the deep network is not performed in a greedy fashion, but _jointly_ with estimating/learning the full model.
+## Timeline
+(based on @kerasR)
 
-The success of deep learning is dependent upon the breakthroughts in hardware development, expecially with faster CPUs and massively parallell graphical processing units (GPUs). Tensor processing units (TPUs) is the next step.
+$~$
 
-Achievements of deep learning includes high quality (near-human to super human) image classification, speech recognition, handwriting transcription, machine translation, digital assistants, autonomous driving, advertise targeting, web searches, playing Go and chess.
+* Neural networks were investigated in "toy form" in the 1950s.
+
+\vspace{2mm}
+
+* The first big step was taken in the 1980s when the backpropagation algorithm were developed (rediscovered) to perform gradient descent in an efficient way.
+
+\vspace{2mm}
+
+* In 1989 (Bell Labs, Yann LeCun) used convolutional neural networks to classifying handwritten digits, and _LeNet_ was used in the US Postal Service for reading ZIP codes in the 1990s.
+
+\vspace{2mm}
+
+* Not so much activity in the neural network field in the 2000s.
+
+---
+
+* In 2011 neural networks with many layers (and trained with GPUs) were performing well on image classification tasks.
+
+\vspace{2mm}
+
+* The [_ImageNet_](http://www.image-net.org/) classification challenge (classify high resolution colour images into 1k different categories after training on 1.4M images) was won by solutions with deep convolutional neural networks (convnets). In 2011 the accuracy was 74.3%, in 2012 83.6% and in 2015 96.4%.
+
+\vspace{2mm}
+
+* From 2012, convnets is the general solution for computer vision tasks. Other application areas are natural language processing.
+
+---
+
+## Deep?
+
+$~$
+
+* Deep learning does not mean a deeper understanding, but refers to sucessive layers of representations - where the number of layers gives the _depth_ of the model. Often tens to hundreds of layers are used.
+
+\vspace{2mm}
+
+* Deep neural networks are not seen as models of the brain, and are not related to neurobiology.
+
+\vspace{2mm}
+
+* A deep network can be seen as many stages of _information-destillation_, where each stage performes a simple data transformation. These transformations are not curated by the data analyst, but is estimated in the network.
+
+\vspace{2mm}
+
+* In contrast, in statistics we first select a set of inputs, then look at how these inputs should be transformed, before we apply some statistical methods. This transformation step can be called _feature engineering_ and has been automated in deep learning.
+
+
+
+---
+
+<!-- In addition, this built-in feature engineering of the deep network is not performed in a greedy fashion, but _jointly_ with estimating/learning the full model. -->
+
+* The success of deep learning is dependent upon the breakthroughts in hardware development, expecially with faster CPUs and massively parallell graphical processing units (GPUs). 
+
+$~$
+
+* Achievements of deep learning includes high quality (near-human to super human) image classification, speech recognition, handwriting transcription, machine translation, digital assistants, autonomous driving, advertise targeting, web searches, playing Go and chess.
 
 ---
 
 ## The R keras package
+$~$
 
-Earlier good programming skills in C++ was essential to work in deep learning. In addition also skills on programming for GPUs were needed (e.g NVIDIA CUDA programming interface). With the launch of the Keras library now users may only need basic skills in Python or R.
+* Earlier good programming skills in C++ was essential to work in deep learning. In addition also skills on programming for GPUs were needed. 
 
-[Keras](https://keras.io/) can be seen as a way to use LEGO bricks in deep learning. To quote the web-page:
+\vspace{2mm}
 
-_Keras is a high-level neural networks API, written in Python and capable of running on top of TensorFlow, CNTK, or Theano. It was developed with a focus on enabling fast experimentation. Being able to go from idea to result with the least possible delay is key to doing good research._
+* With the launch of the Keras library now users may only need basic skills in Python or R.
+
+\vspace{2mm}
+
+* [Keras](https://keras.io/) can be seen as a way to use LEGO bricks in deep learning. To quote the web-page:
+
+\vspace{4mm}
+
+_Keras is a high-level neural networks API developed with a focus on enabling fast experimentation. Being able to go from idea to result with the least possible delay is key to doing good research._
+
 
 ---
 
@@ -1846,37 +1963,42 @@ Cheat-sheet for R Keras: <https://github.com/rstudio/cheatsheets/raw/master/kera
 
 ---
 
-### Simple data analysis workflow
+<!-- ### Simple data analysis workflow -->
 
-1. Select training and test data
-2. Define the model(s): layers, nodes in layers, activation function
-3. Configure the learning process by choosing a loss function, an optimizer, and some metrics to monitor. If needed decide on an evaluation protocol (validation set, cross-validation, iterated cross-validation)
-4. Perform any needed preprocessing of data to fit the choices in 2 and 3
-5. Fit the model to the data
-6. Make preditions for test data or use the model
+<!-- 1. Select training and test data -->
+<!-- 2. Define the model(s): layers, nodes in layers, activation function -->
+<!-- 3. Configure the learning process by choosing a loss function, an optimizer, and some metrics to monitor. If needed decide on an evaluation protocol (validation set, cross-validation, iterated cross-validation) -->
+<!-- 4. Perform any needed preprocessing of data to fit the choices in 2 and 3 -->
+<!-- 5. Fit the model to the data -->
+<!-- 6. Make preditions for test data or use the model -->
 
----
+<!-- --- -->
 
-@kerasR Section 4.5 has the following recommentations for step 3+5:
+<!-- @kerasR Section 4.5 has the following recommentations for step 3+5: -->
 
-* Develop a first model that performs better than a basic baseline (maybe the basic baseline could be standard statistics solutions)
-* Develop a model that overfits the data
-* Regularize and tune hyperparameters
+<!-- * Develop a first model that performs better than a basic baseline (maybe the basic baseline could be standard statistics solutions) -->
+<!-- * Develop a model that overfits the data -->
+<!-- * Regularize and tune hyperparameters -->
 
-Here is a tutorial: <https://keras.rstudio.com/articles/tutorial_overfit_underfit.html>
+<!-- Here is a tutorial: <https://keras.rstudio.com/articles/tutorial_overfit_underfit.html> -->
 
----
+<!-- --- -->
 
 ## MNIST dataset
-This is a larger image version of the handwritten digits data set (a different version, ZIP-codes is found under Recommended exercises).
 
-This data analysis is based on <https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/8-neural_networks_mnist.html> and the `R keras` cheat sheet.
-An advanced version using convolutional neural nets is found here: <https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/12-neural_networks_convolution_mnist.html>
+$~$
+
+* This is a larger image version of the handwritten digits data set (a different version, ZIP-codes is found under Recommended exercises).
+
+$~$
+
+* This data analysis is based on <https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/8-neural_networks_mnist.html> and the `R keras` cheat sheet.
+
+
 
 ---
 
 Objective: classify the digit contained in an image (128 $\times$ 128 greyscale).
-Problem type: Multiclass classification based on image data.
 
 \scriptsize
 ```{r, echo=FALSE}
@@ -1903,6 +2025,8 @@ plot(as.raster(train_images[622,,], max = 255))
 ---
 
 Labels for the training data:
+
+\scriptsize
 ```{r, echo=FALSE}
 table(train_labels)
 ```
@@ -1911,7 +2035,11 @@ table(train_labels)
 
 ### 1. Training and test data
 
+$~$
+
 60 000 images for training and 10 000 images for testing.
+
+$~$
 
 \scriptsize
 
@@ -1926,6 +2054,8 @@ test_labels <- mnist$test$y
 org_testlabels<- test_labels
 ```
 
+$~$
+
 \normalsize 
 The `train_images` is a tensor (generalization of a matrix) with 3 axis, `(samples, height, width)`.
 
@@ -1933,7 +2063,9 @@ The `train_images` is a tensor (generalization of a matrix) with 3 axis, `(sampl
 
 ### 2. Defining the model
 
-In this case we are using a `layer_dense` (fully connected) which expects an input tensor of rank equal to two `(sample, features)` where each `sample` should contain `28*28=784` pixels. Adding a bias term (intercept) is default for `layer_dense`.
+\vspace{2mm}
+
+We are using a `layer_dense` (fully connected) which expects an input tensor of rank equal to two `(sample, features)` where each `sample` should contain `28*28=784` pixels. Adding a bias term (intercept) is default for `layer_dense`.
 
 \scriptsize
 
@@ -1944,14 +2076,24 @@ network <- keras_model_sequential() %>%
 summary(network)
 ```
 
+\vspace{2mm}
+
 \normalsize
-As activation function we use `relu` for the hidden layer, and `softmax` for the output layer - since we have 10 classes (where one is correct each time). We could have included more layers in our model - and then maybe used early stopping if our model was chosen too big.
+As activation function we use `relu` for the hidden layer, and `softmax` for the output layer - since we have 10 classes (where one is correct each time). 
+
+<!-- We could have included more layers in our model - and then maybe used early stopping if our model was chosen too big. -->
 
 ---
 
 ### 3. Configure the learning process
 
-We next need to choose the loss function we will use, which is cross-entropy, and then the version of the optimizer. Here htis is RMSprop. Finally, which measure - metrics - do we want to monitor in our training phase? Here we choose accuracy (=percentage correctly classified).
+$~$
+
+* We next need to choose the loss function we will use, which is cross-entropy, and then the version of the optimizer. Here this is RMSprop. 
+
+* Finally, which measure (metrics) do we want to monitor in our training phase? Here we choose accuracy (=percentage correctly classified).
+
+$~$
 
 \scriptsize
 ```{r, message=FALSE, warning=FALSE}

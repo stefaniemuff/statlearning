@@ -158,7 +158,7 @@
 
 \begin{frame}
 
-Last update: March 24, 2020
+Last update: March 27, 2020
 
 \end{frame}
 
@@ -180,9 +180,44 @@ Last update: March 24, 2020
 
 \begin{block}{Learning material for this module}
 
-Todo
+\(~\)
+
+\textbf{Primary material:}
+
+These slides
+
+\(~\)
+
+\textbf{Secondary material:} \vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Videos on neural networsk and back propagation
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \href{https://www.youtube.com/watch?v=aircAruvnKk}{Video 1}
+  \item
+    \href{https://www.youtube.com/watch?v=IHZwWFHWa-w}{Video 2}
+  \item
+    \href{https://www.youtube.com/watch?v=Ilg3gGewQ5U}{Video 3}
+  \item
+    \href{https://www.youtube.com/watch?v=tIeHLnjs5U8}{Video 4}
+  \end{itemize}
+\end{itemize}
 
 \vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Background material: Chapters 6-8 Goodfellow, Bengio, and Courville
+  (2016) \url{https://www.deeplearningbook.org}
+\end{itemize}
+
+\(~\)
 
 See also \emph{References and further reading} (last slide), for further
 reading material.
@@ -240,7 +275,7 @@ reading material.
   \begin{itemize}
   \tightlist
   \item
-    the timeline
+    The timeline
   \item
     Keras
   \end{itemize}
@@ -378,18 +413,21 @@ Vu-Quoc) \url{https://commons.wikimedia.org/w/index.php?curid=72816083}
 
 \(~\)
 
-\begin{itemize}
-\tightlist
-\item
-  With the field of \emph{machine learning} the shift is that a system
-  is \emph{trained} rather than explicitly programmed.
-\end{itemize}
-
 \end{frame}
 
 \begin{frame}
 
 \begin{block}{Machine learning}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  With the field of \emph{\textcolor{red}{machine learning}} the shift
+  is that a system is \emph{\textcolor{red}{trained}} rather than
+  explicitly programmed.
+\end{itemize}
 
 \(~\)
 
@@ -424,9 +462,40 @@ Vu-Quoc) \url{https://commons.wikimedia.org/w/index.php?curid=72816083}
 
 According to Chollet and Allaire (2018) (page 19): \vspace{2mm}
 
-\begin{quote}
-Machine learning isn't mathematics or physics, where major advancements can be done with a pen and a piece of paper. It's an engineering science.
-\end{quote}
+\emph{Machine learning isn't mathematics or physics, where major
+advancements can be done with a pen and a piece of paper. It's an
+engineering science.}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Deep learning}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{Deep} does not refer to a deeper understanding.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Rather, deep referes to the \emph{layers of representation}, for
+  example in a neural network.
+\end{itemize}
+
+\(~\)
+
+\center
+
+\includegraphics[width=0.8\textwidth,height=\textheight]{deep.png}
 
 \end{block}
 
@@ -595,9 +664,9 @@ We need \emph{\textcolor{red}{new concepts}}:
 
 \begin{verbatim}
 ## # weights:  8
-## initial  value 5391851.936145 
-## iter  10 value 4470.930460
-## final  value 4415.453739 
+## initial  value 2441918.078050 
+## iter  10 value 4471.960339
+## final  value 4415.454905 
 ## converged
 \end{verbatim}
 
@@ -612,7 +681,7 @@ We need \emph{\textcolor{red}{new concepts}}:
   covariate values in the input nodes with the weights (regression
   coefficients), and then sum.
 \item
-  This sum can be sent through a socalled \emph{activition function}
+  This sum can be sent through a so-called \emph{activition function}
   (here just the identity function).
 \end{itemize}
 
@@ -657,8 +726,10 @@ We need \emph{\textcolor{red}{new concepts}}:
   \[ \hat{y}_1({\boldsymbol x}_i)=\phi_o(w_0+w_1 x_{i1}+\cdots + w_p x_{ip})\]
 \end{itemize}
 
-The only difference to our MLR model is then that we would have called
-the \(w\)s \(\hat{\beta}\)s instead.
+\(~\)
+
+The only difference to our multiple linear regression (MLR) model is
+then that we would have called the \(w\)s \(\hat{\beta}\)s instead.
 
 \end{frame}
 
@@ -703,9 +774,17 @@ We now translate what we did for the regression setup into the neural
 networks world: \vspace{2mm}
 
 \begin{enumerate}
+\tightlist
 \item
   Replace the parameters \(\boldsymbol\beta\) with \emph{network
   weights} \(\boldsymbol w\).
+\end{enumerate}
+
+\(~\)
+
+\begin{enumerate}
+\setcounter{enumi}{1}
+\tightlist
 \item
   Replace the RSS in our \emph{training data set} with the following
   \emph{\textcolor{red}{loss function}} (\emph{mean squared error})
@@ -724,7 +803,7 @@ networks world: \vspace{2mm}
 \setcounter{enumi}{2}
 \tightlist
 \item
-  Replace \emph{minimizing} the loss function (RSS) via
+  Replace \emph{minimizing} the loss function (RSS) via \vspace{2mm}
 
   \begin{itemize}
   \tightlist
@@ -732,21 +811,20 @@ networks world: \vspace{2mm}
     calculate the derivative of the loss function with respect to each
     of our parameters
   \item
-    solve the \((p+1)\) linear equations.
+    \emph{\textcolor{red}{more general minization procedures}} that work
+    also when the loss function does not have a closed form.
   \end{itemize}
 
   \(~\)
 
-  \(\rightarrow\)
-  \emph{\textcolor{red}{more general minization procedures}} that work
-  also when the loss function does not have a closed form.
+  Main idea: The gradient descent algorithm
 \end{enumerate}
 
 \end{frame}
 
 \begin{frame}
 
-\begin{block}{Finding optimal weights: Algorithm}
+\begin{block}{Finding optimal weights: Gradient descent algorithm}
 
 \vspace{2mm}
 
@@ -756,27 +834,26 @@ networks world: \vspace{2mm}
   Let \(t=0\) and denote the given initial values for the weights
   \({\boldsymbol w}^{(t)}\), \vspace{2mm}
 \item
-  Until convergence, repeat a) to d)
+  Until finding a (local) optimum, repeat a) to e)
 
   \begin{enumerate}
   [a)]
   \tightlist
   \item
-    Calculate the predictions \({\hat{y}_1({\boldsymbol x}_i)}\)
+    Calculate the predictions \({\hat{y}_1({\boldsymbol x}_i)}\).
   \item
-    calculate the loss function \(J({\boldsymbol w}^{(t)})\),
+    Calculate the loss function \(J({\boldsymbol w}^{(t)})\).
   \item
-    find the gradient (direction) in the \((p+1)\)-dimensional space of
+    Find the gradient (direction) in the \((p+1)\)-dimensional space of
     the weights, and evaluate this at the current weight values
-    \(\nabla J({\boldsymbol w}^{(0)})={\frac{\partial J}{\partial {\boldsymbol w}}}({\boldsymbol w}^{(0)})\)
+    \(\nabla J({\boldsymbol w}^{(t)})={\frac{\partial J}{\partial {\boldsymbol w}}}({\boldsymbol w}^{(t)})\).
   \item
-    go with a given step length (learning rate) \(\lambda\) in the
+    Go with a given step length (learning rate) \(\lambda\) in the
     direction of the negative of the gradient of the loss function to
     get
-    \[{\boldsymbol w}^{(t+1)}={\boldsymbol w}^{(t)} - \lambda \nabla J({\boldsymbol w}^{(t)})\]
+    \[{\boldsymbol w}^{(t+1)}={\boldsymbol w}^{(t)} - \lambda \nabla J({\boldsymbol w}^{(t)}) \ .\]
   \item
-    Set \(t=t+1\), go to a) and continue to e) several times until you
-    arrive at a (local) optimum \vspace{2mm}
+    Set \(t=t+1\). \vspace{2mm}
   \end{enumerate}
 \item
   The final values of the weights in that \((p+1)\) dimensional space
@@ -856,7 +933,7 @@ Here we compare
 
 \begin{frame}[fragile]
 
-\begin{block}{Continuous outcome}
+\begin{block}{Example 1: Continuous outcome (linear regression)}
 
 \(~\)
 
@@ -878,8 +955,8 @@ Linear regression vs.~neural networks: an example.
 
 \begin{verbatim}
 ## # weights:  8
-## initial  value 1730433.495727 
-## iter  10 value 4471.516449
+## initial  value 1827258.372491 
+## iter  10 value 4470.017765
 ## final  value 4415.453729 
 ## converged
 \end{verbatim}
@@ -892,14 +969,14 @@ Linear regression vs.~neural networks: an example.
 
 \begin{verbatim}
 ##                      [,1]          [,2]
-## (Intercept) -9.748931e+01 -9.748903e+01
-## age         -9.607523e-04 -9.607669e-04
-## weight      -6.292838e-01 -6.292820e-01
-## height       3.974902e-01  3.974884e-01
-## bmi          1.785338e+00  1.785330e+00
-## neck        -4.945734e-01 -4.945725e-01
-## abdomen      8.945187e-01  8.945189e-01
-## hip         -1.255554e-01 -1.255549e-01
+## (Intercept) -9.748915e+01 -9.748903e+01
+## age         -9.607628e-04 -9.607669e-04
+## weight      -6.292828e-01 -6.292820e-01
+## height       3.974890e-01  3.974884e-01
+## bmi          1.785333e+00  1.785330e+00
+## neck        -4.945725e-01 -4.945725e-01
+## abdomen      8.945189e-01  8.945189e-01
+## hip         -1.255549e-01 -1.255549e-01
 \end{verbatim}
 
 \end{block}
@@ -908,7 +985,7 @@ Linear regression vs.~neural networks: an example.
 
 \begin{frame}[fragile]
 
-\begin{block}{Binary outcome: Diabetes}
+\begin{block}{Example 2: Binary outcome (logistic regression)}
 
 \vspace{2mm}
 
@@ -1069,7 +1146,7 @@ function}
 \end{itemize}
 
 \[ 
-\hat{y}_1({\boldsymbol x}_i)=\frac{1}{1+\exp(-(w_0+w_1 x_{i1}+\cdots + w_r x_{ir}))} \in (0,1) \ . 
+\hat{y}_1({\boldsymbol x}_i)= \sigma({\boldsymbol x}_i) = \frac{1}{1+\exp(-(w_0+w_1 x_{i1}+\cdots + w_r x_{ir}))} \in (0,1) \ . 
 \]
 
 \end{block}
@@ -1096,9 +1173,10 @@ function}
 \begin{itemize}
 \tightlist
 \item
-  Optimization is done also with gradient descent, but we need the chain
-  rule (due to the activation function) to get the partial derivatives
-  for the gradient direction.
+  Optimization is done also with
+  \emph{\textcolor{red}{gradient descent}}, but we need the chain rule
+  (due to the activation function) to get the partial derivatives for
+  the gradient direction.
 \end{itemize}
 
 \(~\)
@@ -1106,8 +1184,8 @@ function}
 \begin{itemize}
 \tightlist
 \item
-  Same backpropagation algorithm is again applicable, using the
-  activation and loss functions given here.
+  We need the \emph{\textcolor{red}{backpropagation algorithm}}, using
+  the activation and loss functions given here.
 \end{itemize}
 
 \end{block}
@@ -1120,7 +1198,7 @@ function}
 
 \(~\)
 
-\scriptsize
+\tiny
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1277,8 +1355,9 @@ Why can NN and logistic regression lead to such different results?
 
 \end{frame}
 
-\begin{frame}[fragile]{Multiclass regression}
-\protect\hypertarget{multiclass-regression}{}
+\begin{frame}[fragile]
+
+\begin{block}{Example 3: Categorical outcome (multiclass regression)}
 
 \textbf{Which type of iris species?}
 
@@ -1286,6 +1365,8 @@ Why can NN and logistic regression lead to such different results?
 
 The \texttt{iris} flower data set was introduced by the British
 statistician and biologist Ronald Fisher in 1936.
+
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -1299,6 +1380,8 @@ statistician and biologist Ronald Fisher in 1936.
 \(~\)
 
 The aim is to predict the species of an iris plant.
+
+\end{block}
 
 \end{frame}
 
@@ -1398,8 +1481,7 @@ We only briefly mentioned multiclass regression in module 4.
 \tightlist
 \item
   Parameter estimation is done in the same way as for the logistic
-  regression, with the Fisher scoring algorithm (with score vector and
-  Fisher information matrix).
+  regression, with the Fisher scoring algorithm.
 \end{itemize}
 
 \(~\)
@@ -1429,9 +1511,10 @@ We only briefly mentioned multiclass regression in module 4.
   \emph{\textcolor{red}{one-hot coding}}.
 \end{itemize}
 
-\(~\)
+\vspace{2mm}
 
 \begin{itemize}
+\tightlist
 \item
   The activation function for the ouput layer is called
   \emph{\textcolor{red}{softmax}}. For each class \(c=1,\ldots, C\) it
@@ -1439,13 +1522,19 @@ We only briefly mentioned multiclass regression in module 4.
   \hat{y}_c({\boldsymbol x}_i) = \frac{\exp({\boldsymbol x}_i^T{\boldsymbol w}_c)}{\sum_{s=1}^{C}\exp({\boldsymbol x}_i^T{\boldsymbol w}_s)} \ ,
   \] where each \({\boldsymbol w}_s\) is a \(r+1\) dimensional vector of
   weights.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Note: there is some redundancy here, since
   \(\sum_{c=1}^C {\hat y}_{c}({\boldsymbol x}_i)=1\), so we could have
   had \(C-1\) output nodes, but this is not done.
 \end{itemize}
 
-\(~\)
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -1453,6 +1542,8 @@ We only briefly mentioned multiclass regression in module 4.
   The focus of neural networks is not to interpret the weights, and
   there is no need to assume full rank of a matrix with output nodes.
 \end{itemize}
+
+\vspace{2mm}
 
 \textbf{Q:} How many parameters are we estimating?
 
@@ -1512,6 +1603,8 @@ First select a training sample
 \end{Highlighting}
 \end{Shaded}
 
+\(~\)
+
 \normalsize
 
 Then fit the \texttt{nnet()} (by default using the softmax activation
@@ -1521,18 +1614,24 @@ function)
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1234}\NormalTok{)}
 \NormalTok{iris.nnet <-}\StringTok{ }\KeywordTok{nnet}\NormalTok{(species }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ ird, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{size =} \DecValTok{0}\NormalTok{, }
-    \DataTypeTok{skip =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{rang =} \FloatTok{0.1}\NormalTok{, }\DataTypeTok{maxit =} \DecValTok{200}\NormalTok{)}
+    \DataTypeTok{skip =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{maxit =} \DecValTok{100}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## # weights:  15
-## initial  value 56.732848 
-## iter  10 value 2.748260
-## iter  20 value 0.012982
-## final  value 0.000093 
+## initial  value 105.595764 
+## iter  10 value 1.050064
+## iter  20 value 0.018814
+## iter  30 value 0.003937
+## iter  40 value 0.002062
+## iter  50 value 0.001460
+## iter  60 value 0.000150
+## iter  70 value 0.000125
+## iter  80 value 0.000110
+## final  value 0.000096 
 ## converged
 \end{verbatim}
 
@@ -1562,12 +1661,12 @@ function)
 \begin{verbatim}
 ## a 4-0-3 network with 15 weights
 ## options were - skip-layer connections  softmax modelling 
-##   b->o1  i1->o1  i2->o1  i3->o1  i4->o1 
-##  113.44   -0.36   -4.82  -11.51   -6.65 
-##   b->o2  i1->o2  i2->o2  i3->o2  i4->o2 
-##    7.56   20.19   23.17  -38.05  -36.15 
-##   b->o3  i1->o3  i2->o3  i3->o3  i4->o3 
-## -121.04  -19.78  -18.26   49.66   42.79
+##  b->o1 i1->o1 i2->o1 i3->o1 i4->o1 
+##  36.79   9.69   1.26 -14.33 -13.24 
+##  b->o2 i1->o2 i2->o2 i3->o2 i4->o2 
+##   5.16  10.10  21.33 -25.47 -12.48 
+##  b->o3 i1->o3 i2->o3 i3->o3 i4->o3 
+## -42.03 -20.25 -23.12  40.80  25.96
 \end{verbatim}
 
 \end{frame}
@@ -1581,7 +1680,7 @@ function)
 \begin{frame}[fragile]
 
 Fitting the multinomial regression. This is also done with nnet, but
-using a wrapper \texttt{multinom} (this has it's own settings, so
+using a wrapper \texttt{multinom} (this has its own default settings, so
 results are not necessarily the same as above).
 
 \scriptsize
@@ -1668,9 +1767,9 @@ saying \texttt{-1} in the above formula).
 \begin{verbatim}
 ##    
 ##      c  s  v
-##   c 31  0  7
+##   c 29  0  0
 ##   s  0 36  0
-##   v  1  0 25
+##   v  3  0 32
 \end{verbatim}
 
 \end{block}
@@ -1766,8 +1865,8 @@ For more on multinomial regression with R, check
   Connections are only forward in the network, but no feedback
   connections that sends the output of the model back into the network.
 \item
-  Examples: Linear, logistic and multinomial regression with without any
-  \emph{hidden layers} (between the input and output layers).
+  Examples: Linear, logistic and multinomial regression with or without
+  any \emph{hidden layers} (between the input and output layers).
 \item
   We may have no hidden layer, one (to be studied next), or many.
 \item
@@ -1938,11 +2037,11 @@ If we assume that \(\phi_h(z)=z\) (linear or identity activiation):
   with one hidden layer and linear output activation represent?
 \end{itemize}
 
-\(~\)
+\(~\) \pause
 
 The
-\emph{\textcolor{red}{universal approximation theorem}}\footnote{Goodfellow et al 2016, p.198, https://www.deeplearningbook.org}
-says that a feedforward network with
+\emph{\textcolor{red}{universal approximation theorem}}\footnote{Goodfellow et al 2016, p.194, https://www.deeplearningbook.org}
+says that a feedforward network with \vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -1952,6 +2051,8 @@ says that a feedforward network with
   at least one hidden layer with a ``squashing'' activation function and
   ``enough'' hidden units
 \end{itemize}
+
+\vspace{2mm}
 
 can approximate any (Borel measurable) function from one
 finite-dimensional space (our input layer) to another (our output layer)
@@ -1963,7 +2064,7 @@ with any desired non-zero amount of error.
 
 \begin{frame}
 
-The universal approximation theorem holds for
+In particular, the universal approximation theorem holds for
 
 \begin{itemize}
 \tightlist
@@ -1992,7 +2093,7 @@ in the hidden layer.
   default in the hidden layer(s) of a feedforward network.
 \end{itemize}
 
-\(~\)
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -2012,7 +2113,7 @@ in the hidden layer.
   \end{itemize}
 \end{itemize}
 
-\(~\)
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -2058,8 +2159,8 @@ in the hidden layer.
 
 \end{frame}
 
-\begin{frame}[fragile]{Examples}
-\protect\hypertarget{examples}{}
+\begin{frame}[fragile]{An example}
+\protect\hypertarget{an-example}{}
 
 \begin{block}{Boston house prices}
 
@@ -2196,35 +2297,66 @@ Just checking out one hidden layer with 5 units to get going.
 
 \begin{verbatim}
 ## # weights:  76
-## initial  value 222875.445564 
-## iter  10 value 9625.869446
-## iter  20 value 7008.319688
-## iter  30 value 5889.493080
-## iter  40 value 4914.814874
-## iter  50 value 4116.546650
-## iter  60 value 3860.485941
-## iter  70 value 3705.511019
-## iter  80 value 3660.347303
-## iter  90 value 3616.529740
-## iter 100 value 3566.523287
-## iter 110 value 3549.835275
-## iter 120 value 3519.659951
-## iter 130 value 3450.648101
-## iter 140 value 3359.604509
-## iter 150 value 3313.298120
-## iter 160 value 3281.887294
-## iter 170 value 3256.471450
-## iter 180 value 3239.303308
-## iter 190 value 3205.304637
-## iter 200 value 3180.026739
-## iter 210 value 3166.982443
-## iter 220 value 3165.194791
-## iter 230 value 3164.924614
-## iter 240 value 3164.431322
-## iter 250 value 3164.319839
-## iter 250 value 3164.319818
-## iter 250 value 3164.319818
-## final  value 3164.319818 
+## initial  value 226623.512265 
+## iter  10 value 13091.227910
+## iter  20 value 7552.270543
+## iter  30 value 6973.052157
+## iter  40 value 6028.355978
+## iter  50 value 5378.466810
+## iter  60 value 5178.772252
+## iter  70 value 5041.561467
+## iter  80 value 4939.293055
+## iter  90 value 4847.552123
+## iter 100 value 4728.986223
+## iter 110 value 4251.914333
+## iter 120 value 3946.017314
+## iter 130 value 3632.254547
+## iter 140 value 3450.244463
+## iter 150 value 3322.303263
+## iter 160 value 3241.691501
+## iter 170 value 3150.472823
+## iter 180 value 3107.807649
+## iter 190 value 3042.879662
+## iter 200 value 3010.915972
+## iter 210 value 2942.119646
+## iter 220 value 2811.751015
+## iter 230 value 2671.932883
+## iter 240 value 2569.244747
+## iter 250 value 2536.169071
+## iter 260 value 2409.402962
+## iter 270 value 2357.404065
+## iter 280 value 2332.453029
+## iter 290 value 2301.928501
+## iter 300 value 2275.486910
+## iter 310 value 2271.654139
+## iter 320 value 2271.341691
+## iter 330 value 2270.864907
+## iter 340 value 2269.409714
+## iter 350 value 2266.898707
+## iter 360 value 2265.562591
+## iter 370 value 2263.741643
+## iter 380 value 2263.341350
+## iter 390 value 2263.335141
+## iter 400 value 2263.289326
+## iter 410 value 2263.107707
+## iter 420 value 2262.977137
+## iter 430 value 2262.605492
+## iter 440 value 2262.152481
+## iter 450 value 2261.282844
+## iter 460 value 2260.688788
+## iter 470 value 2259.044896
+## iter 480 value 2256.705839
+## iter 490 value 2256.565541
+## iter 500 value 2256.387716
+## iter 510 value 2256.218543
+## iter 520 value 2256.131616
+## iter 530 value 2256.005554
+## iter 540 value 2255.945243
+## iter 550 value 2255.922524
+## iter 560 value 2255.912642
+## iter 570 value 2255.901700
+## iter 580 value 2255.900781
+## final  value 2255.898090 
 ## converged
 \end{verbatim}
 
@@ -2238,27 +2370,27 @@ Just checking out one hidden layer with 5 units to get going.
 ## a 13-5-1 network with 76 weights
 ## options were - linear output units 
 ##   b->h1  i1->h1  i2->h1  i3->h1  i4->h1  i5->h1  i6->h1  i7->h1  i8->h1 
-##   -9.54   14.52   39.89    3.83   92.85 -159.44  111.11  -96.54 -112.98 
+##   71.26   20.97   18.74  -20.16  -10.96  -15.63   26.20  254.52 -118.95 
 ##  i9->h1 i10->h1 i11->h1 i12->h1 i13->h1 
-##  -19.04  -73.75  -46.80   24.26   21.85 
+##  -98.91  245.21   40.35  -63.31 -184.66 
 ##   b->h2  i1->h2  i2->h2  i3->h2  i4->h2  i5->h2  i6->h2  i7->h2  i8->h2 
-##   -2.01   -0.54    0.14    0.03    0.07   -0.24    0.12   -0.06   -0.58 
+##  -11.07   -3.92    4.74  -15.11   -0.35   -3.85    2.55   23.85  -24.67 
 ##  i9->h2 i10->h2 i11->h2 i12->h2 i13->h2 
-##    0.85    0.03   -0.13    0.27   -1.08 
+##  -16.46    3.18    3.34   -2.47  -21.87 
 ##   b->h3  i1->h3  i2->h3  i3->h3  i4->h3  i5->h3  i6->h3  i7->h3  i8->h3 
-##  101.33    8.06   84.39   -4.25   26.14    0.96   14.74  -66.93  -19.00 
+##   -8.67   -0.46   -9.66    0.84    0.04   -0.55   -0.05    0.00   -1.41 
 ##  i9->h3 i10->h3 i11->h3 i12->h3 i13->h3 
-##  -64.05   -3.34  -15.21   13.91  -18.71 
+##    1.28   -0.15   -0.28    0.13   -1.09 
 ##   b->h4  i1->h4  i2->h4  i3->h4  i4->h4  i5->h4  i6->h4  i7->h4  i8->h4 
-## -263.73   20.74    2.84  -49.76   21.23   81.77  127.22  -30.61   10.17 
+##   -2.81   -1.97    0.05   -0.05   -0.06    0.16    0.84   -0.26   -0.12 
 ##  i9->h4 i10->h4 i11->h4 i12->h4 i13->h4 
-##   48.43  -35.78  -33.23   29.71 -111.64 
+##    0.19   -0.15   -0.17    0.08   -0.06 
 ##   b->h5  i1->h5  i2->h5  i3->h5  i4->h5  i5->h5  i6->h5  i7->h5  i8->h5 
-## -277.75  -61.39   41.17  -20.95    9.33  -79.87   25.11   76.91  -74.78 
+##    6.67 -209.31 -112.59 -151.07  235.15 -277.72  271.08 -308.09 -106.76 
 ##  i9->h5 i10->h5 i11->h5 i12->h5 i13->h5 
-##   89.30   99.20  -29.04  -40.58 -210.38 
+##   83.51  -83.42  -61.57   14.81   79.96 
 ##    b->o   h1->o   h2->o   h3->o   h4->o   h5->o 
-##   10.97    3.03   25.68    5.50    7.12    8.62
+##   14.01   -4.99    5.29   42.15   41.37    3.05
 \end{verbatim}
 
 \begin{Shaded}
@@ -2269,7 +2401,7 @@ Just checking out one hidden layer with 5 units to get going.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 5.695772
+## [1] 5.274657
 \end{verbatim}
 
 \begin{Shaded}
@@ -2279,7 +2411,7 @@ Just checking out one hidden layer with 5 units to get going.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 3.490978
+## [1] 2.955324
 \end{verbatim}
 
 \end{frame}
@@ -2335,7 +2467,7 @@ test set:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 5.090128
+## [1] 6.08656
 \end{verbatim}
 
 \begin{Shaded}
@@ -2346,7 +2478,7 @@ test set:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 3.535428
+## [1] 3.97063
 \end{verbatim}
 
 \(~\)
@@ -2945,52 +3077,101 @@ adaptive learning rates (Goodfellow et al, Chapter 8.5).
 
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}
 
 \begin{block}{Regularization}
 
-Goodfellow, Bengio, and Courville (2016), Chapter 7, define
-regularization as \emph{any modification we make to a learning algorithm
-that is intended to reduce its generalization error but not its training
-error}.
+\(~\)
 
-We looked at regularization in Module 6, where our aim was to trade
-\emph{increased bias} for \emph{reduced variance}. Another way of
-looking at this is we need not focus entirely on finding the model of
-``correct size'', but instead find a large model that has been
-regularized properly.
+\begin{itemize}
+\tightlist
+\item
+  Goodfellow, Bengio, and Courville (2016), Chapter 7, define
+  regularization as \emph{any modification we make to a learning
+  algorithm that is intended to reduce its generalization error but not
+  its training error}.
+\end{itemize}
 
-In Module 6 we looked in particular at adding a penalty to the loss
-function. The penalties we looked at were of type absolute value of
-parameter (\(L_1\), lasso, where we looked at this as model selection)
-and square value of parameter (\(L_2\), ridge regression). This can also
-done for neural networks.
+\vspace{2mm}
 
-In neural networks, \emph{weight decay} is the expression for adding a
-\(L_2\)-penalty to the loss function, and is available in the
-\texttt{nnet} R package.
+\begin{itemize}
+\tightlist
+\item
+  Remember (module 6): The aim of regularization was to trade
+  \emph{increased bias} for \emph{reduced variance}. The ideas was to
+  add a penalty to the loss function.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  The penalties we looked at were of type absolute value of parameter
+  (\(L_1\), lasso, where we looked at this as model selection) and
+  square value of parameter (\(L_2\), ridge regression). This can also
+  done for neural networks.
+\end{itemize}
+
+\vspace{2mm}
 
 \end{block}
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
 
-Other versions of regularization are \emph{dataset augmentation} and
-\emph{label smoothing}:
+\begin{block}{Regularization in neural networks}
+
+\(~\)
 
 \begin{itemize}
+\tightlist
 \item
-  Dataset augmentation means adding fake data to the dataset, in order
+  \emph{Weight decay}: In neural networks this means adding a
+  \(L_2\)-penalty to the loss function (see chapter 7.1.1 in Goodfellow
+  et al), and is available in the \texttt{nnet} R package.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{Dataset augmentation}: Adding fake data to the dataset, in order
   that the trained model will generalize better. For some learning task
-  it is straightforward to create the new fake data --- for image data
-  this can be done by rotating and scaling the images.
+  it is straightforward to create the new fake data. For image data this
+  can be done by rotating and scaling the images.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
-  Label smoothing is motivated by the fact that the training data may
-  contain errors in the reponses recorded, and replaced the one-hot
+  \emph{Label smoothing}: Motivated by the fact that the training data
+  may contain errors in the reponses recorded, and replaced the one-hot
   coding for \(C\) classes with \(\epsilon/(C-1)\) and \(1-\epsilon\)
   for some small \(\epsilon\).
 \end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{Early stopping}
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{Dropout}
+\end{itemize}
+
+\end{block}
 
 \end{frame}
 
@@ -2998,89 +3179,51 @@ Other versions of regularization are \emph{dataset augmentation} and
 
 \begin{block}{Early stopping}
 
-(Based on Goodfellow, Bengio, and Courville (2016), Section 7.8)
+\tiny Based on Goodfellow, Bengio, and Courville (2016), Section 7.8
 
-The most commonly used for of regularization is \emph{early stopping}.
+\normalsize
 
-If we have chosen a sufficiently large model with the capacity to
-overfit the training data, we would observe that the training error
-decreases steadily during training, but the error on the validation set
-at some point begins to increase.
-
-If we stop the learning early and return the parameters giving the test
-performance on the validation set, this model would hopefully be a
-better model than if we trained the model until convergence --- and this
-model will then also give a better test set error.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-It is possible to think of the number of \emph{training steps} as a
-hyperparameter. This hyperparameter can easily be set, and the cost is
-just that we need to monitor the performance on the validation set
-during training. Alternatively, cross-validation can be used.
-
-One strategy is to first find the optimal stopping time for the training
-based on the valiation set (or with cross-validation with small data
-sets), and then retrain the full training set (including the validation
-part) and stop at the selected stopping time.
-
-Why is early stopping a regularization technique? By early stopping the
-optimization procedure has only seen a relatively small part of the
-parameter space in the neighbourhood of the intitial parameter value.
-See Goodfellow, Bengio, and Courville (2016), page 250 for a
-relationship with \(L_2\) regularization.
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Hyperparameter optimization}
-
-How to avoid overfitting:
+\(~\)
 
 \begin{itemize}
 \tightlist
 \item
-  reduce network size,
-\item
-  collect more observations,
-\item
-  regularization (including early stopping and drop-out)
+  The most commonly used for of regularization is \emph{early stopping}.
 \end{itemize}
 
-The network architacture, the number of batches to run before
-terminating the optimzation, the drop-out rate, are all examples of
-hyperparameters that need to be chosen in a sensible way before fitting
-the final model.
+\vspace{2mm}
 
-It is important that the hyperparameters are chosen on a validation set
-or by cross-validation.
+\begin{itemize}
+\tightlist
+\item
+  If we have chosen a sufficiently large model with the capacity to
+  overfit the training data, we would observe that the training error
+  decreases steadily during training, but the error on the validation
+  set at some point begins to increase.
+\end{itemize}
 
-However, a ``popular'' term is \emph{validation-set overfitting} and
-refers to using the validation set to decide many hyperparameters, so
-many that you may effectively overfit the validation set.
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  If we stop the learning early and return the parameters giving the
+  test performance on the validation set, this model would hopefully be
+  a better model than if we trained the model until convergence.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  It is possible to think of the number of \emph{training steps} as a
+  hyperparameter. This hyperparameter can easily be set, and the cost is
+  just the performance on the validation set during training.
+  Alternatively, cross-validation can be used.
+\end{itemize}
 
 \end{block}
-
-\end{frame}
-
-\begin{frame}
-
-In statistics we use design of experiments to explore these
-hyperparameters, and just using marginal grids (one hyperparameter at a
-time) is common in machine learning.
-
-Example on DOE:hyperparameter optimization with boosting (which of cause
-also can be used for neural networks). Article: Design of experiments
-and response surface methodology to tune machine learning
-hyperparameters, with a random forest case-study (2018), Gustavo A.
-Lujan-Moreno, Phillip R. Howard, Omar G. Rojas, Douglas Montgomery,
-Expert Systems with Applications, Volume 109,
-\url{https://doi.org/10.1016/j.eswa.2018.05.024}
 
 \end{frame}
 
@@ -3098,6 +3241,8 @@ Chollet and Allaire (2018) 4.4.3
 \(~\)
 
 Dropout was developed by Geoff Hinton and his students.
+
+\(~\)
 
 \begin{itemize}
 \item
@@ -3122,95 +3267,47 @@ Dropout was developed by Geoff Hinton and his students.
 
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}
 
-\begin{block}{Metrics}
+\begin{block}{Hyperparameter optimization}
 
-Provides different forms to measure how well the predictions are
-compared with the true values.
+\(~\)
+
+\textbf{Hyperparameters}: The network architecture, the number of
+batches to run before terminating the optimzation, the drop-out rate.
+
+\(~\)
+
+Ways to avoid overfitting:
+
+\vspace{2mm}
 
 \begin{itemize}
-\tightlist
 \item
-  \texttt{accuracy}: Percentage of correct classifications
+  Reduce network size. \vspace{2mm}
 \item
-  \texttt{mae}: Mean absolute error.
+  Collect more observations. \vspace{2mm}
+\item
+  Regularization.
 \end{itemize}
 
-These metrics can be monitored during training (on validation set) or in
-the end on the test set, and can be the basis for the choice when to top
-training.
+\(~\)
+
+It is important that the hyperparameters are chosen on a validation set
+or by cross-validation.
+
+\vspace{2mm}
+
+However, a ``popular'' term is \emph{validation-set overfitting} and
+refers to using the validation set to decide many hyperparameters, so
+many that you may effectively overfit the validation set.
 
 \end{block}
 
 \end{frame}
 
 \begin{frame}{Deep learning}
-\protect\hypertarget{deep-learning}{}
-
-\begin{block}{Timeline}
-
-(based on Chollet and Allaire (2018))
-
-Neural networks were investigated in ``toy form'' in the 1950s. The
-first big step was taken in the 1980s when the backpropagation algorithm
-were developed (rediscovered) to perform gradient descent in an
-efficient way.
-
-In 1989 (Bell Labs, Yann LeCun) used convolutional neural networks to
-classifying handwritten digits, and \emph{LeNet} was used in the US
-Postal Service for reading ZIP codes in the 1990s.
-
-Not so much seen (?) activity in the neural network field in the 2000s.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-In 2011 neural networks with many layers (and trained with GPUs) were
-performing well on image classification tasks. The
-\href{http://www.image-net.org/}{\emph{ImageNet}} classification
-challenge (classify high resolution colour images into 1k different
-categories after training on 1.4M images) was won by solutions with deep
-convolutional neural networks (convnets). In 2011 the accuracy was
-74.3\%, in 2012 83.6\% and in 2015 96.4\%.
-
-From 2012, convnets is the general solution for computer vision tasks.
-Other application areas are natural language processing.
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Deep?}
-
-Deep learning does not mean a deeper understanding, but refers to
-sucessive layers of representations - where the number of layers gives
-the \emph{depth} of the model. Often tens to hundreds of layers are
-used.
-
-Deep neural networks are not seen as models of the brain, and are not
-related to neurobiology.
-
-A deep network can be seen as many stages of
-\emph{information-destillation} (Chollet and Allaire (2018), page 9),
-where each stage performes a simple data transformation. These
-transformations are not curated by the data analyst, but is estimated in
-the network.
-
-In statistics we first select a set of inputs, then look at how these
-inputs should be transformed (projections in simple form or
-high-dimensional and nonlinear forms), before we apply some statistical
-methods. This transformation step can be called \emph{feature
-engineering} and has been automated in deep learning.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
+\protect\hypertarget{deep-learning-1}{}
 
 \emph{Deep Learning is an algorithm which has no theoretical limitations
 of what it can learn; the more data you give and the more computational
@@ -3222,19 +3319,152 @@ Geoffrey Hinton (Google)
 
 \begin{frame}
 
-In addition, this built-in feature engineering of the deep network is
-not performed in a greedy fashion, but \emph{jointly} with
-estimating/learning the full model.
+\begin{block}{Timeline}
 
-The success of deep learning is dependent upon the breakthroughts in
-hardware development, expecially with faster CPUs and massively
-parallell graphical processing units (GPUs). Tensor processing units
-(TPUs) is the next step.
+(based on Chollet and Allaire (2018))
 
-Achievements of deep learning includes high quality (near-human to super
-human) image classification, speech recognition, handwriting
-transcription, machine translation, digital assistants, autonomous
-driving, advertise targeting, web searches, playing Go and chess.
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Neural networks were investigated in ``toy form'' in the 1950s.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  The first big step was taken in the 1980s when the backpropagation
+  algorithm were developed (rediscovered) to perform gradient descent in
+  an efficient way.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  In 1989 (Bell Labs, Yann LeCun) used convolutional neural networks to
+  classifying handwritten digits, and \emph{LeNet} was used in the US
+  Postal Service for reading ZIP codes in the 1990s.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Not so much activity in the neural network field in the 2000s.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\tightlist
+\item
+  In 2011 neural networks with many layers (and trained with GPUs) were
+  performing well on image classification tasks.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  The \href{http://www.image-net.org/}{\emph{ImageNet}} classification
+  challenge (classify high resolution colour images into 1k different
+  categories after training on 1.4M images) was won by solutions with
+  deep convolutional neural networks (convnets). In 2011 the accuracy
+  was 74.3\%, in 2012 83.6\% and in 2015 96.4\%.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  From 2012, convnets is the general solution for computer vision tasks.
+  Other application areas are natural language processing.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Deep?}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Deep learning does not mean a deeper understanding, but refers to
+  sucessive layers of representations - where the number of layers gives
+  the \emph{depth} of the model. Often tens to hundreds of layers are
+  used.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Deep neural networks are not seen as models of the brain, and are not
+  related to neurobiology.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  A deep network can be seen as many stages of
+  \emph{information-destillation}, where each stage performes a simple
+  data transformation. These transformations are not curated by the data
+  analyst, but is estimated in the network.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  In contrast, in statistics we first select a set of inputs, then look
+  at how these inputs should be transformed, before we apply some
+  statistical methods. This transformation step can be called
+  \emph{feature engineering} and has been automated in deep learning.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{itemize}
+\tightlist
+\item
+  The success of deep learning is dependent upon the breakthroughts in
+  hardware development, expecially with faster CPUs and massively
+  parallell graphical processing units (GPUs).
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Achievements of deep learning includes high quality (near-human to
+  super human) image classification, speech recognition, handwriting
+  transcription, machine translation, digital assistants, autonomous
+  driving, advertise targeting, web searches, playing Go and chess.
+\end{itemize}
 
 \end{frame}
 
@@ -3242,19 +3472,38 @@ driving, advertise targeting, web searches, playing Go and chess.
 
 \begin{block}{The R keras package}
 
-Earlier good programming skills in C++ was essential to work in deep
-learning. In addition also skills on programming for GPUs were needed
-(e.g NVIDIA CUDA programming interface). With the launch of the Keras
-library now users may only need basic skills in Python or R.
+\(~\)
 
-\href{https://keras.io/}{Keras} can be seen as a way to use LEGO bricks
-in deep learning. To quote the web-page:
+\begin{itemize}
+\tightlist
+\item
+  Earlier good programming skills in C++ was essential to work in deep
+  learning. In addition also skills on programming for GPUs were needed.
+\end{itemize}
 
-\emph{Keras is a high-level neural networks API, written in Python and
-capable of running on top of TensorFlow, CNTK, or Theano. It was
-developed with a focus on enabling fast experimentation. Being able to
-go from idea to result with the least possible delay is key to doing
-good research.}
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  With the launch of the Keras library now users may only need basic
+  skills in Python or R.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://keras.io/}{Keras} can be seen as a way to use LEGO
+  bricks in deep learning. To quote the web-page:
+\end{itemize}
+
+\vspace{4mm}
+
+\emph{Keras is a high-level neural networks API developed with a focus
+on enabling fast experimentation. Being able to go from idea to result
+with the least possible delay is key to doing good research.}
 
 \end{block}
 
@@ -3304,66 +3553,28 @@ Cheat-sheet for R Keras:
 
 \end{frame}
 
-\begin{frame}
-
-\begin{block}{Simple data analysis workflow}
-
-\begin{enumerate}
-\tightlist
-\item
-  Select training and test data
-\item
-  Define the model(s): layers, nodes in layers, activation function
-\item
-  Configure the learning process by choosing a loss function, an
-  optimizer, and some metrics to monitor. If needed decide on an
-  evaluation protocol (validation set, cross-validation, iterated
-  cross-validation)
-\item
-  Perform any needed preprocessing of data to fit the choices in 2 and 3
-\item
-  Fit the model to the data
-\item
-  Make preditions for test data or use the model
-\end{enumerate}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-Chollet and Allaire (2018) Section 4.5 has the following recommentations
-for step 3+5:
-
-\begin{itemize}
-\tightlist
-\item
-  Develop a first model that performs better than a basic baseline
-  (maybe the basic baseline could be standard statistics solutions)
-\item
-  Develop a model that overfits the data
-\item
-  Regularize and tune hyperparameters
-\end{itemize}
-
-Here is a tutorial:
-\url{https://keras.rstudio.com/articles/tutorial_overfit_underfit.html}
-
-\end{frame}
-
 \begin{frame}[fragile]
 
 \begin{block}{MNIST dataset}
 
-This is a larger image version of the handwritten digits data set (a
-different version, ZIP-codes is found under Recommended exercises).
+\(~\)
 
-This data analysis is based on
-\url{https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/8-neural_networks_mnist.html}
-and the \texttt{R\ keras} cheat sheet. An advanced version using
-convolutional neural nets is found here:
-\url{https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/12-neural_networks_convolution_mnist.html}
+\begin{itemize}
+\tightlist
+\item
+  This is a larger image version of the handwritten digits data set (a
+  different version, ZIP-codes is found under Recommended exercises).
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  This data analysis is based on
+  \url{https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/8-neural_networks_mnist.html}
+  and the \texttt{R\ keras} cheat sheet.
+\end{itemize}
 
 \end{block}
 
@@ -3372,7 +3583,7 @@ convolutional neural nets is found here:
 \begin{frame}
 
 Objective: classify the digit contained in an image (128 \(\times\) 128
-greyscale). Problem type: Multiclass classification based on image data.
+greyscale).
 
 \scriptsize
 
@@ -3383,6 +3594,8 @@ greyscale). Problem type: Multiclass classification based on image data.
 \begin{frame}[fragile]
 
 Labels for the training data:
+
+\scriptsize
 
 \begin{verbatim}
 ## train_labels
@@ -3396,7 +3609,11 @@ Labels for the training data:
 
 \begin{block}{1. Training and test data}
 
+\(~\)
+
 60 000 images for training and 10 000 images for testing.
+
+\(~\)
 
 \scriptsize
 
@@ -3413,6 +3630,8 @@ Labels for the training data:
 \end{Highlighting}
 \end{Shaded}
 
+\(~\)
+
 \normalsize
 
 The \texttt{train\_images} is a tensor (generalization of a matrix) with
@@ -3426,11 +3645,12 @@ The \texttt{train\_images} is a tensor (generalization of a matrix) with
 
 \begin{block}{2. Defining the model}
 
-In this case we are using a \texttt{layer\_dense} (fully connected)
-which expects an input tensor of rank equal to two
-\texttt{(sample,\ features)} where each \texttt{sample} should contain
-\texttt{28*28=784} pixels. Adding a bias term (intercept) is default for
-\texttt{layer\_dense}.
+\vspace{2mm}
+
+We are using a \texttt{layer\_dense} (fully connected) which expects an
+input tensor of rank equal to two \texttt{(sample,\ features)} where
+each \texttt{sample} should contain \texttt{28*28=784} pixels. Adding a
+bias term (intercept) is default for \texttt{layer\_dense}.
 
 \scriptsize
 
@@ -3457,13 +3677,13 @@ which expects an input tensor of rank equal to two
 ## ___________________________________________________________________________
 \end{verbatim}
 
+\vspace{2mm}
+
 \normalsize
 
 As activation function we use \texttt{relu} for the hidden layer, and
 \texttt{softmax} for the output layer - since we have 10 classes (where
-one is correct each time). We could have included more layers in our
-model - and then maybe used early stopping if our model was chosen too
-big.
+one is correct each time).
 
 \end{block}
 
@@ -3473,11 +3693,19 @@ big.
 
 \begin{block}{3. Configure the learning process}
 
-We next need to choose the loss function we will use, which is
-cross-entropy, and then the version of the optimizer. Here htis is
-RMSprop. Finally, which measure - metrics - do we want to monitor in our
-training phase? Here we choose accuracy (=percentage correctly
-classified).
+\(~\)
+
+\begin{itemize}
+\item
+  We next need to choose the loss function we will use, which is
+  cross-entropy, and then the version of the optimizer. Here this is
+  RMSprop.
+\item
+  Finally, which measure (metrics) do we want to monitor in our training
+  phase? Here we choose accuracy (=percentage correctly classified).
+\end{itemize}
+
+\(~\)
 
 \scriptsize
 
