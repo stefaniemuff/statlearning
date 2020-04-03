@@ -33,7 +33,7 @@ whichformat="latex"
 
 ---
 
-Last update: March 27, 2020
+Last update: April 03, 2020
 
 --- 
 
@@ -1143,7 +1143,7 @@ ggarrange(pp,p)
 \vspace{2mm}
 
 * Even though a large feedforward network with one hidden layer may be able to represent a desired function, we may not be able to estimate the parameters of the function:
-    * we may choose a too many or too few nodes in the hidden layer.
+    * we may choose too many or too few nodes in the hidden layer.
     * our optimization routine may fail.
     * we may overfit/underfit the training data.
 
@@ -1155,11 +1155,11 @@ ggarrange(pp,p)
 
 ---
 
-### The `nnet` R package
+### The `nnet` and `keras` R packages
 
 $~$
 
-* For simplicity (since we only have one week to work with this module), we will use the `nnet` R package by Brian Ripley instead of the currently very popular `keras` package for deep learning (the `keras` package will be presented for completeness).
+* We will use both the rather simple `nnet` R package by Brian Ripley and the currently very popular `keras` package for deep learning (the `keras` package will be presented later).
 \vspace{2mm}
 
 * `nnet` fits _one hidden layer_ with _sigmoid activiation function_. The implementation is not gradient descent, but instead BFGS using `optim`.
@@ -1207,7 +1207,7 @@ head(train_data)
 $~$
 
 \normalsize
-The column names are missing (could get them by using the Boston dataset loaded from the MASS library).
+The column names are missing (we could get them by using the Boston dataset loaded from the MASS library, but they are not relevant here).
 
 <!-- \normalsize -->
 <!-- The column names are missing, so we take them from the `MASS` library: -->
@@ -1239,7 +1239,7 @@ $~$
 
 \normalsize
 
-* **Note**: the quantities used for normalizing the test data are computed using the training data. You should never use in your workflow any quantity computed on the test data, even for something as simple as data normalization. This also means that we need to do this standardization again (from scratch) if we need to do cross-validation.
+* **Note**: the quantities used for normalizing the test data are computed using the training data. You should never use in your workflow any quantity computed on the test data, even for something as simple as data normalization. 
 
 ---
 
@@ -1262,7 +1262,7 @@ mean(abs(pred[,1]-test_targets))
 
 $~$
 
-$\rightarrow$ Cross-validation! (Time-consumring, so only results shown below.)
+$\rightarrow$ Cross-validation! (Time-consuming, so only results are shown below.)
 
 $~$
 
@@ -1327,7 +1327,10 @@ mae
 
 $~$
  
-* See here: <https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural_networks_boston_housing.html> for running two hidden layers of 64 nodes each with `keras`. (This gave a mean absolute error on the test set of 2.68 after early stopping.)
+\normalsize
+* We could improve this error rate my using deeper networks.
+
+<!-- * See here: <https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural_networks_boston_housing.html> for running two hidden layers of 64 nodes each with `keras`. (This gave a mean absolute error on the test set of 2.68 after early stopping.) -->
 
 
 ---
@@ -1358,13 +1361,17 @@ These choices have been guided by solutions in statistics (multiple linear regre
 
 $~$
 
-* Linear: for regression problems
-* Sigmoid: for two-class classification problems
-* Softmax: for more than two classes classification problems
+* _\textcolor{red}{Linear activation}_: for _continuous outcome_ (regression problems)
+\vspace{2mm}
+
+* _\textcolor{red}{Sigmoid activation}_: for _binary outcome_ (two-class classification problems)
+\vspace{2mm}
+
+* _\textcolor{red}{Softmax}_: for _multinomial/categorical outcome_  (multi-class classification problems)
 
 $~$
 
-Remark: it is important that the output activation is matched with an appropriate loss function.
+Remark: it is important that the output activation is matched with an appropriate loss function (see 4).
 
 ---
 
@@ -1428,7 +1435,7 @@ According to @goodfellow, page 191, hidden unit design is an _active area of res
 
 ---
 
-**Q:** Why can we not just use linar activation function in all hidden layers?
+**Q:** Why can we not just use linear activation function in all hidden layers?
 
 **A:** 
 <!-- Then each layer would only be able to do linear transformations of the input data and a deep stack of linear layers would still implement a linear operation. The activation functions sigmoid and relu add non-linearity to the model. And, the universial approximation property is dependent on a squashing type activation function. -->
@@ -1465,7 +1472,7 @@ $~$
 
 ---
 
-However, the recent practice, see e.g. @kerasR, Section 4.5.6 and @goodfellow, page 229, is to
+However, the recent practice, see e.g. @kerasR, Section 4.5.6/7 and @goodfellow, page 229, is to
 
 $~$
 
@@ -1486,7 +1493,7 @@ This simplifies the choice of network architecture to _choose a large enough net
 
 $~$
 
-* The choice of loss function is closely related to the output layer activation function. 
+* The choice of the loss function is closely related to the output layer activation function. 
 
 * To sum up, the popular problem types, output activation and loss functions are:
 
@@ -1557,7 +1564,7 @@ $~$
 
 * Gradient descent
 
-* Mini-batch stochastic gradient descent (SGD)
+* Mini-batch stochastic gradient descent (SGD) and true SGD
 
 * Backpropagation
 
@@ -1568,7 +1575,7 @@ $~$
 
 **Remember**:
 
-Given the gradient $\nabla J({\boldsymbol \theta}^{(t)})$\footnote{Remember that the gradient is the vector of partical derivative of the loss function with respect to each of the parameter in the network.} of the loss function evaluated at the current estimate ${\boldsymbol \theta}^{(t)}$, then the algorithm estimates the parameter at the next step as:
+Given the gradient $\nabla J({\boldsymbol \theta}^{(t)})$\footnote{Remember that the gradient is the vector of partial derivatives of the loss function with respect to each of the parameter in the network.} of the loss function evaluated at the current estimate ${\boldsymbol \theta}^{(t)}$, then the algorithm estimates the parameter at the next step as:
 
 $${\boldsymbol \theta}^{(t+1)}={\boldsymbol \theta}^{(t)} - \lambda \nabla_{\boldsymbol \theta} J({\boldsymbol \theta}^{(t)}) \ , $$
 
@@ -1582,13 +1589,15 @@ where $\lambda$ is the _learning rate_  (usually a small value). In `keras` the 
 ---
 
 ### Mini-batch stochastic gradient descent (SGD)
+\vspace{2mm}
 
-* In full gradient descent, the loss function is computed as a mean over all training examples.
+* In _\textcolor{red}{full gradient descent}_, the loss function is computed as a mean over all training examples.
 $$
 J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n J({\boldsymbol x}_i, y_i) \ .
 $$
 
-* This means that the gradient will also be a mean over the gradient contribution from each training example.
+* The gradient is _an average over many individual gradients_ from the training example. You can think of this as an estimator for an expectation. 
+
 $$
 \nabla_{\boldsymbol \theta} J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n \nabla_{\boldsymbol \theta} J({\boldsymbol x}_i, y_i) \ .
 $$
@@ -1597,15 +1606,24 @@ $$
 
 ---
 
-* The gradient as _an average over many individual gradients_, and think of this as an estimator for an expectation. This expectation can be approximated by the average gradient over just a _mini-batch_ (random sample) of the observations.
+_\textcolor{red}{Stochastic gradient descent}_
 
-* Idea: the optimizer will converge much faster if they can rapidly compute approximate estimates of the gradient, instead of slowly computing the exact gradient (using all training data).
+
+
+* **Crucial idea**: The expectation can be approximated by the average gradient over just a _mini-batch_ (random sample) of the observations.
+
+\vspace{2mm}
+
+**Advantages**:
+
+* The optimizer will converge much faster if they can rapidly compute approximate estimates of the gradient, instead of slowly computing the exact gradient (using all training data).
 
 * Mini-batches may be processed _in parallel_, and the batch size is often a power of 2 (32 or 256).
 
-* Additional benefit: It also turns out that small batches also serves as a regularization effect maybe due to the variability they bring to the optimization process.
+* It also turns out that small batches also serves as a regularization effect maybe due to the variability they bring to the optimization process.
 
-<!-- --- -->
+
+--- 
 
 In the 3th video (on backpropagation) from 3Blue1Brown there is nice example of one trajectory from gradient decent and one from SGD (10:10 minutes into the video):
 <https://www.youtube.com/watch?v=tIeHLnjs5U8>
@@ -1633,7 +1651,7 @@ In the 3th video (on backpropagation) from 3Blue1Brown there is nice example of 
 \vspace{6mm}
 
 
-**Special case**: Stochastic gradient descent (SGD) for only one sample (mini-batch size 1).  Mini-batch SGD is a compromise between SGD (one sample per iteration) and full gradient descent (full dataset per iteration)
+**Special case**: _\textcolor{red}{True SGD}_ involves only _\textcolor{red}{one sample}_ (mini-batch size 1). $\rightarrow$ Mini-batch SGD is a compromise between SGD (one sample per iteration) and full gradient descent (full dataset per iteration)
 
 ---
 
@@ -1653,7 +1671,7 @@ $~$
 
 \vspace{2mm}
 
-* Backpropagation starts with the value of the loss function and works backward from the top layers to the bottom layers, applying the chain rule to compute the contribution that each parameter have in the loss value.
+* Backpropagation starts with the value of the loss function and works backward from the top layers to the bottom layers, applying the chain rule to compute the contribution that each parameter has in the loss value.
 
 ---
 
@@ -1669,15 +1687,15 @@ $~$
 
 ---
 
-### Variations of SDG — with adaptive learning rates
+### Variations of SGD — with adaptive learning rates
 
-\vspace{1mm}
+\vspace{2mm}
 
 The learning rate $\lambda$ is difficult to set. Some ideas for adaptive learning rates (Goodfellow et al, Chapter 8.5).
 
 $~$
 
-* Momentum term: previous gradients are allowed to contribute.
+* _\textcolor{red}{Momentum term}_: previous gradients are allowed to contribute.
 
 <!-- * decay the learning rate linearly until iteration $\tau$: $\lambda_k=(1-\delta)\lambda_0+\delta \lambda{\tau}$, where $\delta=k/\tau$. After iteration $\tau$ the learning rate is kept constant. -->
 
@@ -1686,14 +1704,14 @@ $~$
 
 $~$
 
-* AdaGrad: individually adapt the learning rates ($\lambda$) of all model parameters. The
+* _\textcolor{red}{AdaGrad}_: individually adapt the learning rates ($\lambda$) of all model parameters. The
 parameters with the largest partial derivative of the loss have a correspondingly
-rapid decrease in their learning rate. Nice properties when optimization is convec.
+rapid decrease in their learning rate. Nice properties when optimization is convex.
 
 
 $~$
 
-* RMSprop: modification to AdaGrad in non-convex setting. Scales with exponentially weighted moving average instead of all historical squared gradient values.
+* _\textcolor{red}{RMSprop}_: modification to AdaGrad in non-convex setting. Scales with exponentially weighted moving average instead of all historical squared gradient values. This helps to "forget" information from the extreme past.
 
 <!-- --- -->
 
@@ -1730,11 +1748,13 @@ $~$
 
 $~$
 
-* _Weight decay_: In neural networks this means adding a $L_2$-penalty to the loss function (see chapter 7.1.1 in Goodfellow et al), and is available in the `nnet` R package.
+* _Weight decay_: In neural networks this means adding a $L_2$-penalty to the loss function to _penalize large weights_ \footnote{see chapter 7.1.1 in Goodfellow et al}:
+
+$$ \tilde{J}({\boldsymbol w})= \frac{\alpha}{2}{{\boldsymbol w}^\top{\boldsymbol w}} + J({\boldsymbol w}) \ .$$
 
 \vspace{2mm}
 
-* _Dataset augmentation_: Adding fake data to the dataset, in order that the trained model will generalize better. For some learning task it is straightforward to create the new fake data. For image data this can be done by rotating and scaling the images.
+* _Dataset augmentation_: Adding fake data to the dataset, in order that the trained model will generalize better. For some learning tasks it is straightforward to create fake data. For image data this can be done by rotating and scaling the images.
 
 \vspace{2mm}
 
@@ -1787,14 +1807,17 @@ Dropout was developed by Geoff Hinton and his students.
 
 $~$
 
-* During training: randomly _dropout_ (set to zero) outputs in a layer. Drop-out rates may be chosen between 0.2 and 0.5.
+* During training: randomly _dropout_ (set to zero) some outputs in a given layer at each iteration. Drop-out rates may be chosen between 0.2 and 0.5.
+\vspace{1mm}
 
-* During test: not dropout, but scale done the layer output values by a factor equal to the drop-out rate (since now more units are active than we had during training)
+* During test: no dropout, but scale done the layer output values by a factor equal to the drop-out rate (since now more units are active than we had during training).
+\vspace{1mm}
 
 * Alternatively, the drop-out and scaling (now upscaling) can be done during training.
+\vspace{1mm}
 
 
-* One way to look at dropout is on the lines of what we did in Module 8 when we used bootstrapping to produced many data sets and then fitted a model to each of them and then took the average (bagging). But randomly dropping out outputs in a layer, this can be looked as mimicking bagging — in an efficient way.
+* One way to look at dropout is on the lines of what we did in Module 8 when we used bootstrapping to produced many data sets and then fitted a model to each of them and then took the average (bagging). But randomly dropping out outputs in a layer, this can be looked as mimicking bagging -- in an efficient way.
 
 
 <!-- --- -->
@@ -1912,7 +1935,10 @@ $~$
 
 <!-- In addition, this built-in feature engineering of the deep network is not performed in a greedy fashion, but _jointly_ with estimating/learning the full model. -->
 
-* The success of deep learning is dependent upon the breakthroughts in hardware development, expecially with faster CPUs and massively parallell graphical processing units (GPUs). 
+* The success of deep learning is dependent upon the breakthroughts 
+    + in _\textcolor{red}{hardware}_ development, expecially with faster CPUs and massively parallell graphical processing units (GPUs). 
+    +  _\textcolor{red}{dataset}_ and benchmarks (internet/tech data).
+    + improvemets of the  _\textcolor{red}{algorithms}_.
 
 $~$
 
@@ -1938,22 +1964,22 @@ $~$
 _Keras is a high-level neural networks API developed with a focus on enabling fast experimentation. Being able to go from idea to result with the least possible delay is key to doing good research._
 
 
----
+<!-- --- -->
 
-[Tensorflow](https://www.tensorflow.org/) is a _symbolic-tensor manipulation_ framework that also can perform autodifferentiation.
+<!-- [Tensorflow](https://www.tensorflow.org/) is a _symbolic-tensor manipulation_ framework that also can perform autodifferentiation. -->
 
-A tensor is defined by its number of axis (below), shape (dimension) and data type (double, integer, character)
+<!-- A tensor is defined by its number of axis (below), shape (dimension) and data type (double, integer, character) -->
 
-* 0D tensor is a scalar
-* 1D tensor is a vector
-* 2D tensor is a matrix - and the two _axis_ of the tensor is the rows and columns
-* 3D tensor generalization of a matrix, and may be used for time series data
-* 4D tensors may be used for images (samples, height, width, channels), and
-* 5D tensors may be used for video (as 4D, plus frames).
+<!-- * 0D tensor is a scalar -->
+<!-- * 1D tensor is a vector -->
+<!-- * 2D tensor is a matrix - and the two _axis_ of the tensor is the rows and columns -->
+<!-- * 3D tensor generalization of a matrix, and may be used for time series data -->
+<!-- * 4D tensors may be used for images (samples, height, width, channels), and -->
+<!-- * 5D tensors may be used for video (as 4D, plus frames). -->
 
-Tensor operations (reshaping, dot product) are performed in TensorFlow.
+<!-- Tensor operations (reshaping, dot product) are performed in TensorFlow. -->
 
-The use of Tensorflow in R Keras is referred to as "using Tensorflow as a backend engine". Tensorflow is the default backend.
+<!-- The use of Tensorflow in R Keras is referred to as "using Tensorflow as a backend engine". Tensorflow is the default backend. -->
 
 ---
 
@@ -2089,9 +2115,15 @@ As activation function we use `relu` for the hidden layer, and `softmax` for the
 
 $~$
 
-* We next need to choose the loss function we will use, which is cross-entropy, and then the version of the optimizer. Here this is RMSprop. 
+We choose
 
-* Finally, which measure (metrics) do we want to monitor in our training phase? Here we choose accuracy (=percentage correctly classified).
+\vspace{2mm}
+
+* The loss function we will use, which is cross-entropy. 
+
+* The version of the optimizer, which is RMSprop. 
+
+* Which measure (metrics) do we want to monitor in our training phase? Here we choose accuracy (=percentage correctly classified).
 
 $~$
 
@@ -2109,10 +2141,15 @@ network %>% compile(
 
 ### 4. Preprocessing to match with model inputs and outputs
 
-The training data is scored in an array of dimension (60000, 28, 28) of type integer with values in the [0, 255] interval.
-The data must be reshaped into the shape the network expects (28*28). In addition the grey scale values are scales to be in the [0, 1] interval.
+$~$
 
-Also, the response must be transformed from 0-10 to a vector of 0s and 1s (dummy variable coding) aka one-hot-coding.
+* The training data is scored in an array of dimension (60000, 28, 28) of type integer with values in the [0, 255] interval.
+
+* The data must be reshaped into the shape the network expects ($28\cdot 28$). In addition the grey scale values are scales to be in the [0, 1] interval.
+
+* Also, the response must be transformed from 0-10 to a vector of 0s and 1s (dummy variable coding) aka _one-hot-coding_.
+
+$~$
 
 \scriptsize
 ```{r}
@@ -2127,7 +2164,9 @@ test_labels <- to_categorical(test_labels)
 
 ---
 
-###5. Fit the model
+### 5. Fit the model
+
+$~$
 
 \scriptsize
 ```{r, eval=FALSE,tidy=FALSE}
@@ -2139,12 +2178,14 @@ plot(fitted)+ggtitle("Fitted model")
 
 
 \centering
-![ ](mnistex.png){width=50%}
+![ ](mnistex.png){width=40%}
 
 
 ---
 
-###6. Evaluation and prediction
+### 6. Evaluation and prediction
+
+$~$
 
 \scriptsize
 ```{r,eval=FALSE}
@@ -2191,7 +2232,17 @@ Overall Statistics
 
 ## Kaggle
 
-[Kaggle](https://www.kaggle.com/) has hosted machine-learning competitions since 2010, and by looking at solutions to competitions it is possible to get an overview of what works. In 2016-2017 gradient boosting methods won the competitions with structured data ("shallow" learning problems), while deeplearning won perceptual problems (as image classification), @kerasR (page 18). Kaggle has helped (and is helping) the rise in deep learning.
+$~$
+
+* [Kaggle](https://www.kaggle.com/) has hosted machine-learning competitions since 2010, and by looking at solutions to competitions it is possible to get an overview of what works. 
+
+\vspace{2mm}
+
+* In 2016-2017 gradient boosting methods won the competitions with structured data ("shallow" learning problems), while deeplearning won perceptual problems (as image classification).
+
+\vspace{2mm}
+
+* Kaggle has helped (and is helping) the rise in deep learning.
 
 ---
 
@@ -2218,18 +2269,18 @@ taken from @kerasR: <https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural
 * Technicalities: `nnet` in R
 * Optional: `keras` in R. Use of tensors. Piping sequential layers, piping to estimation and then to evaluation (metrics).
 
----
+<!-- --- -->
 
-## Not covered
+<!-- ## Not covered -->
 
 
-(The first two topics are covered in @kerasR)
+<!-- (The first two topics are covered in @kerasR) -->
 
-Recurrent networks: extending the feedforward network to also have feedback connections. This is a popular type of network to analyse time series data and natural language applications.
+<!-- Recurrent networks: extending the feedforward network to also have feedback connections. This is a popular type of network to analyse time series data and natural language applications. -->
 
-Convolutional networks: some layers in a sequential network contain operations specially suitable for grid-like topology (images). Convolution is used in place of general layer (where we do matrix multiplication) in at least one layer. A popular operation is _pooling_.
+<!-- Convolutional networks: some layers in a sequential network contain operations specially suitable for grid-like topology (images). Convolution is used in place of general layer (where we do matrix multiplication) in at least one layer. A popular operation is _pooling_. -->
 
-Explanable AI (XAI): how to use methods on the network or the predictions of the network to figure out the underlying reasoning of the network. Popular methods are called LIME (local linear regression), Shaply (concept from game theory). The `DALEX` R package contains different socalled _explainers_ <https://arxiv.org/abs/1806.08915>.
+<!-- Explanable AI (XAI): how to use methods on the network or the predictions of the network to figure out the underlying reasoning of the network. Popular methods are called LIME (local linear regression), Shaply (concept from game theory). The `DALEX` R package contains different socalled _explainers_ <https://arxiv.org/abs/1806.08915>. -->
 
 
 

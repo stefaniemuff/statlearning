@@ -158,7 +158,7 @@
 
 \begin{frame}
 
-Last update: March 27, 2020
+Last update: April 03, 2020
 
 \end{frame}
 
@@ -2105,7 +2105,7 @@ in the hidden layer.
   \begin{itemize}
   \tightlist
   \item
-    we may choose a too many or too few nodes in the hidden layer.
+    we may choose too many or too few nodes in the hidden layer.
   \item
     our optimization routine may fail.
   \item
@@ -2127,16 +2127,15 @@ in the hidden layer.
 
 \begin{frame}[fragile]
 
-\begin{block}{The \texttt{nnet} R package}
+\begin{block}{The \texttt{nnet} and \texttt{keras} R packages}
 
 \(~\)
 
 \begin{itemize}
 \item
-  For simplicity (since we only have one week to work with this module),
-  we will use the \texttt{nnet} R package by Brian Ripley instead of the
-  currently very popular \texttt{keras} package for deep learning (the
-  \texttt{keras} package will be presented for completeness).
+  We will use both the rather simple \texttt{nnet} R package by Brian
+  Ripley and the currently very popular \texttt{keras} package for deep
+  learning (the \texttt{keras} package will be presented later).
   \vspace{2mm}
 \item
   \texttt{nnet} fits \emph{one hidden layer} with \emph{sigmoid
@@ -2236,8 +2235,8 @@ R package.
 
 \normalsize
 
-The column names are missing (could get them by using the Boston dataset
-loaded from the MASS library).
+The column names are missing (we could get them by using the Boston
+dataset loaded from the MASS library, but they are not relevant here).
 
 \end{frame}
 
@@ -2274,9 +2273,7 @@ loaded from the MASS library).
   \textbf{Note}: the quantities used for normalizing the test data are
   computed using the training data. You should never use in your
   workflow any quantity computed on the test data, even for something as
-  simple as data normalization. This also means that we need to do this
-  standardization again (from scratch) if we need to do
-  cross-validation.
+  simple as data normalization.
 \end{itemize}
 
 \end{frame}
@@ -2422,7 +2419,7 @@ Just checking out one hidden layer with 5 units to get going.
 
 \(~\)
 
-\(\rightarrow\) Cross-validation! (Time-consumring, so only results
+\(\rightarrow\) Cross-validation! (Time-consuming, so only results are
 shown below.)
 
 \(~\)
@@ -2483,14 +2480,12 @@ test set:
 
 \(~\)
 
+\normalsize
+
 \begin{itemize}
 \tightlist
 \item
-  See here:
-  \url{https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural_networks_boston_housing.html}
-  for running two hidden layers of 64 nodes each with \texttt{keras}.
-  (This gave a mean absolute error on the test set of 2.68 after early
-  stopping.)
+  We could improve this error rate my using deeper networks.
 \end{itemize}
 
 \end{frame}
@@ -2533,19 +2528,21 @@ linear regression, logistic regression, multiclass regression)
 \(~\)
 
 \begin{itemize}
-\tightlist
 \item
-  Linear: for regression problems
+  \emph{\textcolor{red}{Linear activation}}: for \emph{continuous
+  outcome} (regression problems) \vspace{2mm}
 \item
-  Sigmoid: for two-class classification problems
+  \emph{\textcolor{red}{Sigmoid activation}}: for \emph{binary outcome}
+  (two-class classification problems) \vspace{2mm}
 \item
-  Softmax: for more than two classes classification problems
+  \emph{\textcolor{red}{Softmax}}: for \emph{multinomial/categorical
+  outcome} (multi-class classification problems)
 \end{itemize}
 
 \(~\)
 
 Remark: it is important that the output activation is matched with an
-appropriate loss function.
+appropriate loss function (see 4).
 
 \end{block}
 
@@ -2657,7 +2654,7 @@ unit design is an \emph{active area of research.}
 
 \begin{frame}
 
-\textbf{Q:} Why can we not just use linar activation function in all
+\textbf{Q:} Why can we not just use linear activation function in all
 hidden layers?
 
 \textbf{A:}
@@ -2707,8 +2704,8 @@ This depends on the problem, and here experience is important.
 \begin{frame}
 
 However, the recent practice, see e.g. Chollet and Allaire (2018),
-Section 4.5.6 and Goodfellow, Bengio, and Courville (2016), page 229, is
-to
+Section 4.5.6/7 and Goodfellow, Bengio, and Courville (2016), page 229,
+is to
 
 \(~\)
 
@@ -2744,7 +2741,7 @@ large enough network}.
 
 \begin{itemize}
 \item
-  The choice of loss function is closely related to the output layer
+  The choice of the loss function is closely related to the output layer
   activation function.
 \item
   To sum up, the popular problem types, output activation and loss
@@ -2816,7 +2813,7 @@ function to be minimized \(J({\boldsymbol \theta})\).
 \item
   Gradient descent
 \item
-  Mini-batch stochastic gradient descent (SGD)
+  Mini-batch stochastic gradient descent (SGD) and true SGD
 \item
   Backpropagation
 \end{itemize}
@@ -2834,7 +2831,7 @@ function to be minimized \(J({\boldsymbol \theta})\).
 \textbf{Remember}:
 
 Given the gradient
-\(\nabla J({\boldsymbol \theta}^{(t)})\)\footnote{Remember that the gradient is the vector of partical derivative of the loss function with respect to each of the parameter in the network.}
+\(\nabla J({\boldsymbol \theta}^{(t)})\)\footnote{Remember that the gradient is the vector of partial derivatives of the loss function with respect to each of the parameter in the network.}
 of the loss function evaluated at the current estimate
 \({\boldsymbol \theta}^{(t)}\), then the algorithm estimates the
 parameter at the next step as:
@@ -2857,17 +2854,26 @@ gradient? Why not the positive?
 
 \begin{block}{Mini-batch stochastic gradient descent (SGD)}
 
+\vspace{2mm}
+
 \begin{itemize}
 \item
-  In full gradient descent, the loss function is computed as a mean over
-  all training examples. \[
+  In \emph{\textcolor{red}{full gradient descent}}, the loss function is
+  computed as a mean over all training examples. \[
   J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n J({\boldsymbol x}_i, y_i) \ .
   \]
 \item
-  This means that the gradient will also be a mean over the gradient
-  contribution from each training example. \[
-  \nabla_{\boldsymbol \theta} J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n \nabla_{\boldsymbol \theta} J({\boldsymbol x}_i, y_i) \ .
-  \]
+  The gradient is \emph{an average over many individual gradients} from
+  the training example. You can think of this as an estimator for an
+  expectation.
+\end{itemize}
+
+\[
+\nabla_{\boldsymbol \theta} J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n \nabla_{\boldsymbol \theta} J({\boldsymbol x}_i, y_i) \ .
+\]
+
+\begin{itemize}
+\tightlist
 \item
   To build a network that generalizes well, it is important to have many
   training examples, but that would make us spend a lot of time and
@@ -2880,24 +2886,37 @@ gradient? Why not the positive?
 
 \begin{frame}
 
+\emph{\textcolor{red}{Stochastic gradient descent}}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Crucial idea}: The expectation can be approximated by the
+  average gradient over just a \emph{mini-batch} (random sample) of the
+  observations.
+\end{itemize}
+
+\vspace{2mm}
+
+\textbf{Advantages}:
+
 \begin{itemize}
 \item
-  The gradient as \emph{an average over many individual gradients}, and
-  think of this as an estimator for an expectation. This expectation can
-  be approximated by the average gradient over just a \emph{mini-batch}
-  (random sample) of the observations.
-\item
-  Idea: the optimizer will converge much faster if they can rapidly
-  compute approximate estimates of the gradient, instead of slowly
-  computing the exact gradient (using all training data).
+  The optimizer will converge much faster if they can rapidly compute
+  approximate estimates of the gradient, instead of slowly computing the
+  exact gradient (using all training data).
 \item
   Mini-batches may be processed \emph{in parallel}, and the batch size
   is often a power of 2 (32 or 256).
 \item
-  Additional benefit: It also turns out that small batches also serves
-  as a regularization effect maybe due to the variability they bring to
-  the optimization process.
+  It also turns out that small batches also serves as a regularization
+  effect maybe due to the variability they bring to the optimization
+  process.
 \end{itemize}
+
+\end{frame}
+
+\begin{frame}
 
 In the 3th video (on backpropagation) from 3Blue1Brown there is nice
 example of one trajectory from gradient decent and one from SGD (10:10
@@ -2957,10 +2976,10 @@ minutes into the video):
 
 \vspace{6mm}
 
-\textbf{Special case}: Stochastic gradient descent (SGD) for only one
-sample (mini-batch size 1). Mini-batch SGD is a compromise between SGD
-(one sample per iteration) and full gradient descent (full dataset per
-iteration)
+\textbf{Special case}: \emph{\textcolor{red}{True SGD}} involves only
+\emph{\textcolor{red}{one sample}} (mini-batch size 1). \(\rightarrow\)
+Mini-batch SGD is a compromise between SGD (one sample per iteration)
+and full gradient descent (full dataset per iteration)
 
 \end{frame}
 
@@ -3003,7 +3022,7 @@ iteration)
 \item
   Backpropagation starts with the value of the loss function and works
   backward from the top layers to the bottom layers, applying the chain
-  rule to compute the contribution that each parameter have in the loss
+  rule to compute the contribution that each parameter has in the loss
   value.
 \end{itemize}
 
@@ -3037,9 +3056,9 @@ More background:
 
 \begin{frame}
 
-\begin{block}{Variations of SDG --- with adaptive learning rates}
+\begin{block}{Variations of SGD --- with adaptive learning rates}
 
-\vspace{1mm}
+\vspace{2mm}
 
 The learning rate \(\lambda\) is difficult to set. Some ideas for
 adaptive learning rates (Goodfellow et al, Chapter 8.5).
@@ -3049,7 +3068,8 @@ adaptive learning rates (Goodfellow et al, Chapter 8.5).
 \begin{itemize}
 \tightlist
 \item
-  Momentum term: previous gradients are allowed to contribute.
+  \emph{\textcolor{red}{Momentum term}}: previous gradients are allowed
+  to contribute.
 \end{itemize}
 
 \(~\)
@@ -3057,10 +3077,10 @@ adaptive learning rates (Goodfellow et al, Chapter 8.5).
 \begin{itemize}
 \tightlist
 \item
-  AdaGrad: individually adapt the learning rates (\(\lambda\)) of all
-  model parameters. The parameters with the largest partial derivative
-  of the loss have a correspondingly rapid decrease in their learning
-  rate. Nice properties when optimization is convec.
+  \emph{\textcolor{red}{AdaGrad}}: individually adapt the learning rates
+  (\(\lambda\)) of all model parameters. The parameters with the largest
+  partial derivative of the loss have a correspondingly rapid decrease
+  in their learning rate. Nice properties when optimization is convex.
 \end{itemize}
 
 \(~\)
@@ -3068,9 +3088,10 @@ adaptive learning rates (Goodfellow et al, Chapter 8.5).
 \begin{itemize}
 \tightlist
 \item
-  RMSprop: modification to AdaGrad in non-convex setting. Scales with
-  exponentially weighted moving average instead of all historical
-  squared gradient values.
+  \emph{\textcolor{red}{RMSprop}}: modification to AdaGrad in non-convex
+  setting. Scales with exponentially weighted moving average instead of
+  all historical squared gradient values. This helps to ``forget''
+  information from the extreme past.
 \end{itemize}
 
 \end{block}
@@ -3119,7 +3140,7 @@ adaptive learning rates (Goodfellow et al, Chapter 8.5).
 
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}
 
 \begin{block}{Regularization in neural networks}
 
@@ -3129,9 +3150,11 @@ adaptive learning rates (Goodfellow et al, Chapter 8.5).
 \tightlist
 \item
   \emph{Weight decay}: In neural networks this means adding a
-  \(L_2\)-penalty to the loss function (see chapter 7.1.1 in Goodfellow
-  et al), and is available in the \texttt{nnet} R package.
+  \(L_2\)-penalty to the loss function to \emph{penalize large weights}
+  \footnote{see chapter 7.1.1 in Goodfellow et al}:
 \end{itemize}
+
+\[ \tilde{J}({\boldsymbol w})= \frac{\alpha}{2}{{\boldsymbol w}^\top{\boldsymbol w}} + J({\boldsymbol w}) \ .\]
 
 \vspace{2mm}
 
@@ -3139,9 +3162,9 @@ adaptive learning rates (Goodfellow et al, Chapter 8.5).
 \tightlist
 \item
   \emph{Dataset augmentation}: Adding fake data to the dataset, in order
-  that the trained model will generalize better. For some learning task
-  it is straightforward to create the new fake data. For image data this
-  can be done by rotating and scaling the images.
+  that the trained model will generalize better. For some learning tasks
+  it is straightforward to create fake data. For image data this can be
+  done by rotating and scaling the images.
 \end{itemize}
 
 \vspace{2mm}
@@ -3246,21 +3269,22 @@ Dropout was developed by Geoff Hinton and his students.
 
 \begin{itemize}
 \item
-  During training: randomly \emph{dropout} (set to zero) outputs in a
-  layer. Drop-out rates may be chosen between 0.2 and 0.5.
+  During training: randomly \emph{dropout} (set to zero) some outputs in
+  a given layer at each iteration. Drop-out rates may be chosen between
+  0.2 and 0.5. \vspace{1mm}
 \item
-  During test: not dropout, but scale done the layer output values by a
+  During test: no dropout, but scale done the layer output values by a
   factor equal to the drop-out rate (since now more units are active
-  than we had during training)
+  than we had during training). \vspace{1mm}
 \item
   Alternatively, the drop-out and scaling (now upscaling) can be done
-  during training.
+  during training. \vspace{1mm}
 \item
   One way to look at dropout is on the lines of what we did in Module 8
   when we used bootstrapping to produced many data sets and then fitted
   a model to each of them and then took the average (bagging). But
   randomly dropping out outputs in a layer, this can be looked as
-  mimicking bagging --- in an efficient way.
+  mimicking bagging -- in an efficient way.
 \end{itemize}
 
 \end{block}
@@ -3450,9 +3474,19 @@ Geoffrey Hinton (Google)
 \begin{itemize}
 \tightlist
 \item
-  The success of deep learning is dependent upon the breakthroughts in
-  hardware development, expecially with faster CPUs and massively
-  parallell graphical processing units (GPUs).
+  The success of deep learning is dependent upon the breakthroughts
+
+  \begin{itemize}
+  \tightlist
+  \item
+    in \emph{\textcolor{red}{hardware}} development, expecially with
+    faster CPUs and massively parallell graphical processing units
+    (GPUs).
+  \item
+    \emph{\textcolor{red}{dataset}} and benchmarks (internet/tech data).
+  \item
+    improvemets of the \emph{\textcolor{red}{algorithms}}.
+  \end{itemize}
 \end{itemize}
 
 \(~\)
@@ -3506,41 +3540,6 @@ on enabling fast experimentation. Being able to go from idea to result
 with the least possible delay is key to doing good research.}
 
 \end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\href{https://www.tensorflow.org/}{Tensorflow} is a
-\emph{symbolic-tensor manipulation} framework that also can perform
-autodifferentiation.
-
-A tensor is defined by its number of axis (below), shape (dimension) and
-data type (double, integer, character)
-
-\begin{itemize}
-\tightlist
-\item
-  0D tensor is a scalar
-\item
-  1D tensor is a vector
-\item
-  2D tensor is a matrix - and the two \emph{axis} of the tensor is the
-  rows and columns
-\item
-  3D tensor generalization of a matrix, and may be used for time series
-  data
-\item
-  4D tensors may be used for images (samples, height, width, channels),
-  and
-\item
-  5D tensors may be used for video (as 4D, plus frames).
-\end{itemize}
-
-Tensor operations (reshaping, dot product) are performed in TensorFlow.
-
-The use of Tensorflow in R Keras is referred to as ``using Tensorflow as
-a backend engine''. Tensorflow is the default backend.
 
 \end{frame}
 
@@ -3695,14 +3694,18 @@ one is correct each time).
 
 \(~\)
 
+We choose
+
+\vspace{2mm}
+
 \begin{itemize}
 \item
-  We next need to choose the loss function we will use, which is
-  cross-entropy, and then the version of the optimizer. Here this is
-  RMSprop.
+  The loss function we will use, which is cross-entropy.
 \item
-  Finally, which measure (metrics) do we want to monitor in our training
-  phase? Here we choose accuracy (=percentage correctly classified).
+  The version of the optimizer, which is RMSprop.
+\item
+  Which measure (metrics) do we want to monitor in our training phase?
+  Here we choose accuracy (=percentage correctly classified).
 \end{itemize}
 
 \(~\)
@@ -3724,13 +3727,22 @@ one is correct each time).
 
 \begin{block}{4. Preprocessing to match with model inputs and outputs}
 
-The training data is scored in an array of dimension (60000, 28, 28) of
-type integer with values in the {[}0, 255{]} interval. The data must be
-reshaped into the shape the network expects (28*28). In addition the
-grey scale values are scales to be in the {[}0, 1{]} interval.
+\(~\)
 
-Also, the response must be transformed from 0-10 to a vector of 0s and
-1s (dummy variable coding) aka one-hot-coding.
+\begin{itemize}
+\item
+  The training data is scored in an array of dimension (60000, 28, 28)
+  of type integer with values in the {[}0, 255{]} interval.
+\item
+  The data must be reshaped into the shape the network expects
+  (\(28\cdot 28\)). In addition the grey scale values are scales to be
+  in the {[}0, 1{]} interval.
+\item
+  Also, the response must be transformed from 0-10 to a vector of 0s and
+  1s (dummy variable coding) aka \emph{one-hot-coding}.
+\end{itemize}
+
+\(~\)
 
 \scriptsize
 
@@ -3752,7 +3764,9 @@ Also, the response must be transformed from 0-10 to a vector of 0s and
 
 \begin{frame}[fragile]
 
-\#\#\#5. Fit the model
+\begin{block}{5. Fit the model}
+
+\(~\)
 
 \scriptsize
 
@@ -3767,13 +3781,17 @@ Also, the response must be transformed from 0-10 to a vector of 0s and
 
 \centering
 
-\includegraphics[width=0.5\textwidth,height=\textheight]{mnistex.png}
+\includegraphics[width=0.4\textwidth,height=\textheight]{mnistex.png}
+
+\end{block}
 
 \end{frame}
 
 \begin{frame}[fragile]
 
-\#\#\#6. Evaluation and prediction
+\begin{block}{6. Evaluation and prediction}
+
+\(~\)
 
 \scriptsize
 
@@ -3815,19 +3833,41 @@ Also, the response must be transformed from 0-10 to a vector of 0s and
 \end{Highlighting}
 \end{Shaded}
 
+\end{block}
+
 \end{frame}
 
 \begin{frame}
 
 \begin{block}{Kaggle}
 
-\href{https://www.kaggle.com/}{Kaggle} has hosted machine-learning
-competitions since 2010, and by looking at solutions to competitions it
-is possible to get an overview of what works. In 2016-2017 gradient
-boosting methods won the competitions with structured data (``shallow''
-learning problems), while deeplearning won perceptual problems (as image
-classification), Chollet and Allaire (2018) (page 18). Kaggle has helped
-(and is helping) the rise in deep learning.
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  \href{https://www.kaggle.com/}{Kaggle} has hosted machine-learning
+  competitions since 2010, and by looking at solutions to competitions
+  it is possible to get an overview of what works.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  In 2016-2017 gradient boosting methods won the competitions with
+  structured data (``shallow'' learning problems), while deeplearning
+  won perceptual problems (as image classification).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Kaggle has helped (and is helping) the rise in deep learning.
+\end{itemize}
 
 \end{block}
 
@@ -3888,33 +3928,6 @@ taken from Chollet and Allaire (2018):
   Optional: \texttt{keras} in R. Use of tensors. Piping sequential
   layers, piping to estimation and then to evaluation (metrics).
 \end{itemize}
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\begin{block}{Not covered}
-
-(The first two topics are covered in Chollet and Allaire (2018))
-
-Recurrent networks: extending the feedforward network to also have
-feedback connections. This is a popular type of network to analyse time
-series data and natural language applications.
-
-Convolutional networks: some layers in a sequential network contain
-operations specially suitable for grid-like topology (images).
-Convolution is used in place of general layer (where we do matrix
-multiplication) in at least one layer. A popular operation is
-\emph{pooling}.
-
-Explanable AI (XAI): how to use methods on the network or the
-predictions of the network to figure out the underlying reasoning of the
-network. Popular methods are called LIME (local linear regression),
-Shaply (concept from game theory). The \texttt{DALEX} R package contains
-different socalled \emph{explainers}
-\url{https://arxiv.org/abs/1806.08915}.
-
-\end{block}
 
 \end{frame}
 
