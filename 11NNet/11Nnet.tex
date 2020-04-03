@@ -2246,7 +2246,7 @@ dataset loaded from the MASS library, but they are not relevant here).
 \tightlist
 \item
   To make the optimization easier with gradient based methods do
-  feature-wise normalization.
+  \emph{\textcolor{red}{feature-wise normalization}}.
 \end{itemize}
 
 \(~\)
@@ -2560,6 +2560,10 @@ appropriate loss function (see 4).
 
 \(~\)
 
+\textbf{Very common}:
+
+\(~\)
+
 \begin{itemize}
 \tightlist
 \item
@@ -2575,6 +2579,10 @@ appropriate loss function (see 4).
   Sigmoid (\(\phi_h(a)=\sigma(a)=1/(1+\exp(-a))\)) or hyperbolic tangent
   (\(\phi_h(a)=\tanh(z)\)).
 \end{itemize}
+
+\(~\)
+
+\textbf{Less common}:
 
 \(~\)
 
@@ -2886,7 +2894,9 @@ gradient? Why not the positive?
 
 \begin{frame}
 
-\emph{\textcolor{red}{Stochastic gradient descent}}
+\emph{\textcolor{red}{Mini-batch stochastic gradient descent}}
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -3079,8 +3089,9 @@ adaptive learning rates (Goodfellow et al, Chapter 8.5).
 \item
   \emph{\textcolor{red}{AdaGrad}}: individually adapt the learning rates
   (\(\lambda\)) of all model parameters. The parameters with the largest
-  partial derivative of the loss have a correspondingly rapid decrease
-  in their learning rate. Nice properties when optimization is convex.
+  partial derivative of the loss (over all historical values!) have a
+  correspondingly rapid decrease in their learning rate. Nice properties
+  when optimization is convex.
 \end{itemize}
 
 \(~\)

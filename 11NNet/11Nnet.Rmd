@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "March 27 and 30, 2020"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -1222,7 +1222,7 @@ The column names are missing (we could get them by using the Boston dataset load
 
 ---
 
-* To make the optimization easier with gradient based methods do feature-wise normalization.
+* To make the optimization easier with gradient based methods do _\textcolor{red}{feature-wise normalization}_.
 
 $~$
 
@@ -1383,11 +1383,19 @@ Remark: it is important that the output activation is matched with an appropriat
 
 $~$
 
+**Very common**:
+
+$~$
+
 * ReLU  ($\phi_h(a)=\max(0,a)$) is standard choice for deep networks (many hidden layers and many nodes) today.
 
 $~$
 
 * Sigmoid ($\phi_h(a)=\sigma(a)=1/(1+\exp(-a))$) or hyperbolic tangent ($\phi_h(a)=\tanh(z)$).
+
+$~$
+
+**Less common**:
 
 $~$
 
@@ -1606,9 +1614,9 @@ $$
 
 ---
 
-_\textcolor{red}{Stochastic gradient descent}_
+_\textcolor{red}{Mini-batch stochastic gradient descent}_
 
-
+\vspace{2mm}
 
 * **Crucial idea**: The expectation can be approximated by the average gradient over just a _mini-batch_ (random sample) of the observations.
 
@@ -1705,8 +1713,9 @@ $~$
 $~$
 
 * _\textcolor{red}{AdaGrad}_: individually adapt the learning rates ($\lambda$) of all model parameters. The
-parameters with the largest partial derivative of the loss have a correspondingly
+parameters with the largest partial derivative of the loss (over all historical values!) have a correspondingly
 rapid decrease in their learning rate. Nice properties when optimization is convex.
+
 
 
 $~$
