@@ -2091,7 +2091,11 @@ The `train_images` is a tensor (generalization of a matrix) with 3 axis, `(sampl
 
 \vspace{2mm}
 
-We are using a `layer_dense` (fully connected) which expects an input tensor of rank equal to two `(sample, features)` where each `sample` should contain `28*28=784` pixels. Adding a bias term (intercept) is default for `layer_dense`.
+Using `keras_model_sequential()` we build a model with a stack of layers.
+`layer_dense()` adds densely connected layers on top of the input layer. Each sample contains `28*28=784` pixels (= input nodes) and 10 features (=output nodes). Adding a bias term (intercept) is default for `layer_dense`.
+
+
+<!-- which expects an input tensor of rank equal to two `(sample, features)` where each `sample` should contain `28*28=784` pixels. Adding a bias term (intercept) is default for `layer_dense`. -->
 
 \scriptsize
 
@@ -2144,8 +2148,10 @@ network %>% compile(
 $~$
 
 * The training data is scored in an array of dimension (60000, 28, 28) of type integer with values in the [0, 255] interval.
+\vspace{2mm}
 
 * The data must be reshaped into the shape the network expects ($28\cdot 28$). In addition the grey scale values are scales to be in the [0, 1] interval.
+\vspace{2mm}
 
 * Also, the response must be transformed from 0-10 to a vector of 0s and 1s (dummy variable coding) aka _one-hot-coding_.
 
@@ -2176,9 +2182,12 @@ library(ggplot2)
 plot(fitted)+ggtitle("Fitted model")
 ```
 
+\normalsize
+`epoch` defines how many times you go through your training set (using mini-batches). See [here](https://keras.io/getting-started/faq/#what-does-sample-batch-epoch-mean) for some documentation.
 
 \centering
 ![ ](mnistex.png){width=40%}
+
 
 
 ---
@@ -2243,6 +2252,10 @@ $~$
 \vspace{2mm}
 
 * Kaggle has helped (and is helping) the rise in deep learning.
+
+\vspace{2mm}
+
+* Very timely topic: Analysis of COVID-19 data!
 
 ---
 

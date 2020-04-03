@@ -3646,10 +3646,11 @@ The \texttt{train\_images} is a tensor (generalization of a matrix) with
 
 \vspace{2mm}
 
-We are using a \texttt{layer\_dense} (fully connected) which expects an
-input tensor of rank equal to two \texttt{(sample,\ features)} where
-each \texttt{sample} should contain \texttt{28*28=784} pixels. Adding a
-bias term (intercept) is default for \texttt{layer\_dense}.
+Using \texttt{keras\_model\_sequential()} we build a model with a stack
+of layers. \texttt{layer\_dense()} adds densely connected layers on top
+of the input layer. Each sample contains \texttt{28*28=784} pixels (=
+input nodes) and 10 features (=output nodes). Adding a bias term
+(intercept) is default for \texttt{layer\_dense}.
 
 \scriptsize
 
@@ -3732,11 +3733,11 @@ We choose
 \begin{itemize}
 \item
   The training data is scored in an array of dimension (60000, 28, 28)
-  of type integer with values in the {[}0, 255{]} interval.
+  of type integer with values in the {[}0, 255{]} interval. \vspace{2mm}
 \item
   The data must be reshaped into the shape the network expects
   (\(28\cdot 28\)). In addition the grey scale values are scales to be
-  in the {[}0, 1{]} interval.
+  in the {[}0, 1{]} interval. \vspace{2mm}
 \item
   Also, the response must be transformed from 0-10 to a vector of 0s and
   1s (dummy variable coding) aka \emph{one-hot-coding}.
@@ -3778,6 +3779,13 @@ We choose
 \KeywordTok{plot}\NormalTok{(fitted)}\OperatorTok{+}\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"Fitted model"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+
+\normalsize
+
+\texttt{epoch} defines how many times you go through your training set
+(using mini-batches). See
+\href{https://keras.io/getting-started/faq/\#what-does-sample-batch-epoch-mean}{here}
+for some documentation.
 
 \centering
 
@@ -3867,6 +3875,14 @@ We choose
 \tightlist
 \item
   Kaggle has helped (and is helping) the rise in deep learning.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Very timely topic: Analysis of COVID-19 data!
 \end{itemize}
 
 \end{block}
