@@ -11,7 +11,7 @@ output:
   #   latex_engine: xelatex
   #   theme: "Singapore"
   #   colortheme: "default"
-  #   font: "serif"
+  #   font: "serif" 
   html_document:
     toc: true
     toc_float: true
@@ -33,7 +33,7 @@ whichformat="latex"
 
 ---
 
-Last update: April 03, 2020
+Last update: April 09, 2020
 
 --- 
 
@@ -1080,8 +1080,8 @@ $~$
 
 **A:**
 
-<!-- * Principal component regression.  -->
-<!-- * Partial least squares. -->
+* Principal component regression.
+* Partial least squares.
 
 
 ---
@@ -1446,7 +1446,7 @@ According to @goodfellow, page 191, hidden unit design is an _active area of res
 **Q:** Why can we not just use linear activation function in all hidden layers?
 
 **A:** 
-<!-- Then each layer would only be able to do linear transformations of the input data and a deep stack of linear layers would still implement a linear operation. The activation functions sigmoid and relu add non-linearity to the model. And, the universial approximation property is dependent on a squashing type activation function. -->
+Then each layer would only be able to do linear transformations of the input data and a deep stack of linear layers would still implement a linear operation. The activation functions sigmoid and relu add non-linearity to the model. And, the universial approximation property is dependent on a squashing type activation function.
 
 
 
@@ -1594,6 +1594,8 @@ where $\lambda$ is the _learning rate_  (usually a small value). In `keras` the 
 
 **Q**: Why are we moving in the direction of the negative of the gradient? Why not the positive?
 
+**A**: The gradient would point in the direction of the steepest ascent (not descent).
+
 ---
 
 ### Mini-batch stochastic gradient descent (SGD)
@@ -1671,7 +1673,7 @@ $~$
 
 \vspace{2mm}
 
-* _\textcolor{red}{Backpropagation}_ is a simple and inexpensive way to calculate the gradient.
+* _\textcolor{red}{Backpropagation}_ is a simple and inexpensive way to calculate the gradient numerically.
 
 \vspace{2mm}
 
@@ -1713,7 +1715,7 @@ $~$
 $~$
 
 * _\textcolor{red}{AdaGrad}_: individually adapt the learning rates ($\lambda$) of all model parameters. The
-parameters with the largest partial derivative of the loss (over all historical values!) have a correspondingly
+parameters with the largest partial derivative of the loss (over all historical squared values) have a correspondingly
 rapid decrease in their learning rate. Nice properties when optimization is convex.
 
 
@@ -1853,7 +1855,7 @@ $~$
 
 $~$
 
-**Hyperparameters**: The network architecture, the number of batches to run before terminating the optimzation, the drop-out rate.
+**Hyperparameters**: The network architecture, the number of batches to run before terminating the optimization, the drop-out rate.
 
 $~$
 
