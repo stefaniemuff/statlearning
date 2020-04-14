@@ -535,22 +535,304 @@ Hierarchical clustering for visualization
 
 ## 11. Neural networks
  
-### Topics in Module 11:
+ $~$
 
 * Feedforward network architecture: mathematical formula - layers of multivariate transformed (`relu`, `linear`, `sigmoid`) inner products - sequentially connected. 
-* What is the number of parameters that need to be estimated? Intercept term (for each layer) is possible and is referred to as "bias term".
-* Loss function to minimize (on output layer): regression (mean squared), classification binary (binary crossentropy), classification multiple classes (categorical crossentropy) — and remember to connect to the correct choice of output activiation function: mean squared loss goes with linear activation, binary crossentropy with sigmoid, categorical crossentropy with softmax.
-* How to minimize the loss function: gradient based (chain rule) back-propagation - many variants.
+ 
+* Loss function to minimize (on output layer): regression (mean squared), classification binary (binary crossentropy), classification multiple classes (categorical crossentropy) 
 
----
+* Remember the correct choice of output activiation function: mean squared loss goes with linear activation, binary crossentropy with sigmoid, categorical crossentropy with softmax.
+
+* Gradient based (chain rule) back-propagation - many variants.
 
 * Technicalities: `nnet` in R
-* Optional (not on reading list): `keras` in R. Use of tensors. Piping sequential layers, piping to estimation and then to evaluation (metrics).
 
- 
+* `keras` in R. Use of tensors: Piping sequential layers, piping to estimation and then to evaluation (metrics).
+
+---
+
+# Some cautionary words
+
+$~$
+
+* In most of the problems we looked at we could (or had to) choose a set of variables to explain or predict an outcome ($y$).
+
+* Model selection was the topic of Module 6, but there is more to say about it, in particular in the regression context.
+
+* Importantly, the approach to find a model **heavily depends on the aim** for which the model is built. 
+
+$~$
+
+It is important to make the following distinction:
+
+* The aim is to _\textcolor{red}{predict}_ future values of $y$ from known regressors.
+* The aim is to _\textcolor{red}{explain}_ $y$ using known regressors. In this case, the ultimate aim is to find causal relationships.
+
+---
+
+$\rightarrow$ Even among statisticians there is no real consensus about how, if, or when to select a model:
+
+\vspace{2mm}
+
+![](graphics/brewer_title.png){width=90%}
+![](graphics/brewer.png){width=90%}
+
+
+Note: The first sentence of a paper in _Methods in Ecology and Evolution_ from 2016 is: ``Model selection is difficult.''
+
+---
+
+## Why is finding a model so hard?
+
+$~$
+
+A model is an approximation of the reality. The aim of statistics and data analysis is to find connections (explanations or predictions) thanks to simplifications of the real world.
+
+$~$
+
+Box (1979): _\textcolor{red}{``All models are wrong, but some are useful.''}_
+
+$~$
+$~$
+
+$\rightarrow$ There is often not a "right" or a "wrong" model -- but there are more and less useful ones.
+
+$~$
+
+$\rightarrow$ Finding a model or the appropriate method with good properties is sometimes an art...
 
 
 ---
+
+
+## Predictive and explanatory models 
+
+$~$
+
+When choosing a method or a model, you need to be clear about the scope:
+
+$~$
+
+* **\textcolor{red}{Predictive models}**: These are models that aim to predict the outcome of future subjects.  
+**Example:** In the bodyfat example (module 3) the aim is to predict people's bodyfat from factors that are easy to measure (age, BMI, weight,..).
+
+$~$
+
+* **\textcolor{red}{Explanatory models}**: These are models that aim at understanding the (causal) relationship between covariates and the response.   
+**Example:** The South African heart disease data aims to identify important risk factors for coronary heart disease.
+ 
+
+$~$
+ 
+$\rightarrow$ **The model selection strategy depends on this distinction.**
+ 
+---
+
+## Prediction vs explanation
+
+$~$
+
+When the aim is **_prediction_**, the best model is the one that best predicts the fate of a future subject (smallest test error rate). This is a well defined task and ``objective'' variable selection strategies to find the model which is best in this sense are potentially useful.
+
+$~$
+
+However, when used for **_explanation_** the best model will depend on the scientific question being asked, **and automatic variable selection strategies have no place**. 
+ 
+
+$~$
+
+
+\scriptsize
+Chapters 27.1 and 27.2 in @clayton.hills1993
+
+---
+
+## Model selection with AIC, BIC, $C_p$, adjusted $R^2$
+
+$~$
+
+Given $m$ potential variables to be included in a model. Remember from Module 6: 
+\vspace{2mm}
+
+* Subset selection using forward, backward or best subset selection method.
+
+* Use an "objective" criterion to find the "best" model.
+
+$~$
+
+**Cautionary Note**:
+
+The coefficients of such an optimized ``best'' model should _not be interpreted_ in a causal sense! Why?
+
+$~$
+
+$\rightarrow$ Subset selection may lead to **biased parameter estimates**, thus **do not draw (biological, medical,..) conclusions** from models that were optimized for prediction, for example by AIC/AICc/BIC minimization!
+
+\vspace{1mm}
+\scriptsize
+See, e.g., @freedman1983, @copas1983
+
+---
+
+### Your aim is prediction?
+
+$~$
+
+Then you are basically free to do what you want. Your only aim is to minimize some sort of prediction error.
+
+---
+
+### Your aim is explanation?
+
+$~$
+
+_Explanation_ means that you will want to interpret the regression coefficients, 95% CIs and $p$-values. It is then often assumed that some sort of causality ($x\rightarrow y$) exists.
+
+$~$
+
+In such a situation, you should formulate a _\textcolor{red}{confirmatory model}_:
+
+$~$
+
+* Start with a _\textcolor{red}{clear hypothesis}_. 
+\vspace{2mm}
+
+* Select your covariates according to _\textcolor{red}{a priori knowledge}_. 
+\vspace{2mm}
+
+* Ideally, formulate _\textcolor{red}{only one}_ or a few model(s) _\textcolor{red}{before you start analysing your data}_.
+
+
+
+---
+
+## Explanatory: Confirmatory vs exploratory
+
+$~$
+
+Any **additional analyses** that you potentially do with your data have the character of **exploratory models**.
+
+$~$
+
+$\rightarrow$ Two sorts of _\textcolor{red}{explanatory models/analyses}_:
+
+$~$
+
+* \textcolor{red}{Confirmatory}: 
+    * Clear hypothesis and \emph{\bf a priori} selection of regressors for $y$.
+    * **No subset selection!**
+    * Allowed to interpret the results and draw quantitative conclusions. 
+    
+$~$
+ 
+
+* \textcolor{red}{Exploratory}: 
+    * Build whatever model you want, but the results should only be used to generate new hypotheses, a.k.a. ``speculations''.
+    * Clearly label the results as ``exploratory''.
+
+---
+
+Explanatory models to confirm hypotheses (so-called confirmatory models) have a long tradition medicine. In fact, the main conclusions in a study are only allowed to be drawn from the main model (which needs to be specified even before data are collected):
+
+$~$
+
+\includegraphics[width=10.5cm]{graphics/claytonHills.jpg} 
+@clayton.hills1993
+
+---
+
+## Interpretation of exploratory models?
+
+$~$ 
+
+Results from exploratory models can be used to generate new hypotheses, but it is then _not allowed to draw causal conclusions from them_, or to over-interpret effect-sizes.
+
+$~$
+
+
+$\rightarrow$ In biological publications it is (unfortunately) still common practice that exploratory models, which were optimized with model selection criteria (like AIC), are used to draw conclusions as if the models were confirmatory.
+
+$~$
+
+
+$\rightarrow$ We illustrate why this is a problem on the next slides.
+
+
+---
+
+
+## Illustration: Model selection bias
+ 
+$~$
+
+**Aim of the example:** To illustrate how model selection purely based on AIC can lead to biased parameters and overestimated effects.
+
+$~$
+
+_Procedure:_
+\vspace{2mm}
+
+1.) Randomly generate 100 data points for 50 covariables $x^{(1)},\ldots, x^{(50)}$ and a response $y$: 
+
+$~$
+\scriptsize
+```{r,echo=T,eval=T}
+set.seed(1234)
+data <- data.frame(matrix(rnorm(51*100),ncol=51))
+names(data)[51] <- "Y"
+```
+ 
+$~$
+
+\normalsize
+\texttt{data} is a 100$\times$ 51 matrix, where the last column is the response. The **data were generated completely independently**, the covariates do not have any explanatory power for the response! 
+
+---
+
+2.) Fit a linear regression model of $y$ against all the 50 variables
+\begin{equation*}
+y_i = \beta_0 + \beta_1 x_i^{(1)} + \ldots + \beta_{50}x_i^{(50)} + \epsilon_i \ .
+\end{equation*}
+
+\scriptsize
+```{r}
+r.lm <- lm(Y~.,data)
+```
+
+\normalsize
+As expected, the distribution of the $p$-values is (more or less) uniform between 0 and 1, with none below 0.05: 
+
+\scriptsize
+\center
+```{r ,fig.width=4, fig.height=4.5,out.width="4cm"}
+hist(summary(r.lm)$coef[-1,4],freq=T,main="50 variables",xlab="p-values")
+```
+ 
+---
+
+3.) Then use AICc minimization to obtain the objectively "best" model:
+
+\vspace{2mm}
+
+\scriptsize
+```{r echo=T}
+library(MASS)
+r.AICmin <- stepAIC(r.lm, direction = c("both"), trace = FALSE,AICc=TRUE)
+```
+
+\centering
+```{r pvaluesHist,fig.width=4, fig.height=4.5,out.width="5cm"}
+hist(summary(r.AICmin)$coef[-1,4],freq=T,main="18 variables of minimal AICc model",xlab="p-values")
+```
+ 
+\flushleft
+\normalsize
+The distribution of the $p$-values is now skewed: many of them reach rather small values (`r sum(summary(r.AICmin)$coef[-1,4]<0.05)` have $p<0.05$). This happened _although none of the variables has any explanatory power!_
+
+---
+
+
+
 
 # After TMA4268 - what is next?
 
@@ -558,14 +840,14 @@ What are the statistical challenges we have not covered?
 
 Do you want to learn more about the methods we have looked at in this course? And also methods that are more tailored towards specific types of data? Then we have many statistics courses that you may choose from.
 
-An overview of statistics courses and also information on the statistics staff (for bachelor and master supervision)
+An overview of statistics courses is kindly put together by Mette Langaas:
 <https://folk.ntnu.no/mettela/Talks/3klinfo20190325.html>
 
 ---
 
-On behalf of the teaching staff - Michail, Andreas, Thiago and Mette- 
+# Final word
 
-**thank you for attending this course  - hope to see you for the exam supervision - and good luck on May 23!**
+**Thank you for attending this course  - good luck for the compulsory exercise 3 and let's hope we are soon back into normal teaching mode in the post-Covid-19 era!**
 
 ---
 
