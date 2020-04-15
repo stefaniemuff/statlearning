@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "April 17, 2020"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -613,12 +613,12 @@ When choosing a method or a model, you need to be clear about the scope:
 
 $~$
 
-* **\textcolor{red}{Predictive models}**: These are models that aim to predict the outcome of future subjects.  
+* **\textcolor{red}{Predictive models}**: These are models that aim to predict the outcome of future subjects.  \vspace{2mm}  
 **Example:** In the bodyfat example (module 3) the aim is to predict people's bodyfat from factors that are easy to measure (age, BMI, weight,..).
 
 $~$
 
-* **\textcolor{red}{Explanatory models}**: These are models that aim at understanding the (causal) relationship between covariates and the response.   
+* **\textcolor{red}{Explanatory models}**: These are models that aim at understanding the (causal) relationship between covariates and the response. \vspace{2mm}     
 **Example:** The South African heart disease data aims to identify important risk factors for coronary heart disease.
  
 
@@ -647,7 +647,7 @@ Chapters 27.1 and 27.2 in @clayton.hills1993
 
 ---
 
-## Model selection with AIC, BIC, $C_p$, adjusted $R^2$
+## Model selection with AIC, AIC$_c$, BIC, $C_p$, adjusted $R^2$
 
 $~$
 
@@ -671,6 +671,24 @@ $\rightarrow$ Subset selection may lead to **biased parameter estimates**, thus 
 \vspace{1mm}
 \scriptsize
 See, e.g., @freedman1983, @copas1983
+
+---
+
+### AIC$_c$: The AIC for low sample sizes
+
+$~$
+
+When the number of data points $n$ is small with respect to the number of parameters $p$ in a model, the use of a _\textcolor{red}{corrected AIC}_, the AIC$_c$ is recommended. For a model with $n$ data points, likelihood $L$ and $p$ parameters, it is given as
+\begin{equation*}
+\text{AIC}_c = -2\log(L) + 2p\cdot\frac{n}{n-p-1} \ .
+\end{equation*}
+
+\vspace{2mm}
+
+Burnham and Anderson **recommend to use AIC$_c$ in general, but for sure when the ratio $n/p<40$.**
+
+
+
 
 ---
 
@@ -700,7 +718,7 @@ $~$
 * Select your covariates according to _\textcolor{red}{a priori knowledge}_. 
 \vspace{2mm}
 
-* Ideally, formulate _\textcolor{red}{only one}_ or a few model(s) _\textcolor{red}{before you start analysing your data}_.
+* Ideally, formulate _\textcolor{red}{only one}_ or a few model(s) _\textcolor{red}{before you start analysing your data}_. Ideally even before you start collecting your data.
 
 
 
@@ -734,7 +752,6 @@ $~$
 
 Explanatory models to confirm hypotheses (so-called confirmatory models) have a long tradition medicine. In fact, the main conclusions in a study are only allowed to be drawn from the main model (which needs to be specified even before data are collected):
 
-$~$
 
 \includegraphics[width=10.5cm]{graphics/claytonHills.jpg} 
 @clayton.hills1993
@@ -772,14 +789,14 @@ $~$
 _Procedure:_
 \vspace{2mm}
 
-1.) Randomly generate 100 data points for 50 covariables $x^{(1)},\ldots, x^{(50)}$ and a response $y$: 
+1. Randomly generate 100 data points for 50 covariables $x^{(1)},\ldots, x^{(50)}$ and a response $y$: 
 
 $~$
 \scriptsize
 ```{r,echo=T,eval=T}
-set.seed(1234)
-data <- data.frame(matrix(rnorm(51*100),ncol=51))
-names(data)[51] <- "Y"
+set.seed(123456)
+data_aic <- data.frame(matrix(rnorm(51*100),ncol=51))
+names(data_aic)[51] <- "Y"
 ```
  
 $~$
@@ -789,14 +806,14 @@ $~$
 
 ---
 
-2.) Fit a linear regression model of $y$ against all the 50 variables
+2. Fit a linear regression model of $y$ against all the 50 variables
 \begin{equation*}
 y_i = \beta_0 + \beta_1 x_i^{(1)} + \ldots + \beta_{50}x_i^{(50)} + \epsilon_i \ .
 \end{equation*}
 
 \scriptsize
 ```{r}
-r.lm <- lm(Y~.,data)
+r.lm.aic <- lm(Y~.,data_aic)
 ```
 
 \normalsize
@@ -804,24 +821,24 @@ As expected, the distribution of the $p$-values is (more or less) uniform betwee
 
 \scriptsize
 \center
-```{r ,fig.width=4, fig.height=4.5,out.width="4cm"}
-hist(summary(r.lm)$coef[-1,4],freq=T,main="50 variables",xlab="p-values")
+```{r, fig.width=4, fig.height=4.5,out.width="4cm"}
+hist(summary(r.lm.aic)$coef[-1,4],freq=T,main="50 variables",xlab="p-values")
 ```
  
 ---
 
-3.) Then use AICc minimization to obtain the objectively "best" model:
+3. Then use AICc minimization to obtain the objectively "best" model:
 
 \vspace{2mm}
 
 \scriptsize
-```{r echo=T}
+```{r, echo=T}
 library(MASS)
-r.AICmin <- stepAIC(r.lm, direction = c("both"), trace = FALSE,AICc=TRUE)
+r.AICmin <- stepAIC(r.lm.aic, direction = c("both"), trace = FALSE,AICc=TRUE)
 ```
 
 \centering
-```{r pvaluesHist,fig.width=4, fig.height=4.5,out.width="5cm"}
+```{r, fig.width=4, fig.height=4.5,out.width="4cm"}
 hist(summary(r.AICmin)$coef[-1,4],freq=T,main="18 variables of minimal AICc model",xlab="p-values")
 ```
  
@@ -832,7 +849,96 @@ The distribution of the $p$-values is now skewed: many of them reach rather smal
 ---
 
 
+## Summary: Main problem with model selection 
 
+$~$
+
+\colorbox{lightgray}{\begin{minipage}{10cm}
+When model selection is carried out based on objective criteria, the effect sizes will to be too large and the uncertainty too small. So you end up being too sure about a too large effect. 
+\end{minipage}}
+
+---
+
+## Recommended procedure for explanatory models 
+
+$~$
+
+Before you start: 
+\vspace{2mm}
+
+1. **Think about a suitable model**. This includes the model family (e.g., linear model), but also potential variables that are relevant using _a priori_ knowledge.
+\vspace{2mm}
+
+2. Declare a strategy what you do if _e.g._ modelling assumptions are not met or in the presence of collinearity.
+    * What kind of variable transformations would you try, in which order, and why?
+    * What model simplifications will be considered it it is not possible to fit the intended model?
+    * How will you deal with outliers?
+    * How will you treat missing values in the data?
+    * How will you treat collinear covariates?
+    * ... 
+
+$~$
+ 
+It is advisable to write your strategy down as a ``protocol'' before doing any analyses. 
+
+---
+
+
+3. Analyze the data following your ``protocol'':
+
+$~$
+
+* Fit the model and check if modelling assumptions are met.
+
+* If modelling assumptions are not met, {\bf adapt the model} as outlined in your protocol. 
+
+*  Interpret the model coefficients (effect sizes) and the $p$-values properly (see next week). 
+
+
+$~$
+
+
+4. After the analysis that was specified in the ``protocol'': 
+
+* Any additional analyses, which you did not specify in advance, are purely exploratory.
+
+---
+
+# One more thing: The replication crisis
+
+\vspace{2mm}
+
+Replication crisis: https://en.wikipedia.org/wiki/Replication_crisis
+
+
+$~$
+
+Do not overinterpret $p$-values. From @goodman2016 :
+
+$~$
+
+\begin{quote}
+Fisher used ``significance'' merely {\bf to indicate that an observation was worth following up, with refutation of the null hypothesis justified only if further experiments ``rarely failed'' to achieve significance.} 
+This is in stark contrast to the modern practice of making claims based on a single demonstration of statistical significance.
+\end{quote}
+
+---
+
+
+
+Please read some recent literature:
+
+* @wasserstein.lazar2016: The ASA's statement on $p$-values https://amstat.tandfonline.com/doi/full/10.1080/00031305.2016.1154108
+* @goodman2008: https://www.sciencedirect.com/science/article/abs/pii/S0037196308000620
+* @nuzzo2014: https://www.nature.com/news/scientific-method-statistical-errors-1.14700
+
+$~$
+
+These things are **extremely relevant** for you if you are going to analyse scientific data in the future.
+
+
+
+---
 
 # After TMA4268 - what is next?
 
