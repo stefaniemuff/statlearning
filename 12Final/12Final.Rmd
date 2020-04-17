@@ -44,7 +44,7 @@ $~$
 * Course content and learning outcome
 \vspace{2mm}
 
-* Overview of modules and core course topics (with exam type questions)
+* Overview of modules and core course topics
 \vspace{2mm}
 
 * Some cautionary notes
@@ -80,16 +80,19 @@ Supervised and unsupervised learning:
 
 * _\textcolor{red}{Supervised}_: regression and classification
     + examples of regression and classification type problems
-    + how complex a model to get the best fit? flexiblity/overfitting/underfitting.
+    + how complex a model to get the best fit?  
+    $\rightarrow$ flexiblity/overfitting/underfitting.
     + the bias-variance trade-off
-    + how to find the perfect fit - validation and cross-validation (or AIC-type solutions)
+    + how to find a good fit - validation and cross-validation (or AIC-type solutions)
     + how to compare different solutions 
     + how to evaluate the fit - on new unseen data
 
 \vspace{2mm}    
  * _\textcolor{red}{Unsupervised}_: how to find structure or groupings in data?
 
-and of cause all **the methods** (with underlying models) to perform regression, classification and unsupervised learning. We have gained some theoretical understanding, but in some cases deeper theoretical background and understanding of the models is provided in other statistics courses.
+\vspace{2mm}  
+
+and of course all **the methods** (with underlying models) to perform regression, classification and unsupervised learning. 
 
 
 ---
@@ -107,7 +110,8 @@ Figure 2.7 from @ISL
 
 $~$
 
-* Examples, the modules, required background in statistics and 
+* Examples, the modules, required background in statistics
+ \vspace{2mm}
 * Introduction to R 
 
 
@@ -118,15 +122,21 @@ $~$
 $~$
 
 * Model complexity
-    + Prediction vs. interpretation.  
+    + Prediction vs. interpretation (inference).  
     + Parametric vs. nonparametric. 
     + Inflexible vs. flexible.
     + Overfitting vs. underfitting
+  \vspace{2mm}
 * Supervised vs. unsupervised. 
+ \vspace{2mm}
 * Regression and classification.
+ \vspace{2mm}
 * Loss functions: quadratic and 0/1 loss.
+ \vspace{2mm}
 * Bias-variance trade-off (polynomial example): mean squared error, training and test set.
+ \vspace{2mm}
 * Vectors and matrices, rules for mean and covariances, the multivariate normal distribution.
+ \vspace{2mm}
 * Model complexity and the bias-variance trade-off is important in "all" subsequent modules.
 
 
@@ -137,9 +147,17 @@ $~$
 $~$
 
 * The classical normal linear regression model on vector/matrix form.
+ \vspace{2mm}
+
 * Parameter estimators and distribution thereof. Model fit.
+ \vspace{2mm}
+
 * Confidence intervals, hypothesis tests, and interpreting R-output from regression.
+ \vspace{2mm}
+
 * Qualitative covariates, interactions.
+ \vspace{2mm}
+
 * This module is a stepping stone for all subsequent uses of regression in Modules 6, 7, 8, and 11.
 
 
@@ -163,7 +181,7 @@ $~$
 
 ---
 
-```{r,echo=FALSE,eval=TRUE,fig.height=5,fig.width=8}
+```{r,echo=FALSE,eval=TRUE,fig.width=6,fig.height=4.5}
 attach(iris)
 library(class)
 library(MASS)
@@ -195,7 +213,7 @@ irisqda_plot = iris0_plot + geom_point(aes(x = Sepal.Width, y=Sepal.Length,
                             colour=Species_qda), data=iris_qda_df, size=0.8)
 ```
 
-```{r,echo=FALSE}
+```{r,echo=FALSE, fig.width=9,fig.height=4}
 ggarrange(irislda_plot,irisqda_plot)
 ```
 
@@ -306,13 +324,24 @@ $~$
 
 **Cros-validation**
 
-* Data rich situation: Training-validation and test set.
-* Validation set approach
+\vspace{2mm}
+
+* Data rich situation: Training, validation and test set.
+\vspace{2mm}
+* Validation set approach.
+\vspace{2mm}
 * Cross-validation for regression and for classification.
-* LOOCV, 5 and 10 fold CV
-* good and bad issues with validation set, LOOCV, 10-fold CV
-* bias and variance for $k$-fold cross-validation.
-* Selection bias -- the right and wrong way to do cross-validation
+\vspace{2mm}
+* LOOCV, 5 and 10 fold CV.
+\vspace{2mm}
+* Good and bad issues with validation set, LOOCV, 10-fold CV.
+\vspace{2mm}
+* Bias and variance for $k$-fold cross-validation.
+\vspace{2mm}
+* Selection bias -- the right and wrong way to do cross-validation.
+\vspace{2mm}
+
+* Distinction between model selection and model assessment.
 
 $~$
 
@@ -327,6 +356,7 @@ $~$
 $~$
 
 Subset-selection. Discriminate:
+\vspace{2mm}
 
 * _\textcolor{red}{Model selection}_: estimate performance of different models to choose the best one. 
 * _\textcolor{red}{Model assessment}_: having chosen a final model, estimate its performance on new data.
@@ -348,6 +378,10 @@ How?
 
 
 ---
+
+### Model selection
+
+$~$
 
 * Shrinkage methods
     + ridge regression: quadratic L2 penalty added to RSS 
@@ -387,20 +421,26 @@ How?
 $~$
 
 * Modifications to the multiple linear regression model - when a linear model is not the best choice. First look at one covariate, combine in "additive model".
+\vspace{2mm}
 
-* Basis functions: fixed functions of the covariates (no parameters to estimate).
+* Basis functions: fixed functions of the covariates.
+\vspace{2mm}
 
 * Polynomial regression: multiple linear regression with polynomials as basis functions.
+\vspace{2mm}
 
-* Step functions - piece-wise constants. Like our dummy variable coding of factors.
+* Step functions - piecewise constants. Like our dummy variable coding of factors.
+\vspace{2mm}
 
 * Regression splines: regional polynomials joined smoothly - neat use of basis functions. Cubic splines very popular.
 
 ---
 
 * Smoothing splines: smooth functions - minimizing the RSS with an additional penalty on the second derivative of the curve. Results in a natural cubic spline with knots in the unique values of the covariate. 
+\vspace{2mm}
 
 * Local regressions: smoothed $K$-nearest neighbour with local regression and weighting. In applied areas `loess` is very popular.
+\vspace{2mm}
 
 * (Generalized) additive models (GAMs): combine the above. Sum of (possibly) non-linear instead of linear functions.
 
@@ -417,14 +457,19 @@ $~$
 $~$
 
 * Method applicable both to regression and classification ($K$ classes) and will give non-linear covariate effects and include interactions between covariates. 
+\vspace{2mm}
 
 * A tree can also be seen as a division of the covariate space into non-overlapping regions.
+\vspace{2mm}
 
 * Binary splits using only at the current best split:  _greedy strategy_.
+\vspace{2mm}
 
 * Minimization criterion: residual sums of squares (RSS), Gini index or cross-entropy.
+\vspace{2mm}
       
 * Stopping criterion: When to stop: decided stopping criterion - like minimal decrease in RSS or less than 10 observations in terminal node.
+\vspace{2mm}
 
 * Prediction:
     * Regression: Mean in box $R_j$
@@ -439,11 +484,11 @@ To improve prediction (but worse interpretation):
 
 * _Bagging_ (bootstrap aggregation): draw $B$ bootstrap samples and fit one full tree to each, used the average over all trees for prediction. 
 
-* _Random forest_: as bagging but only $m$ (randomly) chosen covariates (out of the $p$) are available for selection at each possible split. Rule of thumb for $m$ is $\sqrt{p}$ for classificaton and $p/3$ for regression.
+* _Random forest_: as bagging but only $m$ (randomly) chosen covariates (out of the $p$) are available for selection at each possible split. 
 
 * Out-of-bag estimation can be used for model selection - no need for cross-validation.
 
-* Variable importance plots: give the total amount of decrease in RSS or Gini index over splits of a predictor - averaged over all trees.
+* Variable importance plots.
 
 * _Boosting_: fit one tree with $d$ splits, make residuals and fit a new tree, adjust residuals partly with new tree - repeat. 
 
@@ -470,7 +515,9 @@ $~$
 
 ---
 
-* Kernels: generalization of an inner product to allow for non-linear boundaries and to speed up calculations due to inner products only involve support vectors. Most popular kernel is radial $$K(x_i,x_i')=\exp(-\gamma\sum_{j=1}^p (x_{ij}-x_{i'j})^2) \ . $$
+* Kernels: generalization of an inner product to allow for non-linear boundaries 
+
+* Most popular kernel is radial $$K(x_i,x_i')=\exp(-\gamma\sum_{j=1}^p (x_{ij}-x_{i'j})^2) \ . $$
 
 
 * Tuning parameters: cost and parameters in kernels - chosen by CV.
@@ -481,7 +528,7 @@ $~$
 
 \vspace{2mm}
 
-* Nice connection to non-linar and ridged version of logistic regression - comparing hinge loss to logistic loss - but then without the computational advanges of the kernel method.
+
 
 ---
 
@@ -498,7 +545,7 @@ $~$
 
 * Clustering:
      + $k$-means: number of clusters given, iterative algorithm to classify to nearest centroid and recalculate centroid
-     + hierarchical clustering: choice of distance measure, choice of linkage method (single, average, complete), 
+     + Hierarchical clustering: choice of distance measure, choice of linkage method (single, average, complete), 
 
 ---
 
@@ -513,14 +560,7 @@ pcaS <- prcomp(drink,scale=TRUE) # scale: variables are scaled
 biplot(pcaS,scale=0,cex=0.6) # scale=0: arrows scaled to represent the loadings
 ```
 
----
-
-PCA for quality control
-
-\centering
-![](PCAforQC.png){width=80%}
-
-
+ 
 
 ---
 
@@ -538,14 +578,19 @@ Hierarchical clustering for visualization
  $~$
 
 * Feedforward network architecture: mathematical formula - layers of multivariate transformed (`relu`, `linear`, `sigmoid`) inner products - sequentially connected. 
+ \vspace{2mm}
  
-* Loss function to minimize (on output layer): regression (mean squared), classification binary (binary crossentropy), classification multiple classes (categorical crossentropy) 
+* Loss function to minimize (on output layer): regression (mean squared), classification binary (binary crossentropy), classification multiple classes (categorical crossentropy).
+\vspace{2mm}
 
 * Remember the correct choice of output activiation function: mean squared loss goes with linear activation, binary crossentropy with sigmoid, categorical crossentropy with softmax.
+\vspace{2mm}
 
 * Gradient based (chain rule) back-propagation - many variants.
+\vspace{2mm}
 
 * Technicalities: `nnet` in R
+\vspace{2mm}
 
 * `keras` in R. Use of tensors: Piping sequential layers, piping to estimation and then to evaluation (metrics).
 
@@ -619,7 +664,7 @@ $~$
 $~$
 
 * **\textcolor{red}{Explanatory models}**: These are models that aim at understanding the (causal) relationship between covariates and the response. \vspace{2mm}     
-**Example:** The South African heart disease data aims to identify important risk factors for coronary heart disease.
+**Example:** The South African heart disease data (module 4) aims to identify important risk factors for coronary heart disease.
  
 
 $~$
@@ -890,7 +935,7 @@ $~$
 
 * Fit the model and check if modelling assumptions are met.
 
-* If modelling assumptions are not met, {\bf adapt the model} as outlined in your protocol. 
+* If modelling assumptions are not met, **adapt the model** as outlined in your protocol. 
 
 *  Interpret the model coefficients (effect sizes) and the $p$-values properly (see next week). 
 
@@ -904,11 +949,37 @@ $~$
 
 ---
 
+Which methods are suitable for explanation (inference)?
+\vspace{-2mm}
+
+\centering
+![](../../ISLR/Figures/Chapter2/2.7.png)
+
+---
+
+### Bottomline
+
+$~$
+
+* _Less flexible_ models tend to have _better interpretability_ and are therefore better suited _for explanation_ than more flexible models.
+
+\vspace{2mm}
+
+* The _more flexible_ a model, the better it tends to perform _for prediction_.
+
+\vspace{2mm}
+
+* Some models can be used for both, prediction and explanation, but then the approach how to build the model (e.g., how to select variables) should still depend on the aim.
+
+---
+
 # One more thing: The replication crisis
 
 \vspace{2mm}
 
-Replication crisis: https://en.wikipedia.org/wiki/Replication_crisis
+* In science, the aim of models is most often _explanation_.
+
+* _Replication crisis_: https://en.wikipedia.org/wiki/Replication_crisis
 
 
 $~$
@@ -934,7 +1005,7 @@ Please read some recent literature:
 
 $~$
 
-These things are **extremely relevant** for you if you are going to analyse scientific data in the future.
+These things are **extremely relevant** for you if you are going to analyse (scientific) data in the future.
 
 
 
