@@ -2,7 +2,7 @@
 subtitle: "TMA4268 Statistical Learning V2020"
 title: "Module 1: Introduction"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "6th January, 2020"
+date: "11th January, 2021"
 fontsize: 10pt
 output:
   beamer_presentation:
@@ -27,13 +27,13 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
                        cache = TRUE, size="scriptsize")
 ```
 
-Last changes: 24.02.2020
+Last changes: 04.01.2021
 
 ---
 
 # Acknowledgements
 
-This course had been built up by Mette Langaas at NTNU in 2018 and 2019. I am using a lot of her material, and material from her TAs, throughout the course. 
+This course had been built up by Mette Langaas at NTNU in 2018 and 2019. I am using a some of her material, and material from her TAs, throughout the course. 
 
 **I would like to thank Mette for her great work and for the permission to use her material!**
 
@@ -51,12 +51,10 @@ This course had been built up by Mette Langaas at NTNU in 2018 and 2019. I am us
 
 # Learning material
 
-<!-- \begin{center} -->
-<!-- \colorbox{lightgray}{\begin{minipage}{11cm} -->
-1) \textbf{The main learning source is the textbook by James, Witten, Hastie, Tibshirani (2013)}: "An Introduction to Statistical Learning".
+ 
+1) **The main learning source** is the textbook by James, Witten, Hastie, Tibshirani (2013): "An Introduction to Statistical Learning".
 The textbook can be downloaded here: https://www-bcf.usc.edu/~gareth/ISL/
-<!-- \end{minipage}} -->
-<!-- \end{center} -->
+ 
 
     * The ebook an also be downloaded from Springer: https://www.springer.com/gp/book/9781461471370 (NB, need to be on NTNU network or via vpn.)
 
@@ -65,8 +63,9 @@ The textbook can be downloaded here: https://www-bcf.usc.edu/~gareth/ISL/
 
 2) All the lecture notes, \textbf{including any classnotes} made on the board (not necessarily available online).
 
-3) \textbf{Additional reading material will be clearly indicated in the modules and on the course page.}
+3) The R course here: [https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/](https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/)
 
+4) **Additional reading material will be clearly indicated in the modules and on the course page.**
 
 
 ---
@@ -75,24 +74,24 @@ The textbook can be downloaded here: https://www-bcf.usc.edu/~gareth/ISL/
 
 All the relevant information for the course can be found here:
 
-https://wiki.math.ntnu.no/tma4268/2020v/start
+https://wiki.math.ntnu.no/tma4268/2021v/start
 
 On each module page, all the relevant learning material and exercises (incl. solutions) will be provided in due time.
 
 ---
 
-# The Statistical Learning Team 2020
+# The Statistical Learning Team 2021
 
 ## The TAs:
 
-* [Martina Hall](https://www.ntnu.no/ansatte/martina.hall); PhD student
+* [Emma Skarstein](https://www.ntnu.no/ansatte/emma.s.skarstein); PhD student
 * [Michail Spitieris](https://www.ntnu.no/ansatte/michail.spitieris); PhD student
 
 ## The Lecturers
 
 * [Stefanie Muff](https://www.ntnu.edu/employees/stefanie.muff); Associate Professor
-* [Thiago Guerrera Martins](https://www.ntnu.no/ansatte/thiago.guerrera); NTNU/AIAscience (Modules 6 & 10)
-* [Andreas Strand](https://www.ntnu.no/ansatte/andreas.strand); PhD student (Module 7)
+* [Thiago Guerrera Martins](https://www.ntnu.no/ansatte/thiago.guerrera); NTNU/AIAscience (Modules 6, 7, 10)
+
 
 ---
 
@@ -102,12 +101,22 @@ On each module page, all the relevant learning material and exercises (incl. sol
 # Who is this course for?
 
 ## Primary requirements
+
+$~$
+
 * Bachelor level: 3rd year student from Science or Technology programs, and master/PhD level students with interest in performing statistical analyses.
+
+\vspace{2mm}
+
 * Statistics background: TMA4240/45 Statistics, ST1101+ST1201 (probability theory and statistical methods), or equivalent.
+
+\vspace{2mm}
 
 * No background in statistical software needed: but we will use the R statistical software extensively in the course. Knowing python will make this easier for you!
 
-* Not a prerequisist but a good thing with knowledge of computing - preferably an introductory course in informatics, like TDT4105 or TDT4110.
+\vspace{2mm}
+
+* Advangatge with knowledge of computing - for example an introductory course in informatics, like TDT4105 or TDT4110.
 
 ---
 
@@ -116,7 +125,9 @@ On each module page, all the relevant learning material and exercises (incl. sol
 
 * [TDT4173](https://www.ntnu.no/studier/emner/TDT4173#tab=omEmnet) Machine learning and case based reasoning: courses differ in philosophy (computer science vs. statistics).
 
-* [TMA4267](https://www.ntnu.no/studier/emner/TMA4267#tab=omEmnet) Linear Statistical Models: useful to know about multivariate random vectors, covariance matrices and the multivariate normal distribution. Overlap only for Multiple linear regression (M3).
+\vspace{2mm}
+
+* [TMA4267](https://www.ntnu.no/studier/emner/TMA4267#tab=omEmnet) Linear Statistical Models: useful to know about multivariate random vectors, covariance matrices and the multivariate normal distribution. Overlap only for multiple linear regression (M3).
 
 ---
 
@@ -125,9 +136,15 @@ On each module page, all the relevant learning material and exercises (incl. sol
 
 ## Focus: Statistical theory **and** doing analyses
 
+$~$
+
 * The course has focus on **statistical theory**, but we apply all models and theory using (mostly) available function in R and real data sets. 
 
+\vspace{2mm}
+
 * It is important that the student in the end of the course **can analyse all types of data** (covered in the course) - not just understand the theory. 
+
+\vspace{2mm}
 
 * And vice versa - the student must also **understand** the model, methods and algorithms used. 
 
@@ -148,7 +165,7 @@ On each module page, all the relevant learning material and exercises (incl. sol
  
 &nbsp;   
 
-* Two weeks without lectures (but supervision of exercises)
+* Two weeks without lectures, time to work on the compulsory exercises.  
 
 ---
 
@@ -157,7 +174,10 @@ On each module page, all the relevant learning material and exercises (incl. sol
 \vspace{2mm}
 
 
-* **Module 1**: Introduction (this module) 
+* **Module 1**: Introduction & R course (this module) 
+
+\vspace{2mm}
+
 * **Modules 2 - 11**: 
     2) Statistical learning
     3) Multiple linear regression
@@ -168,7 +188,10 @@ On each module page, all the relevant learning material and exercises (incl. sol
     8) Support vector machines
     9) Tree-based methods
     10) Unsupervised methods
-    11) Neural nets
+    11) Neural networks (not in the course book)
+
+\vspace{2mm}
+
 * **Module 12**: Summing up  
 
 
@@ -183,8 +206,8 @@ $~$
 
 
 * Portfolio assessment is the basis for the grade awarded in the course. This portfolio comprises 
-    + a written final examination (80%).
-    + works (projects) ($2\times 10\%=20\%$). 
+    + a written **final home examination (60%)**.
+    + two projects / compulsory exercises ($2\times 20\%=40\%$). 
     
 &nbsp;  
 
@@ -201,26 +224,39 @@ $~$
 
 \vspace{2mm}  
 
-**Mondays at 10.15-12.00 in S1 and Fridays at 14.15-16.00 in S4**
+**Mondays at 12.15-14.00 online lectures and Fridays at 10.15-12.00 in S8** (if possible)
 
-* We have $2\cdot 2$ hours of lectures every week (except when working with the compulsory exercises).
-* **Note**: The **first lecture of each module will be on Fridays**, the second lecture on **Mondays**, and the exercise that corresponds to this module on Thursdays. See [here](https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2020.pdf) for a tentative schedule.
+\vspace{2mm}
+
+* We have $2\times 2$ hours of lectures every week (except when working with the compulsory exercises).
+
+\vspace{2mm}
+
+* See here [https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2021.pdf](https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2021.pdf) for a tentative schedule.
+
+\vspace{2mm}
+
+* Some weeks the Tuesday lecture are supposed to be a bit more _interactive_ or with some self-study / exercise component, where _\textcolor{red}{active learning}_ is in focus. However, this will be a bit difficult if the lecture is online.
+
+\vspace{2mm}
+
+* **I suggest that you always have your laptop handy for the Tuesday lecture.** So you can run code or do an exercise in class. 
 
 
-* Some weeks the Monday lecture will be _interactive_ or with some self-study / exercise component, where _\textcolor{red}{active learning}_ is in focus.
+---
 
-* The other weeks (modules 3, 4, 6, 8, 10 and 11) the Monday lecture is a plenary lecture in S1.
+### The first week
 
-* **I suggest that you always bring your laptop to the Monday lecture.**
+$~$
 
-* In the **first week of the course** we need time for an R workshop!
+* In the **first week of the course** you will have to work through parts 1-6 of the R course here: [https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/](https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/)
 
 ---
 
 ## The weekly supervision sessions 
 &nbsp;  
 
-**Thursdays 08.15-10:00 in Smia**
+**Tuesdays 16.15-18:00 in room VE-E20**
 &nbsp;  
 &nbsp;  
 
@@ -229,25 +265,45 @@ $~$
     * computational tasks
     * data analysis
 
+\vspace{2mm}
+
 * These are supervised in the weekly exercise slots. 
 
+\vspace{2mm}
+
 * Solutions will be provided to check yourself (no grading).
+
+\vspace{2mm}
+
+* We of course have to start with online supervision. How this works will be communicated.
 
 ---
 
 ## The compulsory exercises
 
+\vspace{2mm}
+
 * We will have **two compulsory exercises**, each with a maximal score of 50 points.
+
+\vspace{2mm}
 
 * These are supervised in the weekly exercise slots and there will be one week without lectures (only with supervision) for each compulsory exercise.
 
+\vspace{2mm}
+
 * Focus: theory, analysis in R, and interpretation.
+
+\vspace{2mm}
 
 * Work in **groups of maximum 3**; handed in on Blackboard and be written in R Markdown (both .Rmd and .pdf handed in).
 
+\vspace{2mm}
+
 * The TAs grade the exercises.
 
-* This gives 20% of the final evaluation in the course, the written exam the remaining 80%.
+\vspace{2mm}
+
+* The compulsory exercises sum to 40% of the final evaluation in the course, the written exam the remaining 60%.
 
 
 ---
@@ -256,7 +312,7 @@ $~$
   
   \hspace{8mm} Suggested submission deadline: 
   
-  \hspace{8mm} **Thursday, 20. Februar 2020, 12:00h**.
+  \hspace{8mm} **Monday, 22. Februar 2021, 23:59h**.
 
 \vspace{8mm}
 
@@ -264,31 +320,32 @@ $~$
  
   \hspace{8mm}Suggested submission deadline: 
   
-  \hspace{8mm}**Thursday, 2. April 2020, 23:59h**.
+  \hspace{8mm}**Monday, 19. April 2021, 23:59h**.
 
 ---
 
 ## Tentative schedule
 
-\vspace{2mm}
+$~$
 
 A tentative schedule (i.e., with continous updates) can be found under the following link (als available from our course page):
 
 \vspace{2mm}
 
-[https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2020.pdf](https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2020.pdf)
+[https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2021.pdf](https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2021.pdf)
 
 ---
 
 ## The lecture material
 
+$~$
+
+* All the material presented in class will be available on our course webpage (https://wiki.math.ntnu.no/tma4268/2021v/start).
+
 \vspace{2mm}
 
-* All the material presented in class will be available on our course webpage (https://wiki.math.ntnu.no/tma4268/2020v/start).
+* There will be .pdf, .html and .Rmd versions of the lecture notes and exercises. This will allow you to check and use the code that is used therein. 
 
-* There will be both a .pdf and an .Rmd version of the lecture notes. This will allow you to check and use the code that I use to generate the slides. 
-
-* For exercises, we provide a .pdf, .Rmd and an .html version.
 
 
 ---
@@ -318,12 +375,11 @@ Student's learning styles are different! Felder and Silverman (1988) suggested t
 
 
 
-\vspace{-3mm}
-
 * $\ldots$  to provide learning environments, opportunities, interactions, and tasks that help to learn deeper.  
 
 * $\ldots$  to provide guidance and support that challenges students based on their current ability. 
 
+\vspace{2mm}
 
 We will now focus on _active_ and _reflective_ learning styles and learning methods.
 
@@ -353,21 +409,21 @@ We will now focus on _active_ and _reflective_ learning styles and learning meth
 
  
 
----
+<!-- --- -->
 
-# Test your learning style
+<!-- # Test your learning style -->
 
-\vspace{2mm}
+<!-- \vspace{2mm} -->
 
-If you are interested in your learning style, we are very grateful if you can fill out this questionnaire:
+<!-- If you are interested in your learning style, we are very grateful if you can fill out this questionnaire: -->
 
-[https://innsida.ntnu.no/forms/view.php?id=221738](https://innsida.ntnu.no/forms/view.php?id=221738)
+<!-- [https://innsida.ntnu.no/forms/view.php?id=221738](https://innsida.ntnu.no/forms/view.php?id=221738) -->
 
-* The intro is in Norwegian.
-* The questionnaire is in English.
-* If you have questions, contact Mettee Langaas (mette.langaas@ntnu.no).
-* You will get an email with your results. 
-* We have been given permission to collect these data for research.
+<!-- * The intro is in Norwegian. -->
+<!-- * The questionnaire is in English. -->
+<!-- * If you have questions, contact Mettee Langaas (mette.langaas@ntnu.no). -->
+<!-- * You will get an email with your results.  -->
+<!-- * We have been given permission to collect these data for research. -->
 
 ---
 
@@ -375,7 +431,11 @@ If you are interested in your learning style, we are very grateful if you can fi
 
 &nbsp; 
 
-In class - go to [https://app.klicker.uzh.ch/join/bkx](https://app.klicker.uzh.ch/join/bkx) to answer these questions. 
+In class - go to 
+
+[https://docs.google.com/forms/d/e/1FAIpQLSccJumofq9vxWEJ5ZXQLbTOyzyflFGC-37ghllJkxOu58unWg/viewform?usp=sf_link](https://docs.google.com/forms/d/e/1FAIpQLSccJumofq9vxWEJ5ZXQLbTOyzyflFGC-37ghllJkxOu58unWg/viewform?usp=sf_link) 
+
+to answer these questions. 
 
 <!-- ## Study programme  -->
 
@@ -439,9 +499,9 @@ In class - go to [https://app.klicker.uzh.ch/join/bkx](https://app.klicker.uzh.c
 
 Volunteers?
 
-* Andreas Matre, andrmatr@stud.ntnu.no (3 year Bachelor)
-* Sara Elise Wøllo, saraew@stud.ntnu.no (Industrial Mathematics) 
-* John Lau, johnlau@stud.ntnu.no (Other)
+*   (3 year Bachelor or MSMNFNA)
+*   (Industrial Mathematics) 
+*   (Other)
 
 Thanks to the three people that volunteered. 
 
@@ -450,12 +510,18 @@ Thanks to the three people that volunteered.
 # Module 1
 ## Aims of the first module
 
+$~$
+
 * An introduction to statistical learning. What is it?
+
+\vspace{2mm}
 
 * Types of problems we will look at
 
+\vspace{2mm}
+
 * **Introduction to R and RStudio ** 
-<!-- introductory course on R with Rbeginner and Rintermediate -->
+ 
 
 <!-- * Key concepts from your first course in statistics -- that you will need now, mixed with notation for this course -->
 
@@ -463,16 +529,23 @@ Thanks to the three people that volunteered.
 
 ## Learning material for this module
 
-* Our textbook James et al (2013): An Introduction to Statistical Learning - with Applications in R (ISL). Chapter 1 (Introduction) and 2.3 (Lab: Introduction to R). 
+$~$
 
+* Our textbook James et al (2013): An Introduction to Statistical Learning - with Applications in R (ISL). 
+  + Chapter 1 (Introduction)
+  + 2.3 (Lab: Introduction to R)
 
+\vspace{2mm}
 
-* [\texttt{Rbeginner}](https://htmlpreview.github.io/?https://github.com/stefaniemuff/statlearning/blob/master/Exercise1/Rbeginner.html), [\texttt{Rintermediate}](https://htmlpreview.github.io/?https://github.com/stefaniemuff/statlearning/blob/master/Exercise1/Rintermediate.html), and
-[\texttt{Rplots}](https://htmlpreview.github.io/?https://github.com/stefaniemuff/statlearning/blob/master/Exercise1/Rplots.html)
+* Go through parts 1 to 6 in the online R course: https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/
+
+You can log in with your Feide account.
 
 \vspace{3mm}
 
 _Recommended_:
+
+\vspace{2mm}
 
 * Watch the video lecture for Chapter 1 by Hastie and Tibshirani [here](https://www.r-bloggers.com/in-depth-introduction-to-machine-learning-in-15-hours-of-expert-videos/).
 
@@ -598,13 +671,18 @@ Red: male; turquoise: female
 
 * Diagonal: density plot (generalization of histogram), or barplot.
 * Lower diagonals: scatterplot, histograms
-* Upper diagonals: correlations values, boxplots, barplots
+* Upper diagonals: correlations, boxplots or barplots
+
+\vspace{2mm}
+
+We use `sex` to color the graph.
+
 
 ---
 
 ### Etiology of CVD
 
-\vspace{2mm}
+\vspace{3mm}
 
 The question: 
 **What are the factors that cause high SBP?**
@@ -643,11 +721,11 @@ $~$
 The data set contains
 
 * **three plant species** \{setosa, virginica, versicolor\} 
-* **four features measured** for each corresponding sample: 
-      + `Sepal.Length`
-      + `Sepal.Width`
-      + `Petal.Length`
-      + `Petal.Width`.   
+* **four features measured** for each corresponding sample:
+  + `Sepal.Length`
+  + `Sepal.Width`
+  + `Petal.Length`
+  + `Petal.Width`.   
 
 ---
 
@@ -685,7 +763,8 @@ ggpairs(iris, aes(colour=Species), title="Classification of Iris plants")
 ---
 
 ## Linear boundaries
-\vspace{1mm}
+
+\vspace{2mm}
 
 In this plot the small black dots represent correctly classified iris plants, while the red dots represent misclassifications. The big black dots represent the class means.
 
@@ -702,7 +781,8 @@ legend("topright", title="Species", legend=c("setosa", "versicolor", "virginica"
 ---
 
 ## Non-linear boundaries
-\vspace{1mm}
+
+\vspace{2mm}
 
 Sometimes a more suitable boundary is not linear.  
 &nbsp;  
@@ -717,15 +797,30 @@ legend("topright", legend=c("setosa", "versicolor", "virginica"),title="Species"
 
 # Example 3: Unsupervised methods (Gene expression)
 
-* In a collaboration with researchers the Faculty of Medicine and Health the relationship between inborn maximal oxygen uptake and skeletal muscle gene expression was studied. 
-* Rats were artificially selected for high- and low running capacity (HCR and LCR, respectively), 
+\vspace{2mm}
+
+* The relationship between inborn maximal oxygen uptake and skeletal muscle gene expression was studied. 
+
+\vspace{1mm}
+
+* Rats were artificially selected for high- and low running capacity (HCR and LCR, respectively).
+
+\vspace{1mm}
+
 * Rats were either kept seditary or trained. 
+
+\vspace{1mm}
+
 * Transcripts significantly related to running capacity and training were identified.
 <!--  (moderated t-tests from two-way anova models, false discovery rate controlled).  -->
+
+\vspace{1mm}
+
 * To further present the findings heat map of the most significant transcripts were presented (high expression are shown in red and transcripts with a low expression are shown in yellow).
+
+\vspace{1mm}
+
 * This is hierarchical cluster analysis with pearson correlation distance measure.
-
-
 
 
 ---
@@ -753,28 +848,17 @@ Finding clusters in protein-protein-interaction networks.
 
 # Plan for this week
 
-## Thursday January 9, 8.15-10.00 in Smia 
+$~$
 
-* Workshop for R and RStudio
+* You can work through parts 1 - 6 in the R course [https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/](https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/)
 
-* Stefanie, Martina and Michail present
+\vspace{2mm}
 
-\vspace{4mm}
+* Ideally use your Feide account to log in 
 
-## Friday January 10, 14.15-16.00 in S4
+\vspace{2mm}
 
-* Lecture 1 of Module 2
-
- <!-- (??, ?? and Stefanie present) -->
-
-<!-- * 14.15: Stefanie explains about the plan for the R workshop  -->
-<!-- * 14.15-14.25: Work in groups with overview questions on "R, Rstudio, CRAN and GitHub - and R Markdown" -->
-<!-- * 14.25-14.30: Plenum: a few words on what we found and what is useful for us. -->
-<!-- * 14.30-15.00: Work alone/in pairs/triplets with [Rbeginner.html](https://www.math.ntnu.no/emner/TMA4268/2019v/Rbeginner.html)  and/or [Rintermediate.html](https://www.math.ntnu.no/emner/TMA4268/2019v/Rintermediate.html). -->
-<!-- * 15.00-15.15: Break - serve fruits on table 1. -->
-<!-- * 15.15-18.00: Continue to work with [Rbeginner.html](https://www.math.ntnu.no/emner/TMA4268/2019v/Rbeginner.html) and [Rintermediate.html](https://www.math.ntnu.no/emner/TMA4268/2019v/Rintermediate.html). -->
-
-<!-- I will interrupt and talk in plenum if there are common issues that all need to know/pay attention to. -->
+* There is a discussion forum (click on the ``Discussion'' tab).
 
 ---
 
@@ -801,9 +885,9 @@ If you need help on installing R and RStudio on you laptop computer, contact ora
 
 ---
 
-## R, Rstudio, CRAN and GitHub
+## Some additional links
 
-\vspace{2mm}
+\vspace{4mm}
 
 1) What is R?
 <https://www.r-project.org/about.html>
@@ -832,55 +916,55 @@ If you need help on installing R and RStudio on you laptop computer, contact ora
 <!-- 6) What is `knitr`? -->
 <!-- <https://yihui.name/knitr/> -->
 
----
+<!-- --- -->
 
-## Getting to work with RStudio
+<!-- ## Getting to work with RStudio -->
 
-\vspace{6mm}
+<!-- \vspace{6mm} -->
 
-$\rightarrow$ Short demo in class.
+<!-- $\rightarrow$ Short demo in class. -->
 
----
+<!-- --- -->
 
-## A first look at R and RStudio
+<!-- ## A first look at R and RStudio -->
 
-\vspace{6mm}
+<!-- \vspace{6mm} -->
 
-* [Rbeginner.pdf](https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rbeginner.pdf) 
-* [Rbeginner.Rmd](https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rbeginner.Rmd) 
+<!-- * [Rbeginner.pdf](https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rbeginner.pdf)  -->
+<!-- * [Rbeginner.Rmd](https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rbeginner.Rmd)  -->
 
----
+<!-- --- -->
 
-## A second look at R and probability distributions
+<!-- ## A second look at R and probability distributions -->
 
-\vspace{6mm}
+<!-- \vspace{6mm} -->
 
-* [Rintermediate.pdf](https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rintermediate.pdf)
-* [Rintermediate.Rmd](https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rintermediate.Rmd)
+<!-- * [Rintermediate.pdf](https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rintermediate.pdf) -->
+<!-- * [Rintermediate.Rmd](https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rintermediate.Rmd) -->
 
-To see solutions added to the files, add -sol to filename to get
+<!-- To see solutions added to the files, add -sol to filename to get -->
 
-* [Rintermediate-sol.html](https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rintermediate-sol.html)
+<!-- * [Rintermediate-sol.html](https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rintermediate-sol.html) -->
 
----
+<!-- --- -->
 
-## And resources about plots 
+<!-- ## And resources about plots  -->
 
-\vspace{6mm}
+<!-- \vspace{6mm} -->
 
-* [Rplots.pdf](https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rplots.pdf)
-* [Rplots.Rmd](https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rplots.Rmd)
+<!-- * [Rplots.pdf](https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rplots.pdf) -->
+<!-- * [Rplots.Rmd](https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rplots.Rmd) -->
 
 
-To see solutions added to the files, add -sol to filename to get
+<!-- To see solutions added to the files, add -sol to filename to get -->
 
-* [Rplots-sol.html](https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rplots-sol.html)
+<!-- * [Rplots-sol.html](https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rplots-sol.html) -->
 
 ---
 
 ## Additional nice R resources
 
-\vspace{2mm}
+\vspace{3mm}
 
 * P. Dalgaard: Introductory statistics with R, 2nd edition, Springer, which is also available freely to NTNU students as an ebook: [Introductory Statistics with R](https://link.springer.com/book/10.1007/978-0-387-79054-1).
 
@@ -907,16 +991,4 @@ To see solutions added to the files, add -sol to filename to get
 
 Thanks to Julia Debik for contributing to this module page.
 
-
----
-
-# Supplement: Exam from 2019
-
-This is the digital exam held in Inspera.
-
-* [Problem set](https://www.math.ntnu.no/emner/TMA4268/Exam/V2019e.pdf) 
-* [Tentative solutions](https://www.math.ntnu.no/emner/TMA4268/Exam/e2019sol.html) 
-* [Grading document](https://www.math.ntnu.no/emner/TMA4268/Exam/gradingdocumentV2019.pdf)
-
-However, please note that this was the exam created by Mette Langaas and her team, and not by us. The recommended and compulsory exercises will give you hints abou the exam, so we highly recommend you will work on them.
 

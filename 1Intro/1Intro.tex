@@ -1,8 +1,46 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
 \documentclass[10pt,ignorenonframetext,]{beamer}
+\usepackage{pgfpages}
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
 \setbeamercolor{caption name}{fg=normal text.fg}
 \beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+\centering
+\begin{beamercolorbox}[sep=16pt,center]{part title}
+  \usebeamerfont{part title}\insertpart\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+\centering
+\begin{beamercolorbox}[sep=12pt,center]{part title}
+  \usebeamerfont{section title}\insertsection\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+\centering
+\begin{beamercolorbox}[sep=8pt,center]{part title}
+  \usebeamerfont{subsection title}\insertsubsection\par
+\end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -10,12 +48,9 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
+  \usepackage{unicode-math}
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 \usetheme[]{Singapore}
@@ -24,19 +59,28 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
 \IfFileExists{microtype.sty}{%
-\usepackage{microtype}
+\usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\newif\ifbibliography
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{xcolor}
+\usepackage{hyperref}
 \hypersetup{
             pdftitle={Module 1: Introduction},
             pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
             colorlinks=true,
             linkcolor=Maroon,
+            filecolor=Maroon,
             citecolor=Blue,
             urlcolor=blue,
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+\newif\ifbibliography
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -46,96 +90,78 @@
 \usepackage{framed}
 \definecolor{shadecolor}{RGB}{248,248,248}
 \newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\ImportTok}[1]{#1}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
-\newcommand{\BuiltInTok}[1]{#1}
-\newcommand{\ExtensionTok}[1]{#1}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
-\newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight0.8\textheight\else\Gin@nat@height\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
 \makeatother
 % Scale images if necessary, so that they will not overflow the page
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-
-% Prevent slide breaks in the middle of a paragraph:
-\widowpenalties 1 10000
-\raggedbottom
-
-\AtBeginPart{
-  \let\insertpartnumber\relax
-  \let\partname\relax
-  \frame{\partpage}
-}
-\AtBeginSection{
-  \ifbibliography
-  \else
-    \let\insertsectionnumber\relax
-    \let\sectionname\relax
-    \frame{\sectionpage}
-  \fi
-}
-\AtBeginSubsection{
-  \let\insertsubsectionnumber\relax
-  \let\subsectionname\relax
-  \frame{\subsectionpage}
-}
-
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{0}
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
 \usepackage{multirow}
 
 \title{Module 1: Introduction}
+\providecommand{\subtitle}[1]{}
 \subtitle{TMA4268 Statistical Learning V2020}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{6th January, 2020}
+\date{11th January, 2021}
 
 \begin{document}
 \frame{\titlepage}
 
 \begin{frame}
 
-Last changes: 24.02.2020
+Last changes: 04.01.2021
 
 \end{frame}
 
 \begin{frame}{Acknowledgements}
+\protect\hypertarget{acknowledgements}{}
 
 This course had been built up by Mette Langaas at NTNU in 2018 and 2019.
-I am using a lot of her material, and material from her TAs, throughout
+I am using a some of her material, and material from her TAs, throughout
 the course.
 
 \textbf{I would like to thank Mette for her great work and for the
@@ -144,9 +170,9 @@ permission to use her material!}
 \end{frame}
 
 \begin{frame}{Learning outcomes of TMA4268}
+\protect\hypertarget{learning-outcomes-of-tma4268}{}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \item
   \textbf{Knowledge.} The student has knowledge about the most popular
   statistical learning models and methods that are used for
@@ -164,13 +190,15 @@ permission to use her material!}
 \end{frame}
 
 \begin{frame}{Learning material}
+\protect\hypertarget{learning-material}{}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi})}
+[1)]
 \item
-  \textbf{The main learning source is the textbook by James, Witten, Hastie, Tibshirani (2013)}:
-  ``An Introduction to Statistical Learning''. The textbook can be
-  downloaded here: \url{https://www-bcf.usc.edu/~gareth/ISL/}
+  \textbf{The main learning source} is the textbook by James, Witten,
+  Hastie, Tibshirani (2013): ``An Introduction to Statistical
+  Learning''. The textbook can be downloaded here:
+  \url{https://www-bcf.usc.edu/~gareth/ISL/}
 
   \begin{itemize}
   \item
@@ -187,31 +215,37 @@ permission to use her material!}
   All the lecture notes, \textbf{including any classnotes} made on the
   board (not necessarily available online).
 \item
-  \textbf{Additional reading material will be clearly indicated in the modules and on the course page.}
+  The R course here:
+  \url{https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/}
+\item
+  \textbf{Additional reading material will be clearly indicated in the
+  modules and on the course page.}
 \end{enumerate}
 
 \end{frame}
 
 \begin{frame}{Course page}
+\protect\hypertarget{course-page}{}
 
 All the relevant information for the course can be found here:
 
-\url{https://wiki.math.ntnu.no/tma4268/2020v/start}
+\url{https://wiki.math.ntnu.no/tma4268/2021v/start}
 
 On each module page, all the relevant learning material and exercises
 (incl. solutions) will be provided in due time.
 
 \end{frame}
 
-\begin{frame}{The Statistical Learning Team 2020}
+\begin{frame}{The Statistical Learning Team 2021}
+\protect\hypertarget{the-statistical-learning-team-2021}{}
 
 \begin{block}{The TAs:}
 
 \begin{itemize}
 \tightlist
 \item
-  \href{https://www.ntnu.no/ansatte/martina.hall}{Martina Hall}; PhD
-  student
+  \href{https://www.ntnu.no/ansatte/emma.s.skarstein}{Emma Skarstein};
+  PhD student
 \item
   \href{https://www.ntnu.no/ansatte/michail.spitieris}{Michail
   Spitieris}; PhD student
@@ -228,10 +262,7 @@ On each module page, all the relevant learning material and exercises
   Associate Professor
 \item
   \href{https://www.ntnu.no/ansatte/thiago.guerrera}{Thiago Guerrera
-  Martins}; NTNU/AIAscience (Modules 6 \& 10)
-\item
-  \href{https://www.ntnu.no/ansatte/andreas.strand}{Andreas Strand}; PhD
-  student (Module 7)
+  Martins}; NTNU/AIAscience (Modules 6, 7, 10)
 \end{itemize}
 
 \end{block}
@@ -239,25 +270,46 @@ On each module page, all the relevant learning material and exercises
 \end{frame}
 
 \begin{frame}{Who is this course for?}
+\protect\hypertarget{who-is-this-course-for}{}
 
 \begin{block}{Primary requirements}
 
+\(~\)
+
 \begin{itemize}
+\tightlist
 \item
   Bachelor level: 3rd year student from Science or Technology programs,
   and master/PhD level students with interest in performing statistical
   analyses.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Statistics background: TMA4240/45 Statistics, ST1101+ST1201
   (probability theory and statistical methods), or equivalent.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   No background in statistical software needed: but we will use the R
   statistical software extensively in the course. Knowing python will
   make this easier for you!
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
-  Not a prerequisist but a good thing with knowledge of computing -
-  preferably an introductory course in informatics, like TDT4105 or
-  TDT4110.
+  Advangatge with knowledge of computing - for example an introductory
+  course in informatics, like TDT4105 or TDT4110.
 \end{itemize}
 
 \end{block}
@@ -271,15 +323,22 @@ On each module page, all the relevant learning material and exercises
 \vspace{2mm}
 
 \begin{itemize}
+\tightlist
 \item
   \href{https://www.ntnu.no/studier/emner/TDT4173\#tab=omEmnet}{TDT4173}
   Machine learning and case based reasoning: courses differ in
   philosophy (computer science vs.~statistics).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   \href{https://www.ntnu.no/studier/emner/TMA4267\#tab=omEmnet}{TMA4267}
   Linear Statistical Models: useful to know about multivariate random
   vectors, covariance matrices and the multivariate normal distribution.
-  Overlap only for Multiple linear regression (M3).
+  Overlap only for multiple linear regression (M3).
 \end{itemize}
 
 \end{block}
@@ -287,18 +346,34 @@ On each module page, all the relevant learning material and exercises
 \end{frame}
 
 \begin{frame}{About the course}
+\protect\hypertarget{about-the-course}{}
 
 \begin{block}{Focus: Statistical theory \textbf{and} doing analyses}
 
+\(~\)
+
 \begin{itemize}
+\tightlist
 \item
   The course has focus on \textbf{statistical theory}, but we apply all
   models and theory using (mostly) available function in R and real data
   sets.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   It is important that the student in the end of the course \textbf{can
   analyse all types of data} (covered in the course) - not just
   understand the theory.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   And vice versa - the student must also \textbf{understand} the model,
   methods and algorithms used.
@@ -334,7 +409,7 @@ On each module page, all the relevant learning material and exercises
 \begin{itemize}
 \tightlist
 \item
-  Two weeks without lectures (but supervision of exercises)
+  Two weeks without lectures, time to work on the compulsory exercises.
 \end{itemize}
 
 \end{block}
@@ -350,12 +425,18 @@ On each module page, all the relevant learning material and exercises
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Module 1}: Introduction (this module)
+  \textbf{Module 1}: Introduction \& R course (this module)
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   \textbf{Modules 2 - 11}:
 
   \begin{enumerate}
-  \def\labelenumi{\arabic{enumi})}
+  [1)]
   \setcounter{enumi}{1}
   \tightlist
   \item
@@ -377,8 +458,14 @@ On each module page, all the relevant learning material and exercises
   \item
     Unsupervised methods
   \item
-    Neural nets
+    Neural networks (not in the course book)
   \end{enumerate}
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   \textbf{Module 12}: Summing up
 \end{itemize}
@@ -410,9 +497,9 @@ On each module page, all the relevant learning material and exercises
   \begin{itemize}
   \tightlist
   \item
-    a written final examination (80\%).
+    a written \textbf{final home examination (60\%)}.
   \item
-    works (projects) (\(2\times 10\%=20\%\)).
+    two projects / compulsory exercises (\(2\times 20\%=40\%\)).
   \end{itemize}
 \end{itemize}
 
@@ -437,31 +524,64 @@ On each module page, all the relevant learning material and exercises
 
 \vspace{2mm}
 
-\textbf{Mondays at 10.15-12.00 in S1 and Fridays at 14.15-16.00 in S4}
+\textbf{Mondays at 12.15-14.00 online lectures and Fridays at
+10.15-12.00 in S8} (if possible)
+
+\vspace{2mm}
 
 \begin{itemize}
+\tightlist
 \item
-  We have \(2\cdot 2\) hours of lectures every week (except when working
-  with the compulsory exercises).
+  We have \(2\times 2\) hours of lectures every week (except when
+  working with the compulsory exercises).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
-  \textbf{Note}: The \textbf{first lecture of each module will be on
-  Fridays}, the second lecture on \textbf{Mondays}, and the exercise
-  that corresponds to this module on Thursdays. See
-  \href{https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2020.pdf}{here}
+  See here
+  \url{https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2021.pdf}
   for a tentative schedule.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
-  Some weeks the Monday lecture will be \emph{interactive} or with some
-  self-study / exercise component, where
-  \emph{\textcolor{red}{active learning}} is in focus.
+  Some weeks the Tuesday lecture are supposed to be a bit more
+  \emph{interactive} or with some self-study / exercise component, where
+  \emph{\textcolor{red}{active learning}} is in focus. However, this
+  will be a bit difficult if the lecture is online.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
-  The other weeks (modules 3, 4, 6, 8, 10 and 11) the Monday lecture is
-  a plenary lecture in S1.
+  \textbf{I suggest that you always have your laptop handy for the
+  Tuesday lecture.} So you can run code or do an exercise in class.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{The first week}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
-  \textbf{I suggest that you always bring your laptop to the Monday
-  lecture.}
-\item
-  In the \textbf{first week of the course} we need time for an R
-  workshop!
+  In the \textbf{first week of the course} you will have to work through
+  parts 1-6 of the R course here:
+  \url{https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/}
 \end{itemize}
 
 \end{block}
@@ -474,10 +594,11 @@ On each module page, all the relevant learning material and exercises
 
 ~
 
-\textbf{Thursdays 08.15-10:00 in Smia} ~\\
+\textbf{Tuesdays 16.15-18:00 in room VE-E20} ~\\
 \hspace*{0.333em}
 
 \begin{itemize}
+\tightlist
 \item
   For each module \emph{recommended exercises} are uploaded. These are
   partly
@@ -491,10 +612,31 @@ On each module page, all the relevant learning material and exercises
   \item
     data analysis
   \end{itemize}
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   These are supervised in the weekly exercise slots.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Solutions will be provided to check yourself (no grading).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  We of course have to start with online supervision. How this works
+  will be communicated.
 \end{itemize}
 
 \end{block}
@@ -505,24 +647,57 @@ On each module page, all the relevant learning material and exercises
 
 \begin{block}{The compulsory exercises}
 
+\vspace{2mm}
+
 \begin{itemize}
+\tightlist
 \item
   We will have \textbf{two compulsory exercises}, each with a maximal
   score of 50 points.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   These are supervised in the weekly exercise slots and there will be
   one week without lectures (only with supervision) for each compulsory
   exercise.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Focus: theory, analysis in R, and interpretation.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Work in \textbf{groups of maximum 3}; handed in on Blackboard and be
   written in R Markdown (both .Rmd and .pdf handed in).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   The TAs grade the exercises.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
-  This gives 20\% of the final evaluation in the course, the written
-  exam the remaining 80\%.
+  The compulsory exercises sum to 40\% of the final evaluation in the
+  course, the written exam the remaining 60\%.
 \end{itemize}
 
 \end{block}
@@ -532,28 +707,34 @@ On each module page, all the relevant learning material and exercises
 \begin{frame}
 
 \begin{itemize}
-\tightlist
 \item
   The \textbf{first compulsory exercises} will be held after Modules
   1-5.
+
+  \hspace{8mm}
+
+  Suggested submission deadline:
+
+  \hspace{8mm}
+
+  \textbf{Monday, 22. Februar 2021, 23:59h}.
 \end{itemize}
-
-\hspace{8mm} Suggested submission deadline:
-
-\hspace{8mm} \textbf{Thursday, 20. Februar 2020, 12:00h}.
 
 \vspace{8mm}
 
 \begin{itemize}
-\tightlist
 \item
   The \textbf{second compulsory exercise} will be held after Modules
   6-10.
+
+  \hspace{8mm}
+
+  Suggested submission deadline:
+
+  \hspace{8mm}
+
+  \textbf{Monday, 19. April 2021, 23:59h}.
 \end{itemize}
-
-\hspace{8mm}Suggested submission deadline:
-
-\hspace{8mm}\textbf{Thursday, 2. April 2020, 23:59h}.
 
 \end{frame}
 
@@ -561,14 +742,14 @@ On each module page, all the relevant learning material and exercises
 
 \begin{block}{Tentative schedule}
 
-\vspace{2mm}
+\(~\)
 
 A tentative schedule (i.e., with continous updates) can be found under
 the following link (als available from our course page):
 
 \vspace{2mm}
 
-\url{https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2020.pdf}
+\url{https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2021.pdf}
 
 \end{block}
 
@@ -578,18 +759,23 @@ the following link (als available from our course page):
 
 \begin{block}{The lecture material}
 
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  All the material presented in class will be available on our course
+  webpage (\url{https://wiki.math.ntnu.no/tma4268/2021v/start}).
+\end{itemize}
+
 \vspace{2mm}
 
 \begin{itemize}
+\tightlist
 \item
-  All the material presented in class will be available on our course
-  webpage (\url{https://wiki.math.ntnu.no/tma4268/2020v/start}).
-\item
-  There will be both a .pdf and an .Rmd version of the lecture notes.
-  This will allow you to check and use the code that I use to generate
-  the slides.
-\item
-  For exercises, we provide a .pdf, .Rmd and an .html version.
+  There will be .pdf, .html and .Rmd versions of the lecture notes and
+  exercises. This will allow you to check and use the code that is used
+  therein.
 \end{itemize}
 
 \end{block}
@@ -597,12 +783,13 @@ the following link (als available from our course page):
 \end{frame}
 
 \begin{frame}{Student active learning}
+\protect\hypertarget{student-active-learning}{}
 
 Student's learning styles are different! Felder and Silverman (1988)
 suggested the following learning style axes:
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi})}
+[1)]
 \item
   \textbf{active - reflective}: How do you process information: actively
   (through physical activities and discussions), or reflexively (through
@@ -637,11 +824,6 @@ suggested the following learning style axes:
 \item
   \(\ldots\) to choose teaching styles that match the learning styles of
   as many students as possible.
-\end{itemize}
-
-\vspace{-3mm}
-
-\begin{itemize}
 \item
   \(\ldots\) to provide learning environments, opportunities,
   interactions, and tasks that help to learn deeper.
@@ -649,6 +831,8 @@ suggested the following learning style axes:
   \(\ldots\) to provide guidance and support that challenges students
   based on their current ability.
 \end{itemize}
+
+\vspace{2mm}
 
 We will now focus on \emph{active} and \emph{reflective} learning styles
 and learning methods.
@@ -698,42 +882,21 @@ and learning methods.
 
 \end{frame}
 
-\begin{frame}{Test your learning style}
-
-\vspace{2mm}
-
-If you are interested in your learning style, we are very grateful if
-you can fill out this questionnaire:
-
-\url{https://innsida.ntnu.no/forms/view.php?id=221738}
-
-\begin{itemize}
-\tightlist
-\item
-  The intro is in Norwegian.
-\item
-  The questionnaire is in English.
-\item
-  If you have questions, contact Mettee Langaas
-  (\href{mailto:mette.langaas@ntnu.no}{\nolinkurl{mette.langaas@ntnu.no}}).
-\item
-  You will get an email with your results.
-\item
-  We have been given permission to collect these data for research.
-\end{itemize}
-
-\end{frame}
-
 \begin{frame}{Who are you - and what are your expectations?}
+\protect\hypertarget{who-are-you---and-what-are-your-expectations}{}
 
 ~
 
-In class - go to \url{https://app.klicker.uzh.ch/join/bkx} to answer
-these questions.
+In class - go to
+
+\url{https://docs.google.com/forms/d/e/1FAIpQLSccJumofq9vxWEJ5ZXQLbTOyzyflFGC-37ghllJkxOu58unWg/viewform?usp=sf_link}
+
+to answer these questions.
 
 \end{frame}
 
 \begin{frame}{Reference group}
+\protect\hypertarget{reference-group}{}
 
 \textbf{At least 3 members, ideally one from different programmes}
 
@@ -752,16 +915,10 @@ Volunteers?
 \begin{itemize}
 \tightlist
 \item
-  Andreas Matre,
-  \href{mailto:andrmatr@stud.ntnu.no}{\nolinkurl{andrmatr@stud.ntnu.no}}
-  (3 year Bachelor)
+  (3 year Bachelor or MSMNFNA)
 \item
-  Sara Elise Wøllo,
-  \href{mailto:saraew@stud.ntnu.no}{\nolinkurl{saraew@stud.ntnu.no}}
   (Industrial Mathematics)
 \item
-  John Lau,
-  \href{mailto:johnlau@stud.ntnu.no}{\nolinkurl{johnlau@stud.ntnu.no}}
   (Other)
 \end{itemize}
 
@@ -770,16 +927,32 @@ Thanks to the three people that volunteered.
 \end{frame}
 
 \begin{frame}{Module 1}
+\protect\hypertarget{module-1}{}
 
 \begin{block}{Aims of the first module}
 
+\(~\)
+
 \begin{itemize}
+\tightlist
 \item
   An introduction to statistical learning. What is it?
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Types of problems we will look at
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
-  \textbf{Introduction to R and RStudio } 
+  \textbf{Introduction to R and RStudio }
 \end{itemize}
 
 \end{block}
@@ -790,21 +963,39 @@ Thanks to the three people that volunteered.
 
 \begin{block}{Learning material for this module}
 
+\(~\)
+
 \begin{itemize}
+\tightlist
 \item
   Our textbook James et al (2013): An Introduction to Statistical
-  Learning - with Applications in R (ISL). Chapter 1 (Introduction) and
-  2.3 (Lab: Introduction to R).
-\item
-  \href{https://htmlpreview.github.io/?https://github.com/stefaniemuff/statlearning/blob/master/Exercise1/Rbeginner.html}{\texttt{Rbeginner}},
-  \href{https://htmlpreview.github.io/?https://github.com/stefaniemuff/statlearning/blob/master/Exercise1/Rintermediate.html}{\texttt{Rintermediate}},
-  and
-  \href{https://htmlpreview.github.io/?https://github.com/stefaniemuff/statlearning/blob/master/Exercise1/Rplots.html}{\texttt{Rplots}}
+  Learning - with Applications in R (ISL).
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Chapter 1 (Introduction)
+  \item
+    2.3 (Lab: Introduction to R)
+  \end{itemize}
 \end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Go through parts 1 to 6 in the online R course:
+  \url{https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/}
+\end{itemize}
+
+You can log in with your Feide account.
 
 \vspace{3mm}
 
 \emph{Recommended}:
+
+\vspace{2mm}
 
 \begin{itemize}
 \item
@@ -822,6 +1013,7 @@ Thanks to the three people that volunteered.
 \end{frame}
 
 \begin{frame}{What is statistical learning?}
+\protect\hypertarget{what-is-statistical-learning}{}
 
 \begin{itemize}
 \tightlist
@@ -860,6 +1052,7 @@ Thanks to the three people that volunteered.
 \end{frame}
 
 \begin{frame}{Statistical Learning vs. ``Machine Learning''}
+\protect\hypertarget{statistical-learning-vs.-machine-learning}{}
 
 \vspace{2mm}
 
@@ -881,6 +1074,7 @@ Thanks to the three people that volunteered.
 \end{frame}
 
 \begin{frame}{Statistical Learning vs. ``Data Science''}
+\protect\hypertarget{statistical-learning-vs.-data-science}{}
 
 Data science
 
@@ -906,6 +1100,7 @@ and relevant for this course!
 \end{frame}
 
 \begin{frame}{Problems you will learn to solve}
+\protect\hypertarget{problems-you-will-learn-to-solve}{}
 
 There are \textbf{three main types of problems} discussed in this
 course:
@@ -924,6 +1119,7 @@ using data from science, technology, industry, economy/finance, \ldots{}
 \end{frame}
 
 \begin{frame}[fragile]{Example 1: Regression (Etiology of CVD)}
+\protect\hypertarget{example-1-regression-etiology-of-cvd}{}
 
 \begin{itemize}
 \item
@@ -972,7 +1168,7 @@ Red: male; turquoise: female
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
 
 \begin{itemize}
 \tightlist
@@ -981,8 +1177,12 @@ Red: male; turquoise: female
 \item
   Lower diagonals: scatterplot, histograms
 \item
-  Upper diagonals: correlations values, boxplots, barplots
+  Upper diagonals: correlations, boxplots or barplots
 \end{itemize}
+
+\vspace{2mm}
+
+We use \texttt{sex} to color the graph.
 
 \end{frame}
 
@@ -990,7 +1190,7 @@ Red: male; turquoise: female
 
 \begin{block}{Etiology of CVD}
 
-\vspace{2mm}
+\vspace{3mm}
 
 The question: \textbf{What are the factors that cause high SBP?}
 
@@ -1060,6 +1260,7 @@ predction!
 \end{frame}
 
 \begin{frame}[fragile]{Example 2: Classification (iris plants)}
+\protect\hypertarget{example-2-classification-iris-plants}{}
 
 The \texttt{iris} flower data set is a very famous multivariate data set
 introduced by the British statistician and biologist Ronald Fisher in
@@ -1098,7 +1299,8 @@ The data set contains
 \end{figure}
 
 \tiny
-<http://blog.kaggle.com/2015/04/22/scikit-learn-video-3-machine-learning-first-steps-with-the-iris-dataset/>
+
+\url{http://blog.kaggle.com/2015/04/22/scikit-learn-video-3-machine-learning-first-steps-with-the-iris-dataset/}
 
 \end{frame}
 
@@ -1139,7 +1341,7 @@ and sepal width.
 
 \begin{block}{Linear boundaries}
 
-\vspace{1mm}
+\vspace{2mm}
 
 In this plot the small black dots represent correctly classified iris
 plants, while the red dots represent misclassifications. The big black
@@ -1157,7 +1359,7 @@ dots represent the class means.
 
 \begin{block}{Non-linear boundaries}
 
-\vspace{1mm}
+\vspace{2mm}
 
 Sometimes a more suitable boundary is not linear.\\
 \hspace*{0.333em}
@@ -1169,25 +1371,57 @@ Sometimes a more suitable boundary is not linear.\\
 \end{frame}
 
 \begin{frame}{Example 3: Unsupervised methods (Gene expression)}
+\protect\hypertarget{example-3-unsupervised-methods-gene-expression}{}
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
 \item
-  In a collaboration with researchers the Faculty of Medicine and Health
-  the relationship between inborn maximal oxygen uptake and skeletal
+  The relationship between inborn maximal oxygen uptake and skeletal
   muscle gene expression was studied.
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
 \item
   Rats were artificially selected for high- and low running capacity
-  (HCR and LCR, respectively),
+  (HCR and LCR, respectively).
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
 \item
   Rats were either kept seditary or trained.
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
 \item
   Transcripts significantly related to running capacity and training
   were identified. 
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
 \item
   To further present the findings heat map of the most significant
   transcripts were presented (high expression are shown in red and
   transcripts with a low expression are shown in yellow).
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
 \item
   This is hierarchical cluster analysis with pearson correlation
   distance measure.
@@ -1202,11 +1436,13 @@ Sometimes a more suitable boundary is not linear.\\
 \end{figure}
 
 \tiny
+
 More: \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2585023/}
 
 \end{frame}
 
 \begin{frame}{Example 4: Unsupervised methods (Network clustering)}
+\protect\hypertarget{example-4-unsupervised-methods-network-clustering}{}
 
 \vspace{2mm}
 
@@ -1217,33 +1453,37 @@ Finding clusters in protein-protein-interaction networks. \vspace{2mm}
 \end{frame}
 
 \begin{frame}{Plan for this week}
+\protect\hypertarget{plan-for-this-week}{}
 
-\begin{block}{Thursday January 9, 8.15-10.00 in Smia}
-
-\begin{itemize}
-\item
-  Workshop for R and RStudio
-\item
-  Stefanie, Martina and Michail present
-\end{itemize}
-
-\vspace{4mm}
-
-\end{block}
-
-\begin{block}{Friday January 10, 14.15-16.00 in S4}
+\(~\)
 
 \begin{itemize}
 \tightlist
 \item
-  Lecture 1 of Module 2
+  You can work through parts 1 - 6 in the R course
+  \url{https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/}
 \end{itemize}
 
-\end{block}
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Ideally use your Feide account to log in
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  There is a discussion forum (click on the ``Discussion'' tab).
+\end{itemize}
 
 \end{frame}
 
 \begin{frame}{Getting started with R}
+\protect\hypertarget{getting-started-with-r}{}
 
 \vspace{2mm}
 
@@ -1271,12 +1511,12 @@ contact \href{mailto:orakel@ntnu.no}{\nolinkurl{orakel@ntnu.no}}.
 
 \begin{frame}
 
-\begin{block}{R, Rstudio, CRAN and GitHub}
+\begin{block}{Some additional links}
 
-\vspace{2mm}
+\vspace{4mm}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi})}
+[1)]
 \item
   What is R? \url{https://www.r-project.org/about.html} \vspace{2mm}
 \item
@@ -1296,91 +1536,9 @@ contact \href{mailto:orakel@ntnu.no}{\nolinkurl{orakel@ntnu.no}}.
 
 \begin{frame}
 
-\begin{block}{Getting to work with RStudio}
-
-\vspace{6mm}
-
-\(\rightarrow\) Short demo in class.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{A first look at R and RStudio}
-
-\vspace{6mm}
-
-\begin{itemize}
-\tightlist
-\item
-  \href{https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rbeginner.pdf}{Rbeginner.pdf}
-\item
-  \href{https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rbeginner.Rmd}{Rbeginner.Rmd}
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{A second look at R and probability distributions}
-
-\vspace{6mm}
-
-\begin{itemize}
-\tightlist
-\item
-  \href{https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rintermediate.pdf}{Rintermediate.pdf}
-\item
-  \href{https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rintermediate.Rmd}{Rintermediate.Rmd}
-\end{itemize}
-
-To see solutions added to the files, add -sol to filename to get
-
-\begin{itemize}
-\tightlist
-\item
-  \href{https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rintermediate-sol.html}{Rintermediate-sol.html}
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{And resources about plots}
-
-\vspace{6mm}
-
-\begin{itemize}
-\tightlist
-\item
-  \href{https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rplots.pdf}{Rplots.pdf}
-\item
-  \href{https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rplots.Rmd}{Rplots.Rmd}
-\end{itemize}
-
-To see solutions added to the files, add -sol to filename to get
-
-\begin{itemize}
-\tightlist
-\item
-  \href{https://github.com/stefaniemuff/statlearning/blob/master/1Intro/Rplots-sol.html}{Rplots-sol.html}
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
 \begin{block}{Additional nice R resources}
 
-\vspace{2mm}
+\vspace{3mm}
 
 \begin{itemize}
 \tightlist
@@ -1430,32 +1588,9 @@ To see solutions added to the files, add -sol to filename to get
 \end{frame}
 
 \begin{frame}{Acknowledgements}
+\protect\hypertarget{acknowledgements-1}{}
 
 Thanks to Julia Debik for contributing to this module page.
-
-\end{frame}
-
-\begin{frame}{Supplement: Exam from 2019}
-
-This is the digital exam held in Inspera.
-
-\begin{itemize}
-\tightlist
-\item
-  \href{https://www.math.ntnu.no/emner/TMA4268/Exam/V2019e.pdf}{Problem
-  set}
-\item
-  \href{https://www.math.ntnu.no/emner/TMA4268/Exam/e2019sol.html}{Tentative
-  solutions}
-\item
-  \href{https://www.math.ntnu.no/emner/TMA4268/Exam/gradingdocumentV2019.pdf}{Grading
-  document}
-\end{itemize}
-
-However, please note that this was the exam created by Mette Langaas and
-her team, and not by us. The recommended and compulsory exercises will
-give you hints abou the exam, so we highly recommend you will work on
-them.
 
 \end{frame}
 
