@@ -1,8 +1,46 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
 \documentclass[ignorenonframetext,]{beamer}
+\usepackage{pgfpages}
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
 \setbeamercolor{caption name}{fg=normal text.fg}
 \beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+\centering
+\begin{beamercolorbox}[sep=16pt,center]{part title}
+  \usebeamerfont{part title}\insertpart\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+\centering
+\begin{beamercolorbox}[sep=12pt,center]{part title}
+  \usebeamerfont{section title}\insertsection\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+\centering
+\begin{beamercolorbox}[sep=8pt,center]{part title}
+  \usebeamerfont{subsection title}\insertsubsection\par
+\end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -10,12 +48,9 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
+  \usepackage{unicode-math}
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 \usetheme[]{Singapore}
@@ -24,19 +59,28 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
 \IfFileExists{microtype.sty}{%
-\usepackage{microtype}
+\usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\newif\ifbibliography
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{xcolor}
+\usepackage{hyperref}
 \hypersetup{
             pdftitle={Module 2, Part 1: Statistical Learning},
             pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
             colorlinks=true,
             linkcolor=Maroon,
+            filecolor=Maroon,
             citecolor=Blue,
             urlcolor=blue,
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+\newif\ifbibliography
 \usepackage{longtable,booktabs}
 \usepackage{caption}
 % These lines are needed to make table captions work with longtable:
@@ -46,59 +90,41 @@
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight0.8\textheight\else\Gin@nat@height\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
 \makeatother
 % Scale images if necessary, so that they will not overflow the page
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-
-% Prevent slide breaks in the middle of a paragraph:
-\widowpenalties 1 10000
-\raggedbottom
-
-\AtBeginPart{
-  \let\insertpartnumber\relax
-  \let\partname\relax
-  \frame{\partpage}
-}
-\AtBeginSection{
-  \ifbibliography
-  \else
-    \let\insertsectionnumber\relax
-    \let\sectionname\relax
-    \frame{\sectionpage}
-  \fi
-}
-\AtBeginSubsection{
-  \let\insertsubsectionnumber\relax
-  \let\subsectionname\relax
-  \frame{\subsectionpage}
-}
-
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{0}
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
 \usepackage{xcolor}
 
 \title{Module 2, Part 1: Statistical Learning}
+\providecommand{\subtitle}[1]{}
 \subtitle{TMA4268 Statistical Learning V2020}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{January 10, 2020}
+\date{January 18, 2021}
 
 \begin{document}
 \frame{\titlepage}
 
 \begin{frame}
 
-Last update: January 10, 2020
+Last update: January 17, 2021
 
 \end{frame}
 
 \begin{frame}{Acknowledgements}
+\protect\hypertarget{acknowledgements}{}
 
 \begin{itemize}
 \item
@@ -113,14 +139,16 @@ Last update: January 10, 2020
 \end{frame}
 
 \begin{frame}{Introduction}
+\protect\hypertarget{introduction}{}
 
 \begin{block}{Learning material for this module}
 
+\(~\)
+
 \begin{itemize}
-\tightlist
 \item
   James et al (2013): An Introduction to Statistical Learning. Chapter 2
-  (except 2.2.3).\\
+  (except 2.2.3).
 \item
   Additional material (in this module page) on random variables,
   covariance matrix and the multivariate normal distribution (known for
@@ -156,6 +184,7 @@ Last update: January 10, 2020
 \end{frame}
 
 \begin{frame}{What is statistical learning?}
+\protect\hypertarget{what-is-statistical-learning}{}
 
 \emph{Statistical learning} is the process of learning from data.
 
@@ -169,7 +198,7 @@ By applying \emph{statistical methods} on a \emph{data set} (called the
   (\emph{\textcolor{red}{inference}}) or
 \item
   \emph{find a predictive function} for new observations
-  (\emph{\textcolor{red}{predition}}).
+  (\emph{\textcolor{red}{prediction}}).
 \end{itemize}
 
 Also, we would like to find structures in the data that help us to learn
@@ -177,12 +206,6 @@ something about the real world.
 
 Statistical learning plays a key role in many areas of science, finance
 and industry.
-
-\end{frame}
-
-\begin{frame}{Key concepts (stats) and notation}
-
-See board.
 
 \end{frame}
 
@@ -221,6 +244,7 @@ set of \(K\) different classes/labels/categories.
 \end{frame}
 
 \begin{frame}{Examples of learning problems}
+\protect\hypertarget{examples-of-learning-problems}{}
 
 \begin{itemize}
 \item
@@ -261,7 +285,8 @@ set of \(K\) different classes/labels/categories.
   with classes \{0, 1, 2, \ldots{}, 9\}. \vspace{1mm}
 \end{itemize}
 
-\includegraphics[width=0.70000\textwidth]{digits.png} \vspace{1mm}
+\includegraphics[width=0.7\textwidth,height=\textheight]{digits.png}
+\vspace{1mm}
 
 Examples of handwritten digits from U.S. postal envelopes. \scriptsize
 Image taken from \url{https://web.stanford.edu/~hastie/ElemStatLearnII/}
@@ -274,14 +299,24 @@ Image taken from \url{https://web.stanford.edu/~hastie/ElemStatLearnII/}
 
 \begin{block}{Example 2: Email classification (spam detection)}
 
+\(~\)
+
 \begin{itemize}
 \tightlist
 \item
   Goal: to build a spam filter.
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
 \item
   This filter can based on the frequencies of words and characters in
   emails.
 \end{itemize}
+
+\(~\)
 
 The table below show the average percentage of words or characters in an
 email message, based on 4601 emails of which 1813 were classified as a
@@ -309,6 +344,8 @@ Perseverance, luck, skilled mentors or simply chocolate consumption? An
 article published in the New England Journal of Medicine have concluded
 with the following:
 
+\vspace{2mm}
+
 \begin{quote}
 Chocolate consumption enhances cognitive function, which is a sine qua
 non for winning the Nobel Prize, and it closely correlates with the
@@ -316,6 +353,8 @@ number of Nobel laureates in each country. It remains to be determined
 whether the consumption of chocolate is the underlying mechanism for the
 observed association with improved cognitive function.
 \end{quote}
+
+\vspace{2mm}
 
 The figure shows the number of Nobel Laureates per 10 million population
 against countries' annual per capita chocolate consumption.
@@ -335,7 +374,15 @@ informal review of the article
 
 \end{frame}
 
+\begin{frame}{Key concepts (stats) and notation}
+\protect\hypertarget{key-concepts-stats-and-notation}{}
+
+See board.
+
+\end{frame}
+
 \begin{frame}{The Supervised Learning Problem}
+\protect\hypertarget{the-supervised-learning-problem}{}
 
 \textcolor{blue}{\emph{Starting point}}:
 
@@ -393,6 +440,7 @@ learning category (exception: Module 10)
 \end{frame}
 
 \begin{frame}{The Unsupervised Learning Problem}
+\protect\hypertarget{the-unsupervised-learning-problem}{}
 
 \begin{itemize}
 \item
@@ -419,6 +467,7 @@ Examples in the course:
 \end{frame}
 
 \begin{frame}{Overall philosophy}
+\protect\hypertarget{overall-philosophy}{}
 
 \begin{itemize}
 \item
@@ -444,6 +493,7 @@ ones!}
 \end{frame}
 
 \begin{frame}{Statistical Learning vs.~Machine Learning}
+\protect\hypertarget{statistical-learning-vs.machine-learning}{}
 
 \begin{itemize}
 \item
@@ -520,6 +570,7 @@ the predictor variables: \[ Y = f(x) + \varepsilon,\] where
 \end{frame}
 
 \begin{frame}{Example 1}
+\protect\hypertarget{example-1}{}
 
 Sales of a product, given advertising budgets in different media.
 
@@ -528,8 +579,11 @@ Sales of a product, given advertising budgets in different media.
 \end{frame}
 
 \begin{frame}{Example 2}
+\protect\hypertarget{example-2}{}
 
-\vspace{2mm} Income for given levels of education.
+\vspace{2mm}
+
+Income for given levels of education.
 
 \includegraphics{../../ISLR/Figures/Chapter2/2.2.png}
 
@@ -597,7 +651,7 @@ a prediction of \(Y\):
 For a given \(\hat{f}\) and a set of predictors \(X\) which gives
 \(\hat{Y}=\hat{f}(X)\), we have
 
-\[\text{E}[(Y-\hat{Y})^2] = \underbrace{\text{E}[(f(X)-\hat{f}(X))^2]}_{reducible} + \underbrace{Var(\epsilon)}_{irreducible}\]
+\[\text{E}[(Y-\hat{Y})^2] = \underbrace{(f(X)-\hat{f}(X))^2}_{reducible} + \underbrace{\text{Var}(\epsilon)}_{irreducible}\]
 
 \end{frame}
 
@@ -617,12 +671,14 @@ reducible and irreducible error?}
 
 \(~\)
 
-\textbf{Aim}: understand\_how the response variable is affected by the
-various predictors (covariates).
+\textbf{Aim}: understand \emph{how} the response variable is affected by
+the various predictors (covariates).
 
 \(~\)
 
 The \emph{exact form} of \(\hat{f}\) is of \emph{main interest}.
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -639,6 +695,7 @@ The \emph{exact form} of \(\hat{f}\) is of \emph{main interest}.
 \end{frame}
 
 \begin{frame}{Estimating \(f\)}
+\protect\hypertarget{estimating-f}{}
 
 Overall idea:
 
@@ -692,7 +749,6 @@ to fit the model, such that
 Fitting a parametric models is thus done in two steps:
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
   Select a form for the function \(f\).\\
@@ -709,10 +765,17 @@ Fitting a parametric models is thus done in two steps:
 \(~\)
 
 \begin{itemize}
+\tightlist
 \item
   Non-parametric methods seek an estimate of \(f\) that gets close to
   the data points, but without making explicit assumptions about the
   form of the function \(f\).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Example: \(K\)-nearest neighbour (KNN) algorithm, used in
   classification. KNN predicts a class membership for a new observation
@@ -756,28 +819,28 @@ made, prediction accuracy, computational complexity, over/under-fit.
 
 \begin{longtable}[]{@{}ll@{}}
 \toprule
-\begin{minipage}[b]{0.47\columnwidth}\raggedright\strut
+\begin{minipage}[b]{0.47\columnwidth}\raggedright
 Advantages\strut
-\end{minipage} & \begin{minipage}[b]{0.47\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[b]{0.47\columnwidth}\raggedright
 Disadvantages\strut
 \end{minipage}\tabularnewline
 \midrule
 \endhead
-\begin{minipage}[t]{0.47\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
 Simple to use and easy to understand\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
 The function \(f\) is constrained to the specified
 form.\vspace{2mm}\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
 Requires little training data\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
 The assumed function form of \(f\) will in general not match the true
 function, potentially giving a poor estimate.\vspace{2mm}\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
 Computationally cheap\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
 Limited flexibility\strut
 \end{minipage}\tabularnewline
 \bottomrule
@@ -793,27 +856,27 @@ Limited flexibility\strut
 
 \begin{longtable}[]{@{}ll@{}}
 \toprule
-\begin{minipage}[b]{0.47\columnwidth}\raggedright\strut
+\begin{minipage}[b]{0.47\columnwidth}\raggedright
 Advantages\strut
-\end{minipage} & \begin{minipage}[b]{0.47\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[b]{0.47\columnwidth}\raggedright
 Disadvantages\strut
 \end{minipage}\tabularnewline
 \midrule
 \endhead
-\begin{minipage}[t]{0.47\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
 Flexible: a large number of functional forms can be fitted\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright\strut
-Can overfit the data\vspace{2mm}\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
+Can overfit the data\vspace{6mm}\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
 No strong assumptions about the underlying function are made\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
 Computationally more expensive as more parameters need to be
-estimated\vspace{2mm}\strut
+estimated\vspace{3mm}\strut
 \end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright\strut
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
 Can often give good predictions\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
 Much data are required to estimate (the complex) \(f\).\strut
 \end{minipage}\tabularnewline
 \bottomrule
@@ -824,6 +887,7 @@ Much data are required to estimate (the complex) \(f\).\strut
 \end{frame}
 
 \begin{frame}{Prediction accuracy vs.~interpretability}
+\protect\hypertarget{prediction-accuracy-vs.interpretability}{}
 
 (we are warming up to the bias--variance trade--off)
 
@@ -863,8 +927,9 @@ Example: Prediction of icome from ``Years of Education'' and
 ``Seniority''\vspace{2mm}
 
 \centering
-\includegraphics[width=0.45000\textwidth]{../../ISLR/Figures/Chapter2/2.4.png}
-\includegraphics[width=0.45000\textwidth]{../../ISLR/Figures/Chapter2/2.6.png}
+
+\includegraphics[width=0.45\textwidth,height=\textheight]{../../ISLR/Figures/Chapter2/2.4.png}
+\includegraphics[width=0.45\textwidth,height=\textheight]{../../ISLR/Figures/Chapter2/2.6.png}
 
 A linear model vs a perfect fit.
 
@@ -910,12 +975,13 @@ Consider a covariate \(x\) observed between \(x=-2, \ldots , 4\) and
 
 \begin{frame}
 
-We impose a relationship between reponse \(Y\) and covariate \(x\):
+We impose a relationship between reponse \(Y\) and covariate \(x\)
 
-\[ Y=x^2 + \varepsilon\] with error (noise) term
-\(\varepsilon\sim N(0,\sigma^2)\) with \(\sigma=2\). It is a substitue
-for all the unobserved variables that are not in our equation, but that
-might influence \(Y\).
+\[ Y=x^2 + \varepsilon\]
+
+with error (noise) term \(\varepsilon\sim N(0,\sigma^2)\) with
+\(\sigma=2\). It is a substitue for all the unobserved variables that
+are not in our equation, but that might influence \(Y\).
 
 We call \(Y=x^2\) the \emph{truth}.
 
@@ -976,6 +1042,7 @@ We can now ask:
 \end{frame}
 
 \begin{frame}{Assessing model accuracy}
+\protect\hypertarget{assessing-model-accuracy}{}
 
 \textbf{No method} dominates all others over all possible data sets.
 
@@ -997,6 +1064,8 @@ We can now ask:
 \begin{frame}
 
 \begin{block}{Measuring the Quality of Fit}
+
+\vspace{2mm}
 
 \begin{itemize}
 \item
@@ -1053,17 +1122,28 @@ Polynomial example: fitted order 1-20 polynomial when the truth is order
 
 \begin{block}{Test MSE}
 
+\(~\)
+
 \begin{itemize}
+\tightlist
 \item
   Simple solution: estimate \(\hat{f}\) using the training data (maybe
   my minimizing the training MSE), but choose the \emph{best} model
   using a separate \emph{test set}.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   \emph{Test MSE} for a set of \(n_0\) test observations
   \((x_{0j},y_{0j})\):
 \end{itemize}
 
 \[ \text{MSE}_{\text{test}}=\frac{1}{n_0}\sum_{j=1}^{n_0} (y_{0j}-\hat{f}(x_{0j}))^2\]
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -1122,15 +1202,26 @@ one repetition, right: 100 repetitions for the testMSE.
 
 Important observations:
 
+\vspace{2mm}
+
 \begin{itemize}
+\tightlist
 \item
   The test error seems to have a minimum (U-shape) in between the
   extremes.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   The training error keeps going down.
 \end{itemize}
 
-\vspace{1.5cm} \centering
+\vspace{1.5cm}
+\centering
+
 Why?
 
 \end{block}
@@ -1138,21 +1229,32 @@ Why?
 \end{frame}
 
 \begin{frame}{The Bias-Variance trade-off}
+\protect\hypertarget{the-bias-variance-trade-off}{}
+
+\vspace{2mm}
+
+The U-shape is the result of \emph{two competing properties} of
+statistical learning methods.
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
 \item
-  The U-shape is the result of \emph{two competing properties} of
-  statistical learning methods.
+  Assume we have fitted a \emph{regression} curve
+  \[Y  = f(x) + \varepsilon\] to our training data \(\{x_i, y_i\}\) for
+  \(i=1,..,n\), and \(\varepsilon\) is an unobserved random variable
+  that adds random, uncorrelated, mean-zero noise term with variance
+  \(\sigma^2\).\footnote{$\varepsilon$ is a substitute for all the unobserved variables that influence $Y$.}
 \end{itemize}
 
-Assume we have fitted a \emph{regression} curve
-\[Y  = f(x) + \varepsilon\] to our training data \(\{x_i, y_i\}\) for
-\(i=1,..,n\), and \(\varepsilon\) is an unobserved random variable that
-adds random, uncorrelated, mean-zero noise term with variance
-\(\sigma^2\).\footnote{$\varepsilon$ is a substitute for all the unobserved variables that influence $Y$.}
+\vspace{2mm}
 
-The training data was used to estimate \(\hat{f}\).
+\begin{itemize}
+\tightlist
+\item
+  The training data was used to estimate \(\hat{f}\).
+\end{itemize}
 
 \end{frame}
 
@@ -1182,9 +1284,7 @@ The training data was used to estimate \(\hat{f}\).
 \begin{frame}
 
 Using that \(y_0=f(x_0)+\varepsilon\), this expected test MSE can be
-decomposed into three terms (board)
-
-\begin{align*}
+decomposed into three terms (board) \begin{align*}
 &\text{E}[y_0 - \hat{f}(x_0)]^2 = \\
 & ... \\
 & =  \underbrace{\text{Var}(\varepsilon)}_{\text{Irreducible error}} + \underbrace{\text{Var}(\hat{f}(x_0))}_{\text{Variance of prediction}} + \underbrace{\left( f(x_0) - \text{E}[\hat{f}(x_0)] \right)^2}_{\text{Squared bias}}
@@ -1215,21 +1315,23 @@ decomposed into three terms (board)
 
 \begin{frame}
 
-Note: \[\text{E}[(y_0 - \hat{f}(x_0))^2]\]
-
-is the \textbf{expected test MSE}. We can think of this as the average
-test MSE we would obtain if we repeatedly estimated \(f\) using many
-training sets (as we did in our example), and then tested this estimate
-at \(x_0\).
-
-However, if we also assume that \(X\) is a random variable, this is
-really \(\text{E}[(Y - \hat{f}(x_0))^2 \mid X=x_0]\)
-
-The \textbf{overall expected test MSE} can we then compute by averaging
-the expected test MSE over all possible values of \(x_0\) (averaging
-with respect to frequency in test set), or mathematically by the law of
-total expectation \(\text{E} \{ \text{E}[(Y - \hat{f}(X))^2 \mid X]\}\)
-(also sometimes referred to as the law of double expectations).
+\begin{itemize}
+\item
+  Note: \[\text{E}[(y_0 - \hat{f}(x_0))^2]\] is the \textbf{expected
+  test MSE}. We can think of this as the average test MSE we would
+  obtain if we repeatedly estimated \(f\) using many training sets (as
+  we did in our example), and then tested this estimate at \(x_0\).
+\item
+  However, if we also assume that \(X\) is a random variable, this is
+  actually \(\text{E}[(Y - \hat{f}(x_0))^2 \mid X=x_0]\)
+\item
+  The \textbf{overall expected test MSE} can be computed by averaging
+  the expected test MSE over all possible values of \(x_0\) (averaging
+  with respect to frequency in test set).
+\item
+  Mathematically: \(\text{E} \{ \text{E}[(Y - \hat{f}(X))^2 \mid X]\}\)
+  (by the law of total expectation / law of double expectations).
+\end{itemize}
 
 \end{frame}
 
@@ -1245,6 +1347,7 @@ will \emph{decrease}.
 \vspace{4mm}
 
 \centering
+
 This is called the \emph{\textcolor{red}{Bias-variance trade-off}}.
 
 \end{block}
@@ -1255,7 +1358,11 @@ This is called the \emph{\textcolor{red}{Bias-variance trade-off}}.
 
 \begin{block}{Polynomial example (cont.)}
 
+\vspace{2mm}
+
 \(Y=x^2\) is still the \emph{truth}.
+
+\vspace{2mm}
 
 \begin{center}\includegraphics[width=0.9\linewidth]{2StatLearn.1_files/figure-beamer/biasvarianceforx-1} \end{center}
 
@@ -1294,17 +1401,30 @@ Overall version (averaging over 61 gridpoints of \(x\)).
 The aim is often to obtain \textbf{the most predictive model}.
 Ingredients:
 
+\vspace{2mm}
+
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
+\tightlist
 \item
   \textbf{Training set}: The observations used to fit the statistical
   model \(\rightarrow\) Training error
+\end{enumerate}
+
+\vspace{2mm}
+
+\begin{enumerate}
+\setcounter{enumi}{1}
+\tightlist
 \item
   \textbf{Test sample}: new observations which were not used when
   fitting the model \(\rightarrow\) Test error
 \end{enumerate}
 
+\vspace{4mm}
+
 We have seen that
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -1312,6 +1432,8 @@ We have seen that
   Training error decreases for more complex/flexible models, but the
   test error has an \textbf{optimum}.
 \end{itemize}
+
+\centering
 
 \(\rightarrow\) \textbf{Bias-Variance trade-off}
 
@@ -1337,9 +1459,10 @@ We have seen that
 \end{frame}
 
 \begin{frame}{References}
+\protect\hypertarget{references}{}
 
 \hypertarget{refs}{}
-\hypertarget{ref-ISL}{}
+\leavevmode\hypertarget{ref-ISL}{}%
 James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani.
 2013. \emph{An Introduction to Statistical Learning}. Vol. 112.
 Springer.

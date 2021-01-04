@@ -2,7 +2,7 @@
 subtitle: "TMA4268 Statistical Learning V2020"
 title: "Module 2, Part 1: Statistical Learning "
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "January 10, 2020"
+date: "January 18, 2021"
 output:
   beamer_presentation:
     keep_tex: yes
@@ -31,7 +31,7 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 ```
 
-Last update: January 10, 2020
+Last update: January 17, 2021
 
 ---
 
@@ -47,7 +47,10 @@ Last update: January 10, 2020
 
 ## Learning material for this module
 
+$~$
+
 * James et al (2013): An Introduction to Statistical Learning. Chapter 2 (except 2.2.3).  
+
 * Additional material (in this module page) on random variables, covariance matrix and the multivariate normal distribution (known for students who have taken TMA4267 Linear statistical models).
 
 
@@ -85,18 +88,12 @@ Last update: January 10, 2020
 By applying *statistical methods* on a *data set* (called the *training set*), we would like to 
 
 * *draw conclusions* about the relations between the variables (_\textcolor{red}{inference}_) or 
-* *find a predictive function* for new observations (_\textcolor{red}{predition}_). 
+* *find a predictive function* for new observations (_\textcolor{red}{prediction}_). 
 
 Also, we would like to find structures in the data that help us to learn something about the real world.
 
 Statistical learning plays a key role in many areas of science, finance and industry. 
 
----
-
-# Key concepts (stats) and notation
-
-
-See board.
 
 
 ---
@@ -165,8 +162,16 @@ Image taken from <https://web.stanford.edu/~hastie/ElemStatLearnII/>
 
 ### Example 2: Email classification (spam detection)  
 
+$~$
+
 * Goal: to build a spam filter. 
+
+\vspace{1mm}
+
 * This filter can based on the frequencies of words and characters in emails. 
+
+
+$~$ 
 
 The table below show the average percentage of words or characters in an email message, based on 4601 emails of which 1813 were classified as a spam.
 
@@ -198,7 +203,11 @@ kable(means, digits = 2, col.names = c("you", "free", "george", "!", "$", "edu")
 
 Perseverance, luck, skilled mentors or simply chocolate consumption? An article published in the New England Journal of Medicine have concluded with the following:
 
+\vspace{2mm}
+
 > Chocolate consumption enhances cognitive function, which is a sine qua non for winning the Nobel Prize, and it closely correlates  with the number of Nobel laureates in each country. It remains to be determined whether the consumption of chocolate is the  underlying mechanism for the observed association with improved cognitive function.
+
+\vspace{2mm}
 
 The figure shows the number of Nobel Laureates per 10 million population against countries' annual per capita chocolate consumption.
 
@@ -210,6 +219,13 @@ You can read the article [here](http://www.nejm.org/doi/full/10.1056/NEJMon12110
 
 ---
 
+
+# Key concepts (stats) and notation
+
+
+See board.
+
+---
 
 
 # The Supervised Learning Problem
@@ -406,7 +422,7 @@ There are two quantities which influence the accuracy of $\hat{Y}$ as a predicti
 
 For a given $\hat{f}$ and a set of predictors $X$ which gives $\hat{Y}=\hat{f}(X)$, we have
 
-$$\text{E}[(Y-\hat{Y})^2] = \underbrace{\text{E}[(f(X)-\hat{f}(X))^2]}_{reducible} + \underbrace{Var(\epsilon)}_{irreducible}$$
+$$\text{E}[(Y-\hat{Y})^2] = \underbrace{(f(X)-\hat{f}(X))^2}_{reducible} + \underbrace{\text{Var}(\epsilon)}_{irreducible}$$
 
 --- 
 
@@ -423,13 +439,16 @@ $$\text{E}[(Y-\hat{Y})^2] = \underbrace{\text{E}[(f(X)-\hat{f}(X))^2]}_{reducibl
 ---
 
 ## Reason 2: Inference
+
 $~$
 
-**Aim**: understand_how the response variable is affected by the various predictors (covariates). 
+**Aim**: understand _how_ the response variable is affected by the various predictors (covariates). 
 
 $~$
 
 The _exact form_ of $\hat{f}$ is of _main interest_.
+
+\vspace{2mm}
 
 * Which predictors are associated with the response?
 * What is the relationship between the response and each predictor?
@@ -499,9 +518,12 @@ Fitting a parametric models is thus done in two steps:
 ---
 
 ## Non-parametric methods 
+
 $~$
 
 * Non-parametric methods seek an estimate of $f$ that gets close to the data points, but without making explicit assumptions about the form of the function $f$. 
+
+\vspace{2mm}
 
 * Example: $K$-nearest neighbour (KNN) algorithm, used in classification. KNN predicts a class membership for a new observation by making a majority vote based on its $K$ nearest neighbours. We will discuss the $K$-nearest neighbour algorithm in Module 4.
 
@@ -617,8 +639,8 @@ Computationally cheap| Limited flexibility
 
 Advantages | Disadvantages
 ------------------------------------ | ------------------------------------ 
-Flexible: a large number of functional forms can be fitted|Can overfit the data\vspace{2mm}
-No strong assumptions about the underlying function are made|Computationally more expensive as more parameters need to be estimated\vspace{2mm}
+Flexible: a large number of functional forms can be fitted|Can overfit the data\vspace{6mm}
+No strong assumptions about the underlying function are made|Computationally more expensive as more parameters need to be estimated\vspace{3mm}
 Can often give good predictions |Much data are required to estimate (the complex) $f$.
 
 ---
@@ -673,7 +695,7 @@ We illustrate this by a toy example using polynomial regression.
 
 Consider a covariate $x$ observed between $x=-2, \ldots , 4$ and $n=61$ observations.
 
-```{r data, echo=FALSE, fig.width=5, fig.height=3,fig.align = "center"}
+```{r data, echo=FALSE, fig.width=4, fig.height=2.7,fig.align = "center"}
 library(ggplot2)
 library(ggpubr)
 set.seed(2)
@@ -685,16 +707,17 @@ error = rnorm(length(x), mean=0, sd=2)
 y = true_y + error
 
 data = data.frame(x, y)
-p00=ggplot(data= data, aes(x = x, y=y)) +geom_point(size=0.7) +ggtitle("Data")+theme_minimal()
+p00=ggplot(data= data, aes(x = x, y=y)) +geom_point(size=0.7) +theme_minimal()
 
 print(p00)
 ```
 
 ---
 
-We impose a relationship between reponse $Y$ and covariate $x$:
+We impose a relationship between reponse $Y$ and covariate $x$
 
 $$ Y=x^2 + \varepsilon$$
+
 with error (noise) term $\varepsilon\sim N(0,\sigma^2)$ with $\sigma=2$. It is a substitue for all the unobserved variables that are not in our equation, but that might influence $Y$.
 
 We call $Y=x^2$ the _truth_.
@@ -758,6 +781,8 @@ We can now ask:
 ---
 
 ## Measuring the Quality of Fit
+
+\vspace{2mm}
 
 <!-- In regression, where we assume $Y  = f(x) + \varepsilon$, and  -->
 <!-- $\hat{f}(x_i)$ gives the predicted response at $x_i$,  -->
@@ -833,11 +858,17 @@ Polynomial example: fitted order 1-20 polynomial when the truth is order 2. Left
 
 ## Test MSE
 
+$~$
+
 * Simple solution: estimate $\hat{f}$ using the training data (maybe my minimizing the training MSE), but choose the _best_ model using a separate _test set_.
+
+\vspace{2mm}
 
 * _Test MSE_ for a set of $n_0$ test observations $(x_{0j},y_{0j})$:
 
 $$ \text{MSE}_{\text{test}}=\frac{1}{n_0}\sum_{j=1}^{n_0} (y_{0j}-\hat{f}(x_{0j}))^2$$
+
+\vspace{2mm}
 
 * Alternative notation:
 $$\text{Ave}(y_0-\hat{f}(x_0))^2$$
@@ -947,7 +978,11 @@ $~$
 
 Important observations: 
 
+\vspace{2mm}
+
 * The test error seems to have a minimum (U-shape) in between the extremes.
+
+\vspace{2mm}
 
 * The training error keeps going down.
 
@@ -959,14 +994,19 @@ Why?
 
 # The Bias-Variance trade-off
 
-* The U-shape is the result of _two competing properties_ of statistical learning methods.
+\vspace{2mm}
 
+The U-shape is the result of _two competing properties_ of statistical learning methods.
 
-Assume we have fitted a _regression_ curve 
+\vspace{2mm}
+
+* Assume we have fitted a _regression_ curve 
 $$Y  = f(x) + \varepsilon$$ 
 to our training data $\{x_i, y_i\}$ for $i=1,..,n$, and $\varepsilon$ is an unobserved random variable that adds random, uncorrelated, mean-zero noise term with variance $\sigma^2$.\footnote{$\varepsilon$ is a substitute for all the unobserved variables that influence $Y$.}
 
-The training data was used to estimate $\hat{f}$. 
+\vspace{2mm}
+
+* The training data was used to estimate $\hat{f}$. 
 
 ---
 
@@ -1012,16 +1052,16 @@ $$\text{E}[(y_0 - \hat{f}(x_0))^2]=\cdots=\text{Var}(\varepsilon) +  \text{Var}(
 
 ---
 
-Note:
+* Note:
 $$\text{E}[(y_0 - \hat{f}(x_0))^2]$$
-
 is the **expected test MSE**. We can think of this as the average test MSE we would obtain if we repeatedly estimated $f$ using many training sets (as we did in our example), and then tested this estimate at $x_0$. 
 
-However, if we also assume that $X$ is a random variable, this is really 
+* However, if we also assume that $X$ is a random variable, this is actually 
  $\text{E}[(Y - \hat{f}(x_0))^2 \mid X=x_0]$ 
 
-The **overall expected test MSE** can we then compute by averaging the expected test MSE over all possible values of $x_0$ (averaging with respect to frequency in test set),
-or mathematically by the law of total expectation $\text{E} \{ \text{E}[(Y - \hat{f}(X))^2 \mid X]\}$ (also sometimes referred to as the law of double expectations).
+* The **overall expected test MSE** can be computed by averaging the expected test MSE over all possible values of $x_0$ (averaging with respect to frequency in test set).
+
+* Mathematically: $\text{E} \{ \text{E}[(Y - \hat{f}(X))^2 \mid X]\}$ (by the law of total expectation / law of double expectations).
 
 ---
 
@@ -1040,7 +1080,11 @@ This is called the _\textcolor{red}{Bias-variance trade-off}_.
 
 ### Polynomial example (cont.)
 
+\vspace{2mm}
+
 $Y=x^2$ is still the _truth_.
+
+\vspace{2mm}
 
 ```{r biasvarianceforx,echo=FALSE, fig.width=8,fig.height=4,fig.align="center",out.width='90%'}
 library(reshape2)
@@ -1111,16 +1155,24 @@ $~$
 
 The aim is often to obtain **the most predictive model**. Ingredients:
 
+\vspace{2mm}
+
 1. **Training set**: The observations used to fit the statistical model $\rightarrow$ Training error
+
+\vspace{2mm}
 
 2. **Test sample**: new observations which were not used when fitting the model $\rightarrow$ Test error 
 
 
+\vspace{4mm}
+
 We have seen that
+
+\vspace{2mm}
 
 * Training error decreases for more complex/flexible models, but the test error has an **optimum**.
 
-
+\centering
 $\rightarrow$  **Bias-Variance  trade-off**
 
 
