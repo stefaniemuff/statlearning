@@ -2,7 +2,7 @@
 subtitle: "TMA4268 Statistical Learning V2020"
 title: "Module 2, Part 2: Random vectors, covariance, multivariate Normal distribution"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "January 13, 2020"
+date: "January 19, 2021"
 output:
   beamer_presentation:
     keep_tex: yes
@@ -22,14 +22,14 @@ header-includes: \usepackage{xcolor}
 
 ```{r setup, include=FALSE}
 showsolA<-TRUE
-showsolB<-TRUE
+showsolB<-FALSE
 library(knitr)
 opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE)
 knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
                       cache=TRUE, size="scriptsize")
 ```
 
-Last update: January 13, 2020
+Last update: January 18, 2021
 
 ---
 
@@ -77,9 +77,12 @@ $$f_1(x_1)=\int_{-\infty}^{\infty}\cdots \int_{-\infty}^{\infty} f(x_1,x_2,\ldot
 ---
 
 ## Moments 
+
 \vspace{2mm}
 
-The moments are important properties about the distribution of $\boldsymbol{X}$. We will look at:
+The moments are important properties of the distribution of $\boldsymbol{X}$. We will look at:
+
+\vspace{2mm}
 
 * E: Mean of random vector and random matrices.
 * Cov: Covariance matrix.
@@ -90,8 +93,12 @@ The moments are important properties about the distribution of $\boldsymbol{X}$.
 
 ### The Cork deposit data
 
+$~$
+
 * Classical multivariate data set from Rao (1948).
 * Weigth of bark deposits of $n=28$ cork trees in $p=4$ directions (N, E, S, W). 
+
+$~$
 
 \tiny
 ```{r, echo=TRUE, eval=TRUE,size="tiny"}
@@ -134,9 +141,13 @@ $$\text{E}(\boldsymbol{X}+\boldsymbol{Y})=\text{E}(\boldsymbol{X})+\text{E}(\bol
 
 * Random matrix $\boldsymbol{X}_{(n\times p)}$ and conformable constant matrices $\boldsymbol{A}$ and $\boldsymbol{B}$:
 $$\text{E}(\boldsymbol{A}\boldsymbol{X}\boldsymbol{B})=\boldsymbol{A}\text{E}(\boldsymbol{X})\boldsymbol{B}$$
-Proof: Look at element $(i,j)$ of $\boldsymbol{A}\boldsymbol{X}\boldsymbol{B}$ 
-$$e_{ij}=\sum_{k=1}^n a_{ik} \sum_{l=1}^p X_{kl}b_{lj}$$
-(where $a_{ik}$ and $b_{lj}$ are elements of $\boldsymbol{A}$ and $\boldsymbol{B}$ respectively), and see that $\text{E}(e_{ij})$ is the element $(i,j)$ if $\boldsymbol{A}\text{E}(\boldsymbol{X})\boldsymbol{B}$.
+
+Proof: Board
+
+\vspace{60mm}
+<!-- Look at element $(i,j)$ of $\boldsymbol{A}\boldsymbol{X}\boldsymbol{B}$  -->
+<!-- $$e_{ij}=\sum_{k=1}^n a_{ik} \sum_{l=1}^p X_{kl}b_{lj}$$ -->
+<!-- (where $a_{ik}$ and $b_{lj}$ are elements of $\boldsymbol{A}$ and $\boldsymbol{B}$ respectively), and see that $\text{E}(e_{ij})$ is the element $(i,j)$ if $\boldsymbol{A}\text{E}(\boldsymbol{X})\boldsymbol{B}$. -->
 
 
 ---
@@ -145,13 +156,15 @@ $$e_{ij}=\sum_{k=1}^n a_{ik} \sum_{l=1}^p X_{kl}b_{lj}$$
 
 * What are the univariate analogue to the formulas on the previous two slides (which you studied in your first introductory course in statistics)? 
 
-* What do you think happens if we look at $\text{E}(\boldsymbol{X})+\boldsymbol{d}$ when $\boldsymbol{X}$ and $\boldsymbol{d}$ are of the same dimension?
+
 
 ```{r, echo=FALSE, results='asis', eval=showsolB}
 cat("
 **A**: $$\\text{E}(aX+b)=a \\text{E}(X)+b$$
 ")
 ```
+
+\vspace{80mm}
 
 ---
 
@@ -269,12 +282,17 @@ $$\boldsymbol\Sigma= \left[ \begin{array}{cccc} 2&1&0&0\\
           
 ---
 
-**A**: $$\rho=\left[ \begin{array}{cccc} 1&0.5&0&0\\
-      0.5&1&0&0.5\\
-      0&0&1&0.5\\
-      0&0.5&0.5&1\\
-          \end{array}
-          \right]$$
+
+**A**: 
+
+<!-- $$\rho=\left[ \begin{array}{cccc} 1&0.5&0&0\\ -->
+<!--       0.5&1&0&0.5\\ -->
+<!--       0&0&1&0.5\\ -->
+<!--       0&0.5&0.5&1\\ -->
+<!--           \end{array} -->
+<!--           \right]$$ -->
+
+
           
 ---
 
@@ -384,7 +402,9 @@ Hint: Is it possible that the variance of the linear combination $\boldsymbol{Y}
 
 \vspace{4mm}
 
-In class - go to [https://app.klicker.uzh.ch/join/bkx](https://app.klicker.uzh.ch/join/bkx) to answer the questions on the following slides
+Todo: Make this a google form
+
+In class - go to [https://forms.gle/HCaAFxpY2b7JoVim9](https://forms.gle/HCaAFxpY2b7JoVim9) to answer the questions on the following slides
 
 
 ---
@@ -643,15 +663,19 @@ Take a look at the contour plots - when are the contours circles, when ellipses?
 ## Multiple choice - multivariate normal
 \vspace{2mm}
 
-Choose the correct answer - time limit was 30 seconds for each question! Let's go!
+Choose the correct answer. Let's go!
 
-\vspace{2mm}
+[https://forms.gle/G6eJNp2Pr3trjL8T7](https://forms.gle/G6eJNp2Pr3trjL8T7)
+
+---
 
 ### Question 1: Multivariate normal pdf
 \vspace{2mm}
 
 The probability density function is 
 $(\frac{1}{2\pi})^\frac{p}{2}\det(\boldsymbol\Sigma)^{-\frac{1}{2}}\exp\{-\frac{1}{2}Q\}$ where $Q$ is
+
+\vspace{2mm}
 
 * A: $(\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})$
 * B: $(\boldsymbol{x}-\boldsymbol{\mu})\boldsymbol\Sigma(\boldsymbol{x}-\boldsymbol{\mu})^T$
@@ -663,6 +687,8 @@ $(\frac{1}{2\pi})^\frac{p}{2}\det(\boldsymbol\Sigma)^{-\frac{1}{2}}\exp\{-\frac{
 \vspace{2mm}
 
 What graphical form has the solution to $f(\boldsymbol{x})=$ constant?
+
+\vspace{2mm}
 
 * A: Circle
 * B: Parabola
@@ -676,6 +702,8 @@ What graphical form has the solution to $f(\boldsymbol{x})=$ constant?
 
 $\boldsymbol{X}_p \sim N_p(\boldsymbol{\mu},\boldsymbol\Sigma)$, and 
 $\boldsymbol{C}$ is a $k \times p$ constant matrix. $\boldsymbol{Y}=\boldsymbol{C}\boldsymbol{X}$ is
+
+\vspace{2mm}
 
 * A: Chi-squared with $k$ degrees of freedom
 * B: Multivariate normal with mean $k\boldsymbol{\mu}$
@@ -696,6 +724,8 @@ $$\boldsymbol\Sigma= \left[
           \right].$$
 Which two variables are independent?
 
+\vspace{2mm}
+
 * A: $X_1$ and $X_2$
 * B: $X_1$ and $X_3$
 * C: $X_2$ and $X_3$
@@ -707,6 +737,8 @@ Which two variables are independent?
 \vspace{2mm}
 
 Let $\boldsymbol{X}\sim N_p(\boldsymbol{\mu},\boldsymbol\Sigma)$. How can I construct a vector of independent standard normal variables from $\boldsymbol{X}$?
+
+\vspace{2mm}
 
 * A: $\boldsymbol\Sigma(\boldsymbol{X}-\boldsymbol{\mu})$
 * B: $\boldsymbol\Sigma^{-1}(\boldsymbol{X}+\boldsymbol{\mu})$

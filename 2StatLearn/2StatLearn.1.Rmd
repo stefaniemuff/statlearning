@@ -1099,8 +1099,8 @@ for (j in 1:nord)
 bias2mat=(meanmat-matrix(rep(true_y,nord),byrow=TRUE,nrow=nord))^2
 
 df=data.frame(rep(x,each=nord),rep(1:nord,length(x)),c(bias2mat),c(varmat),rep(4,prod(dim(varmat))))
-colnames(df)=c("x","poly","bias2","variance","irreducible error") #suitable for plotting
-df$total=df$bias2+df$variance+df$`irreducible error`
+colnames(df)=c("x","poly","squared bias","variance","irreducible error") #suitable for plotting
+df$total=df$`squared bias`+df$variance+df$`irreducible error`
 hdf=melt(df,id=c("x","poly"))
 hdf1=hdf[hdf$poly==1,]
 hdf2=hdf[hdf$poly==2,]
@@ -1168,7 +1168,7 @@ The aim is often to obtain **the most predictive model**. Ingredients:
 
 We have seen that
 
-\vspace{2mm}
+\vspace{4mm}
 
 * Training error decreases for more complex/flexible models, but the test error has an **optimum**.
 
