@@ -1,17 +1,17 @@
 ---
-subtitle: "TMA4268 Statistical Learning V2020"
+subtitle: "TMA4268 Statistical Learning V2021"
 title: "Module 3: Linear Regression"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "January 17 and 20, 2020"
+date: "January 25 and 26, 2021"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -34,7 +34,7 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 ---
 
-Last update: January 19, 2020
+Last update: January 19, 2021
 
 ---
 
@@ -59,6 +59,8 @@ We need more statistical theory than is presented in the textbook, which you fin
 ---
 
 ## What will you learn?
+
+\vspace{2mm}
 
 * Simple linear regression: 
     + Model and assumptions 
@@ -199,7 +201,7 @@ $$Y = \beta_0 + \beta_1 x + \varepsilon \ , \qquad \varepsilon \sim N(0,\sigma^2
 \vspace{2mm}
 
 In this formulation $Y$ is a random variable $Y \sim N(\beta_0 + \beta_1 x, \sigma^2$) where
-$$Y \quad= \quad \underbrace{\text{ expected value }}_{\text{E}(Y) = \beta_0 + \beta_1 x} \quad + \quad \underbrace{\text{ error}}_{\varepsilon}  \ .$$
+$$Y \quad= \quad \underbrace{\text{ expected value }}_{\mathsf{E}(Y) = \beta_0 + \beta_1 x} \quad + \quad \underbrace{\text{ error}}_{\varepsilon}  \ .$$
 
 Note:
  
@@ -216,9 +218,9 @@ Note:
 The central assumption in linear regression is that for any pairs ($x_i,Y_i$), the error $\varepsilon_i \sim N(0,\sigma^2)$. This implies
 \vspace{2mm}
 
-a)  The expected value of $\varepsilon_i$ is 0: $\text{E}(\varepsilon_i)=0$.
+a)  The expected value of $\varepsilon_i$ is 0: $\mathsf{E}(\varepsilon_i)=0$.
 
-b) All $\varepsilon_i$ have the same variance: $\text{Var}(\varepsilon_i)=\sigma^2$.  
+b) All $\varepsilon_i$ have the same variance: $\mathsf{Var}(\varepsilon_i)=\sigma^2$.  
 
 c) All $\varepsilon_i$ are normally distributed. 
 
@@ -237,7 +239,7 @@ The assumptions about the linear regression model lie in the error term $$\varep
 \vspace{-2mm}
 \includegraphics[width=11cm]{pictures/regrAssumptions.jpg}
 
-Note: The true regression line goes through $\text{E}(Y)$.
+Note: The true regression line goes through $\mathsf{E}(Y)$.
 
 
 ---
@@ -266,9 +268,12 @@ But what are we actually going to minimize?
 ---
 
 ## Least squares
+
 \vspace{2mm}
 
 Remember the **Least Squared Method**. Graphically, we are minimizing the sum of the squared distances over all points:
+
+\vspace{4mm}
 
 ```{r squares, echo=FALSE, fig.width=6.1, fig.height=5,fig.align = "center",out.width='80%'}
 set.seed(9670)
@@ -463,11 +468,11 @@ p
 
 
 * The standard errors of the estimates are given by the following formulas:
-$$\text{Var}(\hat{\beta}_0)=\text{SE}(\hat{\beta}_0)^2 = \sigma^2 \Big [ \frac{1}{n} + \frac{\bar{x}^2}{\sum_{i=1}^n (x_i -\bar{x})^2} \Big]$$
+$$\mathsf{Var}(\hat{\beta}_0)=\text{SE}(\hat{\beta}_0)^2 = \sigma^2 \Big [ \frac{1}{n} + \frac{\bar{x}^2}{\sum_{i=1}^n (x_i -\bar{x})^2} \Big]$$
 and
-$$\text{Var}(\hat{\beta}_1)=\text{SE}(\hat{\beta}_1)^2 = \frac{\sigma^2}{\sum_{i=1}^n (x_i-\bar{x})^2}.$$
+$$\mathsf{Var}(\hat{\beta}_1)=\text{SE}(\hat{\beta}_1)^2 = \frac{\sigma^2}{\sum_{i=1}^n (x_i-\bar{x})^2}.$$
 
-* $\text{Cov}(\hat{\beta_0},\hat{\beta_1})$ is in general different from zero.
+* $\mathsf{Cov}(\hat{\beta_0},\hat{\beta_1})$ is in general different from zero.
 
 $~$
 $~$
@@ -561,7 +566,7 @@ summary(r.bodyfat)$coef
 
 ---
 
-To illustrate this point further, again fit the bodyfat example, but each time with only half of the data (randomly selected points each time). See how the model fit varies:
+To illustrate this point further, fit again the bodyfat example, but each time with only half of the data (randomly selected points each time). See how the model fit varies:
 
 ```{r, echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='80%'}
 set.seed(200)
@@ -607,10 +612,15 @@ After the regression parameters and their uncertainties have been estimated, the
 
 Let's first go back to the output from the bodyfat example:
 
+\vspace{2mm}
+
 \scriptsize
 ```{r,eval=TRUE,echo=TRUE}
 summary(r.bodyfat)$coef
 ```
+
+
+\vspace{2mm}
 
 \normalsize
 Besides the estimate and the standard error (which we discussed before), there is a `t value` and a probability `Pr(>|t|` that we need to understand.
@@ -716,15 +726,19 @@ legend("topright",legend=c("df=1","df=3","df=10","df=30","normal"),col=1:5,lwd=2
 ---
 
 ### Hypothesis tests for bodyfat example
-\vspace{2mm}
+
+$~$
 
 So let's again go back to the bodyfat regression output:
 
+\vspace{2mm}
 
 \scriptsize
 ```{r}
 summary(r.bodyfat)$coef
 ```
+
+\vspace{2mm}
 
 \normalsize
 
@@ -844,8 +858,13 @@ We will discuss this a bit in the final module 12. The topic is connected to goo
 
 * Confidence intervals (CIs) are a much more informative way to report results than $p$-values!
 
+\vspace{1mm}
+
 * The $t$-distribution\footnote{If $n$ is large, the normal approximation to the $t$-distribution can be used (and is used in the textbook).} can be used to create confidence intervals for the regression parameters. The lower and upper limits of a 95\% confidence interval for $\beta_j$ are
 $$\hat{\beta}_j \pm t_{(1-\alpha/2),n-2} \cdot\text{SE} (\hat{\beta}_j) \quad j=0, 1.$$
+
+\vspace{1mm}
+
 * Interpretation of this confidence interval: 
 
     * There is a 95\% probability that the interval will contain the *true* value of $\beta_j$.
@@ -856,6 +875,8 @@ $$\hat{\beta}_j \pm t_{(1-\alpha/2),n-2} \cdot\text{SE} (\hat{\beta}_j) \quad j=
 ---
 
 Doing this for the bodfat example ``by hand'' is not hard. We have $241 (=243-2)$ degrees of freedom:
+
+\vspace{4mm}
 
 \scriptsize
 ```{r}
@@ -869,10 +890,14 @@ beta + c(-1,1) * qt(0.975,241) * sdbeta
 
 Even easier: directly ask R to give you the CIs.
 
+\vspace{4mm}
+
 \scriptsize
 ```{r }
 confint(r.bodyfat,level=c(0.95))
 ```
+
+\vspace{4mm}
 
 \normalsize
 
@@ -1007,8 +1032,8 @@ $${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon}$$
 
 Assumptions:
 
-1. $\text{E}(\boldsymbol{\varepsilon})=\boldsymbol{0}$.
-2. $\text{Cov}(\boldsymbol{\varepsilon})=\text{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\boldsymbol{I}$.
+1. $\mathsf{E}(\boldsymbol{\varepsilon})=\boldsymbol{0}$.
+2. $\mathsf{Cov}(\boldsymbol{\varepsilon})=\mathsf{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\boldsymbol{I}$.
 3. The design matrix has full rank, $\text{rank}({\bf X})=p+1$. (We assume $n>>(p+1)$.)
 
 The classical _normal_ linear regression model is obtained if additionally
@@ -1047,9 +1072,9 @@ $${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon} \ , \quad \boldsymbol\var
 
 **Q:** 
 
-* What is the mean $\text{E}(\bf Y)$?
+* What is the mean $\mathsf{E}(\bf Y)$?
 
-* The covariance matrix $\text{Cov}(\bf Y)$ given $\bf{X}$?
+* The covariance matrix $\mathsf{Cov}(\bf Y)$ given $\bf{X}$?
 
 * Thus what is the distribution of $\bf Y$?
 
@@ -1093,6 +1118,8 @@ $$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y} \ .$$
 
 ## Example continued
 
+\vspace{5mm}
+
 \tiny
 ```{r,echo=showsolB}
 r.bodyfat3  <- lm(bodyfat ~  bmi + age + neck + hip +abdomen,data=d.bodyfat)
@@ -1121,15 +1148,15 @@ Given
 $$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y} \ ,$$
 <!-- 3. From Module 2: Part B: $\mathbf{Y}_{(n\times 1)}$ with mean vector -->
 <!--     $\mathbf{\mu}$ and variance-covariance matrix $\Sigma$, then $\mathbf{Z}=\mathbf{C}\mathbf{Y}$ -->
-<!-- has $\text{E}(\mathbf{Z})=\mathbf{C}\mathbf{\mu}$ and $\text{Cov}(\mathbf{Z})= -->
+<!-- has $\mathsf{E}(\mathbf{Z})=\mathbf{C}\mathbf{\mu}$ and $\mathsf{Cov}(\mathbf{Z})= -->
 <!--    \mathbf{C}\Sigma\mathbf{C}^T$. -->
 <!-- 4. Also Module 2: Part B: If ${\bf Y}$ is multivariate normal, then also $\mathbf{C}\mathbf{Y}$ is multivariate normal.  -->
 
 
 **what are**
 
-* The mean $\text{E}(\hat{\boldsymbol\beta})$?
-* The covariance matrix $\text{Cov}(\hat{\boldsymbol\beta})$?
+* The mean $\mathsf{E}(\hat{\boldsymbol\beta})$?
+* The covariance matrix $\mathsf{Cov}(\hat{\boldsymbol\beta})$?
 * The distribution of $\hat{\boldsymbol\beta}$?
 
 \vspace{4mm}
@@ -1147,8 +1174,8 @@ See Problem 3 of recommended exercise 3 (and the respective solutions) to derive
 
 $$\hat{\boldsymbol\beta}\sim N_{p+1}(\boldsymbol{\beta},\underbrace{\sigma^2({\bf X}^T{\bf X})^{-1}}_{\text{covariance matrix}}) \ . $$
 
-<!-- * $\text{E}(\hat{\boldsymbol\beta})={\bf C}\text{E}({\bf Y})=({\bf X}^T{\bf X})^{-1} {\bf X}^T{\bf X} {\boldsymbol\beta}={\boldsymbol\beta}$. -->
-<!-- * $\text{Cov}(\hat{\boldsymbol\beta})={\bf C}\text{Cov}({\bf Y}){\bf C}^T=({\bf X}^T{\bf X})^{-1} {\bf X}^T \sigma^2 {\bf I}(({\bf X}^T{\bf X})^{-1} {\bf X}^T)^T =({\bf X}^T{\bf X})^{-1} \sigma^2$. -->
+<!-- * $\mathsf{E}(\hat{\boldsymbol\beta})={\bf C}\mathsf{E}({\bf Y})=({\bf X}^T{\bf X})^{-1} {\bf X}^T{\bf X} {\boldsymbol\beta}={\boldsymbol\beta}$. -->
+<!-- * $\mathsf{Cov}(\hat{\boldsymbol\beta})={\bf C}\mathsf{Cov}({\bf Y}){\bf C}^T=({\bf X}^T{\bf X})^{-1} {\bf X}^T \sigma^2 {\bf I}(({\bf X}^T{\bf X})^{-1} {\bf X}^T)^T =({\bf X}^T{\bf X})^{-1} \sigma^2$. -->
 <!-- * $\hat{\boldsymbol\beta}$ is multivariate normal $(p+1)$ dimensions. -->
 
 <!-- So: $\hat{\beta}\sim N_{p+1}(\boldsymbol{\beta},\sigma^2({\bf X}^T{\bf X})^{-1})$. -->
@@ -1302,6 +1329,8 @@ where
 
 * Fit both models and use the `anova()` function to carry out the $F$-test:
 
+$~$
+
 \footnotesize
 ```{r}
 r.bodyfat.small=lm(bodyfat ~  bmi + age ,data=d.bodyfat)
@@ -1324,7 +1353,7 @@ $$H_0: \beta_j=0 \; \text{ vs. } \; H_1: \beta_j\neq 0$$
 
 * Nothing new: We did it for simple linear regression!
 
-* This makes sense: is known that (or you can try to show it yourself)
+* This makes sense: it is known that (or you can try to show it yourself)
 $$F_{1,n-p-1} = t^2_{n-p-1} \ ,$$
 thus we can use a $T$-statistics with $(n-p-1)$ degrees of freedom to get the $p$-value.
 
@@ -1364,6 +1393,8 @@ $$\hat{\beta}_j \pm t_{0.975,n-p-2} \cdot\text{SE} (\hat{\beta}_j)  \ .$$
 
 * Using R, this is very easy:
 
+\vspace{2mm}
+
 \footnotesize
 ```{r}
 confint(r.bodyfat)
@@ -1378,9 +1409,13 @@ $~$
 
 Overarching question: 
 
+$~$
+
 \begin{center}
  \emph{\textcolor{blue}{\bf Which model is the best?}}
 \end{center}
+
+\vspace{2mm}
 
 But:
 
@@ -1402,6 +1437,8 @@ $~$
 
 We can again look at the two measures from simple linear regression:
 
+$~$
+
 * An absolute measure of lack of fit is again given by the estimate of $\sigma$, the residual standard error (RSE)
 
 $$\hat\sigma = \text{RSE}= \sqrt{ \frac{ \text{RSS}}{n-p-1}} \ . $$
@@ -1419,9 +1456,13 @@ $~$
 
 Let us look at the $R^2$s from the three bodyfat models
 
-(model 1: $y\sim bmi$; model 2: $y\sim bmi + age$; 
+model 1: $y\sim bmi$
 
-model 3: $y\sim bmi + age + neck + hip + abdomen$): 
+model 2: $y\sim bmi + age$
+
+model 3: $y\sim bmi + age + neck + hip + abdomen$ 
+
+$~$
 
 \tiny
 ```{r, echo=F}
@@ -1435,6 +1476,8 @@ summary(r.bodyfatM1)$r.squared
 summary(r.bodyfatM2)$r.squared
 summary(r.bodyfatM3)$r.squared
 ```
+
+$~$
 
 \normalsize
 The models explain 54%, 58% and 72% of the total variability of $y$. 
@@ -1475,11 +1518,14 @@ We will look at model validation / model checking later.
 ---
 
 ## 4. Predictions: Two questions
- 
+
+$~$
  
 1. **Which other regression lines are compatible with the observed data?**
 
-We can use $\hat\beta_0, \ldots , \hat\beta_p$ to estimate the _least squares plane_
+\vspace{2mm}
+
+$\rightarrow$ We can use $\hat\beta_0, \ldots , \hat\beta_p$ to estimate the _least squares plane_
 $$\hat{Y} = \hat\beta_0 + \hat\beta_1 X_1 + \ldots + \hat\beta_p X_p $$
  as an approximation of $f(X) = \beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p.$
 This leads to the _\textcolor{red}{confidence interval}_. 
@@ -1488,8 +1534,9 @@ This leads to the _\textcolor{red}{confidence interval}_.
 
 2. **Where do future observations with a given $x$ coordinate lie?**
 
+\vspace{2mm}
 
-Even if we could predict $\hat{Y}=f(X)$, the _true_ value $Y$ varies around $\hat{Y}$. We can compute a _\textcolor{red}{prediction interval}_ for new observations $Y$.
+$\rightarrow$ Even if we could predict $\hat{Y}=f(X)$, the _true_ value $Y$ varies around $\hat{Y}$. We can compute a _\textcolor{red}{prediction interval}_ for new observations $Y$.
 
 
 ---
@@ -1516,10 +1563,10 @@ legend("bottomright", c("confidence range (95%)", "prediction range (95%)"),
 lty=8, cex=1,col=c(2,4),lwd=2)
 ```
 
-\colorbox{lightgray}{\begin{minipage}{10cm}
 
-Plotting the confidence and prediction intervals around all predicted values $\hat Y_0$ one obtains the {\bf confidence range} or {\bf confidence band} for the expected values of $Y$.
-\end{minipage}} 
+ * Plotting the confidence and prediction intervals around all predicted values $\hat Y_0$ one obtains the **confidence range** or **confidence band** for the expected values of $Y$.
+
+\vspace{2mm}
 
 Note: The prediction range is much broader than the confidence range. Why?
 
@@ -1584,8 +1631,9 @@ $\rightarrow$ The *prediction intervals and range are always wider than the conf
 
 ---
 
-Confidence and prediction intervals for given data points can be found in R using `predict` on an `lm` object (make sure that `newdata` is a `data.frame` with the same names as the original data). 
+* Confidence and prediction intervals for given data points can be found in R using `predict` on an `lm` object (make sure that `newdata` is a `data.frame` with the same names as the original data). 
 
+$~$
 
 \scriptsize
 ```{r}
@@ -1627,6 +1675,7 @@ made by George Box in his often-cited remark that
 
 ## Challenges - for model fit
 
+$~$
 
 1. Non-linearity of data
 2. Correlation of error terms
@@ -1650,10 +1699,10 @@ The assumption in linear regression is that the residuals follow a $N(0,\sigma^2
 
 $~$
 
-1. The expected value of $\varepsilon_i$ is 0: $\text{E}(\varepsilon_i)=0$. 
+1. The expected value of $\varepsilon_i$ is 0: $\mathsf{E}(\varepsilon_i)=0$. 
 \vspace{1mm}
 
-2. All $\varepsilon_i$ have the same variance: $\text{Var}(\varepsilon_i)=\sigma^2$.  
+2. All $\varepsilon_i$ have the same variance: $\mathsf{Var}(\varepsilon_i)=\sigma^2$.  
 \vspace{1mm}
 
 3. The $\varepsilon_i$ are normally distributed. 
@@ -1670,10 +1719,15 @@ $~$
 
 The _\textcolor{red}{Tukey-Anscombe}_ diagram plots the residuals against the fitted values. For the bodyfat data it looks like this:
 
+$~$
+
 ```{r,echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='50%'}
 library(ggfortify)
 autoplot(r.bodyfat,smooth.colour=NA)[1] 
 ```
+
+$~$
+
 This plot is ideal to check if assumptions 1. and 2. (and partially 4.) are met. Here, this seems fine.
 
 
@@ -1684,11 +1738,14 @@ $~$
 
 To check assumption 3., the quantiles of the observed distribution are plotted against the quantiles of the respective theoretical (normal) distribution:
 
- 
+$~$
+
 ```{r,echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='50%'}
 autoplot(r.bodyfat,smooth.colour=NA)[2] 
 ```
  
+$~$
+
 If the points lie approximately on a straight line, the data is fairly normally distributed. This is often ``tested'' by eye, and needs some experience.
 
 
@@ -1724,8 +1781,10 @@ The scale-location plot is particularly suited to check the assumption of equal 
 $~$
 
 The idea is to plot the square root of the (standardized) residuals $\sqrt{|\tilde{r}_i|}$ against the fitted values $\hat{y_i}$. There should be *no trend*:
+
+\vspace{2mm}
  
-```{r,echo=FALSE, fig.width=4, fig.height=4,fig.align = "center",out.width='50%'}
+```{r,echo=FALSE, fig.width=3.8, fig.height=3.8,fig.align = "center",out.width='45%'}
 autoplot(r.bodyfat,which=3) + theme_bw()
 ```
 
@@ -1840,8 +1899,12 @@ $~$
 
 It can be shown that the vector of residuals, ${\bf e}=(e_1,e_2,\ldots,e_n)$ have a normal (singular) distribution with 
 
-* $\text{E}({\bf e})={\bf 0}$ 
-* $\text{Cov}({\bf e})=\sigma^2({\bf I}-{\bf H})$, 
+\vspace{2mm}
+
+* $\mathsf{E}({\bf e})={\bf 0}$ 
+* $\mathsf{Cov}({\bf e})=\sigma^2({\bf I}-{\bf H})$, 
+
+\vspace{2mm}
 
 where ${\bf H}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T$.
 
@@ -1899,6 +1962,8 @@ See exercises: We use `autoplot()` from the `ggfortify` package in R to plot the
 
 ### Collinearity
 
+\vspace{2mm}
+
 In brief, collinearity refers to the situation when two or more predictors are correlated, thus encode (partially) for the same information.
 
 $~$
@@ -1908,6 +1973,8 @@ $~$
 * Reduces the accuracy of the estimated coefficients $\hat\beta_j$ (large SE!).
 
 * Consequently, reduces power in finding effects ($p$-values become larger).
+
+$~$
 
 **Solutions:**
 
