@@ -110,7 +110,7 @@
 
 \title{Module 2, Part 1: Statistical Learning}
 \providecommand{\subtitle}[1]{}
-\subtitle{TMA4268 Statistical Learning V2020}
+\subtitle{TMA4268 Statistical Learning V2021}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
 \date{January 18, 2021}
 
@@ -186,26 +186,28 @@ Last update: January 17, 2021
 \begin{frame}{What is statistical learning?}
 \protect\hypertarget{what-is-statistical-learning}{}
 
-\emph{Statistical learning} is the process of learning from data.
-
-By applying \emph{statistical methods} on a \emph{data set} (called the
-\emph{training set}), we would like to
-
 \begin{itemize}
-\tightlist
 \item
-  \emph{draw conclusions} about the relations between the variables
-  (\emph{\textcolor{red}{inference}}) or
+  \emph{Statistical learning} is the process of learning from data. We
+  would like to
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \emph{draw conclusions} about the relations between the variables
+    (\emph{\textcolor{red}{inference}}) or
+  \item
+    \emph{find a predictive function} for new observations
+    (\emph{\textcolor{red}{prediction}}).
+  \end{itemize}
 \item
-  \emph{find a predictive function} for new observations
-  (\emph{\textcolor{red}{prediction}}).
+  Want to find structures in the data that help us to learn something
+  about the real world.
+\item
+  Plays a key role in many areas of science, finance and industry.
+\item
+  A fundamental ingredient in the training of a modern data scientist.
 \end{itemize}
-
-Also, we would like to find structures in the data that help us to learn
-something about the real world.
-
-Statistical learning plays a key role in many areas of science, finance
-and industry.
 
 \end{frame}
 
@@ -225,7 +227,7 @@ they have a numerical value.
   building, the temperature outside, the level of precipitation etc.
 \end{itemize}
 
-\vspace{2mm}
+\vspace{4mm}
 
 \textbf{Qualitative} variables are variables from a discrete set, from a
 set of \(K\) different classes/labels/categories.
@@ -248,25 +250,20 @@ set of \(K\) different classes/labels/categories.
 
 \begin{itemize}
 \item
-  To predict the price of a stock 3 months from now, based on company
-  performance measures and economic data. Here the response variable is
-  quantitative (price).
+  Predict the price of a stock 3 months from now, based on company
+  performance measures and economic data. The response variable is
+  quantitative (price). \emph{Continuous outcome}.
 \item
-  Spam detection for emails.
+  Spam detection for emails. \emph{Binary outcome} (yes, no).
 \item
-  To identify the risk factors for Prostate cancer.
+  Identification of risk factors for Prostate cancer. \emph{Binary
+  outcome} (yes, no).
 \item
-  Estimating the risk that someone will suffer from a heart disease or
-  heart attack, given knowledge about condition, behaviour, age, or
-  demographic, diet and clinical measurements. Here the \emph{outcome is
-  binary} (yes, no) with both qualitative and quantitative input
-  variables.
+  Estimating the risk of heart disease or heart attack, given knowledge
+  about condition, behaviour, age, or demographic, diet and clinical
+  measurements. \emph{Binary outcome} (yes, no).
 \item
-  Predict soemeone's body fat, given BMI, weight, age, etc.
-\item
-  Digit recognition.
-\item
-  Image recognition.
+  Digit and image recognition. \emph{Categorical outcome}.
 \end{itemize}
 
 \end{frame}
@@ -281,12 +278,16 @@ set of \(K\) different classes/labels/categories.
   Aim: To identify the numbers in a handwritten ZIP code, from a
   digitized image.
 \item
-  Classification problem, where the response variable is categorical
-  with classes \{0, 1, 2, \ldots{}, 9\}. \vspace{1mm}
+  Classification problem with categorical response variable \{0, 1, 2,
+  \ldots{}, 9\}. \vspace{1mm}
 \end{itemize}
+
+\centering
 
 \includegraphics[width=0.7\textwidth,height=\textheight]{digits.png}
 \vspace{1mm}
+
+\flushleft
 
 Examples of handwritten digits from U.S. postal envelopes. \scriptsize
 Image taken from \url{https://web.stanford.edu/~hastie/ElemStatLearnII/}
@@ -318,9 +319,9 @@ Image taken from \url{https://web.stanford.edu/~hastie/ElemStatLearnII/}
 
 \(~\)
 
-The table below show the average percentage of words or characters in an
-email message, based on 4601 emails of which 1813 were classified as a
-spam.
+The table below shows the average percentage of words or characters in
+an email message, based on 4601 emails of which 1813 were classified as
+a spam.
 
 \begin{longtable}[]{@{}lrrrrrr@{}}
 \toprule
@@ -333,51 +334,6 @@ spam & 2.26 & 0.52 & 0.00 & 0.51 & 0.17 & 0.01\tabularnewline
 \end{longtable}
 
 \end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Example 3: What makes a Nobel Prize winner?}
-
-Perseverance, luck, skilled mentors or simply chocolate consumption? An
-article published in the New England Journal of Medicine have concluded
-with the following:
-
-\vspace{2mm}
-
-\begin{quote}
-Chocolate consumption enhances cognitive function, which is a sine qua
-non for winning the Nobel Prize, and it closely correlates with the
-number of Nobel laureates in each country. It remains to be determined
-whether the consumption of chocolate is the underlying mechanism for the
-observed association with improved cognitive function.
-\end{quote}
-
-\vspace{2mm}
-
-The figure shows the number of Nobel Laureates per 10 million population
-against countries' annual per capita chocolate consumption.
-
-You can read the article
-\href{http://www.nejm.org/doi/full/10.1056/NEJMon1211064}{here} and a
-informal review of the article
-\href{https://blogs.scientificamerican.com/the-curious-wavefunction/chocolate-consumption-and-nobel-prizes-a-bizarre-juxtaposition-if-there-ever-was-one/}{here}.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\includegraphics{chocolate.jpeg}
-
-\end{frame}
-
-\begin{frame}{Key concepts (stats) and notation}
-\protect\hypertarget{key-concepts-stats-and-notation}{}
-
-See board.
 
 \end{frame}
 
@@ -439,6 +395,13 @@ learning category (exception: Module 10)
 
 \end{frame}
 
+\begin{frame}{Notation and key statistical concepts}
+\protect\hypertarget{notation-and-key-statistical-concepts}{}
+
+See board.
+
+\end{frame}
+
 \begin{frame}{The Unsupervised Learning Problem}
 \protect\hypertarget{the-unsupervised-learning-problem}{}
 
@@ -470,24 +433,22 @@ Examples in the course:
 \protect\hypertarget{overall-philosophy}{}
 
 \begin{itemize}
+\tightlist
 \item
   Important to understand the simpler methods first, in order to grasp
   the more sophisticated ones.
-\item
-  It is important to accurately assess the performance of a method, to
-  know how well or how badly it is working.
 \end{itemize}
 
 \(\rightarrow\) \textbf{Simpler methods often perform as well as fancier
 ones!}
 
+\(~\)
+
 \begin{itemize}
+\tightlist
 \item
-  Statistical learning is a fundamental ingredient in the training of a
-  modern data scientist.
-\item
-  It is an exciting research area, having important applications in
-  science, industry and finance.
+  It is important to accurately \emph{assess the performance of a
+  method}, to know how well or how badly it is working.
 \end{itemize}
 
 \end{frame}
@@ -501,7 +462,7 @@ ones!}
 \item
   Statistical learning arose as a subfield of Statistics.
 \item
-  There is much overlap --- both fields focus on supervised and
+  There is much overlap -- both fields focus on supervised and
   unsupervised problems:
 
   \begin{itemize}
@@ -543,11 +504,22 @@ ones!}
 
 \begin{frame}
 
+A tweet by one of the co-authors of the course book,
+coincidentially\ldots{}
+
+\includegraphics{AI_ML_stat.jpg}
+
+\end{frame}
+
+\begin{frame}
+
 \begin{block}{What is the aim in statistical learning?}
 
 \vspace{3mm}
 
-Assume\footnote{We are talking about supervised methods now.}:
+We are talking about supervised methods now. Assume:
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -555,12 +527,14 @@ Assume\footnote{We are talking about supervised methods now.}:
   we observe one \emph{quantitative} response \(Y\) and
 \item
   \(p\) different predictors \(x_1, x_2,... , x_p\).
+\item
+  We assume that there is a function \(f\) that relates the response and
+  the predictor variables: \[ Y = f(x) + \varepsilon,\] where
+  \(\varepsilon\) is a random error term with mean 0 and independent of
+  \(x\).
 \end{itemize}
 
-We assume that there is a function \(f\) that relates the response and
-the predictor variables: \[ Y = f(x) + \varepsilon,\] where
-\(\varepsilon\) is a random error term with mean 0 and independent of
-\(x\).
+\(~\)
 
 \centering
 {\bf The aim is to estimate $f$.}
@@ -611,7 +585,9 @@ There are two main reasons for estimating \(f\):
 \textbf{Aim}: predict a response \(Y\) given new observations \(x\) of
 the covariates as accurately as possible.
 
-\(~\) Notation:
+\(~\)
+
+Notation:
 
 \[\hat{Y} = \hat{f}(x).\]
 
@@ -638,14 +614,14 @@ a prediction of \(Y\):
 \begin{itemize}
 \tightlist
 \item
-  The \emph{reducible error} has to do with our estimate \(\hat{f}\) of
-  \(f\). This error can be reduced by using the most \emph{appropriate}
-  statistical learning technique.
+  The \emph{\textcolor{red}{reducible error}} has to do with our
+  estimate \(\hat{f}\) of \(f\). This error can be reduced by using the
+  most \emph{appropriate} statistical learning technique.
 \item
-  The \emph{irreducible error} comes from the error term \(\varepsilon\)
-  and cannot be reduced by improving \(f\). This is related to the
-  unobserved quantities influencing the response and possibly the
-  randomness of the situation.
+  The \emph{\textcolor{red}{irreducible error}} comes from the error
+  term \(\varepsilon\) and cannot be reduced by improving \(f\). This is
+  related to the unobserved quantities influencing the response and
+  possibly the randomness of the situation.
 \end{itemize}
 
 For a given \(\hat{f}\) and a set of predictors \(X\) which gives
@@ -809,6 +785,10 @@ non-parametric methods?}
 Hints: interpretability, amount of data needed, complexity, assumptions
 made, prediction accuracy, computational complexity, over/under-fit.
 
+\(~\)
+
+\(\rightarrow\) Short breakout session.
+
 \end{block}
 
 \end{frame}
@@ -819,30 +799,9 @@ made, prediction accuracy, computational complexity, over/under-fit.
 
 \begin{longtable}[]{@{}ll@{}}
 \toprule
-\begin{minipage}[b]{0.47\columnwidth}\raggedright
-Advantages\strut
-\end{minipage} & \begin{minipage}[b]{0.47\columnwidth}\raggedright
-Disadvantages\strut
-\end{minipage}\tabularnewline
+Advantages & Disadvantages\tabularnewline
 \midrule
 \endhead
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-Simple to use and easy to understand\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-The function \(f\) is constrained to the specified
-form.\vspace{2mm}\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-Requires little training data\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-The assumed function form of \(f\) will in general not match the true
-function, potentially giving a poor estimate.\vspace{2mm}\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-Computationally cheap\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-Limited flexibility\strut
-\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -856,29 +815,9 @@ Limited flexibility\strut
 
 \begin{longtable}[]{@{}ll@{}}
 \toprule
-\begin{minipage}[b]{0.47\columnwidth}\raggedright
-Advantages\strut
-\end{minipage} & \begin{minipage}[b]{0.47\columnwidth}\raggedright
-Disadvantages\strut
-\end{minipage}\tabularnewline
+Advantages & Disadvantages\tabularnewline
 \midrule
 \endhead
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-Flexible: a large number of functional forms can be fitted\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-Can overfit the data\vspace{6mm}\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-No strong assumptions about the underlying function are made\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-Computationally more expensive as more parameters need to be
-estimated\vspace{3mm}\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-Can often give good predictions\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-Much data are required to estimate (the complex) \(f\).\strut
-\end{minipage}\tabularnewline
 \bottomrule
 \end{longtable}
 
@@ -995,9 +934,10 @@ We call \(Y=x^2\) the \emph{truth}.
 
 \begin{frame}
 
-Next, we want to fit a function to the observations \emph{without}
-knowing the true relationship, and we have tried different parametric
-polynomial functions.
+Try to fit a function to the observations \emph{without} knowing the
+true relationship:
+
+\(~\)
 
 \begin{itemize}
 \item
@@ -1015,8 +955,6 @@ polynomial functions.
   \(\beta_0+\beta_1 x +\beta_2 x^2+\cdots +\beta_{20}x^{20}\)
   \emph{Overfits} the data.
 \end{itemize}
-
-We will discuss polynomial regression in M7.
 
 \end{frame}
 
@@ -1067,30 +1005,21 @@ We can now ask:
 
 \vspace{2mm}
 
-\begin{itemize}
-\item
-  A popular measure for the quality of fit: \emph{Training MSE} (mean
-  squared error).
-\item
-  It is the mean of squared differences between prediction and truth for
-  the training data (the same values that were used to estimate \(f\)):
-\end{itemize}
+The quality of fit can be measures as the \emph{Training MSE} (mean
+squared error), using the data that were used to estimate \(f\)):
 
 \[ \text{MSE}_{\text{train}}=\frac{1}{n}\sum_{i=1}^n (y_i-\hat{f}(x_i))^2\]
-
-\begin{itemize}
-\tightlist
-\item
-  But: we are \emph{not} interested in how the method works on the
-  training data. We want to know how good the method is when we use it
-  on \emph{previously unseen test data} (e.g., future data).
-\end{itemize}
+\(~\)
 
 \end{block}
 
 \end{frame}
 
 \begin{frame}
+
+Why is the training MSE not the real measure of interest?
+
+\(~\)
 
 Examples:
 
@@ -1108,13 +1037,22 @@ Examples:
 
 \begin{frame}
 
+\begin{block}{Training error for the polynomial example}
+
+\(~\)
+
 \begin{center}\includegraphics[width=0.8\linewidth]{2StatLearn.1_files/figure-beamer/trainMSE-1} \end{center}
+
+\vspace{2mm}
+
+Left: one repetition, right: 100 repetitions of the training set.
+
+\vspace{2mm}
 
 \textbf{Q}: Based on the training MSE - which model fits the data the
 best?
 
-Polynomial example: fitted order 1-20 polynomial when the truth is order
-2. Left: one repetition, right: 100 repetitions of the training set.
+\end{block}
 
 \end{frame}
 
@@ -1158,39 +1096,38 @@ Polynomial example: fitted order 1-20 polynomial when the truth is order
 
 \begin{frame}
 
-\textbf{Q:} What if we do not have access to test data?
+\begin{block}{Test error for the polynomial example}
 
-\vspace{2mm}
-
-\textbf{Q:} But, can we instead just use the training data MSE to choose
-a model? A low training error should also give a low test error?
-
-\end{frame}
-
-\begin{frame}
+\(~\)
 
 \begin{center}\includegraphics[width=0.9\linewidth]{2StatLearn.1_files/figure-beamer/traintestMSE-1} \end{center}
 
-Polynomial example: fitted order 1-20 when the truth is order 2. Left:
-one repetition, right: 100 repetitions for the testMSE.
+Left: one repetition, right: 100 repetitions for the testMSE.
 
-\textbf{Q}: Based on the test MSE - which model fits the data the best?
+\end{block}
 
 \end{frame}
 
 \begin{frame}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{2StatLearn.1_files/figure-beamer/unnamed-chunk-2-1} \end{center}
+\textbf{Q1}: Based on the test MSE - which model fits the data the best?
 
-\textbf{A}: If choosing flexibility
+\vspace{2mm}
 
-\begin{itemize}
-\tightlist
-\item
-  \emph{based on training MSE}: poly20 wins
-\item
-  \emph{based on test MSE}: poly2 wins.
-\end{itemize}
+\textbf{Q2:} What if we do not have access to test data?
+
+\vspace{2mm}
+
+\textbf{Q3:} Can we instead just use the training data MSE to choose a
+model? A low training error should also give a low test error?
+
+\vspace{2mm}
+
+\end{frame}
+
+\begin{frame}
+
+Answers
 
 \end{frame}
 

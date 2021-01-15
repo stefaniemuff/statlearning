@@ -1,20 +1,20 @@
 ---
-subtitle: "TMA4268 Statistical Learning V2020"
+subtitle: "TMA4268 Statistical Learning V2021"
 title: "Module 2, Part 1: Statistical Learning "
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "January 18, 2021"
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
-  # html_document:
-  #   toc: true
-  #   toc_float: true
-  #   toc_depth: 2
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
 urlcolor: blue
 bibliography: refs.bib
 header-includes: \usepackage{xcolor}
@@ -75,24 +75,24 @@ $~$
 
 * The basics of random vectors, covariance matrix and the multivariate normal distribution.
 
-<!-- * Classification (a first look): -->
-<!--     + The Bayes classifier -->
-<!--     + K nearest neighbour (KNN) classifier -->
+ 
 
 ---
 
 # What is statistical learning?
 
-*Statistical learning* is the process of learning from data. 
+* _Statistical learning_ is the process of learning from data. We would like to 
 
-By applying *statistical methods* on a *data set* (called the *training set*), we would like to 
+    * *draw conclusions* about the relations between the variables (_\textcolor{red}{inference}_) or 
+    * *find a predictive function* for new observations (_\textcolor{red}{prediction}_). 
 
-* *draw conclusions* about the relations between the variables (_\textcolor{red}{inference}_) or 
-* *find a predictive function* for new observations (_\textcolor{red}{prediction}_). 
+* Want to find structures in the data that help us to learn something about the real world.
 
-Also, we would like to find structures in the data that help us to learn something about the real world.
+* Plays a key role in many areas of science, finance and industry. 
 
-Statistical learning plays a key role in many areas of science, finance and industry. 
+* A fundamental ingredient in the training of a modern data scientist.
+
+
 
 
 
@@ -105,7 +105,7 @@ Statistical learning plays a key role in many areas of science, finance and indu
 
 * Examples: a person's weight, a company's income, the age of a building, the temperature outside, the level of precipitation etc.
 
-\vspace{2mm}
+\vspace{4mm}
 
 **Qualitative** variables are variables from a discrete set, from a set of $K$ different classes/labels/categories. 
 
@@ -118,19 +118,17 @@ Statistical learning plays a key role in many areas of science, finance and indu
 # Examples of learning problems
 
 
-* To predict the price of a stock 3 months from now, based on company performance measures and economic data. Here the response variable is quantitative (price). 
+* Predict the price of a stock 3 months from now, based on company performance measures and economic data. The response variable is quantitative (price).  _Continuous outcome_.
 
-* Spam detection for emails.
+* Spam detection for emails.  _Binary outcome_ (yes, no).
 
-* To identify the risk factors for Prostate cancer.
+* Identification of risk factors for Prostate cancer.  _Binary outcome_ (yes, no).
 
-* Estimating the risk that someone will suffer from a heart disease or heart attack, given knowledge about condition, behaviour, age, or demographic, diet and clinical measurements. Here the _outcome is binary_ (yes, no) with both qualitative and quantitative input variables. 
+* Estimating the risk of heart disease or heart attack, given knowledge about condition, behaviour, age, or demographic, diet and clinical measurements. _Binary outcome_ (yes, no).
 
-* Predict soemeone's body fat, given BMI, weight, age, etc.
 
-* Digit recognition.
+* Digit and image recognition. _Categorical outcome_.
 
-* Image recognition.
 
 ---
 
@@ -148,12 +146,14 @@ Statistical learning plays a key role in many areas of science, finance and indu
 
 ### Example 1: Handwritten digit recognition 
 * Aim: To identify the numbers in a handwritten ZIP code, from a digitized image. 
-* Classification problem, where the response variable is categorical with classes \{0, 1, 2, ..., 9\}.
+* Classification problem with categorical response variable \{0, 1, 2, ..., 9\}.
 \vspace{1mm}
 
+\centering
 ![Examples of handwritten digits from U.S. postal envelopes. Image taken from <https://web.stanford.edu/~hastie/ElemStatLearnII/>](digits.png){width=70%}
 \vspace{1mm}
 
+\flushleft
 Examples of handwritten digits from U.S. postal envelopes. 
 \scriptsize
 Image taken from <https://web.stanford.edu/~hastie/ElemStatLearnII/>
@@ -173,7 +173,7 @@ $~$
 
 $~$ 
 
-The table below show the average percentage of words or characters in an email message, based on 4601 emails of which 1813 were classified as a spam.
+The table below shows the average percentage of words or characters in an email message, based on 4601 emails of which 1813 were classified as a spam.
 
  
 ```{r spam, echo=FALSE,warning=FALSE}
@@ -197,35 +197,29 @@ means = data.frame(rbind("not spam"= means_mail, "spam"= means_spam))
 kable(means, digits = 2, col.names = c("you", "free", "george", "!", "$", "edu"))
 ```
 
----
+ 
 
-### Example 3: What makes a Nobel Prize winner? 
+<!-- ### Example 3: What makes a Nobel Prize winner?  -->
 
-Perseverance, luck, skilled mentors or simply chocolate consumption? An article published in the New England Journal of Medicine have concluded with the following:
+<!-- Perseverance, luck, skilled mentors or simply chocolate consumption? An article published in the New England Journal of Medicine have concluded with the following: -->
 
-\vspace{2mm}
+<!-- \vspace{2mm} -->
 
-> Chocolate consumption enhances cognitive function, which is a sine qua non for winning the Nobel Prize, and it closely correlates  with the number of Nobel laureates in each country. It remains to be determined whether the consumption of chocolate is the  underlying mechanism for the observed association with improved cognitive function.
+<!-- > Chocolate consumption enhances cognitive function, which is a sine qua non for winning the Nobel Prize, and it closely correlates  with the number of Nobel laureates in each country. It remains to be determined whether the consumption of chocolate is the  underlying mechanism for the observed association with improved cognitive function. -->
 
-\vspace{2mm}
+<!-- \vspace{2mm} -->
 
-The figure shows the number of Nobel Laureates per 10 million population against countries' annual per capita chocolate consumption.
+<!-- The figure shows the number of Nobel Laureates per 10 million population against countries' annual per capita chocolate consumption. -->
 
-You can read the article [here](http://www.nejm.org/doi/full/10.1056/NEJMon1211064) and a informal review of the article [here](https://blogs.scientificamerican.com/the-curious-wavefunction/chocolate-consumption-and-nobel-prizes-a-bizarre-juxtaposition-if-there-ever-was-one/). 
+<!-- You can read the article [here](http://www.nejm.org/doi/full/10.1056/NEJMon1211064) and a informal review of the article [here](https://blogs.scientificamerican.com/the-curious-wavefunction/chocolate-consumption-and-nobel-prizes-a-bizarre-juxtaposition-if-there-ever-was-one/).  -->
 
----
+<!-- --- -->
 
-![Nobel laureates vs. chocolate consumption for different countries](chocolate.jpeg){width=650px,align=center}
-
----
+<!-- ![Nobel laureates vs. chocolate consumption for different countries](chocolate.jpeg){width=650px,align=center} -->
 
 
-# Key concepts (stats) and notation
 
-
-See board.
-
----
+<!-- --- -->
 
 
 # The Supervised Learning Problem
@@ -278,6 +272,12 @@ The majority of problems studied in this course fall in the supervised learning 
 
 ---
 
+# Notation and key statistical concepts
+
+See board.
+
+---
+
 # The Unsupervised Learning Problem
 
 * There is **no outcome variable** $y$, just a set of predictors (features) $x_i$
@@ -304,17 +304,17 @@ Examples in the course:
 * Important to understand the simpler methods first, in order
 to grasp the more sophisticated ones.
 
-* It is important to accurately assess the performance of a
-method, to know how well or how badly it is working.
-
 $\rightarrow$ **Simpler methods often perform as well as fancier ones!**
 
+$~$
 
-* Statistical learning is a fundamental ingredient in the
-training of a modern data scientist.
+* It is important to accurately _assess the performance of a
+method_, to know how well or how badly it is working.
 
-* It is an exciting research area, having important
-applications in science, industry and finance.
+
+
+
+
 
 
 
@@ -326,7 +326,7 @@ applications in science, industry and finance.
 
 * Statistical learning arose as a subfield of Statistics.
 
-* There is much overlap — both fields focus on supervised
+* There is much overlap -- both fields focus on supervised
 and unsupervised problems:
     + Machine learning has a greater emphasis on large scale
 applications and prediction accuracy.
@@ -351,18 +351,27 @@ and there is a great deal of “cross-fertilization”.
 
 ---
 
+A tweet by one of the co-authors of the course book, coincidentially...
+
+![](AI_ML_stat.jpg)
+
+---
+
 
 ## What is the aim in statistical learning?
 \vspace{3mm}
 
-Assume\footnote{We are talking about supervised methods now.}:
+We are talking about supervised methods now. Assume:
+
+\vspace{2mm}
 
 * we observe one _quantitative_ response $Y$ and 
 * $p$ different predictors $x_1, x_2,... , x_p$. 
-
-We assume that there is a function $f$ that relates the response and the predictor variables: 
+* We assume that there is a function $f$ that relates the response and the predictor variables: 
 $$ Y = f(x) + \varepsilon,$$
 where $\varepsilon$ is a random error term with mean 0 and independent of $x$. 
+
+$~$
 
 \centering
 {\bf The aim is to estimate $f$.}
@@ -400,6 +409,7 @@ $~$
 **Aim**: predict a response $Y$ given new observations $x$ of the covariates as accurately as possible. 
 
 $~$
+
 Notation:
 
 $$\hat{Y} = \hat{f}(x).$$
@@ -416,8 +426,8 @@ $$\hat{Y} = \hat{f}(x).$$
 
 There are two quantities which influence the accuracy of $\hat{Y}$ as a prediction of $Y$: 
 
-* The _reducible error_ has to do with our estimate $\hat{f}$ of $f$. This error can be reduced by using the most _appropriate_ statistical learning technique. 
-* The _irreducible error_ comes from the error term $\varepsilon$ and cannot be reduced by improving $f$. This is related to the unobserved quantities influencing the response and possibly the randomness of the situation.
+* The _\textcolor{red}{reducible error}_ has to do with our estimate $\hat{f}$ of $f$. This error can be reduced by using the most _appropriate_ statistical learning technique. 
+* The _\textcolor{red}{irreducible error}_ comes from the error term $\varepsilon$ and cannot be reduced by improving $f$. This is related to the unobserved quantities influencing the response and possibly the randomness of the situation.
 
 
 For a given $\hat{f}$ and a set of predictors $X$ which gives $\hat{Y}=\hat{f}(X)$, we have
@@ -623,15 +633,19 @@ Hints: interpretability, amount of data needed, complexity, assumptions made, pr
 
 <!-- over/under-fit defined below-->
 
+$~$
+
+$\rightarrow$ Short breakout session.
+
 ---
 
 ### A: Parametric methods
 
 Advantages | Disadvantages
 ------------------------------------ | ------------------------------------ 
-Simple to use and easy to understand | The function $f$ is constrained to the specified form.\vspace{2mm}
-Requires little training data | The assumed function form of $f$ will in general not match the true function, potentially giving a poor estimate.\vspace{2mm}
-Computationally cheap| Limited flexibility
+<!-- Simple to use and easy to understand | The function $f$ is constrained to the specified form.\vspace{2mm} -->
+<!-- Requires little training data | The assumed function form of $f$ will in general not match the true function, potentially giving a poor estimate.\vspace{2mm} -->
+<!-- Computationally cheap| Limited flexibility -->
   
 ---
 
@@ -639,9 +653,9 @@ Computationally cheap| Limited flexibility
 
 Advantages | Disadvantages
 ------------------------------------ | ------------------------------------ 
-Flexible: a large number of functional forms can be fitted|Can overfit the data\vspace{6mm}
-No strong assumptions about the underlying function are made|Computationally more expensive as more parameters need to be estimated\vspace{3mm}
-Can often give good predictions |Much data are required to estimate (the complex) $f$.
+<!-- Flexible: a large number of functional forms can be fitted|Can overfit the data\vspace{6mm} -->
+<!-- No strong assumptions about the underlying function are made|Computationally more expensive as more parameters need to be estimated\vspace{3mm} -->
+<!-- Can often give good predictions |Much data are required to estimate (the complex) $f$. -->
 
 ---
 
@@ -732,7 +746,9 @@ print(p0)
 
 ---
 
-Next, we want to fit a function to the observations _without_ knowing the true relationship, and we have tried different parametric polynomial functions.
+Try to fit a function to the observations _without_ knowing the true relationship:
+
+$~$
 
 *  **poly1**: Simple linear model of the form $\beta_0+\beta_1 x$ fitted to the observations.  _Underfits_ the data. 
 
@@ -742,7 +758,6 @@ Next, we want to fit a function to the observations _without_ knowing the true r
 
 * **poly20**: Polynomial of degree 10 fit of the form $\beta_0+\beta_1 x +\beta_2 x^2+\cdots +\beta_{20}x^{20}$ _Overfits_ the data.
 
-We will discuss polynomial regression in M7.
 
 ---
 
@@ -787,15 +802,23 @@ We can now ask:
 <!-- In regression, where we assume $Y  = f(x) + \varepsilon$, and  -->
 <!-- $\hat{f}(x_i)$ gives the predicted response at $x_i$,  -->
 
-* A popular measure for the quality of fit: *Training MSE* (mean squared error).
-
-* It is the mean of squared differences between prediction and truth for the training data (the same values that were used to estimate $f$):
+The quality of fit can be measures as the *Training MSE* (mean squared error), using the data that were used to estimate $f$):
 
 $$ \text{MSE}_{\text{train}}=\frac{1}{n}\sum_{i=1}^n (y_i-\hat{f}(x_i))^2$$
+$~$
 
-* But: we are _not_ interested in how the method works on the training data. We want to know how good the method is when we use it on _previously unseen test data_ (e.g., future data).
+
+
 
 ---
+
+<!-- But: we are _not_ interested in how the method works on the training data. We want to know how good the method is when we use it on _previously unseen test data_ (e.g., future data). -->
+
+
+Why is the training MSE not the real measure of interest?
+
+$~$
+
 
 Examples: 
 
@@ -804,6 +827,10 @@ Examples:
 * We don't want to predict if a patient in the training data has diabetes (because we already know this), we want to predict if a new patient has diabetes.
 
 ---
+
+### Training error for the polynomial example
+
+$~$
 
 ```{r trainMSE, message=FALSE, warning=FALSE, echo=FALSE, fig.width=6,fig.height=3,fig.align="center",out.width='80%'}
 library(ggplot2)
@@ -847,9 +874,14 @@ ggarrange(p1,pall)
 
 ```
 
-**Q**: Based on the training MSE - which model fits the data the best?
+\vspace{2mm}
 
-Polynomial example: fitted order 1-20 polynomial when the truth is order 2. Left: one repetition, right: 100 repetitions of the training set.  
+ 
+Left: one repetition, right: 100 repetitions of the training set.  
+
+\vspace{2mm}
+
+**Q**: Based on the training MSE - which model fits the data the best?
 
 
 <!-- (But, how was these graphs made? Want to see the R code? You can see the code by looking at the 2StatLearn.Rmd file located at the same place as you found this file.) -->
@@ -876,17 +908,9 @@ $$\text{Ave}(y_0-\hat{f}(x_0))^2$$
 
 ---
 
-**Q:** What if we do not have access to test data?
+### Test error for the polynomial example
 
-<!-- **A:** In Module 5 we will look into using _cross validation_ to mimic the use of a test set. -->
-
-\vspace{2mm}
-
-**Q:** But, can we instead just use the training data MSE to choose a model? A low training error should also give a low test error?
-
-<!-- **A:** Sadly no, if we use a flexible model we will look at several cases where a low training error is a sign of overfitting, and will give a high test error. So, the training error is not a good estimator for the test error because it does not properly account for model complexity. -->
-
----
+$~$
 
 ```{r traintestMSE, message=FALSE, warning=FALSE, echo=FALSE,fig.width=7,fig.height=3,fig.align="center",out.width='90%'}
 library(ggplot2)
@@ -926,23 +950,46 @@ testpall= ggplot(data=sdf,aes(x=poly,group=rep,y=testMSE,colour=rep))+scale_y_co
 ggarrange(testp1,testpall)
 ```
 
-Polynomial example: fitted order 1-20 when the truth is order 2.
+
 Left: one repetition, right: 100 repetitions for the testMSE.
 
-**Q**: Based on the test MSE - which model fits the data the best?
 
 ---
 
-```{r,echo=FALSE,fig.width=7,fig.height=4.5,fig.align="center",out.width='80%'}
-ggarrange(p1,pall,testp1,testpall)
-```
+**Q1**: Based on the test MSE - which model fits the data the best?
 
-**A**: If choosing flexibility
-
-* _based on training MSE_:  poly20 wins
-* _based on test MSE_: poly2 wins.
+\vspace{2mm}
 
 
+**Q2:** What if we do not have access to test data?
+
+
+
+\vspace{2mm}
+
+**Q3:** Can we instead just use the training data MSE to choose a model? A low training error should also give a low test error?
+
+
+
+\vspace{2mm}
+
+
+
+---
+
+Answers
+
+<!-- **A1**: -->
+
+<!-- If choosing flexibility -->
+
+<!-- * _based on training MSE_:  poly20 wins -->
+<!-- * _based on test MSE_: poly2 wins. -->
+
+<!-- **A2:** In Module 5 we will look into using _cross validation_ to mimic the use of a test set. -->
+
+
+<!-- **A3:** Sadly no, if we use a flexible model we will look at several cases where a low training error is a sign of overfitting, and will give a high test error. So, the training error is not a good estimator for the test error because it does not properly account for model complexity. -->
 
 <!-- <!-- --- -->  
 
