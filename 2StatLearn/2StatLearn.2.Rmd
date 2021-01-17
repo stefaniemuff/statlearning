@@ -4,13 +4,13 @@ title: "Module 2, Part 2: Random vectors, covariance, multivariate Normal distri
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "January 19, 2021"
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -49,17 +49,6 @@ Last update: January 18, 2021
 * The multivariate normal distribution
 
 
---- 
-
-# Warm up: Task
-
-Find examples to explain the difference between supervised and unsupervised learning.
-
-*
-
-*
-
-* 
 
 ---
 
@@ -67,7 +56,8 @@ Find examples to explain the difference between supervised and unsupervised lear
 
 * A random vector $\boldsymbol{X}_{(p\times 1)}$ is a $p$-dimensional vector of random variables. For example
     + Weight of cork deposits in $p=4$ directions (N, E, S, W).
-    + Rent index in Munich: rent, area, year of construction, location, bath condition, kitchen condition, central heating, district.
+    + Factors to predict body fat: bmi, age, weight, hip circumference,....
+    
 * Joint distribution function: $f(\boldsymbol{x})$.
 * From joint distribution function to marginal (and conditional distributions).
 $$f_1(x_1)=\int_{-\infty}^{\infty}\cdots \int_{-\infty}^{\infty} f(x_1,x_2,\ldots,x_p)dx_2 \cdots dx_p$$
@@ -125,6 +115,8 @@ $$\boldsymbol{X}_{(28 \times 4)}=\left[ \begin{array}{cccc}X_{11} & X_{12} & X_{
 ---
 
 ## Rules for means
+
+$~$
 
 * Random vector $\boldsymbol{X}_{(p\times 1)}$ with mean vector $\boldsymbol{\mu}_{(p\times 1)}$:
 
@@ -351,6 +343,8 @@ X_S\\
 Scientists would like to compare the following three _contrasts_: N-S, E-W and (E+W)-(N+S),
 and define a new random vector $\boldsymbol{Y}_{(3\times 1)}=\boldsymbol{C}_{(3\times 4)} \boldsymbol{X}_{(4\times 1)}$ giving the three contrasts.
 
+\vspace{2mm}
+
 * Write down $\boldsymbol{C}$.
 * Explain how to find $\text{E}(Y_1)$ and $\text{Cov}(Y_1,Y_3)$.
 * Use R to find the mean vector, covariance matrix and correlations matrix of $\boldsymbol{Y}$, when the mean vector and covariance matrix for $\boldsymbol{X}$ is given below.
@@ -401,19 +395,20 @@ $$\boldsymbol{b}^T \boldsymbol{\Sigma} \boldsymbol{b} \geq 0 \ .$$
 
 * Why do you think that is?
 
+$~$
 
 Hint: Is it possible that the variance of the linear combination $\boldsymbol{Y}=\boldsymbol{b}^T\boldsymbol{X}$ is negative? 
 
 
 ---
 
-## Random vectors - Single-choice klicker exercise
+## Random vectors - Single-choice exercise
 
 \vspace{4mm}
 
-Todo: Make this a google form
+We are doing a poll in zoom.
 
-In class - go to [https://forms.gle/HCaAFxpY2b7JoVim9](https://forms.gle/HCaAFxpY2b7JoVim9) to answer the questions on the following slides
+<!-- In class - go to [https://forms.gle/HCaAFxpY2b7JoVim9](https://forms.gle/HCaAFxpY2b7JoVim9) to answer the questions on the following slides -->
 
 
 ---
@@ -424,6 +419,9 @@ In class - go to [https://forms.gle/HCaAFxpY2b7JoVim9](https://forms.gle/HCaAFxp
 
 $\boldsymbol{X}$ and $\boldsymbol{Y}$ are two bivariate random vectors with $\text{E}(\boldsymbol{X})=(1,2)^T$
 and $\text{E}(\boldsymbol{Y})=(2,0)^T$. What is $\text{E}(\boldsymbol{X}+\boldsymbol{Y})$?
+
+
+$~$
 
 * A: $(1.5,1)^T$
 * B: $(3,2)^T$
@@ -437,6 +435,8 @@ and $\text{E}(\boldsymbol{Y})=(2,0)^T$. What is $\text{E}(\boldsymbol{X}+\boldsy
 
 $\boldsymbol{X}$ is a 2-dimensional random vector with $\text{E}(\boldsymbol{X})=(2,5)^T$ , and $\boldsymbol{b}=(0.5, 0.5)^T$ is a constant vector. What is $\text{E}(\boldsymbol{b}^T\boldsymbol{X})$?
 
+$~$
+
 * A: 3.5
 * B: 7
 * C: 2
@@ -448,6 +448,8 @@ $\boldsymbol{X}$ is a 2-dimensional random vector with $\text{E}(\boldsymbol{X})
 \vspace{2mm}
 
 $\boldsymbol{X}$ is a $p$-dimensional random vector with mean $\boldsymbol{\mu}$. Which of the following defines the covariance matrix?
+
+$~$
 
 * A: $E[(\boldsymbol{X}-\boldsymbol{\mu})^T(\boldsymbol{X}-\boldsymbol{\mu})]$ 
 * B: $E[(\boldsymbol{X}-\boldsymbol{\mu})(\boldsymbol{X}-\boldsymbol{\mu})^T]$ 
@@ -463,6 +465,8 @@ $\boldsymbol{X}$ is a $p$-dimensional random vector with mean $\boldsymbol{\mu}$
 and covariance matrix $\boldsymbol\Sigma$. $\boldsymbol{C}$ is a constant matrix. 
 What is then the mean of the $k$-dimensional random vector $\boldsymbol{Y}=\boldsymbol{C}\boldsymbol{X}$?
 
+$~$
+
 * A: $\boldsymbol{C}\boldsymbol{\mu}$
 * B: $\boldsymbol{C}\boldsymbol\Sigma$
 * C: $\boldsymbol{C}\boldsymbol{\mu}\boldsymbol{C}^T$
@@ -476,6 +480,8 @@ What is then the mean of the $k$-dimensional random vector $\boldsymbol{Y}=\bold
 $\boldsymbol{X}$ is a $p$-dimensional random vector with mean $\boldsymbol{\mu}$
 and covariance matrix $\boldsymbol\Sigma$. $\boldsymbol{C}$ is a constant matrix. 
 What is then the covariance of the $k$-dimensional random vector $\boldsymbol{Y}=\boldsymbol{C}\boldsymbol{X}$?
+
+$~$
 
 * A: $\boldsymbol{C}\boldsymbol{\mu}$
 * B: $\boldsymbol{C}\boldsymbol\Sigma$
@@ -495,6 +501,8 @@ covariance matrix
       \end{array}
     \right]\]
 Then the correlation between the two elements of $\boldsymbol{X}$ are:
+
+$~$
 
 * A: 0.10
 * B: 0.25
@@ -541,8 +549,12 @@ Why is the mvN so popular?
 The random vector $\boldsymbol{X}_{p\times 1}$ is multivariate normal $N_p$ with mean $\boldsymbol{\mu}$ and (positive definite) covariate matrix $\boldsymbol\Sigma$. The pdf is:
 
 $$f(\boldsymbol{x})=\frac{1}{(2\pi)^\frac{p}{2}|\boldsymbol\Sigma|^\frac{1}{2}} \exp\{-\frac{1}{2}(\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})\}$$
+$~$
+
 
 **Questions**: 
+
+
 
 * How does this compare to the univariate version?
 $$f(x)=\frac{1}{\sqrt{2\pi}\sigma}\exp\{ \frac{1}{2\sigma^2}(x-\mu)^2\}$$
@@ -560,6 +572,8 @@ $$f(x)=\frac{1}{\sqrt{2\pi}\sigma}\exp\{ \frac{1}{2\sigma^2}(x-\mu)^2\}$$
 
 Let $\boldsymbol{X}_{(p\times 1)}$ be a random vector from $N_p(\boldsymbol{\mu},\boldsymbol\Sigma)$.
 
+\vspace{2mm}
+
 1. The grapical contours of the mvN are ellipsoids (can be shown using spectral decomposition).
 
 2. Linear combinations of components of $\boldsymbol{X}$ are (multivariate) normal 
@@ -568,6 +582,10 @@ Let $\boldsymbol{X}_{(p\times 1)}$ be a random vector from $N_p(\boldsymbol{\mu}
 
 4. Zero covariance implies that the corresponding components are independently distributed (in contrast to general distributions).
 
+$~$
+
+\small
+If you need a refresh, you might find that video useful: [https://www.youtube.com/watch?v=eho8xH3E6mE](https://www.youtube.com/watch?v=eho8xH3E6mE)
 
 ---
 
@@ -584,7 +602,7 @@ The result 4 is rather useful! If you have a bivariate normal and observed covar
 $$ (\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})=b $$
 where $b>0$ is a constant.
 
-* These ellipsoids are centered at $\boldsymbol{\mu}$ and have axes $\pm \sqrt{b \lambda_i}\boldsymbol{e}_i$, where $\boldsymbol\Sigma\boldsymbol{e}_i=\lambda_i \boldsymbol{e}_i$, for $i=1,...,p$.
+* These ellipsoids are centered at $\boldsymbol{\mu}$ and have axes $\pm \sqrt{b \lambda_i}\boldsymbol{e}_i$, where $\boldsymbol\Sigma\boldsymbol{e}_i=\lambda_i \boldsymbol{e}_i$ (eigenvector for $\lambda_i$), for $i=1,...,p$.
 
 * To see this the spectral decomposition of the covariance matrix is useful.
 
@@ -672,9 +690,11 @@ Take a look at the contour plots - when are the contours circles, when ellipses?
 ## Multiple choice - multivariate normal
 \vspace{2mm}
 
+A second zoom poll.
+
 Choose the correct answer. Let's go!
 
-[https://forms.gle/G6eJNp2Pr3trjL8T7](https://forms.gle/G6eJNp2Pr3trjL8T7)
+<!-- [https://forms.gle/G6eJNp2Pr3trjL8T7](https://forms.gle/G6eJNp2Pr3trjL8T7) -->
 
 ---
 

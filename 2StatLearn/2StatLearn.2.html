@@ -1531,23 +1531,13 @@ div.tocify {
 </ul>
 <hr />
 </div>
-<div id="warm-up-task" class="section level1">
-<h1>Warm up: Task</h1>
-<p>Find examples to explain the difference between supervised and unsupervised learning.</p>
-<ul>
-<li></li>
-<li></li>
-<li></li>
-</ul>
-<hr />
-</div>
 <div id="random-vector" class="section level1">
 <h1>Random vector</h1>
 <ul>
 <li>A random vector <span class="math inline">\(\boldsymbol{X}_{(p\times 1)}\)</span> is a <span class="math inline">\(p\)</span>-dimensional vector of random variables. For example
 <ul>
 <li>Weight of cork deposits in <span class="math inline">\(p=4\)</span> directions (N, E, S, W).</li>
-<li>Rent index in Munich: rent, area, year of construction, location, bath condition, kitchen condition, central heating, district.</li>
+<li>Factors to predict body fat: bmi, age, weight, hip circumference,….</li>
 </ul></li>
 <li>Joint distribution function: <span class="math inline">\(f(\boldsymbol{x})\)</span>.</li>
 <li>From joint distribution function to marginal (and conditional distributions). <span class="math display">\[f_1(x_1)=\int_{-\infty}^{\infty}\cdots \int_{-\infty}^{\infty} f(x_1,x_2,\ldots,x_p)dx_2 \cdots dx_p\]</span></li>
@@ -1599,6 +1589,7 @@ head(corkds)</code></pre>
 </div>
 <div id="rules-for-means" class="section level2">
 <h2>Rules for means</h2>
+<p><span class="math inline">\(~\)</span></p>
 <ul>
 <li>Random vector <span class="math inline">\(\boldsymbol{X}_{(p\times 1)}\)</span> with mean vector <span class="math inline">\(\boldsymbol{\mu}_{(p\times 1)}\)</span>:</li>
 </ul>
@@ -1614,7 +1605,7 @@ head(corkds)</code></pre>
 </ul>
 <p>Proof: Board</p>
 
-<!-- Look at element $(i,j)$ of $\boldsymbol{A}\boldsymbol{X}\boldsymbol{B}$  -->
+<!-- Look at element $(i,j)$ of $\boldsymbol{A}\boldsymbol{X}\boldsymbol{B}$ -->
 <!-- $$e_{ij}=\sum_{k=1}^n a_{ik} \sum_{l=1}^p X_{kl}b_{lj}$$ -->
 <!-- (where $a_{ik}$ and $b_{lj}$ are elements of $\boldsymbol{A}$ and $\boldsymbol{B}$ respectively), and see that $\text{E}(e_{ij})$ is the element $(i,j)$ if $\boldsymbol{A}\text{E}(\boldsymbol{X})\boldsymbol{B}$. -->
 <hr />
@@ -1634,6 +1625,9 @@ head(corkds)</code></pre>
 \end{align*}\]</span></p>
 <ul>
 <li>What is the covariance called when <span class="math inline">\(i=j\)</span>?</li>
+</ul>
+
+<ul>
 <li>What does it mean when the covariance is
 <ul>
 <li>negative</li>
@@ -1641,11 +1635,14 @@ head(corkds)</code></pre>
 <li>positive?</li>
 </ul></li>
 </ul>
-<p>Make a scatter plot to show this.</p>
+<hr />
+<p>Make a scatter plot for negative, zero and positive correlation</p>
+
 <hr />
 </div>
 <div id="variance-covariance-matrix" class="section level2">
 <h2>Variance-covariance matrix</h2>
+
 <ul>
 <li><p>Consider random vector <span class="math inline">\(\boldsymbol{X}_{(p\times 1)}\)</span> with mean vector <span class="math inline">\(\boldsymbol{\mu}_{(p\times 1)}\)</span>: <span class="math display">\[\boldsymbol{X}_{(p\times 1)} =\left[ \begin{array}{c} X_1\\ X_2\\ \vdots\\ X_p\\ \end{array} \right], \text{ and }\boldsymbol{\mu}_{(p\times 1)} =\text{E}(\boldsymbol{X})=\left[ \begin{array}{c} \text{E}(X_1)\\ \text{E}(X_2)\\ \vdots\\ \text{E}(X_p)\\ \end{array}\right]\]</span></p></li>
 <li><p>Variance-covariance matrix <span class="math inline">\(\boldsymbol\Sigma\)</span> (real and symmetric) <span class="math display">\[\begin{align*}
@@ -1758,6 +1755,7 @@ X_S\\
     \sigma_{NW} &amp; \sigma_{EW} &amp; \sigma_{SW} &amp; \sigma_{WW}\\
 \end{array} \right]\]</span></p>
 <p>Scientists would like to compare the following three <em>contrasts</em>: N-S, E-W and (E+W)-(N+S), and define a new random vector <span class="math inline">\(\boldsymbol{Y}_{(3\times 1)}=\boldsymbol{C}_{(3\times 4)} \boldsymbol{X}_{(4\times 1)}\)</span> giving the three contrasts.</p>
+
 <ul>
 <li>Write down <span class="math inline">\(\boldsymbol{C}\)</span>.</li>
 <li>Explain how to find <span class="math inline">\(\text{E}(Y_1)\)</span> and <span class="math inline">\(\text{Cov}(Y_1,Y_3)\)</span>.</li>
@@ -1808,20 +1806,22 @@ Sigma</code></pre>
 <ul>
 <li>Why do you think that is?</li>
 </ul>
+<p><span class="math inline">\(~\)</span></p>
 <p>Hint: Is it possible that the variance of the linear combination <span class="math inline">\(\boldsymbol{Y}=\boldsymbol{b}^T\boldsymbol{X}\)</span> is negative?</p>
 <hr />
 </div>
 </div>
-<div id="random-vectors---single-choice-klicker-exercise" class="section level2">
-<h2>Random vectors - Single-choice klicker exercise</h2>
+<div id="random-vectors---single-choice-exercise" class="section level2">
+<h2>Random vectors - Single-choice exercise</h2>
 
-<p>Todo: Make this a google form</p>
-<p>In class - go to <a href="https://forms.gle/HCaAFxpY2b7JoVim9">https://forms.gle/HCaAFxpY2b7JoVim9</a> to answer the questions on the following slides</p>
+<p>We are doing a poll in zoom.</p>
+<!-- In class - go to [https://forms.gle/HCaAFxpY2b7JoVim9](https://forms.gle/HCaAFxpY2b7JoVim9) to answer the questions on the following slides -->
 <hr />
 <div id="question-1-mean-of-sum" class="section level3">
 <h3>Question 1: Mean of sum</h3>
 
 <p><span class="math inline">\(\boldsymbol{X}\)</span> and <span class="math inline">\(\boldsymbol{Y}\)</span> are two bivariate random vectors with <span class="math inline">\(\text{E}(\boldsymbol{X})=(1,2)^T\)</span> and <span class="math inline">\(\text{E}(\boldsymbol{Y})=(2,0)^T\)</span>. What is <span class="math inline">\(\text{E}(\boldsymbol{X}+\boldsymbol{Y})\)</span>?</p>
+<p><span class="math inline">\(~\)</span></p>
 <ul>
 <li>A: <span class="math inline">\((1.5,1)^T\)</span></li>
 <li>B: <span class="math inline">\((3,2)^T\)</span></li>
@@ -1834,6 +1834,7 @@ Sigma</code></pre>
 <h3>Question 2: Mean of linear combination</h3>
 
 <p><span class="math inline">\(\boldsymbol{X}\)</span> is a 2-dimensional random vector with <span class="math inline">\(\text{E}(\boldsymbol{X})=(2,5)^T\)</span> , and <span class="math inline">\(\boldsymbol{b}=(0.5, 0.5)^T\)</span> is a constant vector. What is <span class="math inline">\(\text{E}(\boldsymbol{b}^T\boldsymbol{X})\)</span>?</p>
+<p><span class="math inline">\(~\)</span></p>
 <ul>
 <li>A: 3.5</li>
 <li>B: 7</li>
@@ -1846,6 +1847,7 @@ Sigma</code></pre>
 <h3>Question 3: Covariance</h3>
 
 <p><span class="math inline">\(\boldsymbol{X}\)</span> is a <span class="math inline">\(p\)</span>-dimensional random vector with mean <span class="math inline">\(\boldsymbol{\mu}\)</span>. Which of the following defines the covariance matrix?</p>
+<p><span class="math inline">\(~\)</span></p>
 <ul>
 <li>A: <span class="math inline">\(E[(\boldsymbol{X}-\boldsymbol{\mu})^T(\boldsymbol{X}-\boldsymbol{\mu})]\)</span></li>
 <li>B: <span class="math inline">\(E[(\boldsymbol{X}-\boldsymbol{\mu})(\boldsymbol{X}-\boldsymbol{\mu})^T]\)</span></li>
@@ -1859,6 +1861,7 @@ Sigma</code></pre>
 <h3>Question 4: Mean of linear combinations</h3>
 
 <p><span class="math inline">\(\boldsymbol{X}\)</span> is a <span class="math inline">\(p\)</span>-dimensional random vector with mean <span class="math inline">\(\boldsymbol{\mu}\)</span> and covariance matrix <span class="math inline">\(\boldsymbol\Sigma\)</span>. <span class="math inline">\(\boldsymbol{C}\)</span> is a constant matrix. What is then the mean of the <span class="math inline">\(k\)</span>-dimensional random vector <span class="math inline">\(\boldsymbol{Y}=\boldsymbol{C}\boldsymbol{X}\)</span>?</p>
+<p><span class="math inline">\(~\)</span></p>
 <ul>
 <li>A: <span class="math inline">\(\boldsymbol{C}\boldsymbol{\mu}\)</span></li>
 <li>B: <span class="math inline">\(\boldsymbol{C}\boldsymbol\Sigma\)</span></li>
@@ -1871,6 +1874,7 @@ Sigma</code></pre>
 <h3>Question 5: Covariance of linear combinations</h3>
 
 <p><span class="math inline">\(\boldsymbol{X}\)</span> is a <span class="math inline">\(p\)</span>-dimensional random vector with mean <span class="math inline">\(\boldsymbol{\mu}\)</span> and covariance matrix <span class="math inline">\(\boldsymbol\Sigma\)</span>. <span class="math inline">\(\boldsymbol{C}\)</span> is a constant matrix. What is then the covariance of the <span class="math inline">\(k\)</span>-dimensional random vector <span class="math inline">\(\boldsymbol{Y}=\boldsymbol{C}\boldsymbol{X}\)</span>?</p>
+<p><span class="math inline">\(~\)</span></p>
 <ul>
 <li>A: <span class="math inline">\(\boldsymbol{C}\boldsymbol{\mu}\)</span></li>
 <li>B: <span class="math inline">\(\boldsymbol{C}\boldsymbol\Sigma\)</span></li>
@@ -1887,6 +1891,7 @@ Sigma</code></pre>
           0.8 &amp; 1\\
       \end{array}
     \right]\]</span> Then the correlation between the two elements of <span class="math inline">\(\boldsymbol{X}\)</span> are:</p>
+<p><span class="math inline">\(~\)</span></p>
 <ul>
 <li>A: 0.10</li>
 <li>B: 0.25</li>
@@ -1921,7 +1926,7 @@ Sigma</code></pre>
 <h2>The multivariate normal (mvN) pdf</h2>
 
 <p>The random vector <span class="math inline">\(\boldsymbol{X}_{p\times 1}\)</span> is multivariate normal <span class="math inline">\(N_p\)</span> with mean <span class="math inline">\(\boldsymbol{\mu}\)</span> and (positive definite) covariate matrix <span class="math inline">\(\boldsymbol\Sigma\)</span>. The pdf is:</p>
-<p><span class="math display">\[f(\boldsymbol{x})=\frac{1}{(2\pi)^\frac{p}{2}|\boldsymbol\Sigma|^\frac{1}{2}} \exp\{-\frac{1}{2}(\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})\}\]</span></p>
+<p><span class="math display">\[f(\boldsymbol{x})=\frac{1}{(2\pi)^\frac{p}{2}|\boldsymbol\Sigma|^\frac{1}{2}} \exp\{-\frac{1}{2}(\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})\}\]</span> <span class="math inline">\(~\)</span></p>
 <p><strong>Questions</strong>:</p>
 <ul>
 <li><p>How does this compare to the univariate version? <span class="math display">\[f(x)=\frac{1}{\sqrt{2\pi}\sigma}\exp\{ \frac{1}{2\sigma^2}(x-\mu)^2\}\]</span></p></li>
@@ -1935,12 +1940,16 @@ Sigma</code></pre>
 <h2>Four useful properties of the mvN</h2>
 
 <p>Let <span class="math inline">\(\boldsymbol{X}_{(p\times 1)}\)</span> be a random vector from <span class="math inline">\(N_p(\boldsymbol{\mu},\boldsymbol\Sigma)\)</span>.</p>
+
 <ol style="list-style-type: decimal">
 <li><p>The grapical contours of the mvN are ellipsoids (can be shown using spectral decomposition).</p></li>
 <li><p>Linear combinations of components of <span class="math inline">\(\boldsymbol{X}\)</span> are (multivariate) normal</p></li>
 <li><p>All subsets of the components of <span class="math inline">\(\boldsymbol{X}\)</span> are (multivariate) normal (special case of the above).</p></li>
 <li><p>Zero covariance implies that the corresponding components are independently distributed (in contrast to general distributions).</p></li>
 </ol>
+<p><span class="math inline">\(~\)</span></p>
+
+<p>If you need a refresh, you might find that video useful: <a href="https://www.youtube.com/watch?v=eho8xH3E6mE">https://www.youtube.com/watch?v=eho8xH3E6mE</a></p>
 <hr />
 <p>All of these are proven in TMA4267 Linear Statistical Models.</p>
 <p>The result 4 is rather useful! If you have a bivariate normal and observed covariance 0, then your variables are independent.</p>
@@ -1951,7 +1960,7 @@ Sigma</code></pre>
 
 <ul>
 <li><p>Contours of constant density for the <span class="math inline">\(p\)</span>-dimensional normal distribution are ellipsoids defined by <span class="math inline">\(\boldsymbol{x}\)</span> such that <span class="math display">\[ (\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})=b \]</span> where <span class="math inline">\(b&gt;0\)</span> is a constant.</p></li>
-<li><p>These ellipsoids are centered at <span class="math inline">\(\boldsymbol{\mu}\)</span> and have axes <span class="math inline">\(\pm \sqrt{b \lambda_i}\boldsymbol{e}_i\)</span>, where <span class="math inline">\(\boldsymbol\Sigma\boldsymbol{e}_i=\lambda_i \boldsymbol{e}_i\)</span>, for <span class="math inline">\(i=1,...,p\)</span>.</p></li>
+<li><p>These ellipsoids are centered at <span class="math inline">\(\boldsymbol{\mu}\)</span> and have axes <span class="math inline">\(\pm \sqrt{b \lambda_i}\boldsymbol{e}_i\)</span>, where <span class="math inline">\(\boldsymbol\Sigma\boldsymbol{e}_i=\lambda_i \boldsymbol{e}_i\)</span> (eigenvector for <span class="math inline">\(\lambda_i\)</span>), for <span class="math inline">\(i=1,...,p\)</span>.</p></li>
 <li><p>To see this the spectral decomposition of the covariance matrix is useful.</p></li>
 <li><p><span class="math inline">\((\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})\)</span> is distributed as <span class="math inline">\(\chi^2_p\)</span>.</p></li>
 </ul>
@@ -1985,8 +1994,9 @@ Sigma</code></pre>
 <div id="multiple-choice---multivariate-normal" class="section level2">
 <h2>Multiple choice - multivariate normal</h2>
 
+<p>A second zoom poll.</p>
 <p>Choose the correct answer. Let’s go!</p>
-<p><a href="https://forms.gle/G6eJNp2Pr3trjL8T7">https://forms.gle/G6eJNp2Pr3trjL8T7</a></p>
+<!-- [https://forms.gle/G6eJNp2Pr3trjL8T7](https://forms.gle/G6eJNp2Pr3trjL8T7) -->
 <hr />
 <div id="question-1-multivariate-normal-pdf" class="section level3">
 <h3>Question 1: Multivariate normal pdf</h3>

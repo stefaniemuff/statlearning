@@ -176,20 +176,6 @@ Last update: January 18, 2021
 
 \end{frame}
 
-\begin{frame}{Warm up: Task}
-\protect\hypertarget{warm-up-task}{}
-
-Find examples to explain the difference between supervised and
-unsupervised learning.
-
-\begin{itemize}
-\item
-\item
-\item
-\end{itemize}
-
-\end{frame}
-
 \begin{frame}{Random vector}
 \protect\hypertarget{random-vector}{}
 
@@ -204,8 +190,8 @@ unsupervised learning.
   \item
     Weight of cork deposits in \(p=4\) directions (N, E, S, W).
   \item
-    Rent index in Munich: rent, area, year of construction, location,
-    bath condition, kitchen condition, central heating, district.
+    Factors to predict body fat: bmi, age, weight, hip
+    circumference,\ldots{}.
   \end{itemize}
 \item
   Joint distribution function: \(f(\boldsymbol{x})\).
@@ -320,6 +306,8 @@ The moments are important properties of the distribution of
 \begin{frame}
 
 \begin{block}{Rules for means}
+
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -607,6 +595,8 @@ N-S, E-W and (E+W)-(N+S), and define a new random vector
 \(\boldsymbol{Y}_{(3\times 1)}=\boldsymbol{C}_{(3\times 4)} \boldsymbol{X}_{(4\times 1)}\)
 giving the three contrasts.
 
+\vspace{2mm}
+
 \begin{itemize}
 \tightlist
 \item
@@ -714,6 +704,8 @@ Random vector \(\boldsymbol{X}_{(p\times 1)}\) with mean vector
   Why do you think that is?
 \end{itemize}
 
+\(~\)
+
 Hint: Is it possible that the variance of the linear combination
 \(\boldsymbol{Y}=\boldsymbol{b}^T\boldsymbol{X}\) is negative?
 
@@ -721,14 +713,11 @@ Hint: Is it possible that the variance of the linear combination
 
 \begin{frame}
 
-\begin{block}{Random vectors - Single-choice klicker exercise}
+\begin{block}{Random vectors - Single-choice exercise}
 
 \vspace{4mm}
 
-Todo: Make this a google form
-
-In class - go to \url{https://forms.gle/HCaAFxpY2b7JoVim9} to answer the
-questions on the following slides
+We are doing a poll in zoom.
 
 \end{block}
 
@@ -744,6 +733,8 @@ questions on the following slides
 vectors with \(\text{E}(\boldsymbol{X})=(1,2)^T\) and
 \(\text{E}(\boldsymbol{Y})=(2,0)^T\). What is
 \(\text{E}(\boldsymbol{X}+\boldsymbol{Y})\)?
+
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -772,6 +763,8 @@ vectors with \(\text{E}(\boldsymbol{X})=(1,2)^T\) and
 \(\boldsymbol{b}=(0.5, 0.5)^T\) is a constant vector. What is
 \(\text{E}(\boldsymbol{b}^T\boldsymbol{X})\)?
 
+\(~\)
+
 \begin{itemize}
 \tightlist
 \item
@@ -797,6 +790,8 @@ vectors with \(\text{E}(\boldsymbol{X})=(1,2)^T\) and
 \(\boldsymbol{X}\) is a \(p\)-dimensional random vector with mean
 \(\boldsymbol{\mu}\). Which of the following defines the covariance
 matrix?
+
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -830,6 +825,8 @@ matrix?
 \(k\)-dimensional random vector
 \(\boldsymbol{Y}=\boldsymbol{C}\boldsymbol{X}\)?
 
+\(~\)
+
 \begin{itemize}
 \tightlist
 \item
@@ -857,6 +854,8 @@ matrix?
 \(\boldsymbol{C}\) is a constant matrix. What is then the covariance of
 the \(k\)-dimensional random vector
 \(\boldsymbol{Y}=\boldsymbol{C}\boldsymbol{X}\)?
+
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -887,6 +886,8 @@ matrix \[ \boldsymbol\Sigma= \left[\begin{array}{cc}
       \end{array}
     \right]\] Then the correlation between the two elements of
 \(\boldsymbol{X}\) are:
+
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -954,6 +955,7 @@ The random vector \(\boldsymbol{X}_{p\times 1}\) is multivariate normal
 matrix \(\boldsymbol\Sigma\). The pdf is:
 
 \[f(\boldsymbol{x})=\frac{1}{(2\pi)^\frac{p}{2}|\boldsymbol\Sigma|^\frac{1}{2}} \exp\{-\frac{1}{2}(\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})\}\]
+\(~\)
 
 \textbf{Questions}:
 
@@ -983,6 +985,8 @@ matrix \(\boldsymbol\Sigma\). The pdf is:
 Let \(\boldsymbol{X}_{(p\times 1)}\) be a random vector from
 \(N_p(\boldsymbol{\mu},\boldsymbol\Sigma)\).
 
+\vspace{2mm}
+
 \begin{enumerate}
 \item
   The grapical contours of the mvN are ellipsoids (can be shown using
@@ -997,6 +1001,13 @@ Let \(\boldsymbol{X}_{(p\times 1)}\) be a random vector from
   Zero covariance implies that the corresponding components are
   independently distributed (in contrast to general distributions).
 \end{enumerate}
+
+\(~\)
+
+\small
+
+If you need a refresh, you might find that video useful:
+\url{https://www.youtube.com/watch?v=eho8xH3E6mE}
 
 \end{block}
 
@@ -1026,8 +1037,8 @@ observed covariance 0, then your variables are independent.
 \item
   These ellipsoids are centered at \(\boldsymbol{\mu}\) and have axes
   \(\pm \sqrt{b \lambda_i}\boldsymbol{e}_i\), where
-  \(\boldsymbol\Sigma\boldsymbol{e}_i=\lambda_i \boldsymbol{e}_i\), for
-  \(i=1,...,p\).
+  \(\boldsymbol\Sigma\boldsymbol{e}_i=\lambda_i \boldsymbol{e}_i\)
+  (eigenvector for \(\lambda_i\)), for \(i=1,...,p\).
 \item
   To see this the spectral decomposition of the covariance matrix is
   useful.
@@ -1098,9 +1109,9 @@ ellipses?
 
 \vspace{2mm}
 
-Choose the correct answer. Let's go!
+A second zoom poll.
 
-\url{https://forms.gle/G6eJNp2Pr3trjL8T7}
+Choose the correct answer. Let's go!
 
 \end{block}
 
