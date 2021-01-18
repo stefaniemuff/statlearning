@@ -119,7 +119,7 @@
 
 \begin{frame}
 
-Last update: January 17, 2021
+Last update: January 18, 2021
 
 \end{frame}
 
@@ -235,7 +235,7 @@ set of \(K\) different classes/labels/categories.
 \begin{itemize}
 \item
   Examples: type of fruit \{apples, oranges, bananas, \ldots{}\}, sex
-  \{male, female, other \}, education level.
+  \{male, female, other \}, education level \{none, low, medium, high\}.
 \item
   Qualitative variables which have only two classes are called
   \emph{binary} variables and are usually coded by 0 (no) and 1 (yes).
@@ -398,7 +398,9 @@ learning category (exception: Module 10)
 \begin{frame}{Notation and key statistical concepts}
 \protect\hypertarget{notation-and-key-statistical-concepts}{}
 
-See board.
+See board, and p.~9--12 in the course book.
+
+\vspace{6cm}
 
 \end{frame}
 
@@ -416,6 +418,8 @@ See board.
 \item
   Difficult to know how well your are doing.
 \end{itemize}
+
+\(~\)
 
 Examples in the course:
 
@@ -555,7 +559,7 @@ Sales of a product, given advertising budgets in different media.
 \begin{frame}{Example 2}
 \protect\hypertarget{example-2}{}
 
-\vspace{2mm}
+\vspace{4mm}
 
 Income for given levels of education.
 
@@ -596,8 +600,15 @@ Notation:
   \(\hat{f}\): estimated \(f\)
 \item
   \(\hat{Y}\) prediction for \(Y\) given \(x\).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
-  We do not really care about the shape of \(f\) (``black box'').
+  We \emph{do not really care} about the shape of \(f\) (``black
+  box'').\\
   \(\rightarrow\) no interpretation of regression parameters when the
   aim is purely prediction!
 \end{itemize}
@@ -683,7 +694,9 @@ Overall idea:
   \((X,Y)\) (also those that have not yet been observed).
 \end{itemize}
 
-Two main approaches:
+\(~\)
+
+\textcolor{red}{Two main approaches:}
 
 \begin{itemize}
 \tightlist
@@ -889,13 +902,19 @@ mind.
   For \textbf{prediction} a flexible model is more powerful.
 \end{itemize}
 
+\(~\)
+
+\textbf{Potential problems:}
+
 \textbf{Overfitting} occurs when the estimated function \(f\) is too
 closely fit to the observed data points.
 
 \textbf{Underfitting} occurs when the estimated function \(f\) is too
 rigid to capture the underlying structure of the data.
 
-We illustrate this by a toy example using polynomial regression.
+\(~\)
+
+\emph{We illustrate this by a toy example using polynomial regression.}
 
 \end{frame}
 
@@ -922,7 +941,13 @@ with error (noise) term \(\varepsilon\sim N(0,\sigma^2)\) with
 \(\sigma=2\). It is a substitue for all the unobserved variables that
 are not in our equation, but that might influence \(Y\).
 
-We call \(Y=x^2\) the \emph{truth}.
+\begin{itemize}
+\tightlist
+\item
+  We call \(Y=x^2\) the \emph{truth}.
+\item
+  \(\varepsilon\) is the \emph{irreducible error}.
+\end{itemize}
 
 \end{frame}
 
@@ -1110,6 +1135,10 @@ Left: one repetition, right: 100 repetitions for the testMSE.
 
 \begin{frame}
 
+\begin{block}{Discuss in breakout groups:}
+
+\(~\)
+
 \textbf{Q1}: Based on the test MSE - which model fits the data the best?
 
 \vspace{2mm}
@@ -1123,45 +1152,30 @@ model? A low training error should also give a low test error?
 
 \vspace{2mm}
 
+\textbf{Q4:} Important observation:
+
+\vspace{2mm}
+
+\begin{itemize}
+\item
+  The test error seems to have a minimum (U-shape) in between the
+  extremes.
+\item
+  The training error keeps going down.
+\end{itemize}
+
+\centering
+\vspace{2mm}
+
+Why?
+
+\end{block}
+
 \end{frame}
 
 \begin{frame}
 
 Answers
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Test error vs.~training error}
-
-\(~\)
-
-Important observations:
-
-\vspace{2mm}
-
-\begin{itemize}
-\tightlist
-\item
-  The test error seems to have a minimum (U-shape) in between the
-  extremes.
-\end{itemize}
-
-\vspace{2mm}
-
-\begin{itemize}
-\tightlist
-\item
-  The training error keeps going down.
-\end{itemize}
-
-\vspace{1.5cm}
-\centering
-
-Why?
-
-\end{block}
 
 \end{frame}
 
@@ -1203,7 +1217,7 @@ statistical learning methods.
   \(\hat{f}(x_0)\) for an unseed test observation \((x_0,y_0)\).
 \item
   The \emph{\textcolor{red}{expected test mean squared error (MSE)} at
-  \(x_0\)} is defined as: \[\text{E}[y_0 - \hat{f}(x_0)]^2 \ .\]
+  \(x_0\)} is defined as: \[\text{E}[(y_0 - \hat{f}(x_0))^2] \ .\]
 \end{itemize}
 
 \(~\)
@@ -1222,7 +1236,7 @@ statistical learning methods.
 
 Using that \(y_0=f(x_0)+\varepsilon\), this expected test MSE can be
 decomposed into three terms (board) \begin{align*}
-&\text{E}[y_0 - \hat{f}(x_0)]^2 = \\
+&\text{E}[(y_0 - \hat{f}(x_0))^2] = \\
 & ... \\
 & =  \underbrace{\text{Var}(\varepsilon)}_{\text{Irreducible error}} + \underbrace{\text{Var}(\hat{f}(x_0))}_{\text{Variance of prediction}} + \underbrace{\left( f(x_0) - \text{E}[\hat{f}(x_0)] \right)^2}_{\text{Squared bias}}
 \end{align*}

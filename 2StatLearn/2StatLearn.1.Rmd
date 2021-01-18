@@ -31,7 +31,7 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 ```
 
-Last update: January 17, 2021
+Last update: January 18, 2021
 
 ---
 
@@ -109,7 +109,7 @@ $~$
 
 **Qualitative** variables are variables from a discrete set, from a set of $K$ different classes/labels/categories. 
 
-* Examples: type of fruit \{apples, oranges, bananas, ...\}, sex \{male, female, other \}, education level. 
+* Examples: type of fruit \{apples, oranges, bananas, ...\}, sex \{male, female, other \}, education level \{none, low, medium, high\}. 
 
 * Qualitative variables which have only two classes are called *binary* variables and are usually coded by 0 (no) and 1 (yes). 
 
@@ -274,7 +274,10 @@ The majority of problems studied in this course fall in the supervised learning 
 
 # Notation and key statistical concepts
 
-See board.
+See board, and p. 9--12 in the course book.
+
+
+\vspace{6cm}
 
 ---
 
@@ -287,6 +290,7 @@ measured on a set of samples.
 
 * Difficult to know how well your are doing.
  
+$~$
 
 Examples in the course:   
 
@@ -388,7 +392,8 @@ Sales of a product, given advertising budgets in different media.
 
 # Example 2
 
-\vspace{2mm}
+\vspace{4mm}
+
 Income for given levels of education.
 
 ![ISLR Figure 2.12](../../ISLR/Figures/Chapter2/2.2.png)
@@ -418,7 +423,9 @@ $$\hat{Y} = \hat{f}(x).$$
 
 * $\hat{Y}$ prediction for $Y$ given $x$. 
 
-* We do not really care about the shape of $f$ ("black box").
+\vspace{2mm}
+
+* We _do not really care_ about the shape of $f$ ("black box").  
  $\rightarrow$ no interpretation of regression parameters when the aim is purely prediction!
 
 
@@ -495,7 +502,9 @@ Overall idea:
 
 * Using available _training data_ $(x_1,y_n),\ldots (x_n,y_n)$ to estimate $\hat{f}$, such that $Y\approx \hat{f}(X)$ for any $(X,Y)$ (also those that have not yet been observed).
 
-Two main approaches:
+$~$
+
+\textcolor{red}{Two main approaches:}
 
 * Parametric methods
 * Non-parametric methods
@@ -697,11 +706,17 @@ The choice of a flexible or inflexible method depends on the goal in mind.
 
 <!-- If the aim is inference an inflexible model, which is easy to understand, will be preferred. On the other side, if we want to make as accurate predictions as possible, we are not concerned about the shape of $f$. A flexible method can be chosen, at the cost of model interpretability, and we treat $f$ like a black box. -->
 
+$~$
+
+**Potential problems:**
+
 **Overfitting** occurs when the estimated function $f$ is too closely fit to the observed data points. 
 
 **Underfitting** occurs when the estimated function $f$ is too rigid to capture the underlying structure of the data.
 
-We illustrate this by a toy example using polynomial regression.
+$~$
+
+_We illustrate this by a toy example using polynomial regression._
 
 ---
 
@@ -734,7 +749,8 @@ $$ Y=x^2 + \varepsilon$$
 
 with error (noise) term $\varepsilon\sim N(0,\sigma^2)$ with $\sigma=2$. It is a substitue for all the unobserved variables that are not in our equation, but that might influence $Y$.
 
-We call $Y=x^2$ the _truth_.
+* We call $Y=x^2$ the _truth_.
+* $\varepsilon$ is the _irreducible error_.
 
 
 ---
@@ -956,6 +972,10 @@ Left: one repetition, right: 100 repetitions for the testMSE.
 
 ---
 
+### Discuss in breakout groups:
+
+$~$
+
 **Q1**: Based on the test MSE - which model fits the data the best?
 
 \vspace{2mm}
@@ -975,6 +995,21 @@ Left: one repetition, right: 100 repetitions for the testMSE.
 
 
 
+**Q4:** Important observation: 
+
+\vspace{2mm}
+
+* The test error seems to have a minimum (U-shape) in between the extremes.
+
+
+
+* The training error keeps going down.
+
+\centering
+\vspace{2mm}
+
+Why? 
+
 ---
 
 Answers
@@ -990,6 +1025,8 @@ Answers
 
 
 <!-- **A3:** Sadly no, if we use a flexible model we will look at several cases where a low training error is a sign of overfitting, and will give a high test error. So, the training error is not a good estimator for the test error because it does not properly account for model complexity. -->
+
+<!-- **A4:$$ See next slides. -->
 
 <!-- <!-- --- -->  
 
@@ -1017,25 +1054,7 @@ Answers
 <!-- * IQR=inter quartile range= width of box -->
 <!-- * whiskers to min and max, except when more than 1.5 times IQR from box, then marked as outlier with points. -->
 
----
-
-## Test error vs. training error
-
-$~$
-
-Important observations: 
-
-\vspace{2mm}
-
-* The test error seems to have a minimum (U-shape) in between the extremes.
-
-\vspace{2mm}
-
-* The training error keeps going down.
-
-\vspace{1.5cm}
-\centering
-Why?  
+ 
 
 ---
 
@@ -1060,7 +1079,7 @@ to our training data $\{x_i, y_i\}$ for $i=1,..,n$, and $\varepsilon$ is an unob
 * We want to use $\hat{f}$ to obtain the predicted response value $\hat{f}(x_0)$ for an unseed test observation $(x_0,y_0)$.
 
 * The _\textcolor{red}{expected test mean squared error (MSE)} at $x_0$_ is defined as:
-$$\text{E}[y_0 - \hat{f}(x_0)]^2 \ .$$
+$$\text{E}[(y_0 - \hat{f}(x_0))^2] \ .$$
 
 $~$
 
@@ -1070,7 +1089,7 @@ $~$
 
 Using that $y_0=f(x_0)+\varepsilon$, this expected test MSE can be decomposed into three terms (board)
 \begin{align*}
-&\text{E}[y_0 - \hat{f}(x_0)]^2 = \\
+&\text{E}[(y_0 - \hat{f}(x_0))^2] = \\
 & ... \\
 & =  \underbrace{\text{Var}(\varepsilon)}_{\text{Irreducible error}} + \underbrace{\text{Var}(\hat{f}(x_0))}_{\text{Variance of prediction}} + \underbrace{\left( f(x_0) - \text{E}[\hat{f}(x_0)] \right)^2}_{\text{Squared bias}}
 \end{align*}
