@@ -1914,6 +1914,10 @@ div.tocify {
 <div id="a-parametric-methods" class="section level3">
 <h3>A: Parametric methods</h3>
 <table>
+<colgroup>
+<col width="50%"></col>
+<col width="50%"></col>
+</colgroup>
 <thead>
 <tr class="header">
 <th>Advantages</th>
@@ -1921,16 +1925,29 @@ div.tocify {
 </tr>
 </thead>
 <tbody>
+<tr class="odd">
+<td>Simple to use and easy to understand</td>
+<td>The function <span class="math inline">\(f\)</span> is constrained to the specified form.</td>
+</tr>
+<tr class="even">
+<td>Requires little training data</td>
+<td>The assumed function form of <span class="math inline">\(f\)</span> will in general not match the true function, potentially giving a poor estimate.</td>
+</tr>
+<tr class="odd">
+<td>Computationally cheap</td>
+<td>Limited flexibility</td>
+</tr>
 </tbody>
 </table>
-<!-- Simple to use and easy to understand | The function $f$ is constrained to the specified form.\vspace{2mm} -->
-<!-- Requires little training data | The assumed function form of $f$ will in general not match the true function, potentially giving a poor estimate.\vspace{2mm} -->
-<!-- Computationally cheap| Limited flexibility -->
 <hr />
 </div>
 <div id="a-non-parametric-methods" class="section level3">
 <h3>A: Non-parametric methods</h3>
 <table>
+<colgroup>
+<col width="50%"></col>
+<col width="50%"></col>
+</colgroup>
 <thead>
 <tr class="header">
 <th>Advantages</th>
@@ -1938,11 +1955,20 @@ div.tocify {
 </tr>
 </thead>
 <tbody>
+<tr class="odd">
+<td>Flexible: a large number of functional forms can be fitted</td>
+<td>Can overfit the data</td>
+</tr>
+<tr class="even">
+<td>No strong assumptions about the underlying function are made</td>
+<td>Computationally more expensive as more parameters need to be estimated</td>
+</tr>
+<tr class="odd">
+<td>Can often give good predictions</td>
+<td>Much data are required to estimate (the complex) <span class="math inline">\(f\)</span>.</td>
+</tr>
 </tbody>
 </table>
-<!-- Flexible: a large number of functional forms can be fitted|Can overfit the data\vspace{6mm} -->
-<!-- No strong assumptions about the underlying function are made|Computationally more expensive as more parameters need to be estimated\vspace{3mm} -->
-<!-- Can often give good predictions |Much data are required to estimate (the complex) $f$. -->
 <hr />
 </div>
 </div>
@@ -2101,14 +2127,15 @@ div.tocify {
 <p>Why?</p>
 <hr />
 <p>Answers</p>
-<!-- **A1**: -->
-<!-- If choosing flexibility -->
-<!-- * _based on training MSE_:  poly20 wins -->
-<!-- * _based on test MSE_: poly2 wins. -->
-<!-- **A2:** In Module 5 we will look into using _cross validation_ to mimic the use of a test set. -->
-<!-- **A3:** Sadly no, if we use a flexible model we will look at several cases where a low training error is a sign of overfitting, and will give a high test error. So, the training error is not a good estimator for the test error because it does not properly account for model complexity. -->
-<!-- **A4:$$ See next slides. -->
-<!-- <!-- --- -->
+<p><strong>A1</strong>:</p>
+<p>If choosing flexibility</p>
+<ul>
+<li><em>based on training MSE</em>: poly20 wins</li>
+<li><em>based on test MSE</em>: poly2 wins.</li>
+</ul>
+<p><strong>A2:</strong> In Module 5 we will look into using <em>cross validation</em> to mimic the use of a test set.</p>
+<p><strong>A3:</strong> Sadly no, if we use a flexible model we will look at several cases where a low training error is a sign of overfitting, and will give a high test error. So, the training error is not a good estimator for the test error because it does not properly account for model complexity.</p>
+<p><strong>A4:</strong> See next slides.</p>
 <!-- ```{r,echo=FALSE,fig.width=7,fig.height=4,fig.align="center",out.width='90%'} -->
 <!-- library(reshape2) -->
 <!-- df=melt(sdf,id=c("poly","rep"))[,-2] -->
