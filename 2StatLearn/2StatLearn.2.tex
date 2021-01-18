@@ -285,6 +285,24 @@ The moments are important properties of the distribution of
 
 \end{frame}
 
+\begin{frame}[fragile]
+
+Look at the data (always the first thing to do):
+
+\tiny
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(GGally)}
+\NormalTok{corkds <-}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(corkds)}
+\KeywordTok{ggpairs}\NormalTok{(corkds)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{2StatLearn.2_files/figure-beamer/unnamed-chunk-2-1.pdf}
+
+\end{frame}
+
 \begin{frame}
 
 \begin{itemize}
@@ -311,12 +329,18 @@ The moments are important properties of the distribution of
 \tightlist
 \item
   Random vector \(\boldsymbol{X}_{(p\times 1)}\) with mean vector
-  \(\boldsymbol{\mu}_{(p\times 1)}\):
+  \(\boldsymbol{\mu}_{(p\times 1)}\):\footnote{Observe that $\text{E}(X_j)$ is calculated from the marginal distribution of $X_j$ and contains no information about dependencies between $X_{j}$ and $X_k$, $k\neq j$.}
 \end{itemize}
 
 \[\boldsymbol{X}_{(p\times 1)}=\left[ \begin{array}{c}X_1\\ X_2\\ \vdots\\ X_p\\ \end{array}\right], \text{ and }\boldsymbol{\mu}_{(p \times 1)}=\text{E}(\boldsymbol{X})=\left[ \begin{array}{c}\text{E}(X_1)\\ \text{E}(X_2)\\ \vdots\\ \text{E}(X_p)\\ \end{array}\right] \ .\]
 
-\footnote{Observe that $\text{E}(X_j)$ is calculated from the marginal distribution of $X_j$ and contains no information about dependencies between $X_{j}$ and $X_k$, $k\neq j$.}
+\begin{itemize}
+\tightlist
+\item
+  Same rule for random matrices.
+\end{itemize}
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -406,7 +430,8 @@ In the introductory statistics course we defined the covariance
 
 \begin{frame}
 
-Make a scatter plot for negative, zero and positive correlation
+Make a scatter plot for negative, zero and positive correlation (see
+also R example).
 
 \vspace{6cm}
 

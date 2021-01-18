@@ -99,6 +99,16 @@ head(corkds)
 dim(corkds)
 ```
 
+---
+
+Look at the data (always the first thing to do):
+
+\tiny
+```{r, echo=TRUE, eval=TRUE,size="tiny",fig.width=5.0,fig.height=3.3}
+library(GGally)
+corkds <- as.data.frame(corkds)
+ggpairs(corkds)
+```
 
 
 ---
@@ -116,11 +126,15 @@ $$\boldsymbol{X}_{(28 \times 4)}=\left[ \begin{array}{cccc}X_{11} & X_{12} & X_{
 
 $~$
 
-* Random vector $\boldsymbol{X}_{(p\times 1)}$ with mean vector $\boldsymbol{\mu}_{(p\times 1)}$:
+* Random vector $\boldsymbol{X}_{(p\times 1)}$ with mean vector $\boldsymbol{\mu}_{(p\times 1)}$:\footnote{Observe that $\text{E}(X_j)$ is calculated from the marginal distribution of $X_j$ and contains no information about dependencies between $X_{j}$ and $X_k$, $k\neq j$.}
 
 $$\boldsymbol{X}_{(p\times 1)}=\left[ \begin{array}{c}X_1\\ X_2\\ \vdots\\ X_p\\ \end{array}\right], \text{ and }\boldsymbol{\mu}_{(p \times 1)}=\text{E}(\boldsymbol{X})=\left[ \begin{array}{c}\text{E}(X_1)\\ \text{E}(X_2)\\ \vdots\\ \text{E}(X_p)\\ \end{array}\right] \ .$$
 
-  \footnote{Observe that $\text{E}(X_j)$ is calculated from the marginal distribution of $X_j$ and contains no information about dependencies between $X_{j}$ and $X_k$, $k\neq j$.}
+  
+  
+* Same rule for random matrices.
+
+\vspace{2mm}
 
 * Random matrix $\boldsymbol{X}_{(n\times p)}$ and random matrix $\boldsymbol{Y}_{(n\times p)}$:
 $$\text{E}(\boldsymbol{X}+\boldsymbol{Y})=\text{E}(\boldsymbol{X})+\text{E}(\boldsymbol{Y}) \ .$$
@@ -178,7 +192,7 @@ In the introductory statistics course we defined the covariance
     
 ---    
     
-Make a scatter plot for negative, zero and positive correlation
+Make a scatter plot for negative, zero and positive correlation (see also R example).
 
 \vspace{6cm}
 
