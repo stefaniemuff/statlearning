@@ -40,7 +40,7 @@ Last update: January 19, 2021
 
 # Acknowledgements
 
-* A lot of this material stems from Mette Langaas and her TAs (especiall Julia Debik). I would like to thank Mette for the permission to use her material!
+* Thanks to Mette Langaas and her TAs who permit me to use and modify their original material. 
 
 * Some of the figures and slides in this presentation are taken (or are inspired) from @ISL.
 
@@ -50,7 +50,11 @@ Last update: January 19, 2021
 
 ## Learning material for this module
 
+$~$
+
 * @ISL: An Introduction to Statistical Learning, Chapter 3 (skip 3.5).  
+
+$~$
 
 We need more statistical theory than is presented in the textbook, which you find in this module page.
 
@@ -66,15 +70,27 @@ We need more statistical theory than is presented in the textbook, which you fin
     + Model and assumptions 
     + Least squares
     + Testing and confidence intervals
+    
+\vspace{2mm}
+
 
 * Multiple linear regression:
     + The use of matrix algebra 
     + Distribution of estimators
     + Assessing model fit, model selection
     + Confidence and prediction ranges
-    
+
+\vspace{2mm}
+
+
 * Assessing model fit / residual analysis
+
+\vspace{2mm}
+
 * Qualitative predictors
+
+\vspace{2mm}
+
 * Interactions
     
  
@@ -86,11 +102,7 @@ We need more statistical theory than is presented in the textbook, which you fin
 
 * Parametric.
 
-* Quantitative response vs. one or several explanatory variables.
-
-* Aims:
-    + **Prediction** - "black box"
-    + **Explanation** - understanding the relationship between _explanatory variables_ and the response
+* A quantitative response vs. one or several explanatory variables (quantitative or qualitate).
 
 * Is linear regression too simple? Maybe, but very useful. Important to _understand_ because many learning methods can be seen as generalization of linear regression.
 
@@ -332,7 +344,7 @@ the least squares estiamtes for simple linear regression are given as
 \end{equation}
 and
 \begin{equation}\label{eq:beta1}
-\hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^n(x_i-\bar{x})^2} = \frac{Cov(\boldsymbol{x},\boldsymbol{y})}{Var(\boldsymbol{x})}\ ,
+\hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^n(x_i-\bar{x})^2} = \frac{\mathsf{Cov}(\boldsymbol{x},\boldsymbol{y})}{\mathsf{Var}(\boldsymbol{x})}\ ,
 \end{equation}
 
 \vspace{2mm}
@@ -365,13 +377,19 @@ You can do this here:
 
 Assume a linear relationship between the % bodyfat (`bodyfat`) and the BMI (`bmi`), we can get the LS estimates using R as follows: 
 
+$~$
+
 \scriptsize
 ```{r,eval=TRUE,echo=TRUE,size="tiny"}
 r.bodyfat = lm(bodyfat~bmi, data=d.bodyfat)
 ```
 
+$~$
+
 \normalsize
 The estimates (and more information) can be obtained as follows:
+
+$~$
 
 \scriptsize
 ```{r,eval=TRUE,echo=TRUE,size="tiny"}
@@ -397,9 +415,9 @@ ggplot(d.bodyfat,aes(bmi,bodyfat)) + geom_point() + geom_smooth(method='lm',se=F
 
 * How does this relate to the _true_ (population) model? 
 
-* By looking at the spread of the points around the line, can you detect any violations of the modelling assumptions?
+* **What could the regression line look like if another set of 243 males were used for estimation?**
 
-* Finally: **What could the regression line look like if another set of 243 males were used for estimation?**
+
 
 
 ---
@@ -420,7 +438,9 @@ summary(r.bodyfat)$coef
 ```
 
 \normalsize
+
 $~$
+
 $\rightarrow$ The logical next question is: what is the distribution of the estimates?
 
 ---
@@ -504,30 +524,13 @@ $$\text{SE}(\hat{\beta}_1)^2 = \frac{\sigma^2}{\sum_{i=1}^n (x_i-\bar{x})^2} \ ,
 
 thus for a given $\sigma^2$, the standard error is only dependent on the _design_ of the $x_i$'s!
 
+\vspace{2mm}
+
 * Would we like the $\text{SE}(\hat{\beta}_1)^2$ large or small? Why?
+
 * If it is possible for us to choose the $x_i$'s, which strategy should we use to choose them? 
-* Assume $x$ can take values from 1 to 10 and we choose $n=10$ values. Which is the best design?
-    + evenly in a grid: $[1,2,3,4,5,6,7,8,9,10]$.
-    + only lower and upper value: $[1,1,1,1,1,10,10,10,10,10]$.
-    + randomly drawn from a uniform distribution on $[1,10]$.
-
----
-
-\scriptsize
-```{r,echo=TRUE,eval=TRUE}
-x1=seq(1:10)
-x2=c(rep(1,5),rep(10,5))
-x3=runif(10,1,10)
-
-ss1 = sum((x1-mean(x1))^2)
-ss2 = sum((x2-mean(x2))^2)
-ss3 = sum((x3-mean(x3))^2)
-
-print(c(ss1,ss2,ss3))
-```
-
-\normalsize
-$\rightarrow$ The second design - all observations at extremes - is best!
+ 
+ \vspace{4cm}
 
 ---
 
@@ -558,6 +561,8 @@ but we usually just write ${\text{SE}}(\hat{\beta}_1)^2$ (without the extra hat)
 
 The estimated standard errors can be seen using the `summary()` function:
 
+$~$
+
 \scriptsize
 ```{r}
 summary(r.bodyfat)$coef
@@ -566,28 +571,7 @@ summary(r.bodyfat)$coef
 
 ---
 
-To illustrate this point further, fit again the bodyfat example, but each time with only half of the data (randomly selected points each time). See how the model fit varies:
 
-```{r, echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='80%'}
-set.seed(200)
-
-bodyfat.n1 <- nrow(d.bodyfat)
-
-lm1 <- lm(bodyfat~bmi, d.bodyfat[sample(bodyfat.n1,bodyfat.n1/2),])
-lm2 <- lm(bodyfat~bmi, d.bodyfat[sample(bodyfat.n1,bodyfat.n1/2),])
-lm3 <- lm(bodyfat~bmi, d.bodyfat[sample(bodyfat.n1,bodyfat.n1/2),])
-
-ggplot(d.bodyfat, aes(x=bmi, y=bodyfat))+geom_point(alpha=0.8, size=0.5)+
-  geom_line(aes(x=bmi, y=coef(lm1)[1]+bmi*coef(lm1)[2]), 
-            col="navy") +
-   geom_line(aes(x=bmi, y=coef(lm2)[1]+bmi*coef(lm2)[2]), 
-            col="red") +
-  geom_line(aes(x=bmi, y=coef(lm3)[1]+bmi*coef(lm3)[2]), 
-            col="green") +
-  theme_bw()
-```
-
----
 
 # Testing and Confidence Intervals 
 After the regression parameters and their uncertainties have been estimated, there are typically two fundamental questions:
@@ -634,23 +618,19 @@ How do these things help us to answer the two questions above?
 
 $~$
 
-Remember: in a statistical test you first need to specify the _null hypothesis_. Here, typically, the null hypothesis is
+Remember: in a statistical test you first need to specify the _\textcolor{red}{null hypothesis}_. Here, typically, the null hypothesis is
 
 
  
 $$H_0: \quad \beta_1 =   0  \ .$$
  
-In words: $H_0$ =   ``There is no relationship between $X$ and $Y$.'' 
+In words: $H_0$ =   ``There is no relationship between $X$ and $Y$.'' \footnote{You could also test against another null hypothesis, like $\beta_1=c$.}
 
-\vspace{2mm}
- 
-* Note 1: However, you might want to test against another null hypothesis, like $\beta_1=c$.
 
-* Note 2: Included in $H_0$ is the assumption that the data follow the simple linear regression model!
 
 \vspace{6mm}
 
-Here, the \emph{alternative hypothesis} is given by
+Here, the _\textcolor{red}{alternative hypothesis}_ is given by
 $~$
 
 
@@ -665,7 +645,7 @@ Remember: To carry out a statistical test, we need a _test statistic_. This is s
 
 
 \begin{equation*}\label{eq:beta}
-T=\frac{\hat\beta_1 - 0}{SE(\hat\beta_1)}\ . 
+T=\frac{\hat\beta_1 }{SE(\hat\beta_1)}\ . 
 \end{equation*}
 
 
@@ -686,11 +666,11 @@ T=\frac{\hat\beta_1 - c}{SE(\hat\beta_1)} \ .
 
 We will _derive a general version_ for multiple linear regression!
 
-Brief recap:
+
 
 $~$
 
-Under $H_0$, $T$ has a $t$-distribution with $n-2$ degrees of freedom ($n=$ number of data points; compare to Chapter 8.6 in @walepole.etal).
+Brief recap: Under $H_0$, $T$ has a $t$-distribution with $n-2$ degrees of freedom ($n=$ number of data points; compare to Chapter 8.6 in @walepole.etal).
 
 
 ---
@@ -742,7 +722,7 @@ summary(r.bodyfat)$coef
 
 \normalsize
 
-**Task**: Use the above formulas to derive the $T$-statistics.
+**Q**: Check how the `Estimate`, `Std. Error` and `t value` relate. 
 
 $~$
 
@@ -836,9 +816,14 @@ $~$
 * Simple yes/no decisions do often stand on very wiggly scientific ground.
 
 \vspace{2mm}
+
 $~$
 
-We will discuss this a bit in the final module 12. The topic is connected to good/bad research practice, problems with ``reproducibility'' and scientific progress in general. See here:
+
+\scriptsize
+
+We will discuss this a bit in the final module 12. The topic is connected to good/bad research practice, problems with ``reproducibility'' and scientific progress in general. See e.g. here:
+
 
 * The $p$-value statement by ASA: [https://amstat.tandfonline.com/doi/full/10.1080/00031305.2016.1154108#.Xh16iuExnhM](https://amstat.tandfonline.com/doi/full/10.1080/00031305.2016.1154108#.Xh16iuExnhM)
 * Ideas to redefine what ``statistical significane'' means: [https://www.nature.com/articles/s41562-017-0189-z](https://www.nature.com/articles/s41562-017-0189-z)
@@ -872,23 +857,23 @@ $$\hat{\beta}_j \pm t_{(1-\alpha/2),n-2} \cdot\text{SE} (\hat{\beta}_j) \quad j=
     * **It is the range of parameter estimates that are *compatible with the data* **.
 
 
+<!-- --- -->
+
+<!-- Doing this for the bodfat example ``by hand'' is not hard. We have $241 (=243-2)$ degrees of freedom: -->
+
+<!-- \vspace{4mm} -->
+
+<!-- \scriptsize -->
+<!-- ```{r} -->
+<!-- coefs <- summary(r.bodyfat)$coef -->
+<!-- beta <- coefs[2,1] -->
+<!-- sdbeta <- coefs[2,2]  -->
+<!-- beta + c(-1,1) * qt(0.975,241) * sdbeta  -->
+<!-- ``` -->
+
 ---
 
-Doing this for the bodfat example ``by hand'' is not hard. We have $241 (=243-2)$ degrees of freedom:
-
-\vspace{4mm}
-
-\scriptsize
-```{r}
-coefs <- summary(r.bodyfat)$coef
-beta <- coefs[2,1]
-sdbeta <- coefs[2,2] 
-beta + c(-1,1) * qt(0.975,241) * sdbeta 
-```
-
----
-
-Even easier: directly ask R to give you the CIs.
+We can directly ask R to give us the CIs:
 
 \vspace{4mm}
 
@@ -901,29 +886,32 @@ confint(r.bodyfat,level=c(0.95))
 
 \normalsize
 
-**Interpretation:** for an increase in the bmi by one index point, roughly 1.82 percentage points more bodyfat are expected, and all true values for $\beta_1$ between 1.61 and 2.03 are compatible with the observed data.
+**Interpretation:** 
 
----
+For an increase in the bmi by one index point, roughly $\ldots$ percentage points more bodyfat are expected, and all true values for $\beta_1$ between $\ldots$ and $\ldots$ are $\ldots$. 
 
-## Confidence and prediction ranges
-
-$~$ 
-
-* Based on the joint distribution of the intercept and slope it is possible to find the distribution for the linear predictor $\hat{\beta}_0+\hat{\beta}_1 x$, and then confidence intervals for $\beta_0+\beta_1 x$. 
-
-\hspace{6mm} $\rightarrow$ **Confidence range**
-
-$~$
+<!-- for an increase in the bmi by one index point, roughly 1.82 percentage points more bodyfat are expected, and all true values for $\beta_1$ between 1.61 and 2.03 are compatible with the observed data. -->
 
 
-* Accounting for the fact that we also have an error in the equation $\varepsilon$, we can also find the distribution of future observations.
+<!-- ## Confidence and prediction ranges -->
 
-\hspace{6mm} $\rightarrow$ **Prediction range**
+<!-- $~$  -->
 
-\vspace{10mm}
-We will discuss confidence and prediction ranges in the (more general) multiple linear regression setup.
+<!-- * Based on the joint distribution of the intercept and slope it is possible to find the distribution for the linear predictor $\hat{\beta}_0+\hat{\beta}_1 x$, and then confidence intervals for $\beta_0+\beta_1 x$.  -->
 
----
+<!-- \hspace{6mm} $\rightarrow$ **Confidence range** -->
+
+<!-- $~$ -->
+
+
+<!-- * Accounting for the fact that we also have an error in the equation $\varepsilon$, we can also find the distribution of future observations. -->
+
+<!-- \hspace{6mm} $\rightarrow$ **Prediction range** -->
+
+<!-- \vspace{10mm} -->
+<!-- We will discuss confidence and prediction ranges in the (more general) multiple linear regression setup. -->
+
+
 
 # Model accuracy
 
@@ -953,6 +941,8 @@ where $$\text{TSS} = \sum_{i=1}^n (y_i - \bar{y})^2$$ is the _total sum of squar
 \vspace{6mm}
 
 Verify this by comparing $R^2$ from the bodyfat output to the squared correlation between the two variables: 
+
+$~$
 
 \scriptsize
 ```{r}

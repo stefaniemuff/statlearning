@@ -1,8 +1,46 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
 \documentclass[10pt,ignorenonframetext,]{beamer}
+\usepackage{pgfpages}
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
 \setbeamercolor{caption name}{fg=normal text.fg}
 \beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+\centering
+\begin{beamercolorbox}[sep=16pt,center]{part title}
+  \usebeamerfont{part title}\insertpart\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+\centering
+\begin{beamercolorbox}[sep=12pt,center]{part title}
+  \usebeamerfont{section title}\insertsection\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+\centering
+\begin{beamercolorbox}[sep=8pt,center]{part title}
+  \usebeamerfont{subsection title}\insertsubsection\par
+\end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -10,12 +48,9 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
+  \usepackage{unicode-math}
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 \usetheme[]{Singapore}
@@ -24,19 +59,28 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
 \IfFileExists{microtype.sty}{%
-\usepackage{microtype}
+\usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\newif\ifbibliography
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{xcolor}
+\usepackage{hyperref}
 \hypersetup{
             pdftitle={Module 3: Linear Regression},
             pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
             colorlinks=true,
             linkcolor=Maroon,
+            filecolor=Maroon,
             citecolor=Blue,
             urlcolor=blue,
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+\newif\ifbibliography
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -46,98 +90,79 @@
 \usepackage{framed}
 \definecolor{shadecolor}{RGB}{248,248,248}
 \newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\ImportTok}[1]{#1}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
-\newcommand{\BuiltInTok}[1]{#1}
-\newcommand{\ExtensionTok}[1]{#1}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
-\newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight0.8\textheight\else\Gin@nat@height\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
 \makeatother
 % Scale images if necessary, so that they will not overflow the page
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-
-% Prevent slide breaks in the middle of a paragraph:
-\widowpenalties 1 10000
-\raggedbottom
-
-\AtBeginPart{
-  \let\insertpartnumber\relax
-  \let\partname\relax
-  \frame{\partpage}
-}
-\AtBeginSection{
-  \ifbibliography
-  \else
-    \let\insertsectionnumber\relax
-    \let\sectionname\relax
-    \frame{\sectionpage}
-  \fi
-}
-\AtBeginSubsection{
-  \let\insertsubsectionnumber\relax
-  \let\subsectionname\relax
-  \frame{\subsectionpage}
-}
-
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{0}
 
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
 \title{Module 3: Linear Regression}
-\subtitle{TMA4268 Statistical Learning V2020}
+\providecommand{\subtitle}[1]{}
+\subtitle{TMA4268 Statistical Learning V2021}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{January 17 and 20, 2020}
+\date{January 25 and 26, 2021}
 
 \begin{document}
 \frame{\titlepage}
 
 \begin{frame}
 
-Last update: January 19, 2020
+Last update: January 19, 2021
 
 \end{frame}
 
 \begin{frame}{Acknowledgements}
+\protect\hypertarget{acknowledgements}{}
 
 \begin{itemize}
 \item
-  A lot of this material stems from Mette Langaas and her TAs (especiall
-  Julia Debik). I would like to thank Mette for the permission to use
-  her material!
+  Thanks to Mette Langaas and her TAs who permit me to use and modify
+  their original material.
 \item
   Some of the figures and slides in this presentation are taken (or are
   inspired) from James et al. (2013).
@@ -146,8 +171,11 @@ Last update: January 19, 2020
 \end{frame}
 
 \begin{frame}{Introduction}
+\protect\hypertarget{introduction}{}
 
 \begin{block}{Learning material for this module}
+
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -155,6 +183,8 @@ Last update: January 19, 2020
   James et al. (2013): An Introduction to Statistical Learning, Chapter
   3 (skip 3.5).
 \end{itemize}
+
+\(~\)
 
 We need more statistical theory than is presented in the textbook, which
 you find in this module page.
@@ -166,6 +196,8 @@ you find in this module page.
 \begin{frame}
 
 \begin{block}{What will you learn?}
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -181,6 +213,12 @@ you find in this module page.
   \item
     Testing and confidence intervals
   \end{itemize}
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Multiple linear regression:
 
@@ -195,10 +233,28 @@ you find in this module page.
   \item
     Confidence and prediction ranges
   \end{itemize}
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Assessing model fit / residual analysis
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Qualitative predictors
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Interactions
 \end{itemize}
@@ -208,6 +264,7 @@ you find in this module page.
 \end{frame}
 
 \begin{frame}{Linear regression}
+\protect\hypertarget{linear-regression}{}
 
 \begin{itemize}
 \item
@@ -215,18 +272,8 @@ you find in this module page.
 \item
   Parametric.
 \item
-  Quantitative response vs.~one or several explanatory variables.
-\item
-  Aims:
-
-  \begin{itemize}
-  \tightlist
-  \item
-    \textbf{Prediction} - ``black box''
-  \item
-    \textbf{Explanation} - understanding the relationship between
-    \emph{explanatory variables} and the response
-  \end{itemize}
+  A quantitative response vs.~one or several explanatory variables
+  (quantitative or qualitate).
 \item
   Is linear regression too simple? Maybe, but very useful. Important to
   \emph{understand} because many learning methods can be seen as
@@ -242,15 +289,21 @@ you find in this module page.
 \tiny(From Theo Gasser \& Burkhardt Seifert \emph{Grundbegriffe der
 Biostatistik})
 
-\vspace{2mm} \normalsize
+\vspace{2mm}
+\normalsize
+
 Body fat is an important indicator for overweight, but difficult to
 measure.
 
-\vspace{2mm} \textbf{Question:} Which factors allow for precise
-estimation (prediction) of body fat?
+\vspace{2mm}
 
-\vspace{2mm} Study with 243 male participants, where body fat (\%) and
-BMI and other predictors were measured. Some
+\textbf{Question:} Which factors allow for precise estimation
+(prediction) of body fat?
+
+\vspace{2mm}
+
+Study with 243 male participants, where body fat (\%) and BMI and other
+predictors were measured. Some
 scatterplots\footnote{The data to reproduce these plots and analyses can be found here: https://github.com/stefaniemuff/statlearning/tree/master/3LinReg/data}:
 
 \begin{center}\includegraphics[width=1\linewidth]{3LinReg_files/figure-beamer/motivating-1} \end{center}
@@ -274,7 +327,6 @@ predictor variable}:
 \textbf{Interesting questions}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
   How good is BMI as a predictor for body fat?
@@ -291,6 +343,7 @@ predictor variable}:
 \end{frame}
 
 \begin{frame}{Simple Linear Regression}
+\protect\hypertarget{simple-linear-regression}{}
 
 \begin{itemize}
 \item
@@ -302,10 +355,11 @@ predictor variable}:
   \emph{linear}.
 \end{itemize}
 
-\vspace{6mm} If the relation between \(Y\) and \(x\) is perfectly
-linear, all instances of \((x,Y)\), given by \((x_i,y_i)\),
-\(i= 1,\ldots, n\), lie on a straight line and fulfill
-\[y_i = \beta_0 + \beta_1 x_i\ .\]
+\vspace{6mm}
+
+If the relation between \(Y\) and \(x\) is perfectly linear, all
+instances of \((x,Y)\), given by \((x_i,y_i)\), \(i= 1,\ldots, n\), lie
+on a straight line and fulfill \[y_i = \beta_0 + \beta_1 x_i\ .\]
 
 \end{frame}
 
@@ -334,8 +388,10 @@ It is obvious that
   slightly different picture.
 \end{itemize}
 
-\vspace{4mm} \(\Rightarrow\) We need a \textbf{model} that describes the
-relationship between BMI and bodyfat.
+\vspace{4mm}
+
+\(\Rightarrow\) We need a \textbf{model} that describes the relationship
+between BMI and bodyfat.
 
 \end{frame}
 
@@ -353,7 +409,7 @@ to the independent variable \(x\) as
 
 In this formulation \(Y\) is a random variable
 \(Y \sim N(\beta_0 + \beta_1 x, \sigma^2\)) where
-\[Y \quad= \quad \underbrace{\text{ expected value }}_{\text{E}(Y) = \beta_0 + \beta_1 x} \quad + \quad \underbrace{\text{ error}}_{\varepsilon}  \ .\]
+\[Y \quad= \quad \underbrace{\text{ expected value }}_{\mathsf{E}(Y) = \beta_0 + \beta_1 x} \quad + \quad \underbrace{\text{ error}}_{\varepsilon}  \ .\]
 
 Note:
 
@@ -381,18 +437,20 @@ Note:
 
 \begin{block}{Modeling assumptions}
 
-\vspace{4mm} The central assumption in linear regression is that for any
-pairs (\(x_i,Y_i\)), the error \(\varepsilon_i \sim N(0,\sigma^2)\).
-This implies \vspace{2mm}
+\vspace{4mm}
+
+The central assumption in linear regression is that for any pairs
+(\(x_i,Y_i\)), the error \(\varepsilon_i \sim N(0,\sigma^2)\). This
+implies \vspace{2mm}
 
 \begin{enumerate}
-\def\labelenumi{\alph{enumi})}
+[a)]
 \item
   The expected value of \(\varepsilon_i\) is 0:
-  \(\text{E}(\varepsilon_i)=0\).
+  \(\mathsf{E}(\varepsilon_i)=0\).
 \item
   All \(\varepsilon_i\) have the same variance:
-  \(\text{Var}(\varepsilon_i)=\sigma^2\).
+  \(\mathsf{Var}(\varepsilon_i)=\sigma^2\).
 \item
   All \(\varepsilon_i\) are normally distributed.
 \item
@@ -414,9 +472,11 @@ This implies \vspace{2mm}
 The assumptions about the linear regression model lie in the error term
 \[\varepsilon \sim N(0,\sigma^2) \ . \]
 
-\vspace{-2mm} \includegraphics[width=11cm]{pictures/regrAssumptions.jpg}
+\vspace{-2mm}
 
-Note: The true regression line goes through \(\text{E}(Y)\).
+\includegraphics[width=11cm]{pictures/regrAssumptions.jpg}
+
+Note: The true regression line goes through \(\mathsf{E}(Y)\).
 
 \end{block}
 
@@ -470,6 +530,8 @@ But what are we actually going to minimize?
 Remember the \textbf{Least Squared Method}. Graphically, we are
 minimizing the sum of the squared distances over all points:
 
+\vspace{4mm}
+
 \begin{center}\includegraphics[width=0.8\linewidth]{3LinReg_files/figure-beamer/squares-1} \end{center}
 
 \end{block}
@@ -507,6 +569,7 @@ is being minimized.
 \end{itemize}
 
 \tiny
+
 (The error terms are random variables and can not be estimated - they
 can be predicted. It is only for parameters that we speak about
 estimates.)
@@ -526,18 +589,18 @@ the least squares estiamtes for simple linear regression are given as
 
 \begin{equation}\label{eq:beta0}
 \hat{\beta}_0 = \bar{y}-\hat{\beta}_1 \bar{x}
+\end{equation} and \begin{equation}\label{eq:beta1}
+\hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^n(x_i-\bar{x})^2} = \frac{\mathsf{Cov}(\boldsymbol{x},\boldsymbol{y})}{\mathsf{Var}(\boldsymbol{x})}\ ,
 \end{equation}
 
-and
+\vspace{2mm}
 
-\begin{equation}\label{eq:beta1}
-\hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^n(x_i-\bar{x})^2} = \frac{Cov(\boldsymbol{x},\boldsymbol{y})}{Var(\boldsymbol{x})}\ ,
-\end{equation}
-
-\vspace{2mm} where \(\bar{y} = \frac{1}{n} \sum_{i=1}^n y_i\) and
+where \(\bar{y} = \frac{1}{n} \sum_{i=1}^n y_i\) and
 \(\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i\) are the sample means.
 
-\vspace{6mm} \scriptsize
+\vspace{6mm}
+\scriptsize
+
 This is something you should have proven in your previous statistics
 classes; if you forgot how to get there, please check again, e.g.~in
 chapter 11 of the book by Walepole et al. (2012), see
@@ -574,6 +637,8 @@ Assume a linear relationship between the \% bodyfat (\texttt{bodyfat})
 and the BMI (\texttt{bmi}), we can get the LS estimates using R as
 follows:
 
+\(~\)
+
 \scriptsize
 
 \begin{Shaded}
@@ -582,8 +647,13 @@ follows:
 \end{Highlighting}
 \end{Shaded}
 
+\(~\)
+
 \normalsize
+
 The estimates (and more information) can be obtained as follows:
+
+\(~\)
 
 \scriptsize
 
@@ -627,11 +697,8 @@ It looks that a linear relationship between \texttt{bodyfat} and
 \item
   How does this relate to the \emph{true} (population) model?
 \item
-  By looking at the spread of the points around the line, can you detect
-  any violations of the modelling assumptions?
-\item
-  Finally: \textbf{What could the regression line look like if another
-  set of 243 males were used for estimation?}
+  \textbf{What could the regression line look like if another set of 243
+  males were used for estimation?}
 \end{itemize}
 
 \end{frame}
@@ -668,8 +735,11 @@ estimate: \vspace{2mm}
 \end{verbatim}
 
 \normalsize
-\(~\) \(\rightarrow\) The logical next question is: what is the
-distribution of the estimates?
+
+\(~\)
+
+\(\rightarrow\) The logical next question is: what is the distribution
+of the estimates?
 
 \end{block}
 
@@ -680,8 +750,9 @@ distribution of the estimates?
 \begin{block}{Distribution of the estimators for \(\hat\beta_0\) and
 \(\hat\beta_1\)}
 
-\vspace{2mm} To obtain an intuition, we generate data points according
-to model
+\vspace{2mm}
+
+To obtain an intuition, we generate data points according to model
 
 \[y_i = 4 - 2x_i + \varepsilon_i \ , \quad \varepsilon_i\sim N(0,0.5^2). \]
 In each round, we estimate the parameters and store them: \tiny
@@ -699,9 +770,8 @@ In each round, we estimate the parameters and store them: \tiny
 \end{Highlighting}
 \end{Shaded}
 
-\normalsize
-Doing it 1000 times, we obtain the following distributions for
-\(\hat\beta_0\) and \(\hat\beta_1\):
+\normalsize Doing it 1000 times, we obtain the following distributions
+for \(\hat\beta_0\) and \(\hat\beta_1\):
 
 \begin{center}\includegraphics[width=0.4\linewidth]{3LinReg_files/figure-beamer/sim_fig-1} \end{center}
 
@@ -719,11 +789,11 @@ Doing it 1000 times, we obtain the following distributions for
 \item
   The standard errors of the estimates are given by the following
   formulas:
-  \[\text{Var}(\hat{\beta}_0)=\text{SE}(\hat{\beta}_0)^2 = \sigma^2 \Big [ \frac{1}{n} + \frac{\bar{x}^2}{\sum_{i=1}^n (x_i -\bar{x})^2} \Big]\]
+  \[\mathsf{Var}(\hat{\beta}_0)=\text{SE}(\hat{\beta}_0)^2 = \sigma^2 \Big [ \frac{1}{n} + \frac{\bar{x}^2}{\sum_{i=1}^n (x_i -\bar{x})^2} \Big]\]
   and
-  \[\text{Var}(\hat{\beta}_1)=\text{SE}(\hat{\beta}_1)^2 = \frac{\sigma^2}{\sum_{i=1}^n (x_i-\bar{x})^2}.\]
+  \[\mathsf{Var}(\hat{\beta}_1)=\text{SE}(\hat{\beta}_1)^2 = \frac{\sigma^2}{\sum_{i=1}^n (x_i-\bar{x})^2}.\]
 \item
-  \(\text{Cov}(\hat{\beta_0},\hat{\beta_1})\) is in general different
+  \(\mathsf{Cov}(\hat{\beta_0},\hat{\beta_1})\) is in general different
   from zero.
 \end{itemize}
 
@@ -758,64 +828,28 @@ version in more generality.
 
 \begin{block}{Design issue with data collection}
 
-\vspace{2mm} Recall that
+\vspace{2mm}
+
+Recall that
 
 \[\text{SE}(\hat{\beta}_1)^2 = \frac{\sigma^2}{\sum_{i=1}^n (x_i-\bar{x})^2} \ ,\]
 
 thus for a given \(\sigma^2\), the standard error is only dependent on
 the \emph{design} of the \(x_i\)'s!
 
+\vspace{2mm}
+
 \begin{itemize}
-\tightlist
 \item
   Would we like the \(\text{SE}(\hat{\beta}_1)^2\) large or small? Why?
 \item
   If it is possible for us to choose the \(x_i\)'s, which strategy
   should we use to choose them?
-\item
-  Assume \(x\) can take values from 1 to 10 and we choose \(n=10\)
-  values. Which is the best design?
-
-  \begin{itemize}
-  \tightlist
-  \item
-    evenly in a grid: \([1,2,3,4,5,6,7,8,9,10]\).
-  \item
-    only lower and upper value: \([1,1,1,1,1,10,10,10,10,10]\).
-  \item
-    randomly drawn from a uniform distribution on \([1,10]\).
-  \end{itemize}
 \end{itemize}
 
+\vspace{4cm}
+
 \end{block}
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{x1 =}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{10}\NormalTok{)}
-\NormalTok{x2 =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{), }\KeywordTok{rep}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{5}\NormalTok{))}
-\NormalTok{x3 =}\StringTok{ }\KeywordTok{runif}\NormalTok{(}\DecValTok{10}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{10}\NormalTok{)}
-
-\NormalTok{ss1 =}\StringTok{ }\KeywordTok{sum}\NormalTok{((x1 }\OperatorTok{-}\StringTok{ }\KeywordTok{mean}\NormalTok{(x1))}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
-\NormalTok{ss2 =}\StringTok{ }\KeywordTok{sum}\NormalTok{((x2 }\OperatorTok{-}\StringTok{ }\KeywordTok{mean}\NormalTok{(x2))}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
-\NormalTok{ss3 =}\StringTok{ }\KeywordTok{sum}\NormalTok{((x3 }\OperatorTok{-}\StringTok{ }\KeywordTok{mean}\NormalTok{(x3))}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
-
-\KeywordTok{print}\NormalTok{(}\KeywordTok{c}\NormalTok{(ss1, ss2, ss3))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1]  82.50000 202.50000  49.78026
-\end{verbatim}
-
-\normalsize
-\(\rightarrow\) The second design - all observations at extremes - is
-best!
 
 \end{frame}
 
@@ -853,6 +887,8 @@ extra hat).
 The estimated standard errors can be seen using the \texttt{summary()}
 function:
 
+\(~\)
+
 \scriptsize
 
 \begin{Shaded}
@@ -869,17 +905,8 @@ function:
 
 \end{frame}
 
-\begin{frame}
-
-To illustrate this point further, again fit the bodyfat example, but
-each time with only half of the data (randomly selected points each
-time). See how the model fit varies:
-
-\begin{center}\includegraphics[width=0.8\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-6-1} \end{center}
-
-\end{frame}
-
 \begin{frame}{Testing and Confidence Intervals}
+\protect\hypertarget{testing-and-confidence-intervals}{}
 
 After the regression parameters and their uncertainties have been
 estimated, there are typically two fundamental questions:
@@ -887,7 +914,6 @@ estimated, there are typically two fundamental questions:
 \vspace{4mm}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
   \textbf{``Are the parameters compatible with some specific value?''}
@@ -900,7 +926,6 @@ estimated, there are typically two fundamental questions:
 \vspace{6mm}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{1}
 \tightlist
 \item
@@ -916,6 +941,8 @@ estimated, there are typically two fundamental questions:
 
 Let's first go back to the output from the bodyfat example:
 
+\vspace{2mm}
+
 \scriptsize
 
 \begin{Shaded}
@@ -930,7 +957,10 @@ Let's first go back to the output from the bodyfat example:
 ## bmi           1.818778  0.1083411 16.787522 2.063854e-42
 \end{verbatim}
 
+\vspace{2mm}
+
 \normalsize
+
 Besides the estimate and the standard error (which we discussed before),
 there is a \texttt{t\ value} and a probability
 \texttt{Pr(\textgreater{}\textbar{}t\textbar{}} that we need to
@@ -946,28 +976,20 @@ How do these things help us to answer the two questions above?
 
 \(~\)
 
-Remember: in a statistical test you first need to specify the \emph{null
-hypothesis}. Here, typically, the null hypothesis is
+Remember: in a statistical test you first need to specify the
+\emph{\textcolor{red}{null hypothesis}}. Here, typically, the null
+hypothesis is
 
 \[H_0: \quad \beta_1 =   0  \ .\]
 
 In words: \(H_0\) = ``There is no relationship between \(X\) and
 \(Y\).''
-
-\vspace{2mm}
-
-\begin{itemize}
-\item
-  Note 1: However, you might want to test against another null
-  hypothesis, like \(\beta_1=c\).
-\item
-  Note 2: Included in \(H_0\) is the assumption that the data follow the
-  simple linear regression model!
-\end{itemize}
+\footnote{You could also test against another null hypothesis, like $\beta_1=c$.}
 
 \vspace{6mm}
 
-Here, the \emph{alternative hypothesis} is given by \(~\)
+Here, the \emph{\textcolor{red}{alternative hypothesis}} is given by
+\(~\)
 
 \[H_A: \quad \beta_1 \neq  0  \]
 
@@ -983,10 +1005,12 @@ a known distribution under \(H_0\). For our purpose, we use the
 so-called \textbf{\(T\)-statistic}
 
 \begin{equation*}\label{eq:beta}
-T=\frac{\hat\beta_1 - 0}{SE(\hat\beta_1)}\ . 
+T=\frac{\hat\beta_1 }{SE(\hat\beta_1)}\ . 
 \end{equation*}
 
-\vspace{4mm} \emph{Note}: If you want to test against another value than
+\vspace{4mm}
+
+\emph{Note}: If you want to test against another value than
 \(\beta_1=0\), the formula is
 
 \begin{equation*}
@@ -1003,13 +1027,11 @@ T=\frac{\hat\beta_1 - c}{SE(\hat\beta_1)} \ .
 
 We will \emph{derive a general version} for multiple linear regression!
 
-Brief recap:
-
 \(~\)
 
-Under \(H_0\), \(T\) has a \(t\)-distribution with \(n-2\) degrees of
-freedom (\(n=\) number of data points; compare to Chapter 8.6 in
-Walepole et al. (2012)).
+Brief recap: Under \(H_0\), \(T\) has a \(t\)-distribution with \(n-2\)
+degrees of freedom (\(n=\) number of data points; compare to Chapter 8.6
+in Walepole et al. (2012)).
 
 \end{block}
 
@@ -1021,7 +1043,7 @@ Walepole et al. (2012)).
 
 \(~\)
 
-\begin{center}\includegraphics[width=0.8\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-8-1} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-6-1} \end{center}
 
 \normalsize
 
@@ -1042,9 +1064,11 @@ Walepole et al. (2012)).
 
 \begin{block}{Hypothesis tests for bodyfat example}
 
-\vspace{2mm}
+\(~\)
 
 So let's again go back to the bodyfat regression output:
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -1060,9 +1084,12 @@ So let's again go back to the bodyfat regression output:
 ## bmi           1.818778  0.1083411 16.787522 2.063854e-42
 \end{verbatim}
 
+\vspace{2mm}
+
 \normalsize
 
-\textbf{Task}: Use the above formulas to derive the \(T\)-statistics.
+\textbf{Q}: Check how the \texttt{Estimate}, \texttt{Std.\ Error} and
+\texttt{t\ value} relate.
 
 \(~\)
 
@@ -1145,11 +1172,15 @@ However, this means we can make two types of errors: \vspace{2mm}
   ground.
 \end{itemize}
 
-\vspace{2mm} \(~\)
+\vspace{2mm}
+
+\(~\)
+
+\scriptsize
 
 We will discuss this a bit in the final module 12. The topic is
 connected to good/bad research practice, problems with
-``reproducibility'' and scientific progress in general. See here:
+``reproducibility'' and scientific progress in general. See e.g.~here:
 
 \begin{itemize}
 \tightlist
@@ -1175,9 +1206,16 @@ connected to good/bad research practice, problems with
 \vspace{2mm}
 
 \begin{itemize}
+\tightlist
 \item
   Confidence intervals (CIs) are a much more informative way to report
   results than \(p\)-values!
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
 \item
   The
   \(t\)-distribution\footnote{If $n$ is large, the normal approximation to the $t$-distribution can be used (and is used in the textbook).}
@@ -1185,6 +1223,11 @@ connected to good/bad research practice, problems with
   parameters. The lower and upper limits of a 95\% confidence interval
   for \(\beta_j\) are
   \[\hat{\beta}_j \pm t_{(1-\alpha/2),n-2} \cdot\text{SE} (\hat{\beta}_j) \quad j=0, 1.\]
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
 \item
   Interpretation of this confidence interval:
 
@@ -1204,29 +1247,9 @@ connected to good/bad research practice, problems with
 
 \begin{frame}[fragile]
 
-Doing this for the bodfat example ``by hand'' is not hard. We have
-\(241 (=243-2)\) degrees of freedom:
+We can directly ask R to give us the CIs:
 
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{coefs <-}\StringTok{ }\KeywordTok{summary}\NormalTok{(r.bodyfat)}\OperatorTok{$}\NormalTok{coef}
-\NormalTok{beta <-}\StringTok{ }\NormalTok{coefs[}\DecValTok{2}\NormalTok{, }\DecValTok{1}\NormalTok{]}
-\NormalTok{sdbeta <-}\StringTok{ }\NormalTok{coefs[}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{]}
-\NormalTok{beta }\OperatorTok{+}\StringTok{ }\KeywordTok{c}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{) }\OperatorTok{*}\StringTok{ }\KeywordTok{qt}\NormalTok{(}\FloatTok{0.975}\NormalTok{, }\DecValTok{241}\NormalTok{) }\OperatorTok{*}\StringTok{ }\NormalTok{sdbeta}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 1.605362 2.032195
-\end{verbatim}
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-Even easier: directly ask R to give you the CIs.
+\vspace{4mm}
 
 \scriptsize
 
@@ -1242,57 +1265,24 @@ Even easier: directly ask R to give you the CIs.
 ## bmi           1.605362   2.032195
 \end{verbatim}
 
+\vspace{4mm}
+
 \normalsize
 
-\textbf{Interpretation:} for an increase in the bmi by one index point,
-roughly 1.82 percentage points more bodyfat are expected, and all true
-values for \(\beta_1\) between 1.61 and 2.03 are compatible with the
-observed data.
+\textbf{Interpretation:}
 
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Confidence and prediction ranges}
-
-\(~\)
-
-\begin{itemize}
-\tightlist
-\item
-  Based on the joint distribution of the intercept and slope it is
-  possible to find the distribution for the linear predictor
-  \(\hat{\beta}_0+\hat{\beta}_1 x\), and then confidence intervals for
-  \(\beta_0+\beta_1 x\).
-\end{itemize}
-
-\hspace{6mm} \(\rightarrow\) \textbf{Confidence range}
-
-\(~\)
-
-\begin{itemize}
-\tightlist
-\item
-  Accounting for the fact that we also have an error in the equation
-  \(\varepsilon\), we can also find the distribution of future
-  observations.
-\end{itemize}
-
-\hspace{6mm} \(\rightarrow\) \textbf{Prediction range}
-
-\vspace{10mm} We will discuss confidence and prediction ranges in the
-(more general) multiple linear regression setup.
-
-\end{block}
+For an increase in the bmi by one index point, roughly \(\ldots\)
+percentage points more bodyfat are expected, and all true values for
+\(\beta_1\) between \(\ldots\) and \(\ldots\) are \(\ldots\).
 
 \end{frame}
 
 \begin{frame}{Model accuracy}
+\protect\hypertarget{model-accuracy}{}
 
 Measured by
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
   The \textbf{residual standard error (RSE)}, which provides an
@@ -1302,7 +1292,6 @@ Measured by
 \vspace{2mm}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{1}
 \tightlist
 \item
@@ -1332,6 +1321,8 @@ correlation between the independent and the dependent variable.
 Verify this by comparing \(R^2\) from the bodyfat output to the squared
 correlation between the two variables:
 
+\(~\)
+
 \scriptsize
 
 \begin{Shaded}
@@ -1359,6 +1350,7 @@ correlation between the two variables:
 \end{frame}
 
 \begin{frame}[fragile]{Multiple Linear Regression}
+\protect\hypertarget{multiple-linear-regression}{}
 
 Remember that the bodyfat dataset contained much more information than
 only bmi and bodyfat:
@@ -1389,9 +1381,7 @@ only bmi and bodyfat:
 
 \(~\)
 
-We assume
-
-\begin{equation}
+We assume \begin{equation}
 Y = \beta_0 + \beta_{1}  X_1 + \beta_2 X_1 + ... + \beta_p X_p + \varepsilon \ ,
 \end{equation}
 
@@ -1460,12 +1450,11 @@ Remark: other books, including the book in TMA4267 and TMA4315 define
 Assumptions:
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  \(\text{E}(\boldsymbol{\varepsilon})=\boldsymbol{0}\).
+  \(\mathsf{E}(\boldsymbol{\varepsilon})=\boldsymbol{0}\).
 \item
-  \(\text{Cov}(\boldsymbol{\varepsilon})=\text{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\boldsymbol{I}\).
+  \(\mathsf{Cov}(\boldsymbol{\varepsilon})=\mathsf{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\boldsymbol{I}\).
 \item
   The design matrix has full rank, \(\text{rank}({\bf X})=p+1\). (We
   assume \(n>>(p+1)\).)
@@ -1475,7 +1464,6 @@ The classical \emph{normal} linear regression model is obtained if
 additionally
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{3}
 \tightlist
 \item
@@ -1553,9 +1541,9 @@ Assume that
 
 \begin{itemize}
 \item
-  What is the mean \(\text{E}(\bf Y)\)?
+  What is the mean \(\mathsf{E}(\bf Y)\)?
 \item
-  The covariance matrix \(\text{Cov}(\bf Y)\) given \(\bf{X}\)?
+  The covariance matrix \(\mathsf{Cov}(\bf Y)\) given \(\bf{X}\)?
 \item
   Thus what is the distribution of \(\bf Y\)?
 \end{itemize}
@@ -1613,6 +1601,8 @@ is given like
 \begin{frame}[fragile]
 
 \begin{block}{Example continued}
+
+\vspace{5mm}
 
 \tiny
 
@@ -1686,7 +1676,9 @@ use of \texttt{lm}.
 
 \begin{block}{Distribution of the regression parameter estimator}
 
-\vspace{2mm} Given
+\vspace{2mm}
+
+Given
 \[ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y} \ ,\]
 
 \textbf{what are}
@@ -1694,14 +1686,16 @@ use of \texttt{lm}.
 \begin{itemize}
 \tightlist
 \item
-  The mean \(\text{E}(\hat{\boldsymbol\beta})\)?
+  The mean \(\mathsf{E}(\hat{\boldsymbol\beta})\)?
 \item
-  The covariance matrix \(\text{Cov}(\hat{\boldsymbol\beta})\)?
+  The covariance matrix \(\mathsf{Cov}(\hat{\boldsymbol\beta})\)?
 \item
   The distribution of \(\hat{\boldsymbol\beta}\)?
 \end{itemize}
 
-\vspace{4mm} \textbf{Hint:} Use that
+\vspace{4mm}
+
+\textbf{Hint:} Use that
 
 \begin{itemize}
 \tightlist
@@ -1783,9 +1777,9 @@ connection!
 \end{frame}
 
 \begin{frame}{Four important questions}
+\protect\hypertarget{four-important-questions}{}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \item
   Is at least one of the predictors \(X_1, \ldots, X_p\) useful in
   predicting the response?
@@ -1823,7 +1817,9 @@ $$H_1: \text{at least one } \beta_j \text{ is non-zero.}$$
 
 \begin{frame}
 
-\vspace{4mm} To answer this, we need the \(F\)-statistic
+\vspace{4mm}
+
+To answer this, we need the \(F\)-statistic
 
 \[F = \frac{(\text{TSS}-\text{RSS})/p}{\text{RSS}/(n-p-1)} \sim F_{p,(n-p-1)}\ ,\]
 
@@ -1879,6 +1875,7 @@ Checking the \(F\)-value in the \texttt{R} output:
 \end{verbatim}
 
 \normalsize
+
 Conclusion?
 
 \end{frame}
@@ -1895,8 +1892,9 @@ time, but only a subset \(1,\ldots , q\):
 \[ H_0: \beta_1=\beta_2=\cdots= \beta_q =0\] \text{  vs.  }
 \[H_1: \text{at least one different from zero}.\]
 
-\vspace{2mm} Again, the \(F\)-test can be used, but now \(F\) is
-calculated like
+\vspace{2mm}
+
+Again, the \(F\)-test can be used, but now \(F\) is calculated like
 
 \[F=\frac{(\text{RSS$_0$-RSS})/(q)}{\text{RSS}/(n-p-1)} \sim F_{q,n-p-1} \ ,\]
 
@@ -1929,6 +1927,8 @@ where
   Fit both models and use the \texttt{anova()} function to carry out the
   \(F\)-test:
 \end{itemize}
+
+\(~\)
 
 \footnotesize
 
@@ -1970,9 +1970,10 @@ A special case is
 \item
   Nothing new: We did it for simple linear regression!
 \item
-  This makes sense: is known that (or you can try to show it yourself)
-  \[F_{1,n-p-1} = t^2_{n-p-1} \ ,\] thus we can use a \(T\)-statistics
-  with \((n-p-1)\) degrees of freedom to get the \(p\)-value.
+  This makes sense: it is known that (or you can try to show it
+  yourself) \[F_{1,n-p-1} = t^2_{n-p-1} \ ,\] thus we can use a
+  \(T\)-statistics with \((n-p-1)\) degrees of freedom to get the
+  \(p\)-value.
 \end{itemize}
 
 \end{block}
@@ -2037,6 +2038,8 @@ However:
   Using R, this is very easy:
 \end{itemize}
 
+\vspace{2mm}
+
 \footnotesize
 
 \begin{Shaded}
@@ -2064,9 +2067,13 @@ However:
 
 Overarching question:
 
+\(~\)
+
 \begin{center}
  \emph{\textcolor{blue}{\bf Which model is the best?}}
 \end{center}
+
+\vspace{2mm}
 
 But:
 
@@ -2098,6 +2105,8 @@ But:
 
 We can again look at the two measures from simple linear regression:
 
+\(~\)
+
 \begin{itemize}
 \tightlist
 \item
@@ -2128,9 +2137,13 @@ We can again look at the two measures from simple linear regression:
 
 Let us look at the \(R^2\)s from the three bodyfat models
 
-(model 1: \(y\sim bmi\); model 2: \(y\sim bmi + age\);
+model 1: \(y\sim bmi\)
 
-model 3: \(y\sim bmi + age + neck + hip + abdomen\)):
+model 2: \(y\sim bmi + age\)
+
+model 3: \(y\sim bmi + age + neck + hip + abdomen\)
+
+\(~\)
 
 \tiny
 
@@ -2164,7 +2177,10 @@ model 3: \(y\sim bmi + age + neck + hip + abdomen\)):
 ## [1] 0.718497
 \end{verbatim}
 
+\(~\)
+
 \normalsize
+
 The models explain 54\%, 58\% and 72\% of the total variability of
 \(y\).
 
@@ -2220,16 +2236,19 @@ We will look at model validation / model checking later.
 
 \begin{block}{4. Predictions: Two questions}
 
+\(~\)
+
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
   \textbf{Which other regression lines are compatible with the observed
   data?}
 \end{enumerate}
 
-We can use \(\hat\beta_0, \ldots , \hat\beta_p\) to estimate the
-\emph{least squares plane}
+\vspace{2mm}
+
+\(\rightarrow\) We can use \(\hat\beta_0, \ldots , \hat\beta_p\) to
+estimate the \emph{least squares plane}
 \[\hat{Y} = \hat\beta_0 + \hat\beta_1 X_1 + \ldots + \hat\beta_p X_p \]
 as an approximation of
 \(f(X) = \beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p.\) This leads to
@@ -2238,7 +2257,6 @@ the \emph{\textcolor{red}{confidence interval}}.
 \vspace{4mm}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{1}
 \tightlist
 \item
@@ -2246,8 +2264,10 @@ the \emph{\textcolor{red}{confidence interval}}.
   lie?}
 \end{enumerate}
 
-Even if we could predict \(\hat{Y}=f(X)\), the \emph{true} value \(Y\)
-varies around \(\hat{Y}\). We can compute a
+\vspace{2mm}
+
+\(\rightarrow\) Even if we could predict \(\hat{Y}=f(X)\), the
+\emph{true} value \(Y\) varies around \(\hat{Y}\). We can compute a
 \emph{\textcolor{red}{prediction interval}} for new observations \(Y\).
 
 \end{block}
@@ -2256,12 +2276,17 @@ varies around \(\hat{Y}\). We can compute a
 
 \begin{frame}
 
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-24-1} \end{center}
+\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-21-1} \end{center}
 
-\colorbox{lightgray}{\begin{minipage}{10cm}
+\begin{itemize}
+\tightlist
+\item
+  Plotting the confidence and prediction intervals around all predicted
+  values \(\hat Y_0\) one obtains the \textbf{confidence range} or
+  \textbf{confidence band} for the expected values of \(Y\).
+\end{itemize}
 
-Plotting the confidence and prediction intervals around all predicted values $\hat Y_0$ one obtains the {\bf confidence range} or {\bf confidence band} for the expected values of $Y$.
-\end{minipage}}
+\vspace{2mm}
 
 Note: The prediction range is much broader than the confidence range.
 Why?
@@ -2319,7 +2344,6 @@ Given a new value of \(X_1, \ldots, X_p\), say
 To answer this question, we have to sum uncertainty over two components:
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \item
   the \emph{\textcolor{red}{uncertainty in the predicted value}}
   \(\hat y_0 = \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}\)
@@ -2340,10 +2364,16 @@ wider than the confidence intervals and range}.
 
 \begin{frame}[fragile]
 
-Confidence and prediction intervals for given data points can be found
-in R using \texttt{predict} on an \texttt{lm} object (make sure that
-\texttt{newdata} is a \texttt{data.frame} with the same names as the
-original data).
+\begin{itemize}
+\tightlist
+\item
+  Confidence and prediction intervals for given data points can be found
+  in R using \texttt{predict} on an \texttt{lm} object (make sure that
+  \texttt{newdata} is a \texttt{data.frame} with the same names as the
+  original data).
+\end{itemize}
+
+\(~\)
 
 \scriptsize
 
@@ -2403,8 +2433,9 @@ made by George Box in his often-cited remark that
 
 \begin{block}{Challenges - for model fit}
 
+\(~\)
+
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
   Non-linearity of data
@@ -2444,13 +2475,12 @@ The assumption in linear regression is that the residuals follow a
 \(~\)
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \item
   The expected value of \(\varepsilon_i\) is 0:
-  \(\text{E}(\varepsilon_i)=0\). \vspace{1mm}
+  \(\mathsf{E}(\varepsilon_i)=0\). \vspace{1mm}
 \item
   All \(\varepsilon_i\) have the same variance:
-  \(\text{Var}(\varepsilon_i)=\sigma^2\).\\
+  \(\mathsf{Var}(\varepsilon_i)=\sigma^2\).\\
   \vspace{1mm}
 \item
   The \(\varepsilon_i\) are normally distributed. \vspace{1mm}
@@ -2471,7 +2501,11 @@ The assumption in linear regression is that the residuals follow a
 The \emph{\textcolor{red}{Tukey-Anscombe}} diagram plots the residuals
 against the fitted values. For the bodyfat data it looks like this:
 
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-26-1} \end{center}
+\(~\)
+
+\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-23-1} \end{center}
+
+\(~\)
 
 This plot is ideal to check if assumptions 1. and 2. (and partially 4.)
 are met. Here, this seems fine.
@@ -2490,7 +2524,11 @@ To check assumption 3., the quantiles of the observed distribution are
 plotted against the quantiles of the respective theoretical (normal)
 distribution:
 
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-27-1} \end{center}
+\(~\)
+
+\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-24-1} \end{center}
+
+\(~\)
 
 If the points lie approximately on a straight line, the data is fairly
 normally distributed. This is often ``tested'' by eye, and needs some
@@ -2515,7 +2553,9 @@ The idea is to plot the square root of the (standardized) residuals
 \(\sqrt{|\tilde{r}_i|}\) against the fitted values \(\hat{y_i}\). There
 should be \emph{no trend}:
 
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-28-1} \end{center}
+\vspace{2mm}
+
+\begin{center}\includegraphics[width=0.45\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-25-1} \end{center}
 
 \end{block}
 
@@ -2548,7 +2588,6 @@ should be \emph{no trend}:
 \tightlist
 \item
   In simple regression, the leverage of individual \(i\) is defined as
-
   \begin{equation}\label{eq:leverage}
   H_{ii} = \frac{1}{n} + \frac{(x_i-\overline{x})^2}{\sum_{i'}(x_{i'}-\overline{x})^2} \ . 
   \end{equation}
@@ -2569,7 +2608,7 @@ should be \emph{no trend}:
 \textbf{Illustration}: Data points with \(x_i\) values far from the mean
 have a stronger leverage effect than when \(x_i\approx \overline{x}\):
 
-\begin{center}\includegraphics[width=0.9\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-29-1} \end{center}
+\begin{center}\includegraphics[width=0.9\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-26-1} \end{center}
 
 The outlier in the middle plot ``pulls'' the regression line in its
 direction and biases the slope.
@@ -2586,7 +2625,7 @@ to do it manually!
 In the leverage plot, (standardized) residuals \(\tilde{r_i}\) are
 plotted against the leverage \(H_{ii}\) (still for the bodyfat):
 
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-30-1} \end{center}
+\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-27-1} \end{center}
 
 \textbf{Critical ranges} are the top and bottom right corners! Why?
 
@@ -2641,13 +2680,17 @@ It can be shown that the vector of residuals,
 \({\bf e}=(e_1,e_2,\ldots,e_n)\) have a normal (singular) distribution
 with
 
+\vspace{2mm}
+
 \begin{itemize}
 \tightlist
 \item
-  \(\text{E}({\bf e})={\bf 0}\)
+  \(\mathsf{E}({\bf e})={\bf 0}\)
 \item
-  \(\text{Cov}({\bf e})=\sigma^2({\bf I}-{\bf H})\),
+  \(\mathsf{Cov}({\bf e})=\sigma^2({\bf I}-{\bf H})\),
 \end{itemize}
+
+\vspace{2mm}
 
 where \({\bf H}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T\).
 
@@ -2682,8 +2725,10 @@ may also be correlated.
   \(\epsilon_i\).
 \end{itemize}
 
-\vspace{2mm} \(\rightarrow\) To make the \(e_i\) more ``like
-\(\epsilon_i\)'', we use \emph{\textcolor{red}{standardized}} or
+\vspace{2mm}
+
+\(\rightarrow\) To make the \(e_i\) more ``like \(\epsilon_i\)'', we use
+\emph{\textcolor{red}{standardized}} or
 \emph{\textcolor{red}{studentized residuals}}.
 
 \end{frame}
@@ -2730,6 +2775,8 @@ package in R to plot the diagnostic plots.
 
 \begin{block}{Collinearity}
 
+\vspace{2mm}
+
 In brief, collinearity refers to the situation when two or more
 predictors are correlated, thus encode (partially) for the same
 information.
@@ -2746,6 +2793,8 @@ information.
   Consequently, reduces power in finding effects (\(p\)-values become
   larger).
 \end{itemize}
+
+\(~\)
 
 \textbf{Solutions:}
 
@@ -2767,9 +2816,9 @@ information.
 \end{frame}
 
 \begin{frame}{Other considerations in the regression model}
+\protect\hypertarget{other-considerations-in-the-regression-model}{}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
   Qualitative predictors (\(X_j\)):
@@ -2786,7 +2835,6 @@ information.
 \vspace{4mm}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{1}
 \tightlist
 \item
@@ -2863,13 +2911,13 @@ x_{ij} = \left\{
 \vspace{4mm}
 
 Each of the covariates \(x_1,\ldots, x_k\) can then be included as a
-binary variable in the model
-
-\begin{equation*}
+binary variable in the model \begin{equation*}
 y_i = \beta_0 + \beta_1 x_1 + \ldots + \beta_k x_k + \varepsilon_i \ .
 \end{equation*}
 
-\vspace{6mm} However: this model is
+\vspace{6mm}
+
+However: this model is
 \emph{\textcolor{red}{not identifiable}}.\footnote{What does that mean? I could add a constant to $\beta_1, \beta_2, ...\beta_k$ and subtract it from $\beta_0$, and the model would fit equally well to the data, so it cannot be decided which set of the parameters is best.}
 
 \end{block}
@@ -2954,6 +3002,7 @@ library.
 \end{verbatim}
 
 \normalsize
+
 Question: Do the Balances differ for different Ethnicities?
 
 \end{block}
@@ -2997,6 +3046,7 @@ predictor:
 \end{verbatim}
 
 \normalsize
+
 Interpretation? Do the ethnicities really differ? Check also the
 \(F\)-test in the last line of the summary output.
 
@@ -3006,7 +3056,9 @@ Interpretation? Do the ethnicities really differ? Check also the
 
 \begin{block}{The ``reference category''}
 
-\vspace{2mm} In the above example we do not see a result for the
+\vspace{2mm}
+
+In the above example we do not see a result for the
 \texttt{EthnicityAfrican\ American}. Why?
 
 \begin{itemize}
@@ -3043,6 +3095,7 @@ Interpretation? Do the ethnicities really differ? Check also the
 \end{verbatim}
 
 \small
+
 Note: The differences are now with respect to the Caucasian category --
 the model is however exactly the same!
 
@@ -3072,7 +3125,9 @@ Null Hypothesis is whether
 as \textbf{always when we test for more than one \(\beta_j=0\)
 \emph{simultaneously}}!
 
-\vspace{2mm} In R, this is done by the \texttt{anova()} function:
+\vspace{2mm}
+
+In R, this is done by the \texttt{anova()} function:
 
 \scriptsize
 
@@ -3110,9 +3165,7 @@ is a student or not.
 The model is given as
 \[\text{Balance}_i = \beta_0 + \beta_1 \cdot \text{Income}_i + \beta_2 \cdot \text{Student}_i + \varepsilon_i \ ,\]
 where \texttt{Student} is a binary variable. Thus we have a model that
-looks like
-
-\begin{equation*}
+looks like \begin{equation*}
 \text{Balance}_i = \left\{ 
 \begin{array}{ll}
 \beta_0 + \beta_2 + \beta_1 \cdot \text{Income}_i  + \varepsilon_i \ ,  & \text{if $i$ is a student,}\\
@@ -3277,14 +3330,10 @@ We can include interactions also between
 \item
   Even \emph{\textcolor{red}{transformations}} of covariates can be
   included in (almost) any form. For instance the square of a variable
-  \(X^2\)
-
-  \begin{equation*}
+  \(X^2\) \begin{equation*}
   y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \varepsilon_i \ , 
-  \end{equation*}
-
-  which leads to a \textbf{quadratic} or \textbf{polynomial} regression
-  (if higher order terms are used).
+  \end{equation*} which leads to a \textbf{quadratic} or
+  \textbf{polynomial} regression (if higher order terms are used).
 \end{itemize}
 
 \vspace{4mm}
@@ -3341,12 +3390,14 @@ it can sometimes help to use transformations of a variable \(X\).
 \vspace{2mm}
 
 \scriptsize
+
 \(\rightarrow\) In the later modules, we will discuss other more
 advanced non-linear approaches for addressing this issue.
 
 \end{frame}
 
 \begin{frame}{ Further reading }
+\protect\hypertarget{further-reading}{}
 
 \begin{itemize}
 \tightlist
@@ -3358,19 +3409,20 @@ advanced non-linear approaches for addressing this issue.
 \end{frame}
 
 \begin{frame}{References}
+\protect\hypertarget{references}{}
 
 \hypertarget{refs}{}
-\hypertarget{ref-box1979}{}
+\leavevmode\hypertarget{ref-box1979}{}%
 Box, G. E. P. 1979. ``Robustness in the Strategy of Scientific Model
 Building.'' In \emph{In Robustness in Statistics}, edited by R. L.
 Launer and G. N. Wilkinson, 201--36. New York: Academic Press.
 
-\hypertarget{ref-ISL}{}
+\leavevmode\hypertarget{ref-ISL}{}%
 James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani.
 2013. \emph{An Introduction to Statistical Learning}. Vol. 112.
 Springer.
 
-\hypertarget{ref-walepole.etal}{}
+\leavevmode\hypertarget{ref-walepole.etal}{}%
 Walepole, R. E., R. H. Myers, S. L. Myers, and K. Ye. 2012.
 \emph{Probability \& Statistics for Engineers and Scientists}. 9th ed.
 Boston: Pearson Education Inc.
