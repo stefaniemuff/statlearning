@@ -1655,7 +1655,7 @@ summary {
 <h2>Problem 2</h2>
 <p>Take a look at Figure 2.9 in the course book (p.31).</p>
 <ol style="list-style-type: lower-alpha">
-<li>Will a flexible or rigid method typically have the highest test error?</li>
+<li>Discuss whether a flexible or rigid method typically will have the highest test error.</li>
 <li>Does a small variance imply that the data has been under- or overfit?</li>
 <li>Relate the problem of over- and underfitting to the bias-variance trade-off.</li>
 </ol>
@@ -1675,8 +1675,8 @@ data(Auto)</code></pre>
 <li><p>Suppose we wish to predict gas milage (<code>mpg</code>) on the basis of the other variables (both quantitative and qualitative). Make some plots showing the relationships between <code>mpg</code> and the qualitative predictors (hint: <code>geom_boxplot()</code>). Which predictors would you consider helpful when predicting <code>mpg</code>?</p></li>
 <li><p>The correlation of two variables <span class="math inline">\(X\)</span> and <span class="math inline">\(Y\)</span> are defined as <span class="math display">\[ \text{cor}(X,Y) = \frac{\text{cov}(X,Y)}{\sigma_X\sigma_Y}.\]</span> Both the correlation matrix and covariance matrix are easily assessed in R with the <code>cor()</code> and <code>cov()</code> functions. Use only the covariance matrix to find the correlation between <code>mpg</code> and <code>displacement</code>, <code>mpg</code> and <code>horsepower</code>, and <code>mpg</code> and <code>weight</code>. Do your results coincide with the correlation matrix you find using <code>cor(Auto[,quant])</code>?</p></li>
 </ol>
-<pre class="r"><code>quant = c(1, 3, 4, 5, 6, 7)
-covMat = cov(Auto[, quant])</code></pre>
+<pre class="r"><code>quant = c(1,3,4,5,6,7)
+covMat = cov(Auto[,quant])</code></pre>
 </div>
 <div id="problem-4-multivariate-normal-distribution" class="section level2">
 <h2>Problem 4 – Multivariate normal distribution</h2>
@@ -1710,7 +1710,7 @@ covMat = cov(Auto[, quant])</code></pre>
 3 
 \end{pmatrix} \quad \text{and} \quad \boldsymbol{\Sigma} = \begin{pmatrix}
 1 &amp; -2\\
--2 &amp; 1
+-2 &amp; 5
 \end{pmatrix}.\]</span></p></li>
 </ol></li>
 <li><p>Make a scatterplot of the four sets of simulated datasets. Can you see which plot belongs to which distribution?</p></li>
@@ -1732,54 +1732,44 @@ covMat = cov(Auto[, quant])</code></pre>
 <p>We will learn more about the <code>lm</code> function in Module 3 - now just think of this as fitting a polynomial regression and then predict gives the fitted curve in our grid points. <code>predarray</code> is just a way to save <span class="math inline">\(M\)</span> simulations of 61 gridpoints in <span class="math inline">\(x\)</span> and 20 polynomial models.</p>
 <pre class="r"><code>library(ggplot2)
 library(ggpubr)
-set.seed(2)  # to reproduce
-M = 100  # repeated samplings, x fixed 
-nord = 20  # order of polynoms
+set.seed(2) # to reproduce
+M=100 # repeated samplings, x fixed 
+nord=20 # order of polynoms
 x = seq(from = -2, to = 4, by = 0.1)
-truefunc = function(x) {
-    return(x^2)
+truefunc=function(x){
+  return(x^2)
 }
 true_y = truefunc(x)
-error = matrix(rnorm(length(x) * M, mean = 0, sd = 2), nrow = M, byrow = TRUE)
-ymat = matrix(rep(true_y, M), byrow = T, nrow = M) + error
-predarray = array(NA, dim = c(M, length(x), nord))
-for (i in 1:M) {
-    for (j in 1:nord) {
-        predarray[i, , j] = predict(lm(ymat[i, ] ~ poly(x, j, raw = TRUE)))
-    }
+error = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
+ymat = matrix(rep(true_y,M),byrow=T,nrow=M) + error
+predarray=array(NA,dim=c(M,length(x),nord))
+for (i in 1:M){
+  for (j in 1:nord){
+    predarray[i,,j]=predict(lm(ymat[i,]~poly(x,j,raw=TRUE)))
+  }
 }
-# M matrices of size length(x) times nord first, only look at
-# variablity in the M fits and plot M curves where we had 1 for
-# plotting need to stack the matrices underneath eachother and make
-# new variable 'rep'
-stackmat = NULL
-for (i in 1:M) {
-    stackmat = rbind(stackmat, cbind(x, rep(i, length(x)), predarray[i, 
-        , ]))
+# M matrices of size length(x) times nord
+# first, only look at variablity in the M fits and plot M curves where we had 1
+# for plotting need to stack the matrices underneath eachother and make new variable &quot;rep&quot;
+stackmat=NULL
+for(i in 1:M){
+  stackmat=rbind(stackmat,cbind(x,rep(i,length(x)),predarray[i,,]))
 }
-# dim(stackmat)
-colnames(stackmat) = c(&quot;x&quot;, &quot;rep&quot;, paste(&quot;poly&quot;, 1:20, sep = &quot;&quot;))
-sdf = as.data.frame(stackmat)  #NB have poly1-20 now - but first only use 1,2,20
+#dim(stackmat)
+colnames(stackmat)=c(&quot;x&quot;,&quot;rep&quot;,paste(&quot;poly&quot;,1:20,sep=&quot;&quot;))
+sdf=as.data.frame(stackmat) #NB have poly1-20 now - but first only use 1,2,20
 # to add true curve using stat_function - easiest solution
-true_x = x
-yrange = range(apply(sdf, 2, range)[, 3:22])
-p1 = ggplot(data = sdf, aes(x = x, y = poly1, group = rep, colour = rep)) + 
-    scale_y_continuous(limits = yrange) + geom_line()
-p1 = p1 + stat_function(fun = truefunc, lwd = 1.3, colour = &quot;black&quot;) + 
-    ggtitle(&quot;poly1&quot;)
-p2 = ggplot(data = sdf, aes(x = x, y = poly2, group = rep, colour = rep)) + 
-    scale_y_continuous(limits = yrange) + geom_line()
-p2 = p2 + stat_function(fun = truefunc, lwd = 1.3, colour = &quot;black&quot;) + 
-    ggtitle(&quot;poly2&quot;)
-p10 = ggplot(data = sdf, aes(x = x, y = poly10, group = rep, colour = rep)) + 
-    scale_y_continuous(limits = yrange) + geom_line()
-p10 = p10 + stat_function(fun = truefunc, lwd = 1.3, colour = &quot;black&quot;) + 
-    ggtitle(&quot;poly10&quot;)
-p20 = ggplot(data = sdf, aes(x = x, y = poly20, group = rep, colour = rep)) + 
-    scale_y_continuous(limits = yrange) + geom_line()
-p20 = p20 + stat_function(fun = truefunc, lwd = 1.3, colour = &quot;black&quot;) + 
-    ggtitle(&quot;poly20&quot;)
-ggarrange(p1, p2, p10, p20)</code></pre>
+true_x=x
+yrange=range(apply(sdf,2,range)[,3:22])
+p1=ggplot(data=sdf,aes(x=x,y=poly1,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p1=p1+stat_function(fun=truefunc,lwd=1.3,colour=&quot;black&quot;)+ggtitle(&quot;poly1&quot;)
+p2=ggplot(data=sdf,aes(x=x,y=poly2,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p2=p2+stat_function(fun=truefunc,lwd=1.3,colour=&quot;black&quot;)+ggtitle(&quot;poly2&quot;)
+p10=ggplot(data=sdf,aes(x=x,y=poly10,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p10=p10+stat_function(fun=truefunc,lwd=1.3,colour=&quot;black&quot;)+ggtitle(&quot;poly10&quot;)
+p20=ggplot(data=sdf,aes(x=x,y=poly20,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+p20=p20+stat_function(fun=truefunc,lwd=1.3,colour=&quot;black&quot;)+ggtitle(&quot;poly20&quot;)
+ggarrange(p1,p2,p10,p20)</code></pre>
 <p>What do you observe in the produced plot? Which polynomial fits the best to the true curve?</p>
 <hr />
 </div>
@@ -1787,63 +1777,55 @@ ggarrange(p1, p2, p10, p20)</code></pre>
 <h3>b) Train and test MSE</h3>
 <p>First we produce predictions at each grid point based on our training data (<code>x</code> and <code>ymat</code>). Then we draw new observations to calculate test MSE, see <code>testymat</code>.</p>
 <p>Observe how <code>trainMSE</code> and <code>testMSE</code> are calculated, and then run the code.</p>
-<pre class="r"><code>set.seed(2)  # to reproduce
-M = 100  # repeated samplings,x fixed but new errors
-nord = 20
+<pre class="r"><code>set.seed(2) # to reproduce
+M=100 # repeated samplings,x fixed but new errors
+nord=20
 x = seq(from = -2, to = 4, by = 0.1)
-truefunc = function(x) {
-    return(x^2)
+truefunc=function(x){
+  return(x^2)
 }
 true_y = truefunc(x)
-error = matrix(rnorm(length(x) * M, mean = 0, sd = 2), nrow = M, byrow = TRUE)
-testerror = matrix(rnorm(length(x) * M, mean = 0, sd = 2), nrow = M, 
-    byrow = TRUE)
-ymat = matrix(rep(true_y, M), byrow = T, nrow = M) + error
-testymat = matrix(rep(true_y, M), byrow = T, nrow = M) + testerror
-predarray = array(NA, dim = c(M, length(x), nord))
-for (i in 1:M) {
-    for (j in 1:nord) {
-        predarray[i, , j] = predict(lm(ymat[i, ] ~ poly(x, j, raw = TRUE)))
-    }
-}
-trainMSE = matrix(ncol = nord, nrow = M)
-testMSE = matrix(ncol = nord, nrow = M)
-for (i in 1:M) {
-    trainMSE[i, ] = apply((predarray[i, , ] - ymat[i, ])^2, 2, mean)
-    testMSE[i, ] = apply((predarray[i, , ] - testymat[i, ])^2, 2, mean)
+error = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
+testerror = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
+ymat = matrix(rep(true_y,M),byrow=T,nrow=M) + error
+testymat = matrix(rep(true_y,M),byrow=T,nrow=M) + testerror
+predarray=array(NA,dim=c(M,length(x),nord))
+for (i in 1:M){
+  for (j in 1:nord){
+    predarray[i,,j]=predict(lm(ymat[i,]~poly(x,j,raw=TRUE)))
+  }
+}  
+trainMSE=matrix(ncol=nord,nrow=M)
+testMSE=matrix(ncol=nord,nrow=M)
+for (i in 1:M){
+  trainMSE[i,]=apply((predarray[i,,]-ymat[i,])^2,2,mean)
+  testMSE[i,]=apply((predarray[i,,]-testymat[i,])^2,2,mean)
 }</code></pre>
 <p>Next, we plot – first for one train + test data set, then for 99 more.</p>
 <pre class="r"><code>library(ggplot2)
 library(ggpubr)
-# format suitable for plotting
-stackmat = NULL
-for (i in 1:M) {
-    stackmat = rbind(stackmat, cbind(rep(i, nord), 1:nord, trainMSE[i, 
-        ], testMSE[i, ]))
+# format suitable for plotting 
+stackmat=NULL
+for (i in 1:M){
+  stackmat=rbind(stackmat,cbind(rep(i,nord),1:nord,trainMSE[i,],testMSE[i,]))
 }
-colnames(stackmat) = c(&quot;rep&quot;, &quot;poly&quot;, &quot;trainMSE&quot;, &quot;testMSE&quot;)
-sdf = as.data.frame(stackmat)
-yrange = range(sdf[, 3:4])
-p1 = ggplot(data = sdf[1:nord, ], aes(x = poly, y = trainMSE)) + scale_y_continuous(limits = yrange) + 
-    geom_line()
-pall = ggplot(data = sdf, aes(x = poly, group = rep, y = trainMSE, colour = rep)) + 
-    scale_y_continuous(limits = yrange) + geom_line()
-testp1 = ggplot(data = sdf[1:nord, ], aes(x = poly, y = testMSE)) + scale_y_continuous(limits = yrange) + 
-    geom_line()
-testpall = ggplot(data = sdf, aes(x = poly, group = rep, y = testMSE, 
-    colour = rep)) + scale_y_continuous(limits = yrange) + geom_line()
-ggarrange(p1, pall, testp1, testpall)</code></pre>
+colnames(stackmat)=c(&quot;rep&quot;,&quot;poly&quot;,&quot;trainMSE&quot;,&quot;testMSE&quot;)
+sdf=as.data.frame(stackmat) 
+yrange=range(sdf[,3:4])
+p1=ggplot(data=sdf[1:nord,],aes(x=poly,y=trainMSE))+scale_y_continuous(limits=yrange)+geom_line()
+pall= ggplot(data=sdf,aes(x=poly,group=rep,y=trainMSE,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+testp1=ggplot(data=sdf[1:nord,],aes(x=poly,y=testMSE))+scale_y_continuous(limits=yrange)+geom_line()
+testpall= ggplot(data=sdf,aes(x=poly,group=rep,y=testMSE,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
+ggarrange(p1,pall,testp1,testpall)</code></pre>
 <p>More plots now: first boxplot and then mean for train and test MSE:</p>
 <pre class="r"><code>library(reshape2)
-df = melt(sdf, id = c(&quot;poly&quot;, &quot;rep&quot;))[, -2]
-colnames(df)[2] = &quot;MSEtype&quot;
-ggplot(data = df, aes(x = as.factor(poly), y = value)) + geom_boxplot(aes(fill = MSEtype))</code></pre>
-<pre class="r"><code>trainMSEmean = apply(trainMSE, 2, mean)
-testMSEmean = apply(testMSE, 2, mean)
-meandf = melt(data.frame(cbind(poly = 1:nord, trainMSEmean, testMSEmean)), 
-    id = &quot;poly&quot;)
-ggplot(data = meandf, aes(x = poly, y = value, colour = variable)) + 
-    geom_line()</code></pre>
+df=melt(sdf,id=c(&quot;poly&quot;,&quot;rep&quot;))[,-2]
+colnames(df)[2]=&quot;MSEtype&quot;
+ggplot(data=df,aes(x=as.factor(poly),y=value))+geom_boxplot(aes(fill=MSEtype))</code></pre>
+<pre class="r"><code>trainMSEmean=apply(trainMSE,2,mean)
+testMSEmean=apply(testMSE,2,mean)
+meandf=melt(data.frame(cbind(&quot;poly&quot;=1:nord,trainMSEmean,testMSEmean)),id=&quot;poly&quot;)
+ggplot(data=meandf,aes(x=poly,y=value,colour=variable))+geom_line()</code></pre>
 <ul>
 <li>Which value of the polynomial gives the smallest mean testMSE?</li>
 <li>Which gives the smallest mean trainMSE?</li>
@@ -1860,47 +1842,39 @@ ggplot(data = meandf, aes(x = poly, y = value, colour = variable)) +
 </ul>
 <p>Notice that the test data is not used – only predicted values in each x grid point.</p>
 <p>Study and run the code. Explain the plots produced.</p>
-<pre class="r"><code>meanmat = matrix(ncol = length(x), nrow = nord)
-varmat = matrix(ncol = length(x), nrow = nord)
-for (j in 1:nord) {
-    meanmat[j, ] = apply(predarray[, , j], 2, mean)  # we now take the mean over the M simulations - to mimic E and Var at each x value and each poly model
-    varmat[j, ] = apply(predarray[, , j], 2, var)
+<pre class="r"><code>meanmat=matrix(ncol=length(x),nrow=nord)
+varmat=matrix(ncol=length(x),nrow=nord)
+for (j in 1:nord)
+{
+  meanmat[j,]=apply(predarray[,,j],2,mean) # we now take the mean over the M simulations - to mimic E and Var at each x value and each poly model
+  varmat[j,]=apply(predarray[,,j],2,var)
 }
 # nord times length(x)
-bias2mat = (meanmat - matrix(rep(true_y, nord), byrow = TRUE, nrow = nord))^2  #here the truth is finally used!</code></pre>
+bias2mat=(meanmat-matrix(rep(true_y,nord),byrow=TRUE,nrow=nord))^2 #here the truth is finally used!</code></pre>
 <p>Plotting the polys as a function of x:</p>
-<pre class="r"><code>df = data.frame(rep(x, each = nord), rep(1:nord, length(x)), c(bias2mat), 
-    c(varmat), rep(4, prod(dim(varmat))))  #irr is just 1
-colnames(df) = c(&quot;x&quot;, &quot;poly&quot;, &quot;bias2&quot;, &quot;variance&quot;, &quot;irreducible error&quot;)  #suitable for plotting
-df$total = df$bias2 + df$variance + df$`irreducible error`
-hdf = melt(df, id = c(&quot;x&quot;, &quot;poly&quot;))
-hdf1 = hdf[hdf$poly == 1, ]
-hdf2 = hdf[hdf$poly == 2, ]
-hdf10 = hdf[hdf$poly == 10, ]
-hdf20 = hdf[hdf$poly == 20, ]
-p1 = ggplot(data = hdf1, aes(x = x, y = value, colour = variable)) + 
-    geom_line() + ggtitle(&quot;poly1&quot;)
-p2 = ggplot(data = hdf2, aes(x = x, y = value, colour = variable)) + 
-    geom_line() + ggtitle(&quot;poly2&quot;)
-p10 = ggplot(data = hdf10, aes(x = x, y = value, colour = variable)) + 
-    geom_line() + ggtitle(&quot;poly10&quot;)
-p20 = ggplot(data = hdf20, aes(x = x, y = value, colour = variable)) + 
-    geom_line() + ggtitle(&quot;poly20&quot;)
-ggarrange(p1, p2, p10, p20)</code></pre>
+<pre class="r"><code>df=data.frame(rep(x,each=nord),rep(1:nord,length(x)),c(bias2mat),c(varmat),rep(4,prod(dim(varmat)))) #irr is just 1
+colnames(df)=c(&quot;x&quot;,&quot;poly&quot;,&quot;bias2&quot;,&quot;variance&quot;,&quot;irreducible error&quot;) #suitable for plotting
+df$total=df$bias2+df$variance+df$`irreducible error`
+hdf=melt(df,id=c(&quot;x&quot;,&quot;poly&quot;))
+hdf1=hdf[hdf$poly==1,]
+hdf2=hdf[hdf$poly==2,]
+hdf10=hdf[hdf$poly==10,]
+hdf20=hdf[hdf$poly==20,]
+p1=ggplot(data=hdf1,aes(x=x,y=value,colour=variable))+geom_line()+ggtitle(&quot;poly1&quot;)
+p2=ggplot(data=hdf2,aes(x=x,y=value,colour=variable))+geom_line()+ggtitle(&quot;poly2&quot;)
+p10=ggplot(data=hdf10,aes(x=x,y=value,colour=variable))+geom_line()+ggtitle(&quot;poly10&quot;)
+p20=ggplot(data=hdf20,aes(x=x,y=value,colour=variable))+geom_line()+ggtitle(&quot;poly20&quot;)
+ggarrange(p1,p2,p10,p20)</code></pre>
 <p>Now plotting effect of more complex model at 4 chosen values of x, compare to Figures in 2.12 on page 36 in ISL (our textbook).</p>
-<pre class="r"><code>hdfatxa = hdf[hdf$x == -1, ]
-hdfatxb = hdf[hdf$x == 0.5, ]
-hdfatxc = hdf[hdf$x == 2, ]
-hdfatxd = hdf[hdf$x == 3.5, ]
-pa = ggplot(data = hdfatxa, aes(x = poly, y = value, colour = variable)) + 
-    geom_line() + ggtitle(&quot;x0=-1&quot;)
-pb = ggplot(data = hdfatxb, aes(x = poly, y = value, colour = variable)) + 
-    geom_line() + ggtitle(&quot;x0=0.5&quot;)
-pc = ggplot(data = hdfatxc, aes(x = poly, y = value, colour = variable)) + 
-    geom_line() + ggtitle(&quot;x0=2&quot;)
-pd = ggplot(data = hdfatxd, aes(x = poly, y = value, colour = variable)) + 
-    geom_line() + ggtitle(&quot;x0=3.5&quot;)
-ggarrange(pa, pb, pc, pd)</code></pre>
+<pre class="r"><code>hdfatxa=hdf[hdf$x==-1,]
+hdfatxb=hdf[hdf$x==0.5,]
+hdfatxc=hdf[hdf$x==2,]
+hdfatxd=hdf[hdf$x==3.5,]
+pa=ggplot(data=hdfatxa,aes(x=poly,y=value,colour=variable))+geom_line()+ggtitle(&quot;x0=-1&quot;)
+pb=ggplot(data=hdfatxb,aes(x=poly,y=value,colour=variable))+geom_line()+ggtitle(&quot;x0=0.5&quot;)
+pc=ggplot(data=hdfatxc,aes(x=poly,y=value,colour=variable))+geom_line()+ggtitle(&quot;x0=2&quot;)
+pd=ggplot(data=hdfatxd,aes(x=poly,y=value,colour=variable))+geom_line()+ggtitle(&quot;x0=3.5&quot;)
+ggarrange(pa,pb,pc,pd)</code></pre>
 <p>Study the final plot you produced: when the flexibility increases (poly increase), what happens with i) the squared bias, ii) the variance, iii) the irreducible error?</p>
 <hr />
 </div>
