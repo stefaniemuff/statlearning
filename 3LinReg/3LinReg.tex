@@ -152,7 +152,7 @@
 
 \begin{frame}
 
-Last update: January 19, 2021
+Last update: January 25, 2021
 
 \end{frame}
 
@@ -1414,18 +1414,42 @@ to write the model in matrix form:
 \(~\)
 
 \begin{itemize}
+\tightlist
 \item
-  \({\bf Y}: (n \times 1)\) vector of responses {[}e.g.~one of the
-  following: rent, weight of baby, pH of a lake, volume of a tree{]}
+  \({\bf Y}: (n \times 1)\) vector of responses (e.g., bodyfat).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   \({\bf X}: (n \times (p+1))\) design matrix, and
-  \({\boldsymbol x}_i^T\) is a \((p+1)\)-dimensional row row vector for
+  \({\boldsymbol x}_i^T\) is a \((p+1)\)-dimensional row vector for
   observation \(i\).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   \({\boldsymbol \beta}: ((p+1) \times 1)\) vector of regression
   parameters \((\beta_0,\beta_1,\ldots,\beta_p)^\top\).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   \({\boldsymbol \varepsilon}: (n\times 1)\) vector of random errors.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   We assume that pairs \(({\boldsymbol x}_i^T,y_i)\) \((i=1,...,n)\) are
   measured from \emph{independent} sampling units.
@@ -1445,20 +1469,25 @@ Remark: other books, including the book in TMA4267 and TMA4315 define
 
 \begin{block}{Classical linear model}
 
+\(~\)
+
 \[{\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon}\]
 
-Assumptions:
+Assumptions: \vspace{2mm}
 
 \begin{enumerate}
 \tightlist
 \item
-  \(\mathsf{E}(\boldsymbol{\varepsilon})=\boldsymbol{0}\).
+  \(\mathsf{E}(\boldsymbol{\varepsilon})=\boldsymbol{0}\). \vspace{2mm}
 \item
   \(\mathsf{Cov}(\boldsymbol{\varepsilon})=\mathsf{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\boldsymbol{I}\).
+  \vspace{2mm}
 \item
   The design matrix has full rank, \(\text{rank}({\bf X})=p+1\). (We
   assume \(n>>(p+1)\).)
 \end{enumerate}
+
+\vspace{2mm}
 
 The classical \emph{normal} linear regression model is obtained if
 additionally
@@ -1478,13 +1507,43 @@ additionally
 
 \begin{frame}[fragile]
 
-\begin{block}{Design matrix: Getting it in R}
+\begin{block}{The bodyfat example for two predictors}
+
+\(~\)
+
+We are looking at the regression model
+
+\begin{equation*}
+Y = \beta_0 + \beta_{1}  X_1 + \beta_2 X_1  + \varepsilon \ ,
+\end{equation*}
+
+with bodyfat as the response (\(Y\)) and \texttt{bmi} and \texttt{age}
+as \(X_1\) and \(X_2\).
+
+\(~\)
+
+\normalsize
+
+The regression
 
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{r.bodyfat =}\StringTok{ }\KeywordTok{lm}\NormalTok{(bodyfat }\OperatorTok{~}\StringTok{ }\NormalTok{bmi }\OperatorTok{+}\StringTok{ }\NormalTok{age, }\DataTypeTok{data =}\NormalTok{ d.bodyfat)}
+\end{Highlighting}
+\end{Shaded}
+
+\(~\)
+
+\normalsize
+
+The \emph{\textcolor{red}{design matrix}}:
+
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \KeywordTok{head}\NormalTok{(}\KeywordTok{model.matrix}\NormalTok{(r.bodyfat))}
 \end{Highlighting}
 \end{Shaded}
@@ -1497,26 +1556,6 @@ additionally
 ## 4           1 24.91  26
 ## 5           1 25.54  24
 ## 6           1 26.48  24
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{head}\NormalTok{(d.bodyfat}\OperatorTok{$}\NormalTok{bmi)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 23.65 23.36 24.69 24.91 25.54 26.48
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{head}\NormalTok{(d.bodyfat}\OperatorTok{$}\NormalTok{age)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 23 22 22 26 24 24
 \end{verbatim}
 
 \normalsize
@@ -1580,9 +1619,7 @@ The estimator is found by solving the system of \((p+1)\) equations
 
 \[\frac{\partial \text{RSS}}{\partial \boldsymbol \beta}={\bf 0} \ .\]
 
-\(\rightarrow\) Derivation on the board. See also
-\href{https://www.math.ntnu.no/emner/TMA4268/2018v/notes/LeastSquaresMLR.pdf}{here}
-(from Mette in TMA4267).
+\(\rightarrow\) Derivation on the board.
 
 \end{block}
 
@@ -1648,6 +1685,8 @@ is given like
 
 Reproduce the values under \texttt{Estimate} by calculating without the
 use of \texttt{lm}.
+
+\(~\)
 
 \scriptsize
 
@@ -1725,10 +1764,12 @@ to derive that
 
 \begin{block}{The covariance matrix of \(\boldsymbol{\hat\beta}\) in R}
 
-\vspace{2mm}
+\(~\)
 
 The covariance matrix for the \(\boldsymbol{\hat\beta}\) can be obtained
 as follows:
+
+\(~\)
 
 \scriptsize
 
@@ -1830,7 +1871,7 @@ distribution (see Walepole et al. (2012), Chapter 8.7).
 
 \begin{itemize}
 \item
-  If \(H_0\) is true, \(F\) is expected to be 1.
+  If \(H_0\) is true, \(F\) is expected to be \(\approx 1\).
 \item
   Otherwise, we expect that the numerator is larger than the denominator
   (because the regression then explains a lot of variation) and thus
@@ -1843,6 +1884,8 @@ distribution (see Walepole et al. (2012), Chapter 8.7).
 \begin{frame}[fragile]
 
 Checking the \(F\)-value in the \texttt{R} output:
+
+\(~\)
 
 \scriptsize
 
@@ -1873,6 +1916,8 @@ Checking the \(F\)-value in the \texttt{R} output:
 ## Multiple R-squared:  0.5803, Adjusted R-squared:  0.5768 
 ## F-statistic: 165.9 on 2 and 240 DF,  p-value: < 2.2e-16
 \end{verbatim}
+
+\(~\)
 
 \normalsize
 
@@ -1984,6 +2029,8 @@ A special case is
 
 Going back again:
 
+\(~\)
+
 \footnotesize
 
 \begin{Shaded}
@@ -2001,7 +2048,9 @@ Going back again:
 
 \normalsize
 
-However:
+\(~\)
+
+\textbf{However}:
 
 \begin{itemize}
 \item
@@ -2026,19 +2075,13 @@ However:
   Using that
   \[ T_j=\frac{\hat{\beta}_j}{\text{SE}(\hat\beta_j)}\sim t_{n-p-1} \ ,\]
   we can create confidence intervals for \(\beta_j\) in the same manner
-  as we did for simple linear regression (see slide 43). For example,
+  as we did for simple linear regression (see slide 41). For example,
   when using the typical confidence level \(\alpha=0.05\) we have
 \end{itemize}
 
 \[\hat{\beta}_j \pm t_{0.975,n-p-2} \cdot\text{SE} (\hat{\beta}_j)  \ .\]
 
-\begin{itemize}
-\tightlist
-\item
-  Using R, this is very easy:
-\end{itemize}
-
-\vspace{2mm}
+\vspace{4mm}
 
 \footnotesize
 
@@ -2136,6 +2179,8 @@ We can again look at the two measures from simple linear regression:
 \(~\)
 
 Let us look at the \(R^2\)s from the three bodyfat models
+
+\vspace{2mm}
 
 model 1: \(y\sim bmi\)
 
@@ -2251,7 +2296,7 @@ We will look at model validation / model checking later.
 estimate the \emph{least squares plane}
 \[\hat{Y} = \hat\beta_0 + \hat\beta_1 X_1 + \ldots + \hat\beta_p X_p \]
 as an approximation of
-\(f(X) = \beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p.\) This leads to
+\(f(X) = \beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p .\) This leads to
 the \emph{\textcolor{red}{confidence interval}}.
 
 \vspace{4mm}
@@ -2267,8 +2312,9 @@ the \emph{\textcolor{red}{confidence interval}}.
 \vspace{2mm}
 
 \(\rightarrow\) Even if we could predict \(\hat{Y}=f(X)\), the
-\emph{true} value \(Y\) varies around \(\hat{Y}\). We can compute a
-\emph{\textcolor{red}{prediction interval}} for new observations \(Y\).
+\emph{true} value \(Y = f(X) + \varepsilon\) varies around \(\hat{Y}\).
+We can compute a \emph{\textcolor{red}{prediction interval}} for new
+observations \(Y\).
 
 \end{block}
 
@@ -2276,7 +2322,7 @@ the \emph{\textcolor{red}{confidence interval}}.
 
 \begin{frame}
 
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-21-1} \end{center}
+\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-22-1} \end{center}
 
 \begin{itemize}
 \tightlist
@@ -2299,27 +2345,36 @@ Why?
 
 \(~\)
 
-Given a realization of \(X_1, \ldots ,X_p\), say
-\(x_1^{(0)}, \ldots x_p^{(0)}\). The question is:
-
-\(~\)
-
-\textbf{Where does
-\(\hat y_0 = \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}\)
-lie with a certain confidence (i.e., 95\%)?}
+\begin{itemize}
+\tightlist
+\item
+  Given a realization of \(X_1, \ldots ,X_p\), say
+  \(x_1^{(0)}, \ldots x_p^{(0)}\). The question is:\\
+  \vspace{2mm} \textbf{Where does
+  \(\hat y_0 = \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}\)
+  lie with a certain confidence (i.e., 95\%)?}
+\end{itemize}
 
 \vspace{6mm}
 
-This question is not trivial, because
-\(\hat\beta_0, \ldots \hat\beta_p\) are estimates from the data and
-contain uncertainty.
+\begin{itemize}
+\tightlist
+\item
+  This question is not trivial, because
+  \(\hat\beta_0, \ldots \hat\beta_p\) are estimates from the data and
+  contain uncertainty.
+\end{itemize}
 
 \(~\)
 
 \vspace{4mm}
 
-\(\rightarrow\) For the confidence range, only the uncertainty in the
-estimates \(\hat\beta_0, \ldots \hat\beta_p\) matters.
+\begin{itemize}
+\tightlist
+\item
+  For the confidence range, only the uncertainty in the estimates
+  \(\hat\beta_0, \ldots \hat\beta_p\) matters.
+\end{itemize}
 
 \end{block}
 
@@ -2331,32 +2386,41 @@ estimates \(\hat\beta_0, \ldots \hat\beta_p\) matters.
 
 \(~\)
 
-Given a new value of \(X_1, \ldots, X_p\), say
-\(x_1^{(0)}, \ldots x_p^{(0)}\). The question is:
-
-\(~\)
-
-\textbf{Where does a future observation lie with a certain confidence
-(i.e., 95\%)?}
+\begin{itemize}
+\tightlist
+\item
+  Given a new value of \(X_1, \ldots, X_p\), say
+  \(x_1^{(0)}, \ldots x_p^{(0)}\). The question is:\\
+  \vspace{2mm} \textbf{Where does a future observation \(y_0\) lie with
+  a certain confidence (i.e., 95\%)?}
+\end{itemize}
 
 \vspace{6mm}
 
-To answer this question, we have to sum uncertainty over two components:
+\begin{itemize}
+\item
+  To answer this question, we have to sum uncertainty over two
+  components:
 
-\begin{enumerate}
-\item
-  the \emph{\textcolor{red}{uncertainty in the predicted value}}
-  \(\hat y_0 = \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}\)
-  (due to uncertainty in \(\hat{\boldsymbol\beta}\)).
-\item
-  the \emph{\textcolor{red}{irreducible error}}
-  \(\varepsilon_i \sim N(0,\sigma^2)\).
-\end{enumerate}
+  \begin{enumerate}
+  \item
+    the \emph{\textcolor{red}{uncertainty in the predicted value}}
+    \(\hat y_0 = \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}\)
+    (due to uncertainty in \(\hat{\boldsymbol\beta}\)).
+  \item
+    the \emph{\textcolor{red}{irreducible error}}
+    \(\varepsilon_0 \sim N(0,\sigma^2)\).
+  \end{enumerate}
+\end{itemize}
 
 \vspace{4mm}
 
-\(\rightarrow\) The \emph{prediction intervals and range are always
-wider than the confidence intervals and range}.
+\begin{itemize}
+\tightlist
+\item
+  The \emph{prediction intervals and range are always wider than the
+  confidence intervals and range}.
+\end{itemize}
 
 \end{block}
 
@@ -2381,6 +2445,11 @@ wider than the confidence intervals and range}.
 \begin{Highlighting}[]
 \NormalTok{fit =}\StringTok{ }\KeywordTok{lm}\NormalTok{(bodyfat }\OperatorTok{~}\StringTok{ }\NormalTok{bmi }\OperatorTok{+}\StringTok{ }\NormalTok{age }\OperatorTok{+}\StringTok{ }\NormalTok{abdomen, }\DataTypeTok{data =}\NormalTok{ d.bodyfat)}
 \NormalTok{newobs =}\StringTok{ }\NormalTok{d.bodyfat[}\DecValTok{1}\NormalTok{, ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
 \KeywordTok{predict}\NormalTok{(fit, }\DataTypeTok{newdata =}\NormalTok{ newobs, }\DataTypeTok{interval =} \StringTok{"confidence"}\NormalTok{, }\DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -2429,425 +2498,42 @@ made by George Box in his often-cited remark that
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}{Extensions of the linear model}
+\protect\hypertarget{extensions-of-the-linear-model}{}
 
-\begin{block}{Challenges - for model fit}
+Extensions that make the linear model very powerful:
 
 \(~\)
 
-\begin{enumerate}
+\begin{itemize}
 \tightlist
 \item
-  Non-linearity of data
-\item
-  Correlation of error terms
-\item
-  Non-constant variance of error terms
-\item
-  Non-Normality of error terms
-\item
-  Outliers
-\item
-  High leverage points
-\item
-  Collinearity
-\end{enumerate}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Recap of modelling assumptions in linear regression}
-
-\(~\)
-
-To make valid inference from our model, we must check if our model
-assumptions are
-fulfilled!\footnote{What is the problem if the assumptions are violated?}
-
-\(~\)
-
-The assumption in linear regression is that the residuals follow a
-\(N(0,\sigma^2)\) distribution, implying that :
-
-\(~\)
-
-\begin{enumerate}
-\item
-  The expected value of \(\varepsilon_i\) is 0:
-  \(\mathsf{E}(\varepsilon_i)=0\). \vspace{1mm}
-\item
-  All \(\varepsilon_i\) have the same variance:
-  \(\mathsf{Var}(\varepsilon_i)=\sigma^2\).\\
-  \vspace{1mm}
-\item
-  The \(\varepsilon_i\) are normally distributed. \vspace{1mm}
-\item
-  The \(\varepsilon_i\) are independent of each other.
-\end{enumerate}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Model checking tool I: Tukey-Anscombe diagram}
-
-\(~\)
-
-The \emph{\textcolor{red}{Tukey-Anscombe}} diagram plots the residuals
-against the fitted values. For the bodyfat data it looks like this:
-
-\(~\)
-
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-23-1} \end{center}
-
-\(~\)
-
-This plot is ideal to check if assumptions 1. and 2. (and partially 4.)
-are met. Here, this seems fine.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Model checking tool II: The QQ-diagram}
-
-\(~\)
-
-To check assumption 3., the quantiles of the observed distribution are
-plotted against the quantiles of the respective theoretical (normal)
-distribution:
-
-\(~\)
-
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-24-1} \end{center}
-
-\(~\)
-
-If the points lie approximately on a straight line, the data is fairly
-normally distributed. This is often ``tested'' by eye, and needs some
-experience.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Model checking tool III: The scale-location plot}
-
-\(~\)
-
-The scale-location plot is particularly suited to check the assumption
-of equal variances (homoscedasticity; assumption 2.).
-
-\(~\)
-
-The idea is to plot the square root of the (standardized) residuals
-\(\sqrt{|\tilde{r}_i|}\) against the fitted values \(\hat{y_i}\). There
-should be \emph{no trend}:
+  Binary covariates (e.g., male/female, smoker/non-smoker)
+\end{itemize}
 
 \vspace{2mm}
 
-\begin{center}\includegraphics[width=0.45\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-25-1} \end{center}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Model checking tool IV: The leverage plot}
-
-\(~\)
-
 \begin{itemize}
 \tightlist
 \item
-  Mainly useful to determine outliers.
+  Categorical covariates (e.g., black/white/green)?
 \end{itemize}
-
-\(~\)
-
-\begin{itemize}
-\tightlist
-\item
-  To understand the leverage plot, we need to introduce the idea of the
-  \textbf{leverage}.
-\end{itemize}
-
-\(~\)
-
-\begin{itemize}
-\tightlist
-\item
-  In simple regression, the leverage of individual \(i\) is defined as
-  \begin{equation}\label{eq:leverage}
-  H_{ii} = \frac{1}{n} + \frac{(x_i-\overline{x})^2}{\sum_{i'}(x_{i'}-\overline{x})^2} \ . 
-  \end{equation}
-\end{itemize}
-
-\vspace{7mm}
-
-\textbf{Q:} When are leverages expected to be large/small?
-
-\(~\)
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\textbf{Illustration}: Data points with \(x_i\) values far from the mean
-have a stronger leverage effect than when \(x_i\approx \overline{x}\):
-
-\begin{center}\includegraphics[width=0.9\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-26-1} \end{center}
-
-The outlier in the middle plot ``pulls'' the regression line in its
-direction and biases the slope.
-
-\(~\)
-
-\href{http://students.brown.edu/seeing-theory/regression-analysis/index.html}{Click here}
-to do it manually!
-
-\end{frame}
-
-\begin{frame}
-
-In the leverage plot, (standardized) residuals \(\tilde{r_i}\) are
-plotted against the leverage \(H_{ii}\) (still for the bodyfat):
-
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-27-1} \end{center}
-
-\textbf{Critical ranges} are the top and bottom right corners! Why?
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Leverages in multiple regression}
-
-\vspace{3mm}
-
-\begin{itemize}
-\tightlist
-\item
-  Leverage is defined as the diagonal elements of the so-called
-  \emph{hat matrix}
-  \(\mathbf{H}\)\footnote{Do you remember why $\mathbf{H}$ is called \emph{hat matrix}?},
-  i.e., the leverage of the \(i\)-th data point is \(H_{ii}\) on the
-  diagonal of \(\mathbf{H = X(X^TX)^{-1}X^T}\).
-\end{itemize}
-
-\vspace{1mm}
-
-\begin{itemize}
-\tightlist
-\item
-  Exercise: Verify that formula (4) comes out in the special case of
-  simple linear regression.
-\end{itemize}
-
-\vspace{1mm}
-
-\begin{itemize}
-\tightlist
-\item
-  A large leverage indicates that the observation (\(i\)) has a large
-  influence on the estimation results, and that the covariate values
-  (\({\boldsymbol x}_i\)) are unusual.
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Different types of residuals?}
-
-\(~\)
-
-It can be shown that the vector of residuals,
-\({\bf e}=(e_1,e_2,\ldots,e_n)\) have a normal (singular) distribution
-with
 
 \vspace{2mm}
 
 \begin{itemize}
 \tightlist
 \item
-  \(\mathsf{E}({\bf e})={\bf 0}\)
-\item
-  \(\mathsf{Cov}({\bf e})=\sigma^2({\bf I}-{\bf H})\),
+  Interaction terms
 \end{itemize}
 
 \vspace{2mm}
-
-where \({\bf H}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T\).
-
-\(~\)
-
-This means that the residuals (possibly) have different variance, and
-may also be correlated.
-
-\(~\)
-
-\textbf{Q:} Why is that a problem?
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\textbf{A}:
 
 \begin{itemize}
-\item
-  To check the model assumptions we want to look at the distribution of
-  the error terms \(\varepsilon_i\), to check that our errors are
-  independent, homoscedastic (same variance for each observation), and
-  not dependent on our covariates.
-\item
-  However, we only have the residuals \(e_i\), the ``predictions'' for
-  \(\epsilon_i\).
-\item
-  It would have been great if the \(e_i\) have the same properties as
-  \(\epsilon_i\).
-\end{itemize}
-
-\vspace{2mm}
-
-\(\rightarrow\) To make the \(e_i\) more ``like \(\epsilon_i\)'', we use
-\emph{\textcolor{red}{standardized}} or
-\emph{\textcolor{red}{studentized residuals}}.
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\textbf{Standardized residuals:}
-
-\[r_i=\frac{e_i}{\hat{\sigma}\sqrt{1-H_{ii}}}\] where \(H_{ii}\) is the
-\(i\)th diagonal element of the hat matrix \({\bf H}\).
-
-In R you can get the standardized residuals from an \texttt{lm}-object
-(named \texttt{fit}) by \texttt{rstandard(fit)}.
-
-\vspace{2mm}
-
-\textbf{Studentized residuals:}
-
-\[r^*_i=\frac{e_i}{\hat{\sigma}_{(i)}\sqrt{1-H_{ii}}}\] where
-\(\hat{\sigma}_{(i)}\) is the estimated error variance in a model with
-observation number \(i\) omitted. It can be shown that it is possible to
-calculated the studentized residuals directly from the standardized
-residuals.
-
-In R you can get the studentized residuals from an \texttt{lm}-object
-(named \texttt{fit}) by \texttt{rstudent(fit)}.
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\begin{block}{Diagnostic plots in \texttt{R}}
-
-\vspace{2mm}
-
-See exercises: We use \texttt{autoplot()} from the \texttt{ggfortify}
-package in R to plot the diagnostic plots.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Collinearity}
-
-\vspace{2mm}
-
-In brief, collinearity refers to the situation when two or more
-predictors are correlated, thus encode (partially) for the same
-information.
-
-\(~\)
-
-\textbf{Problems:}
-
-\begin{itemize}
-\item
-  Reduces the accuracy of the estimated coefficients \(\hat\beta_j\)
-  (large SE!).
-\item
-  Consequently, reduces power in finding effects (\(p\)-values become
-  larger).
-\end{itemize}
-
-\(~\)
-
-\textbf{Solutions:}
-
-\begin{itemize}
-\item
-  Detect it by calculating the \emph{variance inflation factor} (VIF).
-\item
-  Remove the problematic variable.
-\item
-  Or combine the collinear variables into a single new one.
-\end{itemize}
-
-\(~\)
-
-\textbf{Todo:} Read in the course book p.99-102 (self-study).
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}{Other considerations in the regression model}
-\protect\hypertarget{other-considerations-in-the-regression-model}{}
-
-\begin{enumerate}
 \tightlist
 \item
-  Qualitative predictors (\(X_j\)):
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Binary covariate (e.g., male/female, smoker/non-smoker)
-  \item
-    Categorical covariate (e.g., black/white/green)?
-  \end{itemize}
-\end{enumerate}
-
-\vspace{4mm}
-
-\begin{enumerate}
-\setcounter{enumi}{1}
-\tightlist
-\item
-  Extensions of the linear model
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Interactions
-  \item
-    Non-linear terms
-  \end{itemize}
-\end{enumerate}
+  Non-linear terms
+\end{itemize}
 
 \end{frame}
 
@@ -2974,6 +2660,8 @@ therefore reduced by \(k-1\).
 We are now using the \texttt{Credit} dataset from the \texttt{ISLR}
 library.
 
+\(~\)
+
 \scriptsize
 
 \begin{Shaded}
@@ -3001,6 +2689,8 @@ library.
 ## 6 Caucasian    1151
 \end{verbatim}
 
+\(~\)
+
 \normalsize
 
 Question: Do the Balances differ for different Ethnicities?
@@ -3011,50 +2701,65 @@ Question: Do the Balances differ for different Ethnicities?
 
 \begin{frame}[fragile]
 
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(GGally)}
+\KeywordTok{ggpairs}\NormalTok{(Credit[, }\KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{11}\NormalTok{, }\DecValTok{12}\NormalTok{)], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{colour =}\NormalTok{ Ethnicity))}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.85\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-26-1}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
 In R, a factor covariate can be used in the same way as a continuous
 predictor:
+
+\(~\)
 
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{r.lm <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(Balance }\OperatorTok{~}\StringTok{ }\NormalTok{Ethnicity, }\DataTypeTok{data =}\NormalTok{ Credit)}
-\KeywordTok{summary}\NormalTok{(r.lm)}
+\KeywordTok{summary}\NormalTok{(r.lm)}\OperatorTok{$}\NormalTok{coef}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## 
-## Call:
-## lm(formula = Balance ~ Ethnicity, data = Credit)
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -531.00 -457.08  -63.25  339.25 1480.50 
-## 
-## Coefficients:
-##                    Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)          531.00      46.32  11.464   <2e-16 ***
-## EthnicityAsian       -18.69      65.02  -0.287    0.774    
-## EthnicityCaucasian   -12.50      56.68  -0.221    0.826    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## Residual standard error: 460.9 on 397 degrees of freedom
-## Multiple R-squared:  0.0002188,  Adjusted R-squared:  -0.004818 
-## F-statistic: 0.04344 on 2 and 397 DF,  p-value: 0.9575
+##                     Estimate Std. Error    t value     Pr(>|t|)
+## (Intercept)        531.00000   46.31868 11.4640565 1.774117e-26
+## EthnicityAsian     -18.68627   65.02107 -0.2873880 7.739652e-01
+## EthnicityCaucasian -12.50251   56.68104 -0.2205766 8.255355e-01
 \end{verbatim}
+
+\(~\)
 
 \normalsize
 
 Interpretation? Do the ethnicities really differ? Check also the
 \(F\)-test in the last line of the summary output.
 
+\(~\)
+
+\begin{equation*}
+\hat{y}_i = \left\{
+\begin{array}{ll}
+\qquad \qquad\qquad \qquad\qquad & \text{if $i$ is Asian}\\[2mm]
+\qquad \qquad\qquad \qquad\qquad & \text{if $i$ is Caucasian}\\[2mm]
+\qquad \qquad\qquad \qquad\qquad & \text{if $i$ is Afro-American}\\
+\end{array}\right.
+\end{equation*}
+
 \end{frame}
 
 \begin{frame}[fragile]
 
-\begin{block}{The ``reference category''}
+\begin{block}{Sidenote: The ``reference category''}
 
 \vspace{2mm}
 
@@ -3076,6 +2781,8 @@ In the above example we do not see a result for the
   You can change the reference category:
 \end{itemize}
 
+\(~\)
+
 \scriptsize
 
 \begin{Shaded}
@@ -3093,6 +2800,8 @@ In the above example we do not see a result for the
 ## EthnicityAfrican American  12.502513   56.68104  0.2205766 8.255355e-01
 ## EthnicityAsian             -6.183762   56.12165 -0.1101850 9.123184e-01
 \end{verbatim}
+
+\vspace{2mm}
 
 \small
 
@@ -3128,6 +2837,8 @@ as \textbf{always when we test for more than one \(\beta_j=0\)
 \vspace{2mm}
 
 In R, this is done by the \texttt{anova()} function:
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -3174,13 +2885,21 @@ looks like \begin{equation*}
 \right.
 \end{equation*}
 
-In R, we simply add \texttt{Student} to the model: \scriptsize
+\vspace{2mm}
+
+In R, we simply add \texttt{Student} to the model:
+
+\vspace{2mm}
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{r.lm <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(Balance }\OperatorTok{~}\StringTok{ }\NormalTok{Income }\OperatorTok{+}\StringTok{ }\NormalTok{Student, Credit)}
 \end{Highlighting}
 \end{Shaded}
+
+\(~\)
 
 \normalsize
 
@@ -3248,6 +2967,8 @@ In R, this is again quite simple:
 ## StudentYes        476.675843 104.3512235  4.567995 6.586095e-06
 ## Income:StudentYes  -1.999151   1.7312511 -1.154743 2.488919e-01
 \end{verbatim}
+
+\(~\)
 
 \normalsize
 
@@ -3393,6 +3114,390 @@ it can sometimes help to use transformations of a variable \(X\).
 
 \(\rightarrow\) In the later modules, we will discuss other more
 advanced non-linear approaches for addressing this issue.
+
+\end{frame}
+
+\begin{frame}{Challenges - for model fit}
+\protect\hypertarget{challenges---for-model-fit}{}
+
+\(~\)
+
+\begin{enumerate}
+\tightlist
+\item
+  Non-linearity of data
+\item
+  Correlation of error terms
+\item
+  Non-constant variance of error terms
+\item
+  Non-Normality of error terms
+\item
+  Outliers
+\item
+  High leverage points
+\item
+  Collinearity
+\end{enumerate}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Recap of modelling assumptions in linear regression}
+
+\(~\)
+
+To make valid inference from our model, we must check if our model
+assumptions are
+fulfilled!\footnote{What is the problem if the assumptions are violated?}
+
+\(~\)
+
+The assumption in linear regression is that the residuals follow a
+\(N(0,\sigma^2)\) distribution, implying that :
+
+\(~\)
+
+\begin{enumerate}
+\item
+  The expected value of \(\varepsilon_i\) is 0:
+  \(\mathsf{E}(\varepsilon_i)=0\). \vspace{1mm}
+\item
+  All \(\varepsilon_i\) have the same variance:
+  \(\mathsf{Var}(\varepsilon_i)=\sigma^2\).\\
+  \vspace{1mm}
+\item
+  The \(\varepsilon_i\) are normally distributed. \vspace{1mm}
+\item
+  The \(\varepsilon_i\) are independent of each other.
+\end{enumerate}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Model checking tool I: Tukey-Anscombe diagram}
+
+\(~\)
+
+The \emph{\textcolor{red}{Tukey-Anscombe}} diagram plots the residuals
+against the fitted values. For the bodyfat data it looks like this:
+
+\(~\)
+
+\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-32-1} \end{center}
+
+\(~\)
+
+This plot is ideal to check if assumptions 1. and 2. (and partially 4.)
+are met. Here, this seems fine.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Model checking tool II: The QQ-diagram}
+
+\(~\)
+
+To check assumption 3., the quantiles of the observed distribution are
+plotted against the quantiles of the respective theoretical (normal)
+distribution:
+
+\(~\)
+
+\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-33-1} \end{center}
+
+\(~\)
+
+If the points lie approximately on a straight line, the data is fairly
+normally distributed. This is often ``tested'' by eye, and needs some
+experience.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Model checking tool III: The scale-location plot}
+
+\(~\)
+
+The scale-location plot is particularly suited to check the assumption
+of equal variances (homoscedasticity; assumption 2.).
+
+\(~\)
+
+The idea is to plot the square root of the (standardized) residuals
+\(\sqrt{|\tilde{r}_i|}\) against the fitted values \(\hat{y_i}\). There
+should be \emph{no trend}:
+
+\vspace{2mm}
+
+\begin{center}\includegraphics[width=0.45\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-34-1} \end{center}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Model checking tool IV: The leverage plot}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Mainly useful to determine outliers.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  To understand the leverage plot, we need to introduce the idea of the
+  \textbf{leverage}.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  In simple regression, the leverage of individual \(i\) is defined as
+  \begin{equation}\label{eq:leverage}
+  H_{ii} = \frac{1}{n} + \frac{(x_i-\overline{x})^2}{\sum_{i'}(x_{i'}-\overline{x})^2} \ . 
+  \end{equation}
+\end{itemize}
+
+\vspace{7mm}
+
+\textbf{Q:} When are leverages expected to be large/small?
+
+\(~\)
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\textbf{Illustration}: Data points with \(x_i\) values far from the mean
+have a stronger leverage effect than when \(x_i\approx \overline{x}\):
+
+\begin{center}\includegraphics[width=0.9\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-35-1} \end{center}
+
+The outlier in the middle plot ``pulls'' the regression line in its
+direction and biases the slope.
+
+\(~\)
+
+\href{http://students.brown.edu/seeing-theory/regression-analysis/index.html}{http://students.brown.edu/seeing-theory/regression-analysis/index.html}
+to do it manually!
+\footnote{You may choose "Ordinary Least Squares" and then click on "I" for the Ascombe quartett example. Drag points to see what happens with the regression line.}
+
+\end{frame}
+
+\begin{frame}
+
+In the leverage plot, (standardized) residuals \(\tilde{r_i}\) are
+plotted against the leverage \(H_{ii}\) (still for the bodyfat):
+
+\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-36-1} \end{center}
+
+\textbf{Critical ranges} are the top and bottom right corners! Why?
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Leverages in multiple regression}
+
+\vspace{3mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Leverage is defined as the diagonal elements of the so-called
+  \emph{hat matrix}
+  \(\mathbf{H}\)\footnote{Do you remember why $\mathbf{H}$ is called \emph{hat matrix}?},
+  i.e., the leverage of the \(i\)-th data point is \(H_{ii}\) on the
+  diagonal of \(\mathbf{H = X(X^TX)^{-1}X^T}\).
+\end{itemize}
+
+\vspace{40mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Exercise: Verify that formula (4) comes out in the special case of
+  simple linear regression.
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
+\item
+  A large leverage indicates that the observation (\(i\)) has a large
+  influence on the estimation results, and that the covariate values
+  (\({\boldsymbol x}_i\)) are unusual.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Different types of residuals?}
+
+\(~\)
+
+It can be shown that the vector of residuals,
+\({\bf e}=(e_1,e_2,\ldots,e_n)\) have a normal (singular) distribution
+with
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  \(\mathsf{E}({\bf e})={\bf 0}\)
+\item
+  \(\mathsf{Cov}({\bf e})=\sigma^2({\bf I}-{\bf H})\),
+\end{itemize}
+
+\vspace{2mm}
+
+where \({\bf H}={\bf X}({\bf X}^T{\bf X})^{-1}{\bf X}^T\).
+
+\(~\)
+
+This means that the residuals (possibly) have different variance, and
+may also be correlated.
+
+\(~\)
+
+\textbf{Q:} Why is that a problem?
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\textbf{A}:
+
+\begin{itemize}
+\item
+  To check the model assumptions we want to look at the distribution of
+  the error terms \(\varepsilon_i\), to check that our errors are
+  independent, homoscedastic (same variance for each observation), and
+  not dependent on our covariates.
+\item
+  However, we only have the residuals \(e_i\), the ``predictions'' for
+  \(\epsilon_i\).
+\item
+  It would have been great if the \(e_i\) have the same properties as
+  \(\epsilon_i\).
+\end{itemize}
+
+\vspace{2mm}
+
+\(\rightarrow\) To make the \(e_i\) more ``like \(\epsilon_i\)'', we use
+\emph{\textcolor{red}{standardized}} or
+\emph{\textcolor{red}{studentized residuals}}.
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\textbf{Standardized residuals:}
+
+\[\tilde{r}_i=\frac{e_i}{\hat{\sigma}\sqrt{1-H_{ii}}}\] where \(H_{ii}\)
+is the \(i\)th diagonal element of the hat matrix \({\bf H}\).
+
+In R you can get the standardized residuals from an \texttt{lm}-object
+(named \texttt{fit}) by \texttt{rstandard(fit)}.
+
+\vspace{2mm}
+
+\textbf{Studentized residuals:}
+
+\[r^*_i=\frac{e_i}{\hat{\sigma}_{(i)}\sqrt{1-H_{ii}}}\] where
+\(\hat{\sigma}_{(i)}\) is the estimated error variance in a model with
+observation number \(i\) omitted. It can be shown that it is possible to
+calculated the studentized residuals directly from the standardized
+residuals.
+
+In R you can get the studentized residuals from an \texttt{lm}-object
+(named \texttt{fit}) by \texttt{rstudent(fit)}.
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Diagnostic plots in \texttt{R}}
+
+\vspace{2mm}
+
+See exercises: We use \texttt{autoplot()} from the \texttt{ggfortify}
+package in R to plot the diagnostic plots.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Collinearity}
+
+\vspace{2mm}
+
+In brief, collinearity refers to the situation when two or more
+predictors are correlated, thus encode (partially) for the same
+information.
+
+\(~\)
+
+\textbf{Problems:}
+
+\begin{itemize}
+\item
+  Reduces the accuracy of the estimated coefficients \(\hat\beta_j\)
+  (large SE!).
+\item
+  Consequently, reduces power in finding effects (\(p\)-values become
+  larger).
+\end{itemize}
+
+\(~\)
+
+\textbf{Solutions:}
+
+\begin{itemize}
+\item
+  Detect it by calculating the \emph{variance inflation factor} (VIF).
+\item
+  Remove the problematic variable.
+\item
+  Or combine the collinear variables into a single new one.
+\end{itemize}
+
+\(~\)
+
+\textbf{Todo:} Read in the course book p.99-102 (self-study).
+
+\end{block}
 
 \end{frame}
 

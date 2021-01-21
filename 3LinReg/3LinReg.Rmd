@@ -34,7 +34,7 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 ---
 
-Last update: January 19, 2021
+Last update: January 25, 2021
 
 ---
 
@@ -996,15 +996,24 @@ $${\bf Y}={\bf {X}} \boldsymbol{\beta}+{\boldsymbol{\varepsilon}} $$
 ---
 
 ## Notation
+
 $~$
 
-* ${\bf Y}: (n \times 1)$ vector of responses [e.g. one of the following: rent, weight of baby, pH of a lake, volume of a tree]
+* ${\bf Y}: (n \times 1)$ vector of responses (e.g., bodyfat).
 
-* ${\bf X}: (n \times (p+1))$ design matrix, and ${\boldsymbol x}_i^T$ is a $(p+1)$-dimensional row row vector for observation $i$.
+\vspace{2mm}
+
+* ${\bf X}: (n \times (p+1))$ design matrix, and ${\boldsymbol x}_i^T$ is a $(p+1)$-dimensional row vector for observation $i$.
+
+\vspace{2mm}
 
 * ${\boldsymbol \beta}: ((p+1) \times 1)$ vector of regression parameters $(\beta_0,\beta_1,\ldots,\beta_p)^\top$.
 
+\vspace{2mm}
+
 * ${\boldsymbol \varepsilon}: (n\times 1)$ vector of random errors.
+
+\vspace{2mm}
 
 * We assume that pairs $({\boldsymbol x}_i^T,y_i)$ $(i=1,...,n)$ are measured from _independent_ sampling units. 
 
@@ -1018,13 +1027,20 @@ Remark: other books, including the book in TMA4267 and TMA4315 define $p$ to inc
 
 ## Classical linear model
 
+$~$
+
 $${\bf Y=X \boldsymbol\beta}+{\boldsymbol \varepsilon}$$
 
 Assumptions:
+\vspace{2mm}
 
 1. $\mathsf{E}(\boldsymbol{\varepsilon})=\boldsymbol{0}$.
+\vspace{2mm}
 2. $\mathsf{Cov}(\boldsymbol{\varepsilon})=\mathsf{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\boldsymbol{I}$.
+\vspace{2mm}
 3. The design matrix has full rank, $\text{rank}({\bf X})=p+1$. (We assume $n>>(p+1)$.)
+
+\vspace{2mm}
 
 The classical _normal_ linear regression model is obtained if additionally
 
@@ -1037,14 +1053,40 @@ The classical _normal_ linear regression model is obtained if additionally
 
 ---
 
-## Design matrix: Getting it in R
+## The bodyfat example for two predictors
+
+$~$
+
+
+We are looking at the regression model 
+
+\begin{equation*}
+Y = \beta_0 + \beta_{1}  X_1 + \beta_2 X_1  + \varepsilon \ ,
+\end{equation*}
+
+with bodyfat as the response ($Y$) and `bmi` and `age` as $X_1$ and $X_2$.
+
+$~$
+
+\normalsize
+The regression
 
 \scriptsize
+
 ```{r}
 r.bodyfat=lm(bodyfat ~  bmi + age ,data=d.bodyfat)
+```
+
+$~$
+
+\normalsize
+
+The _\textcolor{red}{design matrix}_:
+
+\scriptsize
+
+```{r}
 head(model.matrix(r.bodyfat))
-head(d.bodyfat$bmi)
-head(d.bodyfat$age)
 ```
 \normalsize
 
@@ -1094,7 +1136,9 @@ The estimator is found by solving the system of $(p+1)$ equations
 
 $$\frac{\partial \text{RSS}}{\partial \boldsymbol \beta}={\bf 0} \ .$$ 
 
-$\rightarrow$ Derivation on the board. See also [here](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/LeastSquaresMLR.pdf) (from Mette in TMA4267).
+$\rightarrow$ Derivation on the board. 
+
+<!-- See also [here](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/LeastSquaresMLR.pdf) (from Mette in TMA4267). -->
 
 ---
 
@@ -1120,6 +1164,8 @@ summary(r.bodyfat3)
 ---
 
 Reproduce the values under `Estimate` by calculating without the use of `lm`.
+
+$~$
 
 \scriptsize
 ```{r}
@@ -1179,9 +1225,11 @@ $$\hat{\boldsymbol\beta}\sim N_{p+1}(\boldsymbol{\beta},\underbrace{\sigma^2({\b
 
 ### The covariance matrix of $\boldsymbol{\hat\beta}$ in R
 
-\vspace{2mm}
+$~$
 
 The covariance matrix for the $\boldsymbol{\hat\beta}$ can be obtained as follows:
+
+$~$
 
 \scriptsize
 ```{r}
@@ -1268,7 +1316,7 @@ $$F = \frac{(\text{TSS}-\text{RSS})/p}{\text{RSS}/(n-p-1)} \sim F_{p,(n-p-1)}\ ,
 
 where total sum of squares $\text{TSS}=\sum_i(y_i-\bar{y})^2$, and residual sum of squares $\text{RSS}=\sum_i(y_i-\hat{y}_i)^2$. Under the Normal regression assumptions, $F$ follows an $F_{p,(n-p-1)}$ distribution (see @walepole.etal, Chapter 8.7).
 
-* If $H_0$ is true, $F$ is expected to be 1.
+* If $H_0$ is true, $F$ is expected to be $\approx 1$.
 
 * Otherwise, we expect that the numerator is larger than the denominator (because the regression then explains a lot of variation) and thus $F$ is greater than 1. For an observed value $f_0$, the $p$-value is given as
 $$p =P(F_{p,n-p-1}> f_0) \ .$$
@@ -1277,10 +1325,14 @@ $$p =P(F_{p,n-p-1}> f_0) \ .$$
 
 Checking the $F$-value in the `R` output:
 
+$~$
+
 \scriptsize
 ```{r}
 summary(r.bodyfat)
 ```
+
+$~$
 
 \normalsize
 Conclusion?
@@ -1355,13 +1407,18 @@ thus we can use a $T$-statistics with $(n-p-1)$ degrees of freedom to get the $p
 
 Going back again:
 
+$~$
+
 \footnotesize
 ```{r}
 summary(r.bodyfat)$coef
 ```
 \normalsize
 
-However:
+
+$~$
+
+**However**:
 
 * Only checking the individual $p$-values is dangerous. **Why?**  
 <!-- $\rightarrow$ e.g., multiple testing problem. -->
@@ -1377,13 +1434,12 @@ $~$
 
 * Using that 
 $$ T_j=\frac{\hat{\beta}_j}{\text{SE}(\hat\beta_j)}\sim t_{n-p-1} \ ,$$
-we can create confidence intervals for $\beta_j$ in the same manner as we did for simple linear regression (see slide 43). For example, when using the typical confidence level $\alpha=0.05$ we have
+we can create confidence intervals for $\beta_j$ in the same manner as we did for simple linear regression (see slide 41). For example, when using the typical confidence level $\alpha=0.05$ we have
 
 $$\hat{\beta}_j \pm t_{0.975,n-p-2} \cdot\text{SE} (\hat{\beta}_j)  \ .$$
 
-* Using R, this is very easy:
 
-\vspace{2mm}
+\vspace{4mm}
 
 \footnotesize
 ```{r}
@@ -1445,6 +1501,8 @@ Simply speaking: "The higher $R^2$, the better."
 $~$
 
 Let us look at the $R^2$s from the three bodyfat models
+
+\vspace{2mm}
 
 model 1: $y\sim bmi$
 
@@ -1517,7 +1575,7 @@ $~$
 
 $\rightarrow$ We can use $\hat\beta_0, \ldots , \hat\beta_p$ to estimate the _least squares plane_
 $$\hat{Y} = \hat\beta_0 + \hat\beta_1 X_1 + \ldots + \hat\beta_p X_p $$
- as an approximation of $f(X) = \beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p.$
+ as an approximation of $f(X) = \beta_0 + \beta_1 X_1 + \ldots + \beta_p X_p .$
 This leads to the _\textcolor{red}{confidence interval}_. 
 
 \vspace{4mm}
@@ -1526,7 +1584,7 @@ This leads to the _\textcolor{red}{confidence interval}_.
 
 \vspace{2mm}
 
-$\rightarrow$ Even if we could predict $\hat{Y}=f(X)$, the _true_ value $Y$ varies around $\hat{Y}$. We can compute a _\textcolor{red}{prediction interval}_ for new observations $Y$.
+$\rightarrow$ Even if we could predict $\hat{Y}=f(X)$, the _true_ value $Y = f(X) + \varepsilon$ varies around $\hat{Y}$. We can compute a _\textcolor{red}{prediction interval}_ for new observations $Y$.
 
 
 ---
@@ -1566,17 +1624,14 @@ Note: The prediction range is much broader than the confidence range. Why?
 
 $~$ 
 
-Given a realization of $X_1, \ldots ,X_p$, say $x_1^{(0)}, \ldots x_p^{(0)}$. The question is:  
-
-$~$ 
-
- 
+* Given a realization of $X_1, \ldots ,X_p$, say $x_1^{(0)}, \ldots x_p^{(0)}$. The question is:  
+\vspace{2mm}
 **Where does $\hat y_0 = \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}$ lie with a certain confidence (i.e., 95\%)?**
 
 
 \vspace{6mm} 
 
-This question is not trivial, because $\hat\beta_0, \ldots \hat\beta_p$ are estimates from the data and contain uncertainty. 
+* This question is not trivial, because $\hat\beta_0, \ldots \hat\beta_p$ are estimates from the data and contain uncertainty. 
 
 $~$ 
 
@@ -1588,7 +1643,7 @@ $~$
 
 \vspace{4mm}
 
-$\rightarrow$ For the confidence range, only the uncertainty in the estimates $\hat\beta_0, \ldots \hat\beta_p$ matters.
+* For the confidence range, only the uncertainty in the estimates $\hat\beta_0, \ldots \hat\beta_p$ matters.
 
 
 
@@ -1599,24 +1654,22 @@ $\rightarrow$ For the confidence range, only the uncertainty in the estimates $\
 
 $~$ 
 
-Given a new value of $X_1, \ldots, X_p$, say $x_1^{(0)}, \ldots x_p^{(0)}$. The question is:  
-
-$~$ 
-
-**Where does a future observation lie with a certain confidence (i.e., 95\%)?**
+* Given a new value of $X_1, \ldots, X_p$, say $x_1^{(0)}, \ldots x_p^{(0)}$. The question is:  
+\vspace{2mm}
+**Where does a future observation $y_0$ lie with a certain confidence (i.e., 95\%)?**
 
 \vspace{6mm} 
 
-To answer this question, we have to sum uncertainty over two components:
+* To answer this question, we have to sum uncertainty over two components:
 
-1. the _\textcolor{red}{uncertainty in the predicted value}_ $\hat y_0 =  \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}$ (due to uncertainty in $\hat{\boldsymbol\beta}$).
+    1. the _\textcolor{red}{uncertainty in the predicted value}_ $\hat y_0 =  \hat\beta_0 + \hat\beta_1 x_1^{(0)} + \ldots \hat\beta_p x_p^{(0)}$ (due to uncertainty in $\hat{\boldsymbol\beta}$).
 
-2. the _\textcolor{red}{irreducible error}_ $\varepsilon_i \sim N(0,\sigma^2)$.  
+    2. the _\textcolor{red}{irreducible error}_ $\varepsilon_0 \sim N(0,\sigma^2)$.  
 
 
 \vspace{4mm}
 
-$\rightarrow$ The *prediction intervals and range are always wider than the confidence intervals and range*.
+* The *prediction intervals and range are always wider than the confidence intervals and range*.
 
 
 ---
@@ -1629,6 +1682,9 @@ $~$
 ```{r}
 fit=lm(bodyfat ~ bmi + age + abdomen,data=d.bodyfat)
 newobs=d.bodyfat[1,]
+```
+
+```{r}
 predict(fit,newdata=newobs,interval="confidence",type="response")
 predict(fit,newdata=newobs,interval="prediction",type="response")
 ```
@@ -1658,12 +1714,419 @@ made by George Box in his often-cited remark that
 
 [@box1979]
 
+---
+
+# Extensions of the linear model
+
+Extensions that make the linear model very powerful:
+
+$~$
+
+* Binary covariates (e.g., male/female, smoker/non-smoker) 
+
+\vspace{2mm}
+
+* Categorical covariates (e.g., black/white/green)?
+
+\vspace{2mm}
+
+* Interaction terms
+
+\vspace{2mm}
+
+* Non-linear terms
 
 
 
 ---
 
-## Challenges - for model fit
+
+## Binary predictors
+
+$~$
+
+So far, the covariates $X$ were always continuous.  
+\vspace{2mm}
+
+In reality, there are no restrictions assumed with respect to the $X$ variables. 
+\vspace{2mm}
+
+One very frequent data type are **binary** variables, that is, variables that can only attain values 0 or 1. 
+\vspace{4mm}
+
+If the binary variable $x$ is the only variable in the model $Y_i = \beta_0 + \beta_1 x_i + \varepsilon_i$, the model has only two predicted outcomes (plus error):
+
+\begin{equation*}
+Y_i = \left\{ 
+\begin{array}{ll}
+ \beta_0  + \varepsilon_i \quad &\text{if } x_i=0 \ , \\
+ \beta_0 + \beta_1 + \varepsilon_i \quad &\text{if } x_i =1 \ .\\
+\end{array}
+\right .
+\end{equation*}
+
+\vspace{4mm}
+
+**Example**: Credit card data analysis in Section 3.3.1 in the ISLR book.
+
+
+---
+
+## Qualitative predictors with more than 2 levels
+
+$~$
+ 
+More generally, a covariate may indicate a **category**, for instance the species of an animal or a plant. This type of covariate is called a **factor**. The trick: convert a factor variable $X$ with $k$ levels (for instance 3 species) into $k$ dummy variables $X_j$ with 
+\vspace{2mm}
+
+\begin{equation*}
+x_{ij} = \left\{ 
+\begin{array} {ll}
+1, & \text{if the $i$th observation belongs to group $j$}.\\
+0, & \text{otherwise.}
+\end{array}\right.
+\end{equation*}
+
+
+\vspace{4mm}
+
+Each of the covariates $x_1,\ldots, x_k$ can then be included as a binary variable in the model
+\begin{equation*}
+y_i = \beta_0 + \beta_1 x_1 + \ldots + \beta_k x_k + \varepsilon_i \ .
+\end{equation*}
+
+\vspace{6mm}
+However:  this model is _\textcolor{red}{not identifiable}_.\footnote{What does that mean? I could add a constant to $\beta_1, \beta_2, ...\beta_k$ and subtract it from $\beta_0$, and the model would fit equally well to the data, so it cannot be decided which set of the parameters is best.}
+
+---
+
+**Solution:** One of the $k$ categories must be selected as a _reference category_ and is _not included in the model_. Typically: the first category is the reference, thus $\beta_1=0$.
+
+\vspace{2mm}
+
+
+The model thus discriminates between the factor levels, such that (assuming $\beta_1=0$)
+
+\begin{equation*}
+y_i = \left\{
+\begin{array}{ll}
+\beta_0 + \varepsilon, & \text{if $x_{i1}=1$ }\\
+\beta_0 + \beta_2 + \varepsilon, & \text{if $x_{i2}=1$ }\\
+...\\
+\beta_0 + \beta_k + \varepsilon, & \text{if $x_{ik}=1$ } \ .
+\end{array}\right.
+\end{equation*} 
+
+---
+
+## !Important to remember!
+\textcolor{gray}{(Common aspect that leads to confusion!)}
+
+\vspace{10mm}
+
+ _\textcolor{red}{A factor covariate with $k$ factor levels requires $k-1$ parameters!}_
+\vspace{2mm}
+
+$\rightarrow$ The _degrees of freedom_ of the fitted model are therefore reduced by $k-1$.
+
+
+---
+
+## Example
+
+$~$
+
+We are now using the `Credit` dataset from the `ISLR` library.
+
+$~$
+
+\scriptsize
+```{r, echo=T}
+library(ISLR)
+data(Credit)
+head(Credit)
+```
+
+
+$~$
+
+\normalsize
+Question: Do the Balances differ for different Ethnicities?
+
+---
+
+\scriptsize
+
+```{r,out.width='85%',fig.height=4,fig.width=5}
+library(GGally)
+ggpairs(Credit[,c(2,6,11,12)],aes(colour=Ethnicity))
+```
+
+
+---
+
+In R, a factor covariate can be used in the same way as a continuous predictor:
+
+$~$
+
+\scriptsize
+```{r, echo=T}
+r.lm <- lm(Balance ~ Ethnicity, data=Credit)
+summary(r.lm)$coef
+```
+
+$~$
+
+\normalsize
+Interpretation? Do the ethnicities really differ? Check also the $F$-test in the last line of the summary output.
+
+$~$
+
+\begin{equation*}
+\hat{y}_i = \left\{
+\begin{array}{ll}
+\qquad \qquad\qquad \qquad\qquad & \text{if $i$ is Asian}\\[2mm]
+\qquad \qquad\qquad \qquad\qquad & \text{if $i$ is Caucasian}\\[2mm]
+\qquad \qquad\qquad \qquad\qquad & \text{if $i$ is Afro-American}\\
+\end{array}\right.
+\end{equation*}
+
+---
+
+## Sidenote: The "reference category"
+\vspace{2mm}
+In the above example we do not see a result for the `EthnicityAfrican American`. Why?
+
+* `African American` is chosen to be the reference category.
+* The results for `EthnicityAsian` and `EthnicityCaucasian` are **differences** with respect to the reference cateogry.
+* R chooses the reference category in alphabetic order! This is sometimes not a relevant category. 
+* You can change the reference category:
+
+$~$
+
+\scriptsize
+```{r, echo=T}
+library(dplyr)
+Credit <-  mutate(Credit,Ethnicity = relevel(Ethnicity,ref="Caucasian"))
+r.lm <- lm(Balance ~ Ethnicity, data=Credit)
+summary(r.lm)$coef
+```
+
+\vspace{2mm}
+
+\small
+Note: The differences are now with respect to the Caucasian category -- the model is however exactly the same!
+
+---
+
+## Testing for a categorical predictor
+
+\vspace{2mm}
+
+**Question**: Is a qualitative predictor needed in the model?
+
+\vspace{2mm}
+
+For a predictor with more than two levels (like Ethnicity above), the Null Hypothesis is whether
+
+$$\beta_1 = \ldots = \beta_{k-1}=0$$
+at the same time. 
+
+\vspace{2mm}
+
+$\rightarrow$ We again need the $F$-test\footnote{remember that the $F$-test is a generalization of the $t$-test!}, as **always when we test for more than one $\beta_j=0$ _simultaneously_**!
+
+\vspace{2mm}
+In R, this is done by the `anova()` function:
+
+\vspace{2mm}
+
+\scriptsize
+```{r, echo=T}
+anova(r.lm)
+```
+
+---
+
+## Interactions: Removing the additivity assumption
+\vspace{2mm}
+
+We again look at the `Credit` dataset. We want to model the `Balance` as a function of `Income` and wheter the person is a student or not.
+
+\vspace{2mm}
+
+The model is given as 
+$$\text{Balance}_i = \beta_0 + \beta_1 \cdot \text{Income}_i + \beta_2 \cdot \text{Student}_i + \varepsilon_i \ ,$$
+where `Student` is a binary variable. Thus we have a model that looks like
+\begin{equation*}
+\text{Balance}_i = \left\{ 
+\begin{array}{ll}
+\beta_0 + \beta_2 + \beta_1 \cdot \text{Income}_i  + \varepsilon_i \ ,  & \text{if $i$ is a student,}\\
+\beta_0 + \qquad \; \beta_1 \cdot \text{Income}_i  + \varepsilon_i  & \text{otherwise.}
+\end{array}
+\right.
+\end{equation*}
+
+\vspace{2mm}
+
+In R, we simply add `Student` to the model:
+
+\vspace{2mm}
+
+\scriptsize
+```{r, echo=T}
+r.lm <- lm(Balance ~ Income + Student, Credit)
+```
+
+$~$
+
+\normalsize
+
+**Caveat:** This model assumes that students and non-students have the same slope for `Income`. Realistic?
+
+---
+
+Let's look at the graphs:
+
+![ISLR Figure 3.7](../../ISLR/Figures/Chapter3/3.7.png)
+
+$\rightarrow$ We want a model that allows for different slopes!
+
+---
+
+## Interaction terms
+\vspace{2mm}
+
+We formulate a new model that includes the interaction term $(\text{Income}\cdot \text{Student})$:
+
+$$\text{Balance}_i = \beta_0 + \beta_1 \cdot \text{Income}_i + \beta_2 \cdot \text{Student}_i + \beta_3 \cdot \text{Income}_i \cdot \text{Student}_i  + \varepsilon_i \ ,$$
+
+Thus we have a model that allows for different intercept _and_ slope for the two groups:
+
+\begin{equation*}
+\text{Balance}_i = \left\{ 
+\begin{array}{ll}
+\beta_0 + \beta_2 + (\beta_1 + \beta_3) \cdot \text{Income}_i  + \varepsilon_i \ ,  & \text{if $i$ is a student,}\\
+\beta_0 + \qquad \; \beta_1 \cdot \text{Income}_i  + \varepsilon_i  & \text{otherwise.}
+\end{array}
+\right.
+\end{equation*}
+
+
+---
+
+In R, this is again quite simple:
+
+\scriptsize
+```{r, echo=T}
+r.lm <- lm(Balance ~ Income * Student, Credit)
+summary(r.lm)$coef
+```
+
+$~$
+
+\normalsize
+
+**Interpretation:**
+
+We allow the model to depend on the binary variable `Student`, such that
+
+For a student: $\hat{y} =$ `r round(summary(r.lm)$coef[1,1],1)` +  `r round(summary(r.lm)$coef[3,1],1)` + (`r round(summary(r.lm)$coef[2,1],1)` + `r format(summary(r.lm)$coef[4,1],1,1,1)`) $\cdot$ Income 
+
+For a non-Student: $\hat{y} =$ `r round(summary(r.lm)$coef[1,1],1)`  + (`r round(summary(r.lm)$coef[2,1],1)`) $\cdot$ Income 
+
+\vspace{2mm}
+
+**Question:** Is the interaction relevant here?
+
+
+---
+
+## The hierarchical principle
+
+$~$
+
+If we include an interaction in a model, we
+should also include the main effects, even if the $p$-values associated with
+the coefficients of the main effects are large (see p.89 in ISLR book).
+
+---
+
+## More interactions
+
+\vspace{4mm}
+
+We can include interactions also between
+
+* two continuous variables.
+* a categorical variable with more than 2 levels and a continuous variable.
+
+\vspace{4mm}
+
+$\rightarrow$ See exercises!
+
+\vspace{4mm}
+
+
+---
+
+
+## Non-linear terms
+\vspace{2mm}
+
+**Linear regression is even more powerful!**
+\vspace{2mm}
+
+* We have seen that it is possible to include continuous, binary or factorial covariates in a regression model.
+
+\vspace{2mm}
+
+* Even \emph{\textcolor{red}{transformations}} of covariates can be included in (almost) any form. For instance the square of a variable $X^2$
+\begin{equation*}
+y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \varepsilon_i \ , 
+\end{equation*}
+which leads to a **quadratic** or **polynomial** regression (if higher order terms are used).
+
+\vspace{4mm}
+
+* Other common transformations are: 
+    * $\log$ 
+    * $\sqrt{..}$
+    * $\sin$, $\cos$,
+
+
+--- 
+
+How can a \emph{quadratic} regression be a \emph{linear regression}??
+
+\vspace{4mm}
+
+**Note**:
+
+The word _linear_ refers to the _\textcolor{red}{linearity in the coefficients}_, and not on a linear relationship between $Y$ and $X_1, \ldots , X_p$!
+
+
+\vspace{4mm}
+
+**Question**: When would we need such a regression? Well, sometimes the world is not linear. In particular, if 
+
+* there is a theoretical/biological/medical reason to believe in a non-linear relationship, or
+* the residual analysis indicates that there are non-linear associations in the
+data,
+
+it can sometimes help to use transformations of a variable $X$. 
+
+\vspace{2mm}
+
+\scriptsize
+$\rightarrow$ In the later modules, we will discuss other more advanced non-linear
+approaches for addressing this issue.
+
+
+
+---
+
+# Challenges - for model fit
 
 $~$
 
@@ -1833,7 +2296,7 @@ The outlier in the middle plot ``pulls'' the regression line in its direction an
 
 $~$
 
-\href{http://students.brown.edu/seeing-theory/regression-analysis/index.html}{Click here} to do it manually!
+\href{http://students.brown.edu/seeing-theory/regression-analysis/index.html}{http://students.brown.edu/seeing-theory/regression-analysis/index.html} to do it manually! \footnote{You may choose "Ordinary Least Squares" and then click on "I" for the Ascombe quartett example. Drag points to see what happens with the regression line.}
 
 ---
 
@@ -1858,7 +2321,7 @@ autoplot(r.bodyfat,which=5)
 
 * Leverage is defined as the diagonal elements of the so-called _hat matrix_ $\mathbf{H}$\footnote{Do you remember why $\mathbf{H}$ is called \emph{hat matrix}?}, i.e., the leverage of the $i$-th data point is $H_{ii}$ on the diagonal of $\mathbf{H = X(X^TX)^{-1}X^T}$. 
 
-\vspace{1mm}
+\vspace{40mm}
 
 * Exercise: Verify that formula (4) comes out in the special case of simple linear regression.
 
@@ -1923,8 +2386,9 @@ $\rightarrow$ To make the $e_i$ more "like $\epsilon_i$", we use _\textcolor{red
 
 **Standardized residuals:**
 
-$$r_i=\frac{e_i}{\hat{\sigma}\sqrt{1-H_{ii}}}$$
+$$\tilde{r}_i=\frac{e_i}{\hat{\sigma}\sqrt{1-H_{ii}}}$$
 where $H_{ii}$ is the $i$th diagonal element of the hat matrix ${\bf H}$.
+
 
 In R you can get the standardized residuals from an `lm`-object (named `fit`) by `rstandard(fit)`.
 
@@ -1978,363 +2442,6 @@ $~$
 
 **Todo:** Read in the course book p.99-102 (self-study).
 
-
----
-
-# Other considerations in the regression model
-
-1. Qualitative predictors ($X_j$): 
-    + Binary covariate (e.g., male/female, smoker/non-smoker) 
-    + Categorical covariate (e.g., black/white/green)?
-
-\vspace{4mm}
-
-2. Extensions of the linear model
-    + Interactions
-    + Non-linear terms
-
-
-
----
-
-
-## Binary predictors
-
-$~$
-
-So far, the covariates $X$ were always continuous.  
-\vspace{2mm}
-
-In reality, there are no restrictions assumed with respect to the $X$ variables. 
-\vspace{2mm}
-
-One very frequent data type are **binary** variables, that is, variables that can only attain values 0 or 1. 
-\vspace{4mm}
-
-If the binary variable $x$ is the only variable in the model $Y_i = \beta_0 + \beta_1 x_i + \varepsilon_i$, the model has only two predicted outcomes (plus error):
-
-\begin{equation*}
-Y_i = \left\{ 
-\begin{array}{ll}
- \beta_0  + \varepsilon_i \quad &\text{if } x_i=0 \ , \\
- \beta_0 + \beta_1 + \varepsilon_i \quad &\text{if } x_i =1 \ .\\
-\end{array}
-\right .
-\end{equation*}
-
-\vspace{4mm}
-
-**Example**: Credit card data analysis in Section 3.3.1 in the ISLR book.
-
-
----
-
-## Qualitative predictors with more than 2 levels
-
-$~$
- 
-More generally, a covariate may indicate a **category**, for instance the species of an animal or a plant. This type of covariate is called a **factor**. The trick: convert a factor variable $X$ with $k$ levels (for instance 3 species) into $k$ dummy variables $X_j$ with 
-\vspace{2mm}
-
-\begin{equation*}
-x_{ij} = \left\{ 
-\begin{array} {ll}
-1, & \text{if the $i$th observation belongs to group $j$}.\\
-0, & \text{otherwise.}
-\end{array}\right.
-\end{equation*}
-
-
-\vspace{4mm}
-
-Each of the covariates $x_1,\ldots, x_k$ can then be included as a binary variable in the model
-\begin{equation*}
-y_i = \beta_0 + \beta_1 x_1 + \ldots + \beta_k x_k + \varepsilon_i \ .
-\end{equation*}
-
-\vspace{6mm}
-However:  this model is _\textcolor{red}{not identifiable}_.\footnote{What does that mean? I could add a constant to $\beta_1, \beta_2, ...\beta_k$ and subtract it from $\beta_0$, and the model would fit equally well to the data, so it cannot be decided which set of the parameters is best.}
-
----
-
-**Solution:** One of the $k$ categories must be selected as a _reference category_ and is _not included in the model_. Typically: the first category is the reference, thus $\beta_1=0$.
-
-\vspace{2mm}
-
-
-The model thus discriminates between the factor levels, such that (assuming $\beta_1=0$)
-
-\begin{equation*}
-y_i = \left\{
-\begin{array}{ll}
-\beta_0 + \varepsilon, & \text{if $x_{i1}=1$ }\\
-\beta_0 + \beta_2 + \varepsilon, & \text{if $x_{i2}=1$ }\\
-...\\
-\beta_0 + \beta_k + \varepsilon, & \text{if $x_{ik}=1$ } \ .
-\end{array}\right.
-\end{equation*} 
-
----
-
-## !Important to remember!
-\textcolor{gray}{(Common aspect that leads to confusion!)}
-
-\vspace{10mm}
-
- _\textcolor{red}{A factor covariate with $k$ factor levels requires $k-1$ parameters!}_
-\vspace{2mm}
-
-$\rightarrow$ The _degrees of freedom_ of the fitted model are therefore reduced by $k-1$.
-
-
----
-
-## Example
-
-$~$
-
-We are now using the `Credit` dataset from the `ISLR` library.
-
-\scriptsize
-```{r, echo=T}
-library(ISLR)
-data(Credit)
-head(Credit)
-```
-
-\normalsize
-Question: Do the Balances differ for different Ethnicities?
-
-
----
-
-In R, a factor covariate can be used in the same way as a continuous predictor:
-
-\scriptsize
-```{r, echo=T}
-r.lm <- lm(Balance ~ Ethnicity, data=Credit)
-summary(r.lm)
-```
-
-\normalsize
-Interpretation? Do the ethnicities really differ? Check also the $F$-test in the last line of the summary output.
-
----
-
-## The "reference category"
-\vspace{2mm}
-In the above example we do not see a result for the `EthnicityAfrican American`. Why?
-
-* `African American` is chosen to be the reference category.
-* The results for `EthnicityAsian` and `EthnicityCaucasian` are **differences** with respect to the reference cateogry.
-* R chooses the reference category in alphabetic order! This is sometimes not a relevant category. 
-* You can change the reference category:
-
-\scriptsize
-```{r, echo=T}
-library(dplyr)
-Credit <-  mutate(Credit,Ethnicity = relevel(Ethnicity,ref="Caucasian"))
-r.lm <- lm(Balance ~ Ethnicity, data=Credit)
-summary(r.lm)$coef
-```
-
-\small
-Note: The differences are now with respect to the Caucasian category -- the model is however exactly the same!
-
----
-
-## Testing for a categorical predictor
-
-\vspace{2mm}
-
-**Question**: Is a qualitative predictor needed in the model?
-
-\vspace{2mm}
-
-For a predictor with more than two levels (like Ethnicity above), the Null Hypothesis is whether
-
-$$\beta_1 = \ldots = \beta_{k-1}=0$$
-at the same time. 
-
-\vspace{2mm}
-
-$\rightarrow$ We again need the $F$-test\footnote{remember that the $F$-test is a generalization of the $t$-test!}, as **always when we test for more than one $\beta_j=0$ _simultaneously_**!
-
-\vspace{2mm}
-In R, this is done by the `anova()` function:
-
-\scriptsize
-```{r, echo=T}
-anova(r.lm)
-```
-
----
-
-## Interactions: Removing the additivity assumption
-\vspace{2mm}
-
-We again look at the `Credit` dataset. We want to model the `Balance` as a function of `Income` and wheter the person is a student or not.
-
-\vspace{2mm}
-
-The model is given as 
-$$\text{Balance}_i = \beta_0 + \beta_1 \cdot \text{Income}_i + \beta_2 \cdot \text{Student}_i + \varepsilon_i \ ,$$
-where `Student` is a binary variable. Thus we have a model that looks like
-\begin{equation*}
-\text{Balance}_i = \left\{ 
-\begin{array}{ll}
-\beta_0 + \beta_2 + \beta_1 \cdot \text{Income}_i  + \varepsilon_i \ ,  & \text{if $i$ is a student,}\\
-\beta_0 + \qquad \; \beta_1 \cdot \text{Income}_i  + \varepsilon_i  & \text{otherwise.}
-\end{array}
-\right.
-\end{equation*}
-
-
-In R, we simply add `Student` to the model:
-\scriptsize
-```{r, echo=T}
-r.lm <- lm(Balance ~ Income + Student, Credit)
-```
-
-\normalsize
-
-**Caveat:** This model assumes that students and non-students have the same slope for `Income`. Realistic?
-
----
-
-Let's look at the graphs:
-
-![ISLR Figure 3.7](../../ISLR/Figures/Chapter3/3.7.png)
-
-$\rightarrow$ We want a model that allows for different slopes!
-
----
-
-## Interaction terms
-\vspace{2mm}
-
-We formulate a new model that includes the interaction term $(\text{Income}\cdot \text{Student})$:
-
-$$\text{Balance}_i = \beta_0 + \beta_1 \cdot \text{Income}_i + \beta_2 \cdot \text{Student}_i + \beta_3 \cdot \text{Income}_i \cdot \text{Student}_i  + \varepsilon_i \ ,$$
-
-Thus we have a model that allows for different intercept _and_ slope for the two groups:
-
-\begin{equation*}
-\text{Balance}_i = \left\{ 
-\begin{array}{ll}
-\beta_0 + \beta_2 + (\beta_1 + \beta_3) \cdot \text{Income}_i  + \varepsilon_i \ ,  & \text{if $i$ is a student,}\\
-\beta_0 + \qquad \; \beta_1 \cdot \text{Income}_i  + \varepsilon_i  & \text{otherwise.}
-\end{array}
-\right.
-\end{equation*}
-
-
----
-
-In R, this is again quite simple:
-
-\scriptsize
-```{r, echo=T}
-r.lm <- lm(Balance ~ Income * Student, Credit)
-summary(r.lm)$coef
-```
-
-\normalsize
-
-**Interpretation:**
-
-We allow the model to depend on the binary variable `Student`, such that
-
-For a student: $\hat{y} =$ `r round(summary(r.lm)$coef[1,1],1)` +  `r round(summary(r.lm)$coef[3,1],1)` + (`r round(summary(r.lm)$coef[2,1],1)` + `r format(summary(r.lm)$coef[4,1],1,1,1)`) $\cdot$ Income 
-
-For a non-Student: $\hat{y} =$ `r round(summary(r.lm)$coef[1,1],1)`  + (`r round(summary(r.lm)$coef[2,1],1)`) $\cdot$ Income 
-
-\vspace{2mm}
-
-**Question:** Is the interaction relevant here?
-
-
----
-
-## The hierarchical principle
-
-$~$
-
-If we include an interaction in a model, we
-should also include the main effects, even if the $p$-values associated with
-the coefficients of the main effects are large (see p.89 in ISLR book).
-
----
-
-## More interactions
-
-\vspace{4mm}
-
-We can include interactions also between
-
-* two continuous variables.
-* a categorical variable with more than 2 levels and a continuous variable.
-
-\vspace{4mm}
-
-$\rightarrow$ See exercises!
-
-\vspace{4mm}
-
-
----
-
-
-## Non-linear terms
-\vspace{2mm}
-
-**Linear regression is even more powerful!**
-\vspace{2mm}
-
-* We have seen that it is possible to include continuous, binary or factorial covariates in a regression model.
-
-\vspace{2mm}
-
-* Even \emph{\textcolor{red}{transformations}} of covariates can be included in (almost) any form. For instance the square of a variable $X^2$
-\begin{equation*}
-y_i = \beta_0 + \beta_1 x_i + \beta_2 x_i^2 + \varepsilon_i \ , 
-\end{equation*}
-which leads to a **quadratic** or **polynomial** regression (if higher order terms are used).
-
-\vspace{4mm}
-
-* Other common transformations are: 
-    * $\log$ 
-    * $\sqrt{..}$
-    * $\sin$, $\cos$,
-
-
---- 
-
-How can a \emph{quadratic} regression be a \emph{linear regression}??
-
-\vspace{4mm}
-
-**Note**:
-
-The word _linear_ refers to the _\textcolor{red}{linearity in the coefficients}_, and not on a linear relationship between $Y$ and $X_1, \ldots , X_p$!
-
-
-\vspace{4mm}
-
-**Question**: When would we need such a regression? Well, sometimes the world is not linear. In particular, if 
-
-* there is a theoretical/biological/medical reason to believe in a non-linear relationship, or
-* the residual analysis indicates that there are non-linear associations in the
-data,
-
-it can sometimes help to use transformations of a variable $X$. 
-
-\vspace{2mm}
-
-\scriptsize
-$\rightarrow$ In the later modules, we will discuss other more advanced non-linear
-approaches for addressing this issue.
 
 
 
