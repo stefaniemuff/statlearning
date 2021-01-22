@@ -1,0 +1,260 @@
+---
+title: 'Module 2: Recommended Exercises - Solution'
+author: 
+  - Michail Spitieris, Emma Skarstein, Stefanie Muff
+  - Department of Mathematical Sciences, NTNU
+date: "January 26, 2021"
+output:
+  # html_document:
+  #   df_print: paged
+  #   toc: no
+  #   toc_depth: '2'
+  pdf_document:
+    #fig_caption: yes
+    #keep_tex: yes
+    toc: no
+    toc_depth: 2
+subtitle: TMA4268 Statistical Learning V2021
+urlcolor: blue
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
+                      cache=TRUE, size="scriptsize")
+
+```
+
+<!-- rmarkdown::render("RecEx3-sol.Rmd","all",encoding="UTF-8") -->
+<!-- rmarkdown::render("RecEx3-sol.Rmd","html_document",encoding="UTF-8") -->
+<!-- rmarkdown::render("RecEx3-sol.Rmd","pdf_document",encoding="UTF-8") -->
+
+
+---
+
+
+# Problem 1 
+
+
+
+
+
+## a)
+
+```{r}
+library(ISLR)
+Auto = subset(Auto, select = -name)
+#Auto$origin = factor(Auto$origin)
+summary(Auto)
+str(Auto)
+
+Auto$origin = factor(Auto$origin)
+```
+
+```{r,warning=FALSE, message=FALSE}
+library(GGally)
+ggpairs(Auto, lower = list(continuous = wrap("points", size=0.1))) + # change points size
+  theme(text = element_text(size = 7)) # change text size
+```
+
+## b)
+
+Correlation matrix for the `Auto` data set where we omit column 8:
+```{r}
+cor(Auto[,-c(8)])
+```
+
+## c)
+
+```{r}
+fit.lm = lm(mpg ~ ., data=Auto)
+summary(fit.lm)
+#kable(broom::tidy(fit.lm))
+```
+
+i. The F-statistic in the very last line of the summary output shows that it is extremely unilkely that we would see such a result if none of the variables had any explanatory power -- the $p$-value is $<2.2e-16$! So we can be sure that the set of predictors is explaining the response to a quite large degree. This is also confirmed by both a quite high $R^2$ and $R^2_{\text adjust}$ (both around 0.82).
+ii. Yes, there is very strong evidence for a relationship between the weight of a car and the response. The $p$-value is extremely small. The interpretation is that, if a car weights 1000 kg more, we have a degrease of $1000\cdot(-6.710e-03)=-6.71$ miles per gallon (mpg), that is, the car can drive 6.71 miles less far per gallon of fuel.
+iii. The coefficient $\beta_\text{year}= 0.77$ coefficient suggests that a new model has higher mpg compared to an older one. A one year newer model thus should, in average, be able to drive 0.77 miles longer per gallon fuel compared to the older car.
+
+
+## d)
+
+Remember that if we want to test whether a factor variable with more than two levels should be removed from the model, we actually have to test wheter all slope coefficients that are associated with the respective binary dummy variables are zero simultaneously. Look again at equation (3.30) in the course book (p.85). 
+
+Consequently, we have to test here whether $\beta_\text{origin2} = \beta_\text{origin3} =0$ at the same time, and for this we need the $F$-test, which is implemented in the `anova()` function in R:
+
+```{r}
+anova(fit.lm)
+```
+
+The $p$-value associated with `origin` is now the one we can look at. Clearly, $p$ is very small, thus the origin of the car has an influence on the response `mpg`.
+
+## e)
+
+```{r,warning=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='60%'}
+library(ggfortify)
+autoplot(fit.lm, smooth.colour = NA)
+```
+
+* In the residual vs fitted plot (the so-called Tukey-Anscombe plot) there is evidence of non-linearity.
+* Observation 14 has an unusually high leverage. This does not necessarily need to be a problem, but it would be wise to double-check that this observation is not an outlier.
+
+## f)
+
+```{r}
+set.seed(2332)
+n = 100
+
+par(mfrow = c(2,3))
+for(i in 1:6){
+  sim = rnorm(n)
+  qqnorm(sim, pch = 1, frame = FALSE)
+  qqline(sim, col = "blue", lwd = 1)
+}
+```
+
+## g)
+
+
+```{r}
+fit.lm1 = lm(mpg ~ displacement + weight + year*origin, data=Auto)
+summary(fit.lm1)
+```
+
+Again, if we want to find evidence whether the interaction term between year and origin is needed, we are actually testing whether two slope coefficients are zero at the same time ($\beta_\text{year:origin1}=\beta_\text{year:origin2}=0$). Consequently, we need the $F$-test, which is implemented in the `anova()` funcdtion:
+
+```{r}
+anova(fit.lm1)
+```
+
+There is very strong evidence that the year-effect depends on the origin of the car, as can be seen by the $F$-test hat is given by the anova table ($p=0.0001057$). For European (2) and Japanese (3) cars, it seems that the fuel consumption (`mpg`) has a steeper slope for year: $\beta_{year}=0.615$ for the reference category 1 (American), wheras $\beta_{year}=0.615+0.519$ and $\beta_{year}=0.615+0.356$ for category 2 (European) and 3 (Japanese), respectively. This means that the fuel consuption is reduced faster by cars produced outside America (note that `mgp` is "miles per gallon", thus a higher value means that the car consumes less fuel, as it can drive further per gallon).
+
+Note: For a full understanding of interaction terms, you really do need both the `summary()` and the `anova()` tables.
+
+
+## h)
+
+We try three different transformations and look at the residual plots:
+
+```{r, fig.width=5, fig.height=4,fig.align = "center",out.width='50%'}
+# try 3 predictor transformations
+
+Auto$sqrtmpg <- sqrt(Auto$mpg)
+
+fit.lm3 = lm(sqrtmpg ~ displacement + weight + year + origin, data=Auto)
+autoplot(fit.lm3)
+
+fit.lm4 = lm(mpg ~ displacement + I(log(weight)) + year + origin, data=Auto)
+autoplot(fit.lm4)
+
+fit.lm5 = lm(mpg ~ displacement + I(weight^2) + year + origin, data=Auto)
+autoplot(fit.lm5)
+```
+
+
+
+# Problem 2
+
+## a)
+
+\begin{align}
+E(\hat{\boldsymbol\beta})&=E((X^T X)^{-1}X^T Y)=(X^TX)^{-1}X^T E(Y) =(X^TX)^{-1}X^T E(X \boldsymbol\beta +\varepsilon) \\
+&=(X^TX)^{-1}X^T (X \boldsymbol\beta +0)=(X^TX)^{-1}(X^T X) \boldsymbol\beta = I \boldsymbol\beta = \boldsymbol\beta
+\end{align}
+
+\begin{align}
+Cov(\hat{\boldsymbol\beta})&=Cov((X^T X)^{-1}X^T Y)=(X^TX)^{-1}X^T Cov(Y)((X^TX)^{-1}X^T)^T \\
+&=(X^TX)^{-1}X^T \sigma^2  I ((X^TX)^{-1}X^T)^T\\
+&=\sigma^2 (X^TX)^{-1} \\
+\end{align}
+
+We need to assume that $Y$ is multivariate normal. As $\hat{\boldsymbol\beta}$ is a linear transformation of a multivariate normal vector $Y$, $\hat{\boldsymbol\beta}$ is also multivariate normal. 
+
+All components of a multivariate normal vector are themselves univariate normal. This means that $\hat{\beta}_j$ is normally distributed with expected value given by the $\beta_j$ and the variance given by the $j$'th diagonal element of $\sigma^2 (X^T X)^{-1}$.
+
+## b) 
+
+Fix covariates X and repeat the following preocedure many times (`nsim = 1000`)
+
+* collect $Y$
+
+* create CI using $\hat{\beta}$ and $\hat{\sigma}$
+
+95 % of the times the CI contains the true $\beta.$
+
+```{r}
+# CI for beta_j
+beta0 = 1
+beta1 = 3
+true_beta = c(beta0, beta1) # vector of model coefficients
+true_sd = 1 # choosing true sd
+X = runif(100,0,1)
+Xmat = model.matrix(~X, data = data.frame(X)) # Design Matrix
+
+
+ci_int = ci_x = 0 # Counts how many times the true value is within the confidence interval
+nsim = 1000
+for (i in 1:nsim){
+  y = rnorm(n = 100, mean = Xmat%*%true_beta, sd = rep(true_sd, 100))
+  mod = lm(y ~ x, data = data.frame(y = y, x = X))
+  ci = confint(mod)
+  ci_int[i] = ifelse(true_beta[1] >= ci[1,1] && true_beta[1] <= ci[1,2], 1, 0)
+  ci_x[i] = ifelse(true_beta[2] >= ci[2,1] && true_beta[2] <= ci[2,2], 1, 0)
+}
+
+c(mean(ci_int), mean(ci_x))
+```
+
+## c) 
+
+We apply the same idea from b), but now we fix X and $x_0$ and
+
+* collect $Y$
+
+* create PI using $\hat{\beta}$ and $\hat{\sigma}$
+
+* simulate $Y_0$
+
+95 % of the times the PI contains $Y_0.$
+
+```{r}
+# PI for Y_0
+beta0 = 1
+beta1 = 3
+true_beta = c(beta0, beta1) # vector of model coefficients
+true_sd = 1 # choosing true sd
+X = runif(100,0,1)
+Xmat = model.matrix(~X, data = data.frame(X)) # Design Matrix
+
+x0 = c(1,0.4)
+
+# simulating and fitting models many times
+pi_y0 = 0; nsim = 1000
+for (i in 1:nsim){
+  y = rnorm(n = 100, mean = Xmat%*%true_beta, sd = rep(true_sd, 100))
+  mod = lm(y ~ x, data = data.frame(y = y, x = X))
+  y0 = rnorm(n = 1, mean = x0%*%true_beta, sd = true_sd)
+  pi = predict(mod, newdata = data.frame(x = x0[2]), interval = "predict")[2:3]
+  pi_y0[i] = ifelse (y0>=pi[1] && y0<=pi[2], 1, 0)
+}
+
+mean(pi_y0)
+```
+
+## d) 
+
+95 % CI for ${\boldsymbol x}_0^T\mathbf{\beta}$: Same idea as for $\beta_j$. Use that ${\boldsymbol x}_0^T\hat{\mathbf{\beta}} \sim N({\boldsymbol x}_0^T\mathbf{\beta}, {\boldsymbol x}_0^T$Var$(\hat{\mathbf{\beta}}){\boldsymbol x}_0)$ and do as for $\beta_j$. Note that ${\boldsymbol x}_0$ is a vector. 
+The connection between CI for $\mathbf{\beta}$, ${\boldsymbol x}_0^T\mathbf{\beta}$ and PI for $Y$ at ${\boldsymbol x}_0$: The first is CI for a parameter, the second is CI for the expected regression line in the point $x_0$ (when you only have one covariate, this may be more intuitive), and the last is the PI for the response $Y_0$. The difference between the two latter is that $Y$ are the observations, and ${\boldsymbol x}_0^T\mathbf{\beta}$ is the expected value of the observations and hence a function of the model parameters (NOT an observation).
+
+## e)
+
+We have a model on the form $Y=X \beta + \varepsilon$ where $\varepsilon$ is the error. The error of the model is unknown and unobserved, but we can estimate it by what we call the residuals. The residuals are given by the difference between the true response and the predicted value 
+$$\hat{\varepsilon}=Y-\hat{Y}=(I-\underbrace{X(X^TX)^{-1}X}_{=H}^T)Y ,$$
+where $H$ is called the "hat matrix".
+
+Properties of raw residuals: Normally distributed with mean 0 and covariance $Cov(\hat{\varepsilon})=\sigma^2 (I-H).$ This means that the residuals may have different variance (depending on $X$) and may also be correlated.
+
+In a model check, we want to check that our errors are independent, homoscedastic (same variance for each observation) and not dependent on the covariates. As we don't know the true error, we use the residuals as predictors, but as mentioned, the residuals may have different variances and may be correlated. This is why we don't want to use the raw residuals for model check.
+
+To amend our problem we need to try to fix the residuals so that they at least have equal variances. We do that by working with standardized or studentized residuals. 
+
