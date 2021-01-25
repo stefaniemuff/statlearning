@@ -5,10 +5,10 @@ author:
   - Department of Mathematical Sciences, NTNU
 date: "January 26, 2021"
 output:
-  # html_document:
-  #   df_print: paged
-  #   toc: no
-  #   toc_depth: '2'
+  html_document:
+    df_print: paged
+    toc: no
+    toc_depth: '2'
   pdf_document:
     #fig_caption: yes
     #keep_tex: yes
@@ -249,7 +249,7 @@ The connection between CI for $\mathbf{\beta}$, ${\boldsymbol x}_0^T\mathbf{\bet
 ## e)
 
 We have a model on the form $Y=X \beta + \varepsilon$ where $\varepsilon$ is the error. The error of the model is unknown and unobserved, but we can estimate it by what we call the residuals. The residuals are given by the difference between the true response and the predicted value 
-$$\hat{\varepsilon}=Y-\hat{Y}=(I-\underbrace{X(X^TX)^{-1}X}_{=H}^T)Y ,$$
+$$\hat{\varepsilon}=Y-\hat{Y}=(I-\underbrace{X(X^TX)^{-1}X^\top}_{=H})Y ,$$
 where $H$ is called the "hat matrix".
 
 Properties of raw residuals: Normally distributed with mean 0 and covariance $Cov(\hat{\varepsilon})=\sigma^2 (I-H).$ This means that the residuals may have different variance (depending on $X$) and may also be correlated.
