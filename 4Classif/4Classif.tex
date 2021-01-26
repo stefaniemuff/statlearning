@@ -1,8 +1,46 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
 \documentclass[10pt,ignorenonframetext,]{beamer}
+\usepackage{pgfpages}
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
 \setbeamercolor{caption name}{fg=normal text.fg}
 \beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+\centering
+\begin{beamercolorbox}[sep=16pt,center]{part title}
+  \usebeamerfont{part title}\insertpart\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+\centering
+\begin{beamercolorbox}[sep=12pt,center]{part title}
+  \usebeamerfont{section title}\insertsection\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+\centering
+\begin{beamercolorbox}[sep=8pt,center]{part title}
+  \usebeamerfont{subsection title}\insertsubsection\par
+\end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -10,12 +48,9 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
+  \usepackage{unicode-math}
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 \usetheme[]{Singapore}
@@ -24,19 +59,28 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
 \IfFileExists{microtype.sty}{%
-\usepackage{microtype}
+\usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\newif\ifbibliography
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{xcolor}
+\usepackage{hyperref}
 \hypersetup{
             pdftitle={Module 4: Classification},
             pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
             colorlinks=true,
             linkcolor=Maroon,
+            filecolor=Maroon,
             citecolor=Blue,
             urlcolor=blue,
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+\newif\ifbibliography
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -46,99 +90,80 @@
 \usepackage{framed}
 \definecolor{shadecolor}{RGB}{248,248,248}
 \newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\ImportTok}[1]{#1}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
-\newcommand{\BuiltInTok}[1]{#1}
-\newcommand{\ExtensionTok}[1]{#1}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
-\newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight0.8\textheight\else\Gin@nat@height\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
 \makeatother
 % Scale images if necessary, so that they will not overflow the page
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-
-% Prevent slide breaks in the middle of a paragraph:
-\widowpenalties 1 10000
-\raggedbottom
-
-\AtBeginPart{
-  \let\insertpartnumber\relax
-  \let\partname\relax
-  \frame{\partpage}
-}
-\AtBeginSection{
-  \ifbibliography
-  \else
-    \let\insertsectionnumber\relax
-    \let\sectionname\relax
-    \frame{\sectionpage}
-  \fi
-}
-\AtBeginSubsection{
-  \let\insertsubsectionnumber\relax
-  \let\subsectionname\relax
-  \frame{\subsectionpage}
-}
-
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{0}
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
 \usepackage{multirow}
 
 \title{Module 4: Classification}
-\subtitle{TMA4268 Statistical Learning V2020}
+\providecommand{\subtitle}[1]{}
+\subtitle{TMA4268 Statistical Learning V2021}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{January 24 and 27, 2020}
+\date{February 1st and 2nd, 2021}
 
 \begin{document}
 \frame{\titlepage}
 
 \begin{frame}
 
-Last update: January 27, 2020
+Last update: February 1st, 2021
 
 \end{frame}
 
 \begin{frame}{Acknowledgements}
+\protect\hypertarget{acknowledgements}{}
 
 \begin{itemize}
 \item
-  A lot of this material stems from Mette Langaas and her TAs (especiall
-  Julia Debik). I would like to thank Mette for the permission to use
-  her material!
+  Thanks to Mette Langaas and her TAs who permit me to use and modify
+  their original material.
 \item
   Some of the figures and slides in this presentation are taken (or are
   inspired) from James et al. (2013).
@@ -147,6 +172,7 @@ Last update: January 27, 2020
 \end{frame}
 
 \begin{frame}{Introduction}
+\protect\hypertarget{introduction}{}
 
 \begin{block}{Learning material for this module}
 
@@ -155,8 +181,8 @@ Last update: January 27, 2020
 \begin{itemize}
 \tightlist
 \item
-  James et al (2013): An Introduction to Statistical Learning. Chapter 4
-  + Chapter 2.2.3.
+  James et al. (2013): An Introduction to Statistical Learning. Chapter
+  4 + Chapter 2.2.3.
 \end{itemize}
 
 \(~\)
@@ -174,6 +200,8 @@ Last update: January 27, 2020
 \begin{frame}
 
 \begin{block}{What will you learn?}
+
+\(~\)
 
 \begin{itemize}
 \item
@@ -199,6 +227,7 @@ Last update: January 27, 2020
 \end{frame}
 
 \begin{frame}[fragile]{What is classification?}
+\protect\hypertarget{what-is-classification}{}
 
 \vspace{3mm}
 
@@ -255,14 +284,16 @@ Last update: January 27, 2020
 The \texttt{Default} dataset is available from the ISLR package.
 
 \vspace{2mm}
-{\bf Aim}: to predic whether an individual will default on his or her
-credit card payment, given the annual income and credit card balance.
+
+\textbf{Aim} : to predic whether an individual will default on his or
+her credit card payment, given the annual income and credit card
+balance.
 
 \textcolor{orange}{Orange: default=yes},
 \textcolor{blue}{blue: default=no}.
 
-\vspace{0mm} \centering
-\includegraphics[width=0.50000\textwidth]{../../ISLR/Figures/Chapter4/4.1a.png}
+\centering
+\includegraphics[width=0.5\textwidth,height=\textheight]{../../ISLR/Figures/Chapter4/4.1a.png}
 
 \end{block}
 
@@ -302,6 +333,8 @@ error rate (training and test version).
 
 \textbf{Three methods for classification} are discussed here:
 
+\(~\)
+
 \begin{itemize}
 \item
   Logistic regression
@@ -331,19 +364,26 @@ predict \(Y\). We could use \emph{dummy encoding} for \(Y\) like
 \end{array} \right.\] Can we simply perform a linear regression of \(Y\)
 on \(X\) and classify as \texttt{yes} if \(\hat{Y}> 0.5\)?
 
+\vspace{2mm}
+
 \begin{itemize}
+\tightlist
 \item
   In this case of a binary outcome, linear regression does a good job as
   a classifier, and is equivalent to linear discriminant analysis which
   we discuss later.
-\item
-  Since in the population
-  \(\text{E}(Y \mid X = x) = \text{Pr}(Y = 1 \mid X = x)\), we might
-  think that regression is perfect for this task.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   However, linear regression might produce probabilities less than zero
   or bigger than one.
 \end{itemize}
+
+\vspace{2mm}
 
 \(\rightarrow\) We need to use \textbf{logistic regression}.
 
@@ -410,21 +450,30 @@ This suggests an ordering, but this is artificial.
 \vspace{2mm}
 
 \begin{itemize}
+\tightlist
 \item
   It is still possible to use linear regression for classification
   problems with two classes. It is actually not even a bad idea, and
-  works well under some conditions. If the conditional class densities
-  are (multivariate) normal with equal covariance matrices then this
-  linear regression (with 0 and 1 response) will in fact give the same
-  classification as linear discriminant analysis (LDA).
+  works well under some conditions. Under some standard assumptions,
+  this linear regression (with 0 and 1 response) will in fact give the
+  same classification as linear discriminant analysis (LDA).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   For categorical outcomes with more than two levels, it requires some
   extra work (multivariate \(Y\) due to the dummy variable coding).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   We leave linear regression for now.
-\item
-  For two classes \emph{binary regression}, in particular \emph{logistic
-  regression}, is very popular - and is up next.
 \end{itemize}
 
 \end{block}
@@ -432,6 +481,7 @@ This suggests an ordering, but this is artificial.
 \end{frame}
 
 \begin{frame}{Logistic regression}
+\protect\hypertarget{logistic-regression}{}
 
 \begin{itemize}
 \item
@@ -472,13 +522,9 @@ This suggests an ordering, but this is artificial.
   In logistic regression, we use the \emph{logistic link function}
 \end{itemize}
 
-\begin{center}
-\colorbox{lightgray}{\begin{minipage}{10cm}
 \begin{equation}
 \log\left( \frac{p_i}{1-p_i} \right) = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \ldots + \beta_p x_{ip} \ .
 \end{equation}
-\end{minipage}}
-\end{center}
 
 \begin{itemize}
 \tightlist
@@ -503,14 +549,13 @@ This suggests an ordering, but this is artificial.
 
 \[ p_i= \frac{e^{\beta_0+\beta_1 x_i}}{1 + e^{\beta_0 + \beta_1 x_i}}.\]
 
+\vspace{2mm}
+
 \begin{itemize}
+\tightlist
 \item
   \textbf{Important:} These values \(p_i\) will always lie in the
   interval between 0 and 1, with an S-shaped curve.
-\item
-  The parameter \(\beta_1\) determines the rate of increase or decrease
-  of the S-shaped curve, and the sign indicates whether the curve
-  ascends or descends.
 \end{itemize}
 
 \end{block}
@@ -521,18 +566,25 @@ This suggests an ordering, but this is artificial.
 
 \begin{block}{Example: \texttt{Default} credit card data}
 
-\vspace{2mm}
+\(~\)
 
 \begin{itemize}
+\tightlist
 \item
   The parameters are estimated using the method of maximum likelihood -
   we will look at that soon.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Let's first do it! In R, this works with the \texttt{glm()} function,
   where we specify \texttt{family="binomial"}.
 \end{itemize}
 
-\vspace{2mm}
+\vspace{4mm}
 
 \scriptsize
 
@@ -561,7 +613,11 @@ This suggests an ordering, but this is artificial.
 
 Plotting the fitted line (in blue):
 
+\(~\)
+
 \begin{center}\includegraphics[width=0.7\linewidth]{4Classif_files/figure-beamer/defaultglm-1} \end{center}
+
+\(~\)
 
 Default data: here \(\hat{\beta}_0=\) -10.65 and \(\hat{\beta}_1=\)
 0.005.
@@ -572,15 +628,23 @@ Default data: here \(\hat{\beta}_0=\) -10.65 and \(\hat{\beta}_1=\)
 
 \begin{block}{Estimating the regression coefficients with ML}
 
+\(~\)
+
 \begin{itemize}
+\tightlist
 \item
   The coefficients \(\beta_0, \beta_1, \ldots\) are estimated with
   \emph{maximum likelihood} (ML).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
-  We assume that pairs of covariates and responses
-  \(\{{\boldsymbol x}_i, y_i\}\) are measured independently of each
-  other. Given \(n\) such observation pairs, the likelihood function of
-  a logistic regression model can be written as:
+  Given \(n\) independent observation pairs
+  \(\{{\boldsymbol x}_i, y_i\}\), the likelihood function of a logistic
+  regression model can be written as:
   \[L(\boldsymbol{\beta}) = \prod_{i=1}^n L_i(\boldsymbol{\beta}) = \prod_{i=1}^n f(y_i; \boldsymbol{\beta}) = \prod_{i=1}^n (p_i)^{y_i}(1-p_i)^{1-y_i},\]
   where
   \(\boldsymbol{\beta} = (\beta_0, \beta_1, \beta_2, \ldots, \beta_p)^T\)
@@ -637,6 +701,8 @@ Default data: here \(\hat{\beta}_0=\) -10.65 and \(\hat{\beta}_1=\)
 
 Let's again look at the regression output:
 
+\(~\)
+
 \scriptsize
 
 \begin{Shaded}
@@ -651,20 +717,35 @@ Let's again look at the regression output:
 ## balance       0.005498917 0.0002203702  24.95309 1.976602e-137
 \end{verbatim}
 
+\(~\)
+
+\(~\)
+
 \normalsize
 
 \begin{itemize}
+\tightlist
 \item
   The \(z\)-statistic is equal to \(\frac{\hat\beta}{SE(\hat\beta)}\),
   and is approximately \(N(0,1)\)
   distributed.\footnote{With this knowledge we can construct confidence intervals and test hypotheses about the $\beta$s, with the aim to understand which covariate(s) contribute to our posterior probabilites and classification.}
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   The \(p\)-value is \(\text{Pr}(|Z| > |z|)\) for a \(Z\sim N(0,1)\)
   random variable
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
-  \texttt{Balance} seems an important predictor for \texttt{Default}
-  (yes/no), with a higher balance leading to a higher probability of
-  defaulting (\(\beta_1>0\)).
+  Check the \(p\)-value for \texttt{Balance}. Conclusion?
 \end{itemize}
 
 \end{block}
@@ -675,7 +756,9 @@ Let's again look at the regression output:
 
 \begin{block}{Quantitative interpretation of the coefficients}
 
-\vspace{2mm} Remember from equation (1) that
+\vspace{2mm}
+
+Remember from equation (1) that
 
 \begin{equation*}
 \log\left( \frac{p_i}{1-p_i} \right) = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \ldots + \beta_p x_{ip} \ ,
@@ -697,7 +780,6 @@ Odds represent \emph{\textcolor{red}{chances}} (e.g.~in betting).
 \textbf{Q}:
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \item
   You think your football team will win tonight with a probability
   \(p=80\%\). What is the odds that it will win?
@@ -714,8 +796,9 @@ Odds represent \emph{\textcolor{red}{chances}} (e.g.~in betting).
 
 \begin{block}{Why is the odds relevant?}
 
-\vspace{2mm} Let's again rearrange the \emph{odds} in the logistic
-regression model:
+\vspace{2mm}
+
+Let's again rearrange the \emph{odds} in the logistic regression model:
 
 \begin{align*}
  \frac{p_i}{1-p_i} &=  \frac{\text{P}(Y_i=1 \mid X=x)}{\text{P}(Y_i=0 \mid X = x)} \\[2mm]
@@ -741,8 +824,10 @@ To understand the effect of a regression coefficient \(\beta_j\), let's
 see what happens if we increase \(x_{ij}\) to \(x_{ij}+1\), while all
 other covariates are kept fixed.
 
-\vspace{2mm} Using simple algebra and the formula on the previous slide,
-you will see that
+\vspace{2mm}
+
+Using simple algebra and the formula on the previous slide, you will see
+that
 
 \begin{equation}
 \frac{\text{odds}(Y_i=1 \mid X_{j} = x_{ij} + 1)}{\text{odds}(Y_i=1 \mid X_j = x_{ij})} = \exp(\beta_j)  \ .
@@ -877,6 +962,7 @@ Using R: \scriptsize
 \end{verbatim}
 
 \normalsize
+
 (Or via the \texttt{predict()} function in R.)
 
 \end{frame}
@@ -1048,6 +1134,7 @@ predicted probabilities using
 \end{frame}
 
 \begin{frame}{The Bayes classifier}
+\protect\hypertarget{the-bayes-classifier}{}
 
 \begin{itemize}
 \tightlist
@@ -1105,6 +1192,7 @@ predicted probabilities using
 \end{frame}
 
 \begin{frame}{Some terminology}
+\protect\hypertarget{some-terminology}{}
 
 \vspace{2mm}
 
@@ -1181,6 +1269,7 @@ the correct classifications loss 0 - this is called \emph{0/1-loss}.
 \end{frame}
 
 \begin{frame}{The K-nearest neighbour (KNN) classifier}
+\protect\hypertarget{the-k-nearest-neighbour-knn-classifier}{}
 
 \begin{itemize}
 \tightlist
@@ -1213,8 +1302,9 @@ the correct classifications loss 0 - this is called \emph{0/1-loss}.
 
 \begin{frame}
 
-\vspace{2mm} The \(K\)-nearest neighbour classifier (KNN) works in the
-following way:
+\vspace{2mm}
+
+The \(K\)-nearest neighbour classifier (KNN) works in the following way:
 
 \begin{itemize}
 \item
@@ -1321,8 +1411,10 @@ Interpretation:
 
 \begin{block}{Bias-variance trade-off in a classification setting}
 
-\vspace{2mm} Remember the bias-variance trade-off that we discussed in
-Module 2. \vspace{2mm}
+\vspace{2mm}
+
+Remember the bias-variance trade-off that we discussed in Module 2.
+\vspace{2mm}
 
 Considerations: \vspace{2mm}
 
@@ -1383,6 +1475,7 @@ correct level of flexibility (\(K\)).
 \end{frame}
 
 \begin{frame}{Bayes decision rule - two paradigms}
+\protect\hypertarget{bayes-decision-rule---two-paradigms}{}
 
 \vspace{1mm}
 
@@ -1449,6 +1542,7 @@ p_k(X) = \text{Pr}(Y=k \mid X= x) &=
 \end{frame}
 
 \begin{frame}{Discriminant Analysis}
+\protect\hypertarget{discriminant-analysis}{}
 
 \vspace{2mm}
 
@@ -1539,6 +1633,7 @@ boundary shifts to the left:
 \end{frame}
 
 \begin{frame}{Linear discriminant analysis (LDA) when \(p=1\)}
+\protect\hypertarget{linear-discriminant-analysis-lda-when-p1}{}
 
 \begin{itemize}
 \item
@@ -1655,7 +1750,6 @@ Idea: we simply estimate the parameters and plug them into the rule.
 \begin{frame}[fragile]
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
   Use the training set to estimate parameters and class boundary:
@@ -1700,8 +1794,10 @@ Then set
 
 and resolve for \(x\) to obtain a decision rule (boundary).
 
-\vspace{2mm} \textbf{Exercise}: Verify that the following code will give
-you the training and test error rates:
+\vspace{2mm}
+
+\textbf{Exercise}: Verify that the following code will give you the
+training and test error rates:
 
 \scriptsize
 
@@ -1775,6 +1871,7 @@ True K & wrong & wrong & ... & correct\\
 \end{frame}
 
 \begin{frame}{Multivariate LDA (\(p>1\))}
+\protect\hypertarget{multivariate-lda-p1}{}
 
 \vspace{2mm}
 
@@ -1788,7 +1885,8 @@ True K & wrong & wrong & ... & correct\\
 \end{itemize}
 
 \centering
-\includegraphics[width=0.70000\textwidth]{../../ISLR/Figures/Chapter4/4.5.png}
+
+\includegraphics[width=0.7\textwidth,height=\textheight]{../../ISLR/Figures/Chapter4/4.5.png}
 
 \end{frame}
 
@@ -1883,7 +1981,8 @@ We can use the Bayes boundary to find the error rate:
 ##    B 21 79
 \end{verbatim}
 
-\vspace{2mm} \normalsize
+\vspace{2mm}
+\normalsize
 
 \textbf{However}, again, the Bayes boundary is usually not known, and we
 must estimate it from the data.
@@ -1946,6 +2045,7 @@ can use the \texttt{lda()} function in R.
 \end{verbatim}
 
 \normalsize
+
 Note: The training error is smaller than for the Bayes boundary. Why?
 
 \end{block}
@@ -1981,7 +2081,6 @@ Dashed line: Estimated boundary \(~\)
 \item
   These class probabilities can be estimated from the priors and class
   conditional distributions, or from the discriminant functions:
-
   \begin{align*}\hat{P}(Y=k | X=\boldsymbol{x})&=
   \frac{\hat{\pi}_k \cdot \frac{1}{(2 \pi)^{p/2}|\hat{\boldsymbol{\Sigma}}|^{1/2}} \exp(-\frac{1}{2}
   (\boldsymbol{x}-\hat{\boldsymbol\mu}_k)^T \hat{\boldsymbol{\Sigma}}^{-1}
@@ -2001,6 +2100,7 @@ Dashed line: Estimated boundary \(~\)
 \end{frame}
 
 \begin{frame}{Quadratic Discriminant Analysis (QDA)}
+\protect\hypertarget{quadratic-discriminant-analysis-qda}{}
 
 \begin{itemize}
 \item
@@ -2015,10 +2115,8 @@ Dashed line: Estimated boundary \(~\)
 \[X \sim N(\boldsymbol{\mu}_k, \boldsymbol{\Sigma}_k) \ .\]
 
 \begin{itemize}
-\tightlist
 \item
   The discriminant functions are now given by: \vspace{-3mm}
-
   \begin{align*} \delta_k({\boldsymbol x}) &= -\frac{1}{2}({\boldsymbol x}-\boldsymbol{\mu}_k)^T \boldsymbol{\Sigma}_k^{-1}({\boldsymbol x}-\boldsymbol{\mu}_k)-\frac{1}{2}\log |\boldsymbol{\Sigma}_k| + \log \pi_k \\ 
   &= -\frac{1}{2} {\boldsymbol x}^T \boldsymbol{\Sigma}_k^{-1}{\boldsymbol x} + {\boldsymbol x}^T \boldsymbol{\Sigma}_k^{-1}\boldsymbol{\mu}_k - \frac{1}{2} \boldsymbol{\mu}_k^T \boldsymbol{\Sigma}_k^{-1}\boldsymbol{\mu}_k - \frac{1}{2}\log |\boldsymbol{\Sigma}_k | + \log \pi_k.\\
   \end{align*}
@@ -2098,7 +2196,8 @@ boundaries for the cases where
 \(\boldsymbol{\Sigma}_1 \neq \boldsymbol{\Sigma}_2\) (right).
 
 \centering
-\includegraphics[width=1.00000\textwidth]{../../ISLR/Figures/Chapter4/4.9.png}
+
+\includegraphics[width=1\textwidth,height=\textheight]{../../ISLR/Figures/Chapter4/4.9.png}
 
 \end{block}
 
@@ -2125,9 +2224,10 @@ statistician and biologist Ronald Fisher in 1936.
 \begin{figure}
 \includegraphics[width=0.3\linewidth]{iris} \caption{Iris plant with sepal and petal leaves}\label{fig:iris_pic}
 \end{figure}
+\vspace{-2mm}
+\tiny
 
-\vspace{-2mm} \tiny
-<http://blog.kaggle.com/2015/04/22/scikit-learn-video-3-machine-learning-first-steps-with-the-iris-dataset/>
+\url{http://blog.kaggle.com/2015/04/22/scikit-learn-video-3-machine-learning-first-steps-with-the-iris-dataset/}
 
 \end{block}
 
@@ -2353,7 +2453,6 @@ our test set and should be preferred in this case.
 But:
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
   Would another division of the data into training and test set give the
@@ -2371,7 +2470,6 @@ But:
 \vspace{2mm}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{1}
 \tightlist
 \item
@@ -2471,6 +2569,7 @@ Remember:
 \end{frame}
 
 \begin{frame}{Which classification method is the best?}
+\protect\hypertarget{which-classification-method-is-the-best}{}
 
 \begin{block}{Advantages of discriminant analysis}
 
@@ -2583,14 +2682,16 @@ The answer is: \textbf{it depends!}
   of the effect of the covariates possbile.
 \end{itemize}
 
-\vspace{2mm} Please read Section 4.5 of our coursebook (James et al.
-2013).
+\vspace{2mm}
+
+Please read Section 4.5 of our coursebook (James et al. 2013).
 
 \end{block}
 
 \end{frame}
 
 \begin{frame}{Two-class problems: sensitivity, specificity}
+\protect\hypertarget{two-class-problems-sensitivity-specificity}{}
 
 \begin{itemize}
 \item
@@ -2701,8 +2802,9 @@ only}:
   \(\eta=\beta_0 + \beta_1 \cdot x_{\text{sbp}} + \beta_2\cdot x_{\text{tobacco}} + \beta_3 \cdot x_\text{ldh} + \beta_4 \cdot x_{famhist} + \beta_5\cdot x_\text{obesity} + \beta_6\cdot x_\text{alcohol} + \beta_7\cdot x_{\text{age}}\).
 \end{itemize}
 
-\hspace{6mm} Remember that \(x_{famhist} \in \{0,1\}\) is a binary
-covariate.
+\hspace{6mm}
+
+Remember that \(x_{famhist} \in \{0,1\}\) is a binary covariate.
 
 \vspace{2mm}
 
@@ -2885,6 +2987,7 @@ to calculate sensitivity and specificity for this cut-off:
 \end{verbatim}
 
 \normalsize
+
 Observe that the value 0.603 (on \(y\)-axis) and 0.276 (1-specificity on
 \(x\)-axis) is on our ROC curve.
 
@@ -2894,6 +2997,7 @@ sensitivity and specificity.
 \end{frame}
 
 \begin{frame}{Further reading}
+\protect\hypertarget{further-reading}{}
 
 \begin{itemize}
 \tightlist
@@ -2925,9 +3029,10 @@ sensitivity and specificity.
 \end{frame}
 
 \begin{frame}{References}
+\protect\hypertarget{references}{}
 
 \hypertarget{refs}{}
-\hypertarget{ref-james.etal}{}
+\leavevmode\hypertarget{ref-james.etal}{}%
 James, G., D. Witten, T. Hastie, and R. Tibshirani. 2013. \emph{An
 Introduction to Statistical Learning with Applications in R}. New York:
 Springer.

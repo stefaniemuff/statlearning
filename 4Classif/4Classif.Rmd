@@ -1,8 +1,8 @@
 ---
-subtitle: "TMA4268 Statistical Learning V2020"
+subtitle: "TMA4268 Statistical Learning V2021"
 title: "Module 4: Classification"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "January 24 and 27, 2020"
+date: "February 1st and 2nd, 2021"
 fontsize: 10pt
 output:
   # beamer_presentation:
@@ -34,13 +34,13 @@ whichformat="latex"
 
 ---
 
-Last update: January 27, 2020
+Last update: February 1st, 2021
 
 ---
 
 # Acknowledgements
 
-* A lot of this material stems from Mette Langaas and her TAs (especiall Julia Debik). I would like to thank Mette for the permission to use her material!
+* Thanks to Mette Langaas and her TAs who permit me to use and modify their original material. 
 
 * Some of the figures and slides in this presentation are taken (or are inspired) from @james.etal.
 
@@ -51,7 +51,7 @@ Last update: January 27, 2020
 ## Learning material for this module
 \vspace{2mm}
 
-* James et al (2013): An Introduction to Statistical Learning. Chapter 4 + Chapter 2.2.3.  
+* James et al. (2013): An Introduction to Statistical Learning. Chapter 4 + Chapter 2.2.3.  
 
 $~$
 
@@ -74,6 +74,8 @@ $~$
 ---
 
 ## What will you learn?
+
+$~$
 
 * Classification and discrimination
 
@@ -147,11 +149,11 @@ $~$
 The `Default` dataset is available from the ISLR package. 
 
 \vspace{2mm}
-{\bf Aim}: to predic whether an individual will default on his or her credit card payment, given the annual income and credit card balance. 
+**Aim** : to predic whether an individual will default on his or her credit card payment, given the annual income and credit card balance. 
 
 \textcolor{orange}{Orange: default=yes}, \textcolor{blue}{blue: default=no}.
 
-\vspace{0mm}
+
  \centering
 ![ISLR Figure 3.7](../../ISLR/Figures/Chapter4/4.1a.png){width=50%}
  
@@ -184,6 +186,7 @@ $~$
 
 **Three methods for classification** are discussed here:
 
+$~$
 
 
 * Logistic regression
@@ -209,15 +212,18 @@ $$Y = \left\{ \begin{array}{ll}
 Can we simply perform a linear regression of $Y$ on $X$ and
 classify as `yes` if $\hat{Y}> 0.5$? 
 
+\vspace{2mm}
+
 * In this case of a binary outcome, linear regression does a
 good job as a classifier, and is equivalent to linear
 discriminant analysis which we discuss later.
 
-* Since in the population $\text{E}(Y \mid X = x) = \text{Pr}(Y = 1 \mid X = x)$,
-we might think that regression is perfect for this task.
+\vspace{2mm}
 
 * However, linear regression might produce probabilities less
 than zero or bigger than one. 
+
+\vspace{2mm}
 
 $\rightarrow$ We need to use **logistic regression**.
 
@@ -264,16 +270,19 @@ $~$
 ---
 
 ### However:
+
 \vspace{2mm}
 
-* It is still possible to use linear regression for classification problems with two classes. It is actually not even a bad idea, and works well under some conditions. If the conditional class densities are (multivariate) normal with equal covariance matrices then this linear regression (with 0 and 1 response) will in fact give the same classification as linear discriminant analysis (LDA). 
+* It is still possible to use linear regression for classification problems with two classes. It is actually not even a bad idea, and works well under some conditions. Under some standard assumptions, this linear regression (with 0 and 1 response) will in fact give the same classification as linear discriminant analysis (LDA). 
+
+\vspace{2mm}
 
 * For categorical outcomes with more than two levels, it requires some extra work (multivariate $Y$ due to the dummy variable coding). 
 
+\vspace{2mm}
+
 * We leave linear regression for now.
 
-
-* For two classes _binary regression_, in particular _logistic regression_, is very popular - and is up next.
 
 ---
 
@@ -304,13 +313,11 @@ to $p_i$. How?
 
 * In logistic regression, we use the _logistic link function_
 
-\begin{center}
-\colorbox{lightgray}{\begin{minipage}{10cm}
+
 \begin{equation}
 \log\left( \frac{p_i}{1-p_i} \right) = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \ldots + \beta_p x_{ip} \ .
 \end{equation}
-\end{minipage}}
-\end{center}
+
 
 * **Q:** What is the rationale behind this?
 
@@ -318,28 +325,33 @@ to $p_i$. How?
 ---
 
 ### Logistic regression with one covariate
+
 \vspace{2mm}
 
 * Equation (1) can be rearranged and solved for $p_i$. Let's look at this for only one covariate: 
 
 $$ p_i= \frac{e^{\beta_0+\beta_1 x_i}}{1 + e^{\beta_0 + \beta_1 x_i}}.$$
 
+\vspace{2mm}
+
 * **Important:** These values $p_i$ will always lie in the interval between 0 and 1, with an S-shaped curve. 
 
-* The parameter $\beta_1$ determines the rate of increase or decrease of the S-shaped curve, and the sign indicates whether the curve ascends or descends. 
 
 
 
 ---
 
 ### Example: `Default` credit card data
-\vspace{2mm}
+
+$~$
 
 * The parameters are estimated using the method of maximum likelihood - we will look at that soon.
 
+\vspace{2mm}
+
 * Let's first do it! In R, this works with the `glm()` function, where we specify `family="binomial"`. 
 
-\vspace{2mm}
+\vspace{4mm}
 
 \scriptsize
 ```{r, echo=T}
@@ -355,6 +367,8 @@ summary(glm_default)$coef
 
 Plotting the fitted line (in blue):
 
+$~$
+
 ```{r defaultglm, echo=FALSE, fig.width=5, fig.height=3,fig.align = "center",out.width='70%'}
 library(ggplot2)
 glm_alpha = coef(glm_default)[1]
@@ -368,6 +382,8 @@ ggglm = ggplot(Default, aes(x=balance, y=default))+geom_point() +
 ggglm
 ```
 
+$~$
+
 Default data: here $\hat{\beta}_0=$ `r round(glm_alpha,2)` and $\hat{\beta}_1=$ `r round(glm_beta,3)`.
 
 
@@ -375,9 +391,13 @@ Default data: here $\hat{\beta}_0=$ `r round(glm_alpha,2)` and $\hat{\beta}_1=$ 
 
 ### Estimating the regression coefficients with ML
 
+$~$
+
 * The coefficients $\beta_0, \beta_1, \ldots$ are estimated with _maximum likelihood_ (ML).
 
-* We assume that pairs of covariates and responses  $\{{\boldsymbol x}_i, y_i\}$ are measured independently of each other. Given $n$ such observation pairs, the likelihood function of a logistic regression model can be written as:
+\vspace{2mm}
+
+* Given $n$ independent observation pairs  $\{{\boldsymbol x}_i, y_i\}$, the likelihood function of a logistic regression model can be written as:
 $$L(\boldsymbol{\beta}) = \prod_{i=1}^n L_i(\boldsymbol{\beta}) = \prod_{i=1}^n f(y_i; \boldsymbol{\beta}) = \prod_{i=1}^n (p_i)^{y_i}(1-p_i)^{1-y_i},$$
 where $\boldsymbol{\beta} = (\beta_0, \beta_1, \beta_2, \ldots, \beta_p)^T$ enters into $p_i$
 
@@ -413,19 +433,28 @@ $~$
 
 Let's again look at the regression output:
 
+$~$
+
 \scriptsize
 ```{r, echo=T}
 summary(glm_default)$coef
 ```
 
+$~$
+
+$~$
 
 \normalsize
 
 * The $z$-statistic is equal to $\frac{\hat\beta}{SE(\hat\beta)}$, and is approximately $N(0,1)$ distributed.\footnote{With this knowledge we can construct confidence intervals and test hypotheses about the $\beta$s, with the aim to understand which covariate(s) contribute to our posterior probabilites and classification.}
 
+\vspace{2mm}
+
 * The $p$-value is $\text{Pr}(|Z| > |z|)$ for a $Z\sim N(0,1)$ random variable
 
-* `Balance` seems an important predictor for `Default` (yes/no), with a higher balance leading to a higher probability of defaulting ($\beta_1>0$).
+\vspace{2mm}
+
+* Check the $p$-value for `Balance`. Conclusion?
 
 ---
 
