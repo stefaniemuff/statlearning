@@ -777,7 +777,7 @@ Odds represent \emph{\textcolor{red}{chances}} (e.g.~in betting).
 
 \(~\)
 
-\textbf{Q}:
+\textbf{Q}: Answer in the poll:
 
 \begin{enumerate}
 \item
@@ -839,8 +839,8 @@ that
 
 \textbf{Interpretation}:
 
-By increasing covariate \(x_{ij}\) by one unit, we change the odds ratio
-for \(Y_i=1\) by a factor \(\exp(\beta_j)\).
+By increasing covariate \(x_{ij}\) by one unit, we change the odds for
+\(Y_i=1\) by a factor \(\exp(\beta_j)\).
 
 \(~\)
 
@@ -858,6 +858,8 @@ interpreted as a \textbf{log odds-ratio}.
 Let's now fit the logistic regression model for \texttt{default}, given
 \texttt{balance}, \texttt{income} and the binary variable
 \texttt{student} as predictors:
+
+\(~\)
 
 \scriptsize
 
@@ -878,6 +880,8 @@ Let's now fit the logistic regression model for \texttt{default}, given
 ## studentYes  -6.467758e-01 2.362525e-01  -2.737646  6.188063e-03
 \end{verbatim}
 
+\(~\)
+
 \normalsize
 
 \textbf{Questions:}
@@ -885,15 +889,15 @@ Let's now fit the logistic regression model for \texttt{default}, given
 \begin{itemize}
 \tightlist
 \item
-  What happens with the odds-ratio when \texttt{income} increases by
-  10'000 dollars?
+  What happens with the odds to default when \texttt{income} increases
+  by 10'000 dollars?
 \end{itemize}
 
 \begin{itemize}
 \tightlist
 \item
-  What happens with the odds-ratio when \texttt{balance} increases by
-  100 dollars?
+  What happens with the odds to default when \texttt{balance} increases
+  by 100 dollars?
 \end{itemize}
 
 \end{frame}
@@ -971,17 +975,36 @@ Using R: \scriptsize
 
 \begin{block}{Example: South African heart disease data set}
 
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  \texttt{SAheart} data set from the \texttt{ElemStatLearn} package, a
+  retrospective sample of males in a heart-disease high-risk region in
+  South Africa.
+\end{itemize}
+
 \vspace{2mm}
 
 \begin{itemize}
-\item
-  \texttt{SAhert} data set from the \texttt{ElemStatLearn} package, a
-  retrospective sample of males in a heart-disease high-risk region in
-  South Africa.
+\tightlist
 \item
   462 observations on 10 variables.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   All subjects are male in the age range 15-64.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   160 cases (individuals who have suffered from a conorary heart
   disease) and 302 controls (individuals who have not suffered from a
@@ -1058,13 +1081,15 @@ looking at the data:
 \texttt{pairs()} plot with \(Y=1\) (case) in green and \(Y=0\) (control)
 in blue:
 
-\begin{center}\includegraphics[width=1\linewidth]{4Classif_files/figure-beamer/ggpairs_heart-1} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{4Classif_files/figure-beamer/ggpairs_heart-1} \end{center}
 
 \end{frame}
 
 \begin{frame}[fragile]
 
 Fitting the model using all predictors in R:
+
+\(~\)
 
 \tiny
 
@@ -1112,7 +1137,8 @@ Fitting the model using all predictors in R:
 
 \begin{itemize}
 \item
-  What are important predictors for CHD?
+  For which predictors do we have evidence that they are associated with
+  CHD?
 \item
   How would you now calculate \(\hat{p}(X)\) that someone will develop
   CHD, given covariates \(X\)?
@@ -1170,18 +1196,37 @@ predicted probabilities using
 
 \begin{block}{Properties of the Bayes classifier}
 
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  It has the \emph{smallest \textcolor{red}{test error} rate}.
+\end{itemize}
+
 \vspace{2mm}
 
 \begin{itemize}
-\item
-  It has the \emph{smallest \textcolor{red}{test error} rate}.
+\tightlist
 \item
   The class boundaries using the Bayes classifier is called the
   \emph{Bayes decision boundary}.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   The overall Bayes error rate is given as
   \[1-\text{E}(\max_j \text{Pr}(Y=j\mid X))\] where the expectation is
   over \(X\).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   The Bayes error rate is comparable to the \emph{irreducible error} in
   the regression setting.
@@ -1218,6 +1263,8 @@ the correct classifications loss 0 - this is called \emph{0/1-loss}.
 
 \begin{block}{Training error}
 
+\(~\)
+
 \begin{itemize}
 \tightlist
 \item
@@ -1231,11 +1278,19 @@ the correct classifications loss 0 - this is called \emph{0/1-loss}.
 \[\text{I}(a\neq\hat{a}) = \begin{cases} 1 \text{ if } a \neq \hat{a} \ , \\ 
 0 \text{ else. } \end{cases}\]
 
+\vspace{2mm}
+
 \begin{itemize}
+\tightlist
 \item
-  The indicator function counts the number of times our model has made a
-  wrong classification. The training error rate is the fraction of
-  misclassifications made on our training set.
+  The training error rate is the fraction of misclassifications made on
+  our training set.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   A very low training error rate may imply overfitting.
 \end{itemize}
@@ -1248,17 +1303,30 @@ the correct classifications loss 0 - this is called \emph{0/1-loss}.
 
 \begin{block}{Test error}
 
-\vspace{2mm}
+\(~\)
 
 \begin{itemize}
+\tightlist
 \item
   \textbf{Test error rate}: The fraction of misclassifications when our
   model is applied on a test set
   \[\text{Ave}(I(y_0\neq \hat{y}_0)) \ ,\] where the average is over all
   the test observations \((x_0,y_0)\).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Again, this gives a better indication of the true performance of the
   classifier than the training error (remember why?).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   We assume that a \emph{good} classifier is a classifier that has a
   \emph{low test error}.
@@ -1302,6 +1370,39 @@ the correct classifications loss 0 - this is called \emph{0/1-loss}.
 
 \begin{frame}
 
+\begin{block}{A synthetic example}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Simulate \(2\times 100\) observations from a bivariate normal
+  distribution with mean vectors \(\mu_A = (1, 1)^T\),
+  \(\mu_B = (3, 3)^T\), and covariance matrix
+  \(\Sigma_A = \Sigma_B = \begin{pmatrix} 2\hspace{2mm} 0 \\ 0 \hspace{2mm} 2 \end{pmatrix}\).
+\end{itemize}
+
+\(~\)
+
+\begin{center}\includegraphics[width=0.5\linewidth]{4Classif_files/figure-beamer/knn-1} \end{center}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Aim: Find a rule to classify a new observation to \(A\) or \(B\),
+  given only the data points (not the knowledge about the true
+  parameters).
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
 \vspace{2mm}
 
 The \(K\)-nearest neighbour classifier (KNN) works in the following way:
@@ -1324,35 +1425,15 @@ The \(K\)-nearest neighbour classifier (KNN) works in the following way:
 
 \begin{frame}
 
-\begin{block}{A synthetic example}
+\begin{block}{In our example:}
 
-\begin{itemize}
-\tightlist
-\item
-  Simulate \(2\times 100\) observations from a bivariate normal
-  distribution with mean vectors \(\mu_A = (1, 1)^T\),
-  \(\mu_B = (3, 3)^T\), and covariance matrix
-  \(\Sigma_A = \Sigma_B = \begin{pmatrix} 2\hspace{2mm} 0 \\ 0 \hspace{2mm} 2 \end{pmatrix}\).
-\end{itemize}
-
-\begin{center}\includegraphics[width=0.55\linewidth]{4Classif_files/figure-beamer/knn-1} \end{center}
-
-\begin{itemize}
-\tightlist
-\item
-  Aim: Find a rule to classify a new observation to \(A\) or \(B\).
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
+\vspace{2mm}
 
 \begin{itemize}
 \item
   Assume we have a new observation \(x_0 = (x_{01}, x_{02})^T\) which we
   want to classify as belonging to the class \(A\) or \(B\).
+  \vspace{2mm}
 \item
   We illustrate this by fitting the \(K\)-nearest neighbor classifier to
   our simulated data set with \(K = 1, 3, 10\) and \(150\) (next slide).
@@ -1360,7 +1441,15 @@ The \(K\)-nearest neighbour classifier (KNN) works in the following way:
 
 \vspace{4mm}
 
-Interpretation:
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{center}\includegraphics[width=0.9\linewidth]{4Classif_files/figure-beamer/unnamed-chunk-8-1} \end{center}
+
+\scriptsize
 
 \begin{itemize}
 \tightlist
@@ -1369,17 +1458,7 @@ Interpretation:
   grid.
 \item
   The lines show the decision boundaries.
-\item
-  If our new observation falls into the region within the red decision
-  boundary, it will be classified as \(A\). If it falls into the region
-  within the green decision boundary, it will be classified as \(B\).
 \end{itemize}
-
-\end{frame}
-
-\begin{frame}
-
-\includegraphics{4Classif_files/figure-beamer/unnamed-chunk-8-1.pdf}
 
 \end{frame}
 
@@ -1390,18 +1469,43 @@ Interpretation:
 \vspace{2mm}
 
 \begin{itemize}
+\tightlist
 \item
-  For \(K=1\) the classification is made to the same class as the one
-  nearest neighbor. As \(K\) gets very large, the decision boundary
-  tends towards a straight line (which is the Bayes boundary in this
-  set-up).
-\item
-  Finding the \emph{optimal value} of \(K\): try different values of
-  \(K\) and then test the predictive power of the different classifiers,
-  for example by cross-validation (Module 5).
+  \(K=1\): the classification is made to the same class as the one
+  nearest neighbor.
 \end{itemize}
 
-\begin{center}\includegraphics[width=0.6\linewidth]{4Classif_files/figure-beamer/knnerror1-1} \end{center}
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  \(K\) large: the decision boundary tends towards a straight line
+  (which is the Bayes boundary in this set-up).
+\end{itemize}
+
+\vspace{2mm}
+
+\(~\)
+
+\textbf{Discuss}:
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Depending on the choice of \(K\), when is the bias large, when is the
+  variance large?
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  How to find the optimal \(K\)?
+\end{itemize}
 
 \end{block}
 
@@ -1411,27 +1515,16 @@ Interpretation:
 
 \begin{block}{Bias-variance trade-off in a classification setting}
 
-\vspace{2mm}
+\(~\)
 
-Remember the bias-variance trade-off that we discussed in Module 2.
-\vspace{2mm}
+Finding the \emph{optimal value} of \(K\): Test the predictive power for
+different \(K\), for example by cross-validation (Module 5).
 
-Considerations: \vspace{2mm}
+\(~\)
 
-\begin{itemize}
-\item
-  A too low value of \(K\) will give a very flexible classifier which
-  will fit the training set too well: High variance, low bias, and thus
-  poor predictions for new observations due to overfit.
-\item
-  Choosing a high value for \(K\) makes the classifier loose its
-  flexibility: Low variance, high bias.
-\end{itemize}
+\begin{center}\includegraphics[width=0.6\linewidth]{4Classif_files/figure-beamer/knnerror1-1} \end{center}
 
 \vspace{2mm}
-
-\(\rightarrow\) Critical to the success of the classifier to choose the
-correct level of flexibility (\(K\)).
 
 \end{block}
 
@@ -1493,17 +1586,23 @@ posterior distribution for the classes \[\text{Pr}(Y=k \mid X=x)\ .\]
 
 \begin{block}{Sampling paradigm}
 
+\vspace{1mm}
+
 \begin{itemize}
 \tightlist
 \item
   Indirect approach: Model the conditional distribution of predictors
   \(f_k(x)=\text{Pr}(X=x \mid Y=k)\) for each class, and the prior
   probabilities \(\pi_k=\text{Pr}(Y=k)\).
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
 \item
   Then classify to the class with the maximal product \(\pi_k f_k(x)\).
   In this paradigm, we need to model the pdf for each class.
-\item
-  Popular: the multivariate normal distribution!
 \end{itemize}
 
 \end{block}
@@ -1555,6 +1654,8 @@ p_k(X) = \text{Pr}(Y=k \mid X= x) &=
   and obtain \(\text{Pr}(Y \mid X)\).
 \end{itemize}
 
+\vspace{2mm}
+
 \begin{block}{Example}
 
 \vspace{2mm}
@@ -1566,11 +1667,9 @@ Suppose we have observations coming from two classes:
 \[X_{\text{green}}\sim \mathcal{N}(-2, 1.5^2) \text{ and }
 X_{\text{orange}}\sim \mathcal{N}(2, 1.5^2) \]
 
-\begin{itemize}
-\tightlist
-\item
-  Assume probabilities to be equal, \(\pi_1 = \pi_2 = 0.5\).
-\end{itemize}
+\vspace{2mm}
+
+Assume probabilities to be equal, \(\pi_1 = \pi_2 = 0.5\).
 
 \end{block}
 
@@ -1600,7 +1699,7 @@ boundary shifts to the left:
 
 \begin{block}{Why discriminant analysis?}
 
-\vspace{2mm}
+\(~\)
 
 \begin{itemize}
 \item
@@ -1618,14 +1717,13 @@ boundary shifts to the left:
   \end{itemize}
 \end{itemize}
 
-\vspace{2mm}
+\vspace{4mm}
 
 \begin{itemize}
 \tightlist
 \item
   Moreover, linear discriminant analysis is popular when we have more
-  than two response classes, because it also provides low-dimensional
-  views of the data.
+  than two response classes.
 \end{itemize}
 
 \end{block}
@@ -1735,19 +1833,22 @@ Idea: we simply estimate the parameters and plug them into the rule.
   observations from class \(k\):
   \[\hat{\mu}_k = \frac{1}{n_k}\sum_{i:y_i=k} x_i.\]
 \item
-  The standard deviation: sample standard deviation across all classes:
+  The standard deviation: sample standard deviation across all classes
+  (``pooled'' standard deviation):
   \[\hat{\sigma}^2=\frac{1}{n-K}\sum_{k=1}^K \sum_{i: y_i=k} (x_i-\hat{\mu}_k)^2 = \sum_{k=1}^K \frac{n_k - 1}{n - K} \cdot \hat{\sigma}_k^2.\]
   \(\hat{\sigma}_k\): estimated standard deviation of all observations
   from class \(k\).
 \end{itemize}
-
-\textbf{How can we then estimate the goodness of our estimator?}
 
 \end{block}
 
 \end{frame}
 
 \begin{frame}[fragile]
+
+\begin{block}{How to test the goodness of the estimator?}
+
+\(~\)
 
 \begin{enumerate}
 \tightlist
@@ -1757,10 +1858,13 @@ Idea: we simply estimate the parameters and plug them into the rule.
   Use the test set to estimate misclassification rate.
 \end{enumerate}
 
-Simulate data and use training data to estimate \(\mu_k\) and
-\(\hat\sigma^2\):
+\(~\)
 
-\footnotesize
+\textbf{Simulated example:}
+
+\vspace{2mm}
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1784,6 +1888,8 @@ Simulate data and use training data to estimate \(\mu_k\) and
 \end{Highlighting}
 \end{Shaded}
 
+\end{block}
+
 \end{frame}
 
 \begin{frame}[fragile]
@@ -1799,6 +1905,8 @@ and resolve for \(x\) to obtain a decision rule (boundary).
 \textbf{Exercise}: Verify that the following code will give you the
 training and test error rates:
 
+\vspace{2mm}
+
 \scriptsize
 
 \begin{Shaded}
@@ -1806,8 +1914,10 @@ training and test error rates:
 \NormalTok{rule =}\StringTok{ }\FloatTok{0.5} \OperatorTok{*}\StringTok{ }\NormalTok{(}\KeywordTok{mean}\NormalTok{(train1) }\OperatorTok{+}\StringTok{ }\KeywordTok{mean}\NormalTok{(train2)) }\OperatorTok{+}\StringTok{ }\NormalTok{var.pool }\OperatorTok{*}\StringTok{ }\NormalTok{(}\KeywordTok{log}\NormalTok{(n2train}\OperatorTok{/}\NormalTok{n) }\OperatorTok{-}\StringTok{ }
 \StringTok{    }\KeywordTok{log}\NormalTok{(n1train}\OperatorTok{/}\NormalTok{n))}\OperatorTok{/}\NormalTok{(}\KeywordTok{mean}\NormalTok{(train1) }\OperatorTok{-}\StringTok{ }\KeywordTok{mean}\NormalTok{(train2))}
 
-\KeywordTok{c}\NormalTok{((}\KeywordTok{sum}\NormalTok{(train1 }\OperatorTok{>}\StringTok{ }\NormalTok{rule) }\OperatorTok{+}\StringTok{ }\KeywordTok{sum}\NormalTok{(train2 }\OperatorTok{<}\StringTok{ }\NormalTok{rule))}\OperatorTok{/}\NormalTok{n, (}\KeywordTok{sum}\NormalTok{(test1 }\OperatorTok{>}\StringTok{ }\NormalTok{rule) }\OperatorTok{+}\StringTok{ }\KeywordTok{sum}\NormalTok{(test2 }\OperatorTok{<}\StringTok{ }
-\StringTok{    }\NormalTok{rule))}\OperatorTok{/}\NormalTok{n)}
+\NormalTok{trainingError <-}\StringTok{ }\NormalTok{(}\KeywordTok{sum}\NormalTok{(train1 }\OperatorTok{>}\StringTok{ }\NormalTok{rule) }\OperatorTok{+}\StringTok{ }\KeywordTok{sum}\NormalTok{(train2 }\OperatorTok{<}\StringTok{ }\NormalTok{rule))}\OperatorTok{/}\NormalTok{n}
+\NormalTok{testError <-}\StringTok{ }\NormalTok{(}\KeywordTok{sum}\NormalTok{(test1 }\OperatorTok{>}\StringTok{ }\NormalTok{rule) }\OperatorTok{+}\StringTok{ }\KeywordTok{sum}\NormalTok{(test2 }\OperatorTok{<}\StringTok{ }\NormalTok{rule))}\OperatorTok{/}\NormalTok{n}
+
+\KeywordTok{c}\NormalTok{(trainingError, testError)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1828,36 +1938,34 @@ assumed\footnote{Both of which we knew were fulfilled here.}.
 
 \begin{block}{The confusion matrix}
 
-\vspace{2mm}
+\(~\)
 
 \begin{itemize}
+\tightlist
 \item
   The confusion matrix is a table that can show the performance of a
   classifier, given that the true values are known.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   We can make a confusion matrix from the training or test set
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   The sum of the diagonal is the total number of correct
   classifications. The sum of all elements off the diagonal is the total
   number of misclassifications.
 \end{itemize}
 
-\begin{center}
-
-\begin{tabular}{l|l|l|l|l}
-\hline
- & Predicted 1 & Predicted 2 & ... & Predicted K\\
-\hline
-True 1 & correct & wrong & ... & wrong\\
-\hline
-True 2 & wrong & correct & ... & wrong\\
-\hline
-... & ... & ... & ... & ...\\
-\hline
-True K & wrong & wrong & ... & correct\\
-\hline
-\end{tabular}
-\end{center}
+\vspace{35mm}
 
 \begin{itemize}
 \tightlist
@@ -1905,19 +2013,9 @@ True K & wrong & wrong & ... & correct\\
 
 \begin{frame}
 
-In the compulsory 1 exercise you are going to show that the condition
-
-\[P(Y=0 \,|\, \boldsymbol{X}=\boldsymbol{x}) = P(Y=1  \,|\, \boldsymbol{X}=\boldsymbol{x}) \]
-
-can be expressed as
-
-\[\delta_0({\boldsymbol x}) = \delta_1({\boldsymbol x}) \ .\]
-
-\end{frame}
-
-\begin{frame}
-
 \begin{block}{Back to our synthetic example}
+
+\vspace{2mm}
 
 \begin{itemize}
 \item
@@ -1930,7 +2028,9 @@ can be expressed as
   \(B\).
 \end{itemize}
 
-\begin{center}\includegraphics[width=0.6\linewidth]{4Classif_files/figure-beamer/synthAB2-1} \end{center}
+\vspace{4mm}
+
+\begin{center}\includegraphics[width=0.55\linewidth]{4Classif_files/figure-beamer/synthAB2-1} \end{center}
 
 \end{block}
 
@@ -1965,6 +2065,8 @@ functional form \[x_2=4-x_1 \ .\]
 
 We can use the Bayes boundary to find the error rate:
 
+\vspace{2mm}
+
 \scriptsize
 
 \begin{Shaded}
@@ -1981,11 +2083,12 @@ We can use the Bayes boundary to find the error rate:
 ##    B 21 79
 \end{verbatim}
 
-\vspace{2mm}
+\vspace{6mm}
+
 \normalsize
 
-\textbf{However}, again, the Bayes boundary is usually not known, and we
-must estimate it from the data.
+Of course, the Bayes boundary is usually not known, and we must estimate
+it from the data.
 
 \end{block}
 
@@ -2011,21 +2114,13 @@ must estimate it from the data.
   \[\hat{\boldsymbol{\Sigma}}= \sum_{k=1}^K \frac{n_k - 1}{n - K} \cdot \hat{\boldsymbol{\Sigma}}_k.\]
 \end{itemize}
 
-Optional:
-\href{https://www.math.ntnu.no/emner/TMA4268/2018v/notes/ProofMeanS.pdf}{Proof
-that the estimator \(\hat{\boldsymbol{\Sigma}}_k\) is unbiased for each
-class (from TMA4267)}. Proof for pooled version not provided.
-
 \end{frame}
 
 \begin{frame}[fragile]
 
 \begin{block}{Analysing the synthetic example with \texttt{lda()}}
 
-\vspace{2mm}
-
-To obtain parameters estimates and an estimated decision boundary, we
-can use the \texttt{lda()} function in R.
+\(~\)
 
 \scriptsize
 
@@ -2044,6 +2139,8 @@ can use the \texttt{lda()} function in R.
 ##    B 18 82
 \end{verbatim}
 
+\(~\)
+
 \normalsize
 
 Note: The training error is smaller than for the Bayes boundary. Why?
@@ -2060,7 +2157,9 @@ Note: The training error is smaller than for the Bayes boundary. Why?
 
 Solid line: Bayes boundary
 
-Dashed line: Estimated boundary \(~\)
+Dashed line: Estimated boundary
+
+\(~\)
 
 \begin{center}\includegraphics[width=0.65\linewidth]{4Classif_files/figure-beamer/synthAB3-1} \end{center}
 
@@ -2075,25 +2174,33 @@ Dashed line: Estimated boundary \(~\)
 \vspace{2mm}
 
 \begin{itemize}
+\tightlist
 \item
   Sometimes the probability that an observation comes from a class \(k\)
   is more interesting than the actual classification itself.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   These class probabilities can be estimated from the priors and class
   conditional distributions, or from the discriminant functions:
-  \begin{align*}\hat{P}(Y=k | X=\boldsymbol{x})&=
-  \frac{\hat{\pi}_k \cdot \frac{1}{(2 \pi)^{p/2}|\hat{\boldsymbol{\Sigma}}|^{1/2}} \exp(-\frac{1}{2}
-  (\boldsymbol{x}-\hat{\boldsymbol\mu}_k)^T \hat{\boldsymbol{\Sigma}}^{-1}
-  (\boldsymbol{x}-\hat{\boldsymbol\mu}_k))}
-  {\sum_{l=1}^K \hat{\pi}_l 
-  \frac{1}{(2 \pi)^{p/2}|\hat{\boldsymbol{\Sigma}}|^{1/2}}
-  \exp(-\frac{1}{2}
-  (\boldsymbol{x}-\hat{\boldsymbol\mu}_l)^T 
-  \hat{\boldsymbol{\Sigma}}^{-1}
-  (\boldsymbol{x}-\hat{\boldsymbol\mu}_l))}\\
-  &=
-  \frac{e^{\hat{\delta}_k(\boldsymbol{x})}}{\sum_{l=1}^K e^{\hat{\delta}_l(\boldsymbol{x})}}.\end{align*}
 \end{itemize}
+
+\begin{align*}\hat{P}(Y=k | X=\boldsymbol{x})&=
+\frac{\hat{\pi}_k \cdot \frac{1}{(2 \pi)^{p/2}|\hat{\boldsymbol{\Sigma}}|^{1/2}} \exp(-\frac{1}{2}
+(\boldsymbol{x}-\hat{\boldsymbol\mu}_k)^T \hat{\boldsymbol{\Sigma}}^{-1}
+(\boldsymbol{x}-\hat{\boldsymbol\mu}_k))}
+{\sum_{l=1}^K \hat{\pi}_l 
+\frac{1}{(2 \pi)^{p/2}|\hat{\boldsymbol{\Sigma}}|^{1/2}}
+\exp(-\frac{1}{2}
+(\boldsymbol{x}-\hat{\boldsymbol\mu}_l)^T 
+\hat{\boldsymbol{\Sigma}}^{-1}
+(\boldsymbol{x}-\hat{\boldsymbol\mu}_l))}\\
+&=
+\frac{e^{\hat{\delta}_k(\boldsymbol{x})}}{\sum_{l=1}^K e^{\hat{\delta}_l(\boldsymbol{x})}}.\end{align*}
 
 \end{block}
 
@@ -2157,30 +2264,7 @@ covariance matrices.
 
 \textbf{A:}
 
-Explanation similar to a ``Bias-variance trade-off'':
-
-\begin{itemize}
-\tightlist
-\item
-  If the assumption of equal covariance matrices is wrong, then LDA may
-  suffer from high bias for the parameter estimators.
-\item
-  But for small sample sizes the covariance matrices might be poorly
-  estimated (high variance of estimators).
-\end{itemize}
-
-If the number of covariates is high:
-
-\begin{itemize}
-\tightlist
-\item
-  then QDA requires estimating \(K\cdot p \cdot (p+1)/2\) parameters,
-\item
-  while LDA only requires \(p\cdot(p+1)/2\).
-\end{itemize}
-
-Therefore, LDA is less flexible than QDA and might therefore have much
-less variance.
+\vspace{50mm}
 
 \end{frame}
 
@@ -2207,10 +2291,12 @@ boundaries for the cases where
 
 \begin{block}{Example: Which type of iris species?}
 
-\vspace{2mm}
+\(~\)
 
 The \texttt{iris} flower data set was introduced by the British
 statistician and biologist Ronald Fisher in 1936.
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -2242,6 +2328,8 @@ statistician and biologist Ronald Fisher in 1936.
 We will use \texttt{sepal\ width} and \texttt{sepal\ length} to build a
 classificator. We have 50 observations from each class.
 
+\(~\)
+
 \scriptsize
 
 \begin{Shaded}
@@ -2267,7 +2355,7 @@ classificator. We have 50 observations from each class.
 
 \begin{frame}
 
-\begin{center}\includegraphics[width=1\linewidth]{4Classif_files/figure-beamer/iris1-1} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{4Classif_files/figure-beamer/iris1-1} \end{center}
 
 \end{frame}
 
@@ -2284,7 +2372,9 @@ classificator. We have 50 observations from each class.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{4Classif_files/figure-beamer/iris2-1} \end{center}
+\(~\)
+
+\begin{center}\includegraphics[width=0.7\linewidth]{4Classif_files/figure-beamer/iris2-1} \end{center}
 
 \end{block}
 
@@ -2303,7 +2393,9 @@ classificator. We have 50 observations from each class.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics[width=0.8\linewidth]{4Classif_files/figure-beamer/iris3-1} \end{center}
+\(~\)
+
+\begin{center}\includegraphics[width=0.7\linewidth]{4Classif_files/figure-beamer/iris3-1} \end{center}
 
 \end{block}
 
@@ -2319,6 +2411,8 @@ To compare the \emph{predictive performance} of our two classifiers we
 divide the original \texttt{iris} data set randomly into train and test
 samples of equal size:
 
+\(~\)
+
 \scriptsize
 
 \begin{Shaded}
@@ -2333,7 +2427,11 @@ samples of equal size:
 
 \normalsize
 
+\(~\)
+
 Run LDA and QDA \emph{on the same training set}:
+
+\(~\)
 
 \scriptsize
 
@@ -2456,15 +2554,10 @@ But:
 \tightlist
 \item
   Would another division of the data into training and test set give the
-  same conclusion (that LDA is better than QDA for this data set)? (A:
-  Not necessarily, but probably.)
-
-  \begin{itemize}
-  \tightlist
-  \item
-    We will look into other choice than dividing into one training and
-    one test set in Module 5 (cross-validation).
-  \end{itemize}
+  same conclusion (that LDA is better than QDA for this data set)?\\
+  A: Not necessarily, but probably.\\
+  \(\rightarrow\) We will look into such questions in Module 5
+  (cross-validation).
 \end{enumerate}
 
 \vspace{2mm}
@@ -2474,8 +2567,8 @@ But:
 \tightlist
 \item
   What about the other two covariates? Would adding them to the model (4
-  covariates) give a better classification rule? (A: Probably. Try if
-  you want.)
+  covariates) give a better classification rule?\\
+  A: Probably. Try if you want.
 \end{enumerate}
 
 \end{frame}
@@ -2484,17 +2577,38 @@ But:
 
 \begin{block}{Different forms of discriminant analysis}
 
+\(~\)
+
 \begin{itemize}
+\tightlist
 \item
   LDA
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   QDA
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Naive Bayes (``Idiot's Bayes''): Assume that each class density is the
   product of marginal densities - i.e.~inputs are conditionally
   independent in each class \[f_k(x)=\prod_{j=1}^p f_{kj}(x_j) \ .\]
   This is generally not true, but it simplifies the estimation
   dramatically.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Other forms by proposing specific density models for \(f_k(x)\),
   including nonparametric approaches.
@@ -2508,18 +2622,39 @@ But:
 
 \begin{block}{Naive Bayes}
 
+\vspace{2mm}
+
 \begin{itemize}
+\tightlist
 \item
   Naive Bayes is method that is popular when \(p\) is large.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   The \emph{original naive Bayes}: univariate normal marginal
   distributions. Consequently
   \[\delta_k (x) \propto \log \left[ \pi_i \prod_{j=1}^p f_{kj}(x_j) \right] = - \frac{1}{2} \sum_{j=1}^p \frac{(x_j - \mu_{kj})^2}{\sigma_{kj}^2} + \log(\pi_k) \ , \]
   thus \(\boldsymbol{\Sigma}_k\) is assumed diagonal, and only the
   diagonal elements are estimated.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Arbitraty generalizations can be made. For example, mixed features
   (qualitative and quantitative predictors).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   This method often produces good results, even though the joint pdf is
   not the product of the marginal pdf. This might be because we are not
@@ -2533,6 +2668,8 @@ But:
 \begin{frame}
 
 \begin{block}{Summary of Classification Methods}
+
+\(~\)
 
 \begin{itemize}
 \item
@@ -2592,17 +2729,19 @@ Remember:
 
 \begin{block}{Linearity}
 
-\vspace{2mm}
+\(~\)
 
 Assume a binary classification problem with one covariate.
+
+\vspace{2mm}
 
 \begin{itemize}
 \item
   Recall that logistic regression can be written:
-  \[\log \Big ( \frac{p(x)}{1-p(x)}\Big ) = \beta_0 + \beta_1 x.\]
+  \[\log \Big ( \frac{p(x)}{1-p(x)}\Big ) = \beta_0 + \beta_1 x  \ .\]
 \item
   For a two-class problem, one can show that for LDA
-  \[\log\left(\frac{p_1(x)}{1-p_1(x)}\right) = \log\left(\frac{p_1(x)}{p_2(x)}\right) = c_0 + c_1 x_1 \ ,\]
+  \[\log\left(\frac{p_1(x)}{1-p_1(x)}\right) = \log\left(\frac{p_1(x)}{p_2(x)}\right) = c_0 + c_1 x_1 \ , \]
   thus the same linear form. The difference is in how the parameters are
   estimated.
 \end{itemize}
@@ -2615,12 +2754,26 @@ Assume a binary classification problem with one covariate.
 
 \begin{block}{LDA vs logistic regression}
 
+\(~\)
+
 \begin{itemize}
+\tightlist
 \item
   Logistic regression uses the conditional likelihood based on
   \(\text{Pr}(Y \mid X)\).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   LDA uses the full likelihood based on \(\text{Pr}(X,Y)\).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
 \item
   Despite these differences, in practice the results are often very
   similar\footnote{logistic regression can also fit quadratic boundaries
@@ -2643,6 +2796,8 @@ Assume a binary classification problem with one covariate.
   \end{itemize}
 \end{itemize}
 
+\vspace{2mm}
+
 \end{block}
 
 \begin{block}{and KNN?}
@@ -2661,19 +2816,40 @@ Assume a binary classification problem with one covariate.
 
 \begin{block}{So: Which classification method is the best?}
 
-\vspace{2mm}
+\(~\)
 
 The answer is: \textbf{it depends!}
 
+\vspace{2mm}
+
 \begin{itemize}
+\tightlist
 \item
   Logistic regression is very popular for classification, especially
   when \(K = 2\).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   LDA is useful when \(n\) is small, or the classes are well separated,
   and Gaussian assumptions are reasonable. Also when \(K > 2\).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Naive Bayes is useful when \(p\) is very large.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   KNN is completely different, as it makes no assumptions about the
   decision boundary nor the distribution of the variables
@@ -2720,17 +2896,25 @@ Please read Section 4.5 of our coursebook (James et al. 2013).
 \item
   We would like that a classification rule (or a diagnostic test) have
   both a high sensitivity and a high specificity.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   However, in an imperfect test (i.e., an imperfect predictor) one
   usually comes at the cost of the other.
 \end{itemize}
 
+\vspace{2mm}
+
 \(2 \times 2\) table shows data from a simple diagnostic study:
 
 \begin{center}
-\begin{tabular}{ll|c|c|c}
+\begin{tabular}{ll|cc|c}
 & & \multicolumn{2}{c}{\emph{Predicted}} \\
-& & $Y=0$ & $Y=1$ \\ 
+& & $\hat{Y}=0$ & $\hat{Y}=1$ \\ 
 \hline
 \multirow{2}{*}{\emph{True}} & $Y=0$ & True negative ($TN$) & False positive ($FN$) & $N$\\
  & $Y=1$ & False negative ($FP$) & True positive ($TP$) & $P$\\
@@ -2748,8 +2932,10 @@ Please read Section 4.5 of our coursebook (James et al. 2013).
 \vspace{2mm}
 
 We evaluate our multiple logistic model for the \texttt{SAheart} data
-set. To investigate the training error and the test error, we divide the
-original data set randomly into two samples of equal size.
+set. We divide the original data set randomly into a training and test
+dataset of equal size.
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -2764,8 +2950,12 @@ original data set randomly into two samples of equal size.
 
 \normalsize
 
+\(~\)
+
 \textbf{Fit} a logistic regression model, \textbf{using the training set
 only}:
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -2799,21 +2989,16 @@ only}:
 \item
   The estimated probability of a \texttt{chd} event (\(Y=1\)) is then
   given as \[\hat{p}(\mathbf{X}) =\frac{e^\eta}{1+e^\eta} ,\] with
-  \(\eta=\beta_0 + \beta_1 \cdot x_{\text{sbp}} + \beta_2\cdot x_{\text{tobacco}} + \beta_3 \cdot x_\text{ldh} + \beta_4 \cdot x_{famhist} + \beta_5\cdot x_\text{obesity} + \beta_6\cdot x_\text{alcohol} + \beta_7\cdot x_{\text{age}}\).
+  \(\eta=\beta_0 + \beta_1 \cdot x_{\text{sbp}} + \beta_2\cdot x_{\text{tobacco}} + \ldots + \beta_7\cdot x_{\text{age}}\).\\
+  Remember that \(x_{famhist} \in \{0,1\}\) is a binary covariate.
 \end{itemize}
-
-\hspace{6mm}
-
-Remember that \(x_{famhist} \in \{0,1\}\) is a binary covariate.
 
 \vspace{2mm}
 
 \begin{itemize}
 \tightlist
 \item
-  We are interested in the \textbf{predictions for the test set}
-  (although it is of course possible to calculate predictions for the
-  training set, too).
+  We are interested in the \textbf{predictions for the test set}.
 \end{itemize}
 
 \end{frame}
@@ -2828,6 +3013,8 @@ Remember that \(x_{famhist} \in \{0,1\}\) is a binary covariate.
   probabilities for \(Y=1\).
 \end{itemize}
 
+\(~\)
+
 \scriptsize
 
 \begin{Shaded}
@@ -2836,16 +3023,17 @@ Remember that \(x_{famhist} \in \{0,1\}\) is a binary covariate.
 \end{Highlighting}
 \end{Shaded}
 
+\(~\)
+
 \normalsize
 
 \begin{itemize}
 \tightlist
 \item
-  Classifications are obtained by specifying a threshold value. We have
-  here chosen a threshold value of 0.5. By using the \texttt{ifelse}
-  function we specify that all probabilities larger than 0.5 are to be
-  classified as 1, while the remaining probabilities are to be
-  classified as 0.
+  Here we have chosen a threshold value of 0.5. By using the
+  \texttt{ifelse} function we specify that all probabilities larger than
+  0.5 are to be classified as 1, while the remaining probabilities are
+  to be classified as 0.
 \end{itemize}
 
 \end{frame}
@@ -2882,6 +3070,8 @@ Remember that \(x_{famhist} \in \{0,1\}\) is a binary covariate.
 The confusion matrix is used to count the number of misclassifications
 in the test set:
 
+\vspace{2mm}
+
 \scriptsize
 
 \begin{Shaded}
@@ -2896,6 +3086,8 @@ in the test set:
 ##         0 118  45
 ##         1  27  41
 \end{verbatim}
+
+\vspace{2mm}
 
 \normalsize
 
@@ -2916,22 +3108,41 @@ in the test set:
 
 \begin{block}{ROC curves and AUC}
 
-\vspace{2mm}
+\(~\)
 
 \begin{itemize}
+\tightlist
 \item
   The receiver operating characteristics (ROC) curve gives a graphical
   display of the sensitivity against (1-specificity), as the threshold
   value (cut-off on probability of success or disease) is moved over the
   range of all possible values.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   An ideal classifier will give a ROC curve which hugs the top left
   corner (sensitivity = specificity = 1), while a straight line
   represents a classifier with a random guess of the outcome.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   The \textbf{AUC} score is the area under the AUC curve. It ranges
   between the values 0 and 1, where a higher value indicates a better
   classifier.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   The AUC score is useful for comparing the performance of different
   classifiers, as all possible threshold values are taken into account.
@@ -2948,9 +3159,11 @@ in the test set:
 In order to see how our model performs for different threshold values,
 we can plot a ROC curve:
 
+\vspace{2mm}
+
 \scriptsize
 
-\begin{center}\includegraphics[width=0.8\linewidth]{4Classif_files/figure-beamer/roc-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{4Classif_files/figure-beamer/roc-1} \end{center}
 
 \end{block}
 
