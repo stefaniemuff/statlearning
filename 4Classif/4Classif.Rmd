@@ -822,7 +822,7 @@ where the average is over all the test observations $(x_0,y_0)$.
 
 # The K-nearest neighbour (KNN) classifier
 
-* **Caveat** for the Bayes classifier: we usually don't know the conditional distribution of $\text{Pr}(Y  |  X)$ is for real data.
+* **Caveat** for the Bayes classifier: we usually don't know the true conditional distribution of $\text{Pr}(Y  |  X)$ for real data.
 
 \vspace{1mm}
 
@@ -906,7 +906,7 @@ $$\text{Pr}(Y=j | X = x_0) = \frac{1}{K} \sum_{i \in \mathcal{N}_0} I(y_i = j)\ 
 
 ---
 
-```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.width=7,fig.height=5,fig.align="center",out.width='90%'}
+```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.width=8,fig.height=5.5,fig.align="center",out.width='90%'}
 library(class)
 library(dplyr)
 library(ggpubr)
@@ -966,6 +966,8 @@ gg150 = gg150 + ggtitle("k = 150")+xlab("X1")+ylab("X2")+theme_minimal()
 
 ggarrange(gg,gg3,gg10,gg150)
 ```
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -1100,11 +1102,11 @@ How do we get $\text{Pr}(Y=k | X=x_0)$? That is, how can we "flip" the condition
  
 ### **Bayes theorem** 
 \vspace{-3mm}
-\begin{align*}
+\begin{align}
 p_k(X) = \text{Pr}(Y=k \mid X= x) &= 
-\frac{\text{Pr}(X=x \cap Y=k)}{f(x)}\\
-&= \frac{ f_k(x) \pi_k}{\sum_{l=1}^K  f_l(x) \pi_l}  \ .
-\end{align*}
+\frac{\text{Pr}(X=x \cap Y=k)}{f(x)} \nonumber\\
+&= \frac{ f_k(x) \pi_k}{\sum_{l=1}^K  f_l(x) \pi_l}  \ . \label{eq:Bayes}
+\end{align}
 
 
 
@@ -1307,7 +1309,7 @@ $\hat{\sigma}_k$: estimated standard deviation of all observations from class $k
 
 $~$
 
-1. Use the training set to estimate parameters and class boundary:
+1. Use the training set to estimate parameters and class boundary.
 2. Use the test set to estimate misclassification rate.
 
 $~$
@@ -1374,6 +1376,9 @@ $~$
 
 * The sum of the diagonal is the total number of correct classifications. The sum of all elements off the diagonal is the total number of misclassifications.
 
+\centering
+![](true_predicted.png){width=45%}
+
 <!-- \begin{center} -->
 <!-- ```{r, echo=FALSE, warning=FALSE} -->
 <!-- library(knitr) -->
@@ -1390,7 +1395,8 @@ $~$
 <!-- ``` -->
 <!-- \end{center} -->
 
-\vspace{35mm}
+\vspace{2mm}
+\flushleft
 
 * The confusion matrix can be obtained in `R` by using the `table` function, or directly using the `caret` package.
 
@@ -1412,7 +1418,7 @@ $$f(x) = \frac{1}{(2 \pi)^{p/2}|\boldsymbol{\Sigma}|^{1/2}}\exp({-\frac{1}{2}({\
 
 ---
 
-* This gives the following expression for the discriminant function:
+* Plugging this density into equation (\ref{eq:Bayes}) gives the following expression for the discriminant function:
 $$\delta_k(x) = {\boldsymbol x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_k - \frac{1}{2}\boldsymbol\mu_k^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_k + \log \pi_k.$$
 
 * Note: $\delta_k(x) = c_{k0} + c_{k1}x_1 + \ldots + c_{kp}x_p$ is a linear function in $(x_1,\ldots ,x_p)$.

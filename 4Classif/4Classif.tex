@@ -1343,7 +1343,7 @@ the correct classifications loss 0 - this is called \emph{0/1-loss}.
 \tightlist
 \item
   \textbf{Caveat} for the Bayes classifier: we usually don't know the
-  conditional distribution of \(\text{Pr}(Y | X)\) is for real data.
+  true conditional distribution of \(\text{Pr}(Y | X)\) for real data.
 \end{itemize}
 
 \vspace{1mm}
@@ -1448,6 +1448,8 @@ The \(K\)-nearest neighbour classifier (KNN) works in the following way:
 \begin{frame}
 
 \begin{center}\includegraphics[width=0.9\linewidth]{4Classif_files/figure-beamer/unnamed-chunk-8-1} \end{center}
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -1630,11 +1632,11 @@ the conditioning around? \vspace{4mm}
 
 \vspace{-3mm}
 
-\begin{align*}
+\begin{align}
 p_k(X) = \text{Pr}(Y=k \mid X= x) &= 
-\frac{\text{Pr}(X=x \cap Y=k)}{f(x)}\\
-&= \frac{ f_k(x) \pi_k}{\sum_{l=1}^K  f_l(x) \pi_l}  \ .
-\end{align*}
+\frac{\text{Pr}(X=x \cap Y=k)}{f(x)} \nonumber\\
+&= \frac{ f_k(x) \pi_k}{\sum_{l=1}^K  f_l(x) \pi_l}  \ . \label{eq:Bayes}
+\end{align}
 
 \end{block}
 
@@ -1853,7 +1855,7 @@ Idea: we simply estimate the parameters and plug them into the rule.
 \begin{enumerate}
 \tightlist
 \item
-  Use the training set to estimate parameters and class boundary:
+  Use the training set to estimate parameters and class boundary.
 \item
   Use the test set to estimate misclassification rate.
 \end{enumerate}
@@ -1965,7 +1967,12 @@ assumed\footnote{Both of which we knew were fulfilled here.}.
   number of misclassifications.
 \end{itemize}
 
-\vspace{35mm}
+\centering
+
+\includegraphics[width=0.45\textwidth,height=\textheight]{true_predicted.png}
+
+\vspace{2mm}
+\flushleft
 
 \begin{itemize}
 \tightlist
@@ -2002,7 +2009,8 @@ assumed\footnote{Both of which we knew were fulfilled here.}.
 
 \begin{itemize}
 \item
-  This gives the following expression for the discriminant function:
+  Plugging this density into equation (\ref{eq:Bayes}) gives the
+  following expression for the discriminant function:
   \[\delta_k(x) = {\boldsymbol x}^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_k - \frac{1}{2}\boldsymbol\mu_k^T \boldsymbol{\Sigma}^{-1}\boldsymbol\mu_k + \log \pi_k.\]
 \item
   Note: \(\delta_k(x) = c_{k0} + c_{k1}x_1 + \ldots + c_{kp}x_p\) is a
