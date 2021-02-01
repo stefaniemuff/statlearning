@@ -40,26 +40,34 @@ ggplot(knnframe,aes(x=x1,y=x2)) + geom_point(aes(color=y, shape=y), size = 3)
 We wish to use this data set to make a prediction for $Y$ when $X_1=1, X_2=2$ using the $K$-nearest neighbors classification method.
 
 ## a)
-Observation 1: $\sqrt{(3-1)^2+(3-2)^2}= \sqrt{5}$  
-Observation 2: $\sqrt{(2-1)^2+(0-2)^2}= \sqrt{5}$  
-Observation 3: $\sqrt{(1-1)^2+(1-2)^2}= 1$  
-Observation 4: $\sqrt{(0-1)^2+(1-2)^2}= \sqrt{2}$  
-Observation 5: $\sqrt{(-1-1)^2+(0-2)^2}= \sqrt{8}$  
-Observation 6: $\sqrt{(2-1)^2+(1-2)^2}= \sqrt{2}$  
+Observation 1: $\sqrt{(3-1)^2+(3-2)^2}= \sqrt{5} =$ `r round(sqrt(5), 2)`
+
+Observation 2: $\sqrt{(2-1)^2+(0-2)^2}= \sqrt{5} =$  `r round(sqrt(5), 2)`
+
+Observation 3: $\sqrt{(1-1)^2+(1-2)^2} = 1$   
+
+Observation 4: $\sqrt{(0-1)^2+(1-2)^2}= \sqrt{2} =$ `r round(sqrt(2), 2)` 
+
+Observation 5: $\sqrt{(-1-1)^2+(0-2)^2}= \sqrt{8} =$  `r round(sqrt(8), 2)`
+
+Observation 6: $\sqrt{(2-1)^2+(1-2)^2}= \sqrt{2} =$  `r round(sqrt(2), 2)`
+
 Observation 7: $\sqrt{(1-1)^2+(0-2)^2} = 2$
 
 ## b)
 When $K=1$ the nearest neighbor is observation 3 $(1,1)$ which is class A. The predicted probabilities for class A and B are then, $$P(Y=A|X=x_0) = \frac{1}{1}\sum_{i \in \mathcal{N}_0}I(y_i=A) = 1$$
 $$P(Y=B|X=x_0) = \frac{1}{1}\sum_{i \in \mathcal{N}_0}I(y_i=B) = 0,$$ 
 and we classify the point as A.
-For $K=4$ the nearest neighbors are observations 3,4,6 and 7 with corresponding classes \{A,B,B,B\} and the predicted probabilities for class A and B for point $(1,2)$ are then 
+For $K=4$ the nearest neighbors are observations 3, 4, 6 and 7 with corresponding classes \{A,B,B,B\} and the predicted probabilities for class A and B for point $(1,2)$ are then 
 $$P(Y=A|X=x_0) = \frac{1}{4}\sum_{i \in \mathcal{N}_0}I(y_i=A) = \frac{1}{4}(1+0+0+0) = 0.25$$
 $$P(Y=B|X=x_0) = \frac{1}{4}\sum_{i \in \mathcal{N}_0}I(y_i=B) = \frac{1}{4}(0+1+1+1) = 0.75,$$
 and we classify the point as B.
 For $K=7$ we use all our observations to predict the probabilties,
-$$P(Y=A|X=x_0) = \frac{1}{7}\sum_{i \in \mathcal{N}_0}I(y_i=A) = \frac{1}{7}(1+1+0+0+0+0+0) = 0.286$$
-$$P(Y=B|X=x_0) = \frac{1}{7}\sum_{i \in \mathcal{N}_0}I(y_i=B) = \frac{1}{7}(0+0+1+1+1+1+1) = 0.714,$$
-and we classify the point $(1,2)$ as B. Using all observations for classification with KNN, we will always choose the class that are most represented in the data (B in this case), and the predicted class will be B regardless of the position of the new point.
+$$P(Y=A|X=x_0) = \frac{1}{7}\sum_{i \in \mathcal{N}_0}I(y_i=A) = \frac{1}{7}(1+1+1+0+0+0+0) = \frac{3}{7} = 0.429,$$
+$$P(Y=B|X=x_0) = \frac{1}{7}\sum_{i \in \mathcal{N}_0}I(y_i=B) = \frac{1}{7}(0+0+0+1+1+1+1) = \frac{4}{7} = 0.571,$$
+and we classify the point as B. 
+
+Using all observations for classification with KNN, we will always choose the class that are most represented in the data (B in this case), and the predicted class will be B regardless of the position of the new point.
 
 ## c)
 If the Bayes decision boundary is highly non-linear, we would choose a $K$ that is not to big, as the decision boundary becomes approximately linear when $K$ tends to infinity.
@@ -82,7 +90,7 @@ $$
 ## a) 
 Assuming the observations $x_G$ and $x_F$ are independent observations from normal distribution with the same covariance matrix $\boldsymbol \Sigma = \boldsymbol \Sigma_G = \boldsymbol \Sigma_F$, and all observations are independent of each other, we can find the estimated pooled covariance matrix as
 $$\begin{aligned}
-  \hat{\boldsymbol \Sigma} &= \frac{(n_G - 1)\hat{\boldsymbol \Sigma}_G + (n_f - 1)\hat{\boldsymbol \Sigma}_F}{n_g + n_F - 2} \\
+  \hat{\boldsymbol \Sigma} &= \frac{(n_G - 1)\hat{\boldsymbol \Sigma}_G + (n_F - 1)\hat{\boldsymbol \Sigma}_F}{n_G + n_F - 2} \\
   &= \left[     \begin{array}{cc} 0.13710 & 0.00855 \\ 0.00855 & 0.25550 
 \end{array} \right]
 \end{aligned}$$
@@ -114,7 +122,7 @@ $$\begin{aligned}
 \left[ 214.97 \text{  } 141.52 \right] \
 \left[ \begin{array}{cc} 7.31 & -0.24 \\ -0.24 & 3.92 
 \end{array} \right]
-\left[     \begin{array}{c} 214.97 \\ 141.52  \end{array} \right] \ - \log 2 \\
+\left[     \begin{array}{c} 214.97 \\ 141.52  \end{array} \right] \ - \log 0.5 \\
 &= 198667.1
 \end{aligned}$$
 
@@ -127,7 +135,7 @@ $$\begin{aligned}
 \left[ 214.82 \text{  } 139.42 \right] \
 \left[ \begin{array}{cc} 7.31 & -0.24 \\ -0.24 & 3.92 
 \end{array} \right]
-\left[     \begin{array}{c} 214.82 \\ 139.42  \end{array} \right] \ - \log 2 \\
+\left[     \begin{array}{c} 214.82 \\ 139.42  \end{array} \right] \ - \log 0.5 \\
 &= 198668.3
 \end{aligned}$$
 Since $\delta_F({\bf x_0})$ is larger than $\delta_G({\bf x_0})$, we classify the bank note as fake!
@@ -141,8 +149,8 @@ sigmaF = matrix(c(0.1240, 0.0116, 0.0116, 0.3112), byrow = T, ncol=2)
 sigma = (499*sigmaG + 499*sigmaF)/(998)
 x = c(214.0, 140.4)
 #lda discriminant function
-a = t(x)%*%solve(sigma)%*%xg -0.5*t(xg)%*%solve(sigma)%*%xg - log(2)
-b = t(x)%*%solve(sigma)%*%xf -0.5*t(xf)%*%solve(sigma)%*%xf - log(2)
+a = t(x)%*%solve(sigma)%*%xg -0.5*t(xg)%*%solve(sigma)%*%xg - log(0.5)
+b = t(x)%*%solve(sigma)%*%xf -0.5*t(xf)%*%solve(sigma)%*%xf - log(0.5)
 ```
 
 
@@ -207,6 +215,7 @@ b = -0.5*t(x)%*%solve(sigmaF)%*%x + t(x)%*%solve(sigmaF)%*%xf -
 ## a)
 Recall that the odds ratio is defined as $$\text{odds} = \frac{p}{1-p},$$ where $p$ is the probability of some event. We know that the odds ratio is equal to 0.37. We thus solve for $p$:
 $$\begin{aligned} \frac{p}{1-p} &= 0.37 \\ p &= 0.37 (1-p) \\ p &= \frac{0.37}{1.37} = 0.270 \end{aligned} $$
+
 ## b)
 For an individual we are given that $p = 0.16$. We are asked to find the odds that she will default. We can calculate this by inserting the probability of default into the formula for the odds ratio: $$\frac{p}{1-p} = \frac{0.16}{1-0.16} = 0.19$$ 
 
@@ -217,7 +226,7 @@ For an individual we are given that $p = 0.16$. We are asked to find the odds th
 We have that $X_1$ = hours studied = 40 and $X_2$ = undergrad GPA = 3.5. The formula for the predicted probability is 
 $$\begin{aligned}P(Y = A \mid X_1 = 40, X_2 = 3.5) &= \frac{\exp(\hat{\beta}_0 + \hat{\beta}_1 x_1 + \hat{\beta}_2 x_2)}{1 + \exp(\hat{\beta}_0 + \hat{\beta}_1 x_1 + \hat{\beta}_2 x_2)} \\ 
 &= \frac{\exp(-6 + 0.05 \cdot 40 + 1 \cdot 3.5)}{1 + \exp(-6 + 0.05 \cdot 40 + 1 \cdot 3.5)}\\ 
-&\approx 0.0378 \end{aligned}$$  
+&\approx 0.378 \end{aligned}$$  
 
 ## b)
 We know that $x_2$ = 3.5, and need to solve $\hat{P}(Y = A \mid x_1, x_2 = 3.5) = 0.5$ for $x_1$.
@@ -235,11 +244,11 @@ We start by denoting the number of true diseased as $P$ and the number of true n
 ```{r, echo=FALSE, warning=FALSE}
 library(knitr)
 #library(kableExtra)
-row1 = c("", " Predicted non-diseased -", "Predicted diseased +","Total")
-row2 = c("True non-diseased -", "TN","FP","N")
-row3 = c("True diseased +", "FN","TP", "P")
-row4 = c("Total", "N$^*$", "P$^*$","n")
-kable(rbind(row1, row2, row3,row4), row.names=FALSE)
+row1 = c("Predicted non-diseased -", "Predicted diseased +","Total")
+row2 = c("TN","FP","N")
+row3 = c("FN","TP", "P")
+row4 = c("N$^*$", "P$^*$","n")
+kable(rbind("True non-diseased -" = row2, "True diseased +" = row3, "Total" = row4), row.names=TRUE, col.names = row1)
 ```
 
 where TN (true negative) is the number of predicted non-diseased that are actually non-diseased, FP (false positive) is the number of predicted diseased that are actually non-diseased, FN (false negative) is the number of predicted non-diseased that are actually diseased and TP (true positive) is the number of predicted diseased that are actually diseased. Using the confusion table, we can calculate the sensitivity and specificity where
@@ -255,7 +264,7 @@ $$
 In the ROC-curve we plot the sensitivity against 1-specificity for all possible thresholds of the probability. To construct the ROC-curve we would have to calculate the sensitivity and specificity for different values of the cutoff $p(x)>cut$. Using a threshold of 0.5, you say that if a new person has a probability of 0.51 of having the disease, he is classified as diseased. Another person with a probability of 0.49 would then be classified as non-diseased. However, using another cutoff could easily lead to a better balance between sensitivity and specificity (i.e., the point could lie closer to the top-left corner than for a 0.5 cut-off). Moreover, depending on the cost of a false positive or a false negative, the cut-off could be adjusted. It is for example often less severe to generate a false positive (i.e., a positive testresult although a person is healty) than a false negative (i.e., you overlook a disease), in which case the sensitivity is increased at a cost of a lower specificity.
 
 ## c) 
-The AUC is the area under the ROC-curve and gives the overall performance of the test for all possible thresholds. A AUC value of 1 means a perfect fit for all possible thresholds, while a AUC of 0.5 corresponds to the classifyer that performs no better than chance. Hence, a classification method $p(x)$ giving 0.6 and another $q(x)$ giving 0.7, we would probably prefer $q(x)$.
+The AUC is the area under the ROC-curve and gives the overall performance of the test for all possible thresholds. An AUC value of 1 means a perfect fit for all possible thresholds, while a AUC of 0.5 corresponds to the classifier that performs no better than chance. Hence, a classification method $p(x)$ giving 0.6 and another $q(x)$ giving 0.7, we would probably prefer $q(x)$.
 
 ---
 # Data analysis in R
@@ -278,7 +287,7 @@ summary(Weekly)
 ggpairs(Weekly, aes(color=Direction), lower = list(continuous = wrap("points", alpha = 0.3, size=0.2)))
 ```
 
-We can observe that the variables `Year` and `Volume` are highly correlated and it might look like the `Volume` increases quadratically with increasing `Year`. No other clear patterns is observed.
+We can observe that the variables `Year` and `Volume` are highly correlated and it might look like the `Volume` increases quadratically with increasing `Year`. No other clear patterns are observed.
 
 ## b)
 We fit a logistic regression model using the `glm` function and specifying that we want to fit a binomial function by giving `function="binomial"` as an argument. 
