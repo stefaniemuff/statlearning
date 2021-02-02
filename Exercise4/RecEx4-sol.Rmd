@@ -115,14 +115,14 @@ $${\bf x_0}^T \hat{\boldsymbol{\Sigma}}^{-1}(\boldsymbol\mu_G -\boldsymbol\mu_F)
 With ${\bf x_0} = [214.0, 140.4]^T$ and using the formula given in the exercise, $\hat{\boldsymbol{\Sigma}}^{-1} = \left[ \begin{array}{cc} 7.31 & -0.24 \\ -0.24 & 3.92  \end{array} \right]$. Inserting these into the formulas, we have that 
 
 $$\begin{aligned}
-\delta_G({\bf x_0}) &= \left[ 214 \text{  } 140.4  \right]
+\delta_G({\bf x_0}) &=  \left[ 214 \text{  } 140.4  \right]
 \left[ \begin{array}{cc} 7.31 & -0.24 \\ -0.24 & 3.92 
 \end{array} \right]
 \left[     \begin{array}{c} 214.97 \\ 141.52  \end{array} \right] - \frac{1}{2}
 \left[ 214.97 \text{  } 141.52 \right] \
 \left[ \begin{array}{cc} 7.31 & -0.24 \\ -0.24 & 3.92 
 \end{array} \right]
-\left[     \begin{array}{c} 214.97 \\ 141.52  \end{array} \right] \ - \log 0.5 \\
+\left[     \begin{array}{c} 214.97 \\ 141.52  \end{array} \right] \ + \log 0.5 \\
 &= 198667.1
 \end{aligned}$$
 
@@ -135,7 +135,7 @@ $$\begin{aligned}
 \left[ 214.82 \text{  } 139.42 \right] \
 \left[ \begin{array}{cc} 7.31 & -0.24 \\ -0.24 & 3.92 
 \end{array} \right]
-\left[     \begin{array}{c} 214.82 \\ 139.42  \end{array} \right] \ - \log 0.5 \\
+\left[     \begin{array}{c} 214.82 \\ 139.42  \end{array} \right] \ + \log 0.5 \\
 &= 198668.3
 \end{aligned}$$
 Since $\delta_F({\bf x_0})$ is larger than $\delta_G({\bf x_0})$, we classify the bank note as fake!
@@ -163,38 +163,46 @@ which unlike the disscriminant function for LDA is a quadratic function.
 Using the QDA for classification of the bank note from c., we use that $\boldsymbol{\hat\Sigma_G}^{-1} = \left[ \begin{array}{cc} 6.66 & -0.18 \\ -0.18 & 5.01  \end{array} \right]$ and $\boldsymbol{\hat\Sigma_F}^{-1} = \left[ \begin{array}{cc} 8.09 & -0.30 \\ -0.30 & 3.22  \end{array} \right]$. Inserting the estimated values into the discriminant function, we have that
 
 $$\begin{aligned}
-\delta_G({\bf x_0}) &= -\frac{1}{2}\left[ 214 \text{  } 140.4  \right]
+\delta_G({\bf x_0}) = & -\frac{1}{2}\left[ 214 \text{  } 140.4  \right]
 \left[ \begin{array}{cc} 6.66 & -0.18 \\ -0.18 & 5.01 
 \end{array} \right]
-\left[     \begin{array}{c} 214 \\ 140.4  \end{array} \right] +
-\left[ 214 \text{  } 140.4  \right]
+\left[     \begin{array}{c} 214 \\ 140.4  \end{array} \right] 
+\\
+& + \left[ 214 \text{  } 140.4  \right]
 \left[ \begin{array}{cc} 6.66 & -0.18 \\ -0.18 & 5.01 
 \end{array} \right]
-\left[     \begin{array}{c} 214.97 \\ 141.52  \end{array} \right] \\
+\left[     \begin{array}{c} 214.97 \\ 141.52  \end{array} \right] 
+\\
 & - \frac{1}{2}
 \left[ 214.97 \text{  } 141.52 \right] \
 \left[ \begin{array}{cc} 6.66 & -0.18 \\ -0.18 & 5.01 
 \end{array} \right]
-\left[     \begin{array}{c} 214.97 \\ 141.52  \end{array} \right] \  -\frac{1}{2}\log(6.66\cdot5.01 - 0.18^2)- \log 2 \\
-&= -5.018
+\left[     \begin{array}{c} 214.97 \\ 141.52  \end{array} \right] \  
+\\ 
+& - \frac{1}{2}\log(6.66\cdot5.01 - 0.18^2) + \log(0.5) \\
+=& -5.018
 \end{aligned}$$
 
 and 
 
 $$\begin{aligned}
-\delta_F({\bf x_0}) &= -\frac{1}{2}\left[ 214 \text{  } 140.4  \right]
+\delta_F({\bf x_0}) = & -\frac{1}{2}\left[ 214 \text{  } 140.4  \right]
 \left[ \begin{array}{cc} 8.09 & -0.30 \\ -0.30 & 3.22 
 \end{array} \right]
-\left[     \begin{array}{c} 214 \\ 140.4  \end{array} \right] +
-\left[ 214 \text{  } 140.4  \right]
+\left[     \begin{array}{c} 214 \\ 140.4  \end{array} \right] 
+\\
+& +\left[ 214 \text{  } 140.4  \right]
 \left[ \begin{array}{cc} 8.09 & -0.30 \\ -0.30 & 3.22 
 \end{array} \right]
-\left[     \begin{array}{c} 214.82 \\ 139.45  \end{array} \right] \\
+\left[     \begin{array}{c} 214.82 \\ 139.45  \end{array} \right] 
+\\
 &- \frac{1}{2} \left[ 214.82 \text{  } 139.45 \right] \
 \left[ \begin{array}{cc} 8.09 & -0.30 \\ -0.30 & 3.22 
 \end{array} \right]
-\left[     \begin{array}{c} 214.82 \\ 139.45  \end{array} \right] \  -\frac{1}{2}\log(8.09\cdot3.22 - 0.30^2)- \log 2 \\
-&= -3.47
+\left[     \begin{array}{c} 214.82 \\ 139.45  \end{array} \right] \  
+\\
+&-\frac{1}{2}\log(8.09\cdot3.22 - 0.30^2) + \log(0.5) \\
+= & -3.47
 \end{aligned}$$
 
 Since $\delta_F({\bf x_0})$ is larger than $\delta_G({\bf x_0})$ we classify the bank note as fake using QDA, the same result as for LDA. 
