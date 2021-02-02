@@ -7,14 +7,14 @@ to calculate sensitivity and specificity for this cut-off:
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{res =}\StringTok{ }\KeywordTok{table}\NormalTok{(pred_SA, d.heart[}\OperatorTok{-}\NormalTok{train_ID, }\StringTok{"chd"}\NormalTok{])}
-\NormalTok{sens =}\StringTok{ }\NormalTok{res[}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{]}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(res[}\DecValTok{2}\NormalTok{, ])}
-\NormalTok{spec =}\StringTok{ }\NormalTok{res[}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{]}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(res[}\DecValTok{1}\NormalTok{, ])}
+\NormalTok{sens =}\StringTok{ }\NormalTok{res[}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{]}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(res[, }\DecValTok{2}\NormalTok{])}
+\NormalTok{spec =}\StringTok{ }\NormalTok{res[}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{]}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(res[, }\DecValTok{1}\NormalTok{])}
 \NormalTok{sens}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.6029412
+## [1] 0.4767442
 \end{verbatim}
 
 \begin{Shaded}
@@ -24,12 +24,12 @@ to calculate sensitivity and specificity for this cut-off:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.7239264
+## [1] 0.8137931
 \end{verbatim}
 
 \normalsize
 
-Observe that the value 0.603 (on \(y\)-axis) and 0.276 (1-specificity on
+Observe that the value 0.477 (on \(y\)-axis) and 0.186 (1-specificity on
 \(x\)-axis) is on our ROC curve.
 
 The ROC-curve is made up of all possible cut-offs and their associated

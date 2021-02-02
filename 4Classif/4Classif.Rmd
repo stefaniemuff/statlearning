@@ -5,17 +5,17 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "February 1st and 2nd, 2021"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
-  # html_document:
-  #   toc: true
-  #   toc_float: true
-  #   toc_depth: 2
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
 urlcolor: blue
 bibliography: refs.bib
 header-includes: \usepackage{multirow}
@@ -2291,10 +2291,10 @@ ggroc(SA_roc, legacy.axes=TRUE)+ggtitle("ROC curve")+
 To check where in the plot we find the default cut-off on 0.5, we need to calculate sensitivity and specificity for this cut-off:
 
 \scriptsize
-```{r}
+```{r, cache=FALSE}
 res=table(pred_SA, d.heart[-train_ID,"chd"])
-sens=res[2,2]/sum(res[2,])
-spec=res[1,1]/sum(res[1,])
+sens=res[2,2]/sum(res[,2])
+spec=res[1,1]/sum(res[,1])
 sens
 spec
 ```
