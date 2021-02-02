@@ -91,7 +91,7 @@ The $p$-value associated with `origin` is now the one we can look at. Clearly, $
 
 ## e)
 
-```{r,warning=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='60%'}
+```{r,warning=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='60%',cache=FALSE}
 library(ggfortify)
 autoplot(fit.lm, smooth.colour = NA)
 ```
@@ -136,7 +136,7 @@ Note: For a full understanding of interaction terms, you really do need both the
 
 We try three different transformations and look at the residual plots:
 
-```{r, fig.width=5, fig.height=4,fig.align = "center",out.width='50%'}
+```{r, fig.width=5, fig.height=4,fig.align = "center",out.width='50%',cache=FALSE}
 # try 3 predictor transformations
 
 Auto$sqrtmpg <- sqrt(Auto$mpg)
@@ -243,8 +243,107 @@ mean(pi_y0)
 
 ## d) 
 
-95 % CI for ${\boldsymbol x}_0^T\mathbf{\beta}$: Same idea as for $\beta_j$. Use that ${\boldsymbol x}_0^T\hat{\mathbf{\beta}} \sim N({\boldsymbol x}_0^T\mathbf{\beta}, {\boldsymbol x}_0^T$Var$(\hat{\mathbf{\beta}}){\boldsymbol x}_0)$ and do as for $\beta_j$. Note that ${\boldsymbol x}_0$ is a vector. 
-The connection between CI for $\mathbf{\beta}$, ${\boldsymbol x}_0^T\mathbf{\beta}$ and PI for $Y$ at ${\boldsymbol x}_0$: The first is CI for a parameter, the second is CI for the expected regression line in the point $x_0$ (when you only have one covariate, this may be more intuitive), and the last is the PI for the response $Y_0$. The difference between the two latter is that $Y$ are the observations, and ${\boldsymbol x}_0^T\mathbf{\beta}$ is the expected value of the observations and hence a function of the model parameters (NOT an observation).
+
+### Confidence Interval for ${\boldsymbol x}_0^T\boldsymbol{\beta}$
+
+This corresponds to a CI for $\mu_0 = E(y_0) = \boldsymbol{x}_0^T\boldsymbol{\beta}$ of an observation $y_0$ at $\boldsymbol{x}_0.$
+
+First, by using a) we have that 
+
+$E(\boldsymbol{x}_0^T\hat{\boldsymbol{\beta}}) = \boldsymbol{x}_0^T E(\hat{\boldsymbol{\beta}}) = \boldsymbol{x}_0^T \boldsymbol{\beta}$
+
+and
+
+$\operatorname{Var}(\boldsymbol{x}_0^T\hat{\boldsymbol{\beta}}) = \boldsymbol{x}_0^T \operatorname{Var}(\hat{\boldsymbol{\beta}}) \boldsymbol{x}_0= \sigma^2\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0.$
+
+Consequently, 
+
+$$
+\boldsymbol {x}_0^T\hat{\boldsymbol{\beta}} \sim N(\boldsymbol{x}_0^T\boldsymbol{\beta}, \sigma^2\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0)
+$$
+or equivalently
+
+$$
+\frac{\boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}-\mu_0}{\sigma\sqrt{\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0}} \sim N(0, 1).
+$$
+
+By substituting $\sigma^2$ with an estimator $\hat{\sigma ^2},$ the last expression follows a $t-$distribution with $n-p$ degrees of freedom.
+Now we can construct a confidence interval with $1-\alpha$ level (in our case $\alpha = 0.05$) as follows
+
+$$
+P\Big( -t_{n-p}(1-\alpha/2)\le 
+\frac{\boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}-\mu_0}{\hat{\sigma}\sqrt{\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0}}
+\le t_{n-p}(1-\alpha/2) \Big)
+= 1-\alpha
+$$
+or
+
+$$
+P\Big( \boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}-t_{n-p}(1-\alpha/2)\hat{\sigma}\sqrt{\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0}\le 
+\mu_0 
+\le \boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}+t_{n-p}(1-\alpha/2)\hat{\sigma}\sqrt{\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0} \Big)
+= 1-\alpha
+$$
+
+For $\alpha = 0.05$ we have the following $95\%$ CI
+
+$$
+\Big[ \boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}-t_{n-p}(1-0.05/2)\hat{\sigma}\sqrt{\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0}, 
+\boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}+t_{n-p}(1-0.05/2)\hat{\sigma}\sqrt{\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0} \Big]
+$$
+
+### Prediction interval 
+
+To construct the PI we can look at the distribution of the prediction error $\hat{\varepsilon}_0 = y_0-\hat{y}_0 = y_0 - {\boldsymbol x}_0^T\boldsymbol{\beta}.$
+
+We have that 
+$$
+E(\hat{\varepsilon}_0) =y_0 - E(\hat{y}_0) = y_0 - E(\boldsymbol{x}_0^T\hat{\boldsymbol{\beta}}) = y_0-y_0 = 0
+$$ 
+
+and by assuming that $y_0$ and $\hat{y_0}$ are independent and $y_0\sim N(\boldsymbol{x}_0^T \boldsymbol{\beta},\sigma^2)$
+we have that 
+
+$$
+\operatorname{Var}(\hat{\varepsilon}_0) = \operatorname{Var}(y_0)  + \operatorname{Var}(\hat{y}_0) 
+=  \sigma^2 + \sigma^2\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0
+= \sigma^2(1+\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0)
+$$
+
+and 
+
+$$
+\hat{\varepsilon}_0 = y_0 - \boldsymbol{x}_0^T\hat{\boldsymbol{\beta}}\sim N(0, \sigma^2(1+\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0)).
+$$
+
+Following the same logic as for the before and by substituting  the estimate of variance $\hat{\sigma ^2}$ we can construct a prediction interval with $1-\alpha$ level as follows
+
+$$
+P\Big( -t_{n-p}(1-\alpha/2)\le 
+\frac{y_0-\boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}}{\hat{\sigma}\sqrt{1+\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0}}
+\le t_{n-p}(1-\alpha/2) \Big)
+= 1-\alpha
+$$
+
+or
+
+$$
+P\Big( \boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}-t_{n-p}(1-\alpha/2)\hat{\sigma}\sqrt{1+\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0}\le 
+y_0 
+\le \boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}+t_{n-p}(1-\alpha/2)\hat{\sigma}\sqrt{1+\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0} \Big)
+= 1-\alpha
+$$
+
+For $\alpha = 0.05$ we have the following $95\%$ PI
+
+$$
+\Big[ \boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}-t_{n-p}(1-0.05/2)\hat{\sigma}\sqrt{1+\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0}, 
+\boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}+t_{n-p}(1-0.05/2)\hat{\sigma}\sqrt{1+\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0} \Big]
+$$
+
+Observe now that the two intervals are similar, but the prediction interval is by construction wider. Specifically, it can be significantly wider in applications where the error variance $\hat{\sigma ^2}$ is large.
+
+The connection between CI for $\boldsymbol{\beta}$, ${\boldsymbol x}_0^T\boldsymbol{\beta}$ and PI for $y$ at ${\boldsymbol x}_0$: The first is CI for a parameter, the second is CI for the expected regression line at the point $\boldsymbol{x}_0$ (when you only have one covariate, this may be more intuitive), and the last is the PI for the response $y_0$. The difference between the two latter is that $y$ are the observations, and ${\boldsymbol x}_0^T\boldsymbol{\beta}$ is the expected value of the observations and hence a function of the model parameters (NOT an observation).
 
 ## e)
 

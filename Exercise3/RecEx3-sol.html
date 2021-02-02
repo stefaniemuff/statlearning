@@ -1917,7 +1917,77 @@ mean(pi_y0)</code></pre>
 </div>
 <div id="d-1" class="section level2">
 <h2>d)</h2>
-<p>95 % CI for <span class="math inline">\({\boldsymbol x}_0^T\mathbf{\beta}\)</span>: Same idea as for <span class="math inline">\(\beta_j\)</span>. Use that <span class="math inline">\({\boldsymbol x}_0^T\hat{\mathbf{\beta}} \sim N({\boldsymbol x}_0^T\mathbf{\beta}, {\boldsymbol x}_0^T\)</span>Var<span class="math inline">\((\hat{\mathbf{\beta}}){\boldsymbol x}_0)\)</span> and do as for <span class="math inline">\(\beta_j\)</span>. Note that <span class="math inline">\({\boldsymbol x}_0\)</span> is a vector. The connection between CI for <span class="math inline">\(\mathbf{\beta}\)</span>, <span class="math inline">\({\boldsymbol x}_0^T\mathbf{\beta}\)</span> and PI for <span class="math inline">\(Y\)</span> at <span class="math inline">\({\boldsymbol x}_0\)</span>: The first is CI for a parameter, the second is CI for the expected regression line in the point <span class="math inline">\(x_0\)</span> (when you only have one covariate, this may be more intuitive), and the last is the PI for the response <span class="math inline">\(Y_0\)</span>. The difference between the two latter is that <span class="math inline">\(Y\)</span> are the observations, and <span class="math inline">\({\boldsymbol x}_0^T\mathbf{\beta}\)</span> is the expected value of the observations and hence a function of the model parameters (NOT an observation).</p>
+<div id="confidence-interval-for-boldsymbol-x_0tboldsymbolbeta" class="section level3">
+<h3>Confidence Interval for <span class="math inline">\({\boldsymbol x}_0^T\boldsymbol{\beta}\)</span></h3>
+<p>This corresponds to a CI for <span class="math inline">\(\mu_0 = E(y_0) = \boldsymbol{x}_0^T\boldsymbol{\beta}\)</span> of an observation <span class="math inline">\(y_0\)</span> at <span class="math inline">\(\boldsymbol{x}_0.\)</span></p>
+<p>First, by using a) we have that</p>
+<p><span class="math inline">\(E(\boldsymbol{x}_0^T\hat{\boldsymbol{\beta}}) = \boldsymbol{x}_0^T E(\hat{\boldsymbol{\beta}}) = \boldsymbol{x}_0^T \boldsymbol{\beta}\)</span></p>
+<p>and</p>
+<p><span class="math inline">\(\operatorname{Var}(\boldsymbol{x}_0^T\hat{\boldsymbol{\beta}}) = \boldsymbol{x}_0^T \operatorname{Var}(\hat{\boldsymbol{\beta}}) \boldsymbol{x}_0= \sigma^2\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0.\)</span></p>
+<p>Consequently,</p>
+<p><span class="math display">\[
+\boldsymbol {x}_0^T\hat{\boldsymbol{\beta}} \sim N(\boldsymbol{x}_0^T\boldsymbol{\beta}, \sigma^2\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0)
+\]</span> or equivalently</p>
+<p><span class="math display">\[
+\frac{\boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}-\mu_0}{\sigma\sqrt{\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0}} \sim N(0, 1).
+\]</span></p>
+<p>By substituting <span class="math inline">\(\sigma^2\)</span> with an estimator <span class="math inline">\(\hat{\sigma ^2},\)</span> the last expression follows a <span class="math inline">\(t-\)</span>distribution with <span class="math inline">\(n-p\)</span> degrees of freedom. Now we can construct a confidence interval with <span class="math inline">\(1-\alpha\)</span> level (in our case <span class="math inline">\(\alpha = 0.05\)</span>) as follows</p>
+<p><span class="math display">\[
+P\Big( -t_{n-p}(1-\alpha/2)\le 
+\frac{\boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}-\mu_0}{\hat{\sigma}\sqrt{\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0}}
+\le t_{n-p}(1-\alpha/2) \Big)
+= 1-\alpha
+\]</span> or</p>
+<p><span class="math display">\[
+P\Big( \boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}-t_{n-p}(1-\alpha/2)\hat{\sigma}\sqrt{\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0}\le 
+\mu_0 
+\le \boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}+t_{n-p}(1-\alpha/2)\hat{\sigma}\sqrt{\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0} \Big)
+= 1-\alpha
+\]</span></p>
+<p>For <span class="math inline">\(\alpha = 0.05\)</span> we have the following <span class="math inline">\(95\%\)</span> CI</p>
+<p><span class="math display">\[
+\Big[ \boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}-t_{n-p}(1-0.05/2)\hat{\sigma}\sqrt{\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0}, 
+\boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}+t_{n-p}(1-0.05/2)\hat{\sigma}\sqrt{\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0} \Big]
+\]</span></p>
+</div>
+<div id="prediction-interval" class="section level3">
+<h3>Prediction interval</h3>
+<p>To construct the PI we can look at the distribution of the prediction error <span class="math inline">\(\hat{\varepsilon}_0 = y_0-\hat{y}_0 = y_0 - {\boldsymbol x}_0^T\boldsymbol{\beta}.\)</span></p>
+<p>We have that <span class="math display">\[
+E(\hat{\varepsilon}_0) =y_0 - E(\hat{y}_0) = y_0 - E(\boldsymbol{x}_0^T\hat{\boldsymbol{\beta}}) = y_0-y_0 = 0
+\]</span></p>
+<p>and by assuming that <span class="math inline">\(y_0\)</span> and <span class="math inline">\(\hat{y_0}\)</span> are independent and <span class="math inline">\(y_0\sim N(\boldsymbol{x}_0^T \boldsymbol{\beta},\sigma^2)\)</span> we have that</p>
+<p><span class="math display">\[
+\operatorname{Var}(\hat{\varepsilon}_0) = \operatorname{Var}(y_0)  + \operatorname{Var}(\hat{y}_0) 
+=  \sigma^2 + \sigma^2\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0
+= \sigma^2(1+\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0)
+\]</span></p>
+<p>and</p>
+<p><span class="math display">\[
+\hat{\varepsilon}_0 = y_0 - \boldsymbol{x}_0^T\hat{\boldsymbol{\beta}}\sim N(0, \sigma^2(1+\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0)).
+\]</span></p>
+<p>Following the same logic as for the before and by substituting the estimate of variance <span class="math inline">\(\hat{\sigma ^2}\)</span> we can construct a prediction interval with <span class="math inline">\(1-\alpha\)</span> level as follows</p>
+<p><span class="math display">\[
+P\Big( -t_{n-p}(1-\alpha/2)\le 
+\frac{y_0-\boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}}{\hat{\sigma}\sqrt{1+\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0}}
+\le t_{n-p}(1-\alpha/2) \Big)
+= 1-\alpha
+\]</span></p>
+<p>or</p>
+<p><span class="math display">\[
+P\Big( \boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}-t_{n-p}(1-\alpha/2)\hat{\sigma}\sqrt{1+\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0}\le 
+y_0 
+\le \boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}+t_{n-p}(1-\alpha/2)\hat{\sigma}\sqrt{1+\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0} \Big)
+= 1-\alpha
+\]</span></p>
+<p>For <span class="math inline">\(\alpha = 0.05\)</span> we have the following <span class="math inline">\(95\%\)</span> PI</p>
+<p><span class="math display">\[
+\Big[ \boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}-t_{n-p}(1-0.05/2)\hat{\sigma}\sqrt{1+\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0}, 
+\boldsymbol {x}_0^T\hat{\boldsymbol{\beta}}+t_{n-p}(1-0.05/2)\hat{\sigma}\sqrt{1+\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0} \Big]
+\]</span></p>
+<p>Observe now that the two intervals are similar, but the prediction interval is by construction wider. Specifically, it can be significantly wider in applications where the error variance <span class="math inline">\(\hat{\sigma ^2}\)</span> is large.</p>
+<p>The connection between CI for <span class="math inline">\(\boldsymbol{\beta}\)</span>, <span class="math inline">\({\boldsymbol x}_0^T\boldsymbol{\beta}\)</span> and PI for <span class="math inline">\(y\)</span> at <span class="math inline">\({\boldsymbol x}_0\)</span>: The first is CI for a parameter, the second is CI for the expected regression line at the point <span class="math inline">\(\boldsymbol{x}_0\)</span> (when you only have one covariate, this may be more intuitive), and the last is the PI for the response <span class="math inline">\(y_0\)</span>. The difference between the two latter is that <span class="math inline">\(y\)</span> are the observations, and <span class="math inline">\({\boldsymbol x}_0^T\boldsymbol{\beta}\)</span> is the expected value of the observations and hence a function of the model parameters (NOT an observation).</p>
+</div>
 </div>
 <div id="e-1" class="section level2">
 <h2>e)</h2>
