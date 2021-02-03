@@ -1,8 +1,46 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+%
 \documentclass[10pt,ignorenonframetext,]{beamer}
+\usepackage{pgfpages}
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
 \setbeamercolor{caption name}{fg=normal text.fg}
 \beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph:
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+\centering
+\begin{beamercolorbox}[sep=16pt,center]{part title}
+  \usebeamerfont{part title}\insertpart\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+\centering
+\begin{beamercolorbox}[sep=12pt,center]{part title}
+  \usebeamerfont{section title}\insertsection\par
+\end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+\centering
+\begin{beamercolorbox}[sep=8pt,center]{part title}
+  \usebeamerfont{subsection title}\insertsubsection\par
+\end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
 \usepackage{lmodern}
 \usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
@@ -10,12 +48,9 @@
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provides euro and other symbols
 \else % if luatex or xelatex
-  \ifxetex
-    \usepackage{mathspec}
-  \else
-    \usepackage{fontspec}
-  \fi
+  \usepackage{unicode-math}
   \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
 \fi
 \usetheme[]{Singapore}
@@ -24,19 +59,28 @@
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 % use microtype if available
 \IfFileExists{microtype.sty}{%
-\usepackage{microtype}
+\usepackage[]{microtype}
 \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\newif\ifbibliography
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{xcolor}
+\usepackage{hyperref}
 \hypersetup{
             pdftitle={Module 5: Resampling},
             pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
             colorlinks=true,
             linkcolor=Maroon,
+            filecolor=Maroon,
             citecolor=Blue,
             urlcolor=blue,
             breaklinks=true}
 \urlstyle{same}  % don't use monospace font for urls
+\newif\ifbibliography
 \usepackage{color}
 \usepackage{fancyvrb}
 \newcommand{\VerbBar}{|}
@@ -46,93 +90,69 @@
 \usepackage{framed}
 \definecolor{shadecolor}{RGB}{248,248,248}
 \newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
-\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
 \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
-\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
-\newcommand{\ImportTok}[1]{#1}
-\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
 \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
-\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
-\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
-\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
-\newcommand{\BuiltInTok}[1]{#1}
-\newcommand{\ExtensionTok}[1]{#1}
-\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
-\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
-\newcommand{\RegionMarkerTok}[1]{#1}
-\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
 \newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
 \newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx,grffile}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight0.8\textheight\else\Gin@nat@height\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
 \makeatother
 % Scale images if necessary, so that they will not overflow the page
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-
-% Prevent slide breaks in the middle of a paragraph:
-\widowpenalties 1 10000
-\raggedbottom
-
-\AtBeginPart{
-  \let\insertpartnumber\relax
-  \let\partname\relax
-  \frame{\partpage}
-}
-\AtBeginSection{
-  \ifbibliography
-  \else
-    \let\insertsectionnumber\relax
-    \let\sectionname\relax
-    \frame{\sectionpage}
-  \fi
-}
-\AtBeginSubsection{
-  \let\insertsubsectionnumber\relax
-  \let\subsectionname\relax
-  \frame{\subsectionpage}
-}
-
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
 \setlength{\emergencystretch}{3em}  % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{0}
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
 \usepackage{multirow}
 
 \title{Module 5: Resampling}
-\subtitle{TMA4268 Statistical Learning V2020}
+\providecommand{\subtitle}[1]{}
+\subtitle{TMA4268 Statistical Learning V2021}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{January 31 and February 3, 2020}
+\date{February 8 and 9, 2021}
 
 \begin{document}
 \frame{\titlepage}
 
-\begin{frame}
-
-Last update: February 3, 2020
-
-\end{frame}
-
 \begin{frame}{Acknowledgements}
+\protect\hypertarget{acknowledgements}{}
 
 \begin{itemize}
 \item
@@ -146,6 +166,7 @@ Last update: February 3, 2020
 \end{frame}
 
 \begin{frame}{Introduction}
+\protect\hypertarget{introduction}{}
 
 \begin{block}{Learning material for this module}
 
@@ -159,9 +180,10 @@ Last update: February 3, 2020
   All the material presented on these module slides.
 \end{itemize}
 
-\vspace{2mm} Additional material for the interested reader: Chapter 7
-(in particular 7.10) in Friedman et al (2001): Elements of Statistical
-learning.
+\vspace{2mm}
+
+Additional material for the interested reader: Chapter 7 (in particular
+7.10) in Friedman et al (2001): Elements of Statistical learning.
 
 \end{block}
 
@@ -171,12 +193,26 @@ learning.
 
 \begin{block}{What will you learn?}
 
+\(~\)
+
 \begin{itemize}
 \tightlist
 \item
   What is model assessment and model selection?
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Ideal solution in a data rich situation.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Cross-validation and what is best:
 
@@ -189,6 +225,12 @@ learning.
   \item
     \(k\)-fold CV
   \end{itemize}
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Bootstrapping - how and why.
 \end{itemize}
@@ -198,6 +240,7 @@ learning.
 \end{frame}
 
 \begin{frame}{Performance of a learning method}
+\protect\hypertarget{performance-of-a-learning-method}{}
 
 \begin{itemize}
 \item
@@ -210,13 +253,14 @@ learning.
   overfitting)
 \end{itemize}
 
+\vspace{2mm}
+
 This is important both for
 
 \textbf{Model selection}
 
-Estimate the \emph{performance} of different models (often different
-order of complexity within one model class) to \emph{choose the best
-model}.
+Estimate the \emph{performance} of different models to \emph{choose the
+best model}.
 
 \textbf{Model assessment}
 
@@ -229,25 +273,11 @@ data.
 
 \begin{block}{Training vs Test Error}
 
-\vspace{2mm}
+\(~\)
 
-Recall:
+\centering
 
-\begin{itemize}
-\item
-  The \emph{test error} is the average error that results from using a
-  statistical learning method to predict the response on a new
-  observation, one that was not used in training the method.
-\item
-  The \emph{training error} can be easily calculated by applying the
-  statistical learning method to the observations used in its training.
-\item
-  The training error rate often is quite different from the test error
-  rate.
-\item
-  \textbf{The training error can dramatically underestimate the test
-  error}.
-\end{itemize}
+\includegraphics[width=0.8\textwidth,height=\textheight]{training_test.png}
 
 \end{block}
 
@@ -255,16 +285,9 @@ Recall:
 
 \begin{frame}
 
-\centering
-\includegraphics[width=0.80000\textwidth]{training_test.png}
-
-\end{frame}
-
-\begin{frame}
-
 \begin{block}{Loss functions}
 
-\vspace{2mm}
+\(~\)
 
 In order to define how we measure error, we must first decide for a
 \textbf{loss function}. Here we use:
@@ -280,6 +303,8 @@ In order to define how we measure error, we must first decide for a
 \end{itemize}
 
 \[\text{MSE}=\frac{1}{n}\sum_{i=1}^n (y_i-\hat{f}({\boldsymbol x}_i))^2 \ .\]
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -305,10 +330,11 @@ We aim to do \emph{model selection} in KNN-regression, where true curve
 is \(f(x)=-x+x^2+x^3\) with \(x \in [-3,3]\). \(n=61\) for the training
 data.
 
-\vspace{2mm}
+\vspace{4mm}
 
 \centering
-\includegraphics[width=0.50000\textwidth]{Prob1f1.png}
+
+\includegraphics[width=0.5\textwidth,height=\textheight]{Prob1f1.png}
 
 \end{block}
 
@@ -331,6 +357,8 @@ data.
 
 \[\hat{f}(x_0)=\frac{1}{K}\sum_{i\in \mathcal{N}_0} y_i \ .\]
 
+\vspace{2mm}
+
 \begin{itemize}
 \tightlist
 \item
@@ -350,8 +378,11 @@ data.
 
 For KNN: \(K\) small = high complexity; \(K\) large = low complexity.
 
+\vspace{2mm}
+
 \centering
-\includegraphics[width=0.75000\textwidth]{Prob1f4.png}
+
+\includegraphics[width=0.75\textwidth,height=\textheight]{Prob1f4.png}
 
 \end{block}
 
@@ -361,14 +392,27 @@ For KNN: \(K\) small = high complexity; \(K\) large = low complexity.
 
 \begin{block}{The challenge}
 
-\vspace{2mm}
+\(~\)
 
 \begin{itemize}
+\tightlist
 \item
   In the above examples we knew the truth, so we could assess training
   and test error.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   In reality this is of course not the case.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   We need approaches that work with real data!
 \end{itemize}
@@ -381,8 +425,10 @@ For KNN: \(K\) small = high complexity; \(K\) large = low complexity.
 
 \begin{block}{The data-rich situation (often unrealistic)}
 
-\vspace{2mm} If we had a large amount of data we could divide our data
-into three parts:
+\vspace{2mm}
+
+If we had a large amount of data we could divide our data into three
+parts:
 
 \begin{itemize}
 \tightlist
@@ -433,11 +479,16 @@ We will look at \emph{cross-validation} and the \emph{bootstrap}.
 \end{frame}
 
 \begin{frame}{Cross-validation (CV)}
+\protect\hypertarget{cross-validation-cv}{}
+
+\(~\)
 
 ``Model selection'' situation: We assume that test data is available
 (and has been put aside), and we want to use the rest of our data to
 find the model that performs ``best'', that is, \emph{with lowest test
 error}.
+
+\vspace{2mm}
 
 This can be done by:
 
@@ -450,15 +501,6 @@ This can be done by:
   leave one out cross-validation (LOOCV).
 \item
   \(k\)-fold cross-validation (CV), typically \(k=5\) or \(10\).
-\end{itemize}
-
-We will also discuss that there is a ``right and a wrong way'' to do CV
-
-\begin{itemize}
-\tightlist
-\item
-  selection bias - all elements of a model selection strategy need to be
-  within the CV-loop
 \end{itemize}
 
 \end{frame}
@@ -517,6 +559,8 @@ But what if we select another split into two parts? Many splits:
 
 \begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/auto2-1} \end{center}
 
+\vspace{2mm}
+
 \(\rightarrow\) No consensus which model really gives the lowest
 validation set MSE.
 
@@ -562,24 +606,25 @@ Better ideas?
 
 \begin{block}{Leave-one-out cross-validation (LOOCV)}
 
+\(~\)
+
 Leave-one-out cross-validation (LOOCV) addresses the limitations of the
 validation set approach.
 
-\vspace{2mm}
+\vspace{4mm}
 
 \textbf{Idea:}
 
 \begin{itemize}
 \tightlist
 \item
-  Only \textbf{one observation at a time} is left out and makes up the
-  new observations (test set).
+  Only \textbf{one observation at a time} is left out (test set size
+  \(n=1\)).
 \item
   The remaining \(n-1\) observations make up the training set.
 \item
   The procedure of model fitting is repeated \(n\) times, such that each
   of the \(n\) observations is left out once. In each step, we calculate
-  the MSE as
 \end{itemize}
 
 \[\text{MSE}_i=(y_i-\hat{y}_i)^2 \ .\]
@@ -615,7 +660,7 @@ validation set approach.
 
 \begin{block}{Issues with leave-one-out cross-validation}
 
-\vspace{1mm}
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -630,6 +675,12 @@ validation set approach.
     Little bias, since nearly the whole data set used for training
     (compared to half for validation set approach).
   \end{itemize}
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Cons:
 
@@ -639,13 +690,14 @@ validation set approach.
     Expensive to implement -- need to fit \(n\) different models.
   \item
     High variance since: two training sets only differ by one
-    observation - which makes estimates from each fold highly correlated
-    and this can lead to that their average can have high
-    variance\(^\star\).
+    observation, thus estimates from each fold highly correlated, which
+    can lead to high variance in their average\(^\star\).
   \end{itemize}
 \end{itemize}
 
-\vspace{5mm} \scriptsize
+\vspace{5mm}
+\scriptsize
+
 \(^\star\) Recall that
 \[\text{Var}(\sum_{i=1}^na_iX_i)=\sum_{i=1}^n\sum_{j=1}^n a_ia_j\text{Cov}(X_i,X_j)\]
 \[=\sum_{i=1}^na_i^2\text{Var}(X_i)+2\sum_{i=2}^n \sum_{j=1}^{i-1}
@@ -674,6 +726,10 @@ squares fit.
 
 \(\rightarrow\) Need to fit the model only once!
 
+\(~\)
+
+See Compulsory exercise 1.
+
 \end{block}
 
 \end{frame}
@@ -695,16 +751,30 @@ observation in each iteration, but \(1/k\)-th of all data.
 \tightlist
 \item
   Split the data into \(k\) (more or less) equal parts.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Use \(k-1\) parts to fit and the \(k\)th part to validate.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Do this \(k\) times and leave out another part in each round.
 \end{itemize}
 
+\(~\)
+
 The MSE is then estimated in each of the \(k\) iterations
 (\(\text{MSE}_1,\ldots,\text{MSE}_k\)), and the the \(k\)-fold CV is
 
-\[\text{CV}_k = \frac1k \sum_{i=1}^k \text{MSE}_i \ .\]
+\[\text{CV}_k = \frac1k \sum_{j=1}^k \text{MSE}_j \ .\]
 
 \end{block}
 
@@ -715,13 +785,14 @@ The MSE is then estimated in each of the \(k\) iterations
 \textbf{Comparison of LOOCV and \(k\)-fold CV}:
 
 \centering
+
 LOOCV:
 
-\includegraphics[width=0.70000\textwidth]{../../ISLR/Figures/Chapter5/5.3.png}
+\includegraphics[width=0.7\textwidth,height=\textheight]{../../ISLR/Figures/Chapter5/5.3.png}
 
 \(k\)-fold:
 
-\includegraphics[width=0.70000\textwidth]{../../ISLR/Figures/Chapter5/5.5.png}
+\includegraphics[width=0.7\textwidth,height=\textheight]{../../ISLR/Figures/Chapter5/5.5.png}
 
 \end{frame}
 
@@ -735,13 +806,13 @@ LOOCV:
   Indices of observations - divided into \(k\) folds:
   \(C_1, C_2, \ldots, C_k\).
 \item
-  \(n_k\) elements in each fold, if \(n\) is a multiple of \(k\) then
-  \(n_k=n/k\).
+  \(n_j\) elements in fold \(j\). If \(n\) is a multiple of \(k\) then
+  \(n_j=n/k\) for all folds.
 \end{itemize}
 
-\[\text{MSE}_k=\frac{1}{n_k}\sum_{i\in C_k}(y_i-\hat{y}_i)^2\] where
+\[\text{MSE}_j=\frac{1}{n_j}\sum_{i\in C_j}(y_i-\hat{y}_i)^2\] where
 \(\hat{y}_i\) is the fit for observation \(i\) obtained from the data
-with part \(k\) removed.
+with part \(j\) removed.
 
 \[\text{CV}_{k}=\frac{1}{n} \sum_{j=1}^k n_j \text{MSE}_j\]
 
@@ -755,6 +826,8 @@ Observe: setting \(k=n\) gives LOOCV.
 
 \begin{block}{Regression example: \(5\) and \(10\)-fold
 cross-validation}
+
+\(~\)
 
 \begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/auto_510fold-1} \end{center}
 
@@ -779,22 +852,50 @@ validation set approach.
 
 \begin{block}{Issues with \(k\)-fold cross-validation}
 
-\vspace{2mm}
+\(~\)
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
+\tightlist
 \item
   The \emph{result may vary} according to how the folds are made, but
   the variation is in general lower than for the validation set
   approach.
+\end{enumerate}
+
+\vspace{2mm}
+
+\begin{enumerate}
+\setcounter{enumi}{1}
+\tightlist
 \item
   Computational load lower with \(k=5\) or \(10\) than LOOCV.
+\end{enumerate}
+
+\vspace{2mm}
+
+\begin{enumerate}
+\setcounter{enumi}{2}
+\tightlist
 \item
   The training set is \((k-1)/k\) times the size of the original data
   set - the estimate of the prediction error is biased upwards.
+\end{enumerate}
+
+\vspace{2mm}
+
+\begin{enumerate}
+\setcounter{enumi}{3}
+\tightlist
 \item
   This bias is the smallest when \(k=n\) (LOOCV), but we know that LOOCV
   has high variance.
+\end{enumerate}
+
+\vspace{2mm}
+
+\begin{enumerate}
+\setcounter{enumi}{4}
+\tightlist
 \item
   Due to the \emph{bias-variance-trade-off}, \(k\)-fold CV often gives
   more accurate estimates of the test error rate than does LOOCV.\\
@@ -809,16 +910,29 @@ validation set approach.
 
 \begin{block}{Choosing the best model}
 
-\vspace{2mm}
+\(~\)
 
 \begin{itemize}
+\tightlist
 \item
   There is a model parameter (maybe \(K\) in KNN or the degree of the
   polynomial), say \(\theta\), involved to calculate \(\text{CV}_j\),
-  \(j=1,\ldots, k\) \vspace{1mm}
+  \(j=1,\ldots, k\)
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Based on the CV vs \(\theta\)-plot we can choose the model with
-  \emph{the smallest \({\text{CV}_k}\)} as our best model. \vspace{1mm}
+  \emph{the smallest \({\text{CV}_k}\)} as our best model.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   We then fit this model using the whole data set (not the test part,
   that is still kept away), and evaluate the performance on the test
@@ -916,33 +1030,37 @@ assessment?}
 
 \begin{block}{The right and the wrong way to do cross-validation}
 
-\href{https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/cv_boot.pdf}{ISL
-book slides, page 17}: model assessment.
+\(~\)
+
+Example from the online lecture by Hastie and Tibshirain (slide 17 for
+part 5):
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
 \item
-  We have a two-class problem and would like to use a simple
-  classification method, however,
+  Two-class problem, would like to use a simple classification method.
 \item
-  we have many possible predictors (e.g., \(p=5000\)) and not a big
-  sample size (e.g., \(n=50\)).
+  Many possible predictors (e.g., \(p=5000\)) and not a big sample size
+  (e.g., \(n=50\)).
 \end{itemize}
 
-We use this strategy to produce a classifier:
+\vspace{2mm}
+
+\emph{Strategy}:
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
 \item
-  We calculate the correlation between the class label and each of the
+  Calculate the correlation between the class label and each of the
   \(p\) predictors, and choose the \(d=25\) predictors that have the
-  highest (absolute value) correlation with the class label. (We need to
-  have \(d<n\) to fit the logistic regression uniquely.)
+  strongest correlation with the class label.
 \item
-  Then we fit our classifier (here: logistic regression) using only the
-  \(d=25\) predictors.
+  Fit our classifier (logistic regression) using only the \(d=25\)
+  predictors.
 \end{enumerate}
+
+\vspace{2mm}
 
 How can we use cross-validation to produce an estimate of the
 performance of this classifier?
@@ -1000,6 +1118,7 @@ See also this nice
 \end{frame}
 
 \begin{frame}{The Bootstrap}
+\protect\hypertarget{the-bootstrap}{}
 
 \vspace{2mm}
 
@@ -1042,9 +1161,14 @@ See also this nice
   Surprising Adventures of Baron Munchausen'' by Rudolph Erich Raspe:
 \end{itemize}
 
-\emph{The Baron had fallen to the bottom of a deep lake. Just when it
-looked like all was lost, he thought to pick himself up by his own
-bootstraps.}
+\(~\)
+
+\begin{quote}
+The Baron had fallen to the bottom of a deep lake. Just when it looked
+like all was lost, he thought to pick himself up by his own bootstraps.
+\end{quote}
+
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -1059,22 +1183,41 @@ bootstraps.}
 
 \begin{block}{Example: the standard deviation of the sample median?}
 
-\vspace{2mm}
+\(~\)
 
 \begin{itemize}
+\tightlist
 \item
   Assume that we observe a random sample \(X_1, X_2, \ldots, X_n\) from
   an unknown probability distribution \(f\). We are interested in saying
   something about the population median, thus we calculate the sample
   median \(\tilde{X}\).\\
   \(\rightarrow\) Q: How accurate is \(\tilde{X}\) as an estimator?
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   If we would know our distribution \(F\), we could sample from \(F\),
   and use simulations to answer our question.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   However, without knowledge of the distribution, we cannot calculate
   the standard deviation of our estimator, thus
   \(\text{SD}(\tilde{X})\).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   That's where the bootstrap method comes into play.
 \end{itemize}
@@ -1088,6 +1231,8 @@ bootstraps.}
 Let's first assume we would know \(f\), for example \(X\sim N(0,1)\).
 Then we can repeatedly take samples and calculate the standard deviation
 of all medians to obtain an estimate:
+
+\(~\)
 
 \scriptsize
 
@@ -1121,19 +1266,38 @@ of all medians to obtain an estimate:
 
 \begin{block}{Moving from simulation to bootstrapping (\(f\) unknown)}
 
-\vspace{2mm}
+\(~\)
 
 \begin{itemize}
+\tightlist
 \item
   The bootstrap method is using the observed data to estimate the
   \emph{empirical distribution} \(\hat{f}\), that is each observed value
   of \(x\) is given probability \(1/n\).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   A \emph{bootstrap sample} \(X^*_1,X^*_2,\ldots, X^*_n\) is a random
   sample drawn from \(\hat{f}\).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   A simple way to obtain the bootstrap sample is to \emph{draw with
   replacement from \(X_1, X_2, \ldots, X_n\)}.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   \textbf{Note}: Our bootstrap sample consists of \(n\) members of
   \(X_1, X_2, \ldots, X_n\) - some appearing more than once, other not
@@ -1146,7 +1310,11 @@ of all medians to obtain an estimate:
 
 \begin{frame}[fragile]
 
-Compare the sample median \scriptsize
+Compare the sample median
+
+\(~\)
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1162,6 +1330,7 @@ Compare the sample median \scriptsize
 \end{verbatim}
 
 \normalsize
+
 to the median from \textbf{one bootstrap-sample}: \scriptsize
 
 \begin{Shaded}
@@ -1176,6 +1345,7 @@ to the median from \textbf{one bootstrap-sample}: \scriptsize
 \end{verbatim}
 
 \normalsize
+
 However, drawing only \emph{one} such sample does not help much.
 
 \end{frame}
@@ -1184,20 +1354,18 @@ However, drawing only \emph{one} such sample does not help much.
 
 \begin{block}{The bootstrap algorithm for estimating standard errors}
 
-\vspace{2mm}
+\(~\)
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
   Drawing \(B\) bootstrap samples: drawn with replacement from the
   original data.
 \end{enumerate}
 
-\vspace{1mm}
+\vspace{2mm}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{1}
 \tightlist
 \item
@@ -1206,10 +1374,9 @@ However, drawing only \emph{one} such sample does not help much.
   sample.
 \end{enumerate}
 
-\vspace{1mm}
+\vspace{2mm}
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{2}
 \tightlist
 \item
@@ -1228,6 +1395,12 @@ However, drawing only \emph{one} such sample does not help much.
 \begin{block}{Illustration for the median example (with a for-loop in
 R)}
 
+\(~\)
+
+Simulate data:
+
+\vspace{2mm}
+
 \scriptsize
 
 \begin{Shaded}
@@ -1242,6 +1415,17 @@ R)}
 \begin{verbatim}
 ## [1] 0.05300423
 \end{verbatim}
+
+\(~\)
+
+\normalsize
+
+Then take 1000 bootstrap samples and repeatedly estimate the median to
+get a standard deviation:
+
+\vspace{2mm}
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -1267,6 +1451,8 @@ R)}
 
 The distribution of the 1000 sampled estimates:
 
+\(~\)
+
 \begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/boot2-1} \end{center}
 
 \end{frame}
@@ -1275,6 +1461,8 @@ The distribution of the 1000 sampled estimates:
 
 \begin{block}{Alternative: the built-in \texttt{boot} function from
 library \texttt{boot}}
+
+\(~\)
 
 \scriptsize
 
@@ -1320,13 +1508,7 @@ observations.
 
 \vspace{2mm}
 
-\textbf{A:} Then we would always get the same sample - given that the
-order of the sample points is not important for our estimator.
-
 \vspace{4mm}
-
-(Sidenote: In permutation testing we sample without replacement to get
-samples under the null hypothesis - a separate field of research.)
 
 \end{block}
 
@@ -1349,12 +1531,12 @@ In the recommended exercises we will look at how to use bootstrapping to
 estimate the covariance of the estimator.\footnote{
 Why is that "needed" if we already know the mathematical formula for the standard deviation? Answer: not needed - but OK to look at an example where we know the "truth".}
 
-\vspace{2mm} \normalsize
+\vspace{2mm}
+\normalsize
 
 \textbf{Note}: Our bootstrap samples can also be used to make confidence
 intervals for the regression coefficients or prediction intervals for
-new observations. This means that we do not have to rely on assuming
-that the error terms are normally distributed!
+new observations.
 
 \end{block}
 
@@ -1372,13 +1554,26 @@ Bagging (\emph{bootstrap aggregation}) is a special case of
 \vspace{2mm}
 
 \begin{itemize}
+\tightlist
 \item
   In Module 8 we will look at bagging, which is built on bootstrapping
   and the fact that it is possible to reduce the variance of a
   prediction by taking the average of many model fits.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Particularly useful for estimation methods with large variances (like
   regression trees).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Idea:
 
@@ -1388,7 +1583,7 @@ Bagging (\emph{bootstrap aggregation}) is a special case of
     Draw \(B\) bootstrap samples from your data and train the method for
     each sample \(b\) in order to get \(\hat{f}^{\star b}(x)\).
   \item
-    To obtain a prediction, average over all predictions to obtain
+    Average over all predictions to obtain
     \[\hat{f}_{bag}(x) = \frac{1}{B} \sum_{b=1}^B \hat{f}^{\star b}(x) \ .\]
   \end{itemize}
 \end{itemize}
@@ -1429,25 +1624,8 @@ Bagging (\emph{bootstrap aggregation}) is a special case of
 
 \end{frame}
 
-\begin{frame}{Summing up}
-
-\begin{block}{Take home messages}
-
-\begin{itemize}
-\tightlist
-\item
-  Use \(k=5\) or \(10\) fold cross-validation for model selection or
-  assessment.
-\item
-  Use bootstrapping to estimate the standard deviation of an estimator,
-  and understand how it is performed.
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
 \begin{frame}{Further reading}
+\protect\hypertarget{further-reading}{}
 
 \begin{itemize}
 \tightlist
@@ -1462,19 +1640,49 @@ Bagging (\emph{bootstrap aggregation}) is a special case of
 
 \end{frame}
 
-\begin{frame}
-
-\begin{block}{Interactive lecture (Rest of today)}
-
-\vspace{2mm}
+\begin{frame}{Excursion: R Markdown and \texttt{knitr}}
+\protect\hypertarget{excursion-r-markdown-and-knitr}{}
 
 \begin{itemize}
 \item
-  You may work alone, in pairs or larger groups - lecturer and TA will
-  supervise.
+  You can work through the Bonus part about R Markdown in the R course
+  \url{https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/}.
 \item
-  Please \textbf{bring your laptop}!
+  You find a template for the exercise sheets on our course website
+  \url{https://wiki.math.ntnu.no/tma4268/2021v/subpage6}. Do not forget
+  to install the packages listed at the beginning of the exercise sheet.
 \end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{How to render a document?}
+
+\vspace{2mm}
+
+You do this by pressing \texttt{knit}.
+
+Knitting is also done by: Ctrl+Shift+K (Windows) or Cmd+Shift+K (MacOS).
+
+\vspace{2mm}
+
+\begin{enumerate}
+[1)]
+\item
+  Creating documents with R Markdown starts with an .Rmd file that
+  contains a combination of markdown (content with simple text
+  formatting) and R code chunks.
+\item
+  The .Rmd file is fed to \texttt{knitr} which executes all of the R
+  code chunks and creates a new markdown (.md) document which includes
+  the R code and it's output.
+\item
+  The markdown file generated by \texttt{knitr} is then processed by
+  \texttt{pandoc} which is responsible for creating a finished web page,
+  PDF, MS Word document, slide show, handout, book, dashboard, package
+  vignette or other format.
+\end{enumerate}
 
 \end{block}
 
@@ -1484,16 +1692,262 @@ Bagging (\emph{bootstrap aggregation}) is a special case of
 
 \begin{itemize}
 \item
-  \textbf{20min:}
-  \href{https://htmlpreview.github.io/?https://github.com/stefaniemuff/statlearning/blob/master/5Resample/RMarkdownIntro.html}{Introduction
-  to R Markdown (by lecturer)} and the template to be used for
-  Compulsory exercise 1 (approx 20 minutes). Download from
-  \href{https://wiki.math.ntnu.no/tma4268/2020v/subpage6}{course page}
-  and also install the packages listed at the beginning of the exercise
-  sheet.
+  More: \href{https://pandoc.org/}{About pandoc - the swiss army knife
+  for file conversion}
 \item
-  \textbf{Rest of time:} Introduction to problems on cross-validation
-  and bootstrap; work with problems and some discussion.
+  NB: even if you write tex this is first translated to md and then via
+  pandoc to pdf, so subtle tex stuff may be missed on the way.
+\item
+  Do you get a separate window popping up, or is your output shown in
+  the Viewer tab of one of the window panes? Go to RStudio-Tools-Global
+  Options-RMarkdown and check what is your value of ``show output
+  preview in''.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{What output type do you want to produce?}
+
+\vspace{2mm}
+
+\begin{itemize}
+\item
+  Just keep track of your own work: html\_document
+\item
+  For TMA4268 Compulsory exercise 1: we ask for a pdf-file (because that
+  is easy to read and grade when you upload that to Blackboard)
+\item
+  To produce a \texttt{pdf\_document} RStudio (using pandoc) will call a
+  latex-installation, so you need to have latex installed on your laptop
+  to be able to produce a pdf-file.
+\item
+  Toggle comment/uncomment with hashtag in YAML header \texttt{output}
+  to make different options active, then press \texttt{knit}.
+  Alterntively this can be done by calling the function
+  \texttt{rmarkdown::render()} from your Console window.
+\item
+  Optional: check that uncommenting \texttt{pdf\_document} and
+  commenting out \texttt{html\_document} and pressing \texttt{knit} will
+  give you a pdf-file.
+\item
+  During rendering we use the location of the .Rmd file as the working
+  directory, and the rendering is done in a \emph{new session}.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Formatting your R Markdown file}
+\protect\hypertarget{formatting-your-r-markdown-file}{}
+
+\begin{block}{Text, mathematics}
+
+\begin{itemize}
+\tightlist
+\item
+  formatted with markdown
+\item
+  mathematics (in latex) with formulas starting and ending with one
+  \texttt{\$} and equation with \texttt{\$\$}
+\item
+  boldface with two stars and italic with one, new line with two spaces,
+\item
+  For more, like sections, bulleted or numbered lists, tables,
+  footnotes, rulers,\ldots{} see
+  \url{https://github.com/rstudio/cheatsheets/raw/master/rmarkdown-2.0.pdf}
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\textbf{Hands-on}: go the the Compulsory exercise 1 template, and just
+write and press \texttt{knitr} to see!
+
+Check how a nice formula using latex is generated for
+\(Y_i=\beta_0+\beta_1 x_{i1} +\varepsilon_i\).
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Code Chunks}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Chunks of embedded code. Each chunk begins with ```\{r\} and ends with
+  ```
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Set of code chunk options - but I have mainly used these two:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{echo}: display the code in the chunk, TRUE or FALSE or
+    selected lines, or maybe with an R-object (later)
+  \item
+    \texttt{eval}: run code in the chunk, TRUE or FALSE
+  \end{itemize}
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Remember to include packages to be used within the chunk (only needed
+  the first time in a document, if the chung is evaluated,
+  \texttt{eval=TRUE}).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Chunks can have (unique) names, may help when debugging.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Set-up chunk}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  The set-up chunk is a code chunk that you add before you actually
+  start to do the work.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Smart things to add to the setup-chunk:
+\end{itemize}
+
+\(~\)
+
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(knitr)}
+\NormalTok{knitr}\OperatorTok{::}\NormalTok{opts_chunk}\OperatorTok{$}\KeywordTok{set}\NormalTok{(}\DataTypeTok{echo =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{tidy =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{message =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{warning =} \OtherTok{FALSE}\NormalTok{, }
+    \DataTypeTok{strip.white =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{prompt =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{cache =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{size =} \StringTok{"scriptsize"}\NormalTok{, }
+    \DataTypeTok{fig.width =} \DecValTok{4}\NormalTok{, }\DataTypeTok{fig.height =} \DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Calling R outside of the code chunks}
+
+\(~\)
+
+Use the ` r before and ` after an R command to integrate into the text.
+For example,
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\DecValTok{2} \OperatorTok{+}\StringTok{ }\DecValTok{2}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 4
+\end{verbatim}
+
+is equal to 4.
+
+\(~\)
+
+This is what we have done in the YAML-header to include todays date on
+your submission:
+
+` r format(Sys.time(), `\%d \%B, \%Y')` gives 03 Februar, 2021.
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]{Problems}
+\protect\hypertarget{problems}{}
+
+\begin{block}{When I \texttt{knit} with output: pdf\_document no
+pdf-file is produced. Why?}
+
+\begin{itemize}
+\tightlist
+\item
+  html\_document is more forgiving than pdf\_document wrt tex-errors
+\item
+  a tex-error is not easy to spot - log is terrible
+\item
+  many students have problems here, and some just end up handing in html
+  or Rmd for the projects
+\end{itemize}
+
+My solution
+
+\begin{itemize}
+\tightlist
+\item
+  first I render html\_document and look for tex-errors and fix them
+\item
+  then I render pdf\_document, and include \texttt{keep\_tex:\ yes} yaml
+  option
+\item
+  then I compile the tex in my favorite \texttt{texshop} and look for
+  sensible log for errors,
+\item
+  and then go back to the Rmd and fix the error.
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}{Handing in Compulsory exercise 1}
+\protect\hypertarget{handing-in-compulsory-exercise-1}{}
+
+\begin{itemize}
+\item
+  I hope you have already joined a group from Bb (front page -- users
+  and groups -- groups).
+\item
+  Then under Compulsory exercises you will see ``Hand in'' is possible
+  (this will come).
+\item
+  Upload \textbf{both your Rmd and pdf-version of you R Markdown file}
+  with your solutions to the exercise (based on the template).
+\item
+  Scores and comments will be given on Bb.
 \end{itemize}
 
 \end{frame}
@@ -1501,7 +1955,7 @@ Bagging (\emph{bootstrap aggregation}) is a special case of
 \begin{frame}
 
 \hypertarget{refs}{}
-\hypertarget{ref-james.etal}{}
+\leavevmode\hypertarget{ref-james.etal}{}%
 James, G., D. Witten, T. Hastie, and R. Tibshirani. 2013. \emph{An
 Introduction to Statistical Learning with Applications in R}. New York:
 Springer.

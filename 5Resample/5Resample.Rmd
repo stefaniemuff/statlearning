@@ -1,17 +1,17 @@
 ---
-subtitle: "TMA4268 Statistical Learning V2020"
+subtitle: "TMA4268 Statistical Learning V2021"
 title: "Module 5: Resampling"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "January 31 and February 3, 2020"
+date: "February 8 and 9, 2021"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yess
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -32,9 +32,6 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 whichformat="latex"
 ```
 
----
-
-Last update: February 3, 2020
 
 ---
 
@@ -62,12 +59,22 @@ Additional material for the interested reader: Chapter 7 (in particular 7.10) in
 
 ## What will you learn?
 
+$~$
+
 * What is model assessment and model selection?
+
+\vspace{2mm}
+
 * Ideal solution in a data rich situation.
+
+\vspace{2mm}
+
 * Cross-validation and what is best: 
     + validation set 
     + leave-one-out cross-validation (LOOCV) 
     + $k$-fold CV 
+
+\vspace{2mm}
 
 * Bootstrapping - how and why.
 
@@ -82,11 +89,13 @@ Additional material for the interested reader: Chapter 7 (in particular 7.10) in
 
 * Inference and understanding of the true pattern (in contrast to overfitting)
 
+\vspace{2mm}
+
 This is important both for 
 
 **Model selection**
 
-Estimate the _performance_ of different models (often different order of complexity within one model class) to _choose the best model_.
+Estimate the _performance_ of different models to _choose the best model_.
 
 **Model assessment**
 
@@ -94,27 +103,10 @@ Estimating the performance (prediction error) of the final model, on new data.
 
 ---
 
+
 ## Training vs Test Error
 
-\vspace{2mm}
-
-Recall:
-
-* The _test error_ is the average error that results from using a
-statistical learning method to predict the response on a new
-observation, one that was not used in training the method.
-
-* The _training error_ can be easily calculated by
-applying the statistical learning method to the observations
-used in its training.
-
-* The training error rate often is quite different from the
-test error rate.
-
-* **The training error can
-dramatically underestimate the test error**.
-
----
+$~$
 
 \centering
 ![Training vs test error](training_test.png){width=80%}
@@ -124,7 +116,7 @@ dramatically underestimate the test error**.
 
 ## Loss functions 
 
-\vspace{2mm}
+$~$
 
 In order to define how we measure error, we must first decide for a **loss function**. Here we use:
 
@@ -133,6 +125,8 @@ In order to define how we measure error, we must first decide for a **loss funct
 * _\textcolor{red}{Mean squared error}_ (quadratic loss) for regression problems (continuous outcomes) $Y_i=f({\boldsymbol x}_i)+\varepsilon_i$, $i=1,\ldots, n$:  
 
 $$\text{MSE}=\frac{1}{n}\sum_{i=1}^n (y_i-\hat{f}({\boldsymbol x}_i))^2 \ .$$
+
+\vspace{2mm}
 
 * _\textcolor{red}{Misclassification rate}_ (0/1 loss) for classification problems where we classify to the class with the highest probability $P(Y=j\mid {\boldsymbol x}_0)$ for $j=1,\ldots,K$:
 $$\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i) \ .$$ 
@@ -145,7 +139,7 @@ $$\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i) \ .$$
 We aim to do _model selection_ in KNN-regression, where true curve is
 $f(x)=-x+x^2+x^3$ with $x \in [-3,3]$. $n=61$ for the training data.
 
-\vspace{2mm}
+\vspace{4mm}
 
 \centering
 ![Regression problem: training data and true regression curve](Prob1f1.png){width=50%}
@@ -153,12 +147,14 @@ $f(x)=-x+x^2+x^3$ with $x \in [-3,3]$. $n=61$ for the training data.
 ---
 
 ### KNN regression (chapter 3.5 in course book)
+
 \vspace{2mm}
 
 * The KNN regression method provides a prediction at a value $x_0$ by finding the closest $K$ points (Euclidean distance) and calculating the average of the observed $y$ values at the points in the respective neighborhood $\mathcal{N}_0$ 
 
 $$\hat{f}(x_0)=\frac{1}{K}\sum_{i\in \mathcal{N}_0} y_i \ .$$
 
+\vspace{2mm}
 
 * We have considered $K=1,\ldots,25$, and repeated the experiment $M=1000$ times (that is, $M$ versions of training and test set). 
 
@@ -170,6 +166,8 @@ $$\hat{f}(x_0)=\frac{1}{K}\sum_{i\in \mathcal{N}_0} y_i \ .$$
 
 
 For KNN: $K$ small = high complexity; $K$ large = low complexity. 
+
+\vspace{2mm}
 
 <!-- <figure><img src="Probl1fig4negK.png" height="250px" width="250px" align="right" /><figcaption>Regression problem: bias-variance traceoff</figure> -->
 \centering
@@ -183,17 +181,21 @@ For KNN: $K$ small = high complexity; $K$ large = low complexity.
 
 ### The challenge
 
-\vspace{2mm}
+$~$
 
 * In the above examples we knew the truth, so we could assess training and test error.
 
+\vspace{2mm}
+
 * In reality this is of course not the case.
+
+\vspace{2mm}
 
 * We need approaches that work with real data!
 
 ---
 
-##The data-rich situation (often unrealistic)
+## The data-rich situation (often unrealistic)
 
 \vspace{2mm}
 If we had a large amount of data we could divide our data into three parts:
@@ -230,20 +232,17 @@ We will look at _cross-validation_ and the _bootstrap_.
 
 # Cross-validation (CV)
 
+$~$
+
 "Model selection" situation: We assume that test data is available (and has been put aside), and we want to use the rest of our data to find the model that performs "best", that is, _with lowest test error_.
 
+\vspace{2mm}
 
 This can be done by:
 
 * the validation set approach (not strictly a _cross_-validation approach).
 * leave one out cross-validation (LOOCV).
 * $k$-fold cross-validation (CV), typically $k=5$ or $10$.
-
-
-We will also discuss that there is a "right and a wrong way" to do CV
-
-* selection bias - all elements of a model selection strategy need to be within the CV-loop
-
 
 
 
@@ -324,6 +323,8 @@ g1valid=g1
 #ggarrange(g0,g1)
 ```
 
+\vspace{2mm}
+
 $\rightarrow$ No consensus which model really gives the lowest validation set MSE.
 
 ---
@@ -346,15 +347,17 @@ Better ideas?
 
 ## Leave-one-out cross-validation (LOOCV)
 
+$~$
+
 Leave-one-out cross-validation (LOOCV) addresses the limitations of the validation set approach.
 
-\vspace{2mm}
+\vspace{4mm}
 
 **Idea:**
 
-* Only **one observation at a time** is left out and makes up the new observations (test set). 
+* Only **one observation at a time** is left out (test set size $n=1$). 
 * The remaining $n-1$ observations make up the training set. 
-* The procedure of model fitting is repeated $n$ times, such that each of the $n$ observations is left out once. In each step, we calculate the MSE as
+* The procedure of model fitting is repeated $n$ times, such that each of the $n$ observations is left out once. In each step, we calculate
 
 $$\text{MSE}_i=(y_i-\hat{y}_i)^2 \ .$$
 
@@ -419,15 +422,17 @@ g0+theme_minimal()
 
 ### Issues with leave-one-out cross-validation
 
-\vspace{1mm}
+$~$
 
 * Pros: 
     + No randomness in training/validation splits!
     + Little bias, since nearly the whole data set used for training (compared to half for validation set approach).
+  
+\vspace{2mm}
     
 * Cons: 
     + Expensive to implement -- need to fit $n$ different models.
-    + High variance since: two training sets only differ by one observation - which makes estimates from each fold highly correlated and this can lead to that their average can have high variance$^\star$.
+    + High variance since: two training sets only differ by one observation, thus estimates from each fold highly correlated, which can lead to high variance in their average$^\star$.
 
 \vspace{5mm}
 \scriptsize
@@ -452,6 +457,9 @@ where $h_i$ is the $i$th diagonal element (leverage) of the hat matrix ${\bf H}=
 
 $\rightarrow$ Need to fit the model only once!
 
+$~$
+
+See Compulsory exercise 1.
 
 ---
 
@@ -466,12 +474,21 @@ $~$
 **Procedure:**
 
 * Split the data into $k$ (more or less) equal parts.
+
+\vspace{2mm}
+
 * Use $k-1$ parts to fit and the $k$th part to validate.
+
+\vspace{2mm}
+
 * Do this $k$ times and leave out another part in each round.
+
+
+$~$
 
 The MSE is then estimated in each of the $k$ iterations ($\text{MSE}_1,\ldots,\text{MSE}_k$), and the the $k$-fold CV is
 
-$$\text{CV}_k = \frac1k \sum_{i=1}^k \text{MSE}_i \ .$$
+$$\text{CV}_k = \frac1k \sum_{j=1}^k \text{MSE}_j \ .$$
 
 
 ---
@@ -495,10 +512,10 @@ $k$-fold:
 ### Formally
 
 * Indices of observations - divided into $k$ folds: $C_1, C_2, \ldots, C_k$.
-* $n_k$ elements in each fold, if $n$ is a multiple of $k$ then $n_k=n/k$.
+* $n_j$ elements in fold $j$. If $n$ is a multiple of $k$ then $n_j=n/k$ for all folds.
 
-$$\text{MSE}_k=\frac{1}{n_k}\sum_{i\in C_k}(y_i-\hat{y}_i)^2$$
-where $\hat{y}_i$ is the fit for observation $i$ obtained from the data with part $k$ removed. 
+$$\text{MSE}_j=\frac{1}{n_j}\sum_{i\in C_j}(y_i-\hat{y}_i)^2$$
+where $\hat{y}_i$ is the fit for observation $i$ obtained from the data with part $j$ removed. 
 
 $$\text{CV}_{k}=\frac{1}{n} \sum_{j=1}^k n_j \text{MSE}_j$$
 
@@ -507,6 +524,8 @@ Observe: setting $k=n$ gives LOOCV.
 ---
 
 ### Regression example: $5$ and $10$-fold cross-validation
+
+$~$
 
 ```{r auto_510fold, echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='70%'}
 library(ISLR)
@@ -609,15 +628,23 @@ There still _is_ variability, but _much less_ than for validation set approach.
 
 ### Issues with $k$-fold cross-validation
 
-\vspace{2mm}
+$~$
 
 1. The _result may vary_ according to how the folds are made, but the variation is in general lower than for the validation set approach.
 
+\vspace{2mm}
+
 2. Computational load lower with $k=5$ or $10$ than LOOCV.
+
+\vspace{2mm}
 
 3. The training set is $(k-1)/k$ times the size of the original data set - the estimate of the prediction error is biased upwards.
 
+\vspace{2mm}
+
 4. This bias is the smallest when $k=n$ (LOOCV), but we know that LOOCV has high variance.
+
+\vspace{2mm}
 
 5. Due to the _bias-variance-trade-off_, $k$-fold CV often gives more accurate estimates of the test error rate than does LOOCV.  
 $\rightarrow$ $k=5$ or $k=10$ is used as a compromise. 
@@ -626,13 +653,15 @@ $\rightarrow$ $k=5$ or $k=10$ is used as a compromise.
 
 ### Choosing the best model
 
-\vspace{2mm}
+$~$
 
 * There is a model parameter (maybe $K$ in KNN or the degree of the polynomial), say $\theta$, involved to calculate $\text{CV}_j$, $j=1,\ldots, k$
-\vspace{1mm}
+
+\vspace{2mm}
 
 * Based on the CV vs $\theta$-plot we can choose the model with _the smallest ${\text{CV}_k}$_ as our best model.
-\vspace{1mm}
+
+\vspace{2mm}
 
 * We then fit this model using the whole data set (not the test part, that is still kept away), and evaluate the performance on the test set.
 
@@ -703,15 +732,24 @@ $$\text{CV}_{n}=\frac{1}{n} \sum_{i=1}^n {\text{Err}_i}$$
 
 ## The right and the wrong way to do cross-validation
 
-[ISL book slides, page 17](https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/cv_boot.pdf): model assessment.
+$~$
 
-* We have a two-class problem and would like to use a simple classification method, however, 
-* we have many possible predictors (e.g., $p=5000$) and not a big sample size (e.g., $n=50$).
+Example from the online lecture by Hastie and Tibshirain (slide 17 for part 5):
 
-We use this strategy to produce a classifier:
+\vspace{2mm}
 
-1. We calculate the correlation between the class label and each of the $p$ predictors, and choose the $d=25$ predictors that have the highest (absolute value) correlation with the class label. (We need to have $d<n$ to fit the logistic regression uniquely.)
-2. Then we fit our classifier (here: logistic regression) using only the $d=25$ predictors.
+* Two-class problem, would like to use a simple classification method.
+* Many possible predictors (e.g., $p=5000$) and not a big sample size (e.g., $n=50$).
+
+\vspace{2mm}
+
+_Strategy_:
+
+1. Calculate the correlation between the class label and each of the $p$ predictors, and choose the $d=25$ predictors that have the strongest correlation with the class label.
+
+2. Fit our classifier (logistic regression) using only the $d=25$ predictors.
+
+\vspace{2mm}
 
 How can we use cross-validation to produce an estimate of the performance of this classifier? 
 
@@ -731,6 +769,8 @@ $~$
 $~$
 
 Note: We will see in the Recommended Exercises that doing the wrong thing can give a misclassification error approximately 0 - even if the "true" rate is 50%. 
+
+
 
 ---
 
@@ -795,10 +835,14 @@ can be used to quantify _uncertainty_ associated with an estimator or statistica
 * The name? _To pull oneself up by one's bootstraps_ from "The Surprising
 Adventures of Baron Munchausen" by Rudolph Erich Raspe:
 
-_The Baron had fallen to the bottom of a deep lake. Just
-when it looked like all was lost, he thought to pick himself
-up by his own bootstraps._
+$~$
 
+> The Baron had fallen to the bottom of a deep lake. Just
+when it looked like all was lost, he thought to pick himself
+up by his own bootstraps.
+
+
+$~$
 
 * **Idea: Use the data itself to get more information about a statistic (an estimator).**
 
@@ -823,20 +867,28 @@ up by his own bootstraps._
 
 ## Example: the standard deviation of the sample median?
 
-\vspace{2mm}
+$~$
 
 * Assume that we observe a random sample $X_1, X_2, \ldots, X_n$ from an unknown probability distribution $f$. We are interested in saying something about the population median, thus we calculate the sample median $\tilde{X}$.  
 $\rightarrow$ Q: How accurate is $\tilde{X}$ as an estimator?
 
+\vspace{2mm}
+
 * If we would know our distribution $F$, we could sample from $F$, and use simulations to answer our question.
 
+\vspace{2mm}
+
 * However, without knowledge of the distribution, we cannot calculate the standard deviation of our estimator, thus $\text{SD}(\tilde{X})$.
+
+\vspace{2mm}
 
 * That's where the bootstrap method comes into play.
 
 ---
 
 Let's first assume we would know $f$, for example $X\sim N(0,1)$. Then we can repeatedly take samples and calculate the standard deviation of all medians to obtain an estimate:
+
+$~$
 
 \scriptsize
 ```{r,eval=TRUE, echo=TRUE}
@@ -863,19 +915,28 @@ ggplot(data=data.frame(x=estimator),aes(x=x))+
 
 ## Moving from simulation to bootstrapping ($f$ unknown)
 
-\vspace{2mm}
+$~$
 
 * The bootstrap method is using the observed data to estimate the _empirical distribution_ $\hat{f}$, that is each observed value of $x$ is given probability $1/n$.
 
+\vspace{2mm}
+
 * A _bootstrap sample_ $X^*_1,X^*_2,\ldots, X^*_n$ is a random sample drawn from $\hat{f}$.
 
+\vspace{2mm}
+
 * A simple way to obtain the bootstrap sample is to _draw with replacement from $X_1, X_2, \ldots, X_n$_.
+
+\vspace{2mm}
 
 * **Note**: Our bootstrap sample consists of $n$ members of $X_1, X_2, \ldots, X_n$ - some appearing more than once, other not appearing at all.
 
 ---
 
 Compare the sample median
+
+$~$
+
 \scriptsize
 ```{r, eval=TRUE, echo=TRUE}
 set.seed(123)
@@ -899,15 +960,15 @@ However, drawing only _one_ such sample does not help much.
 
 ## The bootstrap algorithm for estimating standard errors
 
-\vspace{2mm}
+$~$
 
 1. Drawing $B$ bootstrap samples: drawn with replacement from the original data.
 
-\vspace{1mm}
+\vspace{2mm}
 
 2. Evaluate the statistic of interest on _each of the $B$ bootstrap samples_ to get $\tilde{X}^*_b$ for the $b$th bootstrap sample.
 
-\vspace{1mm}
+\vspace{2mm}
 
 3. Estimate squared standard error by
 $$\frac{1}{B-1}\sum_{b=1}^B (\tilde{X}^*_b-\frac{1}{B}\sum_{b=1}^B \tilde{X}^*_b)^2 \ ,$$
@@ -918,12 +979,29 @@ which is the empirical standard deviation from the $B$ estimates  $\tilde{X}^*_b
 
 ### Illustration for the median example (with a for-loop in R)
 
+$~$
+
+Simulate data:
+
+\vspace{2mm}
+
 \scriptsize
 ```{r, eval=TRUE, echo=TRUE}
 set.seed(123)
 n=101
 original=rnorm(n)
 median(original)
+```
+
+$~$
+
+\normalsize
+Then take 1000 bootstrap samples and repeatedly estimate the median to get a standard deviation:
+
+\vspace{2mm}
+
+\scriptsize
+```{r, eval=TRUE, echo=TRUE}
 B=1000
 estimator=rep(NA,B)
 for (b in 1:B)
@@ -939,6 +1017,8 @@ sd(estimator)
 
 The distribution of the 1000 sampled estimates:
 
+$~$
+
 ```{r boot2, echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='70%'}
 ggplot(data=data.frame(x=estimator),aes(x=x))+
   geom_density()
@@ -948,6 +1028,8 @@ ggplot(data=data.frame(x=estimator),aes(x=x))+
 ---
 
 ### Alternative: the built-in `boot` function from library  `boot`
+
+$~$
 
 \scriptsize
 ```{r, eval=TRUE, echo=TRUE}
@@ -971,11 +1053,10 @@ In bootstrapping we sample _with replacement_ from our observations.
 
 \vspace{2mm}
 
-**A:** Then we would always get the same sample - given that the order of the sample points is not important for our estimator.
+<!-- **A:** Then we would always get the same sample - given that the order of the sample points is not important for our estimator. -->
 
 \vspace{4mm}
-
-(Sidenote: In permutation testing we sample without replacement to get samples under the null hypothesis - a separate field of research.)
+ 
 
 ---
 
@@ -994,7 +1075,7 @@ Why is that "needed" if we already know the mathematical formula for the standar
 \vspace{2mm}
 \normalsize
 
-**Note**: Our bootstrap samples can also be used to make confidence intervals for the regression coefficients or prediction intervals for new observations. This means that we do not have to rely on assuming that the error terms are normally distributed!
+**Note**: Our bootstrap samples can also be used to make confidence intervals for the regression coefficients or prediction intervals for new observations. 
 
 ---
 
@@ -1008,11 +1089,15 @@ Bagging (_bootstrap aggregation_) is a special case of _ensemble methods_.
 
 * In Module 8 we will look at bagging, which is built on bootstrapping and the fact that it is possible to reduce the variance of a prediction by taking the average of many model fits.
 
+\vspace{2mm}
+
 * Particularly useful for estimation methods with large variances (like regression trees).
 
-* Idea: 
-      + Draw $B$ bootstrap samples from your data and train the method for each sample $b$ in order to get $\hat{f}^{\star b}(x)$.
-      + To obtain a prediction, average over all predictions to obtain 
+\vspace{2mm}
+
+* Idea:
+  + Draw $B$ bootstrap samples from your data and train the method for each sample $b$ in order to get $\hat{f}^{\star b}(x)$.
+  + Average over all predictions to obtain 
       $$\hat{f}_{bag}(x) = \frac{1}{B} \sum_{b=1}^B \hat{f}^{\star b}(x) \ .$$
 
 
@@ -1034,40 +1119,181 @@ $$\text{Var}(\bar{X})=\frac{\sigma^2}{B} \ .$$
 
 ---
 
-# Summing up
-
-## Take home messages
-
-* Use $k=5$ or $10$ fold cross-validation for model selection or assessment.
-* Use bootstrapping to estimate the standard deviation of an estimator, and understand how it is performed.
-
-
----
-
 # Further reading
 
 * [Videoes on YouTube by the authors of ISL, Chapter 5](https://www.youtube.com/playlist?list=PL5-da3qGB5IA6E6ZNXu7dp89_uv8yocmf), and corresponding [slides](https://lagunita.stanford.edu/c4x/HumanitiesScience/StatLearning/asset/cv_boot.pdf)
 * [Solutions to exercises in the book, chapter 5](https://rstudio-pubs-static.s3.amazonaws.com/65561_43c0eaaa8565414eae333b47038f716c.html)
 
 
+
 ---
 
+# Excursion: R Markdown and `knitr`
 
-## Interactive lecture (Rest of today)
+
+* You can work through the Bonus part about R Markdown in the R course [https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/](https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/).
+
+* You find a template for the exercise sheets on our course website [https://wiki.math.ntnu.no/tma4268/2021v/subpage6](https://wiki.math.ntnu.no/tma4268/2021v/subpage6). Do not forget to install the packages listed at the beginning of the exercise sheet.
+
+ 
+
+---
+
+### How to render a document? 
 
 \vspace{2mm}
 
-* You may work alone, in pairs or larger groups - lecturer and TA will supervise.
+You do this by pressing `knit`. 
 
-* Please **bring your laptop**!
+Knitting is also done by: Ctrl+Shift+K (Windows) or Cmd+Shift+K (MacOS).
+
+\vspace{2mm}
+
+1) Creating documents with R Markdown starts with an .Rmd file that contains a combination of markdown (content with simple text formatting) and R code chunks. 
+
+2) The .Rmd file is fed to `knitr` which executes all of the R code chunks and creates a new markdown (.md) document which includes the R code and it’s output.
+
+3) The markdown file generated by `knitr` is then processed by `pandoc` which is responsible for creating a finished web page, PDF, MS Word document, slide show, handout, book, dashboard, package vignette or other format.
 
 ---
 
+* More: [About pandoc - the swiss army knife for file conversion](https://pandoc.org/)
 
-* **20min:** [Introduction to R Markdown (by lecturer)](https://htmlpreview.github.io/?https://github.com/stefaniemuff/statlearning/blob/master/5Resample/RMarkdownIntro.html) and the template to be used for Compulsory exercise 1 (approx 20 minutes). Download
-from [course page](https://wiki.math.ntnu.no/tma4268/2020v/subpage6) and also install the packages listed at the beginning of the exercise sheet.
 
-* **Rest of time:** Introduction to problems on cross-validation and bootstrap; work with problems and some discussion.
+* NB: even if you write tex this is first translated to md and then via pandoc to pdf, so subtle tex stuff may be missed on the way.
+
+* Do you get a separate window popping up, or is your output shown in the Viewer tab of one of the window panes? Go to RStudio-Tools-Global Options-RMarkdown and check what is your value of "show output preview in".
+
+---
+
+### What output type do you want to produce?
+
+\vspace{2mm}
+
+* Just keep track of your own work: html_document
+
+* For TMA4268 Compulsory exercise 1: we ask for a pdf-file (because that is easy to read and grade when you upload that to Blackboard)
+
+* To produce a `pdf_document` RStudio (using pandoc) will call a latex-installation, so you need to have latex installed on your laptop to be able to produce a pdf-file.
+
+* Toggle comment/uncomment with hashtag in YAML header `output` to make different options active, then press `knit`. Alterntively this can be done by calling the function `rmarkdown::render()` from your Console window.
+
+* Optional: check that uncommenting `pdf_document` and commenting out `html_document` and pressing `knit` will give you a pdf-file.
+
+
+* During rendering we use the location of the .Rmd file as the working directory, and the rendering is done in a _new session_.
+
+ 
+---
+
+# Formatting your R Markdown file
+
+## Text, mathematics
+
+* formatted with markdown
+* mathematics (in latex) with formulas starting and ending with one `$` and equation with `$$`
+* boldface with two stars and italic with one, new line with two spaces,
+* For more, like sections, bulleted or numbered lists, tables, footnotes, rulers,... see
+<https://github.com/rstudio/cheatsheets/raw/master/rmarkdown-2.0.pdf>
+
+---
+
+**Hands-on**: go the the Compulsory exercise 1 template, and just write and press `knitr` to see! 
+
+Check how a nice formula using latex is generated for $Y_i=\beta_0+\beta_1 x_{i1} +\varepsilon_i$.
+
+
+
+---
+
+## Code Chunks
+
+$~$
+
+* Chunks of embedded code. Each chunk begins with \`\`\`{r} and ends with \`\`\`
+
+\vspace{2mm}
+
+* Set of code chunk options - but I have mainly used these two:
+    + `echo`: display the code in the chunk, TRUE or FALSE or selected lines, or maybe with an R-object (later)
+    + `eval`: run code in the chunk, TRUE or FALSE
+
+\vspace{2mm}
+
+* Remember to include packages to be used within the chunk (only needed the first time in a document, if the chung is evaluated, `eval=TRUE`).
+
+\vspace{2mm} 
+
+* Chunks can have (unique) names, may help when debugging.
+
+---
+
+## Set-up chunk
+
+$~$
+
+* The set-up chunk is a code chunk that you add before you actually start to do the work.
+
+\vspace{2mm}
+
+* Smart things to add to the setup-chunk:
+
+$~$
+
+\scriptsize
+```{r label, eval=FALSE,echo=TRUE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
+                      cache=TRUE, size="scriptsize",fig.width=4, fig.height=3)
+```
+
+---
+
+## Calling R outside of the code chunks
+
+$~$
+
+Use the \` r before and \` after an R command to integrate into the text. For example,
+```{r, echo=TRUE,eval=TRUE}
+2+2
+```
+is equal to `r 2+2`.
+
+$~$
+
+This is what we have done in the YAML-header to include todays date on your submission:
+ 
+\` r format(Sys.time(), '%d %B, %Y')\` gives `r format(Sys.time(), '%d %B, %Y')`.
+
+
+---
+
+# Problems
+
+## When I `knit` with output: pdf_document no pdf-file is produced. Why?
+
+* html_document is more forgiving than pdf_document wrt tex-errors
+* a tex-error is not easy to spot - log is terrible
+* many students have problems here, and some just end up handing in html or Rmd for the projects 
+
+My solution
+
+* first I render html_document and look for tex-errors and fix them
+* then I render pdf_document, and include `keep_tex: yes` yaml option
+* then I compile the tex in my favorite `texshop` and look for sensible log for errors, 
+* and then go back to the Rmd and fix the error.
+
+# Handing in Compulsory exercise 1
+
+* I hope you have already joined a group from Bb (front page -- users and groups -- groups).
+
+* Then under Compulsory exercises you will see "Hand in" is possible (this will come).
+
+* Upload **both your Rmd and pdf-version of you R Markdown file** with your solutions to the exercise (based on the template).
+
+* Scores and comments will be given on Bb.
+
+
 
 
 ---
