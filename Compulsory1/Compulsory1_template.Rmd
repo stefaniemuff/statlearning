@@ -15,19 +15,15 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 ```
 
-```{r rpackages,eval=TRUE,echo=FALSE}
-# install.packages("knitr") #probably already installed
-# install.packages("rmarkdown") #probably already installed
-# install.packages("ggplot2") #plotting with ggplot
-# install.packages("ggfortify")  
-# install.packages("MASS")  
-# install.packages("dplyr")  
-library(knitr)
-library(rmarkdown)
-library(ggplot2)
-library(ggfortify)
-library(MASS)
-library(dplyr)
+```{r rpackages,eval=FALSE,echo=FALSE}
+install.packages("knitr") #probably already installed
+install.packages("rmarkdown") #probably already installed
+install.packages("ggplot2") #plotting with ggplot
+install.packages("ggfortify")  
+install.packages("MASS")
+install.packages("class")
+install.packages("pROC")
+install.packages("plotROC")
 ```
 
 
@@ -49,6 +45,20 @@ Or the same formula $Y_i  = f(x_i) + \varepsilon_i$ in-line.
 ## b)
 
 ## c)
+
+```{r}
+id <- "1X_8OKcoYbng1XvYFDirxjEWr7LtpNr1m" # google file ID
+values <- dget(sprintf("https://docs.google.com/uc?id=%s&export=download", id))
+
+X = values$X
+dim(X)
+x0 = values$x0
+dim(x0)
+beta=values$beta
+dim(beta)
+sigma=values$sigma
+sigma
+```
 
  
 
