@@ -100,9 +100,9 @@ Y=f(\mathbf {x})+\varepsilon, \text{ where } \text{E}(\varepsilon)=0 \text{ and 
 $$
 
 Assume now that the true function $f(\mathbf {x})$ is a linear combination of the observed covariates, that is
-$f(\mathbf{x}) = \mathbf{x}^T\boldsymbol{\beta},$ where $\mathbf{x}$ and $\boldsymbol{\beta}$ are both vectors of length $p+1.$ 
+$f(\mathbf{x}) = \mathbf{x}^T\boldsymbol{\beta}=\beta_0 + \beta_1 x_1 + \ldots + \beta_p x_p,$ where $\mathbf{x}$ and $\boldsymbol{\beta}$ are both vectors of length $p+1.$ 
 
-We know that the OLS estimator in this case is $\hat{\boldsymbol{\beta}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{Y}.$ We look now at a competing estimator $\widetilde{\boldsymbol \beta} =(\mathbf{X}^T\mathbf{X}+\lambda {\bf I})^{-1}\mathbf{X}^T{\bf Y}$ (ridge regression estimator) where $\lambda\ge0$ is  a constant tuning parameter and controls the bias-variance trade-off. Observe that for $\lambda = 0$ the ridge regression estimator is equivalent to $\hat{\boldsymbol{\beta}}.$
+We know that the OLS estimator in this case is $\hat{\boldsymbol{\beta}} = (\mathbf{X}^T\mathbf{X})^{-1}\mathbf{X}^T\mathbf{Y}$, with design matrix $\mathbf{X}$ and response vector $\mathbf{Y}$. We look now at a competing estimator $\widetilde{\boldsymbol \beta} =(\mathbf{X}^T\mathbf{X}+\lambda {\bf I})^{-1}\mathbf{X}^T{\bf Y}$ (ridge regression estimator) where $\lambda\ge0$ is  a constant tuning parameter and controls the bias-variance trade-off. Observe that for $\lambda = 0$ the ridge regression estimator is equivalent to $\hat{\boldsymbol{\beta}}.$
 
 We will first derive mathematical formulas for the bias and variance and then we will plot these curves in R.
 
