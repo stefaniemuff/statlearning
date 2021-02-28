@@ -1,0 +1,585 @@
+--- 
+title: "Module 7: Moving Beyond Linearity" 
+subtitle: "TMA4268 Statistical learning"
+date: "`r format(Sys.time(), '%B, %Y')`"
+author: "Thiago G. Martins"
+output:
+  beamer_presentation:
+    #theme: "AnnArbor"
+    fig_width: 3
+    fig_height: 3
+    keep_tex: true
+bibliography: ref.bib
+nocite: |
+  @ISL, @ESL, @Reinsch, @K, @Smoother
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, out.width = "90%", fig.width = 5, fig.height = 4)
+```
+
+
+```{r message=FALSE, warning=FALSE, echo=F}
+library(splines)
+library(gam)
+
+Plot = function(fit, main = "", col = "blue", legend = NULL, multi = F){
+  ## AM
+  if(sum(class(fit) == "Gam")){
+    b = length(labels(fit))
+    if(!multi) par(mfrow = c(1,b), oma = c(0,0,1,0), cex.main = 2, cex.lab=1.5)
+    plot(fit,ylab="",se=T,col=col,lwd=2,main=ifelse(multi,"AM",""))
+    title(ifelse(main == "" & !multi,"AM", main), outer = T)
+    co = grconvertX(-(b-1):0+.03, from = "nfc", to = "user")
+    text(co, y = ifelse(multi,0,.5),labels=parse(text=paste0("f[",1:b,"]")),
+         srt=90,cex=1.2,xpd = NA)
+  } else{
+  ## Not AM
+    nam = sort(all.vars(fit$call))
+    if(length(fit$formula)) nam = sort(all.vars(fit$formula))
+    new = sort(unique(get(nam[1])))
+    lvl = nlevels(get(nam[1]))
+    sm = "smooth.spline" %in% class(fit)
+    tx = ifelse("loess" %in% class(fit), invisible, list)
+    ty = invisible
+    if(!sm) fit[c("y","se")] = predict(fit, setNames(tx(new),nam[1]),se=T)[1:2]
+    se.b = cbind(fit$y + 2*fit$se, fit$y- 2*fit$se)
+
+    if(lvl){
+      par(mar = c(4,4,2,0))
+      plot(new, fit$y, ylim = range(se.b),  ylab = nam[2], main = main)
+      arrows(1:lvl, se.b[,1], y1 = se.b[,2],angle = 90, length = 0.03, code = 3)
+    } else{
+      if(length(legend)){
+        col = "red"
+        legend("topright", col = c("blue", "red"), lty = 1, lwd = 2, cex = .8,
+               legend = paste("df =", round(c(legend,fit$df,fit$trace.hat),2)))
+      } else if(is.logical(fit$model[,1])){
+        plot(jitter(get(nam[1])), fit$model[,1]/5, cex=.5,pch="|",col="darkgrey",
+             xlab = nam[1],ylab=sub("I","Pr",names(fit$model)[1]),main=main)
+        ty = plogis
+      } else{
+        par(mar = c(4,4,2,0))
+        plot(get(nam[1]), get(nam[2]), cex = .5, col = "darkgrey",
+             xlab = nam[1], ylab = nam[2], main = main)
+      }
+      lines(new, ty(fit$y), lwd = 2, col = col)
+      abline(v = attr(fit$model[[2]], "knots"),lty = 2)
+      if(!sm) matlines(new, ty(se.b), lwd = 1, col = col, lty = 3)
+    }
+  }
+}
+```
+
+----
+
+# Multiple linear regression
+$$
+y_i = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \ldots \beta_k x_{ik} + \varepsilon_i,
+$$
+or equivalently
+\begin{align*}
+\mathbf  y &= \mathbf  X \beta + \varepsilon = \\
+& \\
+\begin{pmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{pmatrix}
+&= \begin{pmatrix}
+1 & x_{11} & x_{12} & \dots & x_{1k} \\
+1 & x_{21} & x_{22} & \dots & x_{2k} \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+1 & x_{n1} & x_{n2} & \dots & x_{nk}
+\end{pmatrix}
+\begin{pmatrix} \beta_0 \\ \beta_1 \\ \vdots \\ \beta_k \end{pmatrix} +
+\begin{pmatrix} \varepsilon_1 \\ \varepsilon_2 \\ \vdots \\ \varepsilon_n \end{pmatrix}.
+\end{align*}
+
+---
+
+# Estimation 
+The OLS estimator for $\beta$ is
+$$
+\hat{\beta} = (\mathbf  X^\mathsf{T} \mathbf  X)^{-1} \mathbf  X^\mathsf{T} \mathbf  y.
+$$
+We will now change $\mathbf  X$ as we like, but keep $\hat{\beta}$.
+
+---
+
+# Non-Linear Models
+
+Let us focus on **one** explanatory variable $X$ for now. We will generalize later.
+
+$$ 
+y_i = \beta_0 + \beta_1 b_1(x_i) + \beta_2 b_2(x_i) + \ldots \beta_k b_k(x_i) + \varepsilon_i,
+$$
+
+where $b_j(x_i)$ are **basis functions**.
+
+---
+
+# Example with $y_i = \beta_0  + \beta_1 x_i + \beta_2 x_i^2 + \varepsilon_i$
+We  have 
+$$b_1(X) = X,$$
+$$b_2(X) = X^2,$$
+$$\mathbf  x = (6,3,6,8) ^\mathsf{T},$$
+$$\mathbf  y = (3,-2,5,10) ^\mathsf{T}.$$
+This results in
+$$
+\mathbf  X = \begin{pmatrix}
+1 & b_1(x_1) & b_2(x_1)\\
+1 & b_1(x_2) & b_2(x_2)\\
+1 & b_1(x_3) & b_2(x_3)\\
+1 & b_1(x_4) & b_2(x_4)
+\end{pmatrix} = 
+\begin{pmatrix}
+1 & x_1 & x_1^2\\
+1 & x_2 & x_2^2\\
+1 & x_3 & x_3^2\\
+1 & x_4 & x_4^2
+\end{pmatrix} =
+\begin{pmatrix}
+1 & 6 & 36\\
+1 & 3 & 9\\
+1 & 6 & 36\\
+1 & 8 & 64
+\end{pmatrix}
+$$
+and
+$$
+\hat{\beta} = (\mathbf  X^\mathsf{T} \mathbf  X)^{-1} \mathbf  X^\mathsf{T} \mathbf  y = (-4.4, 0.2, 0.2) ^\mathsf{T}.
+$$
+
+--- 
+
+# General Design Matrix
+
+$$
+\mathbf  X = \begin{pmatrix}
+1 & b_1(x_1) & b_2(x_1) & \dots & b_k(x_1) \\
+1 & b_1(x_2) & b_2(x_2) & \dots & b_k(x_2) \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+1 & b_1(x_n) & b_2(x_n) & \dots & b_k(x_n)
+\end{pmatrix}.
+$$
+
+* Rows are observations  
+$~$
+* Columns are basis functions  
+$~$
+* Same setup as for multiple linear regression
+
+---
+
+# The Aim
+
+```{r echo=F}
+library(ISLR)
+attach(Wage)
+plot(age, wage, cex = .5, col = "darkgray", 
+     main = "Observations")
+```
+
+Use `lm(wage ~ X)` and choose $\mathbf X$ according to method.
+
+---
+
+# Polynomial Regression 
+The polynomial regression includes powers of $X$ in the regression. 
+$$ 
+y_i = \beta_0 + \beta_1 x_{i} + \beta_2 x_i^2 + \ldots \beta_k x_i^d + \varepsilon_i,
+$$
+
+* In practice $d \leq 4$ 
+* The basis is $b_j(x_i) = x_i^j$ for $j = 1,2 \ldots, d$ 
+
+$$
+\mathbf  X = \begin{pmatrix}
+1 & x_1 & x_1^2 & \dots & x_1^d \\
+1 & x_2 & x_2^2 & \dots & x_2^d \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+1 & x_n & x_n^2 & \dots & x_n^d
+\end{pmatrix}.
+$$
+
+---
+
+```{r}
+fit = lm(wage ~ poly(age,4))
+Plot(fit, main = "Polynomial Regression")
+```
+
+---
+
+# Step Functions
+* Divide `age` into bins
+* Model `wage` as a constant in each bin 
+* The basis functions indicate which bin $x_i$ belongs to
+* Cutpoints $c_1, c_2, \ldots, c_K$
+
+$$
+b_j(x_i) = I(c_j \leq x_i < c_{j+1})
+$$
+
+$$
+\mathbf  X = \begin{pmatrix}
+1 & I(x_1 < c_1) & I(c_1 \leq x_1 < c_2) & \dots & I(c_K \leq x_1)\\
+1 & I(x_2 < c_1) & I(c_1 \leq x_2 < c_2) & \dots & I(c_K \leq x_2)\\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+1 & I(x_n < c_1) & I(c_1 \leq x_n < c_2) & \dots & I(c_K \leq x_n)\\
+\end{pmatrix}.
+$$
+
+---
+
+```{r}
+fit = lm(wage ~ cut(age,3))
+Plot(fit, main = "Piecewise Constant")
+```
+
+---
+
+```{r}
+fit = lm(wage ~ education)
+Plot(fit, main = "Piecewise Constant")
+```
+
+---
+
+# Regression Splines 
+
+A degree-$d$ spline is a piecewise degree-$d$ polynomial, with continuity in derivatives up to degree $d-1$ at each knot.
+
+$~$
+
+* Combination of polynomials and step functions
+* **Knots** $c_1, c_2, \ldots, c_K$ 
+* Continous derivatives up to order $d-1$ at each knot.
+
+---
+
+# Regression Splines 
+
+![](imgs/regression_spline_constrain.png){#id .class width=90% height=90%}
+
+---
+
+# Regression Splines 
+
+An order-$d$ spline with $K$ knots has the basis
+\begin{align*}
+b_j(x_i) &= x_i^j &&,\; j = 1, \ldots, d\\
+b_{d+k}(x_i) &= (x_i-c_k)^{d}_+ &&,\; k = 1, \ldots, K,
+\end{align*}
+where
+$$
+(x-c_j)^{d}_+ = \begin{cases}
+(x-c_j)^{d} &, x > c_j\\
+0 &, \text{otherwise}.
+\end{cases}
+$$
+
+---
+
+# Cubic Splines
+* A spline with $d=3$ is cubic 
+* The basis is $X, X^2, X^3, (X-c_1)^3_+,(X-c_2)^3_+,\ldots, (X-c_K)^3_+$
+```{r, echo = F}
+M = 4
+cp = c(25,40,60)
+l = range(age)
+par(mfrow = c(1,3), mar = c(10,1,2,1))
+# s=sapply(1:(M-1), function(y) curve(x^y, log = [1], l[2], yaxt = "n",
+#  ylab = "", xlab = "", main = bquote(b[.(y)](x) == x^.(y))))
+s=sapply(1:length(cp), function(y) curve(pmax(0,x-cp[y])^3, l[1], l[2], yaxt = "n",
+ ylab = "", xlab = "age", main = bquote(b[.(y+M-1)](x) == (x-.(cp[y]))["+"]^.(M-1))))
+```
+
+---
+
+```{r}
+fit = lm(wage ~ bs(age, knots = c(25,40,60)))
+Plot(fit, main = "Cubic spline")
+```
+
+---
+
+```{r}
+fit = lm(wage ~ bs(age, df = 6))
+Plot(fit, main = "Cubic spline")
+```
+
+---
+
+# Natural Cubic Splines
+* Cubic spline that is linear at the ends 
+* The idea is to reduce variance
+* Straight line outside $c_0 = 18$ and $c_{K+1} = 80$ 
+* We call these points **boundary knots**
+
+The basis is
+$$
+b_1(x_i) = x_i, \quad b_{k+2}(x_i) = d_k(x_i)-d_K(x_i),\; k = 0, \ldots, K - 1,
+$$
+$$
+d_k(x_i) = \frac{(x_i-c_k)^3_+-(x_i-c_{K+1})^3_+}{c_{K+1}-c_k}.
+$$
+
+---
+
+```{r}
+fit = lm(wage ~ ns(age, df = 4))
+Plot(fit, main = "Natural Cubic Spline")
+```
+
+---
+
+# Recap
+$$
+\mathbf  y = \mathbf  X \beta + \varepsilon.
+$$
+
+* Non-linear methods, but linear regression.
+* Each method defined by a basis, ${\mathbf  X}_{ij} = b_j(x_i)$.
+* And simply $\hat{\beta} = (\mathbf  X^\mathsf{T} \mathbf  X)^{-1} \mathbf  X^\mathsf{T} \mathbf  y$
+* We will now move from $\mathbf X \beta$ to $f(X)$
+
+$$
+\mathbf  y = \mathbf  f(X) + \varepsilon.
+$$
+
+---
+
+# Smoothing Splines
+* Different idea than regression splines
+* Minimize the prediction error
+* Bias-variance approach
+
+A smoothing spline is the function $g$ that minimizes
+$$
+\sum_{i=1}^n (y_i - g(x_i))^2 + \lambda \int g''(t)^2\mathrm d t.
+$$
+
+* What happens as $\lambda \to \infty$?
+* What happens as $\lambda \to 0$?
+
+---
+
+```{r message=FALSE, warning=FALSE}
+fit = smooth.spline(age, wage, df = 16) 
+Plot(fit, main = "Smoothing Splines")
+fit = smooth.spline(age, wage, cv = T)
+Plot(fit, legend = 16)
+```
+
+---
+
+# The Smoother Matrix
+The fitted values are
+$$
+\hat{\mathbf y} = \mathbf S \mathbf y.
+$$
+The effective degrees of freedom is 
+$$
+df_{\lambda} = \mathrm{tr} (\mathbf S).
+$$
+The leave-one-out cross-validation error is
+$$
+\mathrm{RSS}_{cv}(\lambda) = \sum_{i=1}^n \left( \frac{y_i - {\hat y}_i}{1-\mathbf S_{ii}} \right) ^2.
+$$
+
+
+---
+
+# Local Regression 
+* Smoothed $k$-nearest neighbor algorithm
+* Run for each $x_0$
+* Draw a line $\beta_0 + \beta_1x$ through neighborhood
+* Close observations are weighted more heavily
+* The fitted value is $\hat{\beta}_0 + \hat{\beta}_1x_0$
+
+![](imgs/local_regression.png)
+
+---
+
+# Local Regression 
+
+Finding the $\hat{\beta}_0\;$ and $\hat{\beta}_1$ that minimize
+$$
+\sum_{i=1}^n K_{i0}(y_i-\beta_0 - \beta_1x_i)^2,
+$$
+where
+$$
+K_{i0} = \left(1-\left|\frac{x_0-x_i}{x_0-x_\kappa}\right|^3\right)_+^3.
+$$
+
+---
+
+# Local Regression 
+
+```{r message=FALSE, warning=FALSE}
+fit = loess(wage ~ age, span = .2)
+Plot(fit, main = "Local Regression")
+Plot(loess(wage ~ age, span=.5),legend=fit$trace.hat)
+```
+
+---
+
+# Additive Models 
+Combines the models we have discussed so far. For example
+\begin{align*}
+y_i &=   f_1(x_{i1}) +  f_2(x_{i2}) + \varepsilon_i\\
+&= f(x_i) + \varepsilon_i.
+\end{align*}
+If each component is on the form $\mathbf  X \beta$, so is $f$.
+
+---
+
+# Component 1
+* Cubic spline with $X_1 =$ `age` 
+* Knots at 40 and 60
+
+The design matrix when excluding the intercept is 
+$$
+\mathbf X_1 = \begin{pmatrix}
+ x_{11} & x_{11}^2  & x_{11}^3 & (x_{11}-40)^3_+ & (x_{11}-60)^3_+\\
+ x_{21} & x_{21}^2  & x_{21}^3 & (x_{21}-40)^3_+ & (x_{21}-60)^3_+\\
+\vdots& \vdots  & \vdots & \vdots        & \vdots       \\
+ x_{n1} & x_{n1}^2  & x_{n1}^3 & (x_{n1}-40)^3_+ & (x_{n1}-60)^3_+\\
+\end{pmatrix}.
+$$
+
+---
+
+# Component 2
+* Natural spline with $X_2 =$ `year`
+* Knot at $c_1 = 2006$
+* Boundary knots at $c_0 = 2003$ and $c_2 = 2009$
+
+The design matrix when excluding the intercept is 
+$$
+\mathbf X_2 = \begin{pmatrix}
+ x_{12} &  \Big[ \frac{1}{6}(x_{12}-2003)^3 -
+                 \frac{1}{3}(x_{12}-2006)^3_+ \Big]\\
+ x_{22} &  \Big[ \frac{1}{6}(x_{22}-2003)^3 -
+                 \frac{1}{3}(x_{22}-2006)^3_+ \Big]\\
+\vdots  & \vdots \\
+ x_{n2} &  \Big[ \frac{1}{6}(x_{n2}-2003)^3 -
+                 \frac{1}{3}(x_{n2}-2006)^3_+ \Big]\\
+\end{pmatrix}.
+$$
+
+---
+
+# Component 3
+* Factor $X_3 =$ `education` 
+* Levels `< HS Grad`, `HS Grad (HSG)` , `Some College (SC)` , `College Grad (CG)`  and `Advanced Degree (AD)` 
+* Dummy variable coding
+
+The design matrix when excluding the intercept is
+$$
+\mathbf X_3 = \begin{pmatrix}
+ I(x_{13} = \mathrm{HSG}) &  I(x_{13} = \mathrm{SC}) &  I(x_{13} = \mathrm{CG}) &  I(x_{13} = \mathrm{AD}) \\
+ I(x_{23} = \mathrm{HSG}) &  I(x_{23} = \mathrm{SC}) &  I(x_{23} = \mathrm{CG}) &  I(x_{23} = \mathrm{AD}) \\
+\vdots  & \vdots    & \vdots   & \vdots          \\
+ I(x_{n3} = \mathrm{HSG}) &  I(x_{n3} = \mathrm{SC}) &  I(x_{n3} = \mathrm{CG}) &  I(x_{n3} = \mathrm{AD}) \\
+\end{pmatrix}.
+$$
+
+---
+
+# Additive Model
+Combine the components to
+$$
+\mathbf  y_i =  f_1(x_{i1}) +  f_2(x_{i2}) +  f_3(x_{i3}) + \varepsilon_i.
+$$
+Since each component is linear, we can write
+$$
+\mathbf y = \mathbf  X \beta + \varepsilon,
+$$
+where
+$$
+\mathbf X = \begin{pmatrix}
+\mathbf 1 & \mathbf X_1 & \mathbf X_2  & \mathbf X_3
+\end{pmatrix}.
+$$
+
+---
+
+```{r message=FALSE, warning=FALSE}
+fit = gam(wage ~ bs(age, knots = c(40, 60)) + 
+            ns(year,knots=2006) + education)
+Plot(fit)
+```
+
+---
+
+```{r message=FALSE, warning=FALSE}
+fit = gam(wage ~ lo(age, span = 0.6) + 
+            s(year, df = 2) + education)
+Plot(fit)
+```
+
+---
+
+# Qualitative Responses
+* Logistic regression
+* $Y=0$ or $Y=1$
+* $p(X) = \Pr(Y=1|X)$
+
+The generalized logistic regression model is
+$$
+\log \left(\frac{p(X)}{1-p(X)} \right) = f(X).
+$$
+Choose $f$ from the methods we have learned.
+
+---
+
+# Polynomial Logistic Regression
+With degree 4 we have
+$$
+\log \left(\frac{p(X_1)}{1-p(X_1)} \right) = \beta_0 + \beta_1 X_1 + \beta_2 X_1^2 + \beta_3 X_1^3 + \beta_4 X_1^4.
+$$
+
+---
+
+```{r message=FALSE, warning=FALSE}
+fit = glm(I(wage>250) ~ poly(age,3), 
+          family = "binomial")
+Plot(fit, main = "Polynomial")
+```
+
+---
+
+# Cubic Spline Logistic Regression
+* A cubic spline in age
+* Knot at 42
+$$
+\log \left(\frac{p(X_1)}{1-p(X_1)} \right) = \beta_0 + \beta_1 X_1 + \beta_2 X_1^2 + \beta_3 X_1^3 + \beta_4 (X_1-42)^3_+.
+$$
+
+---
+
+```{r message=FALSE, warning=FALSE}
+fit = glm(I(wage>250) ~ bs(age, df = 4), 
+          family = "binomial")
+Plot(fit, main = "Cubic spline")
+```
+
+---
+
+# GAM
+* $f_1$ is a local regression in `age`
+* $f_2$ is a simple linear regression in `year`
+
+$$
+\log \left(\frac{p(X_1,X_2)}{1-p(X_1,X_2)} \right) = \beta_0 + f_1(X_1) + f_2(X_2).
+$$
+
+---
+```{r message=FALSE, warning=FALSE}
+par(mfrow=c(1,2))
+Plot(gam(I(wage>250) ~ lo(age, span = 0.6) + year, 
+         family = "binomial"), multi = T)
+```
+
+---
+
+# References
