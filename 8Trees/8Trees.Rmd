@@ -1,17 +1,17 @@
 ---
-subtitle: "TMA4268 Statistical Learning V2020"
+subtitle: "TMA4268 Statistical Learning V2021"
 title: "Module 8: Tree-based Methods"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "February 28 and March 2, 2020"
+date: "March 8 and 9, 2021"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -31,15 +31,12 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 whichformat="latex"
 ```
 
----
-
-Last update: March 2, 2020
 
 --- 
 
 # Acknowledgements
 
-* A lot of this material stems from Mette Langaas and her TAs (in particular Thea Roksv\aa g, who developed the set of slides, but also Mette Langaas and Julia Debik). Thanks to Mette for the permission to use the material!
+* The course was originally developed by Mette Langaas (original material: https://github.com/mettelang/StatisticalLearningSpring2019). Mette did a fantastic job and I am very thankful that I was allowed to modify and use her material. 
 
 * Some of the figures and slides in this presentation are taken (or are inspired) from @james.etal.
 
@@ -75,6 +72,8 @@ You will get to know
 * Random forests
 * Boosting
 
+$~$
+
 and learn how to apply all that.
 
 --- 
@@ -101,7 +100,7 @@ and learn how to apply all that.
 
 * All points in the same region will be given the same predictive value (the mean of all values in that square, or a majority vote).
 
-
+$~$
  
 Visualisaztion in two dimensions:
 
@@ -112,173 +111,52 @@ Visualisaztion in two dimensions:
 
 ---
 
-The series of splitting rules can be visualized with a _regression tree_.
+* CARTs (Classification and regression trees) are usually drawn upside down, where the top node is called the *root*.
 
-The following tree (which corresponds to the split in the previous slide) has three _leafs_ (terminal nodes), and two _internal nodes_:
+* The series of splitting rules can be visualized with a _regression tree_.
+
+* The following tree (which corresponds to the split in the previous slide) has three _leafs_ (terminal nodes), and two _internal nodes_.
+
 
 $~$
 
 \centering
  
 
-![ISLR Figure 8.1](../../ISLR/Figures/Chapter8/8.1.png){width=50%}
+![ISLR Figure 8.1](../../ISLR/Figures/Chapter8/8.1.png){width=45%}
 
 
+---
 
+## Interpretation
 
+$~$
 
---- 
-
-## More than two predictors?
+* Years is the most important factor in determining Salary ,
+and players with less experience earn lower salaries than
+more experienced players.
 
 \vspace{2mm}
 
-* With more than two predictors we cannot draw the partition of the data in a coordinate system, but we can still draw the regression tree. 
-
-* Before we discuss how the algorithm splits the data into regions, let us look at a somewhat more interesting example.
-
-
----
-
-## Example 2: Detection of Minor Head Injury
-\tiny
-(Artificial data)
-\vspace{2mm}
-
-\normalsize
-
-* Data from patients that enter hospital. The aim is to quickly assess whether a patient as a brain injury or not (binary outcome = classification problem).
-
-* Patients are investigated and (possible) asked questions.
-
-* Our job: To build a good model to predict quickly if someone has a brain injury. The method should be 
-
-    +  **easy** to interpret for the medical personell that are not skilled in statistics, and 
-
-    + **fast**, such that the medical personell quickly can identify a patient that needs treatment. 
-    
-
-    
-$\rightarrow$ This can be done by using tree-based methods. 
-
-
-
-\vspace{4mm}
-
-\small
-Note: Of course, the model should be built _before_ a new emergency patient arrives, using data that is already available.
-
-
----
-
-
-The dataset includes data about 1321 patients and is a modified and smaller version of the (simulated) dataset `headInjury` from the `DAAG` library. 
-
-\footnotesize
-
-```{r,echo=FALSE}
-library(DAAG)
-options(digits=6)
-headInjury2=read.table("headInjury2.txt",header=TRUE)
-colnames(headInjury2)=c("amnesia","bskullf","GCSdecr","GCS.13","GCS.15","risk","consc","oskullf","vomit","brain.injury","age")
-
-n=nrow(headInjury2)
-set.seed(1)
-train=sample(1:nrow(headInjury2),850)
-test=setdiff(1:nrow(headInjury2),train)
-headInjury2$brain.injury=factor(headInjury2$brain.injury)
-for (i in 1:9) headInjury2[[i]]=as.factor(headInjury2[[i]])
-#head(headInjury2[,c(1:9,11,10)])
-head(headInjury2)
-```
-\normalsize
-
----
-
-
-* The variable `brain.injury` will be the response of our model (=1 if a person has an acute brain injury, =0 otherwise). 
-
-\vspace{0mm}
-
-* 250 (19%) of the patients have a clinically important brain injury. 
-
-\vspace{0mm}
-
-* The 10 variables used as explanatory variables describe the state of the patient, for example
-
-    + Is he/she vomiting?
-    + Is the Glasgow Coma Scale (GCS) score\footnote{The GCS scale goes back to an article in the Lancet in 1974, and is used to describe the level of consciousness of patients with an acute brain injury. See <https://www.glasgowcomascale.org/what-is-gcs/>} after 2 hours equal to 15 (or not)?
-    + Has he/she an open scull fracture?
-    + Has he/she had a loss of consciousness?
-    + and so on. 
-
-
-
-
----
-
-The classification tree made from a training set of 850 randomly drawn observations (training set) for the head injury example looks like this:
-
-
-
-
-```{r injury1, echo=FALSE, fig.width=7, fig.height=6,fig.align = "center",out.width='70%'}
-library(tree)
-headtree=tree(brain.injury~.,headInjury2,subset=train)
-plot(headtree, type="uniform")
-text(headtree,pretty=1)
-```
-
-<!-- ```{r injury2, echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='70%'} -->
-<!-- # competing method, gives different result due to other parameter defaults -->
-<!-- library(rpart) -->
-<!-- headrpart=rpart(brain.injury~.,headInjury2,subset=train,method="class") -->
-<!-- plot(headrpart) -->
-<!-- text(headrpart) -->
-<!-- ``` -->
-
-\small
-Note: The split criterion at each node is to the left. For example, "GCS.15:0" means that "GCS.15=0" goes left, and "GCS.15=1" goes right.
-
----
-
-\footnotesize
-```{r,echo=TRUE,eval=TRUE}
-print(headtree)
-```
-\normalsize
-
----
-
-* By using simple decision rules related to the most important explanatory variables the medical staff can now assess the probability of a brain injury. 
-
-* The decision can go "top down", because the most informative predictors are usually split first. 
-
-* Example: The staff might check if the Glasgow Coma Scale of the patient is 15 after 2h, and if it was 13 at the beginning. In that case, the probability of brain injury is estimated to be 0.944 (node 7 in printout). 
-
-
-**Advantages**:
-
-* Decision trees are easier to interpret than many of the classification (and regression) methods that we have studied so far.
-
-* Decision trees provide an easy way to visualize the data for non-statisticians.
-
----
-
-## Some terminology 
-
-* CARTs (Classification and regression trees) are usually drawn upside down, where the top node is called the *root*.
-
-* The *terminal nodes* or *leaf nodes* are the nodes at the bottom. These are written symbolically as $R_j$ for $j = 1, 2, ..., J$ 
-
-* The $R_j$ will be referred to as _non-overlapping regions_ and are high-dimensional rectangles (boxes).
-
-* *Internal nodes* are all nodes between the root and the terminal nodes. These nodes correspond to the partitions of the predictor space.
-
-* *Branches*: segment of the tree connecting the nodes.
+*  Given that a player is less experienced, the number of Hits
+that he made in the previous year seems to play little role
+in his Salary.
 
 \vspace{2mm}
-We will consider only binary splits on one variable, but multiway splits and linear combination of variabes are possible - but not so common.
+
+* But among players who have been in the major leagues for
+five or more years, the number of Hits made in the
+previous year does affect Salary , and players who made
+more Hits last year tend to have higher salaries.
+
+\vspace{2mm}
+
+* Compared to a regression
+model, it is easy to display, interpret and explain
+
+
+
+
 
 ---
 
@@ -324,6 +202,8 @@ To do this we need to consider every partition of the predictor space, and compu
 \vspace{2mm}
 
 * A _greedy_ approach is taken (aka top-down) - called _recursive binary splitting_: Find a split that minimizes RSS at each step\footnote{This does not necessarily give the optimal global solution, but will give the best solution at each split, given what is done previously.}.
+
+\vspace{1mm}
 
 * We start at the top of the tree and divide the predictor space into two regions, $R_1$ and $R_2$ by making a decision rule for one of the predictors $x_1, x_2,...,x_p$. If we define the two regions by $R_1(j,s)=\{x \mid x_j<s\}$ and $R_2(j,s)=\{x \mid x_j\geq s\}$, it means that we need to find the (predictor) $j$ and (splitting point) $s$ that minimize
 $$\sum_{i: x_i \in R_1(j,s)}(y_i-\hat{y}_{R_1})^2+\sum_{i: x_i \in R_2(j,s)}(y_i -\hat{y}_{R_2})^2 \ ,$$
@@ -466,9 +346,11 @@ partition.tree(ozone.tree, add=TRUE,cex=0.8)
 
 * R package `tree` by Brian D. Ripley [@tree2019].
 
-* You get information about the function when you type `?tree` into the `R` console.
+\vspace{2mm}
 
 * Note: The default choice for a function to minimize is the deviance, and for normal data (as we may assume for regression), the deviance is proportional to the RSS.
+
+\vspace{2mm}
 
 <!-- --- -->
 
@@ -485,10 +367,19 @@ partition.tree(ozone.tree, add=TRUE,cex=0.8)
 \vspace{2mm}
 
 * When building the tree, we can (in principle) split until each leaf corresponds to one data point.
+
+\vspace{2mm}
 * Usually we use a less stringent stopping criterion, like the minimal number of nodes per region and/or the minimum reduction in the RSS.
 
+\vspace{2mm}
+
 * For example, the default in `tree()`: is given by `mincut=5, minsize=10, mindev=0.01`, thus a minimal size of 5 nodes, the smallest nodes that are potentially split is 10, and the minimal reduction in deviance (RSS) equal to 0.01. 
-* We could make the ozone tree much deeper by decreasing the minimal size of a region and chanding the minimum reduction in RSS:
+
+\vspace{2mm}
+
+* We could make the ozone tree much deeper:
+
+$~$
 
 \scriptsize
 ```{r, results="asis"}
@@ -514,21 +405,25 @@ text(ozone.tree2,cex=0.8)
 
 ## Tree performance
 
+$~$
+
+Test the predictive performance of our regression tree by using a training and a test set. But:
+
 \vspace{2mm}
 
-* Test the predictive performance of our regression tree by using a training and a test set. 
-* For the two trees (the shallow and the deep one from above), we get the following test MSEs:
 
-\scriptsize
-```{r}
-ozone.pred = predict(ozone.tree, newdata=ozone.test)
-ozone.MSE = mean((ozone.pred-ozone.test$ozone)^2)
-ozone.MSE
+<!-- * For the two trees (the shallow and the deep one from above), we get the following test MSEs: -->
 
-ozone.pred2 = predict(ozone.tree2, newdata=ozone.test)
-ozone.MSE2 = mean((ozone.pred2-ozone.test$ozone)^2)
-ozone.MSE2
-```
+<!-- \scriptsize -->
+<!-- ```{r} -->
+<!-- ozone.pred = predict(ozone.tree, newdata=ozone.test) -->
+<!-- ozone.MSE = mean((ozone.pred-ozone.test$ozone)^2) -->
+<!-- ozone.MSE -->
+
+<!-- ozone.pred2 = predict(ozone.tree2, newdata=ozone.test) -->
+<!-- ozone.MSE2 = mean((ozone.pred2-ozone.test$ozone)^2) -->
+<!-- ozone.MSE2 -->
+<!-- ``` -->
 
 \vspace{1mm}
 
@@ -554,7 +449,11 @@ _\textcolor{red}{How do we know if our tree performs good, or if there would be 
 
 ## Cost complexity pruning 
 
+$~$
+
 * Better idea: to grow a very large tree $T_0$, and then _\textcolor{red}{prune}_ it back in order to obtain a _\textcolor{red}{subtree}_.
+
+\vspace{2mm}
 
 
 * _\textcolor{red}{Cost complexity pruning}_ is used for this: We try to find a subtree $T\subset T_0$ that (for a given value of $\alpha$) minimizes
@@ -563,6 +462,7 @@ C_{\alpha}(T)=Q(T)+\alpha |T|,
 $$
 where $Q(T)$ is our cost function, $|T|$ is the number of terminal nodes in tree $T$. The parameter $\alpha$ is then a parameter penalizing the number of terminal nodes, ensuring that the tree does not get too many branches. 
 
+\vspace{2mm}
 
 * For regression trees (continous outcome) we choose 
 $$Q(T)=\sum_{m=1}^{|T|}\sum_{x_i\in R_m}(y_i - \hat{y}_{R_m})^2 \ .$$
@@ -593,19 +493,29 @@ Please study this [note from Bo Lindqvist in MA8701 in 2017 - Advanced topics in
 
 ## Building a regression  tree: Algorithm 8.1
 
+$~$
+
 1. Use recursive binary splitting to grow a large tree on the training
 data, stopping only when each terminal node has fewer than some
 minimum number of observations.
 
+\vspace{2mm}
+
+
 2. Apply cost complexity pruning to the large tree in order to obtain a
 sequence of best subtrees, as a function of $\alpha$.
+
+\vspace{2mm}
+
 
 3. Use $K$-fold cross-validation to choose $\alpha$. That is, divide the training
 observations into $k$ folds. For each $k = 1,\ldots, K$:
       + Repeat Steps 1 and 2 on all but the $k$th fold of the training data.
       + Evaluate the mean squared prediction error on the data in the left-out $k$th fold, as a function of $\alpha$.
       + Average the results for each value of $\alpha$, and pick $\alpha$ to minimize the average error.
-      
+
+\vspace{2mm}
+
 4. Return the subtree from Step 2 that corresponds to the chosen value of $\alpha$.
 
 
@@ -620,7 +530,10 @@ Let us start with the tree with many leaves, and then prune it with 5-fold CV. W
 set.seed(563)
 ozone.tree <- tree(ozone~temp+wind, 
                   data=ozone.train, 
-                  control = tree.control(nrow(myozone), mincut = 2, minsize = 4, mindev = 0.001)
+                  control = tree.control(nrow(myozone), 
+                                         mincut = 2, 
+                                         minsize = 4, 
+                                         mindev = 0.001)
                   )
 cv.ozone <- cv.tree(ozone.tree,K=5)
 plot(cv.ozone$dev ~  cv.ozone$size,type= "b", lwd=2, col="red", xlab="Tree Size", ylab="Deviance")
@@ -645,17 +558,16 @@ Interestingly, a tree with 5 leaves performs best - which corresponds to the ori
 
 # Classification trees (binary or categorical outcome)
 
+
 \vspace{2mm}
-
-* Remember the minor head injury example: Binary outcome (disease yes/no).
-
-\vspace{1mm}
 
 * Now allow for $K\geq 2$ number of classes for the response.
 
 \vspace{1mm}
 
 * Building a decision tree in this setting is similar to building a regression tree for a quantitative response, but there are two main differences: _the prediction_ and _the splitting criterion_.
+
+
 
 ---
 
@@ -725,11 +637,61 @@ legend(0.3,0.2,legend=c("misclassification","cross-entropy","Gini"),fill=c("blac
 
 ---
 
-### Minor head injury - split with cross-entropy
+## Example: Detection of Minor Head Injury
+\tiny
+(Artificial data)
+\vspace{2mm}
+
+\normalsize
+
+* Data from patients that enter hospital. The aim is to quickly assess whether a patient as a brain injury or not.
+
+\vspace{2mm}
+
+
+* Patients are investigated and (possible) asked questions.
+
+\vspace{2mm}
+
+* Our job: To build a good model to predict quickly if someone has a brain injury. The method should be 
+
+    +  **easy** to interpret for the medical personell that are not skilled in statistics, and 
+
+    + **fast**, such that the medical personell quickly can identify a patient that needs treatment. 
+    
+
+---
+
+
+The dataset includes data about 1321 patients and is a modified and smaller version of the (simulated) dataset `headInjury` from the `DAAG` library. 
+
+\footnotesize
+
+```{r,echo=FALSE}
+library(DAAG)
+options(digits=6)
+headInjury2=read.table("headInjury2.txt",header=TRUE)
+colnames(headInjury2)=c("amnesia","bskullf","GCSdecr","GCS.13","GCS.15","risk","consc","oskullf","vomit","brain.injury","age")
+
+n=nrow(headInjury2)
+set.seed(1)
+train=sample(1:nrow(headInjury2),850)
+test=setdiff(1:nrow(headInjury2),train)
+headInjury2$brain.injury=factor(headInjury2$brain.injury)
+for (i in 1:9) headInjury2[[i]]=as.factor(headInjury2[[i]])
+#head(headInjury2[,c(1:9,11,10)])
+head(headInjury2)
+```
+\normalsize
+
+---
+
+### Split with cross-entropy
 
 \vspace{1mm}
 
 We use the 850 training samples to get a tree using cross-entropy (deviance):
+
 
 
 \scriptsize
@@ -759,6 +721,8 @@ plot(tree.HIClass,type="proportional")
 text(tree.HIClass,pretty=1)
 ```
 
+$~$
+
 \normalsize
 
 * With `type="proportional" `, the length of branches are now proportional to the decrease in impurity.
@@ -767,7 +731,7 @@ text(tree.HIClass,pretty=1)
 
 ---
 
-### Minor head injury - split with Gini index
+### Split with Gini index
 
 \vspace{2mm}
 
@@ -1324,7 +1288,7 @@ Bagging can also be used for prediction methods (regression and classification) 
 
 \vspace{1mm}
 
-* Drawback: It becomes difficult to interpret the results. Instead of having one tree, the resulting model consists of many trees (it is an _ensemble method_). So, which predictors are (how) important?
+* Drawback: It becomes difficult to interpret the results. Instead of having one tree, the resulting model consists of many trees (it is an _ensemble method_). 
 
 \vspace{1mm}
 
@@ -1366,58 +1330,7 @@ The term *important* relates to _total decrease in the node impurity, over split
 
 ---
 
-### Example 1: Ozone data (regression tree)
-
-\vspace{1mm}
-
-
-\scriptsize
-```{r ozoneImp, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='50%'}
-set.seed(4268)
-ozone.rf <- randomForest(ozone~temp+wind, data=ozone.train, ntree=500, mtry=2,keep.forest=FALSE,importance=TRUE)
-varImpPlot(ozone.rf,type=2,pch=20)
-```
-
-\vspace{2mm}
-\normalsize
-This is a bit boring (only two predictors). More interesting example?
-
----
-
-### Example 2: Auto data (regression tree)
-
-\vspace{1mm}
-
-The data relates fuel consumption (`mpg`) to 10 aspects of automobile desing and performance.
-
-\vspace{2mm}
-
-\scriptsize
-
-```{r autoImp, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='50%'}
-data(mtcars)
-mtcars.rf <- randomForest(mpg ~ ., data=mtcars, ntree=1000, 
-                          keep.forest=FALSE,
-                          mtry=10,
-                          importance=TRUE)
-varImpPlot(mtcars.rf,type=2,pch=20)
-```
-
----
-
-### Example 3: Head injury (classification tree)
-
-\vspace{1mm}
-
-\scriptsize
-
-```{r brain, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='50%'}
-varImpPlot(r.brain.bag,type=2,pch=20)
-```
-
----
-
-### Another approach: Variable importance based on randomization
+### Variable importance based on randomization
 
 \vspace{2mm}
 
@@ -1435,22 +1348,48 @@ Variable importance based on randomization is calculated using the OOB sample.
 \vspace{4mm}
 **R-hint**: `varImpPlot()` (or `importance()`) function with `type=1`.
 
----
-
-\scriptsize
-```{r autoImp2, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='50%'}
-varImpPlot(mtcars.rf,type=1,pch=20)
-```
-
 
 ---
 
-The two types together: do they agree?
+### Example 1: Auto data (regression tree)
+
+\vspace{1mm}
+
+The data relates fuel consumption (`mpg`) to 10 aspects of automobile desing and performance.
+
+\vspace{2mm}
+
+$~$
 
 \scriptsize
-```{r autoImp3, echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='70%'}
+
+```{r autoImp, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
+data(mtcars)
+mtcars.rf <- randomForest(mpg ~ ., data=mtcars, ntree=1000, 
+                          keep.forest=FALSE,
+                          mtry=10,
+                          importance=TRUE)
 varImpPlot(mtcars.rf,pch=20,main="")
 ```
+
+
+
+---
+
+### Example 2: Head injury (classification tree)
+
+\vspace{1mm}
+
+$~$
+
+\scriptsize
+
+```{r brain, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='60%'}
+varImpPlot(r.brain.bag,type=2,pch=20)
+```
+
+
+
 
 ---
 
@@ -1714,7 +1653,7 @@ Boosting has three tuning parameters which need to be set ($B$, $\lambda$, $d$),
 
 # Short quizz poll
 
-Go to [slido.com](http://www.slido.com) and enter the code #4296 to participate.
+Go to [slido.com](http://www.slido.com) and enter the code #2496 to participate.
 
 
 

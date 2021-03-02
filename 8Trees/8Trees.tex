@@ -144,28 +144,23 @@
 
 \title{Module 8: Tree-based Methods}
 \providecommand{\subtitle}[1]{}
-\subtitle{TMA4268 Statistical Learning V2020}
+\subtitle{TMA4268 Statistical Learning V2021}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{February 28 and March 2, 2020}
+\date{March 8 and 9, 2021}
 
 \begin{document}
 \frame{\titlepage}
-
-\begin{frame}
-
-Last update: March 2, 2020
-
-\end{frame}
 
 \begin{frame}{Acknowledgements}
 \protect\hypertarget{acknowledgements}{}
 
 \begin{itemize}
 \item
-  A lot of this material stems from Mette Langaas and her TAs (in
-  particular Thea Roksv\aa g, who developed the set of slides, but also
-  Mette Langaas and Julia Debik). Thanks to Mette for the permission to
-  use the material!
+  The course was originally developed by Mette Langaas (original
+  material:
+  \url{https://github.com/mettelang/StatisticalLearningSpring2019}).
+  Mette did a fantastic job and I am very thankful that I was allowed to
+  modify and use her material.
 \item
   Some of the figures and slides in this presentation are taken (or are
   inspired) from James et al. (2013).
@@ -225,6 +220,8 @@ You will get to know
   Boosting
 \end{itemize}
 
+\(~\)
+
 and learn how to apply all that.
 
 \end{block}
@@ -272,6 +269,8 @@ and learn how to apply all that.
   (the mean of all values in that square, or a majority vote).
 \end{itemize}
 
+\(~\)
+
 Visualisaztion in two dimensions:
 
 \centering
@@ -284,265 +283,69 @@ Visualisaztion in two dimensions:
 
 \begin{frame}
 
-The series of splitting rules can be visualized with a \emph{regression
-tree}.
-
-The following tree (which corresponds to the split in the previous
-slide) has three \emph{leafs} (terminal nodes), and two \emph{internal
-nodes}:
-
-\(~\)
-
-\centering
-
-\includegraphics[width=0.5\textwidth,height=\textheight]{../../ISLR/Figures/Chapter8/8.1.png}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{More than two predictors?}
-
-\vspace{2mm}
-
-\begin{itemize}
-\item
-  With more than two predictors we cannot draw the partition of the data
-  in a coordinate system, but we can still draw the regression tree.
-\item
-  Before we discuss how the algorithm splits the data into regions, let
-  us look at a somewhat more interesting example.
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Example 2: Detection of Minor Head Injury}
-
-\tiny
-
-(Artificial data) \vspace{2mm}
-
-\normalsize
-
-\begin{itemize}
-\item
-  Data from patients that enter hospital. The aim is to quickly assess
-  whether a patient as a brain injury or not (binary outcome =
-  classification problem).
-\item
-  Patients are investigated and (possible) asked questions.
-\item
-  Our job: To build a good model to predict quickly if someone has a
-  brain injury. The method should be
-
-  \begin{itemize}
-  \item
-    \textbf{easy} to interpret for the medical personell that are not
-    skilled in statistics, and
-  \item
-    \textbf{fast}, such that the medical personell quickly can identify
-    a patient that needs treatment.
-  \end{itemize}
-\end{itemize}
-
-\(\rightarrow\) This can be done by using tree-based methods.
-
-\vspace{4mm}
-
-\small
-
-Note: Of course, the model should be built \emph{before} a new emergency
-patient arrives, using data that is already available.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-The dataset includes data about 1321 patients and is a modified and
-smaller version of the (simulated) dataset \texttt{headInjury} from the
-\texttt{DAAG} library.
-
-\footnotesize
-
-\begin{verbatim}
-##    amnesia bskullf GCSdecr GCS.13 GCS.15 risk consc oskullf vomit
-## 3        0       0       0      0      0    0     0       0     0
-## 9        0       0       0      0      0    1     0       0     0
-## 11       0       0       0      0      0    0     0       0     0
-## 12       1       0       0      0      0    0     0       0     0
-## 14       0       0       0      0      0    0     0       0     0
-## 16       0       0       0      0      0    0     0       0     0
-##    brain.injury age
-## 3             0  44
-## 9             0  67
-## 11            0  62
-## 12            0   1
-## 14            0  55
-## 16            0  63
-\end{verbatim}
-
-\normalsize
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\begin{itemize}
-\tightlist
-\item
-  The variable \texttt{brain.injury} will be the response of our model
-  (=1 if a person has an acute brain injury, =0 otherwise).
-\end{itemize}
-
-\vspace{0mm}
-
-\begin{itemize}
-\tightlist
-\item
-  250 (19\%) of the patients have a clinically important brain injury.
-\end{itemize}
-
-\vspace{0mm}
-
-\begin{itemize}
-\item
-  The 10 variables used as explanatory variables describe the state of
-  the patient, for example
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Is he/she vomiting?
-  \item
-    Is the Glasgow Coma Scale (GCS)
-    score\footnote{The GCS scale goes back to an article in the Lancet in 1974, and is used to describe the level of consciousness of patients with an acute brain injury. See <https://www.glasgowcomascale.org/what-is-gcs/>}
-    after 2 hours equal to 15 (or not)?
-  \item
-    Has he/she an open scull fracture?
-  \item
-    Has he/she had a loss of consciousness?
-  \item
-    and so on.
-  \end{itemize}
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}
-
-The classification tree made from a training set of 850 randomly drawn
-observations (training set) for the head injury example looks like this:
-
-\begin{center}\includegraphics[width=0.7\linewidth]{8Trees_files/figure-beamer/injury1-1} \end{center}
-
-\small
-
-Note: The split criterion at each node is to the left. For example,
-``GCS.15:0'' means that ``GCS.15=0'' goes left, and ``GCS.15=1'' goes
-right.
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\footnotesize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{print}\NormalTok{(headtree)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## node), split, n, deviance, yval, (yprob)
-##       * denotes terminal node
-## 
-##  1) root 850 819.00 0 ( 0.8129 0.1871 )  
-##    2) GCS.15: 0 711 520.00 0 ( 0.8805 0.1195 )  
-##      4) bskullf: 0 663 398.00 0 ( 0.9110 0.0890 )  
-##        8) risk: 0 487 203.00 0 ( 0.9466 0.0534 )  
-##         16) age < 68.5 445 131.00 0 ( 0.9663 0.0337 ) *
-##         17) age > 68.5 42  48.30 0 ( 0.7381 0.2619 ) *
-##        9) risk: 1 176 170.00 0 ( 0.8125 0.1875 ) *
-##      5) bskullf: 1 48  66.20 1 ( 0.4583 0.5417 )  
-##       10) age < 42.5 13  11.20 0 ( 0.8462 0.1538 ) *
-##       11) age > 42.5 35  43.60 1 ( 0.3143 0.6857 ) *
-##    3) GCS.15: 1 139 192.00 1 ( 0.4676 0.5324 )  
-##      6) GCS.13: 0 121 167.00 0 ( 0.5289 0.4711 )  
-##       12) risk: 0 78 101.00 0 ( 0.6538 0.3462 )  
-##         24) age < 66.5 66  77.30 0 ( 0.7273 0.2727 ) *
-##         25) age > 66.5 12  13.50 1 ( 0.2500 0.7500 ) *
-##       13) risk: 1 43  52.70 1 ( 0.3023 0.6977 ) *
-##      7) GCS.13: 1 18   7.72 1 ( 0.0556 0.9444 ) *
-\end{verbatim}
-
-\normalsize
-
-\end{frame}
-
-\begin{frame}
-
-\begin{itemize}
-\item
-  By using simple decision rules related to the most important
-  explanatory variables the medical staff can now assess the probability
-  of a brain injury.
-\item
-  The decision can go ``top down'', because the most informative
-  predictors are usually split first.
-\item
-  Example: The staff might check if the Glasgow Coma Scale of the
-  patient is 15 after 2h, and if it was 13 at the beginning. In that
-  case, the probability of brain injury is estimated to be 0.944 (node 7
-  in printout).
-\end{itemize}
-
-\textbf{Advantages}:
-
-\begin{itemize}
-\item
-  Decision trees are easier to interpret than many of the classification
-  (and regression) methods that we have studied so far.
-\item
-  Decision trees provide an easy way to visualize the data for
-  non-statisticians.
-\end{itemize}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Some terminology}
-
 \begin{itemize}
 \item
   CARTs (Classification and regression trees) are usually drawn upside
   down, where the top node is called the \emph{root}.
 \item
-  The \emph{terminal nodes} or \emph{leaf nodes} are the nodes at the
-  bottom. These are written symbolically as \(R_j\) for
-  \(j = 1, 2, ..., J\)
+  The series of splitting rules can be visualized with a
+  \emph{regression tree}.
 \item
-  The \(R_j\) will be referred to as \emph{non-overlapping regions} and
-  are high-dimensional rectangles (boxes).
+  The following tree (which corresponds to the split in the previous
+  slide) has three \emph{leafs} (terminal nodes), and two \emph{internal
+  nodes}.
+\end{itemize}
+
+\(~\)
+
+\centering
+
+\includegraphics[width=0.45\textwidth,height=\textheight]{../../ISLR/Figures/Chapter8/8.1.png}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Interpretation}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
-  \emph{Internal nodes} are all nodes between the root and the terminal
-  nodes. These nodes correspond to the partitions of the predictor
-  space.
-\item
-  \emph{Branches}: segment of the tree connecting the nodes.
+  Years is the most important factor in determining Salary , and players
+  with less experience earn lower salaries than more experienced
+  players.
 \end{itemize}
 
 \vspace{2mm}
 
-We will consider only binary splits on one variable, but multiway splits
-and linear combination of variabes are possible - but not so common.
+\begin{itemize}
+\tightlist
+\item
+  Given that a player is less experienced, the number of Hits that he
+  made in the previous year seems to play little role in his Salary.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  But among players who have been in the major leagues for five or more
+  years, the number of Hits made in the previous year does affect Salary
+  , and players who made more Hits last year tend to have higher
+  salaries.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Compared to a regression model, it is easy to display, interpret and
+  explain
+\end{itemize}
 
 \end{block}
 
@@ -606,11 +409,18 @@ and compute the RSS for each partition.
 \vspace{2mm}
 
 \begin{itemize}
+\tightlist
 \item
   A \emph{greedy} approach is taken (aka top-down) - called
   \emph{recursive binary splitting}: Find a split that minimizes RSS at
   each
   step\footnote{This does not necessarily give the optimal global solution, but will give the best solution at each split, given what is done previously.}.
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
 \item
   We start at the top of the tree and divide the predictor space into
   two regions, \(R_1\) and \(R_2\) by making a decision rule for one of
@@ -753,7 +563,7 @@ Use the default settings in the tree function: \scriptsize
 
 \vspace{2mm}
 
-\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-7-1.pdf}
+\includegraphics{8Trees_files/figure-beamer/unnamed-chunk-5-1.pdf}
 
 \vspace{-2mm}
 
@@ -781,16 +591,22 @@ Use the default settings in the tree function: \scriptsize
 \vspace{2mm}
 
 \begin{itemize}
+\tightlist
 \item
   R package \texttt{tree} by Brian D. Ripley (Ripley 2019).
-\item
-  You get information about the function when you type \texttt{?tree}
-  into the \texttt{R} console.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Note: The default choice for a function to minimize is the deviance,
   and for normal data (as we may assume for regression), the deviance is
   proportional to the RSS.
 \end{itemize}
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -810,21 +626,41 @@ Use the default settings in the tree function: \scriptsize
 \vspace{2mm}
 
 \begin{itemize}
+\tightlist
 \item
   When building the tree, we can (in principle) split until each leaf
   corresponds to one data point.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Usually we use a less stringent stopping criterion, like the minimal
   number of nodes per region and/or the minimum reduction in the RSS.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   For example, the default in \texttt{tree()}: is given by
   \texttt{mincut=5,\ minsize=10,\ mindev=0.01}, thus a minimal size of 5
   nodes, the smallest nodes that are potentially split is 10, and the
   minimal reduction in deviance (RSS) equal to 0.01.
-\item
-  We could make the ozone tree much deeper by decreasing the minimal
-  size of a region and chanding the minimum reduction in RSS:
 \end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  We could make the ozone tree much deeper:
+\end{itemize}
+
+\(~\)
 
 \scriptsize
 
@@ -847,47 +683,16 @@ With the above command, the tree would become very fine. Overfitting?
 
 \end{frame}
 
-\begin{frame}[fragile]
+\begin{frame}
 
 \begin{block}{Tree performance}
 
+\(~\)
+
+Test the predictive performance of our regression tree by using a
+training and a test set. But:
+
 \vspace{2mm}
-
-\begin{itemize}
-\tightlist
-\item
-  Test the predictive performance of our regression tree by using a
-  training and a test set.
-\item
-  For the two trees (the shallow and the deep one from above), we get
-  the following test MSEs:
-\end{itemize}
-
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{ozone.pred =}\StringTok{ }\KeywordTok{predict}\NormalTok{(ozone.tree, }\DataTypeTok{newdata =}\NormalTok{ ozone.test)}
-\NormalTok{ozone.MSE =}\StringTok{ }\KeywordTok{mean}\NormalTok{((ozone.pred }\OperatorTok{-}\StringTok{ }\NormalTok{ozone.test}\OperatorTok{$}\NormalTok{ozone)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
-\NormalTok{ozone.MSE}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 384.4906
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{ozone.pred2 =}\StringTok{ }\KeywordTok{predict}\NormalTok{(ozone.tree2, }\DataTypeTok{newdata =}\NormalTok{ ozone.test)}
-\NormalTok{ozone.MSE2 =}\StringTok{ }\KeywordTok{mean}\NormalTok{((ozone.pred2 }\OperatorTok{-}\StringTok{ }\NormalTok{ozone.test}\OperatorTok{$}\NormalTok{ozone)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
-\NormalTok{ozone.MSE2}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 491.2656
-\end{verbatim}
 
 \vspace{1mm}
 
@@ -930,11 +735,20 @@ With the above command, the tree would become very fine. Overfitting?
 
 \begin{block}{Cost complexity pruning}
 
+\(~\)
+
 \begin{itemize}
+\tightlist
 \item
   Better idea: to grow a very large tree \(T_0\), and then
   \emph{\textcolor{red}{prune}} it back in order to obtain a
   \emph{\textcolor{red}{subtree}}.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   \emph{\textcolor{red}{Cost complexity pruning}} is used for this: We
   try to find a subtree \(T\subset T_0\) that (for a given value of
@@ -944,6 +758,12 @@ With the above command, the tree would become very fine. Overfitting?
   terminal nodes in tree \(T\). The parameter \(\alpha\) is then a
   parameter penalizing the number of terminal nodes, ensuring that the
   tree does not get too many branches.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   For regression trees (continous outcome) we choose
   \[Q(T)=\sum_{m=1}^{|T|}\sum_{x_i\in R_m}(y_i - \hat{y}_{R_m})^2 \ .\]
@@ -988,14 +808,31 @@ Ripley (1996), Section 7.2.
 
 \begin{block}{Building a regression tree: Algorithm 8.1}
 
+\(~\)
+
 \begin{enumerate}
+\tightlist
 \item
   Use recursive binary splitting to grow a large tree on the training
   data, stopping only when each terminal node has fewer than some
   minimum number of observations.
+\end{enumerate}
+
+\vspace{2mm}
+
+\begin{enumerate}
+\setcounter{enumi}{1}
+\tightlist
 \item
   Apply cost complexity pruning to the large tree in order to obtain a
   sequence of best subtrees, as a function of \(\alpha\).
+\end{enumerate}
+
+\vspace{2mm}
+
+\begin{enumerate}
+\setcounter{enumi}{2}
+\tightlist
 \item
   Use \(K\)-fold cross-validation to choose \(\alpha\). That is, divide
   the training observations into \(k\) folds. For each
@@ -1013,6 +850,13 @@ Ripley (1996), Section 7.2.
     Average the results for each value of \(\alpha\), and pick
     \(\alpha\) to minimize the average error.
   \end{itemize}
+\end{enumerate}
+
+\vspace{2mm}
+
+\begin{enumerate}
+\setcounter{enumi}{3}
+\tightlist
 \item
   Return the subtree from Step 2 that corresponds to the chosen value of
   \(\alpha\).
@@ -1058,15 +902,6 @@ the original choice.
 \protect\hypertarget{classification-trees-binary-or-categorical-outcome}{}
 
 \vspace{2mm}
-
-\begin{itemize}
-\tightlist
-\item
-  Remember the minor head injury example: Binary outcome (disease
-  yes/no).
-\end{itemize}
-
-\vspace{1mm}
 
 \begin{itemize}
 \tightlist
@@ -1192,9 +1027,84 @@ better? Probably the second one, because it produces a \emph{pure node}.
 
 \end{frame}
 
+\begin{frame}
+
+\begin{block}{Example: Detection of Minor Head Injury}
+
+\tiny
+
+(Artificial data) \vspace{2mm}
+
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Data from patients that enter hospital. The aim is to quickly assess
+  whether a patient as a brain injury or not.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Patients are investigated and (possible) asked questions.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\item
+  Our job: To build a good model to predict quickly if someone has a
+  brain injury. The method should be
+
+  \begin{itemize}
+  \item
+    \textbf{easy} to interpret for the medical personell that are not
+    skilled in statistics, and
+  \item
+    \textbf{fast}, such that the medical personell quickly can identify
+    a patient that needs treatment.
+  \end{itemize}
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
 \begin{frame}[fragile]
 
-\begin{block}{Minor head injury - split with cross-entropy}
+The dataset includes data about 1321 patients and is a modified and
+smaller version of the (simulated) dataset \texttt{headInjury} from the
+\texttt{DAAG} library.
+
+\footnotesize
+
+\begin{verbatim}
+##    amnesia bskullf GCSdecr GCS.13 GCS.15 risk consc oskullf vomit brain.injury
+## 3        0       0       0      0      0    0     0       0     0            0
+## 9        0       0       0      0      0    1     0       0     0            0
+## 11       0       0       0      0      0    0     0       0     0            0
+## 12       1       0       0      0      0    0     0       0     0            0
+## 14       0       0       0      0      0    0     0       0     0            0
+## 16       0       0       0      0      0    0     0       0     0            0
+##    age
+## 3   44
+## 9   67
+## 11  62
+## 12   1
+## 14  55
+## 16  63
+\end{verbatim}
+
+\normalsize
+
+\end{frame}
+
+\begin{frame}[fragile]
+
+\begin{block}{Split with cross-entropy}
 
 \vspace{1mm}
 
@@ -1248,6 +1158,8 @@ entropy criterion.
 
 \begin{center}\includegraphics[width=0.5\linewidth]{8Trees_files/figure-beamer/headInjury-1} \end{center}
 
+\(~\)
+
 \normalsize
 
 \begin{itemize}
@@ -1264,7 +1176,7 @@ entropy criterion.
 
 \begin{frame}[fragile]
 
-\begin{block}{Minor head injury - split with Gini index}
+\begin{block}{Split with Gini index}
 
 \vspace{2mm}
 
@@ -2094,7 +2006,7 @@ bagging:
 \item
   Drawback: It becomes difficult to interpret the results. Instead of
   having one tree, the resulting model consists of many trees (it is an
-  \emph{ensemble method}). So, which predictors are (how) important?
+  \emph{ensemble method}).
 \end{itemize}
 
 \vspace{1mm}
@@ -2177,84 +2089,7 @@ in \texttt{randomForest} with \texttt{type=2}.
 
 \begin{frame}[fragile]
 
-\begin{block}{Example 1: Ozone data (regression tree)}
-
-\vspace{1mm}
-
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
-\NormalTok{ozone.rf <-}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(ozone }\OperatorTok{~}\StringTok{ }\NormalTok{temp }\OperatorTok{+}\StringTok{ }\NormalTok{wind, }\DataTypeTok{data =}\NormalTok{ ozone.train, }\DataTypeTok{ntree =} \DecValTok{500}\NormalTok{, }
-    \DataTypeTok{mtry =} \DecValTok{2}\NormalTok{, }\DataTypeTok{keep.forest =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
-\KeywordTok{varImpPlot}\NormalTok{(ozone.rf, }\DataTypeTok{type =} \DecValTok{2}\NormalTok{, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{center}\includegraphics[width=0.5\linewidth]{8Trees_files/figure-beamer/ozoneImp-1} \end{center}
-
-\vspace{2mm}
-\normalsize
-
-This is a bit boring (only two predictors). More interesting example?
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\begin{block}{Example 2: Auto data (regression tree)}
-
-\vspace{1mm}
-
-The data relates fuel consumption (\texttt{mpg}) to 10 aspects of
-automobile desing and performance.
-
-\vspace{2mm}
-
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{data}\NormalTok{(mtcars)}
-\NormalTok{mtcars.rf <-}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(mpg }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ mtcars, }\DataTypeTok{ntree =} \DecValTok{1000}\NormalTok{, }\DataTypeTok{keep.forest =} \OtherTok{FALSE}\NormalTok{, }
-    \DataTypeTok{mtry =} \DecValTok{10}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
-\KeywordTok{varImpPlot}\NormalTok{(mtcars.rf, }\DataTypeTok{type =} \DecValTok{2}\NormalTok{, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{center}\includegraphics[width=0.5\linewidth]{8Trees_files/figure-beamer/autoImp-1} \end{center}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\begin{block}{Example 3: Head injury (classification tree)}
-
-\vspace{1mm}
-
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{varImpPlot}\NormalTok{(r.brain.bag, }\DataTypeTok{type =} \DecValTok{2}\NormalTok{, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{center}\includegraphics[width=0.5\linewidth]{8Trees_files/figure-beamer/brain-1} \end{center}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\begin{block}{Another approach: Variable importance based on
-randomization}
+\begin{block}{Variable importance based on randomization}
 
 \vspace{2mm}
 
@@ -2296,31 +2131,53 @@ function with \texttt{type=1}.
 
 \begin{frame}[fragile]
 
+\begin{block}{Example 1: Auto data (regression tree)}
+
+\vspace{1mm}
+
+The data relates fuel consumption (\texttt{mpg}) to 10 aspects of
+automobile desing and performance.
+
+\vspace{2mm}
+
+\(~\)
+
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{varImpPlot}\NormalTok{(mtcars.rf, }\DataTypeTok{type =} \DecValTok{1}\NormalTok{, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{)}
+\KeywordTok{data}\NormalTok{(mtcars)}
+\NormalTok{mtcars.rf <-}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(mpg }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ mtcars, }\DataTypeTok{ntree =} \DecValTok{1000}\NormalTok{, }\DataTypeTok{keep.forest =} \OtherTok{FALSE}\NormalTok{, }
+    \DataTypeTok{mtry =} \DecValTok{10}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
+\KeywordTok{varImpPlot}\NormalTok{(mtcars.rf, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{, }\DataTypeTok{main =} \StringTok{""}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics[width=0.5\linewidth]{8Trees_files/figure-beamer/autoImp2-1} \end{center}
+\begin{center}\includegraphics[width=0.7\linewidth]{8Trees_files/figure-beamer/autoImp-1} \end{center}
+
+\end{block}
 
 \end{frame}
 
 \begin{frame}[fragile]
 
-The two types together: do they agree?
+\begin{block}{Example 2: Head injury (classification tree)}
+
+\vspace{1mm}
+
+\(~\)
 
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{varImpPlot}\NormalTok{(mtcars.rf, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{, }\DataTypeTok{main =} \StringTok{""}\NormalTok{)}
+\KeywordTok{varImpPlot}\NormalTok{(r.brain.bag, }\DataTypeTok{type =} \DecValTok{2}\NormalTok{, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics[width=0.7\linewidth]{8Trees_files/figure-beamer/autoImp3-1} \end{center}
+\begin{center}\includegraphics[width=0.6\linewidth]{8Trees_files/figure-beamer/brain-1} \end{center}
+
+\end{block}
 
 \end{frame}
 
@@ -2731,7 +2588,7 @@ Boosting has three tuning parameters which need to be set (\(B\),
 \begin{frame}{Short quizz poll}
 \protect\hypertarget{short-quizz-poll}{}
 
-Go to \href{http://www.slido.com}{slido.com} and enter the code \#4296
+Go to \href{http://www.slido.com}{slido.com} and enter the code \#2496
 to participate.
 
 \end{frame}
@@ -2763,20 +2620,20 @@ at boosting.
 \end{Shaded}
 
 \begin{verbatim}
-##      crim zn indus chas   nox    rm  age    dis rad tax ptratio  black
-## 1 0.00632 18  2.31    0 0.538 6.575 65.2 4.0900   1 296    15.3 396.90
-## 2 0.02731  0  7.07    0 0.469 6.421 78.9 4.9671   2 242    17.8 396.90
-## 3 0.02729  0  7.07    0 0.469 7.185 61.1 4.9671   2 242    17.8 392.83
-## 4 0.03237  0  2.18    0 0.458 6.998 45.8 6.0622   3 222    18.7 394.63
-## 5 0.06905  0  2.18    0 0.458 7.147 54.2 6.0622   3 222    18.7 396.90
-## 6 0.02985  0  2.18    0 0.458 6.430 58.7 6.0622   3 222    18.7 394.12
-##   lstat medv
-## 1  4.98 24.0
-## 2  9.14 21.6
-## 3  4.03 34.7
-## 4  2.94 33.4
-## 5  5.33 36.2
-## 6  5.21 28.7
+##      crim zn indus chas   nox    rm  age    dis rad tax ptratio  black lstat
+## 1 0.00632 18  2.31    0 0.538 6.575 65.2 4.0900   1 296    15.3 396.90  4.98
+## 2 0.02731  0  7.07    0 0.469 6.421 78.9 4.9671   2 242    17.8 396.90  9.14
+## 3 0.02729  0  7.07    0 0.469 7.185 61.1 4.9671   2 242    17.8 392.83  4.03
+## 4 0.03237  0  2.18    0 0.458 6.998 45.8 6.0622   3 222    18.7 394.63  2.94
+## 5 0.06905  0  2.18    0 0.458 7.147 54.2 6.0622   3 222    18.7 396.90  5.33
+## 6 0.02985  0  2.18    0 0.458 6.430 58.7 6.0622   3 222    18.7 394.12  5.21
+##   medv
+## 1 24.0
+## 2 21.6
+## 3 34.7
+## 4 33.4
+## 5 36.2
+## 6 28.7
 \end{verbatim}
 
 \end{frame}
