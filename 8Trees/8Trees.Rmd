@@ -272,8 +272,10 @@ ozone.test = myozone[-ozone.trainID,]
 
 \normalsize
 Use the default settings in the tree function:
+
 \scriptsize
 ```{r}
+library(tree)
 ozone.tree = tree(ozone~temp+wind, data=ozone.train)
 ```
 
@@ -649,14 +651,16 @@ legend(0.3,0.2,legend=c("misclassification","cross-entropy","Gini"),fill=c("blac
 \vspace{2mm}
 
 
-* Patients are investigated and (possible) asked questions.
+* Patients are investigated and (possibly) asked questions.
 
 \vspace{2mm}
 
-* Our job: To build a good model to predict quickly if someone has a brain injury. The method should be 
+* _\textcolor{red}{Our job}_: To build a good model to predict quickly if someone has a brain injury. The method should be 
+\vspace{1mm}
 
     +  **easy** to interpret for the medical personell that are not skilled in statistics, and 
-
+    \vspace{1mm}
+    
     + **fast**, such that the medical personell quickly can identify a patient that needs treatment. 
     
 
@@ -665,7 +669,7 @@ legend(0.3,0.2,legend=c("misclassification","cross-entropy","Gini"),fill=c("blac
 
 The dataset includes data about 1321 patients and is a modified and smaller version of the (simulated) dataset `headInjury` from the `DAAG` library. 
 
-\footnotesize
+\scriptsize
 
 ```{r,echo=FALSE}
 library(DAAG)
@@ -816,9 +820,11 @@ Study the confusion matrices on the previous slide:
 
 ## Building a classification tree: Algorithm 8.1
 
-\vspace{2mm}
+$~$
 
 * Like for regression trees, we would like to find classification trees that are good at prediction.
+
+\vspace{2mm}
 
 * Algorithm 8.1 can be used with misclassification, the Gini index, or cross-entropy instead of the RSS as quality measure.
 
@@ -1025,26 +1031,34 @@ In addition:
 
 ## Leo Breiman - the inventor of CART, bagging and random forests
 
+$~$
+
 \vspace{1mm}
-Quotation from [Wikipedia](https://en.wikipedia.org/wiki/Leo_Breiman)
+See Wikipedia entry: https://en.wikipedia.org/wiki/Leo_Breiman
+
 \vspace{1mm}
+
+$~$
 
 \begin{quote}
-Leo Breiman (January 27, 1928 – July 5, 2005) was a distinguished statistician at the University of California, Berkeley. He was the recipient of numerous honors and awards, and was a member of the United States National Academy of Science.
-
-Breiman's work helped to bridge the gap between statistics and computer science, particularly in the field of machine learning. His most important contributions were his work on classification and regression trees and ensembles of trees fit to bootstrap samples. Bootstrap aggregation was given the name bagging by Breiman. Another of Breiman's ensemble approaches is the random forest.
+Breiman's work helped to bridge the gap between statistics and computer science, particularly in the field of machine learning. His most important contributions were his work on classification and regression trees and ensembles of trees fit to bootstrap samples. Bootstrap aggregation was given the name bagging by Breiman. Another of Breiman's ensemble approaches is the random forest. 
 \end{quote}
 
-See also [Breimans obituary](https://www.berkeley.edu/news/media/releases/2005/07/07_breiman.shtml)
+
 
 <!-- --- -->
 
 <!-- From [Breimans obituary](https://www.berkeley.edu/news/media/releases/2005/07/07_breiman.shtml) -->
+
 <!-- \vspace{1mm} -->
 
-<!-- \begin{quote} -->
+<!-- $~$ -->
+
 <!-- BERKELEY – Leo Breiman, professor emeritus of statistics at the University of California, Berkeley. -->
 
+<!-- $~$ -->
+
+<!-- \begin{quote} -->
 <!-- "It is trite to say so, but Leo Breiman was indeed a Renaissance man, and we shall miss him greatly," said Peter Bickel, professor of statistics and chairman this summer of UC Berkeley's statistics department. -->
 
 <!-- Breiman retired in 1993, but as a Professor in the Graduate School, he continued to get substantial National Science Foundation grants and supervised three Ph.D. students. Bickel said that some of Breiman's best work was done after retirement. -->
@@ -1060,9 +1074,9 @@ See also [Breimans obituary](https://www.berkeley.edu/news/media/releases/2005/0
 
 <!-- \end{quote} -->
 
-<!-- --- -->
 
----
+
+<!-- --- -->
 
 # Bagging 
 
@@ -1072,15 +1086,22 @@ See also [Breimans obituary](https://www.berkeley.edu/news/media/releases/2005/0
 
 * Another way to understand "high variance" is that, if we split our training data into two parts and fit a tree on each, we might get rather different decision trees.
 
-\vspace{2mm}
+<!-- * Bagging = "Bootstrap aggregating" is an approach to reduce the variance. -->
+* To reduce the variance of decision trees we can apply _bootstrap aggregating_ (_bagging_), invented by Leo Breiman in 1996 [@Breiman1996].
 
-Let's draw a new training set (`train2`) for our data and see what happens if we fit our full classification tree (deviance grown).
+
 
 ---
 
-The two classification trees contructed from $850$ observations each (different random subsets):
+### High variance in decision trees -- Illustration
 
- 
+$~$
+
+* Let's draw a new training set (`train2`) and use the deviance criterion to grow the tree. 
+
+* The two classification trees contructed from $850$ different random subsets each:
+
+$~$
 
 ```{r headInjury7, echo=FALSE, fig.width=9, fig.height=5,fig.align = "center",out.width='90%'}
 set.seed(33)
@@ -1094,10 +1115,12 @@ plot(tree.HIClass2);text(tree.HIClass2,pretty=0)
 
 ```
 
+$~$
 
-* We get two different trees that will give different predictions for a test set.
+* We get two rather different trees.
 
-$\rightarrow$ To reduce the variance of decision trees we can apply _bootstrap aggregating_ (_bagging_), invented by Leo Breiman in 1996 [@Breiman1996].
+\vspace{2mm}
+
 
 ---
 
@@ -1109,6 +1132,7 @@ $\rightarrow$ To reduce the variance of decision trees we can apply _bootstrap a
 $$\text{Var}(\bar{X}) = \text{Var}\Big(\frac{1}{B}\sum_{b=1}^B X_b \Big) = \frac{1}{B^2} \sum_{b=1}^B \text{Var}(X_b) = \frac{\sigma^2}{B}.$$
 By averaging we get reduced variance. This is the basic idea!
 
+$~$
  
 
 * For decision trees, if we have $B$ training sets, we could estimate $\hat{f}_1({\boldsymbol x}),\hat{f}_2({\boldsymbol x}),\ldots, \hat{f}_B({\boldsymbol x})$ and average them as
@@ -1118,61 +1142,57 @@ However, we do not have many independent data set - so we use _bootstrapping_ to
 
 ---
 
-## Recall: Bootstrapping 
-
-\vspace{2mm}
-
-* Problem: we want to draw samples from a population with distribution $f$.
-
-* But: we do not know $f$ and do not have a population to draw from, we only have our one sample.
-
-* Solution: we may use our sample as an empirical estimate for the distribution $f$ - by assuming that each sample point has probability $1/n$ for being drawn. 
-
-* Therefore: we draw _\textcolor{red}{with replacement}_ $n$ observations from our sample - and that is our first _bootstrap sample_.
-
-* We repeat this $B$ times and get $B$ bootstrap samples - that we use as our $B$ data sets.
-
----
-
 ## Bagging = Bootstrap aggregating 
 
 \vspace{2mm}
 
-* Idea: For each bootstrap sample $b=1,\ldots, B$ we construct a decision tree, $\hat{f}^{*b}(x)$, and we then use information from all of the trees to draw inference. 
+* Bootsrapping: Draw _\textcolor{red}{with replacement}_ $n$ observations from our sample - and that is our first _bootstrap sample_.
+
+\vspace{2mm}
+
+* We repeat this $B$ times and get $B$ bootstrap samples - that we use as our $B$ data sets.
+
+\vspace{2mm}
+
+* For each bootstrap sample $b=1,\ldots, B$ we construct a decision tree, $\hat{f}^{*b}(x)$. 
+
+<!-- and we then use information from all of the trees to draw inference.  -->
+
+\vspace{2mm}
 
 * For a _regression tree_, we take the average of all of the predictions and use this as the final result:
 $$
 \hat{f}_{bag}(x)=\frac{1}{B}\sum_{b=1}^B \hat{f}^{*b}(x).
 $$
 
-* For a _classification tree_ we record the predicted class (for a given observation $x$) for each of the $B$ trees and use the most occurring classification (_majority vote_) as the final prediction - or alternatively average posterior probabilities for each class.
+\vspace{2mm}
+
+* For a _classification tree_ we record the predicted class (for a given observation $x$) for each of the $B$ trees and use the most occurring classification (_majority vote_) as the final prediction.
 
 ---
 
-* Originally, @Breiman1996 suggested to prune each tree, but later research has found that it is better to leave the trees at maximal size (a bushy tree), to make the trees as different from each other as possible\footnote{Note also that deeper trees have smaller bias.}.
+<!-- * Originally, @Breiman1996 suggested to prune each tree, but later research has found that it is better to leave the trees at maximal size (a bushy tree), to make the trees as different from each other as possible\footnote{Note also that deeper trees have smaller bias.}. -->
 
-\vspace{1mm}
-
-* The number $B$ is chosen to be as large as "necessary". An increase in $B$ will not lead to overfitting, and $B$ is not regarded as a tuning parameter. If a goodness of fit measure is plotted as a function of $B$ (soon) we see that (given that $B$ is large enough) increasing $B$ will not change the goodness of fit measure.
-
-\vspace{1mm}
-
-* To find out which number $B$ is sufficient, we do _not_ need to run cross-validation, but can do something smarter (next slide).
+<!-- \vspace{1mm} -->
 
 
----
+
 
 ## Out-of-bag error estimation
 
-\vspace{1mm}
+$~$
 
 * Recall (module 5) that the probability that an observation is in the bootstrap sample is approximately $1-e^{-1}$=`r round(1-exp(-1),2)` ($\approx 2/3$).
 
+\vspace{1mm}
+
 * When an observation is left out of the bootstrap sample it is not used to build the tree, and we can use this observation as a part of a "test set" to measure the predictive performance and error of the fitted model, $\hat{f}^{*b}(x)$. 
+
+\vspace{1mm}
 
 * For $B$ bootstrap samples, observation $i$ will be outside the bootstrap sample in approximately $B/3$ of the fitted trees. Obtain a single prediction by averaging (regression problem) or taking the majority vote/mean probability (classification problem) of the $B/3$ predictions.
 
-\vspace{2mm}
+$~$
 
 **Terminology:**
 
@@ -1187,11 +1207,11 @@ $$
 
 ## Example
 
-\vspace{1mm}
+$~$
 
 We can do bagging by using the function `randomForest()` in the `randomForest` library.
 
-\vspace{2mm}
+$~$
 
 \scriptsize
 
@@ -1206,7 +1226,7 @@ r.brain.bag$confusion
 ```
 \normalsize
 
-\vspace{4mm}
+$~$
 
 The variable `mtry=10` because we want to consider all $10$ predictors in each split of the tree. The variable `ntree=500` because we want to average over $500$ trees.
 
@@ -1230,7 +1250,6 @@ print(misclass.bag)
 
 Note: The misclassification rate has increased slightly for the bagged tree (as compared to our previous full and pruned tree). **Typically, we would expect an improvement!**
 
----
 
 <!-- ## Prediction by majority vote vs. by averaging the probabilities  -->
 
@@ -1252,26 +1271,26 @@ Note: The misclassification rate has increased slightly for the bagged tree (as 
 
 <!-- --- -->
 
-## When should we use bagging?
+<!-- ## When should we use bagging? -->
 
-\vspace{2mm}
+<!-- \vspace{2mm} -->
 
-Bagging can also be used for prediction methods (regression and classification) that are not trees. 
+<!-- Bagging can also be used for prediction methods (regression and classification) that are not trees.  -->
 
-* According to @Breiman1996 Bagging can improve accuracy when, 
+<!-- * According to @Breiman1996 Bagging can improve accuracy when,  -->
 
-    * the vital element is the instability of the prediction method.
-    * perturbing the learning set can cause significant changes in the predictor constructed.
+<!--     * the vital element is the instability of the prediction method. -->
+<!--     * perturbing the learning set can cause significant changes in the predictor constructed. -->
 
-\vspace{4mm}
+<!-- \vspace{4mm} -->
 
-@Breiman1996 suggests that these methods should be suitable for bagging:
+<!-- @Breiman1996 suggests that these methods should be suitable for bagging: -->
 
-\vspace{2mm}
+<!-- \vspace{2mm} -->
 
-* Neural nets
-* Classification and regression trees
-* Subset selection in linear regression
+<!-- * Neural nets -->
+<!-- * Classification and regression trees -->
+<!-- * Subset selection in linear regression -->
 
 <!-- \vspace{1mm} -->
 
@@ -1282,19 +1301,16 @@ Bagging can also be used for prediction methods (regression and classification) 
 
 ## Variable importance plots
 
-\vspace{1mm}
+$~$
 
-* Bagging typically (but not always) improves accuracy of predictions.
 
-\vspace{1mm}
+* Drawback of bagging: It becomes difficult to interpret the results. Instead of having one tree, the resulting model consists of many trees (it is an _ensemble method_). 
 
-* Drawback: It becomes difficult to interpret the results. Instead of having one tree, the resulting model consists of many trees (it is an _ensemble method_). 
-
-\vspace{1mm}
+\vspace{2mm}
 
 * _\textcolor{red}{Variable importance plots}_ show _the relative importance of the predictors:_ the predictors are sorted according to their importance, such that the top variables have a higher importance than the bottom variables. 
 
-\vspace{1mm}
+\vspace{2mm}
 
 * There are in general two types of variable importance plots: 
 
@@ -1307,7 +1323,7 @@ Bagging can also be used for prediction methods (regression and classification) 
 
 \vspace{1mm}
 
-The term *important* relates to _total decrease in the node impurity, over splits for a predictor_, and is defined differently for regression trees and classification trees.
+*Importance* relates to _total decrease in the node impurity, over splits for a predictor_.
 
 \vspace{4mm}
 
@@ -1318,7 +1334,8 @@ The term *important* relates to _total decrease in the node impurity, over split
 * The algorithm records the total amount that the RSS is decreased due to splits for each predictor (there may be many splits for one predictor for each tree). 
 * This decrease in RSS is then averaged over the $B$ trees.
 
-\vspace{1mm}
+\vspace{2mm}
+
 **Classification trees:** 
 
 * The importance of each predictor is calculated using the Gini index. 
@@ -1395,15 +1412,19 @@ varImpPlot(r.brain.bag,type=2,pch=20)
 
 # Random Forests 
 
- 
+$~$
 
 * If there is a strong predictor in the dataset, the decision trees produced by each of the bootstrap samples in the bagging algorithm becomes very similar: Most of the trees will use the same strong predictor in the top split. 
 
+\vspace{2mm}
+
 * We have seen this for our example trees for the minor head injury example, the predictor `GCS.15` was chosen in the top split every time. This is probably the case for a large amount of the bagged trees as well.
 
-* Not optimal, as we get $B$ trees that are highly correlated. We don't get a large reduction in variance by averaging $\hat{f}^{*b}(x)$ when the correlation between the trees is high. 
+\vspace{2mm}
 
-* We actually even saw a decrease in the predictive performance for the bagged tree compared to the pruned tree and the full tree.
+* Not optimal, as we get $B$ trees that are highly correlated. $\rightarrow$ No large reduction in variance by averaging $\hat{f}^{*b}(x)$ when the correlation between the trees is high. 
+
+ 
 
 
 ---
@@ -1412,20 +1433,23 @@ varImpPlot(r.brain.bag,type=2,pch=20)
 
 \vspace{3mm}
 
-* The variance of the average of $B$ observations of _i.i.d._ random variables $X$, each with variance $\sigma^2$ is $\frac{\sigma^2}{B}$. Now, suppose we have $B$ observations of a random variable $X$ which are identically distributed, each with mean $\mu$ and variance $\sigma^2$, but not independent. 
+* The variance of the average of $B$ observations of _i.i.d._ random variables $X$, each with variance $\sigma^2$ is $\frac{\sigma^2}{B}$. 
 
-* That is, suppose the variables have a positive correlation $\rho$
-$$\text{Cov}(X_i, X_j) = \rho \sigma^2, \quad i \neq j.$$
+* But if we have $B$ _i.i.d._ observations of a random variable $X$ with a positive correlation $\rho$ such that $\text{Cov}(X_i, X_j) = \rho \sigma^2, \quad i \neq j,$ then
 
----
+\vspace{-3mm}
+$$ \begin{aligned} \text{Var}(\bar{X}) &= \text{Var}\Big( \frac{1}{B}\sum_{i=1}^B X_i \Big) =\\
+\end{aligned}$$
 
-The variance of the average is 
-$$\begin{aligned} \text{Var}(\bar{X}) &= \text{Var}\Big( \frac{1}{B}\sum_{i=1}^B X_i \Big) \\
-&= \sum_{i=1}^B \frac{1}{B^2} \text{Var} (X_i) + 2 \sum_{i=2}^B \sum_{j=1}^{i-1} \frac{1}{B^2} \text{Cov} (X_i, X_j) \\
-&= \frac{1}{B} \sigma^2 + 2 \frac{B(B-1)}{2}\frac{1}{B^2} \rho \sigma^2 \\
-&= \frac{1}{B} \sigma^2 + \rho \sigma^2 - \frac{1}{B} \rho \sigma^2 \\
-&= \rho \sigma^2 + \frac{1-\rho}{B}\sigma^2\\
-&= \frac{1-(1-B)\rho}{B} \sigma^2\\ \end{aligned}$$
+\vspace{35mm}
+
+<!-- &= \sum_{i=1}^B \frac{1}{B^2} \text{Var} (X_i) + 2 \sum_{i=2}^B \sum_{j=1}^{i-1} \frac{1}{B^2} \text{Cov} (X_i, X_j) \\ -->
+<!-- &= \frac{1}{B} \sigma^2 + 2 \frac{B(B-1)}{2}\frac{1}{B^2} \rho \sigma^2 \\ -->
+<!-- &= \frac{1}{B} \sigma^2 + \rho \sigma^2 - \frac{1}{B} \rho \sigma^2 \\ -->
+<!-- &= \rho \sigma^2 + \frac{1-\rho}{B}\sigma^2  -->
+<!-- \end{aligned}$$ -->
+
+\vspace{1mm}
 
 Check: $\rho=0$ and $\rho=1$? 
 
@@ -1465,9 +1489,19 @@ The general idea is that for very correlated predictors $m$ is chosen to be smal
 
 \vspace{2mm}
 
-* The number of trees, $B$, is not a tuning parameter, and the best is to choose it large enough. 
+* The number of trees, $B$, is not a tuning parameter, and the best is to choose it large enough (as large as "necessary"). An increase in $B$ will not lead to overfitting, and $B$ is not regarded as a tuning parameter. 
 
-* If $B$ is sufficiently large (three times the number needed for the random forest to stabilize), the OOB error estimate is equivalent to LOOCV [see @Efron_Hastie2016, p. 330].
+\vspace{2mm}
+
+* Increasing $B$ will not change the goodness of fit measure.
+
+\vspace{2mm}
+
+
+* To find out which number $B$ is sufficient, we do _not_ need to run cross-validation, but can again use the OOB error (works bost for bagging and random forests).
+
+
+ 
 
 ---
 
@@ -1523,6 +1557,8 @@ The misclassification rate is slightly decreased compared to the bagged tree (an
 
 By using the `varImpPlot()` function we can study the importance of each predictor.
 
+$~$
+
 \scriptsize
 ```{r brainImp, echo=TRUE, fig.width=8, fig.height=5,fig.align = "center",out.width='70%'}
 varImpPlot(r.brain.rf,pch=20, main="")
@@ -1530,87 +1566,11 @@ varImpPlot(r.brain.rf,pch=20, main="")
 
 \normalsize
 
+$~$
+
 As expected `GCS.15` (GCS=15 at 2h) is a strong predictor along with `bskullf` (basal skull facture) and `age`. This means that most of the trees will have these predictors in the top split.
 
----
 
-## Iris example -- bagging
-\tiny
-(borrowed from \url{https://gist.github.com/ramhiser/6dec3067f087627a7a85})
-
-\vspace{3mm}
-
-\scriptsize
-
-```{r, echo=FALSE}
-library(dplyr)
-```
-
-```{r,echo=showsol,eval=TRUE}
-rf_out <- randomForest(Species ~ ., data=iris, mtry=4, ntree=500)
-rf_out$confusion
-```
-
-\vspace{3mm}
-
-```{r iris, echo=FALSE, fig.width=8, fig.height=4,fig.align = "center",out.width='60%'}
-# Extracts variable importance (Mean Decrease in Gini Index)
-# Sorts by variable importance and relevels factors to match ordering
-var_importance <- data_frame(variable=setdiff(colnames(iris), "Species"),
-                             importance=as.vector(importance(rf_out)))
-var_importance <- arrange(var_importance, desc(importance))
-var_importance$variable <- factor(var_importance$variable, levels=var_importance$variable)
-
-p <- ggplot(var_importance, aes(x=variable, weight=importance, fill=variable))
-p <- p + geom_bar() + ggtitle("Variable Importance from Random Forest Fit")
-p <- p + xlab("Demographic Attribute") + ylab("Mean Decrease in Gini Index")
-p <- p + scale_fill_discrete(name="Variable Name")
-p=p + theme(axis.text.x=element_blank(),
-          axis.text.y=element_text(size=12),
-          axis.title=element_text(size=16),
-          plot.title=element_text(size=18),
-          legend.title=element_text(size=16),
-          legend.text=element_text(size=12))
-p
-```
-
----
-
-
-## Iris example -- random forest
-\tiny
-(borrowed from \url{https://gist.github.com/ramhiser/6dec3067f087627a7a85})
-
-\vspace{3mm}
-
-
-\scriptsize
-
-```{r,echo=showsol,eval=TRUE}
-rf_out=randomForest(Species~.,data=iris,mtry=2,ntree=500)
-rf_out$confusion
-```
-
-\vspace{3mm}
-
-```{r iris2, echo=FALSE, fig.width=8, fig.height=4,fig.align = "center",out.width='60%'}
-var_importance <- data_frame(variable=setdiff(colnames(iris), "Species"),
-                             importance=as.vector(importance(rf_out)))
-var_importance <- arrange(var_importance, desc(importance))
-var_importance$variable <- factor(var_importance$variable, levels=var_importance$variable)
-
-pp <- ggplot(var_importance, aes(x=variable, weight=importance, fill=variable))
-pp <- pp + geom_bar() + ggtitle("Variable Importance from Random Forest Fit")
-pp <- pp + xlab("Demographic Attribute") + ylab("Mean Decrease in Gini Index")
-pp <- pp + scale_fill_discrete(name="Variable Name")
-pp=pp + theme(axis.text.x=element_blank(),
-          axis.text.y=element_text(size=12),
-          axis.title=element_text(size=16),
-          plot.title=element_text(size=18),
-          legend.title=element_text(size=16),
-          legend.text=element_text(size=12))
-pp
-```
 
 ---
 
@@ -1653,6 +1613,7 @@ Boosting has three tuning parameters which need to be set ($B$, $\lambda$, $d$),
 
 # Short quizz poll
 
+Todo: Update 
 Go to [slido.com](http://www.slido.com) and enter the code #2496 to participate.
 
 
@@ -1685,7 +1646,7 @@ $~$
 
 \scriptsize
 ```{r}
-tree.boston=tree(medv~.,Boston,subset=train) 
+tree.boston=tree(medv~.,Boston,subset=train,control = tree.control(nrow(Boston), mindev = 0.005)) 
 summary(tree.boston); 
 ```
 
@@ -1701,7 +1662,7 @@ text(tree.boston,pretty=0)
 Remember: 
 
 * The `tree()` function has a built-in default stopping criterion. 
-* You can change this with the `control` option, for example by setting `control = tree.control(mincut = 2, minsize = 4, mindev = 0.001)`. 
+* You can change this with the `control` option, for example by setting `control = tree.control(mincut = 2, minsize = 4, mindev = 0.001)`. Here we used `mindev=0.005`. 
 
 ---
 
@@ -1717,19 +1678,21 @@ plot(cv.boston$size,cv.boston$dev,type='b')
 
 \normalsize
 
-It looks like the most complex tree was selected.
+\vspace{2mm}
+
+It looks like a tree with 6 leaves would work well.
 
 ---
 
 ### Pruning
 \vspace{1mm}
 
-Want to prune anyway (even if most complex tree was selected)? For example, pruning to a node-5 tree works as follows:
+So we are pruning to a 6-node tree here:
 
 \scriptsize
 
 ```{r boston3, echo=TRUE, fig.width=8, fig.height=6,fig.align = "center",out.width='70%'}
-prune.boston=prune.tree(tree.boston,best=5)
+prune.boston=prune.tree(tree.boston,best=6)
 plot(prune.boston)
 text(prune.boston,pretty=0)
 ```
@@ -1737,13 +1700,16 @@ text(prune.boston,pretty=0)
 ---
 
 ### Test error for full tree
-\vspace{1mm}
 
-Because the full tree (with 7 nodes) was the best, we continue with this one.
+$~$
+
+We calculate the test error for the pruned tree:
+
+\vspace{2mm}
 
 \scriptsize
 ```{r boston4, echo=TRUE, fig.width=5, fig.height=4,fig.align = "center",out.width='50%'}
-yhat=predict(tree.boston,newdata=Boston[-train,])
+yhat=predict(prune.boston,newdata=Boston[-train,])
 boston.test=Boston[-train,"medv"]
 plot(yhat,boston.test, pch=20)
 abline(0,1)
@@ -1757,10 +1723,12 @@ mean((yhat-boston.test)^2)
 
 ### Bagging
 
-\vspace{2mm}
+$~$
 
 \small
 Remember: For bagging you can use the `randomForest()` function, but include all variables (here `mtry=13`).
+
+\vspace{2mm}
 
 \scriptsize
 ```{r}
@@ -1782,7 +1750,7 @@ bag.boston
 
 ### Test error for bagged tree
 
-\vspace{1mm}
+$~$
 
 
 \scriptsize
@@ -1792,6 +1760,7 @@ plot(yhat.bag, boston.test,pch=20)
 abline(0,1)
 ```
 
+\vspace{2mm}
 
 \scriptsize
 ```{r}
@@ -1804,9 +1773,12 @@ mean((yhat.bag-boston.test)^2)
 
 ### Random forest
 
-\vspace{2mm}
+$~$
 
 Let's go from bagging to a random forest\footnote{n.b., why are we now speaking of a forest and no longer of a tree?}, using 6 randomly selected predictors for each tree:
+
+\vspace{2mm}
+
 
 \scriptsize
 ```{r}
@@ -1876,6 +1848,8 @@ summary(boost.boston,plotit=FALSE)
 \small
 `rm` (number of rooms) and `lstat` (% of lower status population) are the most important predictors. Partial dependency plots show the effect of individual predictors, integrated over the other predictors see @hastie_etal2009, Section 10.13.2.
 
+\vspace{2mm}
+
 \scriptsize
 
 ```{r boston7, echo=TRUE, fig.width=5, fig.height=3,fig.align = "center",out.width='40%'}
@@ -1898,6 +1872,11 @@ $~$
 ```{r}
 yhat.boost=predict(boost.boston,newdata=Boston[-train,],n.trees=5000)
 mean((yhat.boost-boston.test)^2)
+```
+
+\vspace{2mm}
+
+```{r}
 boost.boston=gbm(medv~.,data=Boston[train,],distribution="gaussian",
                  n.trees=5000,interaction.depth=4,shrinkage=0.2,verbose=F)
 yhat.boost=predict(boost.boston,newdata=Boston[-train,],n.trees=5000)
@@ -1915,26 +1894,25 @@ abline(0,1)
 
 
 
----
 
-# Summing up with feedback
+<!-- # Summing up with feedback -->
 
-Please give me your opinion about
+<!-- Please give me your opinion about -->
 
-* The "muddiest" (unclearest) point that you have in Module 8.
+<!-- * The "muddiest" (unclearest) point that you have in Module 8. -->
 
-* The main points you *think* you learned in Module 8.
+<!-- * The main points you *think* you learned in Module 8. -->
 
-I can catch up on these points next Friday.
+<!-- I can catch up on these points next Friday. -->
 
-Link to google form:
+<!-- Link to google form: -->
 
-[https://docs.google.com/forms/d/e/1FAIpQLSfHDlHGbO1FxR3JcSxIzg5cIJKnbNrBYu7xXOlLjObHnFSQZg/viewform?usp=sf_link](
-https://docs.google.com/forms/d/e/1FAIpQLSfHDlHGbO1FxR3JcSxIzg5cIJKnbNrBYu7xXOlLjObHnFSQZg/viewform?usp=sf_link)
-
+<!-- [https://docs.google.com/forms/d/e/1FAIpQLSfHDlHGbO1FxR3JcSxIzg5cIJKnbNrBYu7xXOlLjObHnFSQZg/viewform?usp=sf_link]( -->
+<!-- https://docs.google.com/forms/d/e/1FAIpQLSfHDlHGbO1FxR3JcSxIzg5cIJKnbNrBYu7xXOlLjObHnFSQZg/viewform?usp=sf_link) -->
 
 
----
+
+<!-- --- -->
 
 
  

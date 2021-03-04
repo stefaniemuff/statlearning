@@ -532,10 +532,13 @@ and \texttt{temperature} and \texttt{wind} as predictors.
 
 \normalsize
 
-Use the default settings in the tree function: \scriptsize
+Use the default settings in the tree function:
+
+\scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(tree)}
 \NormalTok{ozone.tree =}\StringTok{ }\KeywordTok{tree}\NormalTok{(ozone }\OperatorTok{~}\StringTok{ }\NormalTok{temp }\OperatorTok{+}\StringTok{ }\NormalTok{wind, }\DataTypeTok{data =}\NormalTok{ ozone.train)}
 \end{Highlighting}
 \end{Shaded}
@@ -1049,20 +1052,21 @@ better? Probably the second one, because it produces a \emph{pure node}.
 \begin{itemize}
 \tightlist
 \item
-  Patients are investigated and (possible) asked questions.
+  Patients are investigated and (possibly) asked questions.
 \end{itemize}
 
 \vspace{2mm}
 
 \begin{itemize}
 \item
-  Our job: To build a good model to predict quickly if someone has a
-  brain injury. The method should be
+  \emph{\textcolor{red}{Our job}}: To build a good model to predict
+  quickly if someone has a brain injury. The method should be
+  \vspace{1mm}
 
   \begin{itemize}
   \item
     \textbf{easy} to interpret for the medical personell that are not
-    skilled in statistics, and
+    skilled in statistics, and \vspace{1mm}
   \item
     \textbf{fast}, such that the medical personell quickly can identify
     a patient that needs treatment.
@@ -1079,7 +1083,7 @@ The dataset includes data about 1321 patients and is a modified and
 smaller version of the (simulated) dataset \texttt{headInjury} from the
 \texttt{DAAG} library.
 
-\footnotesize
+\scriptsize
 
 \begin{verbatim}
 ##    amnesia bskullf GCSdecr GCS.13 GCS.15 risk consc oskullf vomit brain.injury
@@ -1129,8 +1133,8 @@ We use the 850 training samples to get a tree using cross-entropy
 ## Variables actually used in tree construction:
 ## [1] "GCS.15"  "bskullf" "risk"    "age"     "GCS.13" 
 ## Number of terminal nodes:  9 
-## Residual mean deviance:  0.6604 = 555.4 / 841 
-## Misclassification error rate: 0.1259 = 107 / 850
+## Residual mean deviance:  0.66 = 555 / 841 
+## Misclassification error rate: 0.126 = 107 / 850
 \end{verbatim}
 
 \vspace{6mm}
@@ -1202,8 +1206,8 @@ The same analysis with the Gini index:
 ## [1] "GCS.15"  "bskullf" "risk"    "age"     "oskullf" "vomit"   "amnesia"
 ## [8] "consc"   "GCS.13" 
 ## Number of terminal nodes:  75 
-## Residual mean deviance:  0.5202 = 403.2 / 775 
-## Misclassification error rate: 0.1094 = 93 / 850
+## Residual mean deviance:  0.52 = 403 / 775 
+## Misclassification error rate: 0.109 = 93 / 850
 \end{verbatim}
 
 \end{block}
@@ -1269,7 +1273,7 @@ With the deviance:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.1401274
+## [1] 0.140127
 \end{verbatim}
 
 \end{block}
@@ -1308,7 +1312,7 @@ With the Gini-index:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.1549894
+## [1] 0.154989
 \end{verbatim}
 
 \end{frame}
@@ -1333,12 +1337,19 @@ Study the confusion matrices on the previous slide:
 
 \begin{block}{Building a classification tree: Algorithm 8.1}
 
-\vspace{2mm}
+\(~\)
 
 \begin{itemize}
+\tightlist
 \item
   Like for regression trees, we would like to find classification trees
   that are good at prediction.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   Algorithm 8.1 can be used with misclassification, the Gini index, or
   cross-entropy instead of the RSS as quality measure.
@@ -1482,7 +1493,7 @@ How is the predictive performance of the model affected?
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.1401274
+## [1] 0.140127
 \end{verbatim}
 
 \normalsize
@@ -1628,26 +1639,25 @@ In addition:
 \begin{block}{Leo Breiman - the inventor of CART, bagging and random
 forests}
 
+\(~\)
+
 \vspace{1mm}
 
-Quotation from
-\href{https://en.wikipedia.org/wiki/Leo_Breiman}{Wikipedia} \vspace{1mm}
+See Wikipedia entry: \url{https://en.wikipedia.org/wiki/Leo_Breiman}
+
+\vspace{1mm}
+
+\(~\)
 
 \begin{quote}
-Leo Breiman (January 27, 1928 – July 5, 2005) was a distinguished statistician at the University of California, Berkeley. He was the recipient of numerous honors and awards, and was a member of the United States National Academy of Science.
-
-Breiman's work helped to bridge the gap between statistics and computer science, particularly in the field of machine learning. His most important contributions were his work on classification and regression trees and ensembles of trees fit to bootstrap samples. Bootstrap aggregation was given the name bagging by Breiman. Another of Breiman's ensemble approaches is the random forest.
+Breiman's work helped to bridge the gap between statistics and computer science, particularly in the field of machine learning. His most important contributions were his work on classification and regression trees and ensembles of trees fit to bootstrap samples. Bootstrap aggregation was given the name bagging by Breiman. Another of Breiman's ensemble approaches is the random forest. 
 \end{quote}
-
-See also
-\href{https://www.berkeley.edu/news/media/releases/2005/07/07_breiman.shtml}{Breimans
-obituary}
 
 \end{block}
 
 \end{frame}
 
-\begin{frame}[fragile]{Bagging}
+\begin{frame}{Bagging}
 \protect\hypertarget{bagging}{}
 
 \vspace{2mm}
@@ -1663,30 +1673,46 @@ obituary}
   rather different decision trees.
 \end{itemize}
 
-\vspace{2mm}
-
-Let's draw a new training set (\texttt{train2}) for our data and see
-what happens if we fit our full classification tree (deviance grown).
+\begin{itemize}
+\tightlist
+\item
+  To reduce the variance of decision trees we can apply \emph{bootstrap
+  aggregating} (\emph{bagging}), invented by Leo Breiman in 1996
+  (Breiman 1996).
+\end{itemize}
 
 \end{frame}
 
-\begin{frame}
+\begin{frame}[fragile]
 
-The two classification trees contructed from \(850\) observations each
-(different random subsets):
+\begin{block}{High variance in decision trees -- Illustration}
+
+\(~\)
+
+\begin{itemize}
+\item
+  Let's draw a new training set (\texttt{train2}) and use the deviance
+  criterion to grow the tree.
+\item
+  The two classification trees contructed from \(850\) different random
+  subsets each:
+\end{itemize}
+
+\(~\)
 
 \begin{center}\includegraphics[width=0.9\linewidth]{8Trees_files/figure-beamer/headInjury7-1} \end{center}
+
+\(~\)
 
 \begin{itemize}
 \tightlist
 \item
-  We get two different trees that will give different predictions for a
-  test set.
+  We get two rather different trees.
 \end{itemize}
 
-\(\rightarrow\) To reduce the variance of decision trees we can apply
-\emph{bootstrap aggregating} (\emph{bagging}), invented by Leo Breiman
-in 1996 (Breiman 1996).
+\vspace{2mm}
+
+\end{block}
 
 \end{frame}
 
@@ -1697,6 +1723,7 @@ in 1996 (Breiman 1996).
 \vspace{2mm}
 
 \begin{itemize}
+\tightlist
 \item
   Assume we have \(B\) \emph{i.i.d.} observations of a random variable
   \(X\) each with the same mean and with variance \(\sigma^2\). We
@@ -1704,6 +1731,12 @@ in 1996 (Breiman 1996).
   variance of the mean is
   \[\text{Var}(\bar{X}) = \text{Var}\Big(\frac{1}{B}\sum_{b=1}^B X_b \Big) = \frac{1}{B^2} \sum_{b=1}^B \text{Var}(X_b) = \frac{\sigma^2}{B}.\]
   By averaging we get reduced variance. This is the basic idea!
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
 \item
   For decision trees, if we have \(B\) training sets, we could estimate
   \(\hat{f}_1({\boldsymbol x}),\hat{f}_2({\boldsymbol x}),\ldots, \hat{f}_B({\boldsymbol x})\)
@@ -1720,94 +1753,59 @@ However, we do not have many independent data set - so we use
 
 \begin{frame}
 
-\begin{block}{Recall: Bootstrapping}
-
-\vspace{2mm}
-
-\begin{itemize}
-\item
-  Problem: we want to draw samples from a population with distribution
-  \(f\).
-\item
-  But: we do not know \(f\) and do not have a population to draw from,
-  we only have our one sample.
-\item
-  Solution: we may use our sample as an empirical estimate for the
-  distribution \(f\) - by assuming that each sample point has
-  probability \(1/n\) for being drawn.
-\item
-  Therefore: we draw \emph{\textcolor{red}{with replacement}} \(n\)
-  observations from our sample - and that is our first \emph{bootstrap
-  sample}.
-\item
-  We repeat this \(B\) times and get \(B\) bootstrap samples - that we
-  use as our \(B\) data sets.
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
 \begin{block}{Bagging = Bootstrap aggregating}
 
 \vspace{2mm}
 
 \begin{itemize}
+\tightlist
 \item
-  Idea: For each bootstrap sample \(b=1,\ldots, B\) we construct a
-  decision tree, \(\hat{f}^{*b}(x)\), and we then use information from
-  all of the trees to draw inference.
+  Bootsrapping: Draw \emph{\textcolor{red}{with replacement}} \(n\)
+  observations from our sample - and that is our first \emph{bootstrap
+  sample}.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  We repeat this \(B\) times and get \(B\) bootstrap samples - that we
+  use as our \(B\) data sets.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  For each bootstrap sample \(b=1,\ldots, B\) we construct a decision
+  tree, \(\hat{f}^{*b}(x)\).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   For a \emph{regression tree}, we take the average of all of the
   predictions and use this as the final result: \[
   \hat{f}_{bag}(x)=\frac{1}{B}\sum_{b=1}^B \hat{f}^{*b}(x).
   \]
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   For a \emph{classification tree} we record the predicted class (for a
   given observation \(x\)) for each of the \(B\) trees and use the most
   occurring classification (\emph{majority vote}) as the final
-  prediction - or alternatively average posterior probabilities for each
-  class.
+  prediction.
 \end{itemize}
 
 \end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{itemize}
-\tightlist
-\item
-  Originally, Breiman (1996) suggested to prune each tree, but later
-  research has found that it is better to leave the trees at maximal
-  size (a bushy tree), to make the trees as different from each other as
-  possible\footnote{Note also that deeper trees have smaller bias.}.
-\end{itemize}
-
-\vspace{1mm}
-
-\begin{itemize}
-\tightlist
-\item
-  The number \(B\) is chosen to be as large as ``necessary''. An
-  increase in \(B\) will not lead to overfitting, and \(B\) is not
-  regarded as a tuning parameter. If a goodness of fit measure is
-  plotted as a function of \(B\) (soon) we see that (given that \(B\) is
-  large enough) increasing \(B\) will not change the goodness of fit
-  measure.
-\end{itemize}
-
-\vspace{1mm}
-
-\begin{itemize}
-\tightlist
-\item
-  To find out which number \(B\) is sufficient, we do \emph{not} need to
-  run cross-validation, but can do something smarter (next slide).
-\end{itemize}
 
 \end{frame}
 
@@ -1815,17 +1813,30 @@ However, we do not have many independent data set - so we use
 
 \begin{block}{Out-of-bag error estimation}
 
-\vspace{1mm}
+\(~\)
 
 \begin{itemize}
+\tightlist
 \item
   Recall (module 5) that the probability that an observation is in the
   bootstrap sample is approximately \(1-e^{-1}\)=0.63 (\(\approx 2/3\)).
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
 \item
   When an observation is left out of the bootstrap sample it is not used
   to build the tree, and we can use this observation as a part of a
   ``test set'' to measure the predictive performance and error of the
   fitted model, \(\hat{f}^{*b}(x)\).
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
 \item
   For \(B\) bootstrap samples, observation \(i\) will be outside the
   bootstrap sample in approximately \(B/3\) of the fitted trees. Obtain
@@ -1834,7 +1845,7 @@ However, we do not have many independent data set - so we use
   predictions.
 \end{itemize}
 
-\vspace{2mm}
+\(~\)
 
 \textbf{Terminology:}
 
@@ -1855,12 +1866,12 @@ However, we do not have many independent data set - so we use
 
 \begin{block}{Example}
 
-\vspace{1mm}
+\(~\)
 
 We can do bagging by using the function \texttt{randomForest()} in the
 \texttt{randomForest} library.
 
-\vspace{2mm}
+\(~\)
 
 \scriptsize
 
@@ -1876,8 +1887,8 @@ We can do bagging by using the function \texttt{randomForest()} in the
 
 \begin{verbatim}
 ##     0  1 class.error
-## 0 637 54  0.07814761
-## 1  76 83  0.47798742
+## 0 637 54   0.0781476
+## 1  76 83   0.4779874
 \end{verbatim}
 
 \begin{Shaded}
@@ -1887,12 +1898,12 @@ We can do bagging by using the function \texttt{randomForest()} in the
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.1529412
+## [1] 0.152941
 \end{verbatim}
 
 \normalsize
 
-\vspace{4mm}
+\(~\)
 
 The variable \texttt{mtry=10} because we want to consider all \(10\)
 predictors in each split of the tree. The variable \texttt{ntree=500}
@@ -1932,7 +1943,7 @@ Predictive performance of the bagged tree on unseen test data:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.1549894
+## [1] 0.154989
 \end{verbatim}
 
 \normalsize
@@ -1945,71 +1956,19 @@ tree (as compared to our previous full and pruned tree).
 
 \begin{frame}
 
-\begin{block}{When should we use bagging?}
-
-\vspace{2mm}
-
-Bagging can also be used for prediction methods (regression and
-classification) that are not trees.
-
-\begin{itemize}
-\item
-  According to Breiman (1996) Bagging can improve accuracy when,
-
-  \begin{itemize}
-  \tightlist
-  \item
-    the vital element is the instability of the prediction method.
-  \item
-    perturbing the learning set can cause significant changes in the
-    predictor constructed.
-  \end{itemize}
-\end{itemize}
-
-\vspace{4mm}
-
-Breiman (1996) suggests that these methods should be suitable for
-bagging:
-
-\vspace{2mm}
-
-\begin{itemize}
-\tightlist
-\item
-  Neural nets
-\item
-  Classification and regression trees
-\item
-  Subset selection in linear regression
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
 \begin{block}{Variable importance plots}
 
-\vspace{1mm}
+\(~\)
 
 \begin{itemize}
 \tightlist
 \item
-  Bagging typically (but not always) improves accuracy of predictions.
+  Drawback of bagging: It becomes difficult to interpret the results.
+  Instead of having one tree, the resulting model consists of many trees
+  (it is an \emph{ensemble method}).
 \end{itemize}
 
-\vspace{1mm}
-
-\begin{itemize}
-\tightlist
-\item
-  Drawback: It becomes difficult to interpret the results. Instead of
-  having one tree, the resulting model consists of many trees (it is an
-  \emph{ensemble method}).
-\end{itemize}
-
-\vspace{1mm}
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -2020,7 +1979,7 @@ bagging:
   higher importance than the bottom variables.
 \end{itemize}
 
-\vspace{1mm}
+\vspace{2mm}
 
 \begin{itemize}
 \item
@@ -2045,9 +2004,8 @@ bagging:
 
 \vspace{1mm}
 
-The term \emph{important} relates to \emph{total decrease in the node
-impurity, over splits for a predictor}, and is defined differently for
-regression trees and classification trees.
+\emph{Importance} relates to \emph{total decrease in the node impurity,
+over splits for a predictor}.
 
 \vspace{4mm}
 
@@ -2065,7 +2023,7 @@ regression trees and classification trees.
   This decrease in RSS is then averaged over the \(B\) trees.
 \end{itemize}
 
-\vspace{1mm}
+\vspace{2mm}
 
 \textbf{Classification trees:}
 
@@ -2184,24 +2142,36 @@ automobile desing and performance.
 \begin{frame}[fragile]{Random Forests}
 \protect\hypertarget{random-forests}{}
 
+\(~\)
+
 \begin{itemize}
+\tightlist
 \item
   If there is a strong predictor in the dataset, the decision trees
   produced by each of the bootstrap samples in the bagging algorithm
   becomes very similar: Most of the trees will use the same strong
   predictor in the top split.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   We have seen this for our example trees for the minor head injury
   example, the predictor \texttt{GCS.15} was chosen in the top split
   every time. This is probably the case for a large amount of the bagged
   trees as well.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
-  Not optimal, as we get \(B\) trees that are highly correlated. We
-  don't get a large reduction in variance by averaging
+  Not optimal, as we get \(B\) trees that are highly correlated.
+  \(\rightarrow\) No large reduction in variance by averaging
   \(\hat{f}^{*b}(x)\) when the correlation between the trees is high.
-\item
-  We actually even saw a decrease in the predictive performance for the
-  bagged tree compared to the pruned tree and the full tree.
 \end{itemize}
 
 \end{frame}
@@ -2216,29 +2186,25 @@ automobile desing and performance.
 \item
   The variance of the average of \(B\) observations of \emph{i.i.d.}
   random variables \(X\), each with variance \(\sigma^2\) is
-  \(\frac{\sigma^2}{B}\). Now, suppose we have \(B\) observations of a
-  random variable \(X\) which are identically distributed, each with
-  mean \(\mu\) and variance \(\sigma^2\), but not independent.
+  \(\frac{\sigma^2}{B}\).
 \item
-  That is, suppose the variables have a positive correlation \(\rho\)
-  \[\text{Cov}(X_i, X_j) = \rho \sigma^2, \quad i \neq j.\]
+  But if we have \(B\) \emph{i.i.d.} observations of a random variable
+  \(X\) with a positive correlation \(\rho\) such that
+  \(\text{Cov}(X_i, X_j) = \rho \sigma^2, \quad i \neq j,\) then
 \end{itemize}
 
-\end{block}
+\vspace{-3mm}
 
-\end{frame}
+\[ \begin{aligned} \text{Var}(\bar{X}) &= \text{Var}\Big( \frac{1}{B}\sum_{i=1}^B X_i \Big) =\\
+\end{aligned}\]
 
-\begin{frame}
+\vspace{35mm}
 
-The variance of the average is
-\[\begin{aligned} \text{Var}(\bar{X}) &= \text{Var}\Big( \frac{1}{B}\sum_{i=1}^B X_i \Big) \\
-&= \sum_{i=1}^B \frac{1}{B^2} \text{Var} (X_i) + 2 \sum_{i=2}^B \sum_{j=1}^{i-1} \frac{1}{B^2} \text{Cov} (X_i, X_j) \\
-&= \frac{1}{B} \sigma^2 + 2 \frac{B(B-1)}{2}\frac{1}{B^2} \rho \sigma^2 \\
-&= \frac{1}{B} \sigma^2 + \rho \sigma^2 - \frac{1}{B} \rho \sigma^2 \\
-&= \rho \sigma^2 + \frac{1-\rho}{B}\sigma^2\\
-&= \frac{1-(1-B)\rho}{B} \sigma^2\\ \end{aligned}\]
+\vspace{1mm}
 
 Check: \(\rho=0\) and \(\rho=1\)?
+
+\end{block}
 
 \end{frame}
 
@@ -2284,13 +2250,30 @@ to be small.
 \vspace{2mm}
 
 \begin{itemize}
+\tightlist
 \item
   The number of trees, \(B\), is not a tuning parameter, and the best is
-  to choose it large enough.
+  to choose it large enough (as large as ``necessary''). An increase in
+  \(B\) will not lead to overfitting, and \(B\) is not regarded as a
+  tuning parameter.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
-  If \(B\) is sufficiently large (three times the number needed for the
-  random forest to stabilize), the OOB error estimate is equivalent to
-  LOOCV (see Efron and Hastie 2016, 330).
+  Increasing \(B\) will not change the goodness of fit measure.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  To find out which number \(B\) is sufficient, we do \emph{not} need to
+  run cross-validation, but can again use the OOB error (works bost for
+  bagging and random forests).
 \end{itemize}
 
 \end{block}
@@ -2352,8 +2335,8 @@ We check the predictive performance as before:
 
 \begin{verbatim}
 ##     0  1 class.error
-## 0 662 29  0.04196816
-## 1  93 66  0.58490566
+## 0 662 29   0.0419682
+## 1  93 66   0.5849057
 \end{verbatim}
 
 \begin{Shaded}
@@ -2364,7 +2347,7 @@ We check the predictive performance as before:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.1435294
+## [1] 0.143529
 \end{verbatim}
 
 \begin{Shaded}
@@ -2405,6 +2388,8 @@ tree (and to the pruned tree).
 By using the \texttt{varImpPlot()} function we can study the importance
 of each predictor.
 
+\(~\)
+
 \scriptsize
 
 \begin{Shaded}
@@ -2417,79 +2402,11 @@ of each predictor.
 
 \normalsize
 
+\(~\)
+
 As expected \texttt{GCS.15} (GCS=15 at 2h) is a strong predictor along
 with \texttt{bskullf} (basal skull facture) and \texttt{age}. This means
 that most of the trees will have these predictors in the top split.
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\begin{block}{Iris example -- bagging}
-
-\tiny
-
-(borrowed from
-\url{https://gist.github.com/ramhiser/6dec3067f087627a7a85})
-
-\vspace{3mm}
-
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{rf_out <-}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(Species }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ iris, }\DataTypeTok{mtry =} \DecValTok{4}\NormalTok{, }\DataTypeTok{ntree =} \DecValTok{500}\NormalTok{)}
-\NormalTok{rf_out}\OperatorTok{$}\NormalTok{confusion}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##            setosa versicolor virginica class.error
-## setosa         50          0         0        0.00
-## versicolor      0         47         3        0.06
-## virginica       0          3        47        0.06
-\end{verbatim}
-
-\vspace{3mm}
-
-\begin{center}\includegraphics[width=0.6\linewidth]{8Trees_files/figure-beamer/iris-1} \end{center}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\begin{block}{Iris example -- random forest}
-
-\tiny
-
-(borrowed from
-\url{https://gist.github.com/ramhiser/6dec3067f087627a7a85})
-
-\vspace{3mm}
-
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{rf_out =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(Species }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ iris, }\DataTypeTok{mtry =} \DecValTok{2}\NormalTok{, }\DataTypeTok{ntree =} \DecValTok{500}\NormalTok{)}
-\NormalTok{rf_out}\OperatorTok{$}\NormalTok{confusion}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##            setosa versicolor virginica class.error
-## setosa         50          0         0        0.00
-## versicolor      0         47         3        0.06
-## virginica       0          4        46        0.08
-\end{verbatim}
-
-\vspace{3mm}
-
-\begin{center}\includegraphics[width=0.6\linewidth]{8Trees_files/figure-beamer/iris2-1} \end{center}
-
-\end{block}
 
 \end{frame}
 
@@ -2588,8 +2505,8 @@ Boosting has three tuning parameters which need to be set (\(B\),
 \begin{frame}{Short quizz poll}
 \protect\hypertarget{short-quizz-poll}{}
 
-Go to \href{http://www.slido.com}{slido.com} and enter the code \#2496
-to participate.
+Todo: Update Go to \href{http://www.slido.com}{slido.com} and enter the
+code \#2496 to participate.
 
 \end{frame}
 
@@ -2648,7 +2565,8 @@ at boosting.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tree.boston =}\StringTok{ }\KeywordTok{tree}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., Boston, }\DataTypeTok{subset =}\NormalTok{ train)}
+\NormalTok{tree.boston =}\StringTok{ }\KeywordTok{tree}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., Boston, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{control =} \KeywordTok{tree.control}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(Boston), }
+    \DataTypeTok{mindev =} \FloatTok{0.005}\NormalTok{))}
 \KeywordTok{summary}\NormalTok{(tree.boston)}
 \end{Highlighting}
 \end{Shaded}
@@ -2656,14 +2574,15 @@ at boosting.
 \begin{verbatim}
 ## 
 ## Regression tree:
-## tree(formula = medv ~ ., data = Boston, subset = train)
+## tree(formula = medv ~ ., data = Boston, subset = train, control = tree.control(nrow(Boston), 
+##     mindev = 0.005))
 ## Variables actually used in tree construction:
-## [1] "rm"    "lstat" "crim"  "age"  
-## Number of terminal nodes:  7 
-## Residual mean deviance:  10.38 = 2555 / 246 
+## [1] "rm"      "lstat"   "age"     "crim"    "black"   "nox"     "ptratio"
+## Number of terminal nodes:  13 
+## Residual mean deviance:  7.35 = 1760 / 240 
 ## Distribution of residuals:
-##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## -10.1800  -1.7770  -0.1775   0.0000   1.9230  16.5800
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  -8.140  -1.440  -0.162   0.000   1.460  12.900
 \end{verbatim}
 
 \end{block}
@@ -2696,6 +2615,7 @@ Remember:
   You can change this with the \texttt{control} option, for example by
   setting
   \texttt{control\ =\ tree.control(mincut\ =\ 2,\ minsize\ =\ 4,\ mindev\ =\ 0.001)}.
+  Here we used \texttt{mindev=0.005}.
 \end{itemize}
 
 \end{frame}
@@ -2719,7 +2639,9 @@ Remember:
 
 \normalsize
 
-It looks like the most complex tree was selected.
+\vspace{2mm}
+
+It looks like a tree with 6 leaves would work well.
 
 \end{block}
 
@@ -2731,14 +2653,13 @@ It looks like the most complex tree was selected.
 
 \vspace{1mm}
 
-Want to prune anyway (even if most complex tree was selected)? For
-example, pruning to a node-5 tree works as follows:
+So we are pruning to a 6-node tree here:
 
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{prune.boston =}\StringTok{ }\KeywordTok{prune.tree}\NormalTok{(tree.boston, }\DataTypeTok{best =} \DecValTok{5}\NormalTok{)}
+\NormalTok{prune.boston =}\StringTok{ }\KeywordTok{prune.tree}\NormalTok{(tree.boston, }\DataTypeTok{best =} \DecValTok{6}\NormalTok{)}
 \KeywordTok{plot}\NormalTok{(prune.boston)}
 \KeywordTok{text}\NormalTok{(prune.boston, }\DataTypeTok{pretty =} \DecValTok{0}\NormalTok{)}
 \end{Highlighting}
@@ -2754,16 +2675,17 @@ example, pruning to a node-5 tree works as follows:
 
 \begin{block}{Test error for full tree}
 
-\vspace{1mm}
+\(~\)
 
-Because the full tree (with 7 nodes) was the best, we continue with this
-one.
+We calculate the test error for the pruned tree:
+
+\vspace{2mm}
 
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{yhat =}\StringTok{ }\KeywordTok{predict}\NormalTok{(tree.boston, }\DataTypeTok{newdata =}\NormalTok{ Boston[}\OperatorTok{-}\NormalTok{train, ])}
+\NormalTok{yhat =}\StringTok{ }\KeywordTok{predict}\NormalTok{(prune.boston, }\DataTypeTok{newdata =}\NormalTok{ Boston[}\OperatorTok{-}\NormalTok{train, ])}
 \NormalTok{boston.test =}\StringTok{ }\NormalTok{Boston[}\OperatorTok{-}\NormalTok{train, }\StringTok{"medv"}\NormalTok{]}
 \KeywordTok{plot}\NormalTok{(yhat, boston.test, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{)}
 \KeywordTok{abline}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)}
@@ -2779,7 +2701,7 @@ one.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 35.28688
+## [1] 35.1644
 \end{verbatim}
 
 \end{block}
@@ -2790,12 +2712,14 @@ one.
 
 \begin{block}{Bagging}
 
-\vspace{2mm}
+\(~\)
 
 \small
 
 Remember: For bagging you can use the \texttt{randomForest()} function,
 but include all variables (here \texttt{mtry=13}).
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -2817,7 +2741,7 @@ but include all variables (here \texttt{mtry=13}).
 ##                      Number of trees: 500
 ## No. of variables tried at each split: 13
 ## 
-##           Mean of squared residuals: 11.39601
+##           Mean of squared residuals: 11.396
 ##                     % Var explained: 85.17
 \end{verbatim}
 
@@ -2829,7 +2753,7 @@ but include all variables (here \texttt{mtry=13}).
 
 \begin{block}{Test error for bagged tree}
 
-\vspace{1mm}
+\(~\)
 
 \scriptsize
 
@@ -2843,6 +2767,8 @@ but include all variables (here \texttt{mtry=13}).
 
 \begin{center}\includegraphics[width=0.5\linewidth]{8Trees_files/figure-beamer/boston5-1} \end{center}
 
+\vspace{2mm}
+
 \scriptsize
 
 \begin{Shaded}
@@ -2855,7 +2781,7 @@ but include all variables (here \texttt{mtry=13}).
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 23.66716
+## [1] 23.6672
 \end{verbatim}
 
 \end{block}
@@ -2866,11 +2792,13 @@ but include all variables (here \texttt{mtry=13}).
 
 \begin{block}{Random forest}
 
-\vspace{2mm}
+\(~\)
 
 Let's go from bagging to a random
 forest\footnote{n.b., why are we now speaking of a forest and no longer of a tree?},
 using 6 randomly selected predictors for each tree:
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -2885,7 +2813,7 @@ using 6 randomly selected predictors for each tree:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 19.62021
+## [1] 19.6202
 \end{verbatim}
 
 \vspace{2mm}
@@ -2913,20 +2841,20 @@ respect to simple bagging.
 \end{Shaded}
 
 \begin{verbatim}
-##           %IncMSE IncNodePurity
-## crim    16.697017    1076.08786
-## zn       3.625784      88.35342
-## indus    4.968621     609.53356
-## chas     1.061432      52.21793
-## nox     13.518179     709.87339
-## rm      32.343305    7857.65451
-## age     13.272498     612.21424
-## dis      9.032477     714.94674
-## rad      2.878434      95.80598
-## tax      9.118801     364.92479
-## ptratio  8.467062     823.93341
-## black    7.579482     275.62272
-## lstat   27.129817    6027.63740
+##          %IncMSE IncNodePurity
+## crim    16.69702     1076.0879
+## zn       3.62578       88.3534
+## indus    4.96862      609.5336
+## chas     1.06143       52.2179
+## nox     13.51818      709.8734
+## rm      32.34330     7857.6545
+## age     13.27250      612.2142
+## dis      9.03248      714.9467
+## rad      2.87843       95.8060
+## tax      9.11880      364.9248
+## ptratio  8.46706      823.9334
+## black    7.57948      275.6227
+## lstat   27.12982     6027.6374
 \end{verbatim}
 
 \normalsize
@@ -2983,20 +2911,20 @@ degree 4:
 \end{Shaded}
 
 \begin{verbatim}
-##             var    rel.inf
-## rm           rm 43.9919329
-## lstat     lstat 33.1216941
-## crim       crim  4.2604167
-## dis         dis  4.0111090
-## nox         nox  3.4353017
-## black     black  2.8267554
-## age         age  2.6113938
-## ptratio ptratio  2.5403035
-## tax         tax  1.4565654
-## indus     indus  0.8008740
-## rad         rad  0.6546400
-## zn           zn  0.1446149
-## chas       chas  0.1443986
+##             var   rel.inf
+## rm           rm 43.991933
+## lstat     lstat 33.121694
+## crim       crim  4.260417
+## dis         dis  4.011109
+## nox         nox  3.435302
+## black     black  2.826755
+## age         age  2.611394
+## ptratio ptratio  2.540303
+## tax         tax  1.456565
+## indus     indus  0.800874
+## rad         rad  0.654640
+## zn           zn  0.144615
+## chas       chas  0.144399
 \end{verbatim}
 
 \end{block}
@@ -3013,6 +2941,8 @@ degree 4:
 population) are the most important predictors. Partial dependency plots
 show the effect of individual predictors, integrated over the other
 predictors see Hastie, Tibshirani, and Friedman (2009), Section 10.13.2.
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -3059,8 +2989,10 @@ predictors see Hastie, Tibshirani, and Friedman (2009), Section 10.13.2.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 18.84709
+## [1] 18.8471
 \end{verbatim}
+
+\vspace{2mm}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -3072,7 +3004,7 @@ predictors see Hastie, Tibshirani, and Friedman (2009), Section 10.13.2.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 18.33455
+## [1] 18.3345
 \end{verbatim}
 
 \end{frame}
@@ -3089,26 +3021,6 @@ predictors see Hastie, Tibshirani, and Friedman (2009), Section 10.13.2.
 \end{Shaded}
 
 \begin{center}\includegraphics[width=0.6\linewidth]{8Trees_files/figure-beamer/boston8-1} \end{center}
-
-\end{frame}
-
-\begin{frame}{Summing up with feedback}
-\protect\hypertarget{summing-up-with-feedback}{}
-
-Please give me your opinion about
-
-\begin{itemize}
-\item
-  The ``muddiest'' (unclearest) point that you have in Module 8.
-\item
-  The main points you \emph{think} you learned in Module 8.
-\end{itemize}
-
-I can catch up on these points next Friday.
-
-Link to google form:
-
-\url{https://docs.google.com/forms/d/e/1FAIpQLSfHDlHGbO1FxR3JcSxIzg5cIJKnbNrBYu7xXOlLjObHnFSQZg/viewform?usp=sf_link}
 
 \end{frame}
 
@@ -3136,11 +3048,6 @@ Link to google form:
 \leavevmode\hypertarget{ref-Breiman1996}{}%
 Breiman, Leo. 1996. ``Bagging Predictors.'' \emph{Machine Learning} 24:
 123--40.
-
-\leavevmode\hypertarget{ref-Efron_Hastie2016}{}%
-Efron, Bradley, and Trevor Hastie. 2016. \emph{Computer Age Statistical
-Inference - Algorithms, Evidence, and Data Science}. Cambridge
-University Press.
 
 \leavevmode\hypertarget{ref-hastie_etal2009}{}%
 Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2009. \emph{The
