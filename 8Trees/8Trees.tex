@@ -938,20 +938,20 @@ the original choice.
   two possibilities:
 
   \begin{itemize}
-  \tightlist
   \item
     \textbf{Majority vote}: Predict that the observation belongs to the
     most commonly occurring class of the training observations in
     \(R_j\).\\
+    \vspace{2mm}
   \item
     Estimate the \textbf{probability} that an observation \(x_i\)
-    belongs to a class \(k\), \(\hat{p}_{jk}(x_i)\), and then classify
-    according to a \textbf{threshold value}. This estimated probability
-    is the proportion of class \(k\) training observations in region
-    \(R_j\), with \(n_{jk}\) observations. Region \(j\) has \(N_j\)
-    observations
-    \[\hat{p}_{jk} = \frac{1}{N_j} \sum_{i:x_i \in R_j} I(y_i = k)=\frac{n_{jk}}{N_j}.\]
+    belongs to a class \(k\), \(\hat{p}_{jk}(x_i)\), given as the
+    proportion of class \(k\) training observations in region \(R_j\).
+    Region \(j\) has \(N_j\) observations and with \(n_{jk}\)
+    observations lying in class k:
   \end{itemize}
+
+  \[\hat{p}_{jk} = \frac{1}{N_j} \sum_{i:x_i \in R_j} I(y_i = k)=\frac{n_{jk}}{N_j}.\]
 \end{itemize}
 
 \end{frame}
@@ -979,8 +979,9 @@ criterion for a qualitative variable. Instead we can use some
 \item
   \textbf{Cross entropy}: \[
   D=-\sum_{k=1}^K \hat{p}_{jk}\log\hat{p}_{jk} \ .
-  \] Here \(\hat{p}_{jk}\) is the proportion of training observation in
-  region \(j\) that are from class \(k\).
+  \] Since \(0\leq\hat{p}_{jk}\leq 1\), it follows that
+  \(0\leq -\hat{p}_{jk}\log\hat{p}_{jk}\), with values near zero of
+  \(\hat{p}_{jk}\) is close to 0 or 1.
 \end{itemize}
 
 When making a split in our classification tree, we want to minimize the
@@ -1110,10 +1111,12 @@ smaller version of the (simulated) dataset \texttt{headInjury} from the
 
 \begin{block}{Split with cross-entropy}
 
-\vspace{1mm}
+\(~\)
 
 We use the 850 training samples to get a tree using cross-entropy
 (deviance):
+
+\(~\)
 
 \scriptsize
 
@@ -1173,7 +1176,7 @@ entropy criterion.
 \item
   The classification tree has two terminal nodes with factor ``0''
   originating from the same branch. Why do we get this ``unnecessary''
-  split? (Hint: Node purity)
+  split?
 \end{itemize}
 
 \end{frame}
@@ -1182,11 +1185,11 @@ entropy criterion.
 
 \begin{block}{Split with Gini index}
 
-\vspace{2mm}
+\(~\)
 
 The same analysis with the Gini index:
 
-\vspace{2mm}
+\(~\)
 
 \scriptsize
 
@@ -1378,7 +1381,7 @@ Study the confusion matrices on the previous slides:
 
 We prune the classification tree that was built with the deviance
 criterion. We use the misclassification error to do
-so\footnote{While trees should be built using the deviance or the Gini index, pruning is typically done with the misclassification criterion.}:
+so\footnote{While trees should be built using the deviance or the Gini index, pruning is typically done with the misclassification criterion when the aim is predictive accuracy.}:
 
 \vspace{3mm}
 

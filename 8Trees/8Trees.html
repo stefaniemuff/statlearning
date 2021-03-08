@@ -1912,10 +1912,11 @@ plot(cv.ozone$dev ~ cv.ozone$size, type = &quot;b&quot;, lwd = 2, col = &quot;re
 <li><p>In the regression case we use the mean value of the responses in <span class="math inline">\(R_j\)</span> as a prediction for an observation that falls into region <span class="math inline">\(R_j\)</span>. </p></li>
 <li><p>For the <em></em>, however, we have two possibilities:</p>
 <ul>
-<li><strong>Majority vote</strong>: Predict that the observation belongs to the most commonly occurring class of the training observations in <span class="math inline">\(R_j\)</span>.<br />
-</li>
-<li>Estimate the <strong>probability</strong> that an observation <span class="math inline">\(x_i\)</span> belongs to a class <span class="math inline">\(k\)</span>, <span class="math inline">\(\hat{p}_{jk}(x_i)\)</span>, and then classify according to a <strong>threshold value</strong>. This estimated probability is the proportion of class <span class="math inline">\(k\)</span> training observations in region <span class="math inline">\(R_j\)</span>, with <span class="math inline">\(n_{jk}\)</span> observations. Region <span class="math inline">\(j\)</span> has <span class="math inline">\(N_j\)</span> observations <span class="math display">\[\hat{p}_{jk} = \frac{1}{N_j} \sum_{i:x_i \in R_j} I(y_i = k)=\frac{n_{jk}}{N_j}.\]</span></li>
-</ul></li>
+<li><p><strong>Majority vote</strong>: Predict that the observation belongs to the most commonly occurring class of the training observations in <span class="math inline">\(R_j\)</span>.<br />
+</p></li>
+<li><p>Estimate the <strong>probability</strong> that an observation <span class="math inline">\(x_i\)</span> belongs to a class <span class="math inline">\(k\)</span>, <span class="math inline">\(\hat{p}_{jk}(x_i)\)</span>, given as the proportion of class <span class="math inline">\(k\)</span> training observations in region <span class="math inline">\(R_j\)</span>. Region <span class="math inline">\(j\)</span> has <span class="math inline">\(N_j\)</span> observations and with <span class="math inline">\(n_{jk}\)</span> observations lying in class k:</p></li>
+</ul>
+<p><span class="math display">\[\hat{p}_{jk} = \frac{1}{N_j} \sum_{i:x_i \in R_j} I(y_i = k)=\frac{n_{jk}}{N_j}.\]</span></p></li>
 </ul>
 <hr />
 <p><strong>2) The splitting criterion:</strong> We do not use RSS as a splitting criterion for a qualitative variable. Instead we can use some <em>measure of impurity</em> of the node. For leaf node <span class="math inline">\(j\)</span> and class <span class="math inline">\(k=1,\ldots, K\)</span>:</p>
@@ -1928,7 +1929,7 @@ G=\sum_{k=1}^K \hat{p}_{jk}(1-\hat{p}_{jk}) \ ,
 <ul>
 <li><strong>Cross entropy</strong>: <span class="math display">\[
 D=-\sum_{k=1}^K \hat{p}_{jk}\log\hat{p}_{jk} \ .
-\]</span> Here <span class="math inline">\(\hat{p}_{jk}\)</span> is the proportion of training observation in region <span class="math inline">\(j\)</span> that are from class <span class="math inline">\(k\)</span>.</li>
+\]</span> Since <span class="math inline">\(0\leq\hat{p}_{jk}\leq 1\)</span>, it follows that <span class="math inline">\(0\leq -\hat{p}_{jk}\log\hat{p}_{jk}\)</span>, with values near zero of <span class="math inline">\(\hat{p}_{jk}\)</span> is close to 0 or 1.</li>
 </ul>
 <p>When making a split in our classification tree, we want to minimize the Gini index or the cross-entropy.</p>
 <hr />
@@ -1991,8 +1992,9 @@ D=-\sum_{k=1}^K \hat{p}_{jk}\log\hat{p}_{jk} \ .
 <hr />
 <div id="split-with-cross-entropy" class="section level3">
 <h3>Split with cross-entropy</h3>
-
+<p><span class="math inline">\(~\)</span></p>
 <p>We use the 850 training samples to get a tree using cross-entropy (deviance):</p>
+<p><span class="math inline">\(~\)</span></p>
 
 <pre class="r"><code>tree.HIClass = tree(brain.injury ~ ., data = headInjury2, subset = train, 
     split = &quot;deviance&quot;)
@@ -2019,15 +2021,16 @@ text(tree.HIClass, pretty = 1)</code></pre>
 
 <ul>
 <li><p>With <code>type=&quot;proportional&quot;</code>, the length of branches are now proportional to the decrease in impurity.</p></li>
-<li><p>The classification tree has two terminal nodes with factor “0” originating from the same branch. Why do we get this “unnecessary” split? (Hint: Node purity)</p></li>
+<li><p>The classification tree has two terminal nodes with factor “0” originating from the same branch. Why do we get this “unnecessary” split?</p></li>
 </ul>
+<!-- (Hint: Node purity), this is important because it means that we can be more/less certain about how accurate our classification is.-->
 <hr />
 </div>
 <div id="split-with-gini-index" class="section level3">
 <h3>Split with Gini index</h3>
-
+<p><span class="math inline">\(~\)</span></p>
 <p>The same analysis with the Gini index:</p>
-
+<p><span class="math inline">\(~\)</span></p>
 
 <pre class="r"><code>tree.HIClassG = tree(brain.injury ~ ., headInjury2, subset = train, split = &quot;gini&quot;)
 summary(tree.HIClassG)</code></pre>
