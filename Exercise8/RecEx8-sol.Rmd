@@ -5,10 +5,10 @@ author:
 - Department of Mathematical Sciences, NTNU
 date: "March 9, 2021"
 output:
-  html_document:
-    df_print: paged
-    toc: no
-    toc_depth: '2'
+  # html_document:
+  #   df_print: paged
+  #   toc: no
+  #   toc_depth: '2'
   pdf_document:
     fig_caption: yes
     keep_tex: yes
@@ -190,7 +190,7 @@ mse_forest <- mean((yhat.rf - Carseats.test$Sales)^2)
 mse_forest
 ```
 
-We use $\sqrt{p} = \sqrt{10}  \approx  3$ trees, and we obtain an MSE of `r round(mse_forest,2)` which is slightly larger than Bagging MSE. The two most important Variables are again `Price`and `ShelveLoc`.
+We use $p/3 = 10/3 \approx  3$ trees, and we obtain an MSE of `r round(mse_forest,2)` which is slightly larger than Bagging MSE. The two most important Variables are again `Price`and `ShelveLoc`.
 
 ```{r,fig.width=8, fig.height=5,out.width='80%'}
 importance(rf.Carseats)
@@ -225,7 +225,7 @@ rf.Car = randomForest(train.predictors, y = Y.train, xtest = test.predictors, yt
 plot(1:500, bag.Car$test$mse, col = "blue", type = "l", xlab = "Number of Trees", ylab = "Test MSE",ylim=c(2,2.8))
 lines(1:500, rf.Car$test$mse, col = "green")
 
-legend("topright", c("m = p", "m = sqrt(p)"), col = c("blue", "green"), cex = 1, lty = 1)
+legend("topright", c("m = p", "m = p/3"), col = c("blue", "green"), cex = 1, lty = 1)
 ```
 
 

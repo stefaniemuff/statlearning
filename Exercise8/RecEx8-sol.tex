@@ -470,8 +470,8 @@ importance plots we might conclude that \texttt{Price}and
 ## [1] 2.25397
 \end{verbatim}
 
-We use \(\sqrt{p} = \sqrt{10} \approx 3\) trees, and we obtain an MSE of
-2.25 which is slightly larger than Bagging MSE. The two most important
+We use \(p/3 = 10/3 \approx 3\) trees, and we obtain an MSE of 2.25
+which is slightly larger than Bagging MSE. The two most important
 Variables are again \texttt{Price}and \texttt{ShelveLoc}.
 
 \begin{Shaded}
@@ -546,8 +546,7 @@ We see a further decrease in MSE by boosing our trees.
     \DataTypeTok{ylab =} \StringTok{"Test MSE"}\NormalTok{, }\DataTypeTok{ylim =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\FloatTok{2.8}\NormalTok{))}
 \KeywordTok{lines}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{500}\NormalTok{, rf.Car}\OperatorTok{$}\NormalTok{test}\OperatorTok{$}\NormalTok{mse, }\DataTypeTok{col =} \StringTok{"green"}\NormalTok{)}
 
-\KeywordTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\KeywordTok{c}\NormalTok{(}\StringTok{"m = p"}\NormalTok{, }\StringTok{"m = sqrt(p)"}\NormalTok{), }\DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"blue"}\NormalTok{, }\StringTok{"green"}\NormalTok{), }\DataTypeTok{cex =} \DecValTok{1}\NormalTok{, }
-    \DataTypeTok{lty =} \DecValTok{1}\NormalTok{)}
+\KeywordTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\KeywordTok{c}\NormalTok{(}\StringTok{"m = p"}\NormalTok{, }\StringTok{"m = p/3"}\NormalTok{), }\DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"blue"}\NormalTok{, }\StringTok{"green"}\NormalTok{), }\DataTypeTok{cex =} \DecValTok{1}\NormalTok{, }\DataTypeTok{lty =} \DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
