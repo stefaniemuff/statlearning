@@ -1,0 +1,34 @@
+\frametitle{Extensions}
+\protect\hypertarget{extensions}{}
+
+\begin{block}{More than two classes}
+
+\vspace{2mm}
+
+What if we have \(k\) classes? Two popular approaches:
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  OVA: \emph{\textcolor{red}{one-versus-all}}. Fit \(k\) different
+  two-class SVMs \(f_k({\boldsymbol x})\) where, each time, one class is
+  compared to the ensemble of all other classes. Classify a test
+  observation to the class where \(f_k({\boldsymbol x}^*)\) is largest.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  OVO: \emph{\textcolor{red}{one-versus-one}}. \texttt{libsvm} uses this
+  approach, in which \(k(k-1)/2\) binary classifiers are trained; the
+  appropriate class is found by a voting scheme (the class that wins the
+  most pairwise competitions for a given \({\boldsymbol x}^*\) is
+  chosen).
+\end{itemize}
+
+\end{block}
+

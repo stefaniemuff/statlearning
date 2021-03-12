@@ -144,28 +144,23 @@
 
 \title{Module 9: Support Vector Machines}
 \providecommand{\subtitle}[1]{}
-\subtitle{TMA4268 Statistical Learning V2020}
+\subtitle{TMA4268 Statistical Learning V2021}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{March 6 and 9, 2020}
+\date{March 15 and 16, 2021}
 
 \begin{document}
 \frame{\titlepage}
-
-\begin{frame}
-
-Last update: March 9, 2020
-
-\end{frame}
 
 \begin{frame}{Acknowledgements}
 \protect\hypertarget{acknowledgements}{}
 
 \begin{itemize}
 \item
-  A lot of this material stems from Mette Langaas and her TAs (in
-  particular Thea Roksv\aa g, who developed the set of slides, but also
-  Mette Langaas and Julia Debik). Thanks to Mette for the permission to
-  use the material!
+  The course was originally developed by Mette Langaas (original
+  material:
+  \url{https://github.com/mettelang/StatisticalLearningSpring2019}).
+  Mette did a fantastic job and I am very thankful that I was allowed to
+  modify and use her material.
 \item
   Some of the figures and slides in this presentation are taken (or are
   inspired) from James et al. (2013).
@@ -227,6 +222,39 @@ and learn how to apply all that.
 
 \end{frame}
 
+\begin{frame}{Support Vector Machines}
+\protect\hypertarget{support-vector-machines}{}
+
+\(~\)
+
+Approach the two-class classification problem in a direct way:
+
+\centering
+
+\emph{\textbf{We try to find \textcolor{red}{a plane} that separates the
+two categories in the feature (covariate) space.}}
+
+\(~\)
+
+\flushleft
+
+If this is not possible, we soften our requirement in two ways:
+
+\begin{itemize}
+\item
+  We soften what we mean by ``separates''.
+\item
+  We enrich and enlarge the feature space such that we can do a
+  separation
+\end{itemize}
+
+\(~\)
+
+Support Vector Machines (SVMs) are a computer science method, not really
+a statistical method (no probabilities involved).
+
+\end{frame}
+
 \begin{frame}
 
 \begin{block}{Motivating example}
@@ -241,9 +269,11 @@ and learn how to apply all that.
   You have three different study areas in which these trees grow.
 \item
   Your study areas with the tree positions in three forests is
-  visualized in the figures below. Orange: redwood tree; green: pine
-  tree.
+  visualized in the figures below.\\
+  \textcolor{red}{Redwood tree}; \textcolor{green}{pine tree}.
 \end{itemize}
+
+\vspace{2mm}
 
 \begin{center}\includegraphics[width=0.8\linewidth]{9SVM_files/figure-beamer/trees-1} \end{center}
 
@@ -269,15 +299,13 @@ Three cases: \vspace{2mm}
 \item
   Forest 1 seems easy: The orange and green points are clearly separated
   and the fence can be built anywhere inside the band that separates
-  them. However, we can draw infinitely many straight lines that all
-  separate the two tree types, and we should take into account that the
-  trees reproduce and that we want future pines and future redwoods to
-  grow up on the correct side of the fence.
+  them. However, there are infinitely many solutions, and we should take
+  into account that the trees reproduce and that we want future pines
+  and future redwoods to grow up on the correct side of the fence.
 \item
   Forest 2 is a bit more complicated: A linear fence still seems like a
   good idea, but in this case the two tree types cannot be perfectly
-  separated. You have to allow some of the trees to be on the wrong side
-  of the fence.
+  separated. You have to allow some errors.
 \item
   Forest 3 is the most complex: It is not possible to separate the two
   tree types by a straight line without getting a large number of
@@ -302,7 +330,7 @@ Topic: \textbf{Maximal Margin hyperplanes}
 
 You are also going to learn how you can find an optimal separating
 hyperplane when your data cannot be perfectly separated by a straight
-line, as in Forest 2.
+line.
 
 Topic: \textbf{Support Vector Classifier} or \textbf{Soft Margin
 Classifier}
@@ -314,8 +342,9 @@ Classifier}
 \begin{frame}
 
 The Support vector classifier can be generalised to an approach that
-produces non-linear decision boundaries. This is useful when the data is
-distributed as illustrated in Forest 3.
+produces non-linear decision boundaries.
+
+\vspace{2mm}
 
 Topic: \textbf{Support Vector Machines} (SVMs)
 
@@ -390,7 +419,7 @@ but extensions to more than two classes are briefly mentioned.
 
 A \textbf{hyperplane} in \(p\) dimensions is defined as
 
-\[\beta_0+\beta_1 X_1 + \beta_2 X_2 +...+\beta_p X_p=\beta_0+{\boldsymbol x}^T {\boldsymbol \beta}=0.\]
+\[\beta_0+\beta_1 X_1 + \beta_2 X_2 +...+\beta_p X_p=\beta_0+{\boldsymbol X}^T {\boldsymbol \beta}=0.\]
 and is a \(p-1\) dimensional subspace of \(\mathbb{R}^p\).
 
 \vspace{5mm}
@@ -502,6 +531,11 @@ Which is ``best''?
 
 \begin{center}\includegraphics[width=0.6\linewidth]{9SVM_files/figure-beamer/forest1.1-1} \end{center}
 
+\vspace{2mm}
+
+\textbf{Q:} How did we solve that problem earlier (e.g.~in LDA, QDA,
+KNN,..)?
+
 \end{block}
 
 \end{frame}
@@ -512,17 +546,24 @@ Which is ``best''?
 
 \vspace{2mm}
 
-The three lines displayed in the figure are three possible separating
-hyperplanes for this dataset which contains two predictors \(x_1\) and
-\(x_2\) (\(p=2\)). The hyperplanes have the property that
+All three hyperplanes have the property that
 
 \[\beta_0+\beta_1 x_{i1} + \beta_2 x_{i2} =\beta_0+{\boldsymbol x}_i^T {\boldsymbol \beta}>0\]
 
 if \(y_i=1\) (green points) and
 
 \[\beta_0+\beta_1 x_{i1} + \beta_2 x_{i2} =\beta_0+{\boldsymbol x}_i^T {\boldsymbol \beta}<0\]
+\vspace{2mm}
 
 if \(y_i=-1\) (orange points).
+
+\pause
+
+\(~\)
+
+In brief:
+
+\[y_i (\beta_0+{\boldsymbol x}_i^T {\boldsymbol \beta})>0 \ .\]
 
 \end{block}
 
@@ -530,15 +571,7 @@ if \(y_i=-1\) (orange points).
 
 \begin{frame}
 
-This means that for all observations (all are correctly classified)
-
-\[y_i (\beta_0+{\boldsymbol x}_i^T {\boldsymbol \beta})>0 \ .\]
-
 \vspace{2mm}
-
-The hyperplane thus leads to a
-\emph{\textcolor{red}{natural classifier}}, depending on the side of the
-hyperplane where the new observation lies.
 
 Analogous for \(p\) predictors: The class \(y^*\) of a new observation
 \({\boldsymbol x}^*=(x_1^*,...,x_p^*)\) is assigned depending on the
@@ -554,6 +587,12 @@ value
 -1 \ , & \text{if } f({\boldsymbol x}^*) < 0 \ .
 \end{array}\right.\]
 
+\(~\)
+
+Or
+
+\[ y^*  f({\boldsymbol x}^*) > 0 \ . \]
+
 \end{frame}
 
 \begin{frame}
@@ -564,8 +603,6 @@ value
 
 \begin{itemize}
 \item
-  In the above figure we plotted three possible hyperplanes.
-\item
   In general, if data are linearly separable, infinitely many possible
   separating hyperplanes exist.
 \item
@@ -573,36 +610,16 @@ value
   maximises the distance from the training observations.
 \end{itemize}
 
-\vspace{4mm}
-
-\textbf{Procedure}:
-
-\begin{itemize}
-\item
-  Compute the perpendicular distance from each training observation to a
-  given separating hyperplane.
-\item
-  The smallest such distance is the minimal distance from the
-  observations to the hyperplane (the \textbf{margin}).
-\item
-  We want to maximize this margin.
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-We have an \textbf{optimization problem} to maximize the width of the
-margin:
+\vspace{3mm}
 
 \centering
 
-\includegraphics[width=0.5\textwidth,height=\textheight]{../../ISLR/Figures/Chapter9/9.3.png}
+\includegraphics[width=0.4\textwidth,height=\textheight]{../../ISLR/Figures/Chapter9/9.3.png}
 \small
 
 ISLR Figure 9.3
+
+\end{block}
 
 \end{frame}
 
@@ -937,14 +954,12 @@ The \texttt{svm} function uses a slightly different formulation than
 what we introduced above.
 
 \begin{itemize}
+\tightlist
 \item
   We a \emph{budget} of errors \(C\), but in \texttt{svm} we instead
   have an argument \texttt{cost} that allows us to specify the cost of
   violating the margin. You can think of the cost as
   \(\propto \frac{1}{C}\).
-\item
-  When \texttt{cost} is set to a low value, the margin will be wider
-  than if set to a large value.
 \end{itemize}
 
 \vspace{3mm}
@@ -955,6 +970,17 @@ interested in a linear decision boundary. \texttt{scale=TRUE} scales the
 predictors to have mean 0 and standard deviation 1. We choose
 \texttt{scale=FALSE} (no scaling).
 
+\(~\)
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{svmfit_linear1 =}\StringTok{ }\KeywordTok{svm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ train2, }\DataTypeTok{kernel =} \StringTok{"linear"}\NormalTok{, }\DataTypeTok{cost =} \DecValTok{1}\NormalTok{, }
+    \DataTypeTok{scale =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
 \end{frame}
 
 \begin{frame}[fragile]
@@ -963,8 +989,6 @@ predictors to have mean 0 and standard deviation 1. We choose
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{svmfit_linear1 =}\StringTok{ }\KeywordTok{svm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ train2, }\DataTypeTok{kernel =} \StringTok{"linear"}\NormalTok{, }\DataTypeTok{cost =} \DecValTok{1}\NormalTok{, }
-    \DataTypeTok{scale =} \OtherTok{FALSE}\NormalTok{)}
 \KeywordTok{plot}\NormalTok{(svmfit_linear1, train2, }\DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"lightcoral"}\NormalTok{, }\StringTok{"lightgreen"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
@@ -1036,12 +1060,14 @@ are due to implementation, nothing for us to worry.)
 \end{Shaded}
 
 \begin{verbatim}
-##  [1]  1  2  4  6  9 10 16 21 26 27 28 40 44 53 55 57 58 65 67 72 76 77 80
-## [24] 81 87 91 92 98  5  8 11 13 18 19 20 23 24 25 34 36 39 41 42 47 48 59
-## [47] 61 62 70 71 75 78 88 93 95 96
+##  [1]  1  2  4  6  9 10 16 21 26 27 28 40 44 53 55 57 58 65 67 72 76 77 80 81 87
+## [26] 91 92 98  5  8 11 13 18 19 20 23 24 25 34 36 39 41 42 47 48 59 61 62 70 71
+## [51] 75 78 88 93 95 96
 \end{verbatim}
 
 \normalsize
+
+\(~\)
 
 \begin{itemize}
 \item
@@ -1058,7 +1084,9 @@ are due to implementation, nothing for us to worry.)
 
 \begin{frame}[fragile]
 
-Next, we set \texttt{cost=100}: \vspace{2mm}
+Next, we set \texttt{cost=100}:
+
+\vspace{2mm}
 
 \scriptsize
 
@@ -1109,9 +1137,9 @@ Next, we set \texttt{cost=100}: \vspace{2mm}
 
 \normalsize
 
-Thus with \texttt{cost=100} we have 31 support vectors, i.e the width of
-the margin is decreased (remember: higher cost = lower budget to violate
-the boundaries).
+Thus with \texttt{cost=100} we have 31 support vectors. The width of the
+margin is
+decreased.\footnote{Remember: higher cost = lower budget to violate the boundaries}
 
 \end{frame}
 
@@ -1215,13 +1243,11 @@ Thus two of the seeds are misclassified, the other 18 are ok.
 \normalsize
 
 The two misclassified observations are marked with a black circle.
-Unsurprisingly, they lie on the border between the green and the orange
-points. Why?
 
 \end{frame}
 
 \begin{frame}{Support Vector Machines}
-\protect\hypertarget{support-vector-machines}{}
+\protect\hypertarget{support-vector-machines-1}{}
 
 \begin{itemize}
 \item
@@ -1306,11 +1332,18 @@ points. Why?
 \vspace{2mm}
 
 \begin{itemize}
+\tightlist
 \item
   \textbf{Left}: expanding feature space to include cubic polynomials
   (\(x_1,x_2,x_1x_2,x_1^2,x_2^2,x_1^2x_2,x_1x_2^2x_1^3,x_2^3\), 9
   parameters to estimate in addition to intercept), and also observe the
   margins (interpretation?).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   \textbf{Right}: radial basis function kernel - wait a bit.
 \end{itemize}
@@ -1329,6 +1362,14 @@ points. Why?
 \tightlist
 \item
   Computation using polynomials quickly becomes unmanageable.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Higher-order polynomials become very wiggly and wild.
 \end{itemize}
 
 \(~\)
@@ -1372,7 +1413,7 @@ between observations.
 
 \begin{itemize}
 \item
-  Remember the the optimisation problem of finding the support vector
+  Remember the optimisation problem of finding the support vector
   classifier hyperplane. We have \emph{not} explained how to solve the
   problem because this is outside the scope of this course. \vspace{1mm}
 \item
@@ -1476,7 +1517,8 @@ This will bring us to another idea:
   \emph{polynomial kernel} of degree \(d>1\): \[
   K({\boldsymbol x}_i,{\boldsymbol x}_i')=(1+\sum_{j}^p x_{ij} x_{i'j})^d \ , 
   \] which computes the inner products needed for \(d\)-dimensional
-  polynomials. Try it for \(p=2\) and \(d=2\) (see exercises).
+  polynomials -- without really visiting the whole space. Try it for
+  \(p=2\) and \(d=2\) (see compulsory exercise 2).
 \end{itemize}
 
 \end{block}
@@ -1496,7 +1538,7 @@ This will bring us to another idea:
   We only need to compute \(K(x_i,x_{i'})\) for the \({n \choose 2}\)
   distinct pairs -- without explicitly working in an enlarged feature
   space. This is very useful when there are \emph{many features}, i.e.,
-  \(p\geq n\).
+  \(p\geq n\).\footnote{And this is the reason why $p>n$ is possible in support vector machines.}
 \end{itemize}
 
 \end{frame}
@@ -1515,19 +1557,26 @@ This will bring us to another idea:
   \] where \(\gamma\) is a positive constant (a tuning parameter).
 \end{itemize}
 
-\vspace{1mm}
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
 \item
-  Interestingly, the radial kernel computes the inner product in a very
-  high (infinite) dimensional feature space. But, this does not give
-  overfitting because some of the dimensions are ``squashed down'' (but
-  we have the parameter \(\gamma\) and the budget parameter \(C\) that
-  we have to decide on).
+  Interestingly, the radial kernel computes the inner product in a
+  infinite dimensional feature space. But, this does not give
+  overfitting because some of the dimensions are ``squashed down''
 \end{itemize}
 
-\vspace{1mm}
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  We have the parameter \(\gamma\) and the budget parameter \(C\) to
+  decide on.
+\end{itemize}
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -1556,7 +1605,7 @@ This will bring us to another idea:
 
 \begin{itemize}
 \item
-  \(\gamma\) and our budget can be chosen by cross-validation.
+  \(\gamma\) and our budget \(C\) can be chosen by cross-validation.
 \item
   Remark: the mathematics behind this is based on
   \emph{reproducing-kernel Hilbert spaces} (see page 384 of Efron and
@@ -1726,19 +1775,19 @@ We could also try with a polynomial kernel with degree 4 as follows:
 ## 
 ## Call:
 ## svm(formula = y ~ ., data = train3, kernel = "polynomial", degree = 4, 
-##     cost = 1e+05, scale = FALSE)
+##     cost = 10000, scale = FALSE)
 ## 
 ## 
 ## Parameters:
 ##    SVM-Type:  C-classification 
 ##  SVM-Kernel:  polynomial 
-##        cost:  1e+05 
+##        cost:  10000 
 ##      degree:  4 
 ##      coef.0:  0 
 ## 
-## Number of Support Vectors:  40
+## Number of Support Vectors:  41
 ## 
-##  ( 21 19 )
+##  ( 21 20 )
 ## 
 ## 
 ## Number of Classes:  2 
@@ -1754,7 +1803,8 @@ We could also try with a polynomial kernel with degree 4 as follows:
 For this dataset a radial kernel is a natural choice: A circular
 decision boundary seems like a good idea. Thus, we proceed with
 \texttt{kernel=\textquotesingle{}radial\textquotesingle{}}, and use the
-\texttt{tune()} function to find the optimal tuning parameter \(C\):
+\texttt{tune()} function to find (approximately) optimal tuning
+parameters \(C\) and \(\gamma\):
 
 \(~\)
 
@@ -1763,8 +1813,8 @@ decision boundary seems like a good idea. Thus, we proceed with
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{CV_kernel =}\StringTok{ }\KeywordTok{tune}\NormalTok{(svm, y }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ train3, }\DataTypeTok{kernel =} \StringTok{"radial"}\NormalTok{, }\DataTypeTok{gamma =} \DecValTok{1}\NormalTok{, }
-    \DataTypeTok{ranges =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{cost =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.001}\NormalTok{, }\FloatTok{0.01}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{1000}\NormalTok{)))}
+\NormalTok{CV_kernel =}\StringTok{ }\KeywordTok{tune}\NormalTok{(svm, y }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ train3, }\DataTypeTok{kernel =} \StringTok{"radial"}\NormalTok{, }\DataTypeTok{ranges =} \KeywordTok{list}\NormalTok{(}\DataTypeTok{cost =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }
+    \FloatTok{0.1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{100}\NormalTok{, }\DecValTok{1000}\NormalTok{), }\DataTypeTok{gamma =} \KeywordTok{c}\NormalTok{(}\FloatTok{0.01}\NormalTok{, }\FloatTok{0.1}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{100}\NormalTok{)))}
 \KeywordTok{summary}\NormalTok{(CV_kernel)}
 \end{Highlighting}
 \end{Shaded}
@@ -1776,21 +1826,48 @@ decision boundary seems like a good idea. Thus, we proceed with
 ## - sampling method: 10-fold cross validation 
 ## 
 ## - best parameters:
-##  cost
-##   100
+##  cost gamma
+##     5   0.1
 ## 
-## - best performance: 0.1089286 
+## - best performance: 0.09642857 
 ## 
 ## - Detailed performance results:
-##    cost     error dispersion
-## 1 1e-03 0.2732143  0.1472658
-## 2 1e-02 0.2732143  0.1472658
-## 3 1e-01 0.2732143  0.1472658
-## 4 1e+00 0.1500000  0.1315463
-## 5 5e+00 0.1357143  0.1226248
-## 6 1e+01 0.1214286  0.1298110
-## 7 1e+02 0.1089286  0.1066291
-## 8 1e+03 0.1767857  0.1226970
+##     cost gamma      error dispersion
+## 1  1e-02 1e-02 0.27321429 0.14726580
+## 2  1e-01 1e-02 0.27321429 0.14726580
+## 3  1e+00 1e-02 0.27321429 0.14726580
+## 4  5e+00 1e-02 0.27321429 0.14726580
+## 5  1e+01 1e-02 0.27321429 0.14726580
+## 6  1e+02 1e-02 0.27321429 0.14726580
+## 7  1e+03 1e-02 0.11250000 0.11232507
+## 8  1e-02 1e-01 0.27321429 0.14726580
+## 9  1e-01 1e-01 0.27321429 0.14726580
+## 10 1e+00 1e-01 0.27321429 0.14726580
+## 11 5e+00 1e-01 0.09642857 0.09494001
+## 12 1e+01 1e-01 0.11250000 0.11232507
+## 13 1e+02 1e-01 0.09642857 0.09494001
+## 14 1e+03 1e-01 0.12142857 0.11566626
+## 15 1e-02 1e+00 0.27321429 0.14726580
+## 16 1e-01 1e+00 0.27321429 0.14726580
+## 17 1e+00 1e+00 0.15000000 0.13154627
+## 18 5e+00 1e+00 0.13571429 0.12262483
+## 19 1e+01 1e+00 0.12142857 0.12981104
+## 20 1e+02 1e+00 0.10892857 0.10662906
+## 21 1e+03 1e+00 0.17678571 0.12269704
+## 22 1e-02 1e+01 0.27321429 0.14726580
+## 23 1e-01 1e+01 0.27321429 0.14726580
+## 24 1e+00 1e+01 0.18928571 0.13261926
+## 25 5e+00 1e+01 0.15892857 0.17666643
+## 26 1e+01 1e+01 0.15892857 0.17666643
+## 27 1e+02 1e+01 0.14642857 0.16683665
+## 28 1e+03 1e+01 0.14642857 0.16683665
+## 29 1e-02 1e+02 0.27321429 0.14726580
+## 30 1e-01 1e+02 0.27321429 0.14726580
+## 31 1e+00 1e+02 0.23035714 0.14395658
+## 32 5e+00 1e+02 0.23035714 0.15892969
+## 33 1e+01 1e+02 0.23035714 0.15892969
+## 34 1e+02 1e+02 0.23035714 0.15892969
+## 35 1e+03 1e+02 0.23035714 0.15892969
 \end{verbatim}
 
 \normalsize
@@ -1928,16 +2005,14 @@ classifier as a ``loss''+``penalty'':
   The margin now corresponds to \(M=1\), and its width is determined by
   \(\sum_{j=1}^p \beta_j^2\).
 \item
-  The loss is called \emph{\textcolor{red}{hinge loss}} - observe the
-  max and 0 to explain why only support vectors contribute.
+  The loss \(L(\boldsymbol x, \boldsymbol{y},\boldsymbol\beta)\) is
+  called \emph{\textcolor{red}{hinge loss}} - observe the max and 0 to
+  explain why only support vectors contribute.
 \item
   The penalty is a ridge penalty.
 \item
   Large \(\lambda\) gives small \(\beta\)s and more violations=high
-  bias, but low variance.
-\item
-  Small \(\lambda\) gives large \(\beta\)s and less violations=low bias,
-  but high variance.
+  bias, but low variance -- and vice versa.
 \end{itemize}
 
 \end{frame}
@@ -2007,6 +2082,15 @@ regression using the same set of predictors \emph{look very similar}:
   If class boundaries are non-linear then SVM is more popular, but
   \emph{kernel versions of logistic regression} are also possible, but
   more computationally expensive (and traditionally less used).
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Drawbacks of SVMs: No feature selection, no probabilities, thus in
+  general interpretability is difficult.
 \end{itemize}
 
 \end{block}

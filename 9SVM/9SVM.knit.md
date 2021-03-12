@@ -1,17 +1,17 @@
 ---
-subtitle: "TMA4268 Statistical Learning V2021"
+subtitle: "TMA4268 Statistical Learning V2020"
 title: "Module 9: Support Vector Machines"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "March 15 and 16, 2021"
+date: "March 6 and 9, 2020"
 fontsize: 10pt
 output:
-  # beamer_presentation:
-  #   keep_tex: yes
-  #   fig_caption: false
-  #   latex_engine: xelatex
-  #   theme: "Singapore"
-  #   colortheme: "default"
-  #   font: "serif"
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+    theme: "Singapore"
+    colortheme: "default"
+    font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -22,21 +22,17 @@ header-includes: \usepackage{multirow}
 
 ---
 
-```{r setup, include=FALSE}
-showsol<-TRUE
-library(knitr)
-opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE)
-knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
-                      cache=TRUE, size="scriptsize")
-whichformat="latex"
-```
 
+
+---
+
+Last update: March 9, 2020
 
 --- 
 
 # Acknowledgements
 
-* The course was originally developed by Mette Langaas (original material: https://github.com/mettelang/StatisticalLearningSpring2019). Mette did a fantastic job and I am very thankful that I was allowed to modify and use her material. 
+* A lot of this material stems from Mette Langaas and her TAs (in particular Thea Roksv\aa g, who developed the set of slides, but also Mette Langaas and Julia Debik). Thanks to Mette for the permission to use the material!
 
 * Some of the figures and slides in this presentation are taken (or are inspired) from @james.etal.
 
@@ -76,32 +72,6 @@ $~$
 and learn how to apply all that.
 
 
---- 
-
-# Support Vector Machines
-
-$~$
-
-Approach the two-class classification problem in a direct way:
-
-\centering
-_**We try to find \textcolor{red}{a plane} that separates the two categories in the feature (covariate) space.**_
-
-$~$
-
-\flushleft
-
-If this is not possible, we soften our requirement in two ways:
-
-* We soften what we mean by "separates".
-
-* We enrich and enlarge the feature space such that we can do a separation
-
-$~$
-
-Support Vector Machines (SVMs) are a computer science method, not really a statistical method (no probabilities involved).
-
-
 ---
 
 ## Motivating example
@@ -111,33 +81,12 @@ Support Vector Machines (SVMs) are a computer science method, not really a stati
 
 * You have three different study areas in which these trees grow. 
 
-* Your study areas with the tree positions in three forests is visualized in the figures below.  
-\textcolor{red}{Redwood tree}; \textcolor{green}{pine tree}.
+* Your study areas with the tree positions in three forests is visualized in the figures below. Orange: redwood tree; green: pine tree.
 
-\vspace{2mm}
 
-```{r trees, echo=FALSE, fig.width=6, fig.height=4,fig.align = "center",out.width='80%'}
-set.seed(8)
-#http://research.stowers.org/mcm/efg/R/Graphics/Basics/mar-oma/index.htm
-library(MASS)
-forest1=read.table(file="forest1.txt"); seeds1=read.table(file="seeds1.txt")
-forest2=read.table(file="forest2.txt");seeds2=read.table(file="seeds2.txt")
-forest3=read.table(file="forest3.txt");seeds3=read.table(file="seeds3.txt")
 
-par(mfrow=c(1,3),pty="s",mar=c(1,1,1,1),oma=c(0,0,0,0))
 
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("Forest 1")
-points(forest1[forest1[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(forest1[forest1[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("Forest 2")
-points(forest2[forest2[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(forest2[forest2[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("Forest 3")
-points(forest3[forest3[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(forest3[forest3[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-```
+\begin{center}\includegraphics[width=0.8\linewidth]{9SVM_files/figure-beamer/trees-1} \end{center}
 
 \vspace{0mm}
 
@@ -148,9 +97,9 @@ points(forest3[forest3[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
 Three cases:
 \vspace{2mm}
 
-* Forest 1 seems easy: The orange and green points are clearly separated and the fence can be built anywhere inside the band that separates them. However, there are infinitely many solutions, and we should take into account that the trees reproduce and that we want future pines and future redwoods to grow up on the correct side of the fence. 
+* Forest 1 seems easy: The orange and green points are clearly separated and the fence can be built anywhere inside the band that separates them. However, we can draw infinitely many straight lines that all separate the two tree types, and we should take into account that the trees reproduce and that we want future pines and future redwoods to grow up on the correct side of the fence. 
 
-* Forest 2 is a bit more complicated: A linear fence still seems like a good idea, but in this case the two tree types cannot be perfectly separated. You have to allow some errors. 
+* Forest 2 is a bit more complicated: A linear fence still seems like a good idea, but in this case the two tree types cannot be perfectly separated. You have to allow some of the trees to be on the wrong side of the fence. 
 
 * Forest 3 is the most complex: It is not possible to separate the two tree types by a straight line without getting a large number of misclassifications. Here, a circular fence around the pine trees seems like a reasonable choice.
 
@@ -160,41 +109,27 @@ Forest 1 illustrates the problem of finding an **optimal separating hyperplane**
 
 Topic: **Maximal Margin hyperplanes**
 
-```{r forest1, echo=FALSE, fig.width=5, fig.height=5,fig.align = "center",out.width='50%'}
-par(pty="s")
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1), main="Forest 1") 
-points(forest1[forest1[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(forest1[forest1[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-```
+
+\begin{center}\includegraphics[width=0.5\linewidth]{9SVM_files/figure-beamer/forest1-1} \end{center}
 
 
 ---
 
-You are also going to learn how you can find an optimal separating hyperplane when your data cannot be perfectly separated by a straight line.  
+You are also going to learn how you can find an optimal separating hyperplane when your data cannot be perfectly separated by a straight line, as in Forest 2.  
 
 Topic: **Support Vector Classifier** or **Soft Margin Classifier**
 
-```{r forest2, echo=FALSE, fig.width=5, fig.height=5,fig.align = "center",out.width='50%'}
-par(pty="s")
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1), main="Forest 2")
-points(forest2[forest2[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(forest2[forest2[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-```
+
+\begin{center}\includegraphics[width=0.5\linewidth]{9SVM_files/figure-beamer/forest2-1} \end{center}
 
 ---
 
-The Support vector classifier can be generalised to an approach that produces non-linear decision boundaries. 
-
-\vspace{2mm}
+The Support vector classifier can be generalised to an approach that produces non-linear decision boundaries. This is useful when the data is distributed as illustrated in Forest 3.
 
 Topic: **Support Vector Machines** (SVMs)
 
-```{r forest3, echo=FALSE, fig.width=5, fig.height=5,fig.align = "center",out.width='50%'}
-par(pty="s")
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("Forest 3")
-points(forest3[forest3[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(forest3[forest3[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-```
+
+\begin{center}\includegraphics[width=0.5\linewidth]{9SVM_files/figure-beamer/forest3-1} \end{center}
 
 
 ---
@@ -232,32 +167,8 @@ $\rightarrow$ We want to use it for classification.
 \vspace{4mm}
 
 
-````{r trees2, echo=FALSE, fig.width=6, fig.height=4,fig.align = "center",out.width='90%'}
-forest1=read.table(file="forest1.txt"); seeds1=read.table(file="seeds1.txt")
-forest2=read.table(file="forest2.txt");seeds2=read.table(file="seeds2.txt")
-forest3=read.table(file="forest3.txt");seeds3=read.table(file="seeds3.txt")
 
-par(mfrow=c(1,3),pty="s",mar=c(1,1,1,1),oma=c(0,0,0,0))
-
-#par(mfrow=c(1,3));par(pty="s")
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("Forest 1")
-points(forest1[forest1[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(forest1[forest1[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-points(seeds1[seeds1[,3]==-1,1:2],pch=21,col="black",bg="lightcoral",cex=1.2)
-points(seeds1[seeds1[,3]==1,1:2],pch=21,col="black",bg="darkseagreen",cex=1.2)
-
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("Forest 2")
-points(forest2[forest2[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(forest2[forest2[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-points(seeds2[seeds2[,3]==-1,1:2],pch=21,col="black",bg="lightcoral",cex=1.2)
-points(seeds2[seeds2[,3]==1,1:2],pch=21,col="black",bg="darkseagreen",cex=1.2)
-
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("Forest 3")
-points(forest3[forest3[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(forest3[forest3[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-points(seeds3[seeds3[,3]==-1,1:2],pch=21,bg="lightcoral",col="black",cex=1.2)
-points(seeds3[seeds3[,3]==1,1:2],pch=21,bg="darkseagreen",col="black",cex=1.2)
-```
+\begin{center}\includegraphics[width=0.9\linewidth]{9SVM_files/figure-beamer/trees2-1} \end{center}
 
 ---
 
@@ -268,7 +179,7 @@ points(seeds3[seeds3[,3]==1,1:2],pch=21,bg="darkseagreen",col="black",cex=1.2)
 
 A **hyperplane** in $p$ dimensions is defined as
 
-$$\beta_0+\beta_1 X_1 + \beta_2 X_2 +...+\beta_p X_p=\beta_0+{\boldsymbol X}^T {\boldsymbol \beta}=0.$$
+$$\beta_0+\beta_1 X_1 + \beta_2 X_2 +...+\beta_p X_p=\beta_0+{\boldsymbol x}^T {\boldsymbol \beta}=0.$$
 and is a $p-1$ dimensional subspace of $\mathbb{R}^p$.
 
 \vspace{5mm}
@@ -333,24 +244,8 @@ $~$
 \vspace{2mm}
 Which is "best"?
 
-```{r forest1.1, echo=FALSE, fig.width=5, fig.height=5,fig.align = "center",out.width='60%'}
-linje=function(x){return(1.2-1.1*x)}
-linje2=function(x){return(1.15-1*x)}
-linje3=function(x){return(1.2-1.16*x)}
 
-par(pty="s");par(mfrow=c(1,1))
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));
-points(forest1[forest1[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(forest1[forest1[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-xx=seq(0,1,length.out=100)
-lines(xx,linje(xx),lwd=1.5,lty=1)
-lines(xx,linje2(xx),lwd=1.5,lty=2)
-lines(xx,linje3(xx),lwd=1.5,lty=3)
-```
-
-\vspace{2mm}
-
-**Q:** How did we solve that problem earlier (e.g. in LDA, QDA, KNN,..)?
+\begin{center}\includegraphics[width=0.6\linewidth]{9SVM_files/figure-beamer/forest1.1-1} \end{center}
 
 ---
 
@@ -358,32 +253,28 @@ lines(xx,linje3(xx),lwd=1.5,lty=3)
 
 \vspace{2mm}
 
-All three hyperplanes have the property that 
+The three lines displayed in the figure are three possible separating hyperplanes for this dataset which contains two predictors $x_1$ and $x_2$ ($p=2$). The hyperplanes have the property that 
 
 $$\beta_0+\beta_1 x_{i1} + \beta_2 x_{i2} =\beta_0+{\boldsymbol x}_i^T {\boldsymbol \beta}>0$$
 
 if $y_i=1$ (green points) and 
 
 $$\beta_0+\beta_1 x_{i1} + \beta_2 x_{i2} =\beta_0+{\boldsymbol x}_i^T {\boldsymbol \beta}<0$$
-\vspace{2mm}
 
 if $y_i=-1$ (orange points). 
 
-\pause
+---
 
-$~$
 
-In brief:
+This means that for all observations (all are correctly classified)
 
 
 $$y_i (\beta_0+{\boldsymbol x}_i^T {\boldsymbol \beta})>0 \ .$$
 
 
----
-
 
 \vspace{2mm}
-
+The hyperplane thus leads to a _\textcolor{red}{natural classifier}_, depending on the side of the hyperplane where the new observation lies.
 
 Analogous for $p$ predictors: The class  $y^*$ of a new observation ${\boldsymbol x}^*=(x_1^*,...,x_p^*)$ is assigned depending on the value $f({\boldsymbol x}^*)=\beta_0+\beta_1 x_1^* + \beta_2 x_{2}^*+...+\beta_p x_{p}^*.$
 
@@ -397,11 +288,6 @@ $$y^* = \left\{ \begin{array}{ll}
 -1 \ , & \text{if } f({\boldsymbol x}^*) < 0 \ .
 \end{array}\right.$$
 
-$~$
-
-Or 
-
-$$ y^*  f({\boldsymbol x}^*) > 0 \ . $$
 
 ---
 
@@ -409,17 +295,31 @@ $$ y^*  f({\boldsymbol x}^*) > 0 \ . $$
 
 \vspace{3mm}
 
+* In the above figure we plotted three possible hyperplanes.
 
 * In general, if data are linearly separable, infinitely many possible separating hyperplanes exist. 
 
 * Natural choice: the **maximal margin hyperplane**, which maximises the distance from the training observations. 
 
+\vspace{4mm}
+
+**Procedure**: 
+
+* Compute the perpendicular distance from each training observation to a given separating hyperplane.
+
+* The smallest such distance is the minimal distance from the observations to the hyperplane (the **margin**).
+
+* We want to maximize this margin. 
 
 
-\vspace{3mm}
+
+
+---
+
+We have an **optimization problem** to maximize the width of the margin:
 
 \centering
-![ISLR Figure 9.3](../../ISLR/Figures/Chapter9/9.3.png){width=40%}
+![ISLR Figure 9.3](../../ISLR/Figures/Chapter9/9.3.png){width=50%}
 \small
 
 ISLR Figure 9.3 
@@ -454,15 +354,7 @@ Observe:
 
 
 
-```{r,echo=FALSE,eval=FALSE}
-# missing lines for the support vectors
-par(pty="s");par(mfrow=c(1,2))
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));
-points(forest1[forest1[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(forest1[forest1[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-xx=seq(0,1,length.out=100)
-lines(xx,linje(xx),lwd=1.5,lty=1)
-```
+
 
 ---
 
@@ -516,12 +408,8 @@ ISLR Figure 9.5
 For some data sets a separating hyperplane does not exist, the data set is *non-separable*. What then? Forest 2:
 
 
-```{r forest2.1, echo=FALSE, fig.width=5, fig.height=5,fig.align = "center",out.width='45%'}
-par(pty="s");par(mfrow=c(1,1))
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));
-points(forest2[forest2[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(forest2[forest2[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-```
+
+\begin{center}\includegraphics[width=0.45\linewidth]{9SVM_files/figure-beamer/forest2.1-1} \end{center}
 
 It is still possible to construct a hyperplane and use it for classification, but then we have to _allow some misclassification_ in the training data. 
 
@@ -647,12 +535,13 @@ The function `svm` in the package `e1071` is used to find the maximal margin hyp
 \vspace{2mm}
 
 \scriptsize
-```{r}
+
+```r
 library(e1071)
-forest2=read.table(file="forest2.txt"); 
-seeds2=read.table(file="seeds2.txt"); 
-train2=data.frame(x=forest2[,1:2], y=as.factor(forest2[,3]))
-test2=data.frame(x=seeds2[,1:2], y=as.factor(seeds2[,3]))
+forest2 = read.table(file = "forest2.txt")
+seeds2 = read.table(file = "seeds2.txt")
+train2 = data.frame(x = forest2[, 1:2], y = as.factor(forest2[, 3]))
+test2 = data.frame(x = seeds2[, 1:2], y = as.factor(seeds2[, 3]))
 ```
 \normalsize
 
@@ -662,32 +551,57 @@ The `svm` function uses a slightly different formulation than what we introduced
 
 * We a _budget_ of errors $C$, but in `svm` we instead have an argument `cost` that allows us to specify the cost of violating the margin. You can think of the cost as $\propto \frac{1}{C}$. 
 
+* When `cost` is set to a low value, the margin will be wider than if set to a large value. 
+
 \vspace{3mm}
 
 We first try with `cost=1`. We set `kernel='linear'` as we are interested in a linear decision boundary. `scale=TRUE` scales the predictors to have mean 0 and standard deviation 1. We choose `scale=FALSE` (no scaling).
 
-$~$
-
-\footnotesize
-
-```{r}
-svmfit_linear1=svm(y ~ ., data=train2, kernel='linear', cost=1, scale=FALSE)
-```
-
 ---
 
 \footnotesize
-```{r forest2.2, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='80%'}
-plot(svmfit_linear1,train2,col=c("lightcoral","lightgreen"))
+
+```r
+svmfit_linear1 = svm(y ~ ., data = train2, kernel = "linear", cost = 1, 
+    scale = FALSE)
+plot(svmfit_linear1, train2, col = c("lightcoral", "lightgreen"))
 ```
+
+
+
+\begin{center}\includegraphics[width=0.8\linewidth]{9SVM_files/figure-beamer/forest2.2-1} \end{center}
 
 (Note: The decision boundary looks a bit strange, and $x_1$ is plotted on the (usual) $y$-axis and $x_2$ on the $x$-axis. Both problems are due to implementation, nothing for us to worry.)
 
 ---
 
 \scriptsize
-```{r}
+
+```r
 summary(svmfit_linear1)
+```
+
+```
+## 
+## Call:
+## svm(formula = y ~ ., data = train2, kernel = "linear", cost = 1, 
+##     scale = FALSE)
+## 
+## 
+## Parameters:
+##    SVM-Type:  C-classification 
+##  SVM-Kernel:  linear 
+##        cost:  1 
+## 
+## Number of Support Vectors:  56
+## 
+##  ( 28 28 )
+## 
+## 
+## Number of Classes:  2 
+## 
+## Levels: 
+##  -1 1
 ```
 \normalsize
 
@@ -700,13 +614,18 @@ summary(svmfit_linear1)
 \vspace{2mm}
 
 \scriptsize
-```{r}
-svmfit_linear1$index #support vectors id in data set
+
+```r
+svmfit_linear1$index  #support vectors id in data set
+```
+
+```
+##  [1]  1  2  4  6  9 10 16 21 26 27 28 40 44 53 55 57 58 65 67 72 76 77 80
+## [24] 81 87 91 92 98  5  8 11 13 18 19 20 23 24 25 34 36 39 41 42 47 48 59
+## [47] 61 62 70 71 75 78 88 93 95 96
 ```
 
 \normalsize
-
-$~$
 
 * With `cost=1`, we have 56 support vectors, 28 in each class. 
 
@@ -718,25 +637,54 @@ $~$
 ---
 
 Next, we set `cost=100`:
-
 \vspace{2mm}
 
 \scriptsize
-```{r forest2.3, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
-svmfit_linear2=svm(y ~ ., data=train2, kernel='linear', cost=100, scale=FALSE)
-plot(svmfit_linear2,train2,col=c("lightcoral","lightgreen"))
+
+```r
+svmfit_linear2 = svm(y ~ ., data = train2, kernel = "linear", cost = 100, 
+    scale = FALSE)
+plot(svmfit_linear2, train2, col = c("lightcoral", "lightgreen"))
 ```
+
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{9SVM_files/figure-beamer/forest2.3-1} \end{center}
 
 ---
 
 \scriptsize
-```{r}
+
+```r
 summary(svmfit_linear2)
+```
+
+```
+## 
+## Call:
+## svm(formula = y ~ ., data = train2, kernel = "linear", cost = 100, 
+##     scale = FALSE)
+## 
+## 
+## Parameters:
+##    SVM-Type:  C-classification 
+##  SVM-Kernel:  linear 
+##        cost:  100 
+## 
+## Number of Support Vectors:  31
+## 
+##  ( 15 16 )
+## 
+## 
+## Number of Classes:  2 
+## 
+## Levels: 
+##  -1 1
 ```
 
 \normalsize
 
-Thus with `cost=100` we have 31 support vectors. The width of the margin is decreased.\footnote{Remember: higher cost = lower budget to violate the boundaries} 
+Thus with `cost=100` we have 31 support vectors, i.e the width of the margin is decreased (remember: higher cost = lower budget to violate the boundaries). 
 
 ---
 
@@ -750,10 +698,35 @@ The `cost` is a tuning parameter. By using the `tune()` function we can perform 
 
 \tiny
 
-```{r}
+
+```r
 set.seed(1)
-CV_linear=tune(svm,y~.,data=train2,kernel="linear",ranges=list(cost=c(0.001, 0.01, 0.1, 1, 5, 10, 50)))
+CV_linear = tune(svm, y ~ ., data = train2, kernel = "linear", ranges = list(cost = c(0.001, 
+    0.01, 0.1, 1, 5, 10, 50)))
 summary(CV_linear)
+```
+
+```
+## 
+## Parameter tuning of 'svm':
+## 
+## - sampling method: 10-fold cross validation 
+## 
+## - best parameters:
+##  cost
+##     5
+## 
+## - best performance: 0.14 
+## 
+## - Detailed performance results:
+##    cost error dispersion
+## 1 1e-03  0.45 0.10801234
+## 2 1e-02  0.23 0.12516656
+## 3 1e-01  0.16 0.11737878
+## 4 1e+00  0.15 0.10801234
+## 5 5e+00  0.14 0.10749677
+## 6 1e+01  0.15 0.09718253
+## 7 5e+01  0.15 0.09718253
 ```
 
 <!-- --- -->
@@ -768,17 +741,26 @@ summary(CV_linear)
 According to the `tune()` function we should set the cost parameter to 5. The function also stores the best model obtained and we can access it as follows:
 
 \scriptsize
-```{r}
-bestmod_linear=CV_linear$best.model
+
+```r
+bestmod_linear = CV_linear$best.model
 ```
 
 \normalsize
 Next, we want to predict the class label of the seeds in the test set. We use the `predict` function and make a confusion table:
 
 \scriptsize
-```{r}
-ypred_linear=predict(bestmod_linear,test2)
-table(predict=ypred_linear,truth=test2[,3])
+
+```r
+ypred_linear = predict(bestmod_linear, test2)
+table(predict = ypred_linear, truth = test2[, 3])
+```
+
+```
+##        truth
+## predict -1  1
+##      -1  8  0
+##      1   2 10
 ```
 
 \normalsize
@@ -789,23 +771,14 @@ Thus two of the seeds are misclassified, the other 18 are ok.
 
 \footnotesize
 
-```{r forest2.4, echo=FALSE, fig.width=8, fig.height=5,fig.align = "center",out.width='90%'}
-par(mfrow=c(1,2)); par(pty="s")
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("True class")
-points(seeds2[seeds2[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(seeds2[seeds2[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-points(seeds2[which(ypred_linear!=seeds2[,3]),1:2],pch=21) #Mark misclassification.
 
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("Predicted class")
-points(seeds2[ypred_linear==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(seeds2[ypred_linear==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-points(seeds2[which(ypred_linear!=seeds2[,3]),1:2],pch=21) #Mark misclassification.
-
-```
+\begin{center}\includegraphics[width=0.9\linewidth]{9SVM_files/figure-beamer/forest2.4-1} \end{center}
 
 \normalsize
 
-The two misclassified observations are marked with a black circle.
+The two misclassified observations are marked with a black circle. Unsurprisingly, they lie on the border between the green and the orange points. Why?
+
+<!-- which is reasonable: The test observations located on the border between green and orange are hardest to predict. -->
 
 
 
@@ -818,13 +791,8 @@ The two misclassified observations are marked with a black circle.
 
 * In such cases you can use a **Support Vector Machine** (SVM). This is an extension of the support vector classifier. 
 
-````{r forest3.1, echo=FALSE, fig.width=6, fig.height=5,fig.align = "center",out.width='40%'}
-par(pty="s");par(mfrow=c(1,1))
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1), main="Forest 3");
-points(forest3[forest3[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(forest3[forest3[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
 
-```
+\begin{center}\includegraphics[width=0.4\linewidth]{9SVM_files/figure-beamer/forest3.1-1} \end{center}
 
 ---
 
@@ -867,8 +835,6 @@ $$\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1X_2 + \beta_4 X_1^2 + \beta_5
 
 * **Left**: expanding feature space to include cubic polynomials ($x_1,x_2,x_1x_2,x_1^2,x_2^2,x_1^2x_2,x_1x_2^2x_1^3,x_2^3$, 9 parameters to estimate in addition to intercept), and also observe the margins (interpretation?).
 
-\vspace{2mm}
-
 * **Right**: radial basis function kernel - wait a bit.
 
 
@@ -879,10 +845,6 @@ $$\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1X_2 + \beta_4 X_1^2 + \beta_5
 $~$
 
 * Computation using polynomials quickly becomes unmanageable.
-
-$~$
-
-* Higher-order polynomials become very wiggly and wild.
 
 $~$
 
@@ -908,7 +870,7 @@ The inner product encodes for the _\textcolor{red}{similarity}_ between observat
 
 ---
 
-* Remember the optimisation problem of finding the support vector classifier hyperplane. We have _not_ explained how to solve the problem because this is outside the scope of this course. 
+* Remember the the optimisation problem of finding the support vector classifier hyperplane. We have _not_ explained how to solve the problem because this is outside the scope of this course. 
 \vspace{1mm}
 
 * But we said that $$\hat{\beta}= \sum_{i\in \mathcal{S}} \hat\alpha_i x_i $$
@@ -985,7 +947,7 @@ $~$
 $$
 K({\boldsymbol x}_i,{\boldsymbol x}_i')=(1+\sum_{j}^p x_{ij} x_{i'j})^d \ , 
 $$
-which computes the inner products needed for $d$-dimensional polynomials -- without really visiting the whole space. Try it for $p=2$ and $d=2$ (see compulsory exercise 2).
+which computes the inner products needed for $d$-dimensional polynomials. Try it for $p=2$ and $d=2$ (see exercises).
 
 <!-- This gives $\binom{p+d}{d}$ possible basis functions. -->
 
@@ -997,7 +959,7 @@ which computes the inner products needed for $d$-dimensional polynomials -- with
 
 * The nice thing here is that we only need to calculate the kernels, _not the basis functions_.
 
-* We only need to compute $K(x_i,x_{i'})$ for the ${n \choose 2}$ distinct pairs -- without explicitly working in an enlarged feature space. This is very useful when there are _many features_, i.e., $p\geq n$.\footnote{And this is the reason why $p>n$ is possible in support vector machines.}
+* We only need to compute $K(x_i,x_{i'})$ for the ${n \choose 2}$ distinct pairs -- without explicitly working in an enlarged feature space. This is very useful when there are _many features_, i.e., $p\geq n$.
 
 ---
 
@@ -1011,15 +973,11 @@ K({\boldsymbol x}_i,{\boldsymbol x}_i')=\exp(-\gamma \sum_{j=1}^p (x_{ij}-x_{i'j
 $$
 where $\gamma$ is a positive constant (a tuning parameter). 
 
-\vspace{2mm}
+\vspace{1mm}
 
-* Interestingly, the radial kernel computes the inner product in a infinite dimensional feature space. But, this does not give overfitting because some of the dimensions are "squashed down" 
+* Interestingly, the radial kernel computes the inner product in a very high (infinite) dimensional feature space. But, this does not give overfitting because some of the dimensions are "squashed down" (but we have the parameter $\gamma$ and the budget parameter $C$ that we have to decide on). 
 
-\vspace{2mm}
-
-* We have the parameter $\gamma$ and the budget parameter $C$ to decide on. 
-
-\vspace{2mm}
+\vspace{1mm}
 
 
 * Connection to a multivariate normal density, where $\gamma \propto 1/\sigma^2$ ($\sigma^2$ variance in normal distribution). If $\gamma$ is small (similar to large variance in the normal distribution) the decision boundaries are smoother than for larger $\gamma$.
@@ -1032,7 +990,7 @@ where $\gamma$ is a positive constant (a tuning parameter).
 
 ![](casi19.5.png)
 
-* $\gamma$ and our budget $C$ can be chosen by cross-validation.
+* $\gamma$ and our budget can be chosen by cross-validation.
 
 * Remark: the mathematics behind this is based on _reproducing-kernel Hilbert spaces_ (see page 384 of @casi for a glimpse of the theory).
 
@@ -1082,28 +1040,59 @@ $~$
 
 \footnotesize
 
-```{r}
+
+```r
 library(e1071)
-forest3=read.table(file="forest3.txt"); seeds3=read.table(file="seeds3.txt")
-train3=data.frame(x=forest3[,1:2], y=as.factor(forest3[,3]))
-test3=data.frame(x=seeds3[,1:2], y=as.factor(seeds3[,3]))
-```
-
----
-
-\scriptsize
-```{r forest3.3, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
-svmfit_kernel1=svm(y ~ ., data=train3, kernel='radial', cost=10, scale=FALSE)
-plot(svmfit_kernel1,train3,col=c("lightcoral","lightgreen"))
+forest3 = read.table(file = "forest3.txt")
+seeds3 = read.table(file = "seeds3.txt")
+train3 = data.frame(x = forest3[, 1:2], y = as.factor(forest3[, 3]))
+test3 = data.frame(x = seeds3[, 1:2], y = as.factor(seeds3[, 3]))
 ```
 
 ---
 
 \scriptsize
 
-```{r}
+```r
+svmfit_kernel1 = svm(y ~ ., data = train3, kernel = "radial", cost = 10, 
+    scale = FALSE)
+plot(svmfit_kernel1, train3, col = c("lightcoral", "lightgreen"))
+```
+
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{9SVM_files/figure-beamer/forest3.3-1} \end{center}
+
+---
+
+\scriptsize
+
+
+```r
 summary(svmfit_kernel1)
+```
 
+```
+## 
+## Call:
+## svm(formula = y ~ ., data = train3, kernel = "radial", cost = 10, 
+##     scale = FALSE)
+## 
+## 
+## Parameters:
+##    SVM-Type:  C-classification 
+##  SVM-Kernel:  radial 
+##        cost:  10 
+## 
+## Number of Support Vectors:  42
+## 
+##  ( 22 20 )
+## 
+## 
+## Number of Classes:  2 
+## 
+## Levels: 
+##  -1 1
 ```
 \normalsize
 
@@ -1115,32 +1104,90 @@ $~$
 
 \scriptsize
 
-```{r forest3.4, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
-svmfit_kernel2=svm(y ~ ., data=train3, kernel='polynomial', degree=4, cost=10000, scale=FALSE)
-plot(svmfit_kernel2,train3,col=c("lightcoral","lightgreen"))
+
+```r
+svmfit_kernel2 = svm(y ~ ., data = train3, kernel = "polynomial", degree = 4, 
+    cost = 10000, scale = FALSE)
+plot(svmfit_kernel2, train3, col = c("lightcoral", "lightgreen"))
 ```
+
+
+
+\begin{center}\includegraphics[width=0.7\linewidth]{9SVM_files/figure-beamer/forest3.4-1} \end{center}
 
 ---
 
 \scriptsize
-```{r}
+
+```r
 summary(svmfit_kernel2)
+```
+
+```
+## 
+## Call:
+## svm(formula = y ~ ., data = train3, kernel = "polynomial", degree = 4, 
+##     cost = 1e+05, scale = FALSE)
+## 
+## 
+## Parameters:
+##    SVM-Type:  C-classification 
+##  SVM-Kernel:  polynomial 
+##        cost:  1e+05 
+##      degree:  4 
+##      coef.0:  0 
+## 
+## Number of Support Vectors:  40
+## 
+##  ( 21 19 )
+## 
+## 
+## Number of Classes:  2 
+## 
+## Levels: 
+##  -1 1
 ```
 
  
 
 ---
 
-For this dataset a radial kernel is a natural choice: A circular decision boundary seems like a good idea. Thus, we proceed with `kernel='radial'`, and use the `tune()` function to find (approximately) optimal tuning parameters $C$ and $\gamma$:
+For this dataset a radial kernel is a natural choice: A circular decision boundary seems like a good idea. Thus, we proceed with `kernel='radial'`, and use the `tune()` function to find the optimal tuning parameter $C$:
 
 $~$
 
 \tiny
 
-```{r}
+
+```r
 set.seed(1)
-CV_kernel=tune(svm,y~.,data=train3,kernel="radial",ranges=list(cost=c(0.01,0.1,1,5,10,100,1000),gamma=c(0.01,0.1,1,10,100)))
+CV_kernel = tune(svm, y ~ ., data = train3, kernel = "radial", gamma = 1, 
+    ranges = list(cost = c(0.001, 0.01, 0.1, 1, 5, 10, 100, 1000)))
 summary(CV_kernel)
+```
+
+```
+## 
+## Parameter tuning of 'svm':
+## 
+## - sampling method: 10-fold cross validation 
+## 
+## - best parameters:
+##  cost
+##   100
+## 
+## - best performance: 0.1089286 
+## 
+## - Detailed performance results:
+##    cost     error dispersion
+## 1 1e-03 0.2732143  0.1472658
+## 2 1e-02 0.2732143  0.1472658
+## 3 1e-01 0.2732143  0.1472658
+## 4 1e+00 0.1500000  0.1315463
+## 5 5e+00 0.1357143  0.1226248
+## 6 1e+01 0.1214286  0.1298110
+## 7 1e+02 0.1089286  0.1066291
+## 8 1e+03 0.1767857  0.1226970
 ```
 
 \normalsize
@@ -1152,31 +1199,30 @@ The optimal $C$ is 100. Next, we predict the class label of the seeds in the tes
 $~$
 
 \scriptsize
-```{r}
-bestmod_kernel=CV_kernel$best.model
-ypred_kernel=predict(bestmod_kernel,test3)
+
+```r
+bestmod_kernel = CV_kernel$best.model
+ypred_kernel = predict(bestmod_kernel, test3)
 ```
 
 $~$
 
-```{r forest3.5, echo=FALSE, fig.width=7, fig.height=5,fig.align = "center",out.width='90%'}
-par(mfrow=c(1,2),pty="s",mar=c(1,4,1,1),oma=c(0,2,0,0))
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("True class")
-points(seeds3[seeds3[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(seeds3[seeds3[,3]==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-points(seeds3[which(ypred_kernel!=seeds3[,3]),1:2],pch=21) #Mark misclassification.
- 
-plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("Predicted class")
-points(seeds3[ypred_kernel==-1,1:2],pch=19,col="lightcoral",cex=0.9)
-points(seeds3[ypred_kernel==1,1:2],pch=19,col="darkseagreen",cex=0.9)
-points(seeds3[which(ypred_kernel!=seeds3[,3]),1:2],pch=21) #Mark misclassification.
-```
+
+\begin{center}\includegraphics[width=0.9\linewidth]{9SVM_files/figure-beamer/forest3.5-1} \end{center}
 
 ---
 
 \scriptsize
-```{r}
-table(predict=ypred_kernel,truth=test3[,3])
+
+```r
+table(predict = ypred_kernel, truth = test3[, 3])
+```
+
+```
+##        truth
+## predict -1 1
+##      -1  9 0
+##      1   1 5
 ```
 
 \normalsize 
@@ -1243,10 +1289,11 @@ It is possible to write the optimization problem for the support vector classifi
 $$\text{minimize}_{\boldsymbol \beta} \left\{ \underbrace{\sum_{i=1}^n \max(0,1-y_i f({\boldsymbol x}_i))}_{=L(\boldsymbol x, \boldsymbol{y},\boldsymbol\beta)}+ \underbrace{\lambda \sum_{j=1}^p \beta_j^2}_{\text{Penalty}} \right\}$$
 
 * The margin now corresponds to $M=1$, and its width is determined by $\sum_{j=1}^p \beta_j^2$.
-* The loss $L(\boldsymbol x, \boldsymbol{y},\boldsymbol\beta)$ is called _\textcolor{red}{hinge loss}_ - observe the max and 0 to explain why only support vectors contribute.
+* The loss is called _\textcolor{red}{hinge loss}_ - observe the max and 0 to explain why only support vectors contribute.
 * The penalty is a ridge penalty. 
 
-* Large $\lambda$ gives small $\beta$s and more violations=high bias, but low variance -- and vice versa.
+* Large $\lambda$ gives small $\beta$s and more violations=high bias, but low variance.
+* Small $\lambda$ gives large $\beta$s and less violations=low bias, but high variance.
 
 ---
 
@@ -1285,10 +1332,6 @@ $~$
 <!-- \footnote{Todo: It could be nice to have an exercise that compares SVM with logistic regression, with and without ridge penalty, and perhaps also LD; or this can be saved for compulsory exercise 2} -->
 
 * If class boundaries are non-linear then SVM is more popular, but _kernel versions of logistic regression_ are also possible, but more computationally expensive (and traditionally less used).
-
-\vspace{2mm}
-
-* Drawbacks of SVMs: No feature selection, no probabilities, thus in general interpretability is difficult.
 
 ---
 
