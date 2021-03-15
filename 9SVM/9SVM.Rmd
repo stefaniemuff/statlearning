@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "March 15 and 16, 2021"
 fontsize: 10pt
 output:
-  # beamer_presentation:
-  #   keep_tex: yes
-  #   fig_caption: false
-  #   latex_engine: xelatex
-  #   theme: "Singapore"
-  #   colortheme: "default"
-  #   font: "serif"
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+    theme: "Singapore"
+    colortheme: "default"
+    font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -448,9 +448,11 @@ Observe:
 
 * In the ISLR Figure 9.3, the three equidistant point are called **support vectors**. 
 
-* If one of the support vectors changes its position, the whole hyperplane will move. 
+\vspace{2mm}
 
-* This is a property of the maximal margin hyperplane: It only depends on the support vectors, and _not on the other observations_.
+* It can be shown, see for example @ESL Section 4.5.2 (_Optimal Separating Hyperplanes_), that the optimization problem can be reformulated using Lagrange multipliers (primal and dual problem) into a quadratic convex optimization problem that can be solved efficiently\footnote{Since we in TMA4268 Statistical learning do not require a course in optimization - we do not go into details here.}.
+
+
 
 
 
@@ -464,15 +466,17 @@ xx=seq(0,1,length.out=100)
 lines(xx,linje(xx),lwd=1.5,lty=1)
 ```
 
----
+ 
 
-* It can be shown, see for example @ESL Section 4.5.2 (_Optimal Separating Hyperplanes_), that the optimization problem can be reformulated using Lagrange multipliers (primal and dual problem) into a quadratic convex optimization problem that can be solved efficiently\footnote{Since we in TMA4268 Statistical learning do not require a course in optimization - we do not go into details here.}. 
+ 
 
 \vspace{4mm}
 
 **Q**: But why do we need to solve the optimization problem, if the solution only depends on a few support vectors?
 
-**A**: We do of course have to solve the optimization problem to identify the support vectors and the unknown parameters for the separating hyperplane.
+**A**: 
+
+<!-- We do of course have to solve the optimization problem to identify the support vectors and the unknown parameters for the separating hyperplane. -->
 
 
 
@@ -481,11 +485,9 @@ lines(xx,linje(xx),lwd=1.5,lty=1)
 ## Questions
 \vspace{2mm}
 
-1. Explain briefly the idea behind the maximal margin classifier.
+1. Is there any tuning parameters that needs to be chosen?
 
-2. Is there any tuning parameters that needs to be chosen?
-
-3. Look at the figure below. What could be the problem with the (maximal margin) hyperplane idea?
+2. Look at the figure below. What could be the problem with the (maximal margin) hyperplane idea?
 
 <!-- overfitting the data; not so robust -->
 <!-- Mainly when $p$ is large. -->
@@ -508,6 +510,11 @@ ISLR Figure 9.5
 
 <!-- Overfitting if focus on few support points. -->
 
+\pause
+
+* If one of the support vectors changes its position, the whole hyperplane will move. 
+
+* This is a property of the maximal margin hyperplane: It only depends on the support vectors, and _not on the other observations_.
 
 ---
 
