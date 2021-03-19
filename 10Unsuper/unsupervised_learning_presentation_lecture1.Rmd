@@ -1,34 +1,16 @@
 ---
 title: "Chapter 10: Unsupervised Learning"
 author: Thiago G. Martins | NTNU & Verizon
-date: Spring 2020
-bibliography: references.bib
+date: Spring 2021
 output:
   ioslides_presentation:
     css: presentation.css
-    widescreen: true
-    #smaller: true
+    widescreen: yes
+  beamer_presentation: default
+bibliography: references.bib
 ---
 
 # Introduction
-
-## Supervised vs. Unsupervised learning
-
-- Supervised Learning definition
-    - $n$ observations. 
-        - Each containing features $X_1, X_2, ..., X_p$ and responses $Y$.
-    - Regression and classification are widely known examples.
-
-## Supervised vs. Unsupervised learning
-
-- Supervised Learning definition
-    - $n$ observations. 
-        - Each containing features $X_1, X_2, ..., X_p$ and responses $Y$.
-    - Regression and classification are widely known examples.
-
-- Unsupervised Learning definition
-    - $n$ observations. 
-        - Each containing features $X_1, X_2, ..., X_p$.
 
 ## Supervised vs. Unsupervised learning
 
@@ -49,42 +31,12 @@ output:
 
 - Cancer research: Look for subgroups within the patients or within the genes in order to better understand the disease
 
-## Usefulness of Unsupervised Learning (Examples)
-
-- Cancer research: Look for subgroups within the patients or within the genes in order to better understand the disease
-
-- Online shopping site: Identify groups of shoppers as well as groups of items within each of those shoppers groups.
-
-## Usefulness of Unsupervised Learning (Examples)
-
-- Cancer research: Look for subgroups within the patients or within the genes in order to better understand the disease
-
 - Online shopping site: Identify groups of shoppers as well as groups of items within each of those shoppers groups.
 
 - Search engine: Search only a subset of the documents in order to find the best one for retrieval.
 
 +++
 
-## General Challenges of Unsupervised Learning
-
-- In general, unsupervised learning methods are
-    - more subjective
-    - hard to assess results
-
-- There is usually no obvious ground-truth to compare to
-
-## General Challenges of Unsupervised Learning
-
-- In general, unsupervised learning methods are
-    - more subjective
-    - hard to assess results
-
-- There is usually no obvious ground-truth to compare to
-
-- Remedy: 
-    - Unsupervised methods are usually part of a bigger goal
-    - Evaluate them as how they contribute to such bigger goal
-    
 ## General Challenges of Unsupervised Learning
 
 - In general, unsupervised learning methods are
@@ -143,32 +95,12 @@ in urban areas.
     - $p(p-1)/2$ such scatterplots
     - each contain small fraction of the total information present in the dataset
 
-## Data Visualization
-
-- Two-dimensional scatterplots of data
-    - $p(p-1)/2$ such scatterplots
-    - each contain small fraction of the total information present in the dataset
-
-- We want to find low dimensional representation of the data that captures most of the info as possible
-    - Perfect scenario: 2 or 3 dimensions.
-
-## Data Visualization
-
-- Two-dimensional scatterplots of data
-    - $p(p-1)/2$ such scatterplots
-    - each contain small fraction of the total information present in the dataset
-
 - We want to find low dimensional representation of the data that captures most of the info as possible
     - Perfect scenario: 2 or 3 dimensions.
 
 - **PCA: finds low dimension that captures most of the variability of the data**
 
 # Principal Component Analysis (PCA)
-
-## Principal Component Analysis (PCA)
-
-- Discussed before in the context of Principal Components Regression
-    - Turn large set of correlated variables into smaller set of orthogonal ones.
 
 ## Principal Component Analysis (PCA)
 
@@ -187,24 +119,10 @@ in urban areas.
 
 $$Z_m = \sum_{j=1}^{p} \phi_{jm} X_j \quad \text{subject to} \quad \sum_{j=1}^p \phi_{jm}^2 = 1$$
 
-## Principal Component Analysis (PCA)
-
-- We want to create a $n \times M$ matrix $Z$, with $M < p$.
-
-- The column $Z_m$ of $Z$ is the $m$-th principal component.
-
-$$Z_m = \sum_{j=1}^{p} \phi_{jm} X_j \quad \text{subject to} \quad \sum_{j=1}^p \phi_{jm}^2 = 1$$
-
 - We want $Z_1$ to have the highest possible variance.
     - That is, take the direction of the data where the observations vary the most.
     - Without the constrain we could get higher variance by increasing $\boldsymbol \phi_j$
 
-## Principal Component Analysis (PCA)
-
-- $Z_2$ should be uncorrelated to $Z_1$, and have the highest variance, subject to this constrain.
-    - The direction of $Z_1$ must be perpendicular (or orthogonal) to the direction of $Z_2$
-
-    
 ## Principal Component Analysis (PCA)
 
 - $Z_2$ should be uncorrelated to $Z_1$, and have the highest variance, subject to this constrain.
@@ -298,42 +216,12 @@ in the pop and ad predictors.
 
 - Each column represent a vector of predictors.
 
-## PCA - General setup
-
-- Let $\boldsymbol X$ be a matrix with dimension $n \times p$.
-
-- Each column represent a vector of predictors.
-
-- Assume $\boldsymbol \Sigma$ to be the covariance matrix associated with $\boldsymbol X$.
-
-## PCA - General setup
-
-- Let $\boldsymbol X$ be a matrix with dimension $n \times p$.
-
-- Each column represent a vector of predictors.
-
 - Assume $\boldsymbol \Sigma$ to be the covariance matrix associated with $\boldsymbol X$.
 
 - Since $\Sigma$ is a non-negative definite matrix, it has an eigen-decomposition
 $$ \boldsymbol {\Sigma} = \boldsymbol C \boldsymbol \Lambda \boldsymbol C^{-1} $$
     - $\boldsymbol \Lambda = diag(\lambda _1, ..., \lambda _p)$ is a diagonal matrix of (non-negative) eigenvalues in decreasing order, 
     - $\boldsymbol C$ is a matrix where its columns are formed by the eigenvectors of $\boldsymbol {\Sigma}$.
-
-## PCA - General setup (II)
-
-- We want $\boldsymbol Z_1 = \boldsymbol \phi_1 \boldsymbol X$, subject to $||\boldsymbol \phi_1||_2 = 1$ 
-
-- We want $\boldsymbol Z_1$ to have the highest possible variance, $V(\boldsymbol Z_1) = \boldsymbol \phi_1^T \Sigma \boldsymbol \phi_1$
-
-
-## PCA - General setup (II)
-
-- We want $\boldsymbol Z_1 = \boldsymbol \phi_1 \boldsymbol X$, subject to $||\boldsymbol \phi_1||_2 = 1$ 
-
-- We want $\boldsymbol Z_1$ to have the highest possible variance, $V(\boldsymbol Z_1) = \boldsymbol \phi_1^T \Sigma \boldsymbol \phi_1$
-
-- $\boldsymbol \phi_1$ equals the column eigenvector corresponding with the largest eigenvalue of $\boldsymbol \Sigma$
-
 
 ## PCA - General setup (II)
 
@@ -397,23 +285,9 @@ $$ R^2 = \frac{\sum _{i=1}^{M} \lambda _i}{\sum _{j=1}^{p}\lambda _j} $$
 
 - Flipping the sign has no effect as the direction of the PC does not change.
 
-## Uniqueness of PCs
-
-- Each Principal Component loading vector is unique, up to a sign flip.
-
-- Flipping the sign has no effect as the direction of the PC does not change.
-
 - The approximation below will not change because the score vector sign will compensate the flip on the loading vector
 
 $$x_{ij} \approx \sum_{m=1}^{M} z_{im} \phi_{jm}$$
-
-## Proportion of variance explained (PVE)
-
-- Let's assume the variables are centered to have mean zero.
-
-- Total variance present in a dataset:
-
-$$\sum_{j=1}^p Var(X_j) = \sum_{j=1}^p \frac{1}{n} \sum _{i=1}^ {n}x_{ij}^2$$
 
 ## Proportion of variance explained (PVE)
 
@@ -435,15 +309,6 @@ $$\frac{\sum_{i=1}^{n}\left(\sum_{j=1}^{p}\phi_{jm}x_{ij}\right)^2}{\sum_{j=1}^p
 
 - Cumulative PVE:
     - In total, there are $min(n-1, p)$ principal components, and their PVEs sum to one.
-    
-## Proportion of variance explained (PVE)
-
-- PVE of the $m$th component:
-
-$$\frac{\sum_{i=1}^{n}\left(\sum_{j=1}^{p}\phi_{jm}x_{ij}\right)^2}{\sum_{j=1}^p \sum _{i=1}^ {n}x_{ij}^2}$$
-
-- Cumulative PVE:
-    - In total, there are $min(n-1, p)$ principal components, and their PVEs sum to one.
 
 - The fraction of the original variance kept by the $M$ principal component
 
@@ -454,16 +319,6 @@ $$ \frac{\sum _{i=1}^{M} \lambda _i}{\sum _{j=1}^{p}\lambda _j} $$
 - where $\lambda$'s are the eigenvalues of the eigen-decomposition of the covariance matrix $\boldsymbol \Sigma$ of $\boldsymbol X$
  
 </div>
-
-## Deciding how many PCs to use
-
-- There is no objective answer
-
-- Adhoc, by looking at the PVE graph
-
-<center>
-<img src="imgs/us_arrests_pve.png" height="70%" width="70%" />
-</center>
 
 ## Deciding how many PCs to use
 

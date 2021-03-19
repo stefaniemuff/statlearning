@@ -1,7 +1,7 @@
 ---
 title: "Chapter 10: Unsupervised Learning"
 author: Thiago G. Martins | NTNU & Verizon
-date: Spring 2020
+date: Spring 2021
 bibliography: references.bib
 output:
   ioslides_presentation:
@@ -18,21 +18,6 @@ output:
     - Observations within each group are quite similar
     - Observations in different groups are quite different 
     
-## Clustering methods
-
-- Partition the data into different groups
-    - Observations within each group are quite similar
-    - Observations in different groups are quite different 
-    
-- Must define what it means to be similar or different
-    - Domain specific considerations
-    
-## Clustering methods
-
-- Partition the data into different groups
-    - Observations within each group are quite similar
-    - Observations in different groups are quite different 
-    
 - Must define what it means to be similar or different
     - Domain specific considerations
     
@@ -40,17 +25,6 @@ output:
     - Different types of cancer
     - Market segmentation
     - Search Engine
-
-## PCA vs. Clustering methods
-
-- Both aim to simplify the data via small number of summaries
-
-## PCA vs. Clustering methods
-
-- Both aim to simplify the data via small number of summaries
-
-- PCA looks for a low-dim representation that explains good fraction of variance
-    - Principal Components
 
 ## PCA vs. Clustering methods
 
@@ -74,10 +48,6 @@ output:
 
 - It is an approach for partitioning a dataset into K distinct, non-overlapping clusters.
 
-## K-means clustering
-
-- It is an approach for partitioning a dataset into K distinct, non-overlapping clusters.
-
 - $C_1, ..., C_k$: Sets containing indices of observations in each cluster.
 
 - This sets satisfy two properties:
@@ -89,24 +59,6 @@ output:
 1) Each observation belongs to at least one of the $K$ clusters.
 
 2) No observation belongs to more than one cluster.
-
-</div>
-
-## Within-cluster variation
-
-- A good cluster is one for which the **within-cluster variation** is **as small as possible**
-
-## Within-cluster variation
-
-- A good cluster is one for which the **within-cluster variation** is **as small as possible**
-
-- Within-cluster variation (squared Euclidean distance)
-
-$$W(C_k) = \frac{1}{|C_k|} \sum_{i, i' \in C_k} \sum_{j=1}^{p}(x_{ij} - x_{i'j})^2$$
-
-<div class="notes">
-
-- Squared Euclidean distance is the most common
 
 </div>
 
@@ -127,20 +79,6 @@ $$\underset{C_1, \ldots, C_k}{\text{minimize}}\left\{\sum_{k=1}^{K}W(C_k)\right\
 - Squared Euclidean distance is the most common
 
 </div>
-
-## K-means algorithm
-
-- Find algorithm to solve:
-
-$$\underset{C_1, \ldots, C_k}{\text{minimize}}\left\{\sum_{k=1}^{K} \frac{1}{|C_k|} \sum_{i, i' \in C_k} \sum_{j=1}^{p}(x_{ij} - x_{i'j})^2 \right\}$$
-
-## K-means algorithm
-
-- Find algorithm to solve:
-
-$$\underset{C_1, \ldots, C_k}{\text{minimize}}\left\{\sum_{k=1}^{K} \frac{1}{|C_k|} \sum_{i, i' \in C_k} \sum_{j=1}^{p}(x_{ij} - x_{i'j})^2 \right\}$$
-
-- Difficult problem: $K^n$ ways to partition $n$ observations into $K$ clusters.
 
 ## K-means algorithm
 
@@ -217,16 +155,6 @@ The pca-examples.rdata can be downloaded from the Blackboard.
 
 - Does not require us to commit to a particular choice of K in advance
 
-## Hierarchical Clustering
-
-- Does not require us to commit to a particular choice of K in advance
-
-- Produces an attractive tree-based representation called dendogram
-
-## Hierarchical Clustering
-
-- Does not require us to commit to a particular choice of K in advance
-
 - Produces an attractive tree-based representation called dendogram
 
 - We will describe bottom-up or agglomerative clustering
@@ -278,41 +206,11 @@ The pca-examples.rdata can be downloaded from the Blackboard.
 - Group of people 
     - evenly split between male and female 
     - evenly split between americans, japanese and french
-
-## Hierarchical structure
-
-- Not always suited for a arbitrary dataset
-
-- Group of people 
-    - evenly split between male and female 
-    - evenly split between americans, japanese and french
-    - best division in two groups -> gender
-    - best division in three groups -> nationality
-
-## Hierarchical structure
-
-- Not always suited for a arbitrary dataset
-
-- Group of people 
-    - evenly split between male and female 
-    - evenly split between americans, japanese and french
     - best division in two groups -> gender
     - best division in three groups -> nationality
     - not nested
 
 - This explains why hierarchical clusters can sometimes yield worse results than K-means for a given number of clusters
-
-## The hierarchical clustering algorithm
-
-1. Start at the botton of the dendogram
-    - Each of the $n$ observations is treated as its own cluster
-
-## The hierarchical clustering algorithm
-
-1. Start at the botton of the dendogram
-    - Each of the $n$ observations is treated as its own cluster
-2. Fuse the two clusters that are more similar to each other
-    - There are now $n-1$ clusters
 
 ## The hierarchical clustering algorithm
 
@@ -358,12 +256,6 @@ The pca-examples.rdata can be downloaded from the Blackboard.
 
 - But there are other options
 
-## Choice of dissimilarity measure
-
-- Euclidean distance is most common dissimilarity measure to use.
-
-- But there are other options
-
 - Correlation-based distance
     - Correlation focus on shape of the observation profile rather than their magnitude
 
@@ -402,24 +294,6 @@ The pca-examples.rdata can be downloaded from the Blackboard.
     - Matrix with shoppers (rows) and items (columns)
     - Value indicate number of times a shopper bought an item
     
-## Online retailer example
-
-- Online retailer example
-    - Identify subgroups of similar shoppers
-    - Matrix with shoppers (rows) and items (columns)
-    - Value indicate number of times a shopper bought an item
-    
-- Euclidean distance
-    - Infrequent shoppers will be clustered together
-    - The amount of itens bought matters
-    
-## Online retailer example
-
-- Online retailer example
-    - Identify subgroups of similar shoppers
-    - Matrix with shoppers (rows) and items (columns)
-    - Value indicate number of times a shopper bought an item
-    
 - Euclidean distance
     - Infrequent shoppers will be clustered together
     - The amount of itens bought matters
@@ -427,10 +301,6 @@ The pca-examples.rdata can be downloaded from the Blackboard.
 - Correlation distance
     - Shoppers with similar preference will be clustered together
     - Including both high and low volumes shoppers
-
-## Linkage
-
-- Need to extend the concept between dissimilarity between pairs of observations to pairs of groups of observations
 
 ## Linkage
 
@@ -486,32 +356,6 @@ The pca-examples.rdata can be downloaded from the Blackboard.
 Perform hierarchical clustering in the New York Times stories dataset. 
 
 The pca-examples.rdata can be downloaded from the Blackboard. 
-
-## Summary of the decisions involved
-
-- Should standardize the variables?
-    - Usually yes
-
-## Summary of the decisions involved
-
-- Should standardize the variables?
-    - Usually yes
-
-- K-means clustering
-    - What K?
-
-## Summary of the decisions involved
-
-- Should standardize the variables?
-    - Usually yes
-
-- K-means clustering
-    - What K?
-
-- Hierarchical clustering:
-    - dissimilarity measure?
-    - Linkage?
-    - Where to cut the dendogram?
 
 ## Summary of the decisions involved
 
