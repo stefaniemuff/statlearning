@@ -135,6 +135,12 @@ $$Z_m = \sum_{j=1}^{p} \phi_{jm} X_j \quad \text{subject to} \quad \sum_{j=1}^p 
     - We have created a set of orthogonal predictors
     - But have **not** accomplished dimensionality reduction
 
+## PCA Example: Interpretations
+
+- M-dimension that capture most of the variability contained in the data
+
+- M-dimension that is closest to the data points (average squared euclidean distances)
+
 ## PCA Example - Ad spending
 
 <center>
@@ -203,12 +209,6 @@ in the pop and ad predictors.
 - Suggesting one only needs the first principal component in order to accurately represent the pop and ad budgets.
 
 </div>
-
-## PCA Example: Interpretations
-
-- M-dimension that capture most of the variability contained in the data
-
-- M-dimension that is closest to the data points (average squared euclidean distances)
 
 ## PCA - General setup
 
@@ -288,37 +288,6 @@ $$ R^2 = \frac{\sum _{i=1}^{M} \lambda _i}{\sum _{j=1}^{p}\lambda _j} $$
 - The approximation below will not change because the score vector sign will compensate the flip on the loading vector
 
 $$x_{ij} \approx \sum_{m=1}^{M} z_{im} \phi_{jm}$$
-
-## Proportion of variance explained (PVE)
-
-- Let's assume the variables are centered to have mean zero.
-
-- Total variance present in a dataset:
-
-$$\sum_{j=1}^p Var(X_j) = \sum_{j=1}^p \frac{1}{n} \sum _{i=1}^ {n}x_{ij}^2$$
-
-- Variance explained by the $m$th component:
-
-$$\frac{1}{n} \sum_{i=1}^{n}z_{im}^2 = \frac{1}{n} \sum_{i=1}^{n}\left(\sum_{j=1}^{p}\phi_{jm}x_{ij}\right)^2$$
-
-## Proportion of variance explained (PVE)
-
-- PVE of the $m$th component:
-
-$$\frac{\sum_{i=1}^{n}\left(\sum_{j=1}^{p}\phi_{jm}x_{ij}\right)^2}{\sum_{j=1}^p \sum _{i=1}^ {n}x_{ij}^2}$$
-
-- Cumulative PVE:
-    - In total, there are $min(n-1, p)$ principal components, and their PVEs sum to one.
-
-- The fraction of the original variance kept by the $M$ principal component
-
-$$ \frac{\sum _{i=1}^{M} \lambda _i}{\sum _{j=1}^{p}\lambda _j} $$
-
-<div class="notes">
-
-- where $\lambda$'s are the eigenvalues of the eigen-decomposition of the covariance matrix $\boldsymbol \Sigma$ of $\boldsymbol X$
- 
-</div>
 
 ## Deciding how many PCs to use
 

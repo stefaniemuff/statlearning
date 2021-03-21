@@ -3350,6 +3350,13 @@ margin-bottom: 0;
 </ul></li>
 </ul>
 
+</article></slide><slide class=""><hgroup><h2>PCA Example: Interpretations</h2></hgroup><article  id="pca-example-interpretations">
+
+<ul>
+<li><p>M-dimension that capture most of the variability contained in the data</p></li>
+<li><p>M-dimension that is closest to the data points (average squared euclidean distances)</p></li>
+</ul>
+
 </article></slide><slide class=""><hgroup><h2>PCA Example - Ad spending</h2></hgroup><article  id="pca-example---ad-spending">
 
 <center>
@@ -3414,13 +3421,6 @@ margin-bottom: 0;
 <li><p>There is little relationship between 2nd PC and predictors</p></li>
 <li><p>Suggesting one only needs the first principal component in order to accurately represent the pop and ad budgets.</p></li>
 </ul></section></aside>
-
-</article></slide><slide class=""><hgroup><h2>PCA Example: Interpretations</h2></hgroup><article  id="pca-example-interpretations">
-
-<ul>
-<li><p>M-dimension that capture most of the variability contained in the data</p></li>
-<li><p>M-dimension that is closest to the data points (average squared euclidean distances)</p></li>
-</ul>
 
 </article></slide><slide class=""><hgroup><h2>PCA - General setup</h2></hgroup><article  id="pca---general-setup">
 
@@ -3493,44 +3493,6 @@ margin-bottom: 0;
 </ul>
 
 <p>\[x_{ij} \approx \sum_{m=1}^{M} z_{im} \phi_{jm}\]</p>
-
-</article></slide><slide class=""><hgroup><h2>Proportion of variance explained (PVE)</h2></hgroup><article  id="proportion-of-variance-explained-pve">
-
-<ul>
-<li><p>Let’s assume the variables are centered to have mean zero.</p></li>
-<li><p>Total variance present in a dataset:</p></li>
-</ul>
-
-<p>\[\sum_{j=1}^p Var(X_j) = \sum_{j=1}^p \frac{1}{n} \sum _{i=1}^ {n}x_{ij}^2\]</p>
-
-<ul>
-<li>Variance explained by the \(m\)th component:</li>
-</ul>
-
-<p>\[\frac{1}{n} \sum_{i=1}^{n}z_{im}^2 = \frac{1}{n} \sum_{i=1}^{n}\left(\sum_{j=1}^{p}\phi_{jm}x_{ij}\right)^2\]</p>
-
-</article></slide><slide class=""><hgroup><h2>Proportion of variance explained (PVE)</h2></hgroup><article  id="proportion-of-variance-explained-pve-1">
-
-<ul>
-<li>PVE of the \(m\)th component:</li>
-</ul>
-
-<p>\[\frac{\sum_{i=1}^{n}\left(\sum_{j=1}^{p}\phi_{jm}x_{ij}\right)^2}{\sum_{j=1}^p \sum _{i=1}^ {n}x_{ij}^2}\]</p>
-
-<ul>
-<li>Cumulative PVE:
-
-<ul>
-<li>In total, there are \(min(n-1, p)\) principal components, and their PVEs sum to one.</li>
-</ul></li>
-<li>The fraction of the original variance kept by the \(M\) principal component</li>
-</ul>
-
-<p>\[ \frac{\sum _{i=1}^{M} \lambda _i}{\sum _{j=1}^{p}\lambda _j} \]</p>
-
-<aside class='note'><section><ul>
-<li>where \(\lambda\)’s are the eigenvalues of the eigen-decomposition of the covariance matrix \(\boldsymbol \Sigma\) of \(\boldsymbol X\)</li>
-</ul></section></aside>
 
 </article></slide><slide class=""><hgroup><h2>Deciding how many PCs to use</h2></hgroup><article  id="deciding-how-many-pcs-to-use">
 
