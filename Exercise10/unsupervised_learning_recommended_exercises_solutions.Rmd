@@ -46,7 +46,7 @@ nyt_pca = prcomp(nyt_data[,-1])
 Too much information on the graph, we should select only a few loading vectors to display.
 
 ```{r, message=FALSE, warning=FALSE}
-biplot(nyt_pca, scale=0)
+biplot(nyt_pca, scale=0, cex = 0.5)
 ```
 
 Lets pick some words with high PC1 weight and some words with high PC2 weight. Only looking at the graph we can see that PC1 is associated with music and PC2 with art.
@@ -58,7 +58,7 @@ informative_loadings = rbind(
   head(nyt_loading[order(nyt_loading[,2], decreasing = TRUE),])
 )
 
-biplot(x = nyt_pca$x[,1:2], y= informative_loadings, scale=0)
+biplot(x = nyt_pca$x[,1:2], y= informative_loadings, scale=0, cex = 0.5)
 ```
 
 ## PVE 
