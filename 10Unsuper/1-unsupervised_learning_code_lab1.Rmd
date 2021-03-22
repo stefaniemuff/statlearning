@@ -2,18 +2,18 @@
 title: "TMA4268 Statistical Learning"
 subtitle: "Chapter 10: Unsupervised Learning - Lab 1"
 author: "Thiago G. Martins, Department of Mathematical Sciences, NTNU"
-date: "Spring 2020"
+date: "Spring 2021"
 output: #3rd letter intentation hierarchy
 #  beamer_presentation:
 ###    incremental: true # or >* for one at a time
 #  slidy_presentation:
 #    font_adjustment: +1  
-   prettydoc::html_pretty:
-    theme: architect
-    highlight: github
-#  pdf_document:
-  #  toc: true
-  #  toc_depth: 2
+  # prettydoc::html_pretty:
+  #  theme: architect
+  #  highlight: github
+  pdf_document:
+    toc: true
+    toc_depth: 2
 
 ---
 
@@ -115,7 +115,7 @@ dim(pr.out$x)
 We can plot the first two principal components as follows:
 
 ```{r, message=FALSE, warning=FALSE}
-biplot(pr.out, scale=0)
+biplot(pr.out, scale=0, cex = 0.5)
 ```
 
 The `scale=0` argument to `biplot()` ensures that the arrows are scaled to
@@ -128,7 +128,7 @@ equivalent results
 ```{r, message=FALSE, warning=FALSE}
 pr.out$rotation=-pr.out$rotation
 pr.out$x=-pr.out$x
-biplot(pr.out, scale=0)
+biplot(pr.out, scale=0, cex = 0.5)
 ```
 
 #### Proportion of variance explained (PVE)
