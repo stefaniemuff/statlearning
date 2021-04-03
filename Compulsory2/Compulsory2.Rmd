@@ -159,9 +159,9 @@ Now use lasso regression on the same data set. Explain how you choose $\lambda$.
 
 **R-hints**:
 ```{r}
-x.train <- model.matrix(birds~., data = catdat.train)
+x.train <- model.matrix(birds~., data = catdat.train)[,-1]
 y.train <- catdat.train$birds
-x.test = model.matrix(birds~., data = catdat.test)
+x.test = model.matrix(birds~., data = catdat.test)[,-1]
 y.test = catdat.test$birds
 ```
 
@@ -172,7 +172,7 @@ For the lasso regression, what happens when $\lambda \rightarrow \infty$? What h
 Now check whether the test MSE is actually better for the models in b) and c), compared to
 
   i) a model with only intercept, and 
-  ii) a simple linear regression. 
+  ii) a multiple linear regression using all covariates. 
 
 
 ## f) (1P)
@@ -233,6 +233,7 @@ d.corona <- read.csv(sprintf("https://docs.google.com/uc?id=%s&export=download",
 ```
 
 ```{r, eval = T, echo=F,fig.width=6,fig.height=5,out.width="60%"}
+set.seed(1)
 library(tree)
 d.corona$deceased = as.numeric(d.corona$deceased)
 t.corona = tree(deceased ~ age + country + sex , data=d.corona, split = "deviance",control = tree.control(2010, mincut = 5, minsize = 10, mindev = 0.003))

@@ -1755,9 +1755,9 @@ catdat.test = catdat[-train.ind, ]</code></pre>
 <h2>c) (2P) - Lasso regression</h2>
 <p>Now use lasso regression on the same data set. Explain how you choose <span class="math inline">\(\lambda\)</span>. Report the non-zero coefficients, and the test MSE.</p>
 <p><strong>R-hints</strong>:</p>
-<pre class="r"><code>x.train &lt;- model.matrix(birds ~ ., data = catdat.train)
+<pre class="r"><code>x.train &lt;- model.matrix(birds ~ ., data = catdat.train)[, -1]
 y.train &lt;- catdat.train$birds
-x.test = model.matrix(birds ~ ., data = catdat.test)
+x.test = model.matrix(birds ~ ., data = catdat.test)[, -1]
 y.test = catdat.test$birds</code></pre>
 </div>
 <div id="d-1p" class="section level2">
@@ -1769,7 +1769,7 @@ y.test = catdat.test$birds</code></pre>
 <p>Now check whether the test MSE is actually better for the models in b) and c), compared to</p>
 <ol style="list-style-type: lower-roman">
 <li>a model with only intercept, and</li>
-<li>a simple linear regression.</li>
+<li>a multiple linear regression using all covariates.</li>
 </ol>
 </div>
 <div id="f-1p" class="section level2">
