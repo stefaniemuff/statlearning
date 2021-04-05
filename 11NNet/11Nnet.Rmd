@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "April 19 and 20, 2021"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -1013,7 +1013,7 @@ $~$
 
 
 1. Inputs (input layer nodes), $j=1,\dots p$: $x_1, x_2, \ldots, x_p$, or as a vector ${\boldsymbol x}$.
-2. The nodes in the hidden layer, $m=1,\ldots, M$: $z_1, z_2, \ldots, z_m$, or as vector ${\boldsymbol z}$, and the hidden layer activation function $\phi_h$.
+2. The nodes $z_m$ in the hidden layer, $m=1,\ldots, M$; as vector ${\boldsymbol z}^\top=(z_1, \ldots, z_M)$, and the hidden layer activation function $\phi_h$.
 $$
 z_m({\boldsymbol x})=\phi_h(\alpha_{0m}+\sum_{j=1}^p \alpha_{jm}x_{j})
 $$
@@ -1075,11 +1075,12 @@ $~$
 
 **Q:** Does this look like something you have seen before?
 
+$~$
 
 **A:**
 
-* Principal component regression.
-* Partial least squares.
+<!-- * Principal component regression. -->
+<!-- * Partial least squares. -->
 
 
 ---
@@ -1097,7 +1098,7 @@ $~$
 $~$
 \pause
 
-The _\textcolor{red}{universal approximation theorem}_\footnote{Goodfellow et al 2016, p.194, https://www.deeplearningbook.org} says that a feedforward network with
+The _\textcolor{red}{universal approximation theorem}_\footnote{Goodfellow et al 2016, Section 6.4.1, https://www.deeplearningbook.org} says that a feedforward network with
 \vspace{2mm}
   
   * a _linear output layer_
@@ -1415,9 +1416,9 @@ $~$
 
 * The function is piecewise linear, but _in total non-linear_. 
 
-* Replacing sigmoid with ReLU is reported to be one of the major changes that have improved the performance of the feedforward networks\footnote{Goodfellow et al, page 226}.
+* Replacing sigmoid with ReLU is reported to be one of the major changes that have improved the performance of the feedforward networks\footnote{Goodfellow et al, Section 6.6}.
 
-* Easy to use with gradient descent -- even though the function is not differentiable at 0. As we will touch upon later, we don't expect to train a network until the gradient is 0. The derivative from the left at 0 is 0, and the derivative from the right is 1\footnote{See Goodfellow et al, p.192 for a discussion on this topic.}.
+* Easy to use with gradient descent -- even though the function is not differentiable at 0. As we will touch upon later, we don't expect to train a network until the gradient is 0. The derivative from the left at 0 is 0, and the derivative from the right is 1\footnote{See Goodfellow et al, Section 6.3 for a discussion on this topic.}.
 
 <!-- When initializing the parameter going into a ReLU node, the advice is to set weight of the bias node to be small and positive, e.g. 0.1, which makes it likely that node will be active (larger than 0) for most inputs in the training set. -->
 
@@ -1431,7 +1432,7 @@ ReLU can also be motivated from biology.
 * For some inputs a biological neuron output can be proportional to the input
 * But, most of the time a biological neuron is inactive.
 
-According to @goodfellow, page 191, hidden unit design is an _active area of research._
+According to @goodfellow (Section 6.3), hidden unit design is an _active area of research._
 
  \centering
 ![ ](Action_potential.png){width=45%}
@@ -1478,7 +1479,7 @@ $~$
 
 ---
 
-However, the recent practice, see e.g. @kerasR, Section 4.5.6/7 and @goodfellow, page 229, is to
+However, the recent practice, see e.g. @kerasR, Section 4.5.6/7 and @goodfellow, Section 7, is to
 
 $~$
 
@@ -1551,12 +1552,12 @@ Due to how estimation is done (see below), the loss functions chosen "need" to b
 
 $~$
 
-**Note**:
+<!-- **Note**: -->
 
 
-* 1980-1990s: the mean squared error was the prominent loss function also for classification problems, but this has subsequently changed.
+<!-- * 1980-1990s: the mean squared error was the prominent loss function also for classification problems, but this has subsequently changed. -->
 
-* We have not explicitly assumed anything about any probability distribution of the responses (not even assumed that the responses are random variables). However, we know which statistical model assumptions would give the loss functions as related to the negative of the loglikelihood.
+<!-- * We have not explicitly assumed anything about any probability distribution of the responses (not even assumed that the responses are random variables). However, we know which statistical model assumptions would give the loss functions as related to the negative of the loglikelihood. -->
 
 ---
 
@@ -1592,7 +1593,9 @@ where $\lambda$ is the _learning rate_  (usually a small value). In `keras` the 
 
 **Q**: Why are we moving in the direction of the negative of the gradient? Why not the positive?
 
-**A**: The gradient would point in the direction of the steepest ascent (not descent).
+**A**: 
+
+<!-- The gradient would point in the direction of the steepest ascent (not descent). -->
 
 ---
 
@@ -1628,13 +1631,13 @@ _\textcolor{red}{Mini-batch stochastic gradient descent}_
 
 * Mini-batches may be processed _in parallel_, and the batch size is often a power of 2 (32 or 256).
 
-* It also turns out that small batches also serves as a regularization effect maybe due to the variability they bring to the optimization process.
+* Small batches also bring in a _regularization effect_, maybe due to the variability they bring to the optimization process.
 
 
 --- 
 
 In the 3th video (on backpropagation) from 3Blue1Brown there is nice example of one trajectory from gradient decent and one from SGD (10:10 minutes into the video):
-<https://www.youtube.com/watch?v=tIeHLnjs5U8>
+<https://www.youtube.com/watch?v=Ilg3gGewQ5U&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=3>
 
 ---
 
@@ -1687,7 +1690,8 @@ More background:
 
 $~$
 
-* Mathematical details: @goodfellow Section 6.5 (pages 204-238).
+* Mathematical details: @goodfellow Section 6.5.  
+<!-- (pages 204-238). -->
 
 $~$
 
@@ -2316,7 +2320,7 @@ taken from @kerasR: <https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural
 * @ESL,Chapter 11: Neural Networks
 * @casi, Chapter 18: Neural Networks and Deep Learning
 * @kerasR
-* @goodfellow (to be used in IT3030) <https://www.deeplearningbook.org/>
+* @goodfellow (used in IT3030) <https://www.deeplearningbook.org/>
 * Explaining backpropagation <http://neuralnetworksanddeeplearning.com/chap2.html>
 * Slides from MA8701 (Thiago Martins) <https://www.math.ntnu.no/emner/MA8701/2019v/DeepLearning/>
 
