@@ -146,7 +146,7 @@ Neuron and myelinated axon, with signal flow from inputs at dendrites to outputs
 
 ---
 
-* There are several (self-study) learning resources (some listed under 'further references') that the student my turn to for further knowledge into deep learning, but this presentation is heavily based on @kerasR, with added formulas and theory.
+* There are several (self-study) learning resources (some listed under 'further references') that the students my turn to for further knowledge into deep learning, but this presentation is heavily based on @kerasR, with added formulas and theory.
 * There is a new IT3030 [deep learning course at NTNU](https://www.ntnu.no/studier/emner/IT3030#tab=omEmnet).
 
 
@@ -242,9 +242,10 @@ Recapitulate from Module 3 with the bodyfat dataset that contained the following
 
 We will now look at modelling the `bodyfat` as response and using all other variables as covariates - this will give us
 
-* one numerical output (response), and
 * seven covariates
 * one intercept
+* one numerical output 
+
 
 Let $n$ be the number of observations in the training set, here $n=243$.
 
@@ -273,14 +274,20 @@ $${\boldsymbol Y}={\boldsymbol {X}} \boldsymbol{\beta}+{\boldsymbol{\varepsilon}
 ---
 
 Assumptions:
+\vspace{2mm}
 
-1. $\text{E}(\boldsymbol{\varepsilon})=\boldsymbol{0}$.
-2. $\text{Cov}(\boldsymbol{\varepsilon})=\text{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\boldsymbol{I}$.
+1. $\mathsf{E}(\boldsymbol{\varepsilon})=\boldsymbol{0}$.
+\vspace{2mm}
+2. $\mathsf{Cov}(\boldsymbol{\varepsilon})=\mathsf{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\boldsymbol{I}$.
+\vspace{2mm}
 3. The design matrix has full rank, $\text{rank}({\bf X})=p+1$. (We assume $n>>(p+1)$.)
+
+\vspace{2mm}
 
 The classical _normal_ linear regression model is obtained if additionally
 
 4. $\boldsymbol\varepsilon\sim N_n({\boldsymbol 0},\sigma^2 {\bf I})$ holds. Here $N_n$ denotes the $n$-dimensional multivarate normal distribution.
+
 
 ---
 
@@ -334,7 +341,7 @@ fitnnet=nnet(bodyfat~ age + weight + height + bmi + neck + abdomen + hip,data=d.
 # NB default is one hidden layer but avoided with size=0, but then skip=TRUE is needed,
 ```
 
-```{r motivating, echo=FALSE, fig.width=7, fig.height=7,fig.align = "center",out.width='80%'}
+```{r motivating, echo=FALSE, fig.width=7, fig.height=6.5,fig.align = "center",out.width='80%'}
 plotnet(fitnnet)
 ```
 
@@ -359,29 +366,23 @@ y_1({\boldsymbol x}_i)=\phi_o(w_0+w_1 x_{i1}+\cdots + w_p x_{ip}) \ ,
 \end{equation*}
 where $\phi_o(x)=x$ (identity function).
 
----
-
-* We do not say anything of what is random and fixed, and do not make any assumption distribution of a random variable.
-
-* In the statistics world we would have written $\hat{y}_1({\boldsymbol x}_i)$ to specify that we are estimating a predicted  value of the response for the given covariate value. To be able to distinguish this predicted response from the observed response we use the notation:
-$$ \hat{y}_1({\boldsymbol x}_i)=\phi_o(w_0+w_1 x_{i1}+\cdots + w_p x_{ip})$$
-
 $~$
 
-The only difference to our multiple linear regression (MLR) model is then that we would have called the $w$s $\hat{\beta}$s instead.
+In the statistics world 
+
+* we would have written $\hat{y}_1({\boldsymbol x}_i)$ to specify that we are estimating a predicted  value of the response for the given covariate value. 
+
+* we would have called the $w$s $\hat{\beta}$s instead.
 
 
 
 ---
 
 ### Statistical parameter estimation
-\vspace{2mm}
-
-* In multiple linear regression, the parameters $\boldsymbol\beta$ are estimated with maximum likelihood and least squares (equivalent under Normal assumption).
 
 $~$ 
 
-* **Remember**: The estimator $\hat{\boldsymbol \beta}$ is found by minimizing the RSS for a multiple linear regression model:
+**Remember**: The estimator $\hat{\boldsymbol \beta}$ is found by minimizing the RSS for a multiple linear regression model:
 $$
 \begin{aligned} \text{RSS} &=\sum_{i=1}^n (y_i - \hat y_i)^2 = \sum_{i=1}^n (y_i - \hat \beta_0 - \hat \beta_1 x_{i1} - \hat \beta_2 x_{i2} -...-\hat \beta_p x_{ip} )^2 \\
 &= \sum_{i=1}^n (y_i-{\boldsymbol x}_i^T \boldsymbol \beta)^2=({\boldsymbol Y}-{\boldsymbol X}\hat{\boldsymbol{\beta}})^T({\boldsymbol Y}-{\boldsymbol X}\hat{\boldsymbol{\beta}}) \ .\end{aligned}
@@ -394,7 +395,7 @@ $$ \hat{\boldsymbol\beta}=({\boldsymbol X}^T{\boldsymbol X})^{-1} {\boldsymbol X
 ### Neural networks: loss function and gradient descent
 \vspace{4mm}
 
-We now translate what we did for the regression setup into the neural networks world:
+We now translate from the statistical into the neural networks world:
 \vspace{2mm}
 
 1. Replace the parameters $\boldsymbol\beta$ with _network weights_ $\boldsymbol w$.
@@ -405,16 +406,9 @@ $~$
 $$ J({\boldsymbol w})=\frac{1}{n}\sum_{i=1}^n (y_i-{\hat{y}_1({\boldsymbol x}_i)})^2 \ ,$$
 where $J({\boldsymbol w})$ indicates that the unknown parameters are the weights ${\boldsymbol w}$.
 
----
+$~$
 
-3.  Replace _minimizing_ the loss function (RSS) via
-\vspace{2mm}
-     + calculate the derivative of the loss function with respect to each of our parameters
-     + _\textcolor{red}{more general minization procedures}_ that work also when the loss function does not have a closed form.
-     
-     $~$
-     
-     Main idea: The gradient descent algorithm
+3.  Replace _minimizing_ the loss function (RSS) by _\textcolor{red}{more general minization procedures}_ that work also when the loss function does not have a closed form. In particular, use the the _gradient descent algorithm_.
 
 
 ---
@@ -461,6 +455,7 @@ $${\boldsymbol w}^{(t+1)}={\boldsymbol w}^{(t)} - \lambda \nabla J({\boldsymbol 
 
 $~$
 
+$~$
 
 \center
 <!-- ![](Gradient_descent_local_minima.jpg){width=50%} -->
@@ -469,17 +464,17 @@ $~$
 \tiny (https://github.com/SoojungHong/MachineLearning/wiki/Gradient-Descent)
 
 $~$
-$~$
 
-\flushleft
-\normalsize
-Other figures that give good illustration of the optimization problem in @kerasR:
 
-$~$
+<!-- \flushleft -->
+<!-- \normalsize -->
+<!-- Other figures that give good illustration of the optimization problem in @kerasR: -->
 
-* 2.11: SGD down a 1D loess curve
-* 2.12: Gradient descent down a 2D loss surface
-* 2.13: local and global minimum
+<!-- $~$ -->
+
+<!-- * 2.11: SGD down a 1D loess curve -->
+<!-- * 2.12: Gradient descent down a 2D loss surface -->
+<!-- * 2.13: local and global minimum -->
 
 
 
@@ -727,7 +722,6 @@ Why can NN and logistic regression lead to such different results?
 
 ## Example 3: Categorical outcome (multiclass regression)
 
-\textbf{Which type of iris species?}
 
 $~$
 
@@ -825,9 +819,6 @@ where each ${\boldsymbol w}_s$ is a $r+1$ dimensional vector of weights.
 
 * The focus of neural networks is not to interpret the weights, and there is no need to assume full rank of a matrix with output nodes.
 
-\vspace{2mm}
-
-**Q:** How many parameters are we estimating?
 
 ---
 
@@ -835,7 +826,7 @@ where each ${\boldsymbol w}_s$ is a $r+1$ dimensional vector of weights.
 
 $~$
 
-* For parameter estimation we looked at maximizing the log-likelihood of the statistical model. For neural networks the negative of the multinomial loglikelihood is a scaled version of the _\textcolor{red}{categorical cross-entropy loss}_
+* For neural networks the negative of the multinomial loglikelihood is a scaled version of the _\textcolor{red}{categorical cross-entropy loss}_
 $$ J({\boldsymbol w})=-\frac{1}{n}\sum_{i=1}^n\frac{1}{C} \sum_{c=1}^C (y_{ic}\ln({\hat{y}_c({\boldsymbol x}_i)}) \ .$$
 
 $~$
@@ -881,7 +872,7 @@ iris.nnet <- nnet(species ~ ., data = ird, subset=train,  size = 0, skip=TRUE, m
 
 ---
 
-* How many weights have been estimated? 
+* How many weights (parameters) have been estimated? 
 
 * What does the graph look like?
 
@@ -902,7 +893,7 @@ plotnet(iris.nnet)
 
 ---
 
-Fitting the multinomial regression. This is also done with nnet, but using a wrapper `multinom` (this has its own default settings, so results are not necessarily the same as above).
+Multinomial regression is also done with nnet, but using a wrapper `multinom` (we use default settings, so results are not necessarily the same as above).
 
 
 \scriptsize
@@ -913,37 +904,17 @@ fit=multinom(species~ -1 + .,family=multinomial, data=iris_train)
 coef(fit)
 ```
 
----
+
 
 Problem: `multinom()` seems to fit an intercept _plus_ an offset node (B), thus we have to remove the intercept manually (by saying `-1` in the above formula).
 
-```{r iris_fit, echo=FALSE, fig.width=9, fig.height=9,fig.align = "center",out.width='80%'}
-plotnet(fit)
-```
+ 
 
 <!-- Solution would be to use `multinom(species~  -1 + .,family=multinomial, data=iris_train)` -->
 
----
+<!-- --- -->
 
-### The performance of multinomial regression vs nnet
-
-$~$
-
-\scriptsize
-```{r}
-testclass=predict(fit,new=iris_test)
-confusionMatrix(data=testclass,reference=iris_test$species)$table
-```
-
-$~$
-
-```{r}
-table(predict(iris.nnet, iris_test, type = "class"),iris_test$species)
-```
-
----
-
-For more on multinomial regression with R, check [here](https://www.r-bloggers.com/%F0%9F%93%8A-multinomial-regression-in-r/).
+<!-- For more on multinomial regression with R, check [here](https://www.r-bloggers.com/%F0%9F%93%8A-multinomial-regression-in-r/). -->
 
 ---
 
@@ -1141,10 +1112,10 @@ ggarrange(pp,p)
 
 \vspace{2mm}
 
-* Even though a large feedforward network with one hidden layer may be able to represent a desired function, we may not be able to estimate the parameters of the function:
-    * we may choose too many or too few nodes in the hidden layer.
-    * our optimization routine may fail.
-    * we may overfit/underfit the training data.
+* Even though a large feedforward network with one hidden layer may be able to _represent_ a desired function, we may not be able to _learn_ (i.e., estimate the) parameters of the function. Why?
+    * wrong nodes in the hidden layer.
+    * our optimization routine may fail / may find a local minimum.
+    * we may overfit / underfit the training data.
 
 \vspace{2mm}
 
@@ -1179,6 +1150,8 @@ $~$
 
 ## Boston house prices
 
+\vspace{2mm}
+
 **Objective**: To predict the median price of owner-occupied homes in a given Boston suburb in the mid-1970s using 10 input variables.
 
 This data set is both available in the `MASS` and `keras` R package.
@@ -1186,6 +1159,8 @@ This data set is both available in the `MASS` and `keras` R package.
 $~$
 
 ### Preparing the data
+
+\vspace{2mm}
 
 * Only 506, split between 404 training samples and 102 test samples (this split already done in the `keras` library)
 * Each feature in the input data (for example, the crime rate) has a different scale, some values are proportions, which take values between 0 and 1; others take values between 1 and 12, others between 0 and 100, and so on.
@@ -1246,10 +1221,12 @@ Just checking out one hidden layer with 5 units to get going.
 
 \scriptsize
 
-```{r}
+```{r,echo=TRUE,results='hide'}
 library(nnet)
-fit5<- nnet(train_targets~., data=train_data,size=5,linout=TRUE,maxit=1000)
-summary(fit5)
+fit5<- nnet(train_targets~., data=train_data,size=5,linout=TRUE,maxit=1000,trace=F)
+```
+
+```{r}
 pred=predict(fit5,newdata=test_data,type="raw")
 sqrt(mean((pred[,1]-test_targets)^2))
 mean(abs(pred[,1]-test_targets))
@@ -1261,55 +1238,12 @@ mean(abs(pred[,1]-test_targets))
 
 $~$
 
-$\rightarrow$ Cross-validation! (Time-consuming, so only results are shown below.)
+$\rightarrow$ Cross-validation! (Time-consuming)
 
 $~$
 
 
-\scriptsize
-
-```{r}
-grid=c(5,10,15,20,25,30,50)
-```
-
-```{r,echo=F,eval=F}
-set.seed(123)
-indices <- sample(1:nrow(train_data))
-folds <- cut(indices, breaks = 4, labels = FALSE)
-# have now assigned the traning data to 4 diffeent folds all of the same size (101)
-resmat=matrix(NA,ncol=k,nrow=length(grid))
-for (j in 1:k)
-{
-  thistrain=(1:dim(train_data)[1])[folds!=j]
-  thisvalid=(1:dim(train_data)[1])[folds==j]
-  mean <- apply(org_train[thistrain,], 2, mean)
-  std <- apply(org_train[thistrain,], 2, sd)
-  new <- scale(org_train, center = mean, scale = std)
-  for (i in 1:length(grid))
-  {
-    thissize=grid[i]
-
-    fit=nnet(train_targets~., data=new,size=thissize,linout=TRUE,maxit=5000)
-    pred=predict(fit,newdata=new[thisvalid,],type="raw")
-    resmat[i,j]=sum((pred[,1]-train_targets[thisvalid])^2)
-  }}
- mse=apply(resmat,1,sum)/nrow(train_data)
-```
- 
-```{r,echo=F}
- mse <- c(6.441470, 2.185833, 7.800200e-01, 1.521461e-01, 1.284062e-01,7.692416e-04, 2.451387e-07)
-```
- 
- $~$
- 
- \center
-```{r,fig.width=4.5,fig.height=4,out.width="60%",echo=F}
- plot(grid,mse,type="l",xlab="No of nodes in hidden layer",ylab="MSE")
-```
-
----
-
-The best model here was the model with 50 nodes, the largest model we tried. Fitting that model on the full training set and testing on the test set:
+Here we compare to a model with 50 nodes:
 
 $~$
 
@@ -1326,10 +1260,9 @@ mae
 
 $~$
  
-\normalsize
-* We could improve this error rate my using deeper networks.
+Note: Deeper networks would presumably improve the error. 
 
-<!-- * See here: <https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural_networks_boston_housing.html> for running two hidden layers of 64 nodes each with `keras`. (This gave a mean absolute error on the test set of 2.68 after early stopping.) -->
+See here: <https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural_networks_boston_housing.html> for running two hidden layers of 64 nodes each with `keras`. (This gave a mean absolute error on the test set of 2.68 after early stopping.) 
 
 
 ---
@@ -1418,7 +1351,7 @@ $~$
 
 * Replacing sigmoid with ReLU is reported to be one of the major changes that have improved the performance of the feedforward networks\footnote{Goodfellow et al, Section 6.6}.
 
-* Easy to use with gradient descent -- even though the function is not differentiable at 0. As we will touch upon later, we don't expect to train a network until the gradient is 0. The derivative from the left at 0 is 0, and the derivative from the right is 1\footnote{See Goodfellow et al, Section 6.3 for a discussion on this topic.}.
+* Easy to use with gradient descent -- even though the function is not differentiable at 0. As we will touch upon later, we don't expect to train a network until the gradient is 0.\footnote{See Goodfellow et al, Section 6.3 for a discussion on this topic.}.
 
 <!-- When initializing the parameter going into a ReLU node, the advice is to set weight of the bias node to be small and positive, e.g. 0.1, which makes it likely that node will be active (larger than 0) for most inputs in the training set. -->
 

@@ -359,7 +359,7 @@ Vu-Quoc) \url{https://commons.wikimedia.org/w/index.php?curid=72816083}
 \tightlist
 \item
   There are several (self-study) learning resources (some listed under
-  `further references') that the student my turn to for further
+  `further references') that the students my turn to for further
   knowledge into deep learning, but this presentation is heavily based
   on Chollet and Allaire (2018), with added formulas and theory.
 \item
@@ -530,11 +530,11 @@ all other variables as covariates - this will give us
 \begin{itemize}
 \tightlist
 \item
-  one numerical output (response), and
-\item
   seven covariates
 \item
   one intercept
+\item
+  one numerical output
 \end{itemize}
 
 Let \(n\) be the number of observations in the training set, here
@@ -571,18 +571,21 @@ We used the compact matrix notation for all observations
 
 \begin{frame}
 
-Assumptions:
+Assumptions: \vspace{2mm}
 
 \begin{enumerate}
 \tightlist
 \item
-  \(\text{E}(\boldsymbol{\varepsilon})=\boldsymbol{0}\).
+  \(\mathsf{E}(\boldsymbol{\varepsilon})=\boldsymbol{0}\). \vspace{2mm}
 \item
-  \(\text{Cov}(\boldsymbol{\varepsilon})=\text{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\boldsymbol{I}\).
+  \(\mathsf{Cov}(\boldsymbol{\varepsilon})=\mathsf{E}(\boldsymbol{\varepsilon}\boldsymbol{\varepsilon}^T)=\sigma^2\boldsymbol{I}\).
+  \vspace{2mm}
 \item
   The design matrix has full rank, \(\text{rank}({\bf X})=p+1\). (We
   assume \(n>>(p+1)\).)
 \end{enumerate}
+
+\vspace{2mm}
 
 The classical \emph{normal} linear regression model is obtained if
 additionally
@@ -702,27 +705,18 @@ We need \emph{\textcolor{red}{new concepts}}:
   \end{equation*} where \(\phi_o(x)=x\) (identity function).
 \end{itemize}
 
-\end{frame}
+\(~\)
 
-\begin{frame}
+In the statistics world
 
 \begin{itemize}
 \item
-  We do not say anything of what is random and fixed, and do not make
-  any assumption distribution of a random variable.
+  we would have written \(\hat{y}_1({\boldsymbol x}_i)\) to specify that
+  we are estimating a predicted value of the response for the given
+  covariate value.
 \item
-  In the statistics world we would have written
-  \(\hat{y}_1({\boldsymbol x}_i)\) to specify that we are estimating a
-  predicted value of the response for the given covariate value. To be
-  able to distinguish this predicted response from the observed response
-  we use the notation:
-  \[ \hat{y}_1({\boldsymbol x}_i)=\phi_o(w_0+w_1 x_{i1}+\cdots + w_p x_{ip})\]
+  we would have called the \(w\)s \(\hat{\beta}\)s instead.
 \end{itemize}
-
-\(~\)
-
-The only difference to our multiple linear regression (MLR) model is
-then that we would have called the \(w\)s \(\hat{\beta}\)s instead.
 
 \end{frame}
 
@@ -730,28 +724,14 @@ then that we would have called the \(w\)s \(\hat{\beta}\)s instead.
 
 \begin{block}{Statistical parameter estimation}
 
-\vspace{2mm}
-
-\begin{itemize}
-\tightlist
-\item
-  In multiple linear regression, the parameters \(\boldsymbol\beta\) are
-  estimated with maximum likelihood and least squares (equivalent under
-  Normal assumption).
-\end{itemize}
-
 \(~\)
 
-\begin{itemize}
-\tightlist
-\item
-  \textbf{Remember}: The estimator \(\hat{\boldsymbol \beta}\) is found
-  by minimizing the RSS for a multiple linear regression model: \[
-  \begin{aligned} \text{RSS} &=\sum_{i=1}^n (y_i - \hat y_i)^2 = \sum_{i=1}^n (y_i - \hat \beta_0 - \hat \beta_1 x_{i1} - \hat \beta_2 x_{i2} -...-\hat \beta_p x_{ip} )^2 \\
-  &= \sum_{i=1}^n (y_i-{\boldsymbol x}_i^T \boldsymbol \beta)^2=({\boldsymbol Y}-{\boldsymbol X}\hat{\boldsymbol{\beta}})^T({\boldsymbol Y}-{\boldsymbol X}\hat{\boldsymbol{\beta}}) \ .\end{aligned}
-  \] Solution:
-  \[ \hat{\boldsymbol\beta}=({\boldsymbol X}^T{\boldsymbol X})^{-1} {\boldsymbol X}^T {\boldsymbol Y} \ .\]
-\end{itemize}
+\textbf{Remember}: The estimator \(\hat{\boldsymbol \beta}\) is found by
+minimizing the RSS for a multiple linear regression model: \[
+\begin{aligned} \text{RSS} &=\sum_{i=1}^n (y_i - \hat y_i)^2 = \sum_{i=1}^n (y_i - \hat \beta_0 - \hat \beta_1 x_{i1} - \hat \beta_2 x_{i2} -...-\hat \beta_p x_{ip} )^2 \\
+&= \sum_{i=1}^n (y_i-{\boldsymbol x}_i^T \boldsymbol \beta)^2=({\boldsymbol Y}-{\boldsymbol X}\hat{\boldsymbol{\beta}})^T({\boldsymbol Y}-{\boldsymbol X}\hat{\boldsymbol{\beta}}) \ .\end{aligned}
+\] Solution:
+\[ \hat{\boldsymbol\beta}=({\boldsymbol X}^T{\boldsymbol X})^{-1} {\boldsymbol X}^T {\boldsymbol Y} \ .\]
 
 \end{block}
 
@@ -763,8 +743,8 @@ then that we would have called the \(w\)s \(\hat{\beta}\)s instead.
 
 \vspace{4mm}
 
-We now translate what we did for the regression setup into the neural
-networks world: \vspace{2mm}
+We now translate from the statistical into the neural networks world:
+\vspace{2mm}
 
 \begin{enumerate}
 \tightlist
@@ -786,32 +766,19 @@ networks world: \vspace{2mm}
   the weights \({\boldsymbol w}\).
 \end{enumerate}
 
-\end{block}
-
-\end{frame}
-
-\begin{frame}
+\(~\)
 
 \begin{enumerate}
 \setcounter{enumi}{2}
 \tightlist
 \item
-  Replace \emph{minimizing} the loss function (RSS) via \vspace{2mm}
-
-  \begin{itemize}
-  \tightlist
-  \item
-    calculate the derivative of the loss function with respect to each
-    of our parameters
-  \item
-    \emph{\textcolor{red}{more general minization procedures}} that work
-    also when the loss function does not have a closed form.
-  \end{itemize}
-
-  \(~\)
-
-  Main idea: The gradient descent algorithm
+  Replace \emph{minimizing} the loss function (RSS) by
+  \emph{\textcolor{red}{more general minization procedures}} that work
+  also when the loss function does not have a closed form. In
+  particular, use the the \emph{gradient descent algorithm}.
 \end{enumerate}
+
+\end{block}
 
 \end{frame}
 
@@ -863,31 +830,15 @@ networks world: \vspace{2mm}
 
 \(~\)
 
+\(~\)
+
 \center
 
 \includegraphics[width=0.6\textwidth,height=\textheight]{gradient_descent.png}
 
 \tiny (\url{https://github.com/SoojungHong/MachineLearning/wiki/Gradient-Descent})
 
-\(~\) \(~\)
-
-\flushleft
-\normalsize
-
-Other figures that give good illustration of the optimization problem in
-Chollet and Allaire (2018):
-
 \(~\)
-
-\begin{itemize}
-\tightlist
-\item
-  2.11: SGD down a 1D loess curve
-\item
-  2.12: Gradient descent down a 2D loss surface
-\item
-  2.13: local and global minimum
-\end{itemize}
 
 \end{block}
 
@@ -1352,8 +1303,6 @@ Why can NN and logistic regression lead to such different results?
 
 \begin{block}{Example 3: Categorical outcome (multiclass regression)}
 
-\textbf{Which type of iris species?}
-
 \(~\)
 
 The \texttt{iris} flower data set was introduced by the British
@@ -1536,10 +1485,6 @@ We only briefly mentioned multiclass regression in module 4.
   there is no need to assume full rank of a matrix with output nodes.
 \end{itemize}
 
-\vspace{2mm}
-
-\textbf{Q:} How many parameters are we estimating?
-
 \end{block}
 
 \end{frame}
@@ -1553,9 +1498,8 @@ We only briefly mentioned multiclass regression in module 4.
 \begin{itemize}
 \tightlist
 \item
-  For parameter estimation we looked at maximizing the log-likelihood of
-  the statistical model. For neural networks the negative of the
-  multinomial loglikelihood is a scaled version of the
+  For neural networks the negative of the multinomial loglikelihood is a
+  scaled version of the
   \emph{\textcolor{red}{categorical cross-entropy loss}}
   \[ J({\boldsymbol w})=-\frac{1}{n}\sum_{i=1}^n\frac{1}{C} \sum_{c=1}^C (y_{ic}\ln({\hat{y}_c({\boldsymbol x}_i)}) \ .\]
 \end{itemize}
@@ -1636,7 +1580,7 @@ function)
 
 \begin{itemize}
 \item
-  How many weights have been estimated?
+  How many weights (parameters) have been estimated?
 \item
   What does the graph look like?
 \end{itemize}
@@ -1672,9 +1616,9 @@ function)
 
 \begin{frame}[fragile]
 
-Fitting the multinomial regression. This is also done with nnet, but
-using a wrapper \texttt{multinom} (this has its own default settings, so
-results are not necessarily the same as above).
+Multinomial regression is also done with nnet, but using a wrapper
+\texttt{multinom} (we use default settings, so results are not
+necessarily the same as above).
 
 \scriptsize
 
@@ -1714,65 +1658,9 @@ results are not necessarily the same as above).
 ## v -39.93182 -28.07162  53.73326 41.264390
 \end{verbatim}
 
-\end{frame}
-
-\begin{frame}[fragile]
-
 Problem: \texttt{multinom()} seems to fit an intercept \emph{plus} an
 offset node (B), thus we have to remove the intercept manually (by
 saying \texttt{-1} in the above formula).
-
-\begin{center}\includegraphics[width=0.8\linewidth]{11Nnet_files/figure-beamer/iris_fit-1} \end{center}
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-\begin{block}{The performance of multinomial regression vs nnet}
-
-\(~\)
-
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{testclass =}\StringTok{ }\KeywordTok{predict}\NormalTok{(fit, }\DataTypeTok{new =}\NormalTok{ iris_test)}
-\KeywordTok{confusionMatrix}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ testclass, }\DataTypeTok{reference =}\NormalTok{ iris_test}\OperatorTok{$}\NormalTok{species)}\OperatorTok{$}\NormalTok{table}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##           Reference
-## Prediction  c  s  v
-##          c 28  0  0
-##          s  0 36  0
-##          v  4  0 32
-\end{verbatim}
-
-\(~\)
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{table}\NormalTok{(}\KeywordTok{predict}\NormalTok{(iris.nnet, iris_test, }\DataTypeTok{type =} \StringTok{"class"}\NormalTok{), iris_test}\OperatorTok{$}\NormalTok{species)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##    
-##      c  s  v
-##   c 29  0  0
-##   s  0 36  0
-##   v  3  0 32
-\end{verbatim}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-For more on multinomial regression with R, check
-\href{https://www.r-bloggers.com/\%F0\%9F\%93\%8A-multinomial-regression-in-r/}{here}.
 
 \end{frame}
 
@@ -2075,7 +1963,7 @@ in the hidden layer.
 
 \center
 
-\includegraphics[width=0.9\linewidth]{11Nnet_files/figure-beamer/unnamed-chunk-16-1}
+\includegraphics[width=0.9\linewidth]{11Nnet_files/figure-beamer/unnamed-chunk-14-1}
 
 \end{frame}
 
@@ -2094,17 +1982,17 @@ in the hidden layer.
 \tightlist
 \item
   Even though a large feedforward network with one hidden layer may be
-  able to represent a desired function, we may not be able to estimate
-  the parameters of the function:
+  able to \emph{represent} a desired function, we may not be able to
+  \emph{learn} (i.e., estimate the) parameters of the function. Why?
 
   \begin{itemize}
   \tightlist
   \item
-    we may choose too many or too few nodes in the hidden layer.
+    wrong nodes in the hidden layer.
   \item
-    our optimization routine may fail.
+    our optimization routine may fail / may find a local minimum.
   \item
-    we may overfit/underfit the training data.
+    we may overfit / underfit the training data.
   \end{itemize}
 \end{itemize}
 
@@ -2158,6 +2046,8 @@ in the hidden layer.
 
 \begin{block}{Boston house prices}
 
+\vspace{2mm}
+
 \textbf{Objective}: To predict the median price of owner-occupied homes
 in a given Boston suburb in the mid-1970s using 10 input variables.
 
@@ -2167,6 +2057,8 @@ R package.
 \(~\)
 
 \begin{block}{Preparing the data}
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -2210,20 +2102,20 @@ R package.
 \end{Shaded}
 
 \begin{verbatim}
-##         [,1] [,2]  [,3] [,4]  [,5]  [,6]  [,7]   [,8] [,9] [,10] [,11]
-## [1,] 1.23247  0.0  8.14    0 0.538 6.142  91.7 3.9769    4   307  21.0
-## [2,] 0.02177 82.5  2.03    0 0.415 7.610  15.7 6.2700    2   348  14.7
-## [3,] 4.89822  0.0 18.10    0 0.631 4.970 100.0 1.3325   24   666  20.2
-## [4,] 0.03961  0.0  5.19    0 0.515 6.037  34.5 5.9853    5   224  20.2
-## [5,] 3.69311  0.0 18.10    0 0.713 6.376  88.4 2.5671   24   666  20.2
-## [6,] 0.28392  0.0  7.38    0 0.493 5.708  74.3 4.7211    5   287  19.6
-##       [,12] [,13]
-## [1,] 396.90 18.72
-## [2,] 395.38  3.11
-## [3,] 375.52  3.26
-## [4,] 396.90  8.01
-## [5,] 391.43 14.65
-## [6,] 391.13 11.74
+##         [,1] [,2]  [,3] [,4]  [,5]  [,6]  [,7]   [,8] [,9] [,10] [,11]  [,12]
+## [1,] 1.23247  0.0  8.14    0 0.538 6.142  91.7 3.9769    4   307  21.0 396.90
+## [2,] 0.02177 82.5  2.03    0 0.415 7.610  15.7 6.2700    2   348  14.7 395.38
+## [3,] 4.89822  0.0 18.10    0 0.631 4.970 100.0 1.3325   24   666  20.2 375.52
+## [4,] 0.03961  0.0  5.19    0 0.515 6.037  34.5 5.9853    5   224  20.2 396.90
+## [5,] 3.69311  0.0 18.10    0 0.713 6.376  88.4 2.5671   24   666  20.2 391.43
+## [6,] 0.28392  0.0  7.38    0 0.493 5.708  74.3 4.7211    5   287  19.6 391.13
+##      [,13]
+## [1,] 18.72
+## [2,]  3.11
+## [3,]  3.26
+## [4,]  8.01
+## [5,] 14.65
+## [6,] 11.74
 \end{verbatim}
 
 \(~\)
@@ -2283,107 +2175,9 @@ Just checking out one hidden layer with 5 units to get going.
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(nnet)}
 \NormalTok{fit5 <-}\StringTok{ }\KeywordTok{nnet}\NormalTok{(train_targets }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ train_data, }\DataTypeTok{size =} \DecValTok{5}\NormalTok{, }\DataTypeTok{linout =} \OtherTok{TRUE}\NormalTok{, }
-    \DataTypeTok{maxit =} \DecValTok{1000}\NormalTok{)}
+    \DataTypeTok{maxit =} \DecValTok{1000}\NormalTok{, }\DataTypeTok{trace =}\NormalTok{ F)}
 \end{Highlighting}
 \end{Shaded}
-
-\begin{verbatim}
-## # weights:  76
-## initial  value 226623.512265 
-## iter  10 value 13091.227910
-## iter  20 value 7552.270543
-## iter  30 value 6973.052157
-## iter  40 value 6028.355978
-## iter  50 value 5378.466810
-## iter  60 value 5178.772252
-## iter  70 value 5041.561467
-## iter  80 value 4939.293055
-## iter  90 value 4847.552123
-## iter 100 value 4728.986223
-## iter 110 value 4251.914333
-## iter 120 value 3946.017314
-## iter 130 value 3632.254547
-## iter 140 value 3450.244463
-## iter 150 value 3322.303263
-## iter 160 value 3241.691501
-## iter 170 value 3150.472823
-## iter 180 value 3107.807649
-## iter 190 value 3042.879662
-## iter 200 value 3010.915972
-## iter 210 value 2942.119646
-## iter 220 value 2811.751015
-## iter 230 value 2671.932883
-## iter 240 value 2569.244747
-## iter 250 value 2536.169071
-## iter 260 value 2409.402962
-## iter 270 value 2357.404065
-## iter 280 value 2332.453029
-## iter 290 value 2301.928501
-## iter 300 value 2275.486910
-## iter 310 value 2271.654139
-## iter 320 value 2271.341691
-## iter 330 value 2270.864907
-## iter 340 value 2269.409714
-## iter 350 value 2266.898707
-## iter 360 value 2265.562591
-## iter 370 value 2263.741643
-## iter 380 value 2263.341350
-## iter 390 value 2263.335141
-## iter 400 value 2263.289326
-## iter 410 value 2263.107707
-## iter 420 value 2262.977137
-## iter 430 value 2262.605492
-## iter 440 value 2262.152481
-## iter 450 value 2261.282844
-## iter 460 value 2260.688788
-## iter 470 value 2259.044896
-## iter 480 value 2256.705839
-## iter 490 value 2256.565541
-## iter 500 value 2256.387716
-## iter 510 value 2256.218543
-## iter 520 value 2256.131616
-## iter 530 value 2256.005554
-## iter 540 value 2255.945243
-## iter 550 value 2255.922524
-## iter 560 value 2255.912642
-## iter 570 value 2255.901700
-## iter 580 value 2255.900781
-## final  value 2255.898090 
-## converged
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(fit5)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## a 13-5-1 network with 76 weights
-## options were - linear output units 
-##   b->h1  i1->h1  i2->h1  i3->h1  i4->h1  i5->h1  i6->h1  i7->h1  i8->h1 
-##   71.26   20.97   18.74  -20.16  -10.96  -15.63   26.20  254.52 -118.95 
-##  i9->h1 i10->h1 i11->h1 i12->h1 i13->h1 
-##  -98.91  245.21   40.35  -63.31 -184.66 
-##   b->h2  i1->h2  i2->h2  i3->h2  i4->h2  i5->h2  i6->h2  i7->h2  i8->h2 
-##  -11.07   -3.92    4.74  -15.11   -0.35   -3.85    2.55   23.85  -24.67 
-##  i9->h2 i10->h2 i11->h2 i12->h2 i13->h2 
-##  -16.46    3.18    3.34   -2.47  -21.87 
-##   b->h3  i1->h3  i2->h3  i3->h3  i4->h3  i5->h3  i6->h3  i7->h3  i8->h3 
-##   -8.67   -0.46   -9.66    0.84    0.04   -0.55   -0.05    0.00   -1.41 
-##  i9->h3 i10->h3 i11->h3 i12->h3 i13->h3 
-##    1.28   -0.15   -0.28    0.13   -1.09 
-##   b->h4  i1->h4  i2->h4  i3->h4  i4->h4  i5->h4  i6->h4  i7->h4  i8->h4 
-##   -2.81   -1.97    0.05   -0.05   -0.06    0.16    0.84   -0.26   -0.12 
-##  i9->h4 i10->h4 i11->h4 i12->h4 i13->h4 
-##    0.19   -0.15   -0.17    0.08   -0.06 
-##   b->h5  i1->h5  i2->h5  i3->h5  i4->h5  i5->h5  i6->h5  i7->h5  i8->h5 
-##    6.67 -209.31 -112.59 -151.07  235.15 -277.72  271.08 -308.09 -106.76 
-##  i9->h5 i10->h5 i11->h5 i12->h5 i13->h5 
-##   83.51  -83.42  -61.57   14.81   79.96 
-##    b->o   h1->o   h2->o   h3->o   h4->o   h5->o 
-##   14.01   -4.99    5.29   42.15   41.37    3.05
-\end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2393,7 +2187,7 @@ Just checking out one hidden layer with 5 units to get going.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 5.274657
+## [1] 6.167934
 \end{verbatim}
 
 \begin{Shaded}
@@ -2403,7 +2197,7 @@ Just checking out one hidden layer with 5 units to get going.
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 2.955324
+## [1] 4.271899
 \end{verbatim}
 
 \end{frame}
@@ -2414,34 +2208,11 @@ Just checking out one hidden layer with 5 units to get going.
 
 \(~\)
 
-\(\rightarrow\) Cross-validation! (Time-consuming, so only results are
-shown below.)
+\(\rightarrow\) Cross-validation! (Time-consuming)
 
 \(~\)
 
-\scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{grid =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{5}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{15}\NormalTok{, }\DecValTok{20}\NormalTok{, }\DecValTok{25}\NormalTok{, }\DecValTok{30}\NormalTok{, }\DecValTok{50}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\(~\)
-
-\center
-
-\includegraphics[width=0.6\linewidth]{11Nnet_files/figure-beamer/unnamed-chunk-23-1}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}[fragile]
-
-The best model here was the model with 50 nodes, the largest model we
-tried. Fitting that model on the full training set and testing on the
-test set:
+Here we compare to a model with 50 nodes:
 
 \(~\)
 
@@ -2459,7 +2230,7 @@ test set:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 6.08656
+## [1] 5.885913
 \end{verbatim}
 
 \begin{Shaded}
@@ -2470,18 +2241,20 @@ test set:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 3.97063
+## [1] 4.333412
 \end{verbatim}
 
 \(~\)
 
-\normalsize
+Note: Deeper networks would presumably improve the error.
 
-\begin{itemize}
-\tightlist
-\item
-  We could improve this error rate my using deeper networks.
-\end{itemize}
+See here:
+\url{https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/11-neural_networks_boston_housing.html}
+for running two hidden layers of 64 nodes each with \texttt{keras}.
+(This gave a mean absolute error on the test set of 2.68 after early
+stopping.)
+
+\end{block}
 
 \end{frame}
 
@@ -2623,9 +2396,8 @@ Among all the possibilities, ReLU is nowadays the most popular one. Why?
 \item
   Easy to use with gradient descent -- even though the function is not
   differentiable at 0. As we will touch upon later, we don't expect to
-  train a network until the gradient is 0. The derivative from the left
-  at 0 is 0, and the derivative from the right is
-  1\footnote{See Goodfellow et al, Section 6.3 for a discussion on this topic.}.
+  train a network until the gradient is
+  0.\footnote{See Goodfellow et al, Section 6.3 for a discussion on this topic.}.
 \end{itemize}
 
 \end{frame}
@@ -3584,7 +3356,7 @@ greyscale).
 
 \scriptsize
 
-\includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-25-1.pdf}
+\includegraphics{11Nnet_files/figure-beamer/unnamed-chunk-20-1.pdf}
 
 \end{frame}
 
@@ -3662,17 +3434,17 @@ input nodes) and 10 features (=output nodes). Adding a bias term
 
 \begin{verbatim}
 ## Model: "sequential"
-## ___________________________________________________________________________
-## Layer (type)                     Output Shape                  Param #     
-## ===========================================================================
-## dense (Dense)                    (None, 512)                   401920      
-## ___________________________________________________________________________
-## dense_1 (Dense)                  (None, 10)                    5130        
-## ===========================================================================
+## ________________________________________________________________________________
+## Layer (type)                        Output Shape                    Param #     
+## ================================================================================
+## dense (Dense)                       (None, 512)                     401920      
+## ________________________________________________________________________________
+## dense_1 (Dense)                     (None, 10)                      5130        
+## ================================================================================
 ## Total params: 407,050
 ## Trainable params: 407,050
 ## Non-trainable params: 0
-## ___________________________________________________________________________
+## ________________________________________________________________________________
 \end{verbatim}
 
 \vspace{2mm}
@@ -3962,7 +3734,7 @@ taken from Chollet and Allaire (2018):
 \item
   Chollet and Allaire (2018)
 \item
-  Goodfellow, Bengio, and Courville (2016) (to be used in IT3030)
+  Goodfellow, Bengio, and Courville (2016) (used in IT3030)
   \url{https://www.deeplearningbook.org/}
 \item
   Explaining backpropagation
