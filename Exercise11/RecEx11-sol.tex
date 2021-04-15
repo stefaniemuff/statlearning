@@ -334,7 +334,7 @@ The identity function is used for regression problems.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{compile}\NormalTok{(}\DataTypeTok{optimizer =} \StringTok{"rmsprop"}\NormalTok{, }\DataTypeTok{loss =} \StringTok{"binary_crossentropy"}\NormalTok{, }
+\NormalTok{model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{compile}\NormalTok{(}\DataTypeTok{optimizer =} \StringTok{"rmsprop"}\NormalTok{, }\DataTypeTok{loss =} \StringTok{"categorical_crossentropy"}\NormalTok{, }
     \DataTypeTok{metrics =} \KeywordTok{c}\NormalTok{(}\StringTok{"accuracy"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
@@ -362,10 +362,10 @@ The identity function is used for regression problems.
 ##   ..$ batch_size   : int 128
 ##   ..$ verbose      : int 0
 ##  $ metrics:List of 4
-##   ..$ loss        : num [1:20] 0.1661 0.0884 0.0709 0.0613 0.055 ...
-##   ..$ val_accuracy: num [1:20] 0.966 0.976 0.98 0.983 0.983 ...
-##   ..$ val_loss    : num [1:20] 0.098 0.0724 0.0609 0.0534 0.0509 ...
-##   ..$ accuracy    : num [1:20] 0.94 0.97 0.977 0.98 0.982 ...
+##   ..$ loss        : num [1:20] 1.199 0.539 0.41 0.36 0.335 ...
+##   ..$ val_accuracy: num [1:20] 0.829 0.88 0.896 0.907 0.909 ...
+##   ..$ val_loss    : num [1:20] 0.645 0.426 0.36 0.326 0.317 ...
+##   ..$ accuracy    : num [1:20] 0.623 0.847 0.882 0.896 0.903 ...
 ##  - attr(*, "class")= chr "keras_training_history"
 \end{verbatim}
 
@@ -385,10 +385,10 @@ The identity function is used for regression problems.
 
 \begin{verbatim}
 ## $loss
-## [1] 0.04202067
+## [1] 0.2619604
 ## 
 ## $accuracy
-## [1] 0.9868193
+## [1] 0.9259
 \end{verbatim}
 
 Number of parameters
@@ -426,7 +426,7 @@ Number of parameters
     \DataTypeTok{input_shape =} \KeywordTok{c}\NormalTok{(}\DecValTok{28} \OperatorTok{*}\StringTok{ }\DecValTok{28}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{layer_dense}\NormalTok{(}\DataTypeTok{units =} \DecValTok{128}\NormalTok{, }\DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{    }\KeywordTok{layer_dense}\NormalTok{(}\DataTypeTok{units =} \DecValTok{10}\NormalTok{, }\DataTypeTok{activation =} \StringTok{"softmax"}\NormalTok{)}
 
-\NormalTok{model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{compile}\NormalTok{(}\DataTypeTok{optimizer =} \StringTok{"rmsprop"}\NormalTok{, }\DataTypeTok{loss =} \StringTok{"binary_crossentropy"}\NormalTok{, }
+\NormalTok{model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{compile}\NormalTok{(}\DataTypeTok{optimizer =} \StringTok{"rmsprop"}\NormalTok{, }\DataTypeTok{loss =} \StringTok{"categorical_crossentropy"}\NormalTok{, }
     \DataTypeTok{metrics =} \KeywordTok{c}\NormalTok{(}\StringTok{"accuracy"}\NormalTok{))}
 
 \NormalTok{history =}\StringTok{ }\NormalTok{model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{fit}\NormalTok{(x_train, y_train, }\DataTypeTok{epochs =} \DecValTok{20}\NormalTok{, }\DataTypeTok{batch_size =} \DecValTok{128}\NormalTok{, }
@@ -447,10 +447,10 @@ Number of parameters
 ##   ..$ batch_size   : int 128
 ##   ..$ verbose      : int 0
 ##  $ metrics:List of 4
-##   ..$ loss        : num [1:20] 0.0556 0.0258 0.0186 0.0143 0.0114 ...
-##   ..$ val_accuracy: num [1:20] 0.99 0.993 0.994 0.994 0.994 ...
-##   ..$ val_loss    : num [1:20] 0.03 0.0228 0.0194 0.0187 0.02 ...
-##   ..$ accuracy    : num [1:20] 0.981 0.991 0.994 0.995 0.996 ...
+##   ..$ loss        : num [1:20] 0.3347 0.1414 0.0962 0.0727 0.0573 ...
+##   ..$ val_accuracy: num [1:20] 0.951 0.961 0.969 0.973 0.973 ...
+##   ..$ val_loss    : num [1:20] 0.1742 0.1249 0.1063 0.0908 0.0989 ...
+##   ..$ accuracy    : num [1:20] 0.904 0.957 0.971 0.978 0.983 ...
 ##  - attr(*, "class")= chr "keras_training_history"
 \end{verbatim}
 
@@ -470,10 +470,10 @@ Number of parameters
 
 \begin{verbatim}
 ## $loss
-## [1] 0.02075446
+## [1] 0.1379396
 ## 
 ## $accuracy
-## [1] 0.9959097
+## [1] 0.9776
 \end{verbatim}
 
 We see that the validation loss reach its minimum after 5-10 epochs and
@@ -490,7 +490,7 @@ after the first few epochs.
     \DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{layer_dropout}\NormalTok{(}\DataTypeTok{rate =} \FloatTok{0.3}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{layer_dense}\NormalTok{(}\DataTypeTok{units =} \DecValTok{10}\NormalTok{, }
     \DataTypeTok{activation =} \StringTok{"softmax"}\NormalTok{)}
 
-\NormalTok{model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{compile}\NormalTok{(}\DataTypeTok{optimizer =} \StringTok{"rmsprop"}\NormalTok{, }\DataTypeTok{loss =} \StringTok{"binary_crossentropy"}\NormalTok{, }
+\NormalTok{model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{compile}\NormalTok{(}\DataTypeTok{optimizer =} \StringTok{"rmsprop"}\NormalTok{, }\DataTypeTok{loss =} \StringTok{"categorical_crossentropy"}\NormalTok{, }
     \DataTypeTok{metrics =} \KeywordTok{c}\NormalTok{(}\StringTok{"accuracy"}\NormalTok{))}
 
 \NormalTok{history =}\StringTok{ }\NormalTok{model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{fit}\NormalTok{(x_train, y_train, }\DataTypeTok{epochs =} \DecValTok{20}\NormalTok{, }\DataTypeTok{batch_size =} \DecValTok{128}\NormalTok{, }
@@ -511,10 +511,10 @@ after the first few epochs.
 ##   ..$ batch_size   : int 128
 ##   ..$ verbose      : int 0
 ##  $ metrics:List of 4
-##   ..$ loss        : num [1:20] 0.0839 0.044 0.0357 0.0315 0.0287 ...
-##   ..$ val_accuracy: num [1:20] 0.989 0.991 0.993 0.993 0.994 ...
-##   ..$ val_loss    : num [1:20] 0.0335 0.0259 0.0233 0.021 0.02 ...
-##   ..$ accuracy    : num [1:20] 0.97 0.985 0.988 0.99 0.991 ...
+##   ..$ loss        : num [1:20] 0.522 0.256 0.205 0.177 0.161 ...
+##   ..$ val_accuracy: num [1:20] 0.941 0.956 0.964 0.966 0.968 ...
+##   ..$ val_loss    : num [1:20] 0.196 0.152 0.122 0.12 0.109 ...
+##   ..$ accuracy    : num [1:20] 0.838 0.925 0.939 0.948 0.953 ...
 ##  - attr(*, "class")= chr "keras_training_history"
 \end{verbatim}
 
@@ -534,10 +534,10 @@ after the first few epochs.
 
 \begin{verbatim}
 ## $loss
-## [1] 0.01669225
+## [1] 0.01524244
 ## 
 ## $accuracy
-## [1] 0.9955099
+## [1] 0.9955599
 \end{verbatim}
 
 Here the validation curve looks better and we might increase the number
@@ -550,7 +550,7 @@ of epochs.
 \StringTok{    }\KeywordTok{layer_dense}\NormalTok{(}\DataTypeTok{units =} \DecValTok{128}\NormalTok{, }\DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{, }\DataTypeTok{kernel_regularizer =} \KeywordTok{regularizer_l2}\NormalTok{(}\DataTypeTok{l =} \FloatTok{0.001}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }
 \StringTok{    }\KeywordTok{layer_dense}\NormalTok{(}\DataTypeTok{units =} \DecValTok{10}\NormalTok{, }\DataTypeTok{activation =} \StringTok{"softmax"}\NormalTok{)}
 
-\NormalTok{model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{compile}\NormalTok{(}\DataTypeTok{optimizer =} \StringTok{"rmsprop"}\NormalTok{, }\DataTypeTok{loss =} \StringTok{"binary_crossentropy"}\NormalTok{, }
+\NormalTok{model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{compile}\NormalTok{(}\DataTypeTok{optimizer =} \StringTok{"rmsprop"}\NormalTok{, }\DataTypeTok{loss =} \StringTok{"categorical_crossentropy"}\NormalTok{, }
     \DataTypeTok{metrics =} \KeywordTok{c}\NormalTok{(}\StringTok{"accuracy"}\NormalTok{))}
 
 \NormalTok{history =}\StringTok{ }\NormalTok{model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{fit}\NormalTok{(x_train, y_train, }\DataTypeTok{epochs =} \DecValTok{20}\NormalTok{, }\DataTypeTok{batch_size =} \DecValTok{128}\NormalTok{, }
@@ -571,10 +571,10 @@ of epochs.
 ##   ..$ batch_size   : int 128
 ##   ..$ verbose      : int 0
 ##  $ metrics:List of 4
-##   ..$ loss        : num [1:20] 0.1732 0.0863 0.0716 0.0643 0.0593 ...
-##   ..$ val_accuracy: num [1:20] 0.986 0.989 0.989 0.992 0.991 ...
-##   ..$ val_loss    : num [1:20] 0.0954 0.0707 0.065 0.0566 0.0561 ...
-##   ..$ accuracy    : num [1:20] 0.976 0.985 0.987 0.989 0.99 ...
+##   ..$ loss        : num [1:20] 0.579 0.336 0.263 0.222 0.198 ...
+##   ..$ val_accuracy: num [1:20] 0.944 0.958 0.965 0.968 0.97 ...
+##   ..$ val_loss    : num [1:20] 0.385 0.292 0.244 0.215 0.199 ...
+##   ..$ accuracy    : num [1:20] 0.898 0.95 0.961 0.968 0.971 ...
 ##  - attr(*, "class")= chr "keras_training_history"
 \end{verbatim}
 
@@ -594,10 +594,10 @@ of epochs.
 
 \begin{verbatim}
 ## $loss
-## [1] 0.03584955
+## [1] 0.03626197
 ## 
 ## $accuracy
-## [1] 0.9941496
+## [1] 0.9938795
 \end{verbatim}
 
 \end{document}

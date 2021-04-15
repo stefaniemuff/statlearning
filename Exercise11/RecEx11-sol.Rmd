@@ -5,10 +5,10 @@ author:
 - Department of Mathematical Sciences, NTNU
 date: "April 20, 2021"
 output:
-  # html_document:
-  #   df_print: paged
-  #   toc: no
-  #   toc_depth: '2'
+  html_document:
+    df_print: paged
+    toc: no
+    toc_depth: '2'
   pdf_document:
     fig_caption: yes
     keep_tex: yes
@@ -193,7 +193,7 @@ The identity function is used for regression problems.
 ```{r}
 model %>% compile(
 optimizer = "rmsprop",
-loss = "binary_crossentropy", metrics = c("accuracy")
+loss = "categorical_crossentropy", metrics = c("accuracy")
 )
 ```
 
@@ -230,7 +230,7 @@ model = keras_model_sequential() %>%
 
 model %>% compile(
 optimizer = "rmsprop",
-loss = "binary_crossentropy", metrics = c("accuracy")
+loss = "categorical_crossentropy", metrics = c("accuracy")
 )
 
 history = model %>% fit(x_train, y_train,
@@ -260,7 +260,7 @@ model = keras_model_sequential() %>%
 
 model %>% compile(
 optimizer = "rmsprop",
-loss = "binary_crossentropy", metrics = c("accuracy")
+loss = "categorical_crossentropy", metrics = c("accuracy")
 )
 
 history = model %>% fit(x_train, y_train,
@@ -287,7 +287,7 @@ model = keras_model_sequential() %>%
 
 model %>% compile(
 optimizer = "rmsprop",
-loss = "binary_crossentropy", metrics = c("accuracy")
+loss = "categorical_crossentropy", metrics = c("accuracy")
 )
 
 history = model %>% fit(x_train, y_train,
