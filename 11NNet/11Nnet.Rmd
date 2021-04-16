@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "April 19 and 20, 2021"
 fontsize: 10pt
 output:
-  # beamer_presentation:
-  #   keep_tex: yes
-  #   fig_caption: false
-  #   latex_engine: xelatex
-  #   theme: "Singapore"
-  #   colortheme: "default"
-  #   font: "serif"
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+    theme: "Singapore"
+    colortheme: "default"
+    font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -1412,7 +1412,7 @@ $~$
 
 ---
 
-However, the recent practice, see e.g. @kerasR, Section 4.5.6/7 and @goodfellow, Section 7, is to
+However, the recent practice is to
 
 $~$
 
@@ -1426,6 +1426,9 @@ $~$
 
 This simplifies the choice of network architecture to _choose a large enough network_.
 
+$~$
+
+See e.g. @kerasR, Section 4.5.6/7 and @goodfellow, Section 7
 
 ---
 
@@ -1435,7 +1438,7 @@ $~$
 
 * The choice of the loss function is closely related to the output layer activation function. 
 
-* To sum up, the popular problem types, output activation and loss functions are:
+* Most popular problem types, output activation and loss functions:
 
 | Problem | Output activation | Loss function |
 |--------------|-----------------------|---------------|
@@ -1475,10 +1478,11 @@ $~$
 <!-- $$ J({\boldsymbol \theta})=-\frac{1}{n}\sum_{i=1}^n\frac{1}{C} \sum_{c=1}^C (y_{ic}\ln({\hat{y}_c({\boldsymbol x}_i)})$$ -->
 <!-- where $\hat{y}_c({\boldsymbol x}_i)$ is the output from the softmax output node $c$ and $y_{ic}$ is the observed one-hot coding (0/1) for class $c$. -->
 
----
+\vspace{2mm}
 
+The loss functions chosen "need" to be (see below):
 
-Due to how estimation is done (see below), the loss functions chosen "need" to be:
+\vspace{1mm}
 
 * differentiable
 * possible to compute for each single training data point (or a mini-batch -- to be explained soon)
@@ -1532,8 +1536,7 @@ where $\lambda$ is the _learning rate_  (usually a small value). In `keras` the 
 
 ---
 
-### Mini-batch stochastic gradient descent (SGD)
-\vspace{2mm}
+
 
 * In _\textcolor{red}{full gradient descent}_, the loss function is computed as a mean over all training examples.
 $$
@@ -1550,27 +1553,26 @@ $$
 
 ---
 
-_\textcolor{red}{Mini-batch stochastic gradient descent}_
-
+### Mini-batch stochastic gradient descent (SGD)
 \vspace{2mm}
 
-* **Crucial idea**: The expectation can be approximated by the average gradient over just a _mini-batch_ (random sample) of the observations.
+**Crucial idea**: 
 
-\vspace{2mm}
+The expectation can be approximated by the average gradient over just a _mini-batch_ (random sample) of the observations.
+
+
+$~$
 
 **Advantages**:
 
-* The optimizer will converge much faster if they can rapidly compute approximate estimates of the gradient, instead of slowly computing the exact gradient (using all training data).
+\vspace{1mm}
+
+* The optimizer will converge much faster if it can rapidly compute approximate estimates of the gradient, instead of slowly computing the exact gradient (using all training data).
 
 * Mini-batches may be processed _in parallel_, and the batch size is often a power of 2 (32 or 256).
 
 * Small batches also bring in a _regularization effect_, maybe due to the variability they bring to the optimization process.
 
-
---- 
-
-In the 3th video (on backpropagation) from 3Blue1Brown there is nice example of one trajectory from gradient decent and one from SGD (10:10 minutes into the video):
-<https://www.youtube.com/watch?v=Ilg3gGewQ5U&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=3>
 
 ---
 
@@ -1586,7 +1588,7 @@ In the 3th video (on backpropagation) from 3Blue1Brown there is nice example of 
     a) For each mini-batch: Make predictions of the reponses in the mini-batch in a _forward pass_.
     b) Compute the loss for the training data in this batch.
     c) Compute the gradient of the loss with regard to the model's parameters (_backward pass_) based on the training data in the batch. $\nabla_{\boldsymbol \theta}^* J({\boldsymbol \theta}^{(t)})$
-    d) Update all weighs, but just using the average gradient from the mini-batch ${\boldsymbol \theta}^{(t+1)}={\boldsymbol \theta}^{(t)} - \lambda \nabla_{\boldsymbol \theta} ^* J({\boldsymbol \theta}^{(t)})$
+    d) Update all weighs, but just using the _average gradient_ from the mini-batch ${\boldsymbol \theta}^{(t+1)}={\boldsymbol \theta}^{(t)} - \lambda \nabla_{\boldsymbol \theta} ^* J({\boldsymbol \theta}^{(t)})$
  
 \vspace{1mm}
 
@@ -1597,21 +1599,30 @@ In the 3th video (on backpropagation) from 3Blue1Brown there is nice example of 
 
 **Special case**: _\textcolor{red}{True SGD}_ involves only _\textcolor{red}{one sample}_ (mini-batch size 1). $\rightarrow$ Mini-batch SGD is a compromise between SGD (one sample per iteration) and full gradient descent (full dataset per iteration)
 
+
+--- 
+
+In the 3rd video (on backpropagation) from 3Blue1Brown there is nice example of one trajectory from gradient decent and one from SGD (10:10 minutes into the video):
+<https://www.youtube.com/watch?v=Ilg3gGewQ5U&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=3>
+
 ---
 
 ### Backpropagation algorithm
 
 $~$
 
-* Computing the analytical expression for the gradient $\nabla J$ is not difficult, but the numerical evaluation may be expensive.  
+* _\textcolor{red}{Backpropagation}_ is a simple and inexpensive way _to calculate the gradient_.
 
 \vspace{2mm}
 
-* _\textcolor{red}{Backpropagation}_ is a simple and inexpensive way to calculate the gradient numerically.
+* Computing the analytical expression for the gradient $\nabla J$ is not difficult, but _the numerical evaluation may be expensive_.  
 
 \vspace{2mm}
 
-* The _\textcolor{red}{chain rule}_ is used to compute derivatives of functions of other functions where the derivatives are known, this is done efficiently with backpropagation.
+
+\vspace{2mm}
+
+* The _\textcolor{red}{chain rule}_ is used to compute derivatives of functions of other functions where the derivatives are known. This is efficiently done with backpropagation.
 
 \vspace{2mm}
 
@@ -1636,7 +1647,7 @@ $~$
 
 \vspace{2mm}
 
-The learning rate $\lambda$ is difficult to set. Some ideas for adaptive learning rates (Goodfellow et al, Chapter 8.5).
+The learning rate $\lambda$ is difficult to set. Some ideas for adaptive learning rates (Goodfellow et al, Chapters 8.3 and 8.5).
 
 $~$
 
@@ -1651,7 +1662,7 @@ $~$
 
 * _\textcolor{red}{AdaGrad}_: individually adapt the learning rates ($\lambda$) of all model parameters. The
 parameters with the largest partial derivative of the loss (over all historical squared values) have a correspondingly
-rapid decrease in their learning rate. Nice properties when optimization is convex.
+rapid decrease in their learning rate. 
 
 
 
@@ -1694,25 +1705,25 @@ $~$
 
 $~$
 
-* _Weight decay_: In neural networks this means adding a $L_2$-penalty to the loss function to _penalize large weights_ \footnote{see chapter 7.1.1 in Goodfellow et al}:
+* _\textcolor{red}{Weight decay}_: In neural networks this means adding a $L_2$-penalty to the loss function to _penalize large weights_ \footnote{see chapter 7.1.1 in Goodfellow et al}:
 
 $$ \tilde{J}({\boldsymbol w})= \frac{\alpha}{2}{{\boldsymbol w}^\top{\boldsymbol w}} + J({\boldsymbol w}) \ .$$
 
 \vspace{2mm}
 
-* _Dataset augmentation_: Adding fake data to the dataset, in order that the trained model will generalize better. For some learning tasks it is straightforward to create fake data. For image data this can be done by rotating and scaling the images.
+* _\textcolor{red}{Dataset augmentation}_: Adding fake data to the dataset, in order that the trained model will generalize better. For some learning tasks it is straightforward to create fake data. For image data this can be done by rotating and scaling the images.
 
 \vspace{2mm}
 
-* _Label smoothing_: Motivated by the fact that the training data may contain errors in the reponses recorded, and replaced the one-hot coding for $C$ classes with $\epsilon/(C-1)$ and $1-\epsilon$ for some small $\epsilon$.
+* _\textcolor{red}{Label smoothing}_: Motivated by the fact that the training data may contain errors in the reponses recorded, and replaced the one-hot coding for $C$ classes with $\epsilon/(C-1)$ and $1-\epsilon$ for some small $\epsilon$.
 
 \vspace{2mm}
 
-* _Early stopping_
+* _\textcolor{red}{Early stopping}_
 
 \vspace{2mm}
 
-* _Dropout_ 
+* _\textcolor{red}{Dropout}_ 
 
 
 ---
@@ -1756,19 +1767,19 @@ $~$
 * During training: randomly _dropout_ (set to zero) some outputs in a given layer at each iteration. Drop-out rates may be chosen between 0.2 and 0.5.
 \vspace{1mm}
 
-* During test: no dropout, but scale done the layer output values by a factor equal to the drop-out rate (since now more units are active than we had during training).
+* During test: no dropout, but scale down the layer output values by a factor equal to the drop-out rate (since now more units are active than we had during training).
 \vspace{1mm}
 
 * Alternatively, the drop-out and scaling (now upscaling) can be done during training.
 \vspace{1mm}
 
 
-* One way to look at dropout is on the lines of what we did in Module 8 when we used bootstrapping to produced many data sets and then fitted a model to each of them and then took the average (bagging). But randomly dropping out outputs in a layer, this can be looked as mimicking bagging -- in an efficient way.
+<!-- * One way to look at dropout is on the lines of what we did in Module 8 when we used bootstrapping to produced many data sets and then fitted a model to each of them and then took the average (bagging). But randomly dropping out outputs in a layer, this can be looked as mimicking bagging -- in an efficient way. -->
 
 
 <!-- --- -->
 
-<!-- <https://www.reddit.com/r/MachineLearning/comments/4w6tsv/ama_we_are_the_google_brain_team_wed_love_to/> -->
+<!-- <https://www.reddit.com/r/MachineLearning/comments/4w6tsv/ama_we_are_the_google_brain_team_wed_love_to/>  -->
 
 <!-- The following is a direct quotation. -->
 
@@ -1786,15 +1797,15 @@ $~$
 
 ---
 
-## Hyperparameter optimization
+## Ways to avoid overfitting
 
 $~$
 
-**Hyperparameters**: The network architecture, the number of batches to run before terminating the optimization, the drop-out rate.
+Many **hyperparameters** when building and fitting a neural network, like the network architecture, the number of batches to run before terminating the optimization, the drop-out rate, etc.
 
 $~$
 
-Ways to avoid overfitting:
+To avoid overfit, we have some strategies:
 
 \vspace{2mm}
 
@@ -1812,7 +1823,7 @@ It is important that the hyperparameters are chosen on a validation set or by cr
 
 \vspace{2mm}
 
-However, a "popular" term is _validation-set overfitting_ and refers to using the validation set to decide many hyperparameters, so many that you may effectively overfit the validation set.
+However, we may run into _validation-set overfitting_: when using the validation set to decide many hyperparameters, so many that you may effectively overfit the validation set.
 
 ---
 
@@ -1833,11 +1844,11 @@ $~$
 
 \vspace{2mm}
 
-* The first big step was taken in the 1980s when the backpropagation algorithm were developed (rediscovered) to perform gradient descent in an efficient way.
+* The first big step was taken in the 1980s when the backpropagation algorithm was rediscovered.
 
 \vspace{2mm}
 
-* In 1989 (Bell Labs, Yann LeCun) used convolutional neural networks to classifying handwritten digits, and _LeNet_ was used in the US Postal Service for reading ZIP codes in the 1990s.
+* In 1989 (Bell Labs, Yann LeCun) used convolutional neural networks to classifying handwritten digits.
 
 \vspace{2mm}
 
@@ -1873,7 +1884,7 @@ $~$
 
 \vspace{2mm}
 
-* In contrast, in statistics we first select a set of inputs, then look at how these inputs should be transformed, before we apply some statistical methods. This transformation step can be called _feature engineering_ and has been automated in deep learning.
+* In contrast, in statistics we first select a set of inputs, then look at how these inputs should be transformed, before we apply some statistical methods (_feature engineering_).
 
 
 
@@ -1883,7 +1894,7 @@ $~$
 
 * The success of deep learning is dependent upon the breakthroughts 
     + in _\textcolor{red}{hardware}_ development, expecially with faster CPUs and massively parallell graphical processing units (GPUs). 
-    +  _\textcolor{red}{dataset}_ and benchmarks (internet/tech data).
+    +  _\textcolor{red}{datasets}_ and benchmarks (internet/tech data).
     + improvemets of the  _\textcolor{red}{algorithms}_.
 
 $~$
@@ -1895,7 +1906,7 @@ $~$
 ## The R keras package
 $~$
 
-* Earlier good programming skills in C++ was essential to work in deep learning. In addition also skills on programming for GPUs were needed. 
+* Earlier good programming skills (especially in C++) was essential to work in deep learning. 
 
 \vspace{2mm}
 
@@ -1909,7 +1920,19 @@ $~$
 
 _Keras is a high-level neural networks API developed with a focus on enabling fast experimentation. Being able to go from idea to result with the least possible delay is key to doing good research._
 
+$~$
 
+$~$
+
+\scriptsize
+
+
+
+More information on the R solution: <https://keras.rstudio.com/>
+
+\vspace{1mm}
+
+Cheat-sheet for R Keras: <https://github.com/rstudio/cheatsheets/raw/master/keras.pdf>
 <!-- --- -->
 
 <!-- [Tensorflow](https://www.tensorflow.org/) is a _symbolic-tensor manipulation_ framework that also can perform autodifferentiation. -->
@@ -1927,11 +1950,9 @@ _Keras is a high-level neural networks API developed with a focus on enabling fa
 
 <!-- The use of Tensorflow in R Keras is referred to as "using Tensorflow as a backend engine". Tensorflow is the default backend. -->
 
----
+ 
 
-More information on the R solution: <https://keras.rstudio.com/>
 
-Cheat-sheet for R Keras: <https://github.com/rstudio/cheatsheets/raw/master/keras.pdf>
 
 ---
 
@@ -2132,7 +2153,7 @@ plot(fitted)+ggtitle("Fitted model")
 `epoch` defines how many times you go through your training set (using mini-batches). See [here](https://keras.io/getting-started/faq/#what-does-sample-batch-epoch-mean) for some documentation.
 
 \centering
-![ ](mnistex.png){width=40%}
+![ ](mnistex.png){width=30%}
 
 
 

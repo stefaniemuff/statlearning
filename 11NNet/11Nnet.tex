@@ -2483,9 +2483,7 @@ This depends on the problem, and here experience is important.
 
 \begin{frame}
 
-However, the recent practice, see e.g. Chollet and Allaire (2018),
-Section 4.5.6/7 and Goodfellow, Bengio, and Courville (2016), Section 7,
-is to
+However, the recent practice is to
 
 \(~\)
 
@@ -2511,6 +2509,11 @@ is to
 This simplifies the choice of network architecture to \emph{choose a
 large enough network}.
 
+\(~\)
+
+See e.g. Chollet and Allaire (2018), Section 4.5.6/7 and Goodfellow,
+Bengio, and Courville (2016), Section 7
+
 \end{frame}
 
 \begin{frame}[fragile]
@@ -2524,8 +2527,7 @@ large enough network}.
   The choice of the loss function is closely related to the output layer
   activation function.
 \item
-  To sum up, the popular problem types, output activation and loss
-  functions are:
+  Most popular problem types, output activation and loss functions:
 \end{itemize}
 
 \begin{longtable}[]{@{}lll@{}}
@@ -2541,14 +2543,11 @@ Classification (C\textgreater{}2) & \texttt{softmax} &
 \bottomrule
 \end{longtable}
 
-\end{block}
+\vspace{2mm}
 
-\end{frame}
+The loss functions chosen ``need'' to be (see below):
 
-\begin{frame}
-
-Due to how estimation is done (see below), the loss functions chosen
-``need'' to be:
+\vspace{1mm}
 
 \begin{itemize}
 \tightlist
@@ -2560,6 +2559,8 @@ Due to how estimation is done (see below), the loss functions chosen
 \end{itemize}
 
 \(~\)
+
+\end{block}
 
 \end{frame}
 
@@ -2620,10 +2621,6 @@ gradient? Why not the positive?
 
 \begin{frame}
 
-\begin{block}{Mini-batch stochastic gradient descent (SGD)}
-
-\vspace{2mm}
-
 \begin{itemize}
 \item
   In \emph{\textcolor{red}{full gradient descent}}, the loss function is
@@ -2648,31 +2645,28 @@ gradient? Why not the positive?
   computer resources at calculating each gradient descent step.
 \end{itemize}
 
-\end{block}
-
 \end{frame}
 
 \begin{frame}
 
-\emph{\textcolor{red}{Mini-batch stochastic gradient descent}}
+\begin{block}{Mini-batch stochastic gradient descent (SGD)}
 
 \vspace{2mm}
 
-\begin{itemize}
-\tightlist
-\item
-  \textbf{Crucial idea}: The expectation can be approximated by the
-  average gradient over just a \emph{mini-batch} (random sample) of the
-  observations.
-\end{itemize}
+\textbf{Crucial idea}:
 
-\vspace{2mm}
+The expectation can be approximated by the average gradient over just a
+\emph{mini-batch} (random sample) of the observations.
+
+\(~\)
 
 \textbf{Advantages}:
 
+\vspace{1mm}
+
 \begin{itemize}
 \item
-  The optimizer will converge much faster if they can rapidly compute
+  The optimizer will converge much faster if it can rapidly compute
   approximate estimates of the gradient, instead of slowly computing the
   exact gradient (using all training data).
 \item
@@ -2683,14 +2677,7 @@ gradient? Why not the positive?
   to the variability they bring to the optimization process.
 \end{itemize}
 
-\end{frame}
-
-\begin{frame}
-
-In the 3th video (on backpropagation) from 3Blue1Brown there is nice
-example of one trajectory from gradient decent and one from SGD (10:10
-minutes into the video):
-\url{https://www.youtube.com/watch?v=Ilg3gGewQ5U\&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi\&index=3}
+\end{block}
 
 \end{frame}
 
@@ -2728,8 +2715,8 @@ minutes into the video):
     batch.
     \(\nabla_{\boldsymbol \theta}^* J({\boldsymbol \theta}^{(t)})\)
   \item
-    Update all weighs, but just using the average gradient from the
-    mini-batch
+    Update all weighs, but just using the \emph{average gradient} from
+    the mini-batch
     \({\boldsymbol \theta}^{(t+1)}={\boldsymbol \theta}^{(t)} - \lambda \nabla_{\boldsymbol \theta} ^* J({\boldsymbol \theta}^{(t)})\)
   \end{enumerate}
 \end{enumerate}
@@ -2754,6 +2741,15 @@ and full gradient descent (full dataset per iteration)
 
 \begin{frame}
 
+In the 3rd video (on backpropagation) from 3Blue1Brown there is nice
+example of one trajectory from gradient decent and one from SGD (10:10
+minutes into the video):
+\url{https://www.youtube.com/watch?v=Ilg3gGewQ5U\&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi\&index=3}
+
+\end{frame}
+
+\begin{frame}
+
 \begin{block}{Backpropagation algorithm}
 
 \(~\)
@@ -2761,8 +2757,8 @@ and full gradient descent (full dataset per iteration)
 \begin{itemize}
 \tightlist
 \item
-  Computing the analytical expression for the gradient \(\nabla J\) is
-  not difficult, but the numerical evaluation may be expensive.
+  \emph{\textcolor{red}{Backpropagation}} is a simple and inexpensive
+  way \emph{to calculate the gradient}.
 \end{itemize}
 
 \vspace{2mm}
@@ -2770,9 +2766,11 @@ and full gradient descent (full dataset per iteration)
 \begin{itemize}
 \tightlist
 \item
-  \emph{\textcolor{red}{Backpropagation}} is a simple and inexpensive
-  way to calculate the gradient numerically.
+  Computing the analytical expression for the gradient \(\nabla J\) is
+  not difficult, but \emph{the numerical evaluation may be expensive}.
 \end{itemize}
+
+\vspace{2mm}
 
 \vspace{2mm}
 
@@ -2780,8 +2778,8 @@ and full gradient descent (full dataset per iteration)
 \tightlist
 \item
   The \emph{\textcolor{red}{chain rule}} is used to compute derivatives
-  of functions of other functions where the derivatives are known, this
-  is done efficiently with backpropagation.
+  of functions of other functions where the derivatives are known. This
+  is efficiently done with backpropagation.
 \end{itemize}
 
 \vspace{2mm}
@@ -2830,7 +2828,7 @@ More background:
 \vspace{2mm}
 
 The learning rate \(\lambda\) is difficult to set. Some ideas for
-adaptive learning rates (Goodfellow et al, Chapter 8.5).
+adaptive learning rates (Goodfellow et al, Chapters 8.3 and 8.5).
 
 \(~\)
 
@@ -2849,8 +2847,7 @@ adaptive learning rates (Goodfellow et al, Chapter 8.5).
   \emph{\textcolor{red}{AdaGrad}}: individually adapt the learning rates
   (\(\lambda\)) of all model parameters. The parameters with the largest
   partial derivative of the loss (over all historical squared values)
-  have a correspondingly rapid decrease in their learning rate. Nice
-  properties when optimization is convex.
+  have a correspondingly rapid decrease in their learning rate.
 \end{itemize}
 
 \(~\)
@@ -2919,9 +2916,9 @@ adaptive learning rates (Goodfellow et al, Chapter 8.5).
 \begin{itemize}
 \tightlist
 \item
-  \emph{Weight decay}: In neural networks this means adding a
-  \(L_2\)-penalty to the loss function to \emph{penalize large weights}
-  \footnote{see chapter 7.1.1 in Goodfellow et al}:
+  \emph{\textcolor{red}{Weight decay}}: In neural networks this means
+  adding a \(L_2\)-penalty to the loss function to \emph{penalize large
+  weights} \footnote{see chapter 7.1.1 in Goodfellow et al}:
 \end{itemize}
 
 \[ \tilde{J}({\boldsymbol w})= \frac{\alpha}{2}{{\boldsymbol w}^\top{\boldsymbol w}} + J({\boldsymbol w}) \ .\]
@@ -2931,10 +2928,10 @@ adaptive learning rates (Goodfellow et al, Chapter 8.5).
 \begin{itemize}
 \tightlist
 \item
-  \emph{Dataset augmentation}: Adding fake data to the dataset, in order
-  that the trained model will generalize better. For some learning tasks
-  it is straightforward to create fake data. For image data this can be
-  done by rotating and scaling the images.
+  \emph{\textcolor{red}{Dataset augmentation}}: Adding fake data to the
+  dataset, in order that the trained model will generalize better. For
+  some learning tasks it is straightforward to create fake data. For
+  image data this can be done by rotating and scaling the images.
 \end{itemize}
 
 \vspace{2mm}
@@ -2942,10 +2939,10 @@ adaptive learning rates (Goodfellow et al, Chapter 8.5).
 \begin{itemize}
 \tightlist
 \item
-  \emph{Label smoothing}: Motivated by the fact that the training data
-  may contain errors in the reponses recorded, and replaced the one-hot
-  coding for \(C\) classes with \(\epsilon/(C-1)\) and \(1-\epsilon\)
-  for some small \(\epsilon\).
+  \emph{\textcolor{red}{Label smoothing}}: Motivated by the fact that
+  the training data may contain errors in the reponses recorded, and
+  replaced the one-hot coding for \(C\) classes with \(\epsilon/(C-1)\)
+  and \(1-\epsilon\) for some small \(\epsilon\).
 \end{itemize}
 
 \vspace{2mm}
@@ -2953,7 +2950,7 @@ adaptive learning rates (Goodfellow et al, Chapter 8.5).
 \begin{itemize}
 \tightlist
 \item
-  \emph{Early stopping}
+  \emph{\textcolor{red}{Early stopping}}
 \end{itemize}
 
 \vspace{2mm}
@@ -2961,7 +2958,7 @@ adaptive learning rates (Goodfellow et al, Chapter 8.5).
 \begin{itemize}
 \tightlist
 \item
-  \emph{Dropout}
+  \emph{\textcolor{red}{Dropout}}
 \end{itemize}
 
 \end{block}
@@ -3043,18 +3040,12 @@ Dropout was developed by Geoff Hinton and his students.
   a given layer at each iteration. Drop-out rates may be chosen between
   0.2 and 0.5. \vspace{1mm}
 \item
-  During test: no dropout, but scale done the layer output values by a
+  During test: no dropout, but scale down the layer output values by a
   factor equal to the drop-out rate (since now more units are active
   than we had during training). \vspace{1mm}
 \item
   Alternatively, the drop-out and scaling (now upscaling) can be done
   during training. \vspace{1mm}
-\item
-  One way to look at dropout is on the lines of what we did in Module 8
-  when we used bootstrapping to produced many data sets and then fitted
-  a model to each of them and then took the average (bagging). But
-  randomly dropping out outputs in a layer, this can be looked as
-  mimicking bagging -- in an efficient way.
 \end{itemize}
 
 \end{block}
@@ -3063,16 +3054,17 @@ Dropout was developed by Geoff Hinton and his students.
 
 \begin{frame}
 
-\begin{block}{Hyperparameter optimization}
+\begin{block}{Ways to avoid overfitting}
 
 \(~\)
 
-\textbf{Hyperparameters}: The network architecture, the number of
-batches to run before terminating the optimization, the drop-out rate.
+Many \textbf{hyperparameters} when building and fitting a neural
+network, like the network architecture, the number of batches to run
+before terminating the optimization, the drop-out rate, etc.
 
 \(~\)
 
-Ways to avoid overfitting:
+To avoid overfit, we have some strategies:
 
 \vspace{2mm}
 
@@ -3092,9 +3084,9 @@ or by cross-validation.
 
 \vspace{2mm}
 
-However, a ``popular'' term is \emph{validation-set overfitting} and
-refers to using the validation set to decide many hyperparameters, so
-many that you may effectively overfit the validation set.
+However, we may run into \emph{validation-set overfitting}: when using
+the validation set to decide many hyperparameters, so many that you may
+effectively overfit the validation set.
 
 \end{block}
 
@@ -3131,8 +3123,7 @@ Geoffrey Hinton (Google)
 \tightlist
 \item
   The first big step was taken in the 1980s when the backpropagation
-  algorithm were developed (rediscovered) to perform gradient descent in
-  an efficient way.
+  algorithm was rediscovered.
 \end{itemize}
 
 \vspace{2mm}
@@ -3141,8 +3132,7 @@ Geoffrey Hinton (Google)
 \tightlist
 \item
   In 1989 (Bell Labs, Yann LeCun) used convolutional neural networks to
-  classifying handwritten digits, and \emph{LeNet} was used in the US
-  Postal Service for reading ZIP codes in the 1990s.
+  classifying handwritten digits.
 \end{itemize}
 
 \vspace{2mm}
@@ -3231,8 +3221,7 @@ Geoffrey Hinton (Google)
 \item
   In contrast, in statistics we first select a set of inputs, then look
   at how these inputs should be transformed, before we apply some
-  statistical methods. This transformation step can be called
-  \emph{feature engineering} and has been automated in deep learning.
+  statistical methods (\emph{feature engineering}).
 \end{itemize}
 
 \end{block}
@@ -3253,7 +3242,8 @@ Geoffrey Hinton (Google)
     faster CPUs and massively parallell graphical processing units
     (GPUs).
   \item
-    \emph{\textcolor{red}{dataset}} and benchmarks (internet/tech data).
+    \emph{\textcolor{red}{datasets}} and benchmarks (internet/tech
+    data).
   \item
     improvemets of the \emph{\textcolor{red}{algorithms}}.
   \end{itemize}
@@ -3281,8 +3271,8 @@ Geoffrey Hinton (Google)
 \begin{itemize}
 \tightlist
 \item
-  Earlier good programming skills in C++ was essential to work in deep
-  learning. In addition also skills on programming for GPUs were needed.
+  Earlier good programming skills (especially in C++) was essential to
+  work in deep learning.
 \end{itemize}
 
 \vspace{2mm}
@@ -3309,16 +3299,20 @@ Geoffrey Hinton (Google)
 on enabling fast experimentation. Being able to go from idea to result
 with the least possible delay is key to doing good research.}
 
-\end{block}
+\(~\)
 
-\end{frame}
+\(~\)
 
-\begin{frame}
+\scriptsize
 
 More information on the R solution: \url{https://keras.rstudio.com/}
 
+\vspace{1mm}
+
 Cheat-sheet for R Keras:
 \url{https://github.com/rstudio/cheatsheets/raw/master/keras.pdf}
+
+\end{block}
 
 \end{frame}
 
@@ -3559,7 +3553,7 @@ for some documentation.
 
 \centering
 
-\includegraphics[width=0.4\textwidth,height=\textheight]{mnistex.png}
+\includegraphics[width=0.3\textwidth,height=\textheight]{mnistex.png}
 
 \end{block}
 
