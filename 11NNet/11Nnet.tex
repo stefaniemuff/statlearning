@@ -668,17 +668,21 @@ We need \emph{\textcolor{red}{new concepts}}:
 
 \begin{center}\includegraphics[width=0.8\linewidth]{11Nnet_files/figure-beamer/motivating-1} \end{center}
 
+\(~\)
+
 \normalsize
 
 \begin{itemize}
 \tightlist
 \item
   All lines going into the output node signifies that we multiply the
-  covariate values in the input nodes with the weights (regression
-  coefficients), and then sum.
+  covariate values in the input nodes with the
+  \emph{\textcolor{red}{weights}} (regression coefficients), and then
+  sum.
 \item
-  This sum can be sent through a so-called \emph{activition function}
-  (here just the identity function).
+  This sum can be sent through a so-called
+  \emph{\textcolor{red}{activition function}} (here just the identity
+  function).
 \end{itemize}
 
 \end{frame}
@@ -784,6 +788,26 @@ We now translate from the statistical into the neural networks world:
 
 \begin{frame}
 
+\begin{block}{Gradient descent and local minima}
+
+\(~\)
+
+\(~\)
+
+\center
+
+\includegraphics[width=0.6\textwidth,height=\textheight]{gradient_descent.png}
+
+\tiny (\url{https://github.com/SoojungHong/MachineLearning/wiki/Gradient-Descent})
+
+\(~\)
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
 \begin{block}{Finding optimal weights: Gradient descent algorithm}
 
 \vspace{2mm}
@@ -819,26 +843,6 @@ We now translate from the statistical into the neural networks world:
   The final values of the weights in that \((p+1)\) dimensional space
   are our parameter estimates and your network is \emph{trained}.
 \end{enumerate}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Gradient descent and local minima}
-
-\(~\)
-
-\(~\)
-
-\center
-
-\includegraphics[width=0.6\textwidth,height=\textheight]{gradient_descent.png}
-
-\tiny (\url{https://github.com/SoojungHong/MachineLearning/wiki/Gradient-Descent})
-
-\(~\)
 
 \end{block}
 
@@ -1511,7 +1515,7 @@ We only briefly mentioned multiclass regression in module 4.
 \item
   The optimization is done using gradient descent, with minor changes
   from what was done for the logistic regression due to the added sum
-  and the small change in the activation function.
+  and the change in the activation function.
 \end{itemize}
 
 \end{block}
@@ -1620,34 +1624,15 @@ Multinomial regression is also done with nnet, but using a wrapper
 \texttt{multinom} (we use default settings, so results are not
 necessarily the same as above).
 
+\(~\)
+
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
 \KeywordTok{library}\NormalTok{(caret)}
-\NormalTok{fit =}\StringTok{ }\KeywordTok{multinom}\NormalTok{(species }\OperatorTok{~}\StringTok{ }\DecValTok{-1} \OperatorTok{+}\StringTok{ }\NormalTok{., }\DataTypeTok{family =}\NormalTok{ multinomial, }\DataTypeTok{data =}\NormalTok{ iris_train)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## # weights:  15 (8 variable)
-## initial  value 54.930614 
-## iter  10 value 4.353139
-## iter  20 value 0.139411
-## iter  30 value 0.065218
-## iter  40 value 0.056419
-## iter  50 value 0.045548
-## iter  60 value 0.020867
-## iter  70 value 0.016116
-## iter  80 value 0.012952
-## iter  90 value 0.012787
-## iter 100 value 0.009090
-## final  value 0.009090 
-## stopped after 100 iterations
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
+\NormalTok{fit =}\StringTok{ }\KeywordTok{multinom}\NormalTok{(species }\OperatorTok{~}\StringTok{ }\DecValTok{-1} \OperatorTok{+}\StringTok{ }\NormalTok{., }\DataTypeTok{family =}\NormalTok{ multinomial, }\DataTypeTok{data =}\NormalTok{ iris_train, }
+    \DataTypeTok{trace =} \OtherTok{FALSE}\NormalTok{)}
 \KeywordTok{coef}\NormalTok{(fit)}
 \end{Highlighting}
 \end{Shaded}
@@ -1658,9 +1643,17 @@ necessarily the same as above).
 ## v -39.93182 -28.07162  53.73326 41.264390
 \end{verbatim}
 
-Problem: \texttt{multinom()} seems to fit an intercept \emph{plus} an
-offset node (B), thus we have to remove the intercept manually (by
-saying \texttt{-1} in the above formula).
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{fit}\OperatorTok{$}\NormalTok{wts}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]   0.000000   0.000000   0.000000   0.000000   0.000000   0.000000
+##  [7]  -5.919760  21.302473 -12.520725  -2.774511   0.000000 -39.931823
+## [13] -28.071619  53.733263  41.264390
+\end{verbatim}
 
 \end{frame}
 

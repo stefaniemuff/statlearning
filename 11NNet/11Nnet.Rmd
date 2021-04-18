@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "April 19 and 20, 2021"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -345,10 +345,11 @@ fitnnet=nnet(bodyfat~ age + weight + height + bmi + neck + abdomen + hip,data=d.
 plotnet(fitnnet)
 ```
 
+$~$
 
 \normalsize
-* All lines going into the output node signifies that we multiply the covariate values in the input nodes with the weights (regression coefficients), and then sum. 
-* This sum can be sent through a so-called _activition function_ (here just the identity function).
+* All lines going into the output node signifies that we multiply the covariate values in the input nodes with the _\textcolor{red}{weights}_ (regression coefficients), and then sum. 
+* This sum can be sent through a so-called _\textcolor{red}{activition function}_ (here just the identity function).
 
 ---
 
@@ -410,6 +411,22 @@ $~$
 
 3.  Replace _minimizing_ the loss function (RSS) by _\textcolor{red}{more general minization procedures}_ that work also when the loss function does not have a closed form. In particular, use the the _gradient descent algorithm_.
 
+---
+
+### Gradient descent and local minima
+
+$~$
+
+$~$
+
+\center
+<!-- ![](Gradient_descent_local_minima.jpg){width=50%} -->
+![](gradient_descent.png){width=60%}
+
+\tiny (https://github.com/SoojungHong/MachineLearning/wiki/Gradient-Descent)
+
+$~$
+
 
 ---
 
@@ -449,21 +466,6 @@ $${\boldsymbol w}^{(t+1)}={\boldsymbol w}^{(t)} - \lambda \nabla J({\boldsymbol 
 
 <!-- --- -->
 
----
-
-### Gradient descent and local minima
-
-$~$
-
-$~$
-
-\center
-<!-- ![](Gradient_descent_local_minima.jpg){width=50%} -->
-![](gradient_descent.png){width=60%}
-
-\tiny (https://github.com/SoojungHong/MachineLearning/wiki/Gradient-Descent)
-
-$~$
 
 
 <!-- \flushleft -->
@@ -831,7 +833,7 @@ $$ J({\boldsymbol w})=-\frac{1}{n}\sum_{i=1}^n\frac{1}{C} \sum_{c=1}^C (y_{ic}\l
 
 $~$
 
-* The optimization is done using gradient descent, with minor changes from what was done for the logistic regression due to the added sum and the small change in the activation function.
+* The optimization is done using gradient descent, with minor changes from what was done for the logistic regression due to the added sum and the change in the activation function.
 
 
 ---
@@ -895,18 +897,20 @@ plotnet(iris.nnet)
 
 Multinomial regression is also done with nnet, but using a wrapper `multinom` (we use default settings, so results are not necessarily the same as above).
 
+$~$
 
 \scriptsize
 
 ```{r}
 library(caret)
-fit=multinom(species~ -1 + .,family=multinomial, data=iris_train)
+fit=multinom(species~  -1 + .,family=multinomial, data=iris_train, trace=FALSE)
 coef(fit)
+fit$wts
 ```
 
 
 
-Problem: `multinom()` seems to fit an intercept _plus_ an offset node (B), thus we have to remove the intercept manually (by saying `-1` in the above formula).
+<!-- Problem: `multinom()` seems to fit an intercept _plus_ an offset node (B), thus we have to remove the intercept manually (by saying `-1` in the above formula). -->
 
  
 
