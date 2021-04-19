@@ -660,9 +660,9 @@ We need \emph{\textcolor{red}{new concepts}}:
 
 \begin{verbatim}
 ## # weights:  8
-## initial  value 2441918.078050 
-## iter  10 value 4471.960339
-## final  value 4415.454905 
+## initial  value 317427.173652 
+## iter  10 value 4470.570789
+## final  value 4415.453729 
 ## converged
 \end{verbatim}
 
@@ -1742,7 +1742,7 @@ necessarily the same as above).
   Examples: Linear, logistic and multinomial regression with or without
   any \emph{hidden layers} (between the input and output layers).
 \item
-  We may have no hidden layer, one (to be studied next), or many.
+  We may have between zero and very many hidden layers.
 \item
   Adding \emph{hidden layers} with \emph{non-linear activation
   functions} between the input and output layer will make nonlinear
@@ -1790,8 +1790,7 @@ The nodes are also called \emph{neurons}.
   \] where \(\alpha_{jm}\) is the
   weight\footnote{We stick with greek letters $\alpha$ and $\beta$ for parameters, but call them weights.}
   from input \(j\) to hidden node \(m\), and \(\alpha_{0m}\) is the bias
-  term for the \(m\)th hidden node. The hidden nodes can be thought of
-  as \emph{latent variables}.
+  term for the \(m\)th hidden node.
 \end{enumerate}
 
 \end{block}
@@ -1981,7 +1980,7 @@ in the hidden layer.
   \begin{itemize}
   \tightlist
   \item
-    wrong nodes in the hidden layer.
+    wrong number of nodes in the hidden layer.
   \item
     our optimization routine may fail / may find a local minimum.
   \item
@@ -2025,9 +2024,10 @@ in the hidden layer.
   \texttt{nnet()}. \vspace{2mm}
 \item
   If the response in formula is a factor, an appropriate classification
-  network is constructed; this has one output and entropy fit if the
-  number of levels is two, and a number of outputs equal to the number
-  of classes and a softmax output stage for more levels.
+  network is constructed; this has one output, sigmoid activation and
+  binary entropy loss for a binary response, and a number of outputs
+  equal to the number of classes, softmax activation and categorical
+  cross-entropy loss for more levels.
 \end{itemize}
 
 \end{block}
@@ -2236,6 +2236,8 @@ Here we compare to a model with 50 nodes:
 \begin{verbatim}
 ## [1] 4.333412
 \end{verbatim}
+
+\(~\)
 
 \(~\)
 

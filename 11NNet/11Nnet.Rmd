@@ -960,7 +960,7 @@ $~$
 
 * Examples: Linear, logistic and multinomial regression with or without any _hidden layers_ (between the input and output layers).
 
-* We may have no hidden layer, one (to be studied next), or many.
+* We may have between zero and very many hidden layers.
 
 * Adding _hidden layers_ with _non-linear activation functions_ between the input and output layer will make nonlinear statistical models.
 
@@ -992,7 +992,7 @@ $~$
 $$
 z_m({\boldsymbol x})=\phi_h(\alpha_{0m}+\sum_{j=1}^p \alpha_{jm}x_{j})
 $$
-where $\alpha_{jm}$ is the weight\footnote{We stick with greek letters $\alpha$ and $\beta$ for parameters, but call them weights.} from input $j$ to hidden node $m$, and $\alpha_{0m}$ is the bias term for the $m$th hidden node. The hidden nodes can be thought of as _latent variables_.
+where $\alpha_{jm}$ is the weight\footnote{We stick with greek letters $\alpha$ and $\beta$ for parameters, but call them weights.} from input $j$ to hidden node $m$, and $\alpha_{0m}$ is the bias term for the $m$th hidden node. 
 
 ---
 
@@ -1117,7 +1117,7 @@ ggarrange(pp,p)
 \vspace{2mm}
 
 * Even though a large feedforward network with one hidden layer may be able to _represent_ a desired function, we may not be able to _learn_ (i.e., estimate the) parameters of the function. Why?
-    * wrong nodes in the hidden layer.
+    * wrong number of nodes in the hidden layer.
     * our optimization routine may fail / may find a local minimum.
     * we may overfit / underfit the training data.
 
@@ -1144,7 +1144,7 @@ $~$
 * Type `?nnet()` into your R-console to see the arguments of `nnet()`.
 \vspace{2mm}
 
-* If the response in formula is a factor, an appropriate classification network is constructed; this has one output and entropy fit if the number of levels is two, and a number of outputs equal to the number of classes and a softmax output stage for more levels.
+* If the response in formula is a factor, an appropriate classification network is constructed; this has one output, sigmoid activation and binary entropy loss for a binary response, and a number of outputs equal to the number of classes, softmax activation and categorical cross-entropy loss for more levels.
 
 
 
@@ -1261,6 +1261,8 @@ sqrt(mean((pred[,1]-test_targets)^2))
 mae=mean(abs(pred[,1]-test_targets))
 mae
 ```
+
+$~$
 
 $~$
  
