@@ -845,7 +845,7 @@ $~$
 First select a training sample
 
 \scriptsize
-```{r,echo=F,cache=FALSE}
+```{r,echo=F}
 ird <- data.frame(rbind(iris3[,,1], iris3[,,2], iris3[,,3]),
         species = factor(c(rep("s",50), rep("c", 50), rep("v", 50))))
 ```
@@ -853,7 +853,7 @@ ird <- data.frame(rbind(iris3[,,1], iris3[,,2], iris3[,,3]),
 $~$
 
 
-```{r,cache=FALSE}
+```{r}
 library(nnet)
 set.seed(123)
 train = sample(1:150, 50)
@@ -901,7 +901,7 @@ $~$
 
 \scriptsize
 
-```{r,cache=FALSE}
+```{r}
 library(caret)
 fit=multinom(species~  . ,family=multinomial, data=iris_train, trace=FALSE)
 coef(fit)
@@ -1225,15 +1225,23 @@ Just checking out one hidden layer with 5 units to get going.
 
 \scriptsize
 
-```{r,echo=TRUE,results='hide'}
+```{r,echo=TRUE}
 library(nnet)
 fit5<- nnet(train_targets~., data=train_data,size=5,linout=TRUE,maxit=1000,trace=F)
 ```
+
+
 
 ```{r}
 pred=predict(fit5,newdata=test_data,type="raw")
 sqrt(mean((pred[,1]-test_targets)^2))
 mean(abs(pred[,1]-test_targets))
+```
+
+---
+
+```{r}
+plotnet(fit5)
 ```
 
 ---
