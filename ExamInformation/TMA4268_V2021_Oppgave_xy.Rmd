@@ -1,0 +1,59 @@
+---
+title: "Oppgave xy"
+author: "Your name"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  pdf_document
+# html_document
+---
+  
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
+                      cache=TRUE, size="scriptsize",fig.width=4, fig.height=3)
+
+```
+
+You can start with an R-chunck where you load some R packages, for example as follows (replace with the R packages you need to solve the task):
+
+```{r,eval=TRUE,echo=TRUE}
+library(knitr)
+library(rmarkdown)
+library(ggplot2)
+library(ggfortify)
+library(MASS)
+```
+
+Note: Make sure that you have installed the R packages we used in the course. Smart to go through all the exercises and check with packages were used BEFORE the exam!
+
+Here are some examples how to include R code (required) and LaTex formulas (recommended), in the same way we did it during the whole semester. Please install latex on your computer if you would like to include mathematical formulas. The alternative is that you write mathematical things on paper, your iPad or similar, and upload separately.
+
+To prepare for the exam you might also want to go throught the bonus part on RMarkdown in the online R course:
+
+https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/
+
+
+Here is a code chunk taken from Compulsory 1 (replace it with the code you need in the exam):
+
+```{r, eval=TRUE}
+id <- "1nLen1ckdnX4P9n8ShZeU7zbXpLc7qiwt" # google file ID
+d.worm <- read.csv(sprintf("https://docs.google.com/uc?id=%s&export=download", id))
+head(d.worm)
+```
+
+
+## a)
+
+R code, results and answers to sub-question a)
+
+
+## b) 
+Below you have to complete the code and then replace `eval=FALSE` by `eval=TRUE` in the chunk options:
+```{r, eval=FALSE, echo=TRUE}
+ggplot(d.worm,aes(x= ... ,y=  ... ,colour= ...)) + geom_point() + theme_bw()
+```
+
+Note that the default figure width and height have been set globally as `fig.width=4, fig.height=3`, but if you would like to change that (e.g., due to space constraints), you can include a different width and height directly into the chunk options, again using `fig.width=..., fig.height=...`.
+
+## c)
+
