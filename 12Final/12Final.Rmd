@@ -1,17 +1,17 @@
 ---
-subtitle: "TMA4268 Statistical Learning V2020"
+subtitle: "TMA4268 Statistical Learning V2021"
 title: "Module 12: Summing up and some cautionary notes"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "April 17, 2020"
+date: "April 26, 2021"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -31,9 +31,6 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 whichformat="latex"
 ```
 
----
-
-Last update: April 17, 2020
 
 --- 
 
@@ -112,7 +109,7 @@ $~$
 
 * Examples, the modules, required background in statistics
  \vspace{2mm}
-* Introduction to R 
+* Introduction to R and RStudio via the online R-course
 
 
 ---
@@ -124,7 +121,7 @@ $~$
 * Model complexity
     + Prediction vs. interpretation (inference).  
     + Parametric vs. nonparametric. 
-    + Inflexible vs. flexible.
+    + Flexible vs.\ inflexible.
     + Overfitting vs. underfitting
   \vspace{2mm}
 * Supervised vs. unsupervised. 
@@ -136,8 +133,7 @@ $~$
 * Bias-variance trade-off (polynomial example): mean squared error, training and test set.
  \vspace{2mm}
 * Vectors and matrices, rules for mean and covariances, the multivariate normal distribution.
- \vspace{2mm}
-* Model complexity and the bias-variance trade-off is important in "all" subsequent modules.
+
 
 
 ---
@@ -507,11 +503,18 @@ $~$
 
 \vspace{2mm}
 
-* Central: maximizing the distance (on both sides) from the class boundary to the closes observations (the margin $M$). This was relaxed with slack variables (support vector classifiers), and to allow nonlinear functions of ${\bf x}$ by extending an inner product to kernels (support vector machine).
+---
+
+* Maximizing the distance (on both sides) from the class boundary to the closes observations (the margin $M$). 
+
+* Relaxed with slack variables (support vector classifiers), and to allow nonlinear functions of ${\bf x}$ (inner products).
 
 \vspace{2mm}
 
 * Support vectors: observations that lie on the margin or on the wrong side of the margin. 
+
+\centering
+![casi Figure 19.3](../../casi/19.3.png){width=80%}
 
 ---
 
@@ -528,7 +531,7 @@ $~$
 
 \vspace{2mm}
 
-
+* _\textcolor{red}{SVMs have been overtaken largely by neural networks and tree-based methods.}_
 
 ---
 
@@ -596,6 +599,12 @@ Hierarchical clustering for visualization
 
 ---
 
+# Zoom-poll
+
+
+
+---
+
 # Some cautionary words
 
 $~$
@@ -611,7 +620,7 @@ $~$
 It is important to make the following distinction:
 
 * The aim is to _\textcolor{red}{predict}_ future values of $y$ from known regressors.
-* The aim is to _\textcolor{red}{explain}_ $y$ using known regressors. In this case, the ultimate aim is to find causal relationships.
+* The aim is to _\textcolor{red}{explain}_ $y$ using known regressors. In this case, the ultimate aim is to find _causal relationships_.
 
 ---
 
@@ -711,124 +720,89 @@ The coefficients of such an optimized ``best'' model should _not be interpreted_
 
 $~$
 
-$\rightarrow$ Subset selection may lead to **biased parameter estimates**, thus **do not draw (biological, medical,..) conclusions** from models that were optimized for prediction, for example by AIC/AICc/BIC minimization!
-
-\vspace{1mm}
-\scriptsize
-See, e.g., @freedman1983, @copas1983
+* Subset selection may lead to **biased parameter estimates**, thus **do not draw (biological, medical,..) conclusions** from models that were optimized for prediction, for example by AIC/AICc/BIC minimization! 
+See, e.g., @freedman1983, @copas1983.
 
 \vspace{2mm}
 \normalsize
 
-$\rightarrow$ **Exception**: Shrinkage methods!
 
 
----
+<!-- --- -->
 
-### AIC$_c$: The AIC for low sample sizes
+<!-- ### AIC$_c$: The AIC for low sample sizes -->
 
-$~$
+<!-- $~$ -->
 
-When the number of data points $n$ is small with respect to the number of parameters $p$ in a model, the use of a _\textcolor{red}{corrected AIC}_, the AIC$_c$ is recommended. For a model with $n$ data points, likelihood $L$ and $p$ parameters, it is given as
-\begin{equation*}
-\text{AIC}_c = -2\log(L) + 2p\cdot\frac{n}{n-p-1} \ .
-\end{equation*}
+<!-- When the number of data points $n$ is small with respect to the number of parameters $p$ in a model, the use of a _\textcolor{red}{corrected AIC}_, the AIC$_c$ is recommended. For a model with $n$ data points, likelihood $L$ and $p$ parameters, it is given as -->
+<!-- \begin{equation*} -->
+<!-- \text{AIC}_c = -2\log(L) + 2p\cdot\frac{n}{n-p-1} \ . -->
+<!-- \end{equation*} -->
 
-\vspace{2mm}
+<!-- \vspace{2mm} -->
 
-Burnham and Anderson **recommend to use AIC$_c$ in general, but for sure when the ratio $n/p<40$.**
-
-
-
-
----
-
-### Your aim is prediction?
-
-$~$
-
-Then you are basically free to do what you want. Your only aim is to minimize some sort of prediction error.
-
----
-
-### Your aim is explanation?
-
-$~$
-
-_Explanation_ means that you will want to interpret the regression coefficients, 95% CIs and $p$-values. It is then often assumed that some sort of causality ($x\rightarrow y$) exists.
-
-$~$
-
-In such a situation, you should formulate a _\textcolor{red}{confirmatory model}_:
-
-$~$
-
-* Start with a _\textcolor{red}{clear hypothesis}_. 
-\vspace{2mm}
-
-* Select your covariates according to _\textcolor{red}{a priori knowledge}_. 
-\vspace{2mm}
-
-* Ideally, formulate _\textcolor{red}{only one}_ or a few model(s) _\textcolor{red}{before you start analysing your data}_. Ideally even before you start collecting your data.
+<!-- Burnham and Anderson **recommend to use AIC$_c$ in general, but for sure when the ratio $n/p<40$.** -->
 
 
 
----
-
-## Explanatory: Confirmatory vs exploratory
 
 
 
-$~$
 
-$\rightarrow$ Two sorts of _\textcolor{red}{explanatory models/analyses}_:
+<!-- --- -->
 
-$~$
-
-* \textcolor{red}{Confirmatory}: 
-    * Clear hypothesis and \emph{\bf a priori} selection of regressors for $y$.
-    * **No subset selection!**
-    * Allowed to interpret the results and draw quantitative conclusions. 
-    
-$~$
- 
-
-* \textcolor{red}{Exploratory}: 
-    * Build whatever model you want, but the results should only be used to generate new hypotheses, a.k.a. ``speculations''.
-    * Clearly label the results as ``exploratory''.
+<!-- ## Explanatory: Confirmatory vs exploratory -->
 
 
-$~$
 
-$~$
+<!-- $~$ -->
 
-Therefore: Any **additional analyses** that you potentially do with your data have the character of **exploratory models**.
+<!-- $\rightarrow$ We can further split \textcolor{red}{explanatory analyses} into: -->
 
----
+<!-- $~$ -->
 
-**Explanatory models** to confirm hypotheses (so-called confirmatory models) have **a long tradition medicine**. In fact, the main conclusions in a study are only allowed to be drawn from the main model (which needs to be specified even before data are collected):
+<!-- * \textcolor{red}{Confirmatory}:  -->
+<!--     * Clear hypothesis and \emph{\bf a priori} selection of regressors for $y$. -->
+<!--     * **No subset selection!** -->
+<!--     * Allowed to interpret the results and draw quantitative conclusions.  -->
 
-
-\includegraphics[width=10.5cm]{graphics/claytonHills.jpg} 
-@clayton.hills1993
-
----
-
-## Interpretation of exploratory models?
-
-$~$ 
-
-Results from exploratory models can be used to generate new hypotheses, but it is then _not allowed to draw causal conclusions from them_, or to over-interpret effect-sizes.
-
-$~$
+<!-- $~$ -->
 
 
-$\rightarrow$ In biological publications it is (unfortunately) still common practice that exploratory models, which were optimized with model selection criteria (like AIC), are used to draw conclusions as if the models were confirmatory.
+<!-- * \textcolor{red}{Exploratory}:  -->
+<!--     * Build whatever model you want, but the results should only be used to generate new hypotheses, a.k.a. ``speculations''. -->
+<!--     * Clearly label the results as ``exploratory''. -->
 
-$~$
+
+<!-- $~$ -->
+
+<!-- $~$ -->
+
+<!-- Therefore: Any **additional analyses** that you potentially do with your data have the character of **exploratory models**. -->
+
+<!-- --- -->
+
+<!-- ## Example from a clinical study -->
 
 
-$\rightarrow$ We illustrate why this is a problem on the next slides.
+
+<!-- --- -->
+
+<!-- ## Interpretation of exploratory models? -->
+
+<!-- $~$  -->
+
+<!-- Results from exploratory models can be used to generate new hypotheses, but it is then _not allowed to draw causal conclusions from them_, or to over-interpret effect-sizes. -->
+
+<!-- $~$ -->
+
+
+<!-- * In biological publications it is (unfortunately) still common practice that exploratory models, which were optimized with model selection criteria (like AIC), are used to draw conclusions as if the models were confirmatory. -->
+
+<!-- $~$ -->
+
+
+<!-- * We illustrate why this is a problem on the next slides. -->
 
 
 ---
@@ -902,7 +876,44 @@ hist(summary(r.AICmin)$coef[-1,4],freq=T,main="18 variables of minimal AICc mode
 \normalsize
 The distribution of the $p$-values is now skewed: many of them reach rather small values (`r sum(summary(r.AICmin)$coef[-1,4]<0.05)` have $p<0.05$). This happened _although none of the variables has any explanatory power!_
 
+
 ---
+
+<!-- ### Your aim is prediction? -->
+
+<!-- $~$ -->
+
+<!-- Then you are basically free to do what you want. Your only aim is to _minimize some sort of prediction error_ or _loss function_. -->
+
+<!-- $~$ -->
+
+<!-- **Examples**: -->
+
+<!-- --- -->
+
+<!-- ### Your aim is explanation? -->
+
+<!-- $~$ -->
+
+<!-- _Explanation_ means that you will want to interpret the regression coefficients, 95% CIs and $p$-values. It is then often assumed that some sort of causality ($x\rightarrow y$) exists. -->
+
+<!-- $~$ -->
+
+<!-- In such a situation: -->
+
+<!-- $~$ -->
+
+<!-- * Start with a _\textcolor{red}{clear hypothesis}_.  -->
+<!-- \vspace{2mm} -->
+
+<!-- * Select your covariates according to _\textcolor{red}{a priori knowledge}_.  -->
+<!-- \vspace{2mm} -->
+
+<!-- * Ideally, formulate _\textcolor{red}{only one}_ or a few model(s) _\textcolor{red}{before you start analysing your data}_. Ideally even before you start collecting your data. -->
+
+
+
+<!-- --- -->
 
 
 ## Summary: Main problem with model selection 
@@ -913,50 +924,58 @@ $~$
 When model selection is carried out based on objective criteria, the effect sizes will to be too large and the uncertainty too small. So you end up being too sure about a too large effect. 
 \end{minipage}}
 
----
-
-## Recommended procedure for explanatory models 
+$~$
 
 $~$
 
-Before you start: 
-\vspace{2mm}
-
-1. **Think about a suitable model**. This includes the model family (e.g., linear model), but also potential variables that are relevant using _a priori_ knowledge.
-\vspace{2mm}
-
-2. Declare a strategy what you do if _e.g._ modelling assumptions are not met or in the presence of collinearity.
-    * What kind of variable transformations would you try, in which order, and why?
-    * What model simplifications will be considered it it is not possible to fit the intended model?
-    * How will you deal with outliers?
-    * How will you treat missing values in the data?
-    * How will you treat collinear covariates?
-    * ... 
-
-$~$
- 
-It is advisable to write your strategy down as a ``protocol'' before doing any analyses. 
-
----
+**Exception**: Shrinkage methods!
 
 
-3. Analyze the data following your ``protocol'':
+<!-- --- -->
 
-$~$
+<!-- ## Recommended procedure for explanatory models  -->
 
-* Fit the model and check if modelling assumptions are met.
+<!-- $~$ -->
 
-* If modelling assumptions are not met, **adapt the model** as outlined in your protocol. 
+<!-- Before you start:  -->
+<!-- \vspace{2mm} -->
 
-*  Interpret the model coefficients (effect sizes) and the $p$-values properly (see next week). 
+<!-- 1. **Think about a suitable model**. This includes the model family (e.g., linear model), but also potential variables that are relevant using _a priori_ knowledge. -->
+<!-- \vspace{2mm} -->
+
+<!-- 2. Declare a strategy what you do if _e.g._ modelling assumptions are not met or in the presence of collinearity. -->
+<!--     * What kind of variable transformations would you try, in which order, and why? -->
+<!--     * What model simplifications will be considered it it is not possible to fit the intended model? -->
+<!--     * How will you deal with outliers? -->
+<!--     * How will you treat missing values in the data? -->
+<!--     * How will you treat collinear covariates? -->
+<!--     * ...  -->
+
+<!-- $~$ -->
+
+<!-- It is advisable to write your strategy down as a ``protocol'' before doing any analyses.  -->
+
+<!-- --- -->
 
 
-$~$
+<!-- 3. Analyze the data following your ``protocol'': -->
+
+<!-- $~$ -->
+
+<!-- * Fit the model and check if modelling assumptions are met. -->
+
+<!-- * If modelling assumptions are not met, **adapt the model** as outlined in your protocol.  -->
+
+<!-- *  Interpret the model coefficients (effect sizes) and the $p$-values properly.  -->
 
 
-4. After the analysis that was specified in the ``protocol'': 
+<!-- $~$ -->
 
-* Any additional analyses, which you did not specify in advance, are purely exploratory.
+
+<!-- 4. After the analysis that was specified in the ``protocol'':  -->
+
+<!-- * Any additional analyses, which you did not specify in advance, are purely exploratory. -->
+
 
 ---
 
@@ -982,60 +1001,77 @@ $~$
 
 * Some models can be used for both, prediction and explanation, but then the approach how to build the model (e.g., how to select variables) should still depend on the aim.
 
----
 
-# One more thing: The replication crisis
 
-\vspace{2mm}
+<!-- # One more thing: The replication crisis -->
 
-* In science, the aim of models is most often _explanation_.
+<!-- \vspace{2mm} -->
 
-* _Replication crisis_: https://en.wikipedia.org/wiki/Replication_crisis
+<!-- * In science, the aim of models is most often _explanation_. -->
 
+<!-- * _Replication crisis_: https://en.wikipedia.org/wiki/Replication_crisis -->
+
+
+<!-- $~$ -->
+
+<!-- Do not overinterpret $p$-values. From @goodman2016 : -->
+
+<!-- $~$ -->
+
+<!-- \begin{quote} -->
+<!-- Fisher used ``significance'' merely {\bf to indicate that an observation was worth following up, with refutation of the null hypothesis justified only if further experiments ``rarely failed'' to achieve significance.}  -->
+<!-- This is in stark contrast to the modern practice of making claims based on a single demonstration of statistical significance. -->
+<!-- \end{quote} -->
+
+<!-- --- -->
+
+
+
+<!-- Please read some recent literature: -->
+
+<!-- * @wasserstein.lazar2016: The ASA's statement on $p$-values https://amstat.tandfonline.com/doi/full/10.1080/00031305.2016.1154108 -->
+<!-- * @goodman2008: https://www.sciencedirect.com/science/article/abs/pii/S0037196308000620 -->
+<!-- * @nuzzo2014: https://www.nature.com/news/scientific-method-statistical-errors-1.14700 -->
+
+<!-- $~$ -->
+
+<!-- These things are **extremely relevant** for you if you are going to analyse (scientific) data in the future. -->
+
+
+
+<!-- --- -->
+
+<!-- # After TMA4268 - what is next? -->
+
+<!-- What are the statistical challenges we have not covered? -->
+
+<!-- Do you want to learn more about the methods we have looked at in this course? And also methods that are more tailored towards specific types of data? Then we have many statistics courses that you may choose from. -->
+
+<!-- An overview of statistics courses is kindly put together by Mette Langaas: -->
+<!-- <https://folk.ntnu.no/mettela/Talks/3klinfo20190325.html> -->
+
+
+
+# The exam
 
 $~$
 
-Do not overinterpret $p$-values. From @goodman2016 :
+* **Digital home exam** May 26th, 9-13h.
 
 $~$
 
-\begin{quote}
-Fisher used ``significance'' merely {\bf to indicate that an observation was worth following up, with refutation of the null hypothesis justified only if further experiments ``rarely failed'' to achieve significance.} 
-This is in stark contrast to the modern practice of making claims based on a single demonstration of statistical significance.
-\end{quote}
+Tentative plan:
 
----
-
-
-
-Please read some recent literature:
-
-* @wasserstein.lazar2016: The ASA's statement on $p$-values https://amstat.tandfonline.com/doi/full/10.1080/00031305.2016.1154108
-* @goodman2008: https://www.sciencedirect.com/science/article/abs/pii/S0037196308000620
-* @nuzzo2014: https://www.nature.com/news/scientific-method-statistical-errors-1.14700
-
-$~$
-
-These things are **extremely relevant** for you if you are going to analyse (scientific) data in the future.
-
+* Warm up section
+* Two examples with real data
+* A conceptual/theoretical section testing your understanding.
+* A section with single/multiple choice questions
 
 
 ---
 
-# After TMA4268 - what is next?
+Thank you for attending this course  - good luck for the exam and let's hope we are soon back into normal post-Covid teaching mode!
 
-What are the statistical challenges we have not covered?
-
-Do you want to learn more about the methods we have looked at in this course? And also methods that are more tailored towards specific types of data? Then we have many statistics courses that you may choose from.
-
-An overview of statistics courses is kindly put together by Mette Langaas:
-<https://folk.ntnu.no/mettela/Talks/3klinfo20190325.html>
-
----
-
-# Final word
-
-**Thank you for attending this course  - good luck for the compulsory exercise 3 and let's hope we are soon back into normal teaching mode in the post-Covid-19 era!**
 
 ---
 

@@ -144,18 +144,12 @@
 
 \title{Module 12: Summing up and some cautionary notes}
 \providecommand{\subtitle}[1]{}
-\subtitle{TMA4268 Statistical Learning V2020}
+\subtitle{TMA4268 Statistical Learning V2021}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{April 17, 2020}
+\date{April 26, 2021}
 
 \begin{document}
 \frame{\titlepage}
-
-\begin{frame}
-
-Last update: April 17, 2020
-
-\end{frame}
 
 \begin{frame}{Overview}
 \protect\hypertarget{overview}{}
@@ -271,7 +265,7 @@ Gareth James et al. (2013)
 \item
   Examples, the modules, required background in statistics \vspace{2mm}
 \item
-  Introduction to R
+  Introduction to R and RStudio via the online R-course
 \end{itemize}
 
 \end{block}
@@ -296,7 +290,7 @@ Gareth James et al. (2013)
   \item
     Parametric vs.~nonparametric.
   \item
-    Inflexible vs.~flexible.
+    Flexible vs.~inflexible.
   \item
     Overfitting vs.~underfitting \vspace{2mm}
   \end{itemize}
@@ -311,10 +305,7 @@ Gareth James et al. (2013)
   training and test set. \vspace{2mm}
 \item
   Vectors and matrices, rules for mean and covariances, the multivariate
-  normal distribution. \vspace{2mm}
-\item
-  Model complexity and the bias-variance trade-off is important in
-  ``all'' subsequent modules.
+  normal distribution.
 \end{itemize}
 
 \end{block}
@@ -736,14 +727,19 @@ To improve prediction (but worse interpretation):
 
 \vspace{2mm}
 
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
 \begin{itemize}
-\tightlist
 \item
-  Central: maximizing the distance (on both sides) from the class
-  boundary to the closes observations (the margin \(M\)). This was
-  relaxed with slack variables (support vector classifiers), and to
-  allow nonlinear functions of \({\bf x}\) by extending an inner product
-  to kernels (support vector machine).
+  Maximizing the distance (on both sides) from the class boundary to the
+  closes observations (the margin \(M\)).
+\item
+  Relaxed with slack variables (support vector classifiers), and to
+  allow nonlinear functions of \({\bf x}\) (inner products).
 \end{itemize}
 
 \vspace{2mm}
@@ -755,7 +751,9 @@ To improve prediction (but worse interpretation):
   side of the margin.
 \end{itemize}
 
-\end{block}
+\centering
+
+\includegraphics[width=0.8\textwidth,height=\textheight]{../../casi/19.3.png}
 
 \end{frame}
 
@@ -782,6 +780,12 @@ To improve prediction (but worse interpretation):
 \end{itemize}
 
 \vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{\textcolor{red}{SVMs have been overtaken largely by neural networks and tree-based methods.}}
+\end{itemize}
 
 \end{frame}
 
@@ -882,6 +886,11 @@ Hierarchical clustering for visualization
 
 \end{frame}
 
+\begin{frame}{Zoom-poll}
+\protect\hypertarget{zoom-poll}{}
+
+\end{frame}
+
 \begin{frame}{Some cautionary words}
 \protect\hypertarget{some-cautionary-words}{}
 
@@ -910,8 +919,8 @@ It is important to make the following distinction:
   from known regressors.
 \item
   The aim is to \emph{\textcolor{red}{explain}} \(y\) using known
-  regressors. In this case, the ultimate aim is to find causal
-  relationships.
+  regressors. In this case, the ultimate aim is to find \emph{causal
+  relationships}.
 \end{itemize}
 
 \end{frame}
@@ -1056,182 +1065,17 @@ interpreted} in a causal sense! Why?
 
 \(~\)
 
-\(\rightarrow\) Subset selection may lead to \textbf{biased parameter
-estimates}, thus \textbf{do not draw (biological, medical,..)
-conclusions} from models that were optimized for prediction, for example
-by AIC/AICc/BIC minimization!
-
-\vspace{1mm}
-\scriptsize
-
-See, e.g., Freedman (1983), Copas (1983)
+\begin{itemize}
+\tightlist
+\item
+  Subset selection may lead to \textbf{biased parameter estimates}, thus
+  \textbf{do not draw (biological, medical,..) conclusions} from models
+  that were optimized for prediction, for example by AIC/AICc/BIC
+  minimization! See, e.g., Freedman (1983), Copas (1983).
+\end{itemize}
 
 \vspace{2mm}
 \normalsize
-
-\(\rightarrow\) \textbf{Exception}: Shrinkage methods!
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{AIC\(_c\): The AIC for low sample sizes}
-
-\(~\)
-
-When the number of data points \(n\) is small with respect to the number
-of parameters \(p\) in a model, the use of a
-\emph{\textcolor{red}{corrected AIC}}, the AIC\(_c\) is recommended. For
-a model with \(n\) data points, likelihood \(L\) and \(p\) parameters,
-it is given as \begin{equation*}
-\text{AIC}_c = -2\log(L) + 2p\cdot\frac{n}{n-p-1} \ .
-\end{equation*}
-
-\vspace{2mm}
-
-Burnham and Anderson \textbf{recommend to use AIC\(_c\) in general, but
-for sure when the ratio \(n/p<40\).}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Your aim is prediction?}
-
-\(~\)
-
-Then you are basically free to do what you want. Your only aim is to
-minimize some sort of prediction error.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Your aim is explanation?}
-
-\(~\)
-
-\emph{Explanation} means that you will want to interpret the regression
-coefficients, 95\% CIs and \(p\)-values. It is then often assumed that
-some sort of causality (\(x\rightarrow y\)) exists.
-
-\(~\)
-
-In such a situation, you should formulate a
-\emph{\textcolor{red}{confirmatory model}}:
-
-\(~\)
-
-\begin{itemize}
-\item
-  Start with a \emph{\textcolor{red}{clear hypothesis}}. \vspace{2mm}
-\item
-  Select your covariates according to
-  \emph{\textcolor{red}{a priori knowledge}}. \vspace{2mm}
-\item
-  Ideally, formulate \emph{\textcolor{red}{only one}} or a few model(s)
-  \emph{\textcolor{red}{before you start analysing your data}}. Ideally
-  even before you start collecting your data.
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Explanatory: Confirmatory vs exploratory}
-
-\(~\)
-
-\(\rightarrow\) Two sorts of
-\emph{\textcolor{red}{explanatory models/analyses}}:
-
-\(~\)
-
-\begin{itemize}
-\tightlist
-\item
-  \textcolor{red}{Confirmatory}:
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Clear hypothesis and \emph{\bf a priori} selection of regressors for
-    \(y\).
-  \item
-    \textbf{No subset selection!}
-  \item
-    Allowed to interpret the results and draw quantitative conclusions.
-  \end{itemize}
-\end{itemize}
-
-\(~\)
-
-\begin{itemize}
-\tightlist
-\item
-  \textcolor{red}{Exploratory}:
-
-  \begin{itemize}
-  \tightlist
-  \item
-    Build whatever model you want, but the results should only be used
-    to generate new hypotheses, a.k.a. ``speculations''.
-  \item
-    Clearly label the results as ``exploratory''.
-  \end{itemize}
-\end{itemize}
-
-\(~\)
-
-\(~\)
-
-Therefore: Any \textbf{additional analyses} that you potentially do with
-your data have the character of \textbf{exploratory models}.
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\textbf{Explanatory models} to confirm hypotheses (so-called
-confirmatory models) have \textbf{a long tradition medicine}. In fact,
-the main conclusions in a study are only allowed to be drawn from the
-main model (which needs to be specified even before data are collected):
-
-\includegraphics[width=10.5cm]{graphics/claytonHills.jpg} Clayton and
-Hills (1993)
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Interpretation of exploratory models?}
-
-\(~\)
-
-Results from exploratory models can be used to generate new hypotheses,
-but it is then \emph{not allowed to draw causal conclusions from them},
-or to over-interpret effect-sizes.
-
-\(~\)
-
-\(\rightarrow\) In biological publications it is (unfortunately) still
-common practice that exploratory models, which were optimized with model
-selection criteria (like AIC), are used to draw conclusions as if the
-models were confirmatory.
-
-\(~\)
-
-\(\rightarrow\) We illustrate why this is a problem on the next slides.
 
 \end{block}
 
@@ -1368,92 +1212,13 @@ none of the variables has any explanatory power!}
 When model selection is carried out based on objective criteria, the effect sizes will to be too large and the uncertainty too small. So you end up being too sure about a too large effect. 
 \end{minipage}}
 
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Recommended procedure for explanatory models}
+\(~\)
 
 \(~\)
 
-Before you start: \vspace{2mm}
-
-\begin{enumerate}
-\item
-  \textbf{Think about a suitable model}. This includes the model family
-  (e.g., linear model), but also potential variables that are relevant
-  using \emph{a priori} knowledge. \vspace{2mm}
-\item
-  Declare a strategy what you do if \emph{e.g.} modelling assumptions
-  are not met or in the presence of collinearity.
-
-  \begin{itemize}
-  \tightlist
-  \item
-    What kind of variable transformations would you try, in which order,
-    and why?
-  \item
-    What model simplifications will be considered it it is not possible
-    to fit the intended model?
-  \item
-    How will you deal with outliers?
-  \item
-    How will you treat missing values in the data?
-  \item
-    How will you treat collinear covariates?
-  \item
-    \ldots{}
-  \end{itemize}
-\end{enumerate}
-
-\(~\)
-
-It is advisable to write your strategy down as a ``protocol'' before
-doing any analyses.
+\textbf{Exception}: Shrinkage methods!
 
 \end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{enumerate}
-\setcounter{enumi}{2}
-\tightlist
-\item
-  Analyze the data following your ``protocol'':
-\end{enumerate}
-
-\(~\)
-
-\begin{itemize}
-\item
-  Fit the model and check if modelling assumptions are met.
-\item
-  If modelling assumptions are not met, \textbf{adapt the model} as
-  outlined in your protocol.
-\item
-  Interpret the model coefficients (effect sizes) and the \(p\)-values
-  properly (see next week).
-\end{itemize}
-
-\(~\)
-
-\begin{enumerate}
-\setcounter{enumi}{3}
-\tightlist
-\item
-  After the analysis that was specified in the ``protocol'':
-\end{enumerate}
-
-\begin{itemize}
-\tightlist
-\item
-  Any additional analyses, which you did not specify in advance, are
-  purely exploratory.
-\end{itemize}
 
 \end{frame}
 
@@ -1504,76 +1269,39 @@ Which methods are suitable for explanation (inference)? \vspace{-2mm}
 
 \end{frame}
 
-\begin{frame}{One more thing: The replication crisis}
-\protect\hypertarget{one-more-thing-the-replication-crisis}{}
+\begin{frame}{The exam}
+\protect\hypertarget{the-exam}{}
 
-\vspace{2mm}
+\(~\)
 
 \begin{itemize}
+\tightlist
 \item
-  In science, the aim of models is most often \emph{explanation}.
-\item
-  \emph{Replication crisis}:
-  \url{https://en.wikipedia.org/wiki/Replication_crisis}
+  \textbf{Digital home exam} May 26th, 9-13h.
 \end{itemize}
 
 \(~\)
 
-Do not overinterpret \(p\)-values. From Goodman (2016) :
+Tentative plan:
 
-\(~\)
-
-\begin{quote}
-Fisher used ``significance'' merely {\bf to indicate that an observation was worth following up, with refutation of the null hypothesis justified only if further experiments ``rarely failed'' to achieve significance.} 
-This is in stark contrast to the modern practice of making claims based on a single demonstration of statistical significance.
-\end{quote}
+\begin{itemize}
+\tightlist
+\item
+  Warm up section
+\item
+  Two examples with real data
+\item
+  A conceptual/theoretical section testing your understanding.
+\item
+  A section with single/multiple choice questions
+\end{itemize}
 
 \end{frame}
 
 \begin{frame}
 
-Please read some recent literature:
-
-\begin{itemize}
-\tightlist
-\item
-  Wasserstein and Lazar (2016): The ASA's statement on \(p\)-values
-  \url{https://amstat.tandfonline.com/doi/full/10.1080/00031305.2016.1154108}
-\item
-  Goodman (2008):
-  \url{https://www.sciencedirect.com/science/article/abs/pii/S0037196308000620}
-\item
-  Nuzzo (2014):
-  \url{https://www.nature.com/news/scientific-method-statistical-errors-1.14700}
-\end{itemize}
-
-\(~\)
-
-These things are \textbf{extremely relevant} for you if you are going to
-analyse (scientific) data in the future.
-
-\end{frame}
-
-\begin{frame}{After TMA4268 - what is next?}
-\protect\hypertarget{after-tma4268---what-is-next}{}
-
-What are the statistical challenges we have not covered?
-
-Do you want to learn more about the methods we have looked at in this
-course? And also methods that are more tailored towards specific types
-of data? Then we have many statistics courses that you may choose from.
-
-An overview of statistics courses is kindly put together by Mette
-Langaas: \url{https://folk.ntnu.no/mettela/Talks/3klinfo20190325.html}
-
-\end{frame}
-
-\begin{frame}{Final word}
-\protect\hypertarget{final-word}{}
-
-\textbf{Thank you for attending this course - good luck for the
-compulsory exercise 3 and let's hope we are soon back into normal
-teaching mode in the post-Covid-19 era!}
+Thank you for attending this course - good luck for the exam and let's
+hope we are soon back into normal post-Covid teaching mode!
 
 \end{frame}
 
@@ -1594,14 +1322,6 @@ Methodology)} 45: 311--54.
 Freedman, D. A. 1983. ``A Note on Screening Regression Equations.''
 \emph{The American Statistician} 37: 152--55.
 
-\leavevmode\hypertarget{ref-goodman2008}{}%
-Goodman, S. N. 2008. ``A Dirty Dozen: Twelve P-Value Misconceptions.''
-\emph{Seminars in Hematology} 45: 135--40.
-
-\leavevmode\hypertarget{ref-goodman2016}{}%
----------. 2016. ``Aligning Statistical and Scientific Reasoning.''
-\emph{Science} 352: 1180--2.
-
 \leavevmode\hypertarget{ref-ISL}{}%
 James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani.
 2013. \emph{An Introduction to Statistical Learning}. Vol. 112.
@@ -1611,15 +1331,6 @@ Springer.
 James, G., D. Witten, T. Hastie, and R. Tibshirani. 2013. \emph{An
 Introduction to Statistical Learning with Applications in R}. New York:
 Springer.
-
-\leavevmode\hypertarget{ref-nuzzo2014}{}%
-Nuzzo, R. 2014. ``Scientific Method: Statistical Errors.'' \emph{Nature}
-506: 150--52.
-
-\leavevmode\hypertarget{ref-wasserstein.lazar2016}{}%
-Wasserstein, R. L., and N. A. Lazar. 2016. ``The ASA's Statement on
-P-Values: Context, Process, and Purpose.'' \emph{The American
-Statistician}.
 
 \end{frame}
 
