@@ -112,7 +112,7 @@ $~$
 
 * After the first hype, NNs were pushed aside by boosting and support vector machines.
 
-* Revival since 2010: The emergence of _\textcolor{red}{Deep learning}_ as a consequence of improved computer resources, some innovations, and applications to image and video classification, and speech and text processing
+* Revival since 2010: The emergence of _Deep learning_ as a consequence of improved computer resources, some innovations, and applications to image and video classification, and speech and text processing
 
 ---
 
@@ -120,7 +120,7 @@ $~$
 
 $~$
 
-* Every day you read about the success of AI, machine learning -- and in particular _\textcolor{red}{deep learning}_.
+* Every day you read about the success of AI, machine learning -- and in particular _deep learning_.
 
 $~$
 
@@ -184,7 +184,7 @@ $~$
 
 $~$
 
-* With the field of _\textcolor{red}{machine learning}_ the shift is that a system is _\textcolor{red}{trained}_ rather than explicitly programmed.
+* With the field of _machine learning_ the shift is that a system is _trained_ rather than explicitly programmed.
 
 $~$
 
@@ -196,7 +196,7 @@ $~$
 
 $~$
 
-* The focus in ML is oriented towards _\textcolor{red}{engineering}_, and ideas are proven _empirically_ rather than theoretically (which is the case in mathematical statistics).
+* The focus in ML is oriented towards _engineering_, and ideas are proven _empirically_ rather than theoretically (which is the case in mathematical statistics).
 
 $~$
 
@@ -299,7 +299,7 @@ How can our statistical model be represented as a network?
 
 $~$
 
-We need _\textcolor{red}{new concepts}_:
+We need _new concepts_:
 
 $~$
 
@@ -348,12 +348,12 @@ plotnet(fitnnet)
 $~$
 
 \normalsize
-* All lines going into the output node signifies that we multiply the covariate values in the input nodes with the _\textcolor{red}{weights}_ (regression coefficients), and then sum. 
-* This sum can be sent through a so-called _\textcolor{red}{activition function}_ (here just the identity function).
+* All lines going into the output node signifies that we multiply the covariate values in the input nodes with the _weights_ (regression coefficients), and then sum. 
+* This sum can be sent through a so-called _activition function_ (here just the identity function).
 
 ---
 
-* _\textcolor{red}{Regression notation:}_
+* _Regression notation:_
 
 \begin{equation*}
  Y_i=\beta_0 + \beta_1 x_{i1}+\beta_2 x_{i2}+\cdots + \beta_p x_{ip}+\varepsilon_i \ .
@@ -361,7 +361,7 @@ $~$
 
 $~$
 
-* _\textcolor{red}{Neural network notation:}_
+* _Neural network notation:_
 \begin{equation*}
 y_1({\boldsymbol x}_i)=\phi_o(w_0+w_1 x_{i1}+\cdots + w_p x_{ip}) \ ,
 \end{equation*}
@@ -403,13 +403,13 @@ We now translate from the statistical into the neural networks world:
 
 $~$
 
-2. Replace the RSS in our _training data set_ with the following _\textcolor{red}{loss function}_  (_mean squared error_)
+2. Replace the RSS in our _training data set_ with the following _loss function_  (_mean squared error_)
 $$ J({\boldsymbol w})=\frac{1}{n}\sum_{i=1}^n (y_i-{\hat{y}_1({\boldsymbol x}_i)})^2 \ ,$$
 where $J({\boldsymbol w})$ indicates that the unknown parameters are the weights ${\boldsymbol w}$.
 
 $~$
 
-3.  Replace _minimizing_ the loss function (RSS) by _\textcolor{red}{more general minization procedures}_ that work also when the loss function does not have a closed form. In particular, use the the _gradient descent algorithm_.
+3.  Replace _minimizing_ the loss function (RSS) by _more general minization procedures_ that work also when the loss function does not have a closed form. In particular, use the the _gradient descent algorithm_.
 
 ---
 
@@ -606,7 +606,7 @@ $$ \ln(L(\boldsymbol{\beta}))=l(\boldsymbol{\beta}) =\sum_{i=1}^n \Big ( y_i \ln
 
 \small
 
-* No closed form solution, thus we use a _\textcolor{red}{gradient-based method}_ (the Newton-Raphson or [Fisher scoring algorithm](https://en.wikipedia.org/wiki/Scoring_algorithm) to find $\hat\beta$ and $SD(\hat\beta)$:
+* No closed form solution, thus we use a _gradient-based method_ (the Newton-Raphson or [Fisher scoring algorithm](https://en.wikipedia.org/wiki/Scoring_algorithm) to find $\hat\beta$ and $SD(\hat\beta)$:
 $$
 \beta^{(t+1)}=\beta^{(t)} + {\boldsymbol F}({\boldsymbol \beta}^{(t)})^{-1} s(\beta^{(t)}) \ ,
 $$
@@ -627,7 +627,7 @@ with activation function $\phi_o(x)=x$.
 
 $~$
 
-* In the NN version of _logistic regression_ we instead have the _\textcolor{red}{sigmoid activation function}_
+* In the NN version of _logistic regression_ we instead have the _sigmoid activation function_
 $\phi_o(x)=\frac{1}{1+\exp(-x)}$, often denoted as $\sigma(x)$. Again, we prefer to use $\hat{y}_1({\boldsymbol x}_i)$ and get:
 
 $$ 
@@ -641,17 +641,17 @@ $$
 
 \vspace{2mm}
 
-* For NNs we use _\textcolor{red}{binomial cross-entropy loss}_
+* For NNs we use _binomial cross-entropy loss_
 $$ J({\boldsymbol w})=-\frac{1}{n}\sum_{i=1}^n (y_i\ln({\hat{y}_1({\boldsymbol x}_i)})+(1-y_i)\ln(1-{\hat{y}_1({\boldsymbol x}_i)}) \ , $$
 which is a scaled version of the negative of the binomial loglikelihood!
 
 $~$
 
-* Optimization is done also with _\textcolor{red}{gradient descent}_, but we need the chain rule (due to the activation function) to get the partial derivatives for the gradient direction. 
+* Optimization is done also with _gradient descent_, but we need the chain rule (due to the activation function) to get the partial derivatives for the gradient direction. 
 
 $~$
 
-* We need the _\textcolor{red}{backpropagation algorithm}_, using the activation and loss functions given here.
+* We need the _backpropagation algorithm_, using the activation and loss functions given here.
 
 ---
 
@@ -757,7 +757,7 @@ $~$
 
 $~$
 
-* _\textcolor{red}{Dummy variable coding}_ of the response in a $C$-dimensional vector: ${\boldsymbol y}_i=(0,0,\ldots,0,1,0,\ldots,0)$ with a value of $1$ in the $c^{th}$ element of ${\boldsymbol y}_i$ if the class is $c$.
+* _Dummy variable coding_ of the response in a $C$-dimensional vector: ${\boldsymbol y}_i=(0,0,\ldots,0,1,0,\ldots,0)$ with a value of $1$ in the $c^{th}$ element of ${\boldsymbol y}_i$ if the class is $c$.
 
 ---
 
@@ -803,11 +803,11 @@ $~$
 \vspace{4mm}
 
 
-* Builds an output layer with $C$ nodes and corresponding 0/1 targets (responses) using the dummy variable coding of the responses, called _\textcolor{red}{one-hot coding}_.
+* Builds an output layer with $C$ nodes and corresponding 0/1 targets (responses) using the dummy variable coding of the responses, called _one-hot coding_.
 
 \vspace{2mm}
 
-* The activation function for the ouput layer is called _\textcolor{red}{softmax}_. For each class $c=1,\ldots, C$ it is given as
+* The activation function for the ouput layer is called _softmax_. For each class $c=1,\ldots, C$ it is given as
 $$
 \hat{y}_c({\boldsymbol x}_i) = \frac{\exp({\boldsymbol x}_i^T{\boldsymbol w}_c)}{\sum_{s=1}^{C}\exp({\boldsymbol x}_i^T{\boldsymbol w}_s)} \ ,
 $$
@@ -828,7 +828,7 @@ where each ${\boldsymbol w}_s$ is a $r+1$ dimensional vector of weights.
 
 $~$
 
-* For neural networks the negative of the multinomial loglikelihood is a scaled version of the _\textcolor{red}{categorical cross-entropy loss}_
+* For neural networks the negative of the multinomial loglikelihood is a scaled version of the _categorical cross-entropy loss_
 $$ J({\boldsymbol w})=-\frac{1}{n}\sum_{i=1}^n\frac{1}{C} \sum_{c=1}^C (y_{ic}\ln({\hat{y}_c({\boldsymbol x}_i)}) \ .$$
 
 $~$
@@ -1073,7 +1073,7 @@ $~$
 $~$
 \pause
 
-The _\textcolor{red}{universal approximation theorem}_\footnote{Goodfellow et al 2016, Section 6.4.1, https://www.deeplearningbook.org} says that a feedforward network with
+The _universal approximation theorem_\footnote{Goodfellow et al 2016, Section 6.4.1, https://www.deeplearningbook.org} says that a feedforward network with
 \vspace{2mm}
   
   * a _linear output layer_
@@ -1123,7 +1123,7 @@ ggarrange(pp,p)
 
 \vspace{2mm}
 
-* Alternative: networks with more than one hidden layer, but fewer total number of nodes but more layers. A network with _many hidden layers_ is called a _\textcolor{red}{deep network}_.
+* Alternative: networks with more than one hidden layer, but fewer total number of nodes but more layers. A network with _many hidden layers_ is called a _deep network_.
 
 
 
@@ -1200,7 +1200,7 @@ The column names are missing (we could get them by using the Boston dataset load
 
 ---
 
-* To make the optimization easier with gradient based methods do _\textcolor{red}{feature-wise normalization}_.
+* To make the optimization easier with gradient based methods do _feature-wise normalization_.
 
 $~$
 
@@ -1307,13 +1307,13 @@ These choices have been guided by solutions in statistics (multiple linear regre
 
 $~$
 
-* _\textcolor{red}{Linear activation}_: for _continuous outcome_ (regression problems)
+* _Linear activation_: for _continuous outcome_ (regression problems)
 \vspace{2mm}
 
-* _\textcolor{red}{Sigmoid activation}_: for _binary outcome_ (two-class classification problems)
+* _Sigmoid activation_: for _binary outcome_ (two-class classification problems)
 \vspace{2mm}
 
-* _\textcolor{red}{Softmax}_: for _multinomial/categorical outcome_  (multi-class classification problems)
+* _Softmax_: for _multinomial/categorical outcome_  (multi-class classification problems)
 
 $~$
 
@@ -1407,11 +1407,11 @@ Network architecture contains three components:
 
 $~$
 
-* _\textcolor{red}{Width}_: How many nodes are in each layer of the network? 
+* _Width_: How many nodes are in each layer of the network? 
 
-* _\textcolor{red}{Depth}_: How deep is the network (how many hidden layers)?
+* _Depth_: How deep is the network (how many hidden layers)?
 
-* _\textcolor{red}{Connectivity}_: How are the nodes connected to each other? 
+* _Connectivity_: How are the nodes connected to each other? 
 
 
 $~$
@@ -1552,7 +1552,7 @@ where $\lambda$ is the _learning rate_  (usually a small value). In `keras` the 
 
 
 
-* In _\textcolor{red}{full gradient descent}_, the loss function is computed as a mean over all training examples.
+* In _full gradient descent_, the loss function is computed as a mean over all training examples.
 $$
 J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n J({\boldsymbol x}_i, y_i) \ .
 $$
@@ -1611,7 +1611,7 @@ $~$
 \vspace{6mm}
 
 
-**Special case**: _\textcolor{red}{True SGD}_ involves only _\textcolor{red}{one sample}_ (mini-batch size 1). $\rightarrow$ Mini-batch SGD is a compromise between SGD (one sample per iteration) and full gradient descent (full dataset per iteration)
+**Special case**: _True SGD_ involves only _one sample_ (mini-batch size 1). $\rightarrow$ Mini-batch SGD is a compromise between SGD (one sample per iteration) and full gradient descent (full dataset per iteration)
 
 
 --- 
@@ -1625,7 +1625,7 @@ In the 3rd video (on backpropagation) from 3Blue1Brown there is nice example of 
 
 $~$
 
-* _\textcolor{red}{Backpropagation}_ is a simple and inexpensive way _to calculate the gradient_.
+* _Backpropagation_ is a simple and inexpensive way _to calculate the gradient_.
 
 \vspace{2mm}
 
@@ -1636,7 +1636,7 @@ $~$
 
 \vspace{2mm}
 
-* The _\textcolor{red}{chain rule}_ is used to compute derivatives of functions of other functions where the derivatives are known. This is efficiently done with backpropagation.
+* The _chain rule_ is used to compute derivatives of functions of other functions where the derivatives are known. This is efficiently done with backpropagation.
 
 \vspace{2mm}
 
@@ -1665,7 +1665,7 @@ The learning rate $\lambda$ is difficult to set. Some ideas for adaptive learnin
 
 $~$
 
-* _\textcolor{red}{Momentum term}_: previous gradients are allowed to contribute.
+* _Momentum term_: previous gradients are allowed to contribute.
 
 <!-- * decay the learning rate linearly until iteration $\tau$: $\lambda_k=(1-\delta)\lambda_0+\delta \lambda{\tau}$, where $\delta=k/\tau$. After iteration $\tau$ the learning rate is kept constant. -->
 
@@ -1674,7 +1674,7 @@ $~$
 
 $~$
 
-* _\textcolor{red}{AdaGrad}_: individually adapt the learning rates ($\lambda$) of all model parameters. The
+* _AdaGrad_: individually adapt the learning rates ($\lambda$) of all model parameters. The
 parameters with the largest partial derivative of the loss (over all historical squared values) have a correspondingly
 rapid decrease in their learning rate. 
 
@@ -1682,7 +1682,7 @@ rapid decrease in their learning rate.
 
 $~$
 
-* _\textcolor{red}{RMSprop}_: modification to AdaGrad in non-convex setting. Scales with exponentially weighted moving average instead of all historical squared gradient values. This helps to "forget" information from the extreme past.
+* _RMSprop_: modification to AdaGrad in non-convex setting. Scales with exponentially weighted moving average instead of all historical squared gradient values. This helps to "forget" information from the extreme past.
 
 <!-- --- -->
 
@@ -1719,25 +1719,25 @@ $~$
 
 $~$
 
-* _\textcolor{red}{Weight decay}_: In neural networks this means adding a $L_2$-penalty to the loss function to _penalize large weights_ \footnote{see chapter 7.1.1 in Goodfellow et al}:
+* _Weight decay_: In neural networks this means adding a $L_2$-penalty to the loss function to _penalize large weights_ \footnote{see chapter 7.1.1 in Goodfellow et al}:
 
 $$ \tilde{J}({\boldsymbol w})= \frac{\alpha}{2}{{\boldsymbol w}^\top{\boldsymbol w}} + J({\boldsymbol w}) \ .$$
 
 \vspace{2mm}
 
-* _\textcolor{red}{Dataset augmentation}_: Adding fake data to the dataset, in order that the trained model will generalize better. For some learning tasks it is straightforward to create fake data. For image data this can be done by rotating and scaling the images.
+* _Dataset augmentation_: Adding fake data to the dataset, in order that the trained model will generalize better. For some learning tasks it is straightforward to create fake data. For image data this can be done by rotating and scaling the images.
 
 \vspace{2mm}
 
-* _\textcolor{red}{Label smoothing}_: Motivated by the fact that the training data may contain errors in the reponses recorded, and replaced the one-hot coding for $C$ classes with $\epsilon/(C-1)$ and $1-\epsilon$ for some small $\epsilon$.
+* _Label smoothing_: Motivated by the fact that the training data may contain errors in the reponses recorded, and replaced the one-hot coding for $C$ classes with $\epsilon/(C-1)$ and $1-\epsilon$ for some small $\epsilon$.
 
 \vspace{2mm}
 
-* _\textcolor{red}{Early stopping}_
+* _Early stopping_
 
 \vspace{2mm}
 
-* _\textcolor{red}{Dropout}_ 
+* _Dropout_ 
 
 
 ---
@@ -1907,9 +1907,9 @@ $~$
 <!-- In addition, this built-in feature engineering of the deep network is not performed in a greedy fashion, but _jointly_ with estimating/learning the full model. -->
 
 * The success of deep learning is dependent upon the breakthroughts 
-    + in _\textcolor{red}{hardware}_ development, expecially with faster CPUs and massively parallell graphical processing units (GPUs). 
-    +  _\textcolor{red}{datasets}_ and benchmarks (internet/tech data).
-    + improvemets of the  _\textcolor{red}{algorithms}_.
+    + in _hardware_ development, expecially with faster CPUs and massively parallell graphical processing units (GPUs). 
+    +  _datasets_ and benchmarks (internet/tech data).
+    + improvemets of the  _algorithms_.
 
 $~$
 
