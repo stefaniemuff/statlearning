@@ -1,17 +1,17 @@
 ---
-subtitle: "TMA4268 Statistical Learning V2021"
+subtitle: "TMA4268 Statistical Learning V2022"
 title: "Module 1: Introduction"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "11th January, 2021"
+date: "10th January, 2022"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -26,17 +26,17 @@ header-includes: \usepackage{multirow}
 knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
                        cache = TRUE, size="scriptsize")
 ```
-
-Last changes: 10.01.2021
-
----
+ 
 
 # Acknowledgements
 
-This course had been built up by Mette Langaas at NTNU in 2018 and 2019. I am using a some of her material, and material from her TAs, throughout the course. 
-
+* This course had been built up by Mette Langaas at NTNU in 2018 and 2019. I am using a some of her material, and material from her TAs, throughout the course.  
+\vspace{2mm}
 **I would like to thank Mette for her great work and for the permission to use her material!**
 
+$~$
+
+* Thanks to Julia Debik for contributing to this module page.
 
 ---
 
@@ -45,6 +45,7 @@ This course had been built up by Mette Langaas at NTNU in 2018 and 2019. I am us
 1. **Knowledge.** The student has knowledge about the most popular statistical learning models and methods that are used for _prediction_ and _inference_ in science and technology. Emphasis is on regression- and classification-type statistical models.
 
 2. **Skills.** The student can, based on an existing data set, choose a suitable statistical model, apply sound statistical methods, and perform the analyses using statistical software. The student can present, interpret and communicate the results from the statistical analyses, and knows which conclusions can be drawn from the analyses, and what the caveats are. 
+
 
 
 ---
@@ -74,23 +75,30 @@ The textbook can be downloaded here: https://www-bcf.usc.edu/~gareth/ISL/
 
 All the relevant information for the course can be found here:
 
-https://wiki.math.ntnu.no/tma4268/2021v/start
+https://wiki.math.ntnu.no/tma4268/2022v/start
 
 On each module page, all the relevant learning material and exercises (incl. solutions) will be provided in due time.
 
 ---
 
-# The Statistical Learning Team 2021
+# The Statistical Learning Team 2022
 
 ## The TAs:
 
+\vspace{2mm}
+
 * [Emma Skarstein](https://www.ntnu.no/ansatte/emma.s.skarstein); PhD student
-* [Michail Spitieris](https://www.ntnu.no/ansatte/michail.spitieris); PhD student
+* [Daesoo Lee](https://www.ntnu.no/ansatte/daesoo.lee); PhD student
+
+$~$
 
 ## The Lecturers
 
+\vspace{2mm}
+
 * [Stefanie Muff](https://www.ntnu.edu/employees/stefanie.muff); Associate Professor
-* [Thiago Guerrera Martins](https://www.ntnu.no/ansatte/thiago.guerrera); NTNU/AIAscience (Modules 6, 7, 10)
+* [Thiago Guerrera Martins](https://www.ntnu.no/ansatte/thiago.guerrera); NTNU/AIAscience (Modules 6, 10)
+ 
 
 
 ---
@@ -205,8 +213,8 @@ $~$
 
 
 * Portfolio assessment is the basis for the grade awarded in the course. This portfolio comprises 
-    + a written **final home examination (60%)**.
-    + two projects / compulsory exercises ($2\times 20\%=40\%$). 
+    + a written **final (school!) examination (80%)**.
+    + two projects / compulsory exercises ($2\times 10\%=20\%$). 
     
 &nbsp;  
 
@@ -223,7 +231,7 @@ $~$
 
 \vspace{2mm}  
 
-**Mondays at 12.15-14.00 online lectures and Fridays at 10.15-12.00 in S8** (if possible)
+**Mondays at 14.15-16.00 in S3 and Thursdays at 08.15-10.00 in S2**
 
 \vspace{2mm}
 
@@ -231,15 +239,11 @@ $~$
 
 \vspace{2mm}
 
-* See here [https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2021.pdf](https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2021.pdf) for a tentative schedule.
+* See here [https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2022.pdf](https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2022.pdf) for a tentative schedule.
 
 \vspace{2mm}
 
-* Some weeks the Tuesday lecture are supposed to be a bit more _interactive_ or with some self-study / exercise component, where _\textcolor{red}{active learning}_ is in focus. However, this will be a bit difficult if the lecture is online.
-
-\vspace{2mm}
-
-* **I suggest that you always have your laptop handy for the Tuesday lecture.** So you can run code or do an exercise in class. 
+* **I suggest that you always have your laptop handy for the lecture.** So you can run code or do an exercise in class. 
 
 
 ---
@@ -252,7 +256,7 @@ $~$
 
 $~$
 
-* Log in with your Feide account.
+* Log in with your Feide account (scroll a bit down).
 
 $~$
 
@@ -260,12 +264,9 @@ $~$
 
 ---
 
-## The weekly supervision sessions 
-&nbsp;  
+## Recommended exercises
 
-**Tuesdays 16.15-18:00 in room VE-E20**
-&nbsp;  
-&nbsp;  
+\vspace{2mm}
 
 * For each module *recommended exercises* are uploaded. These are partly 
     * theoretical exercises (from book or not)
@@ -280,9 +281,21 @@ $~$
 
 * Solutions will be provided to check yourself (no grading).
 
+$~$
+
+Currently there are **three slots** in the schedule:
+
+* Mon 8:15-10:00 (F2)
+* Wed 12:15-14:00 (F6)
+* Wed 14:15-16:00 (S4)
+
 \vspace{2mm}
 
-* We of course have to start with online supervision. How this works will be communicated.
+But **do we need all of those**? (todo: zoom poll)
+
+\vspace{2mm}
+
+* We of course have to start with online supervision. How this works will be communicated (see also course website).
 
 ---
 
@@ -310,24 +323,25 @@ $~$
 
 \vspace{2mm}
 
-* The compulsory exercises sum to 40% of the final evaluation in the course, the written exam the remaining 60%.
+* The compulsory exercises sum up to 20% of the final evaluation in the course, the written exam the remaining 80%.
 
 
 ---
 
-* The **first compulsory exercises** will be held after Modules 1-5. 
+* The **\textcolor{red}{first compulsory exercise}** will be held after Modules 1-5. 
   
-  \hspace{8mm} Suggested submission deadline: 
-  
-  \hspace{8mm} **Monday, 22. Februar 2021, 23:59h**.
+  \hspace{8mm} Suggested submission deadline:  
+  \vspace{2mm}
+  \hspace{8mm} **Monday, 21. Februar 2022, 23:59h**.
+
 
 \vspace{8mm}
 
-* The **second compulsory exercise** will be held after Modules 6-10.
+* The **\textcolor{red}{second compulsory exercise}** will be held after Modules 6-10.
  
-  \hspace{8mm}Suggested submission deadline: 
-  
-  \hspace{8mm}**Monday, 19. April 2021, 23:59h**.
+  \hspace{8mm}Suggested submission deadline:  
+  \vspace{2mm}
+  \hspace{8mm}**Monday, 4. April 2022, 23:59h**.
 
 ---
 
@@ -339,7 +353,7 @@ A tentative schedule (i.e., with continous updates) can be found under the follo
 
 \vspace{2mm}
 
-[https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2021.pdf](https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2021.pdf)
+[https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2022.pdf](https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2022.pdf)
 
 ---
 
@@ -347,7 +361,7 @@ A tentative schedule (i.e., with continous updates) can be found under the follo
 
 $~$
 
-* All the material presented in class will be available on our course webpage (https://wiki.math.ntnu.no/tma4268/2021v/start).
+* All the material presented in class will be available on our course webpage (https://wiki.math.ntnu.no/tma4268/2022v/start).
 
 \vspace{2mm}
 
@@ -356,78 +370,20 @@ $~$
 
 ---
 
-## The discussion forum on Piazza 
+## The discussion forum on Mattelab 
 
 $~$
 
-* Use our discussion forum on Piazza for all course-relevant questions: 
+Todo: adjust
+
+* Use our discussion forum on Mattelab for all course-relevant questions: 
 [https://piazza.com/ntnu.no/spring2021/tma4268](https://piazza.com/ntnu.no/spring2021/tma4268)
 
 $~$
 
-* Avoid writing emails to the course staff. By posting your question on Piazza we get the chance to answer the questions to everyone. 
+* Avoid writing emails to the course staff. By posting your question on Mattelab we get the chance to answer the questions to everyone. 
 
 
----
-
-# Student active learning
-
-Student's learning styles are different! Felder and Silverman (1988) suggested the following learning style axes:
-
-1) **active - reflective**: How do you process information: actively (through physical activities and discussions), or reflexively (through introspection)?
-
-2) **sensing-intuitive**: What kind of information do you tend to receive: sensitive (external agents like places, sounds, physical sensation) or intuitive (internal agents like possibilities, ideas, through hunches)?
-
-3) **visual-verbal:** Through which sensorial channels do you tend to receive information more effectively: visual (images, diagrams, graphics), or verbal (spoken words, sound)? Many students have a visual learning style!
-
-4) **sequential - global**: How do you make progress: sequentially (with continuous steps), or globally (through leaps and an integral approach)?
-
-
----
-
-## We try!
-
-\vspace{2mm}
-
-* $\ldots$ to acknowledging these different learning style axes.
-
-* $\ldots$  to choose teaching styles that match the learning styles of as many students as possible. 
-
-
-
-* $\ldots$  to provide learning environments, opportunities, interactions, and tasks that help to learn deeper.  
-
-* $\ldots$  to provide guidance and support that challenges students based on their current ability. 
-
-\vspace{2mm}
-
-We will now focus on _active_ and _reflective_ learning styles and learning methods.
-
----
-
-## Active vs. reflective learning styles
-
-\vspace{2mm}
-
-**Reflective learning methods**
-
-* Plenary lectures
-* Reading textbook
-* Self study
-
-\vspace{4mm}
-
-**Active learing methods**
-
-* Pause in plenary lecture to ask questions and let students think and/or discuss.
-* In-class quizzes 
-<!-- (with the NTNU invention Kahoot!) - individual and team mode. -->
-* Projects - individual or in groups 
-* Group discussion
-* Interactive lectures
-
-
- 
 
 <!-- --- -->
 
@@ -551,6 +507,10 @@ $~$
 
 $~$
 
+_\textcolor{red}{Required}_:
+
+\vspace{1mm}
+
 * Our textbook James et al (2013): An Introduction to Statistical Learning - with Applications in R (ISL). 
   + Chapter 1 (Introduction)
   + 2.3 (Lab: Introduction to R)
@@ -559,13 +519,13 @@ $~$
 
 * Go through parts 1 to 6 in the online R course: https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/
 
-You can log in with your Feide account.
+Use your Feide account.
 
 \vspace{3mm}
 
-_Recommended_:
+_\textcolor{red}{Recommended}_:
 
-\vspace{2mm}
+\vspace{1mm}
 
 * Watch the video lecture for Chapter 1 by Hastie and Tibshirani [here](https://www.r-bloggers.com/in-depth-introduction-to-machine-learning-in-15-hours-of-expert-videos/).
 
@@ -594,7 +554,7 @@ _Recommended_:
 
 <!-- model $\rightarrow$ method $\rightarrow$ algorithm $\rightarrow$ analysis $\rightarrow$ interpretation -->
 
-* Both **prediction** and **understanding** (inference $\rightarrow$ drawing conclusions). 
+* Both **prediction** and **inference** (understanding $\rightarrow$ drawing conclusions). 
 
 \vspace{1mm}
 
@@ -620,12 +580,18 @@ _Recommended_:
 
 Data science
 
-* The aim is to extract knowledge and understanding from data.
+* Aim: to extract knowledge and understanding from data.
 \vspace{2mm}
 
 * Requires a combination of statistics, mathematics, numerics, computer science and informatics. 
 
-This encompasses the whole process of data acquisition/scraping, going from unstructured to structured data, setting up a data model, performing data analysis, implementing tools and interpreting results. 
+This encompasses the whole process of 
+ 
+ 1. data acquisition/scraping
+ 2. going from unstructured to structured data
+ 3. setting up a data model
+ 4. implementing and performing data analysis
+ 5. interpreting and communicating results 
 
 In statistical learning we will not work on the two first above (acquisition and unstructured to structured).
 
@@ -709,7 +675,7 @@ The question:
 
 \vspace{2mm}
 
-So we are interested in _inference_ (explanation) and not predction!
+$\rightarrow$ we are interested in _inference_ (explanation), not prediction!
 
 
 \vspace{4mm}
@@ -717,6 +683,8 @@ So we are interested in _inference_ (explanation) and not predction!
 * A _multiple normal linear regression model_ was fit to the data set with 
 $$-\frac{1}{\sqrt{\texttt{SYSBP}}}$$ 
 as response (output) and all the other variables as covariates (inputs). 
+
+\vspace{2mm}
 
 * The results are used to formulate hypotheses about the etiology of CVD - to be studied in new trials.
 
@@ -804,7 +772,7 @@ legend("topright", title="Species", legend=c("setosa", "versicolor", "virginica"
 
 \vspace{2mm}
 
-Sometimes a more suitable boundary is not linear.  
+Sometimes a non-linear boundary is more suitable. 
 &nbsp;  
   
 ```{r irisqda,  echo=FALSE, fig.width=6, fig.height=4.5,out.width="10cm"}
@@ -836,11 +804,11 @@ legend("topright", legend=c("setosa", "versicolor", "virginica"),title="Species"
 
 \vspace{1mm}
 
-* To further present the findings heat map of the most significant transcripts were presented (high expression are shown in red and transcripts with a low expression are shown in yellow).
+* Heat maps showing the expression level for the most significant transcripts were presented graphically.
 
 \vspace{1mm}
 
-* This is hierarchical cluster analysis with pearson correlation distance measure.
+* This is _hierarchical cluster analysis_ with pearson correlation distance measure (module 10).
 
 
 ---
@@ -1005,10 +973,7 @@ If you need help on installing R and RStudio on you laptop computer, contact ora
 * Questions on R: ask the course staff, colleagues, and [stackoverflow](https://stackoverflow.com/).
 
 
----
+ 
 
-# Acknowledgements
-
-Thanks to Julia Debik for contributing to this module page.
 
 
