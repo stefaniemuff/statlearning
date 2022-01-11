@@ -110,18 +110,12 @@
 
 \title{Module 2, Part 1: Statistical Learning}
 \providecommand{\subtitle}[1]{}
-\subtitle{TMA4268 Statistical Learning V2021}
+\subtitle{TMA4268 Statistical Learning V2022}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{January 18, 2021}
+\date{January 17, 2022}
 
 \begin{document}
 \frame{\titlepage}
-
-\begin{frame}
-
-Last update: January 18, 2021
-
-\end{frame}
 
 \begin{frame}{Acknowledgements}
 \protect\hypertarget{acknowledgements}{}
@@ -229,8 +223,8 @@ they have a numerical value.
 
 \vspace{4mm}
 
-\textbf{Qualitative} variables are variables from a discrete set, from a
-set of \(K\) different classes/labels/categories.
+\textbf{Qualitative} variables are variables from a discrete set with
+\(K\) different classes/labels/categories.
 
 \begin{itemize}
 \item
@@ -398,7 +392,7 @@ learning category (exception: Module 10)
 \begin{frame}{Notation and key statistical concepts}
 \protect\hypertarget{notation-and-key-statistical-concepts}{}
 
-See board, and p.~9--12 in the course book.
+See notes and p.~9--12 in the course book.
 
 \vspace{6cm}
 
@@ -528,9 +522,14 @@ We are talking about supervised methods now. Assume:
 \begin{itemize}
 \tightlist
 \item
-  we observe one \emph{quantitative} response \(Y\) and
-\item
-  \(p\) different predictors \(x_1, x_2,... , x_p\).
+  we observe one \emph{quantitative} response \(Y\) and \(p\) different
+  predictors \(x_1, x_2,... , x_p\).
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
 \item
   We assume that there is a function \(f\) that relates the response and
   the predictor variables: \[ Y = f(x) + \varepsilon,\] where
@@ -810,34 +809,7 @@ made, prediction accuracy, computational complexity, over/under-fit.
 
 \begin{block}{A: Parametric methods}
 
-\begin{longtable}[]{@{}ll@{}}
-\toprule
-\begin{minipage}[b]{0.47\columnwidth}\raggedright
-Advantages\strut
-\end{minipage} & \begin{minipage}[b]{0.47\columnwidth}\raggedright
-Disadvantages\strut
-\end{minipage}\tabularnewline
-\midrule
-\endhead
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-Simple to use and easy to understand\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-The function \(f\) is constrained to the specified
-form.\vspace{2mm}\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-Requires little training data\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-The assumed function form of \(f\) will in general not match the true
-function, potentially giving a poor estimate.\vspace{2mm}\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-Computationally cheap\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-Limited flexibility\strut
-\end{minipage}\tabularnewline
-\bottomrule
-\end{longtable}
+(to be revealed)
 
 \end{block}
 
@@ -847,33 +819,7 @@ Limited flexibility\strut
 
 \begin{block}{A: Non-parametric methods}
 
-\begin{longtable}[]{@{}ll@{}}
-\toprule
-\begin{minipage}[b]{0.47\columnwidth}\raggedright
-Advantages\strut
-\end{minipage} & \begin{minipage}[b]{0.47\columnwidth}\raggedright
-Disadvantages\strut
-\end{minipage}\tabularnewline
-\midrule
-\endhead
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-Flexible: a large number of functional forms can be fitted\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-Can overfit the data\vspace{6mm}\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-No strong assumptions about the underlying function are made\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-Computationally more expensive as more parameters need to be
-estimated\vspace{3mm}\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.47\columnwidth}\raggedright
-Can often give good predictions\strut
-\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
-Much data are required to estimate (the complex) \(f\).\strut
-\end{minipage}\tabularnewline
-\bottomrule
-\end{longtable}
+(to be revealed)
 
 \end{block}
 
@@ -1298,8 +1244,8 @@ statistical learning methods.
 
 \begin{frame}
 
-Using that \(y_0=f(x_0)+\varepsilon\), this expected test MSE can be
-decomposed into three terms (board) \begin{align*}
+Using that \(y_0=f(x_0)+\varepsilon\), this expected test MSE (at
+\(X=x_0\)) can be decomposed into three terms (board) \begin{align*}
 &\text{E}[(y_0 - \hat{f}(x_0))^2] = \\
 & ... \\
 & =  \underbrace{\text{Var}(\varepsilon)}_{\text{Irreducible error}} + \underbrace{\text{Var}(\hat{f}(x_0))}_{\text{Variance of prediction}} + \underbrace{\left( f(x_0) - \text{E}[\hat{f}(x_0)] \right)^2}_{\text{Squared bias}}
