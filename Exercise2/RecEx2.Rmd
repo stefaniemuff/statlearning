@@ -1,20 +1,20 @@
 ---
 title: 'Module 2: Recommended Exercises'
 author: 
-  - Michail Spitieris, Emma Skarstein, Stefanie Muff
+  - Emma Skarstein, Daesoo Lee, Stefanie Muff
   - Department of Mathematical Sciences, NTNU
-date: "January 19, 2021"
+date: "January 17, 2022"
 output:
   html_document:
     df_print: paged
     toc: no
     toc_depth: '2'
-  # pdf_document:
-  #   fig_caption: yes
-  #   keep_tex: yes
-  #   toc: no
-  #   toc_depth: 2
-subtitle: TMA4268 Statistical Learning V2021
+  pdf_document:
+    fig_caption: yes
+    keep_tex: yes
+    toc: no
+    toc_depth: 2
+subtitle: TMA4268 Statistical Learning V2022
 urlcolor: blue
 ---
 
@@ -83,7 +83,8 @@ $$ f(\boldsymbol{x}) = \frac{1}{(2\pi)^{p/2}|\boldsymbol{\Sigma|}} \exp\{-\frac{
 
 a) Use the `mvrnorm()` function from the `MASS` library to simulate 1000 values from multivariate normal distributions with 
   
-    i)  $$ \boldsymbol{\mu} = \begin{pmatrix}
+    i)  
+  $$ \boldsymbol{\mu} = \begin{pmatrix}
 2 \\
 3 
 \end{pmatrix} \quad \text{and} \quad \boldsymbol{\Sigma} = \begin{pmatrix}
@@ -131,51 +132,71 @@ Below, the code to run the simulation is included. The data is simulated accordi
 
 ### a) Problem set-up
 
-Look at the code below, copy it and run it yourself. Explain roughly what is done (you do not need not understand the code in detail).
+Look at the code below, copy it and run it yourself. Explain roughly what is done (you do not need not understand the code in detail), for example by commenting the code after copying it into your report.
 
-We will learn more about the `lm` function in Module 3 - now just think of this as fitting a polynomial regression and then predict gives the fitted curve in our grid points. `predarray` is just a way to save $M$ simulations of 61 gridpoints in $x$ and 20 polynomial models.
+We will learn more about the `lm` function in Module 3 - now just think of this as fitting a polynomial regression and then predict gives the fitted curve in our grid points. `predictions_list` is just a way to save $M$ simulations of 61 gridpoints in $x$ and 20 polynomial models.
 
-```{r, Problem2a,eval=FALSE}
-library(ggplot2)
-library(ggpubr)
+```{r, Problem2a, eval=FALSE}
 set.seed(2) # to reproduce
-M=100 # repeated samplings, x fixed 
-nord=20 # order of polynoms
-x = seq(from = -2, to = 4, by = 0.1)
-truefunc=function(x){
-  return(x^2)
+
+M <- 100 # repeated samplings, x fixed
+nord <- 20 # order of polynomials
+
+#------
+
+x <- seq(from = -2, to = 4, by = 0.1)
+
+truefunc <- function(x) {
+  return(x ^ 2)
 }
-true_y = truefunc(x)
-error = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
-ymat = matrix(rep(true_y,M),byrow=T,nrow=M) + error
-predarray=array(NA,dim=c(M,length(x),nord))
-for (i in 1:M){
-  for (j in 1:nord){
-    predarray[i,,j]=predict(lm(ymat[i,]~poly(x,j,raw=TRUE)))
+true_y <- truefunc(x)
+error <- matrix(rnorm(length(x) * M, mean = 0, sd = 2),
+                nrow = M,
+                byrow = TRUE)
+ymat <- matrix(rep(true_y, M), byrow = T, nrow = M) + error  # Each row is a simulation
+
+#------
+
+predictions_list <- lapply(1:nord, matrix, data = NA, nrow = M, ncol = ncol(ymat))
+for(i in 1:nord){
+  for(j in 1:M){
+    predictions_list[[i]][j, ] <- predict(lm(ymat[j,] ~ poly(x, i, raw = TRUE)))
   }
 }
-# M matrices of size length(x) times nord
-# first, only look at variablity in the M fits and plot M curves where we had 1
-# for plotting need to stack the matrices underneath eachother and make new variable "rep"
-stackmat=NULL
-for(i in 1:M){
-  stackmat=rbind(stackmat,cbind(x,rep(i,length(x)),predarray[i,,]))
+
+# Plotting -----
+
+library(tidyverse) # The tidyverse contains ggplot2, as well as tidyr and dplyr, 
+# which we can use for dataframe manipulation.
+
+list_of_matrices_with_deg_id <- lapply(1:nord, function(poly_degree) cbind(predictions_list[[poly_degree]], simulation_num = 1:M, poly_degree))
+# Now predictions_list is a list with 20 entries, where each entry is a matrix 
+# with 100 rows, where each row is the predicted polynomial of that degree.
+# We also have a column for the simulation number, and a column for polynomial degree.
+
+# Extract each matrix and bind them to one large matrix
+stacked_matrices <-  NULL
+for (i in 1:nord) {
+  stacked_matrices <-
+    rbind(stacked_matrices, list_of_matrices_with_deg_id[[i]])
 }
-#dim(stackmat)
-colnames(stackmat)=c("x","rep",paste("poly",1:20,sep=""))
-sdf=as.data.frame(stackmat) #NB have poly1-20 now - but first only use 1,2,20
-# to add true curve using stat_function - easiest solution
-true_x=x
-yrange=range(apply(sdf,2,range)[,3:22])
-p1=ggplot(data=sdf,aes(x=x,y=poly1,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
-p1=p1+stat_function(fun=truefunc,lwd=1.3,colour="black")+ggtitle("poly1")
-p2=ggplot(data=sdf,aes(x=x,y=poly2,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
-p2=p2+stat_function(fun=truefunc,lwd=1.3,colour="black")+ggtitle("poly2")
-p10=ggplot(data=sdf,aes(x=x,y=poly10,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
-p10=p10+stat_function(fun=truefunc,lwd=1.3,colour="black")+ggtitle("poly10")
-p20=ggplot(data=sdf,aes(x=x,y=poly20,group=rep,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
-p20=p20+stat_function(fun=truefunc,lwd=1.3,colour="black")+ggtitle("poly20")
-ggarrange(p1,p2,p10,p20)
+stacked_matrices_df <- as.data.frame(stacked_matrices)
+
+# Convert from wide to long (because that is the best format for ggplot2)
+long_predictions_df <- pivot_longer(stacked_matrices_df, !c(simulation_num, poly_degree), values_to = "y")
+
+# Now we can use ggplot2!
+# We just want to plot for degrees 1, 2, 10 and 20.
+
+plotting_df <- cbind(long_predictions_df, x = x) %>% # adding the x-vector to the dataframe
+  filter(poly_degree %in% c(1, 2, 10, 20)) # Select only the predictions using degree 1, 2, 10 or 20
+
+ggplot(plotting_df, aes(x = x, y = y, group = simulation_num)) +
+  geom_line(aes(color = simulation_num)) +
+  geom_line(aes(x = x, y = x^2), size = 1.5) +
+  facet_wrap(~ poly_degree) +
+  theme_bw() +
+  theme(legend.position = "none")
 ```
 
 What do you observe in the produced plot? Which polynomial fits the best to the true curve?
@@ -190,65 +211,99 @@ Observe how `trainMSE` and `testMSE` are calculated, and then run the code.
 
 ```{r 2btraintestMSE,eval=FALSE}
 set.seed(2) # to reproduce
-M=100 # repeated samplings,x fixed but new errors
-nord=20
-x = seq(from = -2, to = 4, by = 0.1)
-truefunc=function(x){
+M <- 100 # repeated samplings,x fixed but new errors
+nord <- 20
+
+x <- seq(from = -2, to = 4, by = 0.1)
+truefunc <- function(x){
   return(x^2)
 }
-true_y = truefunc(x)
-error = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
-testerror = matrix(rnorm(length(x)*M, mean=0, sd=2),nrow=M,byrow=TRUE)
-ymat = matrix(rep(true_y,M),byrow=T,nrow=M) + error
-testymat = matrix(rep(true_y,M),byrow=T,nrow=M) + testerror
-predarray=array(NA,dim=c(M,length(x),nord))
-for (i in 1:M){
-  for (j in 1:nord){
-    predarray[i,,j]=predict(lm(ymat[i,]~poly(x,j,raw=TRUE)))
+true_y <- truefunc(x)
+error <- matrix(rnorm(length(x)*M, mean = 0, sd = 2), nrow = M, byrow = TRUE)
+testerror <- matrix(rnorm(length(x)*M, mean = 0, sd = 2), nrow = M, byrow = TRUE)
+ymat <- matrix(rep(true_y, M), byrow = T, nrow = M) + error
+testymat <- matrix(rep(true_y, M), byrow=T, nrow=M) + testerror
+
+predictions_list <- lapply(1:nord, matrix, data = NA, nrow = M, ncol = ncol(ymat))
+for(i in 1:nord){
+  for(j in 1:M){
+    predictions_list[[i]][j, ] <- predict(lm(ymat[j,] ~ poly(x, i, raw = TRUE)))
   }
-}  
-trainMSE=matrix(ncol=nord,nrow=M)
-testMSE=matrix(ncol=nord,nrow=M)
-for (i in 1:M){
-  trainMSE[i,]=apply((predarray[i,,]-ymat[i,])^2,2,mean)
-  testMSE[i,]=apply((predarray[i,,]-testymat[i,])^2,2,mean)
 }
+
+trainMSE <- lapply(1:nord, function(poly_degree) rowMeans((predictions_list[[poly_degree]] - ymat)^2))
+testMSE <- lapply(1:nord, function(poly_degree) rowMeans((predictions_list[[poly_degree]] - testymat)^2))
 ```
 
-Next, we plot  -- first for one train + test data set, then for 99 more.
+Next, we plot the training and test error for each of the 100 data sets we simulated, as well as two different plots that show the means across the simulations.
 
 ```{r 2btraintestplots,eval=FALSE}
-library(ggplot2)
-library(ggpubr)
-# format suitable for plotting 
-stackmat=NULL
-for (i in 1:M){
-  stackmat=rbind(stackmat,cbind(rep(i,nord),1:nord,trainMSE[i,],testMSE[i,]))
+library(tidyverse) # The tidyverse contains ggplot2, as well as tidyr and dplyr, 
+# which we can use for dataframe manipulation.
+
+# Convert each matrix in the list form wide to long (because that is the best format for ggplot2)
+list_train_MSE <- lapply(1:nord, function(poly_degree) cbind(error = trainMSE[[poly_degree]], 
+                                                             poly_degree, 
+                                                             error_type = "train",
+                                                             simulation_num = 1:M))
+list_test_MSE <- lapply(1:nord, function(poly_degree) cbind(error = testMSE[[poly_degree]], 
+                                                            poly_degree, 
+                                                            error_type = "test", 
+                                                            simulation_num = 1:M))
+
+# Now predictions_list is a list with 20 entries, where each entry is a matrix 
+# with 100 rows, where each row is the predicted polynomial of that degree.
+
+stacked_train <- NULL
+for (i in 1:nord) {
+  stacked_train <-
+    rbind(stacked_train, list_train_MSE[[i]])
 }
-colnames(stackmat)=c("rep","poly","trainMSE","testMSE")
-sdf=as.data.frame(stackmat) 
-yrange=range(sdf[,3:4])
-p1=ggplot(data=sdf[1:nord,],aes(x=poly,y=trainMSE))+scale_y_continuous(limits=yrange)+geom_line()
-pall= ggplot(data=sdf,aes(x=poly,group=rep,y=trainMSE,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
-testp1=ggplot(data=sdf[1:nord,],aes(x=poly,y=testMSE))+scale_y_continuous(limits=yrange)+geom_line()
-testpall= ggplot(data=sdf,aes(x=poly,group=rep,y=testMSE,colour=rep))+scale_y_continuous(limits=yrange)+geom_line()
-ggarrange(p1,pall,testp1,testpall)
-```
+stacked_test <- NULL
+for (i in 1:nord) {
+  stacked_test <-
+    rbind(stacked_test, list_test_MSE[[i]])
+}
 
-More plots now: first boxplot and then mean for train and test MSE:
+stacked_errors_df <- as.data.frame(rbind(stacked_train, stacked_test))
+# This is already on long format. 
+stacked_errors_df$error <- as.numeric(stacked_errors_df$error)
+stacked_errors_df$simulation_num <- as.integer(stacked_errors_df$simulation_num)
+stacked_errors_df$poly_degree <- as.integer(stacked_errors_df$poly_degree)
 
-```{r 2btraintestbox,eval=FALSE}
-library(reshape2)
-df=melt(sdf,id=c("poly","rep"))[,-2]
-colnames(df)[2]="MSEtype"
-ggplot(data=df,aes(x=as.factor(poly),y=value))+geom_boxplot(aes(fill=MSEtype))
-```
+p.all_lines <- ggplot(data = stacked_errors_df, aes(x = poly_degree, y = error, group = simulation_num)) +
+  geom_line(aes(color = simulation_num)) +
+  facet_wrap(~ error_type) +
+  xlab("Polynomial degree") +
+  ylab("MSE") +
+  theme_bw() +
+  theme(legend.position = "none")
 
-```{r 2btraintestmean,eval=FALSE}
-trainMSEmean=apply(trainMSE,2,mean)
-testMSEmean=apply(testMSE,2,mean)
-meandf=melt(data.frame(cbind("poly"=1:nord,trainMSEmean,testMSEmean)),id="poly")
-ggplot(data=meandf,aes(x=poly,y=value,colour=variable))+geom_line()
+p.bars <- ggplot(stacked_errors_df, aes(x = as.factor(poly_degree), y = error)) +
+  geom_boxplot(aes(fill = error_type)) +
+  scale_fill_discrete(name = "Error type") +
+  xlab("Polynomial degree") +
+  ylab("MSE") +
+  theme_bw()
+
+# Here we find the average test error and training error across the repeated simulations. 
+# The symbol "%>%" is called a pipe, and comes from the tidyverse packages, 
+# which provide convenient functions for working with data frames.
+means_across_simulations <- stacked_errors_df %>% 
+  group_by(error_type, poly_degree) %>% 
+  summarise(mean = mean(error))
+
+p.means <- ggplot(means_across_simulations, aes(x = poly_degree, y = mean)) +
+  geom_line(aes(color = error_type)) +
+  scale_color_discrete(name = "Error type") +
+  xlab("Polynomial degree") +
+  ylab("MSE") +
+  theme_bw()
+
+library(patchwork) # The library patchwork is the best way of combining ggplot2 objects. 
+# You could also use the function ggarrange from the ggpubr package.
+
+p.all_lines / (p.bars + p.means)
 ```
 
 - Which value of the polynomial gives the smallest mean testMSE? 
@@ -268,47 +323,45 @@ Notice that the test data is not used -- only predicted values in each x grid po
 Study and run the code. Explain the plots produced.
 
 ```{r 2bbiasvariance,eval=FALSE}
-meanmat=matrix(ncol=length(x),nrow=nord)
-varmat=matrix(ncol=length(x),nrow=nord)
-for (j in 1:nord)
-{
-  meanmat[j,]=apply(predarray[,,j],2,mean) # we now take the mean over the M simulations - to mimic E and Var at each x value and each poly model
-  varmat[j,]=apply(predarray[,,j],2,var)
+meanmat <- matrix(ncol = length(x), nrow = nord)
+varmat <- matrix(ncol = length(x), nrow = nord)
+for (j in 1:nord){
+  meanmat[j,] <- apply(predictions_list[[j]], 2, mean) # we now take the mean over the M simulations - to mimic E and Var at each x value and each poly model
+  varmat[j,] <- apply(predictions_list[[j]], 2, var)
 }
+
 # nord times length(x)
-bias2mat=(meanmat-matrix(rep(true_y,nord),byrow=TRUE,nrow=nord))^2 #here the truth is finally used!
+bias2mat <- (meanmat - matrix(rep(true_y, nord), byrow = TRUE, nrow = nord))^2 #here the truth is finally used!
 ```
 
 Plotting the polys as a function of x:
 
 ```{r 2bbiasvariance1, eval=FALSE}
-df=data.frame(rep(x,each=nord),rep(1:nord,length(x)),c(bias2mat),c(varmat),rep(4,prod(dim(varmat)))) #irr is just 1
-colnames(df)=c("x","poly","bias2","variance","irreducible error") #suitable for plotting
-df$total=df$bias2+df$variance+df$`irreducible error`
-hdf=melt(df,id=c("x","poly"))
-hdf1=hdf[hdf$poly==1,]
-hdf2=hdf[hdf$poly==2,]
-hdf10=hdf[hdf$poly==10,]
-hdf20=hdf[hdf$poly==20,]
-p1=ggplot(data=hdf1,aes(x=x,y=value,colour=variable))+geom_line()+ggtitle("poly1")
-p2=ggplot(data=hdf2,aes(x=x,y=value,colour=variable))+geom_line()+ggtitle("poly2")
-p10=ggplot(data=hdf10,aes(x=x,y=value,colour=variable))+geom_line()+ggtitle("poly10")
-p20=ggplot(data=hdf20,aes(x=x,y=value,colour=variable))+geom_line()+ggtitle("poly20")
-ggarrange(p1,p2,p10,p20)
+df <- data.frame(x = rep(x, each = nord), poly_degree = rep(1:nord, length(x)), 
+                 bias2 = c(bias2mat), variance = c(varmat), 
+                 irreducible_error = rep(4, prod(dim(varmat)))) #irr is just 1
+
+df$total <- df$bias2 + df$variance + df$irreducible_error
+
+df_long <- pivot_longer(df, cols = !c(x, poly_degree), names_to = "type") 
+
+df_select_poly <- filter(df_long, poly_degree %in% c(1, 2, 10, 20))
+
+ggplot(df_select_poly, aes(x = x, y = value, group = type)) +
+  geom_line(aes(color = type)) +
+  facet_wrap(~poly_degree, scales = "free", labeller = label_both) +
+  theme_bw()
 ```
 
 Now plotting effect of more complex model at 4 chosen values of x, compare to Figures in 2.12 on page 36 in ISL (our textbook).
 
 ```{r 2bbiasvariance2,echo=TRUE, eval=FALSE}
-hdfatxa=hdf[hdf$x==-1,]
-hdfatxb=hdf[hdf$x==0.5,]
-hdfatxc=hdf[hdf$x==2,]
-hdfatxd=hdf[hdf$x==3.5,]
-pa=ggplot(data=hdfatxa,aes(x=poly,y=value,colour=variable))+geom_line()+ggtitle("x0=-1")
-pb=ggplot(data=hdfatxb,aes(x=poly,y=value,colour=variable))+geom_line()+ggtitle("x0=0.5")
-pc=ggplot(data=hdfatxc,aes(x=poly,y=value,colour=variable))+geom_line()+ggtitle("x0=2")
-pd=ggplot(data=hdfatxd,aes(x=poly,y=value,colour=variable))+geom_line()+ggtitle("x0=3.5")
-ggarrange(pa,pb,pc,pd)
+df_select_x <- filter(df_long, x %in% c(-1, 0.5, 2, 3.5))
+
+ggplot(df_select_x, aes(x = poly_degree, y = value, group = type)) +
+  geom_line(aes(color = type)) +
+  facet_wrap(~x, scales = "free", labeller = label_both) +
+  theme_bw()
 ```
 
 Study the final plot you produced: when the flexibility increases (poly increase), what happens with

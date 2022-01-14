@@ -1,45 +1,51 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 %
-\documentclass[]{article}
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
-\else % if luatex or xelatex
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
   \usepackage{unicode-math}
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
 \usepackage{xcolor}
-\usepackage{hyperref}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-            pdftitle={Module 2: Recommended Exercises},
-            pdfauthor={Michail Spitieris, Emma Skarstein, Stefanie Muff; Department of Mathematical Sciences, NTNU},
-            colorlinks=true,
-            linkcolor=Maroon,
-            filecolor=Maroon,
-            citecolor=Blue,
-            urlcolor=blue,
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
+  pdftitle={Module 2: Recommended Exercises},
+  pdfauthor={Emma Skarstein, Daesoo Lee, Stefanie Muff; Department of Mathematical Sciences, NTNU},
+  colorlinks=true,
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=blue,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
 \usepackage[margin=1in]{geometry}
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -81,7 +87,7 @@
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\usepackage{graphicx,grffile}
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -90,37 +96,29 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{0}
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
-
-% set default figure placement to htbp
+% Set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 
+\title{Module 2: Recommended Exercises}
 \usepackage{etoolbox}
 \makeatletter
 \providecommand{\subtitle}[1]{% add subtitle to \maketitle
   \apptocmd{\@title}{\par {\large #1 \par}}{}{}
 }
 \makeatother
-
-\title{Module 2: Recommended Exercises}
-\providecommand{\subtitle}[1]{}
-\subtitle{TMA4268 Statistical Learning V2021}
-\author{Michail Spitieris, Emma Skarstein, Stefanie Muff \and Department of Mathematical Sciences, NTNU}
-\date{January 19, 2021}
+\subtitle{TMA4268 Statistical Learning V2022}
+\author{Emma Skarstein, Daesoo Lee, Stefanie Muff \and Department of
+Mathematical Sciences, NTNU}
+\date{January 17, 2022}
 
 \begin{document}
 \maketitle
@@ -150,7 +148,8 @@ Take a look at Figure 2.9 in the course book (p.31).
 \def\labelenumi{\alph{enumi})}
 \tightlist
 \item
-  Will a flexible or rigid method typically have the highest test error?
+  Discuss whether a flexible or rigid method typically will have the
+  highest test error.
 \item
   Does a small variance imply that the data has been under- or overfit?
 \item
@@ -168,8 +167,8 @@ commands:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(ISLR)}
-\KeywordTok{data}\NormalTok{(Auto)}
+\FunctionTok{library}\NormalTok{(ISLR)}
+\FunctionTok{data}\NormalTok{(Auto)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -218,8 +217,8 @@ time.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{quant =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{, }\DecValTok{5}\NormalTok{, }\DecValTok{6}\NormalTok{, }\DecValTok{7}\NormalTok{)}
-\NormalTok{covMat =}\StringTok{ }\KeywordTok{cov}\NormalTok{(Auto[, quant])}
+\NormalTok{quant }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{4}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{7}\NormalTok{)}
+\NormalTok{covMat }\OtherTok{=} \FunctionTok{cov}\NormalTok{(Auto[,quant])}
 \end{Highlighting}
 \end{Shaded}
 
@@ -271,7 +270,7 @@ where \(\bf{x}\) is a random vector of size \(p\times 1\),
     3 
     \end{pmatrix} \quad \text{and} \quad \boldsymbol{\Sigma} = \begin{pmatrix}
     1 & -2\\
-    -2 & 1
+    -2 & 5
     \end{pmatrix}.\]
   \end{enumerate}
 \item
@@ -308,66 +307,77 @@ according to the following specifications:
 \subsubsection{a) Problem set-up}\label{a-problem-set-up}}
 
 Look at the code below, copy it and run it yourself. Explain roughly
-what is done (you do not need not understand the code in detail).
+what is done (you do not need not understand the code in detail), for
+example by commenting the code after copying it into your report.
 
 We will learn more about the \texttt{lm} function in Module 3 - now just
 think of this as fitting a polynomial regression and then predict gives
-the fitted curve in our grid points. \texttt{predarray} is just a way to
-save \(M\) simulations of 61 gridpoints in \(x\) and 20 polynomial
-models.
+the fitted curve in our grid points. \texttt{predictions\_list} is just
+a way to save \(M\) simulations of 61 gridpoints in \(x\) and 20
+polynomial models.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(ggplot2)}
-\KeywordTok{library}\NormalTok{(ggpubr)}
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{2}\NormalTok{)  }\CommentTok{# to reproduce}
-\NormalTok{M =}\StringTok{ }\DecValTok{100}  \CommentTok{# repeated samplings, x fixed }
-\NormalTok{nord =}\StringTok{ }\DecValTok{20}  \CommentTok{# order of polynoms}
-\NormalTok{x =}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\DataTypeTok{from =} \DecValTok{-2}\NormalTok{, }\DataTypeTok{to =} \DecValTok{4}\NormalTok{, }\DataTypeTok{by =} \FloatTok{0.1}\NormalTok{)}
-\NormalTok{truefunc =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x) \{}
-    \KeywordTok{return}\NormalTok{(x}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{2}\NormalTok{) }\CommentTok{\# to reproduce}
+
+\NormalTok{M }\OtherTok{\textless{}{-}} \DecValTok{100} \CommentTok{\# repeated samplings, x fixed}
+\NormalTok{nord }\OtherTok{\textless{}{-}} \DecValTok{20} \CommentTok{\# order of polynomials}
+
+\CommentTok{\#{-}{-}{-}{-}{-}{-}}
+
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\AttributeTok{from =} \SpecialCharTok{{-}}\DecValTok{2}\NormalTok{, }\AttributeTok{to =} \DecValTok{4}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.1}\NormalTok{)}
+
+\NormalTok{truefunc }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x) \{}
+  \FunctionTok{return}\NormalTok{(x }\SpecialCharTok{\^{}} \DecValTok{2}\NormalTok{)}
 \NormalTok{\}}
-\NormalTok{true_y =}\StringTok{ }\KeywordTok{truefunc}\NormalTok{(x)}
-\NormalTok{error =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(}\KeywordTok{length}\NormalTok{(x) }\OperatorTok{*}\StringTok{ }\NormalTok{M, }\DataTypeTok{mean =} \DecValTok{0}\NormalTok{, }\DataTypeTok{sd =} \DecValTok{2}\NormalTok{), }\DataTypeTok{nrow =}\NormalTok{ M, }\DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{ymat =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rep}\NormalTok{(true_y, M), }\DataTypeTok{byrow =}\NormalTok{ T, }\DataTypeTok{nrow =}\NormalTok{ M) }\OperatorTok{+}\StringTok{ }\NormalTok{error}
-\NormalTok{predarray =}\StringTok{ }\KeywordTok{array}\NormalTok{(}\OtherTok{NA}\NormalTok{, }\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(M, }\KeywordTok{length}\NormalTok{(x), nord))}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{M) \{}
-    \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{nord) \{}
-\NormalTok{        predarray[i, , j] =}\StringTok{ }\KeywordTok{predict}\NormalTok{(}\KeywordTok{lm}\NormalTok{(ymat[i, ] }\OperatorTok{~}\StringTok{ }\KeywordTok{poly}\NormalTok{(x, j, }\DataTypeTok{raw =} \OtherTok{TRUE}\NormalTok{)))}
-\NormalTok{    \}}
+\NormalTok{true\_y }\OtherTok{\textless{}{-}} \FunctionTok{truefunc}\NormalTok{(x)}
+\NormalTok{error }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{rnorm}\NormalTok{(}\FunctionTok{length}\NormalTok{(x) }\SpecialCharTok{*}\NormalTok{ M, }\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{2}\NormalTok{),}
+                \AttributeTok{nrow =}\NormalTok{ M,}
+                \AttributeTok{byrow =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{ymat }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{rep}\NormalTok{(true\_y, M), }\AttributeTok{byrow =}\NormalTok{ T, }\AttributeTok{nrow =}\NormalTok{ M) }\SpecialCharTok{+}\NormalTok{ error  }\CommentTok{\# Each row is a simulation}
+
+\CommentTok{\#{-}{-}{-}{-}{-}{-}}
+
+\NormalTok{predictions\_list }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{nord, matrix, }\AttributeTok{data =} \ConstantTok{NA}\NormalTok{, }\AttributeTok{nrow =}\NormalTok{ M, }\AttributeTok{ncol =} \FunctionTok{ncol}\NormalTok{(ymat))}
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{nord)\{}
+  \ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{M)\{}
+\NormalTok{    predictions\_list[[i]][j, ] }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(}\FunctionTok{lm}\NormalTok{(ymat[j,] }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(x, i, }\AttributeTok{raw =} \ConstantTok{TRUE}\NormalTok{)))}
+\NormalTok{  \}}
 \NormalTok{\}}
-\CommentTok{# M matrices of size length(x) times nord first, only look at}
-\CommentTok{# variablity in the M fits and plot M curves where we had 1 for}
-\CommentTok{# plotting need to stack the matrices underneath eachother and make}
-\CommentTok{# new variable 'rep'}
-\NormalTok{stackmat =}\StringTok{ }\OtherTok{NULL}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{M) \{}
-\NormalTok{    stackmat =}\StringTok{ }\KeywordTok{rbind}\NormalTok{(stackmat, }\KeywordTok{cbind}\NormalTok{(x, }\KeywordTok{rep}\NormalTok{(i, }\KeywordTok{length}\NormalTok{(x)), predarray[i, }
-\NormalTok{        , ]))}
+
+\CommentTok{\# Plotting {-}{-}{-}{-}{-}}
+
+\FunctionTok{library}\NormalTok{(tidyverse) }\CommentTok{\# The tidyverse contains ggplot2, as well as tidyr and dplyr, }
+\CommentTok{\# which we can use for dataframe manipulation.}
+
+\NormalTok{list\_of\_matrices\_with\_deg\_id }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{nord, }\ControlFlowTok{function}\NormalTok{(poly\_degree) }\FunctionTok{cbind}\NormalTok{(predictions\_list[[poly\_degree]], }\AttributeTok{simulation\_num =} \DecValTok{1}\SpecialCharTok{:}\NormalTok{M, poly\_degree))}
+\CommentTok{\# Now predictions\_list is a list with 20 entries, where each entry is a matrix }
+\CommentTok{\# with 100 rows, where each row is the predicted polynomial of that degree.}
+\CommentTok{\# We also have a column for the simulation number, and a column for polynomial degree.}
+
+\CommentTok{\# Extract each matrix and bind them to one large matrix}
+\NormalTok{stacked\_matrices }\OtherTok{\textless{}{-}}  \ConstantTok{NULL}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{nord) \{}
+\NormalTok{  stacked\_matrices }\OtherTok{\textless{}{-}}
+    \FunctionTok{rbind}\NormalTok{(stacked\_matrices, list\_of\_matrices\_with\_deg\_id[[i]])}
 \NormalTok{\}}
-\CommentTok{# dim(stackmat)}
-\KeywordTok{colnames}\NormalTok{(stackmat) =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"x"}\NormalTok{, }\StringTok{"rep"}\NormalTok{, }\KeywordTok{paste}\NormalTok{(}\StringTok{"poly"}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{20}\NormalTok{, }\DataTypeTok{sep =} \StringTok{""}\NormalTok{))}
-\NormalTok{sdf =}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(stackmat)  }\CommentTok{#NB have poly1-20 now - but first only use 1,2,20}
-\CommentTok{# to add true curve using stat_function - easiest solution}
-\NormalTok{true_x =}\StringTok{ }\NormalTok{x}
-\NormalTok{yrange =}\StringTok{ }\KeywordTok{range}\NormalTok{(}\KeywordTok{apply}\NormalTok{(sdf, }\DecValTok{2}\NormalTok{, range)[, }\DecValTok{3}\OperatorTok{:}\DecValTok{22}\NormalTok{])}
-\NormalTok{p1 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sdf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ poly1, }\DataTypeTok{group =}\NormalTok{ rep, }\DataTypeTok{colour =}\NormalTok{ rep)) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{()}
-\NormalTok{p1 =}\StringTok{ }\NormalTok{p1 }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_function}\NormalTok{(}\DataTypeTok{fun =}\NormalTok{ truefunc, }\DataTypeTok{lwd =} \FloatTok{1.3}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"poly1"}\NormalTok{)}
-\NormalTok{p2 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sdf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ poly2, }\DataTypeTok{group =}\NormalTok{ rep, }\DataTypeTok{colour =}\NormalTok{ rep)) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{()}
-\NormalTok{p2 =}\StringTok{ }\NormalTok{p2 }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_function}\NormalTok{(}\DataTypeTok{fun =}\NormalTok{ truefunc, }\DataTypeTok{lwd =} \FloatTok{1.3}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"poly2"}\NormalTok{)}
-\NormalTok{p10 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sdf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ poly10, }\DataTypeTok{group =}\NormalTok{ rep, }\DataTypeTok{colour =}\NormalTok{ rep)) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{()}
-\NormalTok{p10 =}\StringTok{ }\NormalTok{p10 }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_function}\NormalTok{(}\DataTypeTok{fun =}\NormalTok{ truefunc, }\DataTypeTok{lwd =} \FloatTok{1.3}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"poly10"}\NormalTok{)}
-\NormalTok{p20 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sdf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ poly20, }\DataTypeTok{group =}\NormalTok{ rep, }\DataTypeTok{colour =}\NormalTok{ rep)) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{()}
-\NormalTok{p20 =}\StringTok{ }\NormalTok{p20 }\OperatorTok{+}\StringTok{ }\KeywordTok{stat_function}\NormalTok{(}\DataTypeTok{fun =}\NormalTok{ truefunc, }\DataTypeTok{lwd =} \FloatTok{1.3}\NormalTok{, }\DataTypeTok{colour =} \StringTok{"black"}\NormalTok{) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"poly20"}\NormalTok{)}
-\KeywordTok{ggarrange}\NormalTok{(p1, p2, p10, p20)}
+\NormalTok{stacked\_matrices\_df }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(stacked\_matrices)}
+
+\CommentTok{\# Convert from wide to long (because that is the best format for ggplot2)}
+\NormalTok{long\_predictions\_df }\OtherTok{\textless{}{-}} \FunctionTok{pivot\_longer}\NormalTok{(stacked\_matrices\_df, }\SpecialCharTok{!}\FunctionTok{c}\NormalTok{(simulation\_num, poly\_degree), }\AttributeTok{values\_to =} \StringTok{"y"}\NormalTok{)}
+
+\CommentTok{\# Now we can use ggplot2!}
+\CommentTok{\# We just want to plot for degrees 1, 2, 10 and 20.}
+
+\NormalTok{plotting\_df }\OtherTok{\textless{}{-}} \FunctionTok{cbind}\NormalTok{(long\_predictions\_df, }\AttributeTok{x =}\NormalTok{ x) }\SpecialCharTok{\%\textgreater{}\%} \CommentTok{\# adding the x{-}vector to the dataframe}
+  \FunctionTok{filter}\NormalTok{(poly\_degree }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{20}\NormalTok{)) }\CommentTok{\# Select only the predictions using degree 1, 2, 10 or 20}
+
+\FunctionTok{ggplot}\NormalTok{(plotting\_df, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{group =}\NormalTok{ simulation\_num)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =}\NormalTok{ simulation\_num)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{), }\AttributeTok{size =} \FloatTok{1.5}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ poly\_degree) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -388,80 +398,104 @@ then run the code.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{2}\NormalTok{)  }\CommentTok{# to reproduce}
-\NormalTok{M =}\StringTok{ }\DecValTok{100}  \CommentTok{# repeated samplings,x fixed but new errors}
-\NormalTok{nord =}\StringTok{ }\DecValTok{20}
-\NormalTok{x =}\StringTok{ }\KeywordTok{seq}\NormalTok{(}\DataTypeTok{from =} \DecValTok{-2}\NormalTok{, }\DataTypeTok{to =} \DecValTok{4}\NormalTok{, }\DataTypeTok{by =} \FloatTok{0.1}\NormalTok{)}
-\NormalTok{truefunc =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(x) \{}
-    \KeywordTok{return}\NormalTok{(x}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{2}\NormalTok{) }\CommentTok{\# to reproduce}
+\NormalTok{M }\OtherTok{\textless{}{-}} \DecValTok{100} \CommentTok{\# repeated samplings,x fixed but new errors}
+\NormalTok{nord }\OtherTok{\textless{}{-}} \DecValTok{20}
+
+\NormalTok{x }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\AttributeTok{from =} \SpecialCharTok{{-}}\DecValTok{2}\NormalTok{, }\AttributeTok{to =} \DecValTok{4}\NormalTok{, }\AttributeTok{by =} \FloatTok{0.1}\NormalTok{)}
+\NormalTok{truefunc }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x)\{}
+  \FunctionTok{return}\NormalTok{(x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
 \NormalTok{\}}
-\NormalTok{true_y =}\StringTok{ }\KeywordTok{truefunc}\NormalTok{(x)}
-\NormalTok{error =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(}\KeywordTok{length}\NormalTok{(x) }\OperatorTok{*}\StringTok{ }\NormalTok{M, }\DataTypeTok{mean =} \DecValTok{0}\NormalTok{, }\DataTypeTok{sd =} \DecValTok{2}\NormalTok{), }\DataTypeTok{nrow =}\NormalTok{ M, }\DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{testerror =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(}\KeywordTok{length}\NormalTok{(x) }\OperatorTok{*}\StringTok{ }\NormalTok{M, }\DataTypeTok{mean =} \DecValTok{0}\NormalTok{, }\DataTypeTok{sd =} \DecValTok{2}\NormalTok{), }\DataTypeTok{nrow =}\NormalTok{ M, }
-    \DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{ymat =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rep}\NormalTok{(true_y, M), }\DataTypeTok{byrow =}\NormalTok{ T, }\DataTypeTok{nrow =}\NormalTok{ M) }\OperatorTok{+}\StringTok{ }\NormalTok{error}
-\NormalTok{testymat =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rep}\NormalTok{(true_y, M), }\DataTypeTok{byrow =}\NormalTok{ T, }\DataTypeTok{nrow =}\NormalTok{ M) }\OperatorTok{+}\StringTok{ }\NormalTok{testerror}
-\NormalTok{predarray =}\StringTok{ }\KeywordTok{array}\NormalTok{(}\OtherTok{NA}\NormalTok{, }\DataTypeTok{dim =} \KeywordTok{c}\NormalTok{(M, }\KeywordTok{length}\NormalTok{(x), nord))}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{M) \{}
-    \ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{nord) \{}
-\NormalTok{        predarray[i, , j] =}\StringTok{ }\KeywordTok{predict}\NormalTok{(}\KeywordTok{lm}\NormalTok{(ymat[i, ] }\OperatorTok{~}\StringTok{ }\KeywordTok{poly}\NormalTok{(x, j, }\DataTypeTok{raw =} \OtherTok{TRUE}\NormalTok{)))}
-\NormalTok{    \}}
+\NormalTok{true\_y }\OtherTok{\textless{}{-}} \FunctionTok{truefunc}\NormalTok{(x)}
+\NormalTok{error }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{rnorm}\NormalTok{(}\FunctionTok{length}\NormalTok{(x)}\SpecialCharTok{*}\NormalTok{M, }\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{2}\NormalTok{), }\AttributeTok{nrow =}\NormalTok{ M, }\AttributeTok{byrow =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{testerror }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{rnorm}\NormalTok{(}\FunctionTok{length}\NormalTok{(x)}\SpecialCharTok{*}\NormalTok{M, }\AttributeTok{mean =} \DecValTok{0}\NormalTok{, }\AttributeTok{sd =} \DecValTok{2}\NormalTok{), }\AttributeTok{nrow =}\NormalTok{ M, }\AttributeTok{byrow =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{ymat }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{rep}\NormalTok{(true\_y, M), }\AttributeTok{byrow =}\NormalTok{ T, }\AttributeTok{nrow =}\NormalTok{ M) }\SpecialCharTok{+}\NormalTok{ error}
+\NormalTok{testymat }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{rep}\NormalTok{(true\_y, M), }\AttributeTok{byrow=}\NormalTok{T, }\AttributeTok{nrow=}\NormalTok{M) }\SpecialCharTok{+}\NormalTok{ testerror}
+
+\NormalTok{predictions\_list }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{nord, matrix, }\AttributeTok{data =} \ConstantTok{NA}\NormalTok{, }\AttributeTok{nrow =}\NormalTok{ M, }\AttributeTok{ncol =} \FunctionTok{ncol}\NormalTok{(ymat))}
+\ControlFlowTok{for}\NormalTok{(i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{nord)\{}
+  \ControlFlowTok{for}\NormalTok{(j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{M)\{}
+\NormalTok{    predictions\_list[[i]][j, ] }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(}\FunctionTok{lm}\NormalTok{(ymat[j,] }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(x, i, }\AttributeTok{raw =} \ConstantTok{TRUE}\NormalTok{)))}
+\NormalTok{  \}}
 \NormalTok{\}}
-\NormalTok{trainMSE =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DataTypeTok{ncol =}\NormalTok{ nord, }\DataTypeTok{nrow =}\NormalTok{ M)}
-\NormalTok{testMSE =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DataTypeTok{ncol =}\NormalTok{ nord, }\DataTypeTok{nrow =}\NormalTok{ M)}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{M) \{}
-\NormalTok{    trainMSE[i, ] =}\StringTok{ }\KeywordTok{apply}\NormalTok{((predarray[i, , ] }\OperatorTok{-}\StringTok{ }\NormalTok{ymat[i, ])}\OperatorTok{^}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, mean)}
-\NormalTok{    testMSE[i, ] =}\StringTok{ }\KeywordTok{apply}\NormalTok{((predarray[i, , ] }\OperatorTok{-}\StringTok{ }\NormalTok{testymat[i, ])}\OperatorTok{^}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{, mean)}
-\NormalTok{\}}
+
+\NormalTok{trainMSE }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{nord, }\ControlFlowTok{function}\NormalTok{(poly\_degree) }\FunctionTok{rowMeans}\NormalTok{((predictions\_list[[poly\_degree]] }\SpecialCharTok{{-}}\NormalTok{ ymat)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{testMSE }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{nord, }\ControlFlowTok{function}\NormalTok{(poly\_degree) }\FunctionTok{rowMeans}\NormalTok{((predictions\_list[[poly\_degree]] }\SpecialCharTok{{-}}\NormalTok{ testymat)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
-Next, we plot -- first for one train + test data set, then for 99 more.
+Next, we plot the training and test error for each of the 100 data sets
+we simulated, as well as two different plots that show the means across
+the simulations.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(ggplot2)}
-\KeywordTok{library}\NormalTok{(ggpubr)}
-\CommentTok{# format suitable for plotting}
-\NormalTok{stackmat =}\StringTok{ }\OtherTok{NULL}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{M) \{}
-\NormalTok{    stackmat =}\StringTok{ }\KeywordTok{rbind}\NormalTok{(stackmat, }\KeywordTok{cbind}\NormalTok{(}\KeywordTok{rep}\NormalTok{(i, nord), }\DecValTok{1}\OperatorTok{:}\NormalTok{nord, trainMSE[i, }
-\NormalTok{        ], testMSE[i, ]))}
+\FunctionTok{library}\NormalTok{(tidyverse) }\CommentTok{\# The tidyverse contains ggplot2, as well as tidyr and dplyr, }
+\CommentTok{\# which we can use for dataframe manipulation.}
+
+\CommentTok{\# Convert each matrix in the list form wide to long (because that is the best format for ggplot2)}
+\NormalTok{list\_train\_MSE }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{nord, }\ControlFlowTok{function}\NormalTok{(poly\_degree) }\FunctionTok{cbind}\NormalTok{(}\AttributeTok{error =}\NormalTok{ trainMSE[[poly\_degree]], }
+\NormalTok{                                                             poly\_degree, }
+                                                             \AttributeTok{error\_type =} \StringTok{"train"}\NormalTok{,}
+                                                             \AttributeTok{simulation\_num =} \DecValTok{1}\SpecialCharTok{:}\NormalTok{M))}
+\NormalTok{list\_test\_MSE }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{nord, }\ControlFlowTok{function}\NormalTok{(poly\_degree) }\FunctionTok{cbind}\NormalTok{(}\AttributeTok{error =}\NormalTok{ testMSE[[poly\_degree]], }
+\NormalTok{                                                            poly\_degree, }
+                                                            \AttributeTok{error\_type =} \StringTok{"test"}\NormalTok{, }
+                                                            \AttributeTok{simulation\_num =} \DecValTok{1}\SpecialCharTok{:}\NormalTok{M))}
+
+\CommentTok{\# Now predictions\_list is a list with 20 entries, where each entry is a matrix }
+\CommentTok{\# with 100 rows, where each row is the predicted polynomial of that degree.}
+
+\NormalTok{stacked\_train }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{nord) \{}
+\NormalTok{  stacked\_train }\OtherTok{\textless{}{-}}
+    \FunctionTok{rbind}\NormalTok{(stacked\_train, list\_train\_MSE[[i]])}
 \NormalTok{\}}
-\KeywordTok{colnames}\NormalTok{(stackmat) =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"rep"}\NormalTok{, }\StringTok{"poly"}\NormalTok{, }\StringTok{"trainMSE"}\NormalTok{, }\StringTok{"testMSE"}\NormalTok{)}
-\NormalTok{sdf =}\StringTok{ }\KeywordTok{as.data.frame}\NormalTok{(stackmat)}
-\NormalTok{yrange =}\StringTok{ }\KeywordTok{range}\NormalTok{(sdf[, }\DecValTok{3}\OperatorTok{:}\DecValTok{4}\NormalTok{])}
-\NormalTok{p1 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sdf[}\DecValTok{1}\OperatorTok{:}\NormalTok{nord, ], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{y =}\NormalTok{ trainMSE)) }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{()}
-\NormalTok{pall =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sdf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{group =}\NormalTok{ rep, }\DataTypeTok{y =}\NormalTok{ trainMSE, }\DataTypeTok{colour =}\NormalTok{ rep)) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{()}
-\NormalTok{testp1 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sdf[}\DecValTok{1}\OperatorTok{:}\NormalTok{nord, ], }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{y =}\NormalTok{ testMSE)) }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{()}
-\NormalTok{testpall =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ sdf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{group =}\NormalTok{ rep, }\DataTypeTok{y =}\NormalTok{ testMSE, }
-    \DataTypeTok{colour =}\NormalTok{ rep)) }\OperatorTok{+}\StringTok{ }\KeywordTok{scale_y_continuous}\NormalTok{(}\DataTypeTok{limits =}\NormalTok{ yrange) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_line}\NormalTok{()}
-\KeywordTok{ggarrange}\NormalTok{(p1, pall, testp1, testpall)}
-\end{Highlighting}
-\end{Shaded}
+\NormalTok{stacked\_test }\OtherTok{\textless{}{-}} \ConstantTok{NULL}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{nord) \{}
+\NormalTok{  stacked\_test }\OtherTok{\textless{}{-}}
+    \FunctionTok{rbind}\NormalTok{(stacked\_test, list\_test\_MSE[[i]])}
+\NormalTok{\}}
 
-More plots now: first boxplot and then mean for train and test MSE:
+\NormalTok{stacked\_errors\_df }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{rbind}\NormalTok{(stacked\_train, stacked\_test))}
+\CommentTok{\# This is already on long format. }
+\NormalTok{stacked\_errors\_df}\SpecialCharTok{$}\NormalTok{error }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(stacked\_errors\_df}\SpecialCharTok{$}\NormalTok{error)}
+\NormalTok{stacked\_errors\_df}\SpecialCharTok{$}\NormalTok{simulation\_num }\OtherTok{\textless{}{-}} \FunctionTok{as.integer}\NormalTok{(stacked\_errors\_df}\SpecialCharTok{$}\NormalTok{simulation\_num)}
+\NormalTok{stacked\_errors\_df}\SpecialCharTok{$}\NormalTok{poly\_degree }\OtherTok{\textless{}{-}} \FunctionTok{as.integer}\NormalTok{(stacked\_errors\_df}\SpecialCharTok{$}\NormalTok{poly\_degree)}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(reshape2)}
-\NormalTok{df =}\StringTok{ }\KeywordTok{melt}\NormalTok{(sdf, }\DataTypeTok{id =} \KeywordTok{c}\NormalTok{(}\StringTok{"poly"}\NormalTok{, }\StringTok{"rep"}\NormalTok{))[, }\DecValTok{-2}\NormalTok{]}
-\KeywordTok{colnames}\NormalTok{(df)[}\DecValTok{2}\NormalTok{] =}\StringTok{ "MSEtype"}
-\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ df, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =} \KeywordTok{as.factor}\NormalTok{(poly), }\DataTypeTok{y =}\NormalTok{ value)) }\OperatorTok{+}\StringTok{ }\KeywordTok{geom_boxplot}\NormalTok{(}\KeywordTok{aes}\NormalTok{(}\DataTypeTok{fill =}\NormalTok{ MSEtype))}
-\end{Highlighting}
-\end{Shaded}
+\NormalTok{p.all\_lines }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ stacked\_errors\_df, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ poly\_degree, }\AttributeTok{y =}\NormalTok{ error, }\AttributeTok{group =}\NormalTok{ simulation\_num)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =}\NormalTok{ simulation\_num)) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{ error\_type) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Polynomial degree"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"MSE"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{legend.position =} \StringTok{"none"}\NormalTok{)}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{trainMSEmean =}\StringTok{ }\KeywordTok{apply}\NormalTok{(trainMSE, }\DecValTok{2}\NormalTok{, mean)}
-\NormalTok{testMSEmean =}\StringTok{ }\KeywordTok{apply}\NormalTok{(testMSE, }\DecValTok{2}\NormalTok{, mean)}
-\NormalTok{meandf =}\StringTok{ }\KeywordTok{melt}\NormalTok{(}\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{cbind}\NormalTok{(}\DataTypeTok{poly =} \DecValTok{1}\OperatorTok{:}\NormalTok{nord, trainMSEmean, testMSEmean)), }
-    \DataTypeTok{id =} \StringTok{"poly"}\NormalTok{)}
-\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ meandf, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{()}
+\NormalTok{p.bars }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(stacked\_errors\_df, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{as.factor}\NormalTok{(poly\_degree), }\AttributeTok{y =}\NormalTok{ error)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{fill =}\NormalTok{ error\_type)) }\SpecialCharTok{+}
+  \FunctionTok{scale\_fill\_discrete}\NormalTok{(}\AttributeTok{name =} \StringTok{"Error type"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Polynomial degree"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"MSE"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+
+\CommentTok{\# Here we find the average test error and training error across the repeated simulations. }
+\CommentTok{\# The symbol "\%\textgreater{}\%" is called a pipe, and comes from the tidyverse packages, }
+\CommentTok{\# which provide convenient functions for working with data frames.}
+\NormalTok{means\_across\_simulations }\OtherTok{\textless{}{-}}\NormalTok{ stacked\_errors\_df }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(error\_type, poly\_degree) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarise}\NormalTok{(}\AttributeTok{mean =} \FunctionTok{mean}\NormalTok{(error))}
+
+\NormalTok{p.means }\OtherTok{\textless{}{-}} \FunctionTok{ggplot}\NormalTok{(means\_across\_simulations, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ poly\_degree, }\AttributeTok{y =}\NormalTok{ mean)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =}\NormalTok{ error\_type)) }\SpecialCharTok{+}
+  \FunctionTok{scale\_color\_discrete}\NormalTok{(}\AttributeTok{name =} \StringTok{"Error type"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{xlab}\NormalTok{(}\StringTok{"Polynomial degree"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{ylab}\NormalTok{(}\StringTok{"MSE"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
+
+\FunctionTok{library}\NormalTok{(patchwork) }\CommentTok{\# The library patchwork is the best way of combining ggplot2 objects. }
+\CommentTok{\# You could also use the function ggarrange from the ggpubr package.}
+
+\NormalTok{p.all\_lines }\SpecialCharTok{/}\NormalTok{ (p.bars }\SpecialCharTok{+}\NormalTok{ p.means)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -500,14 +534,15 @@ Study and run the code. Explain the plots produced.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{meanmat =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DataTypeTok{ncol =} \KeywordTok{length}\NormalTok{(x), }\DataTypeTok{nrow =}\NormalTok{ nord)}
-\NormalTok{varmat =}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\DataTypeTok{ncol =} \KeywordTok{length}\NormalTok{(x), }\DataTypeTok{nrow =}\NormalTok{ nord)}
-\ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{nord) \{}
-\NormalTok{    meanmat[j, ] =}\StringTok{ }\KeywordTok{apply}\NormalTok{(predarray[, , j], }\DecValTok{2}\NormalTok{, mean)  }\CommentTok{# we now take the mean over the M simulations - to mimic E and Var at each x value and each poly model}
-\NormalTok{    varmat[j, ] =}\StringTok{ }\KeywordTok{apply}\NormalTok{(predarray[, , j], }\DecValTok{2}\NormalTok{, var)}
+\NormalTok{meanmat }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\AttributeTok{ncol =} \FunctionTok{length}\NormalTok{(x), }\AttributeTok{nrow =}\NormalTok{ nord)}
+\NormalTok{varmat }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\AttributeTok{ncol =} \FunctionTok{length}\NormalTok{(x), }\AttributeTok{nrow =}\NormalTok{ nord)}
+\ControlFlowTok{for}\NormalTok{ (j }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{nord)\{}
+\NormalTok{  meanmat[j,] }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(predictions\_list[[j]], }\DecValTok{2}\NormalTok{, mean) }\CommentTok{\# we now take the mean over the M simulations {-} to mimic E and Var at each x value and each poly model}
+\NormalTok{  varmat[j,] }\OtherTok{\textless{}{-}} \FunctionTok{apply}\NormalTok{(predictions\_list[[j]], }\DecValTok{2}\NormalTok{, var)}
 \NormalTok{\}}
-\CommentTok{# nord times length(x)}
-\NormalTok{bias2mat =}\StringTok{ }\NormalTok{(meanmat }\OperatorTok{-}\StringTok{ }\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rep}\NormalTok{(true_y, nord), }\DataTypeTok{byrow =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{nrow =}\NormalTok{ nord))}\OperatorTok{^}\DecValTok{2}  \CommentTok{#here the truth is finally used!}
+
+\CommentTok{\# nord times length(x)}
+\NormalTok{bias2mat }\OtherTok{\textless{}{-}}\NormalTok{ (meanmat }\SpecialCharTok{{-}} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{rep}\NormalTok{(true\_y, nord), }\AttributeTok{byrow =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{nrow =}\NormalTok{ nord))}\SpecialCharTok{\^{}}\DecValTok{2} \CommentTok{\#here the truth is finally used!}
 \end{Highlighting}
 \end{Shaded}
 
@@ -515,24 +550,20 @@ Plotting the polys as a function of x:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{df =}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{rep}\NormalTok{(x, }\DataTypeTok{each =}\NormalTok{ nord), }\KeywordTok{rep}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{nord, }\KeywordTok{length}\NormalTok{(x)), }\KeywordTok{c}\NormalTok{(bias2mat), }
-    \KeywordTok{c}\NormalTok{(varmat), }\KeywordTok{rep}\NormalTok{(}\DecValTok{4}\NormalTok{, }\KeywordTok{prod}\NormalTok{(}\KeywordTok{dim}\NormalTok{(varmat))))  }\CommentTok{#irr is just 1}
-\KeywordTok{colnames}\NormalTok{(df) =}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"x"}\NormalTok{, }\StringTok{"poly"}\NormalTok{, }\StringTok{"bias2"}\NormalTok{, }\StringTok{"variance"}\NormalTok{, }\StringTok{"irreducible error"}\NormalTok{)  }\CommentTok{#suitable for plotting}
-\NormalTok{df}\OperatorTok{$}\NormalTok{total =}\StringTok{ }\NormalTok{df}\OperatorTok{$}\NormalTok{bias2 }\OperatorTok{+}\StringTok{ }\NormalTok{df}\OperatorTok{$}\NormalTok{variance }\OperatorTok{+}\StringTok{ }\NormalTok{df}\OperatorTok{$}\StringTok{`}\DataTypeTok{irreducible error}\StringTok{`}
-\NormalTok{hdf =}\StringTok{ }\KeywordTok{melt}\NormalTok{(df, }\DataTypeTok{id =} \KeywordTok{c}\NormalTok{(}\StringTok{"x"}\NormalTok{, }\StringTok{"poly"}\NormalTok{))}
-\NormalTok{hdf1 =}\StringTok{ }\NormalTok{hdf[hdf}\OperatorTok{$}\NormalTok{poly }\OperatorTok{==}\StringTok{ }\DecValTok{1}\NormalTok{, ]}
-\NormalTok{hdf2 =}\StringTok{ }\NormalTok{hdf[hdf}\OperatorTok{$}\NormalTok{poly }\OperatorTok{==}\StringTok{ }\DecValTok{2}\NormalTok{, ]}
-\NormalTok{hdf10 =}\StringTok{ }\NormalTok{hdf[hdf}\OperatorTok{$}\NormalTok{poly }\OperatorTok{==}\StringTok{ }\DecValTok{10}\NormalTok{, ]}
-\NormalTok{hdf20 =}\StringTok{ }\NormalTok{hdf[hdf}\OperatorTok{$}\NormalTok{poly }\OperatorTok{==}\StringTok{ }\DecValTok{20}\NormalTok{, ]}
-\NormalTok{p1 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hdf1, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"poly1"}\NormalTok{)}
-\NormalTok{p2 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hdf2, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"poly2"}\NormalTok{)}
-\NormalTok{p10 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hdf10, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"poly10"}\NormalTok{)}
-\NormalTok{p20 =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hdf20, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ x, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"poly20"}\NormalTok{)}
-\KeywordTok{ggarrange}\NormalTok{(p1, p2, p10, p20)}
+\NormalTok{df }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{x =} \FunctionTok{rep}\NormalTok{(x, }\AttributeTok{each =}\NormalTok{ nord), }\AttributeTok{poly\_degree =} \FunctionTok{rep}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{nord, }\FunctionTok{length}\NormalTok{(x)), }
+                 \AttributeTok{bias2 =} \FunctionTok{c}\NormalTok{(bias2mat), }\AttributeTok{variance =} \FunctionTok{c}\NormalTok{(varmat), }
+                 \AttributeTok{irreducible\_error =} \FunctionTok{rep}\NormalTok{(}\DecValTok{4}\NormalTok{, }\FunctionTok{prod}\NormalTok{(}\FunctionTok{dim}\NormalTok{(varmat)))) }\CommentTok{\#irr is just 1}
+
+\NormalTok{df}\SpecialCharTok{$}\NormalTok{total }\OtherTok{\textless{}{-}}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{bias2 }\SpecialCharTok{+}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{variance }\SpecialCharTok{+}\NormalTok{ df}\SpecialCharTok{$}\NormalTok{irreducible\_error}
+
+\NormalTok{df\_long }\OtherTok{\textless{}{-}} \FunctionTok{pivot\_longer}\NormalTok{(df, }\AttributeTok{cols =} \SpecialCharTok{!}\FunctionTok{c}\NormalTok{(x, poly\_degree), }\AttributeTok{names\_to =} \StringTok{"type"}\NormalTok{) }
+
+\NormalTok{df\_select\_poly }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(df\_long, poly\_degree }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{2}\NormalTok{, }\DecValTok{10}\NormalTok{, }\DecValTok{20}\NormalTok{))}
+
+\FunctionTok{ggplot}\NormalTok{(df\_select\_poly, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ x, }\AttributeTok{y =}\NormalTok{ value, }\AttributeTok{group =}\NormalTok{ type)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =}\NormalTok{ type)) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{poly\_degree, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{, }\AttributeTok{labeller =}\NormalTok{ label\_both) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
@@ -541,19 +572,12 @@ compare to Figures in 2.12 on page 36 in ISL (our textbook).
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{hdfatxa =}\StringTok{ }\NormalTok{hdf[hdf}\OperatorTok{$}\NormalTok{x }\OperatorTok{==}\StringTok{ }\DecValTok{-1}\NormalTok{, ]}
-\NormalTok{hdfatxb =}\StringTok{ }\NormalTok{hdf[hdf}\OperatorTok{$}\NormalTok{x }\OperatorTok{==}\StringTok{ }\FloatTok{0.5}\NormalTok{, ]}
-\NormalTok{hdfatxc =}\StringTok{ }\NormalTok{hdf[hdf}\OperatorTok{$}\NormalTok{x }\OperatorTok{==}\StringTok{ }\DecValTok{2}\NormalTok{, ]}
-\NormalTok{hdfatxd =}\StringTok{ }\NormalTok{hdf[hdf}\OperatorTok{$}\NormalTok{x }\OperatorTok{==}\StringTok{ }\FloatTok{3.5}\NormalTok{, ]}
-\NormalTok{pa =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hdfatxa, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"x0=-1"}\NormalTok{)}
-\NormalTok{pb =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hdfatxb, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"x0=0.5"}\NormalTok{)}
-\NormalTok{pc =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hdfatxc, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"x0=2"}\NormalTok{)}
-\NormalTok{pd =}\StringTok{ }\KeywordTok{ggplot}\NormalTok{(}\DataTypeTok{data =}\NormalTok{ hdfatxd, }\KeywordTok{aes}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ poly, }\DataTypeTok{y =}\NormalTok{ value, }\DataTypeTok{colour =}\NormalTok{ variable)) }\OperatorTok{+}\StringTok{ }
-\StringTok{    }\KeywordTok{geom_line}\NormalTok{() }\OperatorTok{+}\StringTok{ }\KeywordTok{ggtitle}\NormalTok{(}\StringTok{"x0=3.5"}\NormalTok{)}
-\KeywordTok{ggarrange}\NormalTok{(pa, pb, pc, pd)}
+\NormalTok{df\_select\_x }\OtherTok{\textless{}{-}} \FunctionTok{filter}\NormalTok{(df\_long, x }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\DecValTok{2}\NormalTok{, }\FloatTok{3.5}\NormalTok{))}
+
+\FunctionTok{ggplot}\NormalTok{(df\_select\_x, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ poly\_degree, }\AttributeTok{y =}\NormalTok{ value, }\AttributeTok{group =}\NormalTok{ type)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_line}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{color =}\NormalTok{ type)) }\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{x, }\AttributeTok{scales =} \StringTok{"free"}\NormalTok{, }\AttributeTok{labeller =}\NormalTok{ label\_both) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
 
