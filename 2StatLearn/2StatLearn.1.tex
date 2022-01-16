@@ -789,17 +789,36 @@ Fitting a parametric models is thus done in two steps:
 
 \begin{frame}
 
-\begin{block}{Q: What are advantages and disadvantages of parametric and
-non-parametric methods?}
+\begin{block}{Parametric methods}
 
-\vspace{2mm}
-
-Hints: interpretability, amount of data needed, complexity, assumptions
-made, prediction accuracy, computational complexity, over/under-fit.
-
-\(~\)
-
-\(\rightarrow\) Short breakout session.
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.47\columnwidth}\raggedright
+Advantages\strut
+\end{minipage} & \begin{minipage}[b]{0.47\columnwidth}\raggedright
+Disadvantages\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
+Simple to use and easy to understand\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
+The function \(f\) is constrained to the specified
+form.\vspace{2mm}\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
+Requires little training data\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
+The assumed function form of \(f\) will in general not match the true
+function, potentially giving a poor estimate.\vspace{2mm}\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
+Computationally cheap\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
+Limited flexibility\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
 
 \end{block}
 
@@ -807,19 +826,35 @@ made, prediction accuracy, computational complexity, over/under-fit.
 
 \begin{frame}
 
-\begin{block}{A: Parametric methods}
+\begin{block}{Non-parametric methods}
 
-(to be revealed)
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{A: Non-parametric methods}
-
-(to be revealed)
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\begin{minipage}[b]{0.47\columnwidth}\raggedright
+Advantages\strut
+\end{minipage} & \begin{minipage}[b]{0.47\columnwidth}\raggedright
+Disadvantages\strut
+\end{minipage}\tabularnewline
+\midrule
+\endhead
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
+Flexible: a large number of functional forms can be fitted\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
+Can overfit the data\vspace{6mm}\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
+No strong assumptions about the underlying function are made\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
+Computationally more expensive as more parameters need to be
+estimated\vspace{3mm}\strut
+\end{minipage}\tabularnewline
+\begin{minipage}[t]{0.47\columnwidth}\raggedright
+Can often give good predictions\strut
+\end{minipage} & \begin{minipage}[t]{0.47\columnwidth}\raggedright
+Much data are required to estimate (the complex) \(f\).\strut
+\end{minipage}\tabularnewline
+\bottomrule
+\end{longtable}
 
 \end{block}
 
@@ -877,17 +912,6 @@ A linear model vs a perfect fit.
 \end{frame}
 
 \begin{frame}
-
-The choice of a flexible or inflexible method depends on the goal in
-mind.
-
-\begin{itemize}
-\tightlist
-\item
-  For \textbf{inference} an inflexible model is easier to interpret.
-\item
-  For \textbf{prediction} a flexible model is more powerful.
-\end{itemize}
 
 \(~\)
 
@@ -1122,7 +1146,7 @@ Left: one repetition, right: 100 repetitions for the testMSE.
 
 \begin{frame}
 
-\begin{block}{Discuss in breakout groups:}
+\begin{block}{Questions:}
 
 \(~\)
 
@@ -1157,35 +1181,6 @@ model? A low training error should also give a low test error?
 Why?
 
 \end{block}
-
-\end{frame}
-
-\begin{frame}
-
-Answers
-
-\textbf{A1}:
-
-If choosing flexibility
-
-\begin{itemize}
-\tightlist
-\item
-  \emph{based on training MSE}: poly20 wins
-\item
-  \emph{based on test MSE}: poly2 wins.
-\end{itemize}
-
-\textbf{A2:} In Module 5 we will look into using \emph{cross validation}
-to mimic the use of a test set.
-
-\textbf{A3:} Sadly no, if we use a flexible model we will look at
-several cases where a low training error is a sign of overfitting, and
-will give a high test error. So, the training error is not a good
-estimator for the test error because it does not properly account for
-model complexity.
-
-\textbf{A4:} See next slides.
 
 \end{frame}
 
