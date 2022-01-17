@@ -1665,7 +1665,7 @@ ggpairs(corkds)</code></pre>
 <li><p>Variance-covariance matrix <span class="math inline">\(\boldsymbol\Sigma\)</span> (real and symmetric) <span class="math display">\[\begin{align*}
 \boldsymbol\Sigma &amp; =\text{Cov}(\boldsymbol{X})  
 =\text{E}[(\boldsymbol{X}-\boldsymbol{\mu})(\boldsymbol{X}-\boldsymbol{\mu})^T] \\
-&amp; = \left[ \begin{array}{cccc} \sigma_{11} &amp; \sigma_{12} &amp; \cdots &amp; \sigma_{1p}\\ \sigma_{12} &amp; \sigma_{22} &amp; \cdots &amp; \sigma_{2p}\\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\ \sigma_{1p} &amp; \sigma_{2p} &amp; \cdots &amp; \sigma_{pp}\\ \end{array}  \right] 
+&amp; = \left[ \begin{array}{cccc} \sigma_{1}^2 &amp; \sigma_{12} &amp; \cdots &amp; \sigma_{1p}\\ \sigma_{12} &amp; \sigma_{2}^2 &amp; \cdots &amp; \sigma_{2p}\\ \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\ \sigma_{1p} &amp; \sigma_{2p} &amp; \cdots &amp; \sigma_{p}^2\\ \end{array}  \right] 
  = \text{E}(\boldsymbol{X}\boldsymbol{X}^T)-\boldsymbol{\mu}\boldsymbol{\mu}^T
 \end{align*}\]</span></p></li>
 </ul>
@@ -1692,19 +1692,19 @@ ggpairs(corkds)</code></pre>
 <h3>Correlation matrix</h3>
 <p><span class="math inline">\(~\)</span></p>
 <p>Correlation matrix <span class="math inline">\(\boldsymbol{\rho}\)</span> (real and symmetric) <span class="math display">\[\boldsymbol{\rho}=\left[ \begin{array}{cccc}
-    \frac{\sigma_{11}}{\sqrt{\sigma_{11}\sigma_{11}}} &amp;
-    \frac{\sigma_{12}}{\sqrt{\sigma_{11}\sigma_{22}}} &amp;
+    \frac{\sigma_{1}^2}{\sqrt{\sigma_{1}^2\sigma_{1}^2}} &amp;
+    \frac{\sigma_{12}}{\sqrt{\sigma_{1}^2\sigma_{2}^2}} &amp;
     \cdots &amp;
-    \frac{\sigma_{1p}}{\sqrt{\sigma_{11}\sigma_{pp}}}\\
-    \frac{\sigma_{12}}{\sqrt{\sigma_{11}\sigma_{22}}} &amp;
-    \frac{\sigma_{22}}{\sqrt{\sigma_{22}\sigma_{22}}} &amp;
+    \frac{\sigma_{1p}}{\sqrt{\sigma_{1}^2\sigma_{p}^2}}\\
+    \frac{\sigma_{12}}{\sqrt{\sigma_{1}^2\sigma_{2}^2}} &amp;
+    \frac{\sigma_{2}^2}{\sqrt{\sigma_{2}^2\sigma_{2}^2}} &amp;
     \cdots &amp;
-    \frac{\sigma_{2p}}{\sqrt{\sigma_{22}\sigma_{pp}}}\\
+    \frac{\sigma_{2p}}{\sqrt{\sigma_{2}^2\sigma_{p}^2}}\\
     \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
-      \frac{\sigma_{1p}}{\sqrt{\sigma_{11}\sigma_{pp}}} &amp;
-    \frac{\sigma_{2p}}{\sqrt{\sigma_{22}\sigma_{pp}}} &amp;
+      \frac{\sigma_{1p}}{\sqrt{\sigma_{1}^2\sigma_{p}^2}} &amp;
+    \frac{\sigma_{2p}}{\sqrt{\sigma_{2}^2\sigma_{p}^2}} &amp;
     \cdots &amp;
-    \frac{\sigma_{pp}}{\sqrt{\sigma_{pp}\sigma_{pp}}}\\ \end{array}\right]=
+    \frac{\sigma_{p}^2}{\sqrt{\sigma_{p}^2\sigma_{p}^2}}\\ \end{array}\right]=
  \left[ \begin{array}{cccc}
     1 &amp; \rho_{12} &amp; \cdots &amp; \rho_{1p}\\
     \rho_{12} &amp; 1 &amp; \cdots &amp; \rho_{2p}\\
@@ -1715,10 +1715,10 @@ ggpairs(corkds)</code></pre>
     \boldsymbol\Sigma(\boldsymbol{V}^{\frac{1}{2}})^{-1}, \text{   where    }
    \boldsymbol{V}^{\frac{1}{2}}=
  \left[ \begin{array}{cccc}
-    \sqrt{\sigma_{11}} &amp; 0&amp; \cdots &amp; 0\\
-    0 &amp; \sqrt{\sigma_{22}} &amp; \cdots &amp; 0\\
+    \sigma_{1} &amp; 0&amp; \cdots &amp; 0\\
+    0 &amp;  \sigma_{2}  &amp; \cdots &amp; 0\\
     \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
-    0 &amp; 0 &amp; \cdots &amp; \sqrt{\sigma_{pp}}\\
+    0 &amp; 0 &amp; \cdots &amp;  \sigma_{p} \\
 \end{array} \right]\]</span></p>
 <hr />
 </div>
@@ -1766,10 +1766,10 @@ X_S\\
           \mu_W\\
           \end{array}
           \right], \text{ and } \boldsymbol\Sigma=\left[ \begin{array}{cccc}
-    \sigma_{NN} &amp; \sigma_{NE} &amp; \sigma_{NS} &amp; \sigma_{NW}\\
-    \sigma_{NE} &amp; \sigma_{EE} &amp; \sigma_{ES}&amp; \sigma_{EW}\\
-        \sigma_{NS} &amp; \sigma_{EE} &amp; \sigma_{SS}&amp; \sigma_{SW}\\
-    \sigma_{NW} &amp; \sigma_{EW} &amp; \sigma_{SW} &amp; \sigma_{WW}\\
+    \sigma_{N}^2 &amp; \sigma_{NE} &amp; \sigma_{NS} &amp; \sigma_{NW}\\
+    \sigma_{NE} &amp; \sigma_{E}^2 &amp; \sigma_{ES}&amp; \sigma_{EW}\\
+        \sigma_{NS} &amp; \sigma_{SE} &amp; \sigma_{S}^2 &amp; \sigma_{SW}\\
+    \sigma_{NW} &amp; \sigma_{EW} &amp; \sigma_{SW} &amp; \sigma_{W}^2\\
 \end{array} \right]\]</span></p>
 <p>Scientists would like to compare the following three <em>contrasts</em>: N-S, E+W and (E+W)-(N+S), and define a new random vector <span class="math inline">\(\boldsymbol{Y}_{(3\times 1)}=\boldsymbol{C}_{(3\times 4)} \boldsymbol{X}_{(4\times 1)}\)</span> giving the three contrasts.</p>
 
@@ -1810,10 +1810,10 @@ Sigma</code></pre>
 <p><span class="math inline">\(~\)</span></p>
 <p>Random vector <span class="math inline">\(\boldsymbol{X}_{(p\times 1)}\)</span> with mean vector <span class="math inline">\(\boldsymbol{\mu}_{(p\times 1)}\)</span> and covariance matrix <span class="math display">\[\boldsymbol\Sigma=\text{Cov}(\boldsymbol{X})=\text{E}[(\boldsymbol{X}-\boldsymbol{\mu})(\boldsymbol{X}-\boldsymbol{\mu})^T]=
 \left[ \begin{array}{cccc}
-    \sigma_{11} &amp; \sigma_{12} &amp; \cdots &amp; \sigma_{1p}\\
-    \sigma_{12} &amp; \sigma_{22} &amp; \cdots &amp; \sigma_{2p}\\
+    \sigma_{1}^2 &amp; \sigma_{12} &amp; \cdots &amp; \sigma_{1p}\\
+    \sigma_{12} &amp; \sigma_{2}^2 &amp; \cdots &amp; \sigma_{2p}\\
     \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
-    \sigma_{1p} &amp; \sigma_{2p} &amp; \cdots &amp; \sigma_{pp}\\
+    \sigma_{1p} &amp; \sigma_{2p} &amp; \cdots &amp; \sigma_{p}^2\\
 \end{array} \right]\]</span></p>
 <hr />
 <ul>

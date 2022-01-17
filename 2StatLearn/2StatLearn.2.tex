@@ -447,7 +447,7 @@ also R example).
   \begin{align*}
   \boldsymbol\Sigma & =\text{Cov}(\boldsymbol{X})  
   =\text{E}[(\boldsymbol{X}-\boldsymbol{\mu})(\boldsymbol{X}-\boldsymbol{\mu})^T] \\
-  & = \left[ \begin{array}{cccc} \sigma_{11} & \sigma_{12} & \cdots & \sigma_{1p}\\ \sigma_{12} & \sigma_{22} & \cdots & \sigma_{2p}\\ \vdots & \vdots & \ddots & \vdots\\ \sigma_{1p} & \sigma_{2p} & \cdots & \sigma_{pp}\\ \end{array}  \right] 
+  & = \left[ \begin{array}{cccc} \sigma_{1}^2 & \sigma_{12} & \cdots & \sigma_{1p}\\ \sigma_{12} & \sigma_{2}^2 & \cdots & \sigma_{2p}\\ \vdots & \vdots & \ddots & \vdots\\ \sigma_{1p} & \sigma_{2p} & \cdots & \sigma_{p}^2\\ \end{array}  \right] 
    = \text{E}(\boldsymbol{X}\boldsymbol{X}^T)-\boldsymbol{\mu}\boldsymbol{\mu}^T
   \end{align*}
 \end{itemize}
@@ -501,19 +501,19 @@ Explain what this means.
 
 Correlation matrix \(\boldsymbol{\rho}\) (real and symmetric)
 \[\boldsymbol{\rho}=\left[ \begin{array}{cccc}
-    \frac{\sigma_{11}}{\sqrt{\sigma_{11}\sigma_{11}}} &
-    \frac{\sigma_{12}}{\sqrt{\sigma_{11}\sigma_{22}}} &
+    \frac{\sigma_{1}^2}{\sqrt{\sigma_{1}^2\sigma_{1}^2}} &
+    \frac{\sigma_{12}}{\sqrt{\sigma_{1}^2\sigma_{2}^2}} &
     \cdots &
-    \frac{\sigma_{1p}}{\sqrt{\sigma_{11}\sigma_{pp}}}\\
-    \frac{\sigma_{12}}{\sqrt{\sigma_{11}\sigma_{22}}} &
-    \frac{\sigma_{22}}{\sqrt{\sigma_{22}\sigma_{22}}} &
+    \frac{\sigma_{1p}}{\sqrt{\sigma_{1}^2\sigma_{p}^2}}\\
+    \frac{\sigma_{12}}{\sqrt{\sigma_{1}^2\sigma_{2}^2}} &
+    \frac{\sigma_{2}^2}{\sqrt{\sigma_{2}^2\sigma_{2}^2}} &
     \cdots &
-    \frac{\sigma_{2p}}{\sqrt{\sigma_{22}\sigma_{pp}}}\\
+    \frac{\sigma_{2p}}{\sqrt{\sigma_{2}^2\sigma_{p}^2}}\\
     \vdots & \vdots & \ddots & \vdots\\
-      \frac{\sigma_{1p}}{\sqrt{\sigma_{11}\sigma_{pp}}} &
-    \frac{\sigma_{2p}}{\sqrt{\sigma_{22}\sigma_{pp}}} &
+      \frac{\sigma_{1p}}{\sqrt{\sigma_{1}^2\sigma_{p}^2}} &
+    \frac{\sigma_{2p}}{\sqrt{\sigma_{2}^2\sigma_{p}^2}} &
     \cdots &
-    \frac{\sigma_{pp}}{\sqrt{\sigma_{pp}\sigma_{pp}}}\\ \end{array}\right]=
+    \frac{\sigma_{p}^2}{\sqrt{\sigma_{p}^2\sigma_{p}^2}}\\ \end{array}\right]=
  \left[ \begin{array}{cccc}
     1 & \rho_{12} & \cdots & \rho_{1p}\\
     \rho_{12} & 1 & \cdots & \rho_{2p}\\
@@ -525,10 +525,10 @@ Correlation matrix \(\boldsymbol{\rho}\) (real and symmetric)
     \boldsymbol\Sigma(\boldsymbol{V}^{\frac{1}{2}})^{-1}, \text{   where    }
    \boldsymbol{V}^{\frac{1}{2}}=
  \left[ \begin{array}{cccc}
-    \sqrt{\sigma_{11}} & 0& \cdots & 0\\
-    0 & \sqrt{\sigma_{22}} & \cdots & 0\\
+    \sigma_{1} & 0& \cdots & 0\\
+    0 &  \sigma_{2}  & \cdots & 0\\
     \vdots & \vdots & \ddots & \vdots\\
-    0 & 0 & \cdots & \sqrt{\sigma_{pp}}\\
+    0 & 0 & \cdots &  \sigma_{p} \\
 \end{array} \right]\]
 
 \end{block}
@@ -601,10 +601,10 @@ X_S\\
           \mu_W\\
           \end{array}
           \right], \text{ and } \boldsymbol\Sigma=\left[ \begin{array}{cccc}
-    \sigma_{NN} & \sigma_{NE} & \sigma_{NS} & \sigma_{NW}\\
-    \sigma_{NE} & \sigma_{EE} & \sigma_{ES}& \sigma_{EW}\\
-        \sigma_{NS} & \sigma_{EE} & \sigma_{SS}& \sigma_{SW}\\
-    \sigma_{NW} & \sigma_{EW} & \sigma_{SW} & \sigma_{WW}\\
+    \sigma_{N}^2 & \sigma_{NE} & \sigma_{NS} & \sigma_{NW}\\
+    \sigma_{NE} & \sigma_{E}^2 & \sigma_{ES}& \sigma_{EW}\\
+        \sigma_{NS} & \sigma_{SE} & \sigma_{S}^2 & \sigma_{SW}\\
+    \sigma_{NW} & \sigma_{EW} & \sigma_{SW} & \sigma_{W}^2\\
 \end{array} \right]\]
 
 Scientists would like to compare the following three \emph{contrasts}:
@@ -693,10 +693,10 @@ Random vector \(\boldsymbol{X}_{(p\times 1)}\) with mean vector
 \(\boldsymbol{\mu}_{(p\times 1)}\) and covariance matrix
 \[\boldsymbol\Sigma=\text{Cov}(\boldsymbol{X})=\text{E}[(\boldsymbol{X}-\boldsymbol{\mu})(\boldsymbol{X}-\boldsymbol{\mu})^T]=
 \left[ \begin{array}{cccc}
-    \sigma_{11} & \sigma_{12} & \cdots & \sigma_{1p}\\
-    \sigma_{12} & \sigma_{22} & \cdots & \sigma_{2p}\\
+    \sigma_{1}^2 & \sigma_{12} & \cdots & \sigma_{1p}\\
+    \sigma_{12} & \sigma_{2}^2 & \cdots & \sigma_{2p}\\
     \vdots & \vdots & \ddots & \vdots\\
-    \sigma_{1p} & \sigma_{2p} & \cdots & \sigma_{pp}\\
+    \sigma_{1p} & \sigma_{2p} & \cdots & \sigma_{p}^2\\
 \end{array} \right]\]
 
 \end{block}
