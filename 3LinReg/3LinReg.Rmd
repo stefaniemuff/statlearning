@@ -1,17 +1,17 @@
 ---
-subtitle: "TMA4268 Statistical Learning V2021"
+subtitle: "TMA4268 Statistical Learning V2022"
 title: "Module 3: Linear Regression"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "January 25 and 26, 2021"
+date: "January 24 and 27, 2022"
 fontsize: 10pt
 output:
-  # beamer_presentation:
-  #   keep_tex: yes
-  #   fig_caption: false
-  #   latex_engine: xelatex
-  #   theme: "Singapore"
-  #   colortheme: "default"
-  #   font: "serif"
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+    theme: "Singapore"
+    colortheme: "default"
+    font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -32,10 +32,7 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 ```
 
----
-
-Last update: January 25, 2021
-
+ 
 ---
 
 # Acknowledgements
@@ -192,7 +189,6 @@ geom_abline(intercept = -36, slope = 2.25, color="blue",    size=0.6)
 
 **Task:** Estimate the intercept and slope parameters (by "eye") and write it down (we will look at the "best" answer later).
 
-Add your answer into the google sheet: https://docs.google.com/spreadsheets/d/1DishfNIsYmmcTmNjsTDGeyBK9FElC7yGpyYJoK32SyI/edit?usp=sharing
 
 ---
 
@@ -342,11 +338,11 @@ $$(x_1,y_1), (x_2,y_2), \ldots, (x_n,y_n)\ ,$$
 
 the least squares estiamtes for simple linear regression are given as
 
-\begin{equation}\label{eq:beta0}
+\begin{equation} 
 \hat{\beta}_0 = \bar{y}-\hat{\beta}_1 \bar{x}
 \end{equation}
 and
-\begin{equation}\label{eq:beta1}
+\begin{equation} 
 \hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^n(x_i-\bar{x})^2} = \frac{\mathsf{Cov}(\boldsymbol{x},\boldsymbol{y})}{\mathsf{Var}(\boldsymbol{x})}\ ,
 \end{equation}
 
@@ -647,7 +643,7 @@ Remember: To carry out a statistical test, we need a _test statistic_. This is s
 
 
 
-\begin{equation*}\label{eq:beta}
+\begin{equation*}
 T=\frac{\hat\beta_1 }{SE(\hat\beta_1)}\ . 
 \end{equation*}
 
@@ -787,24 +783,6 @@ polygon(cord.x3,cord.y3,col='gray')
 text(-3,0.05,labels="2.5%")
 ```
 
----
-
-## Recap: Two types of errors
-
-\vspace{2mm}
-
-In the testing setup, we typically _reject the null hypothesis_ if the $p$-value is small enough. Typical cutoffs for the _significance level_ ($\alpha$) are $5\%$ or $1\%$.
-
-\vspace{2mm}
-
-However, this means we can make two types of errors:
-\vspace{2mm}
-
-* Type I error: 
-
-* Type II error:
-
-\vspace{2mm}
 
 ---
 
@@ -830,12 +808,9 @@ We will discuss this a bit in the final module 12. The topic is connected to goo
 
 * The $p$-value statement by ASA: [https://amstat.tandfonline.com/doi/full/10.1080/00031305.2016.1154108#.Xh16iuExnhM](https://amstat.tandfonline.com/doi/full/10.1080/00031305.2016.1154108#.Xh16iuExnhM)
 * Ideas to redefine what ``statistical significane'' means: [https://www.nature.com/articles/s41562-017-0189-z](https://www.nature.com/articles/s41562-017-0189-z)
-* A blog by the Scientific American: [https://blogs.scientificamerican.com/observations/to-fix-the-reproducibility-crisis-rethink-how-we-do-experiments/](https://blogs.scientificamerican.com/observations/to-fix-the-reproducibility-crisis-rethink-how-we-do-experiments/)
+* Recently written with some co-authors: [https://www.cell.com/trends/ecology-evolution/fulltext/S0169-5347(21)00284-6](https://www.cell.com/trends/ecology-evolution/fulltext/S0169-5347(21)00284-6)
 
-<!-- * "Reject $H_0$ when $H_0$ is true"="false positives" = "type I error" ="miscarriage of justice". -->
-<!-- These are our _fake news_, which are very important for us to avoid. -->
-
-<!-- * "Fail to reject $H_0$ when $H_1$ is true (and $H_0$ is false)"="false negatives" = "type II error"= "guilty criminal go free". -->
+ 
 
 
 ---
@@ -2261,7 +2236,8 @@ $~$
 $~$
 
 * In simple regression, the leverage of individual $i$ is defined as 
-\begin{equation}\label{eq:leverage}
+
+\begin{equation} 
 H_{ii} = \frac{1}{n} + \frac{(x_i-\overline{x})^2}{\sum_{i'}(x_{i'}-\overline{x})^2} \ . 
 \end{equation}
 

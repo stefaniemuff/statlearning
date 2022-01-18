@@ -144,18 +144,12 @@
 
 \title{Module 3: Linear Regression}
 \providecommand{\subtitle}[1]{}
-\subtitle{TMA4268 Statistical Learning V2021}
+\subtitle{TMA4268 Statistical Learning V2022}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{January 25 and 26, 2021}
+\date{January 24 and 27, 2022}
 
 \begin{document}
 \frame{\titlepage}
-
-\begin{frame}
-
-Last update: January 25, 2021
-
-\end{frame}
 
 \begin{frame}{Acknowledgements}
 \protect\hypertarget{acknowledgements}{}
@@ -374,9 +368,6 @@ exact?
 \textbf{Task:} Estimate the intercept and slope parameters (by ``eye'')
 and write it down (we will look at the ``best'' answer later).
 
-Add your answer into the google sheet:
-\url{https://docs.google.com/spreadsheets/d/1DishfNIsYmmcTmNjsTDGeyBK9FElC7yGpyYJoK32SyI/edit?usp=sharing}
-
 \end{frame}
 
 \begin{frame}
@@ -591,9 +582,9 @@ Using \(n\) observed independent data points
 
 the least squares estiamtes for simple linear regression are given as
 
-\begin{equation}\label{eq:beta0}
+\begin{equation} 
 \hat{\beta}_0 = \bar{y}-\hat{\beta}_1 \bar{x}
-\end{equation} and \begin{equation}\label{eq:beta1}
+\end{equation} and \begin{equation} 
 \hat{\beta}_1 = \frac{\sum_{i=1}^n(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^n(x_i-\bar{x})^2} = \frac{\mathsf{Cov}(\boldsymbol{x},\boldsymbol{y})}{\mathsf{Var}(\boldsymbol{x})}\ ,
 \end{equation}
 
@@ -1008,7 +999,7 @@ statistic}. This is some type of \textbf{summary statistic} that follows
 a known distribution under \(H_0\). For our purpose, we use the
 so-called \textbf{\(T\)-statistic}
 
-\begin{equation*}\label{eq:beta}
+\begin{equation*}
 T=\frac{\hat\beta_1 }{SE(\hat\beta_1)}\ . 
 \end{equation*}
 
@@ -1136,33 +1127,6 @@ test-statistic leads to a \(z\)-value = -1.96 \(\Rightarrow\)
 
 \begin{frame}
 
-\begin{block}{Recap: Two types of errors}
-
-\vspace{2mm}
-
-In the testing setup, we typically \emph{reject the null hypothesis} if
-the \(p\)-value is small enough. Typical cutoffs for the
-\emph{significance level} (\(\alpha\)) are \(5\%\) or \(1\%\).
-
-\vspace{2mm}
-
-However, this means we can make two types of errors: \vspace{2mm}
-
-\begin{itemize}
-\item
-  Type I error:
-\item
-  Type II error:
-\end{itemize}
-
-\vspace{2mm}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
 \begin{block}{Cautionary notes regarding \(p\)-values:}
 
 \(~\)
@@ -1195,8 +1159,8 @@ connected to good/bad research practice, problems with
   Ideas to redefine what ``statistical significane'' means:
   \url{https://www.nature.com/articles/s41562-017-0189-z}
 \item
-  A blog by the Scientific American:
-  \url{https://blogs.scientificamerican.com/observations/to-fix-the-reproducibility-crisis-rethink-how-we-do-experiments/}
+  Recently written with some co-authors:
+  \url{https://www.cell.com/trends/ecology-evolution/fulltext/S0169-5347(21)00284-6}
 \end{itemize}
 
 \end{block}
@@ -1784,20 +1748,20 @@ as follows:
 \end{Shaded}
 
 \begin{verbatim}
-##             (Intercept)           bmi           age          neck
-## (Intercept) 53.26521684  0.6774596810 -0.0780438125 -0.7219656479
-## bmi          0.67745968  0.0535131152  0.0005729015 -0.0120408637
-## age         -0.07804381  0.0005729015  0.0007745054 -0.0003432518
-## neck        -0.72196565 -0.0120408637 -0.0003432518  0.0364680351
-## hip         -0.54820573 -0.0058040729  0.0015239515 -0.0027159299
-## abdomen      0.16457979 -0.0110809165 -0.0011917596 -0.0007706161
-##                      hip       abdomen
-## (Intercept) -0.548205733  0.1645797895
-## bmi         -0.005804073 -0.0110809165
-## age          0.001523951 -0.0011917596
-## neck        -0.002715930 -0.0007706161
-## hip          0.011558850 -0.0045707222
-## abdomen     -0.004570722  0.0070861066
+##             (Intercept)           bmi           age          neck          hip
+## (Intercept) 53.26521684  0.6774596810 -0.0780438125 -0.7219656479 -0.548205733
+## bmi          0.67745968  0.0535131152  0.0005729015 -0.0120408637 -0.005804073
+## age         -0.07804381  0.0005729015  0.0007745054 -0.0003432518  0.001523951
+## neck        -0.72196565 -0.0120408637 -0.0003432518  0.0364680351 -0.002715930
+## hip         -0.54820573 -0.0058040729  0.0015239515 -0.0027159299  0.011558850
+## abdomen      0.16457979 -0.0110809165 -0.0011917596 -0.0007706161 -0.004570722
+##                   abdomen
+## (Intercept)  0.1645797895
+## bmi         -0.0110809165
+## age         -0.0011917596
+## neck        -0.0007706161
+## hip         -0.0045707222
+## abdomen      0.0070861066
 \end{verbatim}
 
 \end{block}
@@ -2677,20 +2641,20 @@ library.
 \end{Shaded}
 
 \begin{verbatim}
-##   ID  Income Limit Rating Cards Age Education Gender Student Married
-## 1  1  14.891  3606    283     2  34        11   Male      No     Yes
-## 2  2 106.025  6645    483     3  82        15 Female     Yes     Yes
-## 3  3 104.593  7075    514     4  71        11   Male      No      No
-## 4  4 148.924  9504    681     3  36        11 Female      No      No
-## 5  5  55.882  4897    357     2  68        16   Male      No     Yes
-## 6  6  80.180  8047    569     4  77        10   Male      No      No
-##   Ethnicity Balance
-## 1 Caucasian     333
-## 2     Asian     903
-## 3     Asian     580
-## 4     Asian     964
-## 5 Caucasian     331
-## 6 Caucasian    1151
+##   ID  Income Limit Rating Cards Age Education Gender Student Married Ethnicity
+## 1  1  14.891  3606    283     2  34        11   Male      No     Yes Caucasian
+## 2  2 106.025  6645    483     3  82        15 Female     Yes     Yes     Asian
+## 3  3 104.593  7075    514     4  71        11   Male      No      No     Asian
+## 4  4 148.924  9504    681     3  36        11 Female      No      No     Asian
+## 5  5  55.882  4897    357     2  68        16   Male      No     Yes Caucasian
+## 6  6  80.180  8047    569     4  77        10   Male      No      No Caucasian
+##   Balance
+## 1     333
+## 2     903
+## 3     580
+## 4     964
+## 5     331
+## 6    1151
 \end{verbatim}
 
 \(~\)
@@ -3277,10 +3241,11 @@ should be \emph{no trend}:
 \tightlist
 \item
   In simple regression, the leverage of individual \(i\) is defined as
-  \begin{equation}\label{eq:leverage}
-  H_{ii} = \frac{1}{n} + \frac{(x_i-\overline{x})^2}{\sum_{i'}(x_{i'}-\overline{x})^2} \ . 
-  \end{equation}
 \end{itemize}
+
+\begin{equation} 
+H_{ii} = \frac{1}{n} + \frac{(x_i-\overline{x})^2}{\sum_{i'}(x_{i'}-\overline{x})^2} \ . 
+\end{equation}
 
 \vspace{7mm}
 
