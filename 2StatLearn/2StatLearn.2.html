@@ -1549,7 +1549,6 @@ div.tocify {
 <li>Joint distribution function: <span class="math inline">\(f(\boldsymbol{x})\)</span>.</li>
 <li>From joint distribution function to marginal (and conditional distributions). <span class="math display">\[f_1(x_1)=\int_{-\infty}^{\infty}\cdots \int_{-\infty}^{\infty} f(x_1,x_2,\ldots,x_p)dx_2 \cdots dx_p\]</span></li>
 <li>Cumulative distribution (definite integrals!) used to calculate probabilites.</li>
-<li>Independence: <span class="math inline">\(f(x_1,x_2)=f_1(x_1)\cdot f(x_2)\)</span> and <span class="math inline">\(f(x_1\mid x_2)=f_1(x_1).\)</span></li>
 </ul>
 <hr />
 <div id="moments" class="section level2">
@@ -1715,10 +1714,10 @@ ggpairs(corkds)</code></pre>
     \boldsymbol\Sigma(\boldsymbol{V}^{\frac{1}{2}})^{-1}, \text{   where    }
    \boldsymbol{V}^{\frac{1}{2}}=
  \left[ \begin{array}{cccc}
-    \sigma_{1} &amp; 0&amp; \cdots &amp; 0\\
-    0 &amp;  \sigma_{2}  &amp; \cdots &amp; 0\\
+    \sqrt{\sigma_{1}^2} &amp; 0&amp; \cdots &amp; 0\\
+    0 &amp;  \sqrt{\sigma_{2}^2}  &amp; \cdots &amp; 0\\
     \vdots &amp; \vdots &amp; \ddots &amp; \vdots\\
-    0 &amp; 0 &amp; \cdots &amp;  \sigma_{p} \\
+    0 &amp; 0 &amp; \cdots &amp;  \sqrt{\sigma_{p}^2} \\
 \end{array} \right]\]</span></p>
 <hr />
 </div>
@@ -1960,7 +1959,7 @@ Sigma</code></pre>
 
 <ol style="list-style-type: decimal">
 <li><p>The grapical contours of the mvN are ellipsoids (can be shown using spectral decomposition).</p></li>
-<li><p>Linear combinations of components of <span class="math inline">\(\boldsymbol{X}\)</span> are (multivariate) normal</p></li>
+<li><p>Linear combinations of components of <span class="math inline">\(\boldsymbol{X}\)</span> are (multivariate) normal.</p></li>
 <li><p>All subsets of the components of <span class="math inline">\(\boldsymbol{X}\)</span> are (multivariate) normal (special case of the above).</p></li>
 <li><p>Zero covariance implies that the corresponding components are independently distributed (in contrast to general distributions).</p></li>
 </ol>
@@ -1979,14 +1978,14 @@ Sigma</code></pre>
 <li><p>Contours of constant density for the <span class="math inline">\(p\)</span>-dimensional normal distribution are ellipsoids defined by <span class="math inline">\(\boldsymbol{x}\)</span> such that <span class="math display">\[ (\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})=b \]</span> where <span class="math inline">\(b&gt;0\)</span> is a constant.</p></li>
 <li><p>These ellipsoids are centered at <span class="math inline">\(\boldsymbol{\mu}\)</span> and have axes <span class="math inline">\(\pm \sqrt{b \lambda_i}\boldsymbol{e}_i\)</span>, where <span class="math inline">\(\boldsymbol\Sigma\boldsymbol{e}_i=\lambda_i \boldsymbol{e}_i\)</span> (eigenvector for <span class="math inline">\(\lambda_i\)</span>), for <span class="math inline">\(i=1,...,p\)</span>.</p></li>
 <li><p>To see this the spectral decomposition of the covariance matrix is useful.</p></li>
-<li><p><span class="math inline">\((\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})\)</span> is distributed as <span class="math inline">\(\chi^2_p\)</span>.</p></li>
 </ul>
+<!-- * $(\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})$ is distributed as $\chi^2_p$. -->
 <!-- * The volume inside the ellipsoid of $\boldsymbol{x}$ values satisfying -->
 <!-- $$ (\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu}) \le \chi^2_p(\alpha) $$ -->
 <!-- has probability $1-\alpha$. -->
 <hr />
 <p>Note:</p>
-<p><em>In M4: Classification the mvN is very important and we will often draw contours of the mvN as ellipses- and this is the reason why we do that. </em></p>
+<p><em>In M4: Classification the mvN is very important and we will often draw contours of the mvN as ellipses (in 2D space). This is the reason why we do that. </em></p>
 <hr />
 </div>
 <div id="identify-the-mvns-from-their-contours" class="section level2">

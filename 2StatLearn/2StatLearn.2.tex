@@ -140,7 +140,7 @@
 \def\fps@figure{htbp}
 \makeatother
 
-\usepackage{xcolor}
+\usepackage{xcolor,bm}
 
 \title{Module 2, Part 2: Random vectors, covariance, multivariate Normal
 distribution}
@@ -194,9 +194,6 @@ distribution}
 \item
   Cumulative distribution (definite integrals!) used to calculate
   probabilites.
-\item
-  Independence: \(f(x_1,x_2)=f_1(x_1)\cdot f(x_2)\) and
-  \(f(x_1\mid x_2)=f_1(x_1).\)
 \end{itemize}
 
 \end{frame}
@@ -525,10 +522,10 @@ Correlation matrix \(\boldsymbol{\rho}\) (real and symmetric)
     \boldsymbol\Sigma(\boldsymbol{V}^{\frac{1}{2}})^{-1}, \text{   where    }
    \boldsymbol{V}^{\frac{1}{2}}=
  \left[ \begin{array}{cccc}
-    \sigma_{1} & 0& \cdots & 0\\
-    0 &  \sigma_{2}  & \cdots & 0\\
+    \sqrt{\sigma_{1}^2} & 0& \cdots & 0\\
+    0 &  \sqrt{\sigma_{2}^2}  & \cdots & 0\\
     \vdots & \vdots & \ddots & \vdots\\
-    0 & 0 & \cdots &  \sigma_{p} \\
+    0 & 0 & \cdots &  \sqrt{\sigma_{p}^2} \\
 \end{array} \right]\]
 
 \end{block}
@@ -1010,7 +1007,7 @@ Let \(\boldsymbol{X}_{(p\times 1)}\) be a random vector from
   spectral decomposition).
 \item
   Linear combinations of components of \(\boldsymbol{X}\) are
-  (multivariate) normal
+  (multivariate) normal.
 \item
   All subsets of the components of \(\boldsymbol{X}\) are (multivariate)
   normal (special case of the above).
@@ -1059,9 +1056,6 @@ observed covariance 0, then your variables are independent.
 \item
   To see this the spectral decomposition of the covariance matrix is
   useful.
-\item
-  \((\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})\)
-  is distributed as \(\chi^2_p\).
 \end{itemize}
 
 \end{block}
@@ -1073,8 +1067,8 @@ observed covariance 0, then your variables are independent.
 Note:
 
 \emph{In M4: Classification the mvN is very important and we will often
-draw contours of the mvN as ellipses- and this is the reason why we do
-that. }
+draw contours of the mvN as ellipses (in 2D space). This is the reason
+why we do that. }
 
 \end{frame}
 

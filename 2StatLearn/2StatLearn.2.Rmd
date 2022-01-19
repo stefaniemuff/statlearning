@@ -4,20 +4,19 @@ title: "Module 2, Part 2: Random vectors, covariance, multivariate Normal distri
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "January 20, 2022"
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
     toc_depth: 2
 urlcolor: blue
-header-includes: \usepackage{xcolor}
-
+header-includes: \usepackage{xcolor,bm}
 ---
 
 ```{r setup, include=FALSE}
@@ -57,7 +56,6 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 * From joint distribution function to marginal (and conditional distributions).
 $$f_1(x_1)=\int_{-\infty}^{\infty}\cdots \int_{-\infty}^{\infty} f(x_1,x_2,\ldots,x_p)dx_2 \cdots dx_p$$
 * Cumulative distribution (definite integrals!) used to calculate probabilites.
-* Independence: $f(x_1,x_2)=f_1(x_1)\cdot f(x_2)$ and $f(x_1\mid x_2)=f_1(x_1).$
 
 ---
 
@@ -269,10 +267,10 @@ $$\boldsymbol{\rho}=(\boldsymbol{V}^{\frac{1}{2}})^{-1}
     \boldsymbol\Sigma(\boldsymbol{V}^{\frac{1}{2}})^{-1}, \text{   where    }
    \boldsymbol{V}^{\frac{1}{2}}=
  \left[ \begin{array}{cccc}
-    \sigma_{1} & 0& \cdots & 0\\
-    0 &  \sigma_{2}  & \cdots & 0\\
+    \sqrt{\sigma_{1}^2} & 0& \cdots & 0\\
+    0 &  \sqrt{\sigma_{2}^2}  & \cdots & 0\\
     \vdots & \vdots & \ddots & \vdots\\
-    0 & 0 & \cdots &  \sigma_{p} \\
+    0 & 0 & \cdots &  \sqrt{\sigma_{p}^2} \\
 \end{array} \right]$$
 
 ---
@@ -586,7 +584,7 @@ Let $\boldsymbol{X}_{(p\times 1)}$ be a random vector from $N_p(\boldsymbol{\mu}
 
 1. The grapical contours of the mvN are ellipsoids (can be shown using spectral decomposition).
 
-2. Linear combinations of components of $\boldsymbol{X}$ are (multivariate) normal 
+2. Linear combinations of components of $\boldsymbol{X}$ are (multivariate) normal.
 
 3. All subsets of the components of $\boldsymbol{X}$ are (multivariate) normal (special case of the above).
 
@@ -616,7 +614,7 @@ where $b>0$ is a constant.
 
 * To see this the spectral decomposition of the covariance matrix is useful.
 
-* $(\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})$ is distributed as $\chi^2_p$.
+<!-- * $(\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu})$ is distributed as $\chi^2_p$. -->
 
 <!-- * The volume inside the ellipsoid of $\boldsymbol{x}$ values satisfying -->
 <!-- $$ (\boldsymbol{x}-\boldsymbol{\mu})^T\boldsymbol\Sigma^{-1}(\boldsymbol{x}-\boldsymbol{\mu}) \le \chi^2_p(\alpha) $$ -->
@@ -626,7 +624,7 @@ where $b>0$ is a constant.
 
 Note: 
 
-_In M4: Classification the mvN is very important and we will often draw contours of the mvN as ellipses- and this is the reason why we do that. _
+_In M4: Classification the mvN is very important and we will often draw contours of the mvN as ellipses (in 2D space). This is the reason why we do that. _
 
 
 ---
