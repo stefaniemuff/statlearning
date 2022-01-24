@@ -368,6 +368,8 @@ exact?
 \textbf{Task:} Estimate the intercept and slope parameters (by ``eye'')
 and write it down (we will look at the ``best'' answer later).
 
+\(\rightarrow\) Mentimeter
+
 \end{frame}
 
 \begin{frame}
@@ -815,7 +817,7 @@ formulas (1) and (2), we have in addition that
 \vspace{6mm}
 
 \textbf{Again}: We will derive this in the multiple linear regression
-version in more generality (see recommended exercises).
+version in more generality (see recommended exercise 3).
 
 \end{frame}
 
@@ -1032,29 +1034,6 @@ in Walepole et al. (2012)).
 
 \end{frame}
 
-\begin{frame}
-
-\begin{block}{Recap: The \(t\)-distribution}
-
-\(~\)
-
-\begin{center}\includegraphics[width=0.8\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-6-1} \end{center}
-
-\normalsize
-
-\begin{itemize}
-\tightlist
-\item
-  The \(t\)-distribution has heavier tails than the normal distribution.
-\item
-  For df \(\geq 30\) the \(t\) and Normal distribution are pretty
-  similar.
-\end{itemize}
-
-\end{block}
-
-\end{frame}
-
 \begin{frame}[fragile]
 
 \begin{block}{Hypothesis tests for bodyfat example}
@@ -1096,30 +1075,6 @@ So let's again go back to the bodyfat regression output:
   The \(p\)-value for \texttt{bmi} is very small (\(p<0.0001\)).
   \textbf{What does this mean?}
 \end{itemize}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Recap: Formal definition of the \(p\)-value}
-
-\(~\)
-
-\textbf{The \(p\)-value is} the probability to observe a data summary
-(e.g., an average) that is at least as extreme as the one observed,
-given that the Null Hypothesis is correct.
-
-\vspace{3mm}
-
-\textbf{Example} (normal distribution): Assume the observed
-test-statistic leads to a \(z\)-value = -1.96 \(\Rightarrow\)
-\(\text{P}(|z|\geq 1.96)=0.05\) and \(\text{P}(z\leq-1.96)=0.025\) .
-
-\vspace{1mm}
-
-\begin{center}\includegraphics[width=1\linewidth]{3LinReg_files/figure-beamer/pValFig-1} \end{center}
 
 \end{block}
 
@@ -1359,7 +1314,7 @@ regression coeffficient.
 \(~\)
 
 Assume we have \(n\) sampling units \((x_{1i},\ldots,x_{pi}, y_i)\),
-\(1\leq i \leq n\), such that each represent an instance of equation
+\(1\leq i \leq n\), such that each represents an instance of equation
 (3), we can use the data matrix
 
 \[{\bf{X}} = \left[\begin{matrix} 1 & x_{11} & ... & x_{1p} \\
@@ -1985,7 +1940,7 @@ A special case is
 \item
   This makes sense: it is known that (or you can try to show it
   yourself) \[F_{1,n-p-1} = t^2_{n-p-1} \ ,\] thus we can use a
-  \(T\)-statistics with \((n-p-1)\) degrees of freedom to get the
+  \(T\)-statistic with \((n-p-1)\) degrees of freedom to get the
   \(p\)-value.
 \end{itemize}
 
@@ -2020,14 +1975,7 @@ Going back again:
 
 \textbf{However}:
 
-\begin{itemize}
-\item
-  Only checking the individual \(p\)-values is dangerous.
-  \textbf{Why?}\\
-\item
-  Not possible if \(n>p\) \(\rightarrow\) need other approaches (see
-  e.g., Module 6).
-\end{itemize}
+Only checking the individual \(p\)-values is dangerous. \textbf{Why?}\\
 
 \end{frame}
 
@@ -2217,7 +2165,7 @@ a better (``fairer'') estimation of the actual variability that is
 explained by the covariates:
 
 \begin{equation*}
-R^2_a = 1-(1-R^2 )\frac{n-1}{n-m-1}
+R^2_a = 1-(1-R^2 )\frac{n-1}{n-p-1}
 \end{equation*}
 
 \(~\)
@@ -2290,7 +2238,7 @@ observations \(Y\).
 
 \begin{frame}
 
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-22-1} \end{center}
+\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-21-1} \end{center}
 
 \begin{itemize}
 \tightlist
@@ -2678,7 +2626,7 @@ Question: Do the Balances differ for different Ethnicities?
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics[width=0.85\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-26-1}
+\includegraphics[width=0.85\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-25-1}
 
 \end{frame}
 
@@ -3156,7 +3104,7 @@ against the fitted values. For the bodyfat data it looks like this:
 
 \(~\)
 
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-32-1} \end{center}
+\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-31-1} \end{center}
 
 \(~\)
 
@@ -3179,7 +3127,7 @@ distribution:
 
 \(~\)
 
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-33-1} \end{center}
+\begin{center}\includegraphics[width=0.4\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-32-1} \end{center}
 
 \(~\)
 
@@ -3208,7 +3156,7 @@ should be \emph{no trend}:
 
 \vspace{2mm}
 
-\begin{center}\includegraphics[width=0.45\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-34-1} \end{center}
+\begin{center}\includegraphics[width=0.45\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-33-1} \end{center}
 
 \end{block}
 
@@ -3262,7 +3210,7 @@ H_{ii} = \frac{1}{n} + \frac{(x_i-\overline{x})^2}{\sum_{i'}(x_{i'}-\overline{x}
 \textbf{Illustration}: Data points with \(x_i\) values far from the mean
 have a stronger leverage effect than when \(x_i\approx \overline{x}\):
 
-\begin{center}\includegraphics[width=0.9\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-35-1} \end{center}
+\begin{center}\includegraphics[width=0.8\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-34-1} \end{center}
 
 The outlier in the middle plot ``pulls'' the regression line in its
 direction and biases the slope.
@@ -3280,7 +3228,7 @@ to do it manually!
 In the leverage plot, (standardized) residuals \(\tilde{r_i}\) are
 plotted against the leverage \(H_{ii}\) (still for the bodyfat):
 
-\begin{center}\includegraphics[width=0.5\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-36-1} \end{center}
+\begin{center}\includegraphics[width=0.45\linewidth]{3LinReg_files/figure-beamer/unnamed-chunk-35-1} \end{center}
 
 \textbf{Critical ranges} are the top and bottom right corners! Why?
 

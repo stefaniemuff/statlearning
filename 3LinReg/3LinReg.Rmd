@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "January 24 and 27, 2022"
 fontsize: 10pt
 output:
-  # beamer_presentation:
-  #   keep_tex: yes
-  #   fig_caption: false
-  #   latex_engine: xelatex
-  #   theme: "Singapore"
-  #   colortheme: "default"
-  #   font: "serif"
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+    theme: "Singapore"
+    colortheme: "default"
+    font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -189,6 +189,7 @@ geom_abline(intercept = -36, slope = 2.25, color="blue",    size=0.6)
 
 **Task:** Estimate the intercept and slope parameters (by "eye") and write it down (we will look at the "best" answer later).
 
+$\rightarrow$ Mentimeter
 
 ---
 
@@ -509,7 +510,7 @@ $$
 
 \vspace{6mm}
 
-**Again**: We will derive this in the multiple linear regression version in more generality (see recommended exercises).
+**Again**: We will derive this in the multiple linear regression version in more generality (see recommended exercise 3).
 
 
 ---
@@ -674,35 +675,35 @@ Brief recap: Under $H_0$, $T$ has a $t$-distribution with $n-2$ degrees of freed
 
 ---
 
-## Recap: The $t$-distribution
+<!-- ## Recap: The $t$-distribution -->
 
-$~$
+<!-- $~$ -->
 
-```{r,echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='80%'}
+<!-- ```{r,echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='80%'} -->
 
-xx <- data.frame(seq(-4,4,0.01))
-names(xx) <- "xx"
-xx$t1 <- dt(xx$xx,1)
-xx$t3 <- dt(xx$xx,3)
-xx$t10 <- dt(xx$xx,10)
-xx$t30 <- dt(xx$xx,30)
-xx$norm <- dnorm(xx$xx)
+<!-- xx <- data.frame(seq(-4,4,0.01)) -->
+<!-- names(xx) <- "xx" -->
+<!-- xx$t1 <- dt(xx$xx,1) -->
+<!-- xx$t3 <- dt(xx$xx,3) -->
+<!-- xx$t10 <- dt(xx$xx,10) -->
+<!-- xx$t30 <- dt(xx$xx,30) -->
+<!-- xx$norm <- dnorm(xx$xx) -->
 
-plot(xx$xx,xx$t1,lwd=2,type="l",xlab="x",ylab="density",ylim=c(0,0.4))
-lines(xx$xx,xx$t3,add=TRUE,lwd=2,col=2)
-lines(xx$xx,xx$t10,add=TRUE,lwd=2,col=3)
-lines(xx$xx,xx$t30,add=TRUE,lwd=2,col=4)
-lines(xx$xx,xx$norm,add=TRUE,lwd=2,col=5)
-legend("topright",legend=c("df=1","df=3","df=10","df=30","normal"),col=1:5,lwd=2)
+<!-- plot(xx$xx,xx$t1,lwd=2,type="l",xlab="x",ylab="density",ylim=c(0,0.4)) -->
+<!-- lines(xx$xx,xx$t3,add=TRUE,lwd=2,col=2) -->
+<!-- lines(xx$xx,xx$t10,add=TRUE,lwd=2,col=3) -->
+<!-- lines(xx$xx,xx$t30,add=TRUE,lwd=2,col=4) -->
+<!-- lines(xx$xx,xx$norm,add=TRUE,lwd=2,col=5) -->
+<!-- legend("topright",legend=c("df=1","df=3","df=10","df=30","normal"),col=1:5,lwd=2) -->
 
-``` 
+<!-- ```  -->
 
-\normalsize
+<!-- \normalsize -->
 
-* The $t$-distribution has heavier tails than the normal distribution. 
-* For df $\geq 30$ the $t$ and Normal distribution are pretty similar.
+<!-- * The $t$-distribution has heavier tails than the normal distribution.  -->
+<!-- * For df $\geq 30$ the $t$ and Normal distribution are pretty similar. -->
 
----
+<!-- --- -->
 
 ### Hypothesis tests for bodyfat example
 
@@ -740,48 +741,48 @@ $~$
 
 <!-- We would in a two-sided setting reject $H_0$ for large values of $\text{abs}(t_0)$. We may rely on calculating a $p$-value.  -->
 
----
+<!-- --- -->
 
-## Recap: Formal definition of the $p$-value
+<!-- ## Recap: Formal definition of the $p$-value -->
 
-$~$
+<!-- $~$ -->
 
-**The $p$-value is** the probability to observe a data summary (e.g., an average) that is at least as extreme as the one observed, given that the Null Hypothesis is correct.
+<!-- **The $p$-value is** the probability to observe a data summary (e.g., an average) that is at least as extreme as the one observed, given that the Null Hypothesis is correct. -->
 
-\vspace{3mm}
+<!-- \vspace{3mm} -->
 
-**Example** (normal distribution): Assume the observed test-statistic leads to a $z$-value = -1.96 
-$\Rightarrow$ $\text{P}(|z|\geq 1.96)=0.05$ and $\text{P}(z\leq-1.96)=0.025$ .
+<!-- **Example** (normal distribution): Assume the observed test-statistic leads to a $z$-value = -1.96  -->
+<!-- $\Rightarrow$ $\text{P}(|z|\geq 1.96)=0.05$ and $\text{P}(z\leq-1.96)=0.025$ . -->
 
-\vspace{1mm}
+<!-- \vspace{1mm} -->
 
 
-```{r pValFig, echo=FALSE, fig.width=8, fig.height=4,fig.align = "center",out.width='100%'}
-par(mfrow=c(1,2))
+<!-- ```{r pValFig, echo=FALSE, fig.width=8, fig.height=4,fig.align = "center",out.width='100%'} -->
+<!-- par(mfrow=c(1,2)) -->
 
-zz1 <- qnorm(0.025)
-zz2 <- qnorm(0.975)
-zz3 <- qnorm(0.025)
+<!-- zz1 <- qnorm(0.025) -->
+<!-- zz2 <- qnorm(0.975) -->
+<!-- zz3 <- qnorm(0.025) -->
 
-cord.x1 <- c(-4,seq(-4,zz1,0.01),zz1)
-cord.y1 <- c(0,dnorm(seq(-4,zz1,0.01)),0)
+<!-- cord.x1 <- c(-4,seq(-4,zz1,0.01),zz1) -->
+<!-- cord.y1 <- c(0,dnorm(seq(-4,zz1,0.01)),0) -->
 
-cord.x2 <- c(zz2,seq(zz2,4,0.01),4)
-cord.y2 <- c(0,dnorm(seq(zz2,4,0.01)),0)
+<!-- cord.x2 <- c(zz2,seq(zz2,4,0.01),4) -->
+<!-- cord.y2 <- c(0,dnorm(seq(zz2,4,0.01)),0) -->
 
-curve(dnorm(x,0,1),-4,4,ylab="density",main="Two-sided p-value (0.05)",xlab="")
-polygon(cord.x1,cord.y1,col='gray')
-polygon(cord.x2,cord.y2,col='gray')
-text(-3,0.05,labels="2.5%")
-text(3,0.05,labels="2.5%")
+<!-- curve(dnorm(x,0,1),-4,4,ylab="density",main="Two-sided p-value (0.05)",xlab="") -->
+<!-- polygon(cord.x1,cord.y1,col='gray') -->
+<!-- polygon(cord.x2,cord.y2,col='gray') -->
+<!-- text(-3,0.05,labels="2.5%") -->
+<!-- text(3,0.05,labels="2.5%") -->
 
-cord.x3 <- c(-4,seq(-4,zz3,0.01),zz3)
-cord.y3 <- c(0,dnorm(seq(-4,zz3,0.01)),0)
+<!-- cord.x3 <- c(-4,seq(-4,zz3,0.01),zz3) -->
+<!-- cord.y3 <- c(0,dnorm(seq(-4,zz3,0.01)),0) -->
 
-curve(dnorm(x,0,1),-4,4,ylab="density",main="One-sided p-value (0.025)",xlab="")
-polygon(cord.x3,cord.y3,col='gray')
-text(-3,0.05,labels="2.5%")
-```
+<!-- curve(dnorm(x,0,1),-4,4,ylab="density",main="One-sided p-value (0.025)",xlab="") -->
+<!-- polygon(cord.x3,cord.y3,col='gray') -->
+<!-- text(-3,0.05,labels="2.5%") -->
+<!-- ``` -->
 
 
 ---
@@ -960,7 +961,7 @@ where $X_j$ is the $j$th predictor and $\beta_j$ the respective regression coeff
 
 $~$
 
-Assume we have $n$ sampling units $(x_{1i},\ldots,x_{pi}, y_i)$, $1\leq i \leq n$, such that each represent an instance of equation (3), we can use the data matrix 
+Assume we have $n$ sampling units $(x_{1i},\ldots,x_{pi}, y_i)$, $1\leq i \leq n$, such that each represents an instance of equation (3), we can use the data matrix 
 
 $${\bf{X}} = \left[\begin{matrix} 1 & x_{11} & ... & x_{1p} \\
 1 & x_{21} & ... & x_{2p} \\
@@ -1375,7 +1376,7 @@ $$H_0: \beta_j=0 \; \text{ vs. } \; H_1: \beta_j\neq 0$$
 
 * This makes sense: it is known that (or you can try to show it yourself)
 $$F_{1,n-p-1} = t^2_{n-p-1} \ ,$$
-thus we can use a $T$-statistics with $(n-p-1)$ degrees of freedom to get the $p$-value.
+thus we can use a $T$-statistic with $(n-p-1)$ degrees of freedom to get the $p$-value.
 
 <!-- $$ T_j=\frac{\hat{\beta}_j-\beta_j}{\sqrt{c_{jj}}\hat{\sigma}}\sim t_{n-p-1}$$ -->
 
@@ -1398,10 +1399,8 @@ $~$
 
 **However**:
 
-* Only checking the individual $p$-values is dangerous. **Why?**  
+Only checking the individual $p$-values is dangerous. **Why?**  
 <!-- $\rightarrow$ e.g., multiple testing problem. -->
-
-* Not possible if $n>p$ $\rightarrow$ need other approaches (see e.g., Module 6).
 
 
 ---
@@ -1520,7 +1519,7 @@ $~$
 When the sample size $n$ is small with respect to the number of variables $m$ included in the model, an _adjusted_ $R^2$ gives a better ("fairer") estimation of the actual variability that is explained by the covariates:
 
 \begin{equation*}
-R^2_a = 1-(1-R^2 )\frac{n-1}{n-m-1}
+R^2_a = 1-(1-R^2 )\frac{n-1}{n-p-1}
 \end{equation*}
 
 $~$
@@ -2152,7 +2151,7 @@ The _\textcolor{red}{Tukey-Anscombe}_ diagram plots the residuals against the fi
 
 $~$
 
-```{r,echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='50%'}
+```{r,echo=FALSE, fig.width=8, fig.height=3.5,fig.align = "center",out.width='50%'}
 library(ggfortify)
 autoplot(r.bodyfat,smooth.colour=NA)[1] 
 ```
@@ -2171,7 +2170,7 @@ To check assumption 3., the quantiles of the observed distribution are plotted a
 
 $~$
 
-```{r,echo=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='50%'}
+```{r,echo=FALSE, fig.width=8, fig.height=3.5,fig.align = "center",out.width='40%'}
 autoplot(r.bodyfat,smooth.colour=NA)[2] 
 ```
  
@@ -2215,7 +2214,7 @@ The idea is to plot the square root of the (standardized) residuals $\sqrt{|\til
 
 \vspace{2mm}
  
-```{r,echo=FALSE, fig.width=3.8, fig.height=3.8,fig.align = "center",out.width='45%'}
+```{r,echo=FALSE, fig.width=8, fig.height=3.5,fig.align = "center",out.width='45%'}
 autoplot(r.bodyfat,which=3) + theme_bw()
 ```
 
@@ -2252,7 +2251,7 @@ $~$
 **Illustration**:
 Data points with $x_i$ values far from the mean have a stronger leverage effect than when $x_i\approx \overline{x}$:
 
-```{r,echo=FALSE, fig.width=6, fig.height=2,fig.align = "center",out.width='90%'}
+```{r,echo=FALSE, fig.width=6, fig.height=2.2,fig.align = "center",out.width='80%'}
 set.seed(37489)
 par(mfrow=c(1,3),mar=c(4,4,1,1))
 x <- sort(rnorm(18))
@@ -2283,7 +2282,7 @@ $~$
 In the leverage plot, (standardized) residuals $\tilde{r_i}$ are plotted against the leverage $H_{ii}$ (still for the bodyfat):
  
  
-```{r,echo=FALSE, fig.width=4, fig.height=4,fig.align = "center",out.width='50%'}
+```{r,echo=FALSE, fig.width=8, fig.height=3.5,fig.align = "center",out.width='45%'}
 autoplot(r.bodyfat,which=5)
 ```
  
