@@ -1185,7 +1185,7 @@ $$ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y} \ ,$$
 
 **Answers:**
 
-See Problem 3 of recommended exercise 3 (and the respective solutions) to derive that
+See Problem 2 of recommended exercise 3 (and the respective solutions) to derive that
 
 $$\hat{\boldsymbol\beta}\sim N_{p+1}(\boldsymbol{\beta},\underbrace{\sigma^2({\bf X}^T{\bf X})^{-1}}_{\text{covariance matrix}}) \ . $$
 
@@ -1270,7 +1270,7 @@ $~$
 
 3. How well does the model fit the data?
 
-4. Given a set of predictor variables, what response value should we predict, and how accurate is our prediction?
+4. Given a set of predictor variables, how accurate is our prediction?
 
 ---
 
@@ -1828,15 +1828,15 @@ head(Credit)
 $~$
 
 \normalsize
-Question: Do the Balances differ for different Ethnicities?
+Question: Do the Balances differ for different Ethnicities (Caucasian/Asian/Afro-American)?
 
 ---
 
 \scriptsize
 
-```{r,out.width='85%',fig.height=4,fig.width=5}
+```{r,out.width='75%',fig.height=4,fig.width=5}
 library(GGally)
-ggpairs(Credit[,c(2,6,11,12)],aes(colour=Ethnicity))
+ggpairs(Credit[,c("Ethnicity","Balance")],aes(colour=Ethnicity))
 ```
 
 
@@ -2040,7 +2040,7 @@ We can include interactions also between
 
 \vspace{4mm}
 
-$\rightarrow$ See exercises!
+$\rightarrow$ See problem 1 in recommended exercises 3 (important)!
 
 \vspace{4mm}
 
@@ -2089,11 +2089,10 @@ The word _linear_ refers to the _\textcolor{red}{linearity in the coefficients}_
 
 * there is a theoretical/biological/medical reason to believe in a non-linear relationship, or
 * the residual analysis indicates that there are non-linear associations in the
-data,
+data.
 
-it can sometimes help to use transformations of a variable $X$. 
 
-\vspace{2mm}
+\vspace{4mm}
 
 \scriptsize
 $\rightarrow$ In the later modules, we will discuss other more advanced non-linear
