@@ -144,18 +144,12 @@
 
 \title{Module 4: Classification}
 \providecommand{\subtitle}[1]{}
-\subtitle{TMA4268 Statistical Learning V2021}
+\subtitle{TMA4268 Statistical Learning V2022}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{February 1st and 2nd, 2021}
+\date{January 31 and February 3rd, 2022}
 
 \begin{document}
 \frame{\titlepage}
-
-\begin{frame}
-
-Last update: February 1st, 2021
-
-\end{frame}
 
 \begin{frame}{Acknowledgements}
 \protect\hypertarget{acknowledgements}{}
@@ -777,14 +771,14 @@ Odds represent \emph{\textcolor{red}{chances}} (e.g.~in betting).
 
 \(~\)
 
-\textbf{Q}: Answer in the poll:
+\textbf{Q}: Answer in mentimeter:
 
 \begin{enumerate}
 \item
   You think your football team will win tonight with a probability
   \(p=80\%\). What is the odds that it will win?
 \item
-  The odds for the best horse in a race is \(9:1\). What is the
+  The odds for the best horse in a race is \(5:1\). What is the
   probability that this horse will win?
 \end{enumerate}
 
@@ -1425,27 +1419,7 @@ The \(K\)-nearest neighbour classifier (KNN) works in the following way:
 
 \begin{frame}
 
-\begin{block}{In our example:}
-
-\vspace{2mm}
-
-\begin{itemize}
-\item
-  Assume we have a new observation \(x_0 = (x_{01}, x_{02})^T\) which we
-  want to classify as belonging to the class \(A\) or \(B\).
-  \vspace{2mm}
-\item
-  We illustrate this by fitting the \(K\)-nearest neighbor classifier to
-  our simulated data set with \(K = 1, 3, 10\) and \(150\) (next slide).
-\end{itemize}
-
-\vspace{4mm}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
+Illustration:
 
 \begin{center}\includegraphics[width=0.9\linewidth]{4Classif_files/figure-beamer/unnamed-chunk-8-1} \end{center}
 
@@ -1541,12 +1515,12 @@ different \(K\), for example by cross-validation (Module 5).
 \begin{itemize}
 \tightlist
 \item
-  The nearest neighbor classifier can be quite good if the number of
-  predictors \(p\) is small and the number of observations \(n\) is
-  large. We need enough close neighbors to make a good classification.
+  KNN can be quite good if the number of predictors \(p\) is small and
+  the number of observations \(n\) is large. We need enough close
+  neighbors to make a good classification.
 \end{itemize}
 
-\vspace{1mm}
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -1555,14 +1529,14 @@ different \(K\), for example by cross-validation (Module 5).
   dimension of the preditor space is high.
 \end{itemize}
 
-\vspace{1mm}
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
 \item
   Why? Because the nearest neighbors tend to be far away in high
   dimensions and the method is no longer local. This is referred to as
-  the \emph{curse of dimensionality}.
+  the \emph{\textcolor{red}{curse of dimensionality}}.
 \end{itemize}
 
 \end{block}
@@ -1621,8 +1595,8 @@ Given a continuous \(X\) and categorical \(Y\), and
   the probability \emph{\textcolor{red}{density}} function
   \(f_k(x) = \text{Pr}(X=x \mid Y=k)\) for \(X\) in class \(k\).
 \item
-  the \emph{\textcolor{red}{prior}} probability for class \(k\)
-  \(\pi_k = \text{Pr}(Y=k)\) is the prior probability.
+  the \emph{\textcolor{red}{prior}} probability for class \(k\),
+  \(\pi_k = \text{Pr}(Y=k)\), is the prior probability.
 \end{itemize}
 
 How do we get \(\text{Pr}(Y=k | X=x_0)\)? That is, how can we ``flip''
@@ -2645,7 +2619,7 @@ But:
 \item
   The \emph{original naive Bayes}: univariate normal marginal
   distributions. Consequently
-  \[\delta_k (x) \propto \log \left[ \pi_i \prod_{j=1}^p f_{kj}(x_j) \right] = - \frac{1}{2} \sum_{j=1}^p \frac{(x_j - \mu_{kj})^2}{\sigma_{kj}^2} + \log(\pi_k) \ , \]
+  \[\delta_k (x) \propto \log \left[ \pi_k \prod_{j=1}^p f_{kj}(x_j) \right] = - \frac{1}{2} \sum_{j=1}^p \frac{(x_j - \mu_{kj})^2}{\sigma_{kj}^2} + \log(\pi_k) \ , \]
   thus \(\boldsymbol{\Sigma}_k\) is assumed diagonal, and only the
   diagonal elements are estimated.
 \end{itemize}
@@ -2762,30 +2736,16 @@ Assume a binary classification problem with one covariate.
 
 \begin{block}{LDA vs logistic regression}
 
-\(~\)
-
-\begin{itemize}
-\tightlist
-\item
-  Logistic regression uses the conditional likelihood based on
-  \(\text{Pr}(Y \mid X)\).
-\end{itemize}
-
 \vspace{2mm}
 
 \begin{itemize}
 \tightlist
 \item
-  LDA uses the full likelihood based on \(\text{Pr}(X,Y)\).
-\end{itemize}
-
-\vspace{2mm}
-
-\begin{itemize}
-\item
-  Despite these differences, in practice the results are often very
+  In practice the results are often very
   similar\footnote{logistic regression can also fit quadratic boundaries
-  like QDA, by explicitly including quadratic terms in the model.}, but
+  like QDA, by explicitly including quadratic terms in the model.},
+  but\\
+  \vspace{2mm}
 
   \begin{itemize}
   \tightlist
@@ -2809,6 +2769,8 @@ Assume a binary classification problem with one covariate.
 \end{block}
 
 \begin{block}{and KNN?}
+
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -2859,11 +2821,17 @@ The answer is: \textbf{it depends!}
 \begin{itemize}
 \tightlist
 \item
-  KNN is completely different, as it makes no assumptions about the
-  decision boundary nor the distribution of the variables
-  (nonparametric). It is expected to work better than LDA and logistic
-  regression when boundary is very non-linear. Caveat: No interpretation
-  of the effect of the covariates possbile.
+  KNN is nonparametric, thus no assumptions about the decision boundary
+  nor the distribution of the variables. Expected to work better than
+  LDA and logistic regression when boundary is very non-linear. Caveats:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    No interpretation of the effect of the covariates possbile.
+  \item
+    Curse of dimensionality.
+  \end{itemize}
 \end{itemize}
 
 \vspace{2mm}
@@ -3123,8 +3091,7 @@ in the test set:
 \item
   The receiver operating characteristics (ROC) curve gives a graphical
   display of the sensitivity against (1-specificity), as the threshold
-  value (cut-off on probability of success or disease) is moved over the
-  range of all possible values.
+  value (cut-off on probability) is moved from 0 to 1.
 \end{itemize}
 
 \vspace{2mm}
@@ -3223,29 +3190,9 @@ sensitivity and specificity.
 \begin{itemize}
 \tightlist
 \item
-  \href{https://www.youtube.com/playlist?list=PL5-da3qGB5IC4vaDba5ClatUmFppXLAhE}{Videoes
-  on YouTube by the authors of ISL, Chapter 4, plus the videos for KNN
-  in Chapter 2}
+  \href{https://www.youtube.com/playlist?list=PL5-da3qGB5IC4vaDba5ClatUmFppXLAhE}{Videos
+  on YouTube by the authors of ISL, Chapter 4,}
 \end{itemize}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Want to learn more (theory) about logistic regression?}
-
-\begin{itemize}
-\item
-  In TMA4315 Generalized linear models there are 3 weeks with binary
-  regression - mainly logistic regression:
-  \href{https://www.math.ntnu.no/emner/TMA4315/2018h/3BinReg.html}{TMA4315M3:
-  Binary regression}.
-\item
-  The focus there is on all parts of the regression (not classification)
-  with a mathematical focus on estimation, inference, model fit.
-\end{itemize}
-
-\end{block}
 
 \end{frame}
 

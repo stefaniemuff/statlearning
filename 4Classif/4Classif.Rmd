@@ -1,8 +1,8 @@
 ---
-subtitle: "TMA4268 Statistical Learning V2021"
+subtitle: "TMA4268 Statistical Learning V2022"
 title: "Module 4: Classification"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "February 1st and 2nd, 2021"
+date: "January 31 and February 3rd, 2022"
 fontsize: 10pt
 output:
   # beamer_presentation:
@@ -34,9 +34,6 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 whichformat="latex"
 ```
 
----
-
-Last update: February 1st, 2021
 
 ---
 
@@ -481,11 +478,11 @@ The quantity $p_i/(1-p_i)$ is called the _\textcolor{red}{odds}_. Odds represent
 
 $~$
 
-**Q**: Answer in the poll:
+**Q**: Answer in mentimeter:
 
 1. You think your football team will win tonight with a probability $p=80\%$. What is the odds that it will win?
 
-2. The odds for the best horse in a race is $9:1$. What is the probability that this horse will win?
+2. The odds for the best horse in a race is $5:1$. What is the probability that this horse will win?
 
 
 
@@ -889,22 +886,12 @@ The $K$-nearest neighbour classifier (KNN) works in the following way:
 $$\text{Pr}(Y=j | X = x_0) = \frac{1}{K} \sum_{i \in \mathcal{N}_0} I(y_i = j)\ .$$
 
 
----
-
-### In our example:
-
-\vspace{2mm}
-
-* Assume we have a new observation $x_0 = (x_{01}, x_{02})^T$ which we want to classify as belonging to the class $A$ or $B$. 
-\vspace{2mm}
-
-* We illustrate this by fitting the $K$-nearest neighbor classifier to our simulated data set with $K = 1, 3, 10$ and $150$ (next slide).
-
-\vspace{4mm}
 
 
 
 ---
+
+Illustration:
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE,fig.width=8,fig.height=5.5,fig.align="center",out.width='90%'}
 library(class)
@@ -1049,15 +1036,15 @@ gge
 
 \vspace{2mm}
 
-* The nearest neighbor classifier can be quite good if the number of predictors $p$ is small and the number of observations $n$ is large. We need enough close neighbors to make a good classification. 
+* KNN can be quite good if the number of predictors $p$ is small and the number of observations $n$ is large. We need enough close neighbors to make a good classification. 
 
-\vspace{1mm}
+\vspace{2mm}
 
 * The effectiveness of the KNN classifier falls quickly when the dimension of the preditor space is high. 
 
-\vspace{1mm}
+\vspace{2mm}
 
-* Why? Because the nearest neighbors tend to be far away in high dimensions and the method is no longer  local. This is referred to as the _curse of dimensionality_.
+* Why? Because the nearest neighbors tend to be far away in high dimensions and the method is no longer  local. This is referred to as the _\textcolor{red}{curse of dimensionality}_.
 
 
 
@@ -1094,7 +1081,7 @@ This is what we did so far: The focus was  _directly_ estimating the posterior d
 Given a continuous $X$ and categorical $Y$, and 
 
 * the probability  _\textcolor{red}{density}_ function $f_k(x) = \text{Pr}(X=x \mid Y=k)$ for $X$ in class $k$.
-* the  _\textcolor{red}{prior}_ probability for class $k$ $\pi_k = \text{Pr}(Y=k)$ is the prior probability.
+* the  _\textcolor{red}{prior}_ probability for class $k$, $\pi_k = \text{Pr}(Y=k)$, is the prior probability.
 
 How do we get $\text{Pr}(Y=k | X=x_0)$? That is, how can we "flip" the conditioning around?
 \vspace{4mm}
@@ -1968,7 +1955,7 @@ $f_k(x)$, including nonparametric approaches.
 \vspace{2mm}
 
 * The _original naive Bayes_: univariate normal marginal distributions. Consequently
-$$\delta_k (x) \propto \log \left[ \pi_i \prod_{j=1}^p f_{kj}(x_j) \right] = - \frac{1}{2} \sum_{j=1}^p \frac{(x_j - \mu_{kj})^2}{\sigma_{kj}^2} + \log(\pi_k) \ , $$
+$$\delta_k (x) \propto \log \left[ \pi_k \prod_{j=1}^p f_{kj}(x_j) \right] = - \frac{1}{2} \sum_{j=1}^p \frac{(x_j - \mu_{kj})^2}{\sigma_{kj}^2} + \log(\pi_k) \ , $$
 thus $\boldsymbol{\Sigma}_k$ is assumed diagonal, and only the diagonal elements are estimated.
 
 \vspace{2mm}
@@ -2039,29 +2026,23 @@ The difference is in how the parameters are estimated.
 
 ### LDA vs logistic regression
 
-$~$
-
-* Logistic regression uses the conditional likelihood based on
-$\text{Pr}(Y \mid X)$.
 
 \vspace{2mm}
 
-* LDA uses the full likelihood based on $\text{Pr}(X,Y)$.
-
-\vspace{2mm}
-
-* Despite these differences, in practice the results are often
+* In practice the results are often
 very similar\footnote{logistic regression can also fit quadratic boundaries
-like QDA, by explicitly including quadratic terms in the model.}, but
-
-    + LDA is "more available" in the multi-class setting.
-    + if the class conditional distributions are multivariate normal then LDA (or QDA) is preferred.
-    + logistic regression makes no assumptions about the covariates and is therefore to be preferred in many practical applications.
-    + in medicine for two-class problems logistic regression is often preferred (for interpretability) and (always) together with ROC and AUC (for model comparison).
+like QDA, by explicitly including quadratic terms in the model.}, but  
+\vspace{2mm}
+    * LDA is "more available" in the multi-class setting.
+    * if the class conditional distributions are multivariate normal then LDA (or QDA) is preferred.
+    * logistic regression makes no assumptions about the covariates and is therefore to be preferred in many practical applications.
+    * in medicine for two-class problems logistic regression is often preferred (for interpretability) and (always) together with ROC and AUC (for model comparison).
 
 \vspace{2mm}
 
 ### and KNN?
+
+\vspace{2mm}
 
 * KNN is used when the class boundaries are non-linear.
 
@@ -2090,7 +2071,9 @@ when $K > 2$.
 
 \vspace{2mm}
 
-* KNN is completely different, as it makes no assumptions about the decision boundary nor the distribution of the variables (nonparametric). It is expected to work better than LDA and logistic regression when boundary is very non-linear. Caveat: No interpretation of the effect of the covariates possbile.
+* KNN is nonparametric, thus no assumptions about the decision boundary nor the distribution of the variables. Expected to work better than LDA and logistic regression when boundary is very non-linear. Caveats: 
+  * No interpretation of the effect of the covariates possbile.
+  * Curse of dimensionality.
 
 \vspace{2mm}
 Please read Section 4.5 of our coursebook [@james.etal].
@@ -2254,7 +2237,7 @@ $$\text{Test error rate} = \frac{27+45}{27+45+118+41} \approx 0.31 \ .$$
 
 $~$
 
-* The receiver operating characteristics (ROC) curve gives a graphical display of the sensitivity against (1-specificity), as the threshold value (cut-off on probability of success or disease) is moved over the range of all possible values. 
+* The receiver operating characteristics (ROC) curve gives a graphical display of the sensitivity against (1-specificity), as the threshold value (cut-off on probability) is moved from 0 to 1. 
 
 \vspace{2mm}
 
@@ -2312,16 +2295,7 @@ The ROC-curve is made up of all possible cut-offs and their associated sensitivi
 #  Further reading  
 
 
-* [Videoes on YouTube by the authors of ISL, Chapter 4, plus the videos for KNN in Chapter 2](https://www.youtube.com/playlist?list=PL5-da3qGB5IC4vaDba5ClatUmFppXLAhE)
-
-
----
-
-## Want to learn more (theory) about logistic regression?
-
-* In TMA4315 Generalized linear models there are 3 weeks with binary regression - mainly logistic regression: [TMA4315M3: Binary regression](https://www.math.ntnu.no/emner/TMA4315/2018h/3BinReg.html).
-
-* The focus there is on all parts of the regression (not classification) with a mathematical focus on estimation, inference, model fit. 
+* [Videos on YouTube by the authors of ISL, Chapter 4,](https://www.youtube.com/playlist?list=PL5-da3qGB5IC4vaDba5ClatUmFppXLAhE)
 
 
 
