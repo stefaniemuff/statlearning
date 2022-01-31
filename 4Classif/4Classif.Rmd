@@ -688,7 +688,7 @@ summary(glm_heart)
 
 ---
 
-* For which predictors do we have evidence that they are associated with CHD?
+* For which predictors do we have evidence that they are associated with CHD (www.menti.com)?
 
 * How would you now calculate $\hat{p}(X)$ that someone will develop CHD, given covariates $X$?
 
@@ -756,6 +756,10 @@ $~$
 
 * The Bayes error rate is comparable to the _irreducible error_ in the regression setting.
 
+\vspace{2mm}
+
+* **Caveat:** We usually don't know the true conditional distribution $\text{Pr}(Y  |  X)$ for real data.
+
 ---
 
 # Some terminology
@@ -779,7 +783,7 @@ $~$
 
 $~$
 
-* **Training error rate**:
+**Training error rate**:
 The proportion of mistakes that are made if we apply our estimator $\hat{f}$ to the training observations, i.e. $\hat{y}_i=\hat{f}(x_i)$ 
 $$\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i) \ ,$$
 with indicator function I, which is defined as: 
@@ -789,41 +793,35 @@ $$\text{I}(a\neq\hat{a}) = \begin{cases} 1 \text{ if } a \neq \hat{a} \ , \\
 
 \vspace{2mm}
 
-* The training error rate is the fraction of misclassifications made on our training set. 
-
-\vspace{2mm}
-
-* A very low training error rate may imply overfitting.
-
+ 
 ---
 
 ### Test error
 
 $~$
 
-* **Test error rate**: The fraction of misclassifications when our model is applied on a test set
-$$\text{Ave}(I(y_0\neq \hat{y}_0)) \ ,$$
+**Test error rate**: The fraction of misclassifications when our model is applied on a test set
+
+$$\frac{1}{n_0}\sum_{i=1}^{n_0} \text{I}(y_{0i} \neq \hat{y}_{0i}) \ ,$$
 where the average is over all the test observations $(x_0,y_0)$.
 
-\vspace{2mm}
+\vspace{6mm}
 
-* Again, this gives a better indication of the true performance of the classifier than the training error (remember why?).
+Remember: a _\textcolor{red}{good classifier}_ is a classifier that has a _\textcolor{red}{low test error}_ (why?).
 
-\vspace{2mm}
-
-* We assume that a _good_ classifier is a classifier that has a _low test error_.
-
+ 
 
 
 ---
 
 # The K-nearest neighbour (KNN) classifier
 
-* **Caveat** for the Bayes classifier: we usually don't know the true conditional distribution of $\text{Pr}(Y  |  X)$ for real data.
+
+* We have discussed how to estimate $\text{Pr}(Y  |  X)$ with logistic regression (for two categories).
+
+
 
 \vspace{1mm}
-
-* We have discussed how to estimate it with logistic regression (for two categories).
 
 \vspace{1mm}
 
@@ -1165,27 +1163,6 @@ For different priors $\pi_1 = 0.3$ and $\pi_2 = 0.7$, the decision boundary shif
 ggplot(XY)+geom_line(aes(x=x, y=0.3*y1), col="darkgreen")+geom_line(aes(x=x, y=0.7*y2),col="orange")+geom_vline(xintercept=-0.45, linetype="dashed") +annotate("text", x = -2, y = 0.2, parse=TRUE, label =as.character(expression(pi[1] == 0.3)))+annotate("text", x=1, y=0.2, parse=TRUE, label=as.character(expression(pi[2]==0.7)))+labs(y=NULL, title=expression(pi[k]*f[k](x)))
 
 ```
-
-
----
-
-
-### Why discriminant analysis?
-
-$~$
-
-* Linear discriminant analysis is more stable than logistic regression when
-
-    * the classes are well-separated. In that case, the parameter
-estimates for the logistic regression model are very
-unstable. 
-    * $n$ is small and the distribution of the predictors $X$ is
-approximately normal in each of the classes.
-
-\vspace{4mm}
-
-* Moreover, linear discriminant analysis is popular when we have more
-than two response classes.
 
 
 ---
@@ -1998,8 +1975,20 @@ Remember:
 
 ## Advantages of discriminant analysis
 
-* Discriminant analysis is more stable than logistic regression when the classes are well-separated.
-* Discriminant analysis is more stable than logistic regression if the number of observations $n$ is small and the distribution of the predictors $X$ is approximately (multivariate) normal.
+ 
+$~$
+
+* Linear discriminant analysis is more stable than logistic regression when
+    * the classes are well-separated. In that case, the parameter
+estimates for the logistic regression model are very
+unstable. 
+    * Discriminant analysis is more stable than logistic regression if the number of observations $n$ is small and the distribution of the predictors $X$ is approximately (multivariate) normal.
+
+\vspace{2mm}
+ 
+* Moreover, linear discriminant analysis is popular when we have more
+than two response classes.
+ 
 
 ---
 

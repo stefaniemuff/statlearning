@@ -1132,7 +1132,7 @@ Fitting the model using all predictors in R:
 \begin{itemize}
 \item
   For which predictors do we have evidence that they are associated with
-  CHD?
+  CHD (www.menti.com)?
 \item
   How would you now calculate \(\hat{p}(X)\) that someone will develop
   CHD, given covariates \(X\)?
@@ -1226,6 +1226,15 @@ predicted probabilities using
   the regression setting.
 \end{itemize}
 
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Caveat:} We usually don't know the true conditional
+  distribution \(\text{Pr}(Y | X)\) for real data.
+\end{itemize}
+
 \end{block}
 
 \end{frame}
@@ -1259,35 +1268,16 @@ the correct classifications loss 0 - this is called \emph{0/1-loss}.
 
 \(~\)
 
-\begin{itemize}
-\tightlist
-\item
-  \textbf{Training error rate}: The proportion of mistakes that are made
-  if we apply our estimator \(\hat{f}\) to the training observations,
-  i.e. \(\hat{y}_i=\hat{f}(x_i)\)
-  \[\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i) \ ,\] with
-  indicator function I, which is defined as:
-\end{itemize}
+\textbf{Training error rate}: The proportion of mistakes that are made
+if we apply our estimator \(\hat{f}\) to the training observations, i.e.
+\(\hat{y}_i=\hat{f}(x_i)\)
+\[\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i) \ ,\] with
+indicator function I, which is defined as:
 
 \[\text{I}(a\neq\hat{a}) = \begin{cases} 1 \text{ if } a \neq \hat{a} \ , \\ 
 0 \text{ else. } \end{cases}\]
 
 \vspace{2mm}
-
-\begin{itemize}
-\tightlist
-\item
-  The training error rate is the fraction of misclassifications made on
-  our training set.
-\end{itemize}
-
-\vspace{2mm}
-
-\begin{itemize}
-\tightlist
-\item
-  A very low training error rate may imply overfitting.
-\end{itemize}
 
 \end{block}
 
@@ -1299,32 +1289,16 @@ the correct classifications loss 0 - this is called \emph{0/1-loss}.
 
 \(~\)
 
-\begin{itemize}
-\tightlist
-\item
-  \textbf{Test error rate}: The fraction of misclassifications when our
-  model is applied on a test set
-  \[\text{Ave}(I(y_0\neq \hat{y}_0)) \ ,\] where the average is over all
-  the test observations \((x_0,y_0)\).
-\end{itemize}
+\textbf{Test error rate}: The fraction of misclassifications when our
+model is applied on a test set
 
-\vspace{2mm}
+\[\frac{1}{n_0}\sum_{i=1}^{n_0} \text{I}(y_{0i} \neq \hat{y}_{0i}) \ ,\]
+where the average is over all the test observations \((x_0,y_0)\).
 
-\begin{itemize}
-\tightlist
-\item
-  Again, this gives a better indication of the true performance of the
-  classifier than the training error (remember why?).
-\end{itemize}
+\vspace{6mm}
 
-\vspace{2mm}
-
-\begin{itemize}
-\tightlist
-\item
-  We assume that a \emph{good} classifier is a classifier that has a
-  \emph{low test error}.
-\end{itemize}
+Remember: a \emph{\textcolor{red}{good classifier}} is a classifier that
+has a \emph{\textcolor{red}{low test error}} (why?).
 
 \end{block}
 
@@ -1336,18 +1310,11 @@ the correct classifications loss 0 - this is called \emph{0/1-loss}.
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Caveat} for the Bayes classifier: we usually don't know the
-  true conditional distribution of \(\text{Pr}(Y | X)\) for real data.
+  We have discussed how to estimate \(\text{Pr}(Y | X)\) with logistic
+  regression (for two categories).
 \end{itemize}
 
 \vspace{1mm}
-
-\begin{itemize}
-\tightlist
-\item
-  We have discussed how to estimate it with logistic regression (for two
-  categories).
-\end{itemize}
 
 \vspace{1mm}
 
@@ -1668,41 +1635,6 @@ For different priors \(\pi_1 = 0.3\) and \(\pi_2 = 0.7\), the decision
 boundary shifts to the left:
 
 \begin{center}\includegraphics[width=0.7\linewidth]{4Classif_files/figure-beamer/gauss2-1} \end{center}
-
-\end{frame}
-
-\begin{frame}
-
-\begin{block}{Why discriminant analysis?}
-
-\(~\)
-
-\begin{itemize}
-\item
-  Linear discriminant analysis is more stable than logistic regression
-  when
-
-  \begin{itemize}
-  \tightlist
-  \item
-    the classes are well-separated. In that case, the parameter
-    estimates for the logistic regression model are very unstable.
-  \item
-    \(n\) is small and the distribution of the predictors \(X\) is
-    approximately normal in each of the classes.
-  \end{itemize}
-\end{itemize}
-
-\vspace{4mm}
-
-\begin{itemize}
-\tightlist
-\item
-  Moreover, linear discriminant analysis is popular when we have more
-  than two response classes.
-\end{itemize}
-
-\end{block}
 
 \end{frame}
 
@@ -2692,15 +2624,33 @@ Remember:
 
 \begin{block}{Advantages of discriminant analysis}
 
+\(~\)
+
 \begin{itemize}
 \tightlist
 \item
-  Discriminant analysis is more stable than logistic regression when the
-  classes are well-separated.
+  Linear discriminant analysis is more stable than logistic regression
+  when
+
+  \begin{itemize}
+  \tightlist
+  \item
+    the classes are well-separated. In that case, the parameter
+    estimates for the logistic regression model are very unstable.
+  \item
+    Discriminant analysis is more stable than logistic regression if the
+    number of observations \(n\) is small and the distribution of the
+    predictors \(X\) is approximately (multivariate) normal.
+  \end{itemize}
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
-  Discriminant analysis is more stable than logistic regression if the
-  number of observations \(n\) is small and the distribution of the
-  predictors \(X\) is approximately (multivariate) normal.
+  Moreover, linear discriminant analysis is popular when we have more
+  than two response classes.
 \end{itemize}
 
 \end{block}
