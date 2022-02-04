@@ -11,7 +11,7 @@ output:
 ```{r setup, include=FALSE}
 library(knitr)
 knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
-                      cache=TRUE, size="scriptsize",fig.width=4, fig.height=3)
+                      cache=TRUE, size="scriptsize",fig.width=4, fig.height=3,fig.align = "center")
 
 ```
 
@@ -19,21 +19,24 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 # install.packages("knitr") #probably already installed
 # install.packages("rmarkdown") #probably already installed
 # install.packages("ggplot2") #plotting with ggplot
-# install.packages("ggfortify")  
-# install.packages("MASS")  
-# install.packages("dplyr")  
-library(knitr)
-library(rmarkdown)
-library(ggplot2)
-library(ggfortify)
-library(MASS)
-library(dplyr)
+# install.packages("palmerpenguins")
+# install.packages("ggfortify") # For model checking
+# install.packages("MASS")
+# install.packages("class")
+# install.packages("pROC")
+# install.packages("plotROC")
+# install.packages("boot")
+library("knitr")
+library("rmarkdown")
+library("palmerpenguins")
 ```
+
+<!--  Etc (load all packages needed). -->
 
 
 # Problem 1
 
- 
+For this problem you will need to include some LaTex code. Please install latex on your computer and then consult Compulsor1.Rmd for hints how to write formulas in LaTex.
 
 ## a)
 
@@ -41,60 +44,31 @@ library(dplyr)
 
 ## c)
 
+## d)
 
-...
+## e)
 
-
+ 
 
 # Problem 2
 
 Here is a code chunk:
 
 ```{r, eval=TRUE}
-id <- "1nLen1ckdnX4P9n8ShZeU7zbXpLc7qiwt" # google file ID
-d.worm <- read.csv(sprintf("https://docs.google.com/uc?id=%s&export=download", id))
-head(d.worm)
+library(palmerpenguins) # Contains the data set "penguins".
+data(penguins)
+head(penguins)
 ```
-
-
 
 
 ## a)
 
-
 ## b) 
-Below you have to complete the code and then replace `eval=FALSE` by `eval=TRUE` in the chunk options:
-```{r, eval=FALSE, echo=TRUE}
-ggplot(d.worm,aes(x= ... ,y=  ... ,colour= ...)) + geom_point() + theme_bw()
-```
-
-Note that the default figure width and height have been set globally as `fig.width=4, fig.height=3`, but if you would like to change that (e.g., due to space constraints), you can include a different width and height directly into the chunk options, again using `fig.width=..., fig.height=...`.
-
+ 
 ## c)
-
-...
 
 
 # Problem 3
 
-## a)
-
-## b)
-
-## c)
-
-...
-
-
 # Problem 4
-
-## a)
-
-## b)
-
-## c)
-
-...
-
-
-
+ 
