@@ -9,10 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Emma Skarstein, Michail Spitieris, Stefanie Muff" />
+<meta name="author" content="Emma Skarstein, Daesoo Lee, Stefanie Muff" />
 <meta name="author" content="Department of Mathematical Sciences, NTNU" />
 
-<meta name="date" content="2021-02-09" />
+<meta name="date" content="2022-02-07" />
 
 <title>Module 5: Recommended Exercises</title>
 
@@ -1646,10 +1646,10 @@ summary {
 
 
 <h1 class="title toc-ignore">Module 5: Recommended Exercises</h1>
-<h3 class="subtitle">TMA4268 Statistical Learning V2021</h3>
-<h4 class="author">Emma Skarstein, Michail Spitieris, Stefanie Muff</h4>
+<h3 class="subtitle">TMA4268 Statistical Learning V2022</h3>
+<h4 class="author">Emma Skarstein, Daesoo Lee, Stefanie Muff</h4>
 <h4 class="author">Department of Mathematical Sciences, NTNU</h4>
-<h4 class="date">February 9, 2021</h4>
+<h4 class="date">February 7, 2022</h4>
 
 </div>
 
@@ -1657,8 +1657,9 @@ summary {
 <hr />
 <p><strong>We strongly recommend you to work through the Section 5.3 in the course book (Lab: Cross-Validation and the Bootstrap)</strong></p>
 <hr />
-<div id="problem-1-explain-how-k-fold-cross-validation-is-implemented" class="section level2">
-<h2>Problem 1: Explain how <span class="math inline">\(k\)</span>-fold cross-validation is implemented</h2>
+<div id="problem-1" class="section level2">
+<h2>Problem 1</h2>
+<p>Explain how <span class="math inline">\(k\)</span>-fold cross-validation is implemented</p>
 <ol style="list-style-type: lower-alpha">
 <li><p>Draw a figure</p></li>
 <li><p>Specify algorithmically what is done, and in particular how the “results” from each fold are aggregated</p></li>
@@ -1667,8 +1668,8 @@ summary {
 </ol>
 <p>Hint: the words “loss function”, “fold”, “training”, “validation” are central.</p>
 </div>
-<div id="problem-2-advantages-and-disadvantages-of-k-fold-cross-validation" class="section level2">
-<h2>Problem 2: Advantages and disadvantages of <span class="math inline">\(k\)</span>-fold Cross-Validation</h2>
+<div id="problem-2" class="section level2">
+<h2>Problem 2</h2>
 <p>What are the advantages and disadvantages of <span class="math inline">\(k\)</span>-fold cross-validation relative to</p>
 <ol style="list-style-type: lower-alpha">
 <li>The validation set approach</li>
@@ -1677,8 +1678,9 @@ summary {
 </ol>
 <p>Hint: the words “bias”, “variance” and “computational complexity” should be included.</p>
 </div>
-<div id="problem-3-selection-bias-and-the-wrong-way-to-do-cv." class="section level2">
-<h2>Problem 3: Selection bias and the “wrong way to do CV”.</h2>
+<div id="problem-3" class="section level2">
+<h2>Problem 3</h2>
+<p>Topic: Selection bias and the “wrong way to do CV”.</p>
 <p>The task here is to devise an algorithm to “prove” that the wrong way is wrong and that the right way is right.</p>
 <ol style="list-style-type: lower-alpha">
 <li><p>What are the steps of such an algorithm? Write down a suggestion. Hint: How do you generate data for predictors and class labels, how do you do the classification task, where is the CV in the correct way and wrong way inserted into your algorithm? Can you make a schematic drawing of the right and the wrong way?</p></li>
@@ -1754,10 +1756,8 @@ table(ys[reorder], validclass)
 <!-- $k$-fold CV with built in function: cv.glm -->
 <!-- for loop -->
 </div>
-<div id="recommended-exercises-on-bootstrapping" class="section level1">
-<h1>Recommended exercises on bootstrapping</h1>
-<div id="problem-4-probability-of-being-part-of-a-bootstrap-sample" class="section level2">
-<h2>Problem 4: Probability of being part of a bootstrap sample</h2>
+<div id="problem-4" class="section level2">
+<h2>Problem 4</h2>
 <p>We will calculate the probability that a given observation in our original sample is part of a bootstrap sample. This is useful for us to know in Module 8.</p>
 <p>Our sample size is <span class="math inline">\(n\)</span>.</p>
 <ol style="list-style-type: lower-alpha">
@@ -1767,12 +1767,12 @@ table(ys[reorder], validclass)
 <li>Write a short R code chunk to check your result. (Hint: An example on how to this is on page 198 in our ISLR book.) You may also study the result in c. How good is the approximation as a function of <span class="math inline">\(n\)</span>?</li>
 </ol>
 </div>
-<div id="problem-5-estimate-standard-deviation-and-confidence-intervals-with-bootstrapping" class="section level2">
-<h2>Problem 5: Estimate standard deviation and confidence intervals with bootstrapping</h2>
+<div id="problem-5" class="section level2">
+<h2>Problem 5</h2>
 <p>Explain with words and an algorithm how you would proceed to use bootstrapping to estimate the standard deviation and the 95% confidence interval of one of the regression parameters in multiple linear regression. Comment on which assumptions you make for your regression model.</p>
 </div>
-<div id="problem-6-implement-problem-5" class="section level2">
-<h2>Problem 6: Implement problem 5</h2>
+<div id="problem-6" class="section level2">
+<h2>Problem 6</h2>
 <p>Implement your algorithm from 5 both using for-loop and using the <code>boot</code> function. Hint: see page 195 of our ISLR book. Use our SLID data set and provide standard errors for the coefficient for age. Compare with the theoretical value <span class="math inline">\(({\bf X}^T{\bf X})^{-1}\hat{\sigma}^2\)</span> that you find in the output from the regression model.</p>
 <pre class="r"><code>library(car)
 library(boot)
@@ -1782,25 +1782,6 @@ SLID.lm = lm(wages ~ ., data = SLID)
 summary(SLID.lm)$coeff[&quot;age&quot;, ]</code></pre>
 <p>Now go ahead and use bootstrap to estimate the 95% CI. Compare your result to</p>
 <pre class="r"><code>confint(SLID.lm)</code></pre>
-<hr />
-</div>
-</div>
-<div id="summing-up" class="section level1">
-<h1>Summing up</h1>
-<div id="take-home-messages" class="section level2">
-<h2>Take home messages</h2>
-<ul>
-<li>Use <span class="math inline">\(k=5\)</span> or <span class="math inline">\(10\)</span> fold cross-validation for model selection or assessment.</li>
-<li>Use bootstrapping to estimate the standard deviation of an estimator, and understand how it is performed before module 8 on trees.</li>
-</ul>
-</div>
-</div>
-<div id="further-reading" class="section level1">
-<h1>Further reading</h1>
-<ul>
-<li><a href="https://www.youtube.com/playlist?list=PL5-da3qGB5IA6E6ZNXu7dp89_uv8yocmf">Videos on YouTube by the authors of ISL, Chapter 5</a>.</li>
-<li><a href="https://rstudio-pubs-static.s3.amazonaws.com/65561_43c0eaaa8565414eae333b47038f716c.html">Solutions to exercises in the book, chapter 5</a></li>
-</ul>
 </div>
 
 

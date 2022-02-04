@@ -1,18 +1,18 @@
 ---
 title: 'Module 5: Solutions to Recommended Exercises'
-author: 
-  - Emma Skarstein, Michail Spitieris, Stefanie Muff
-  - Department of Mathematical Sciences, NTNU
-date: "February 9, 2021"
+author:
+- Emma Skarstein, Daesoo Lee, Stefanie Muff
+- Department of Mathematical Sciences, NTNU
+date: "February 7, 2022"
 output:
-  # pdf_document:
+  # html_document:
+  #   df_print: paged
   #   toc: no
   #   toc_depth: '2'
-  html_document:
-    df_print: paged
+  pdf_document:
     toc: no
     toc_depth: '2'
-subtitle: TMA4268 Statistical Learning V2021
+subtitle: TMA4268 Statistical Learning V2022
 urlcolor: blue
 ---
 
@@ -26,9 +26,7 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 
 
-# Recommended exercises on cross-validation
-
-## Problem 1: Explain how $k$-fold cross-validation is implemented 
+## Problem 1
 
 a)  See Figure 1
 
@@ -52,7 +50,9 @@ c) Find the optimal number of neighbours $k$ in KNN or the optimal polynoimial d
 d) For a calssification problem we can use CV to choose between QDA or LDA.
 
 
-## Problem 2: Advantages and disadvantages of $k$-fold Cross-Validation
+## Problem 2
+
+Advantages and disadvantages of $k$-fold Cross-Validation
 
 a) The validation set approach:
 
@@ -78,15 +78,14 @@ Experimental research (simulations) has found that $k = 5$ or $k=10$ to be good 
 
 
 
-## Problem 3: Selection bias and the "wrong way to do CV".
+## Problem 3 
 
 No solution is provided on top of the guidelines in the exercise sheet.
 
 
 
-# Recommended exercises on bootstrapping
-
-## Problem 4: Probability of being part of a bootstrap sample
+ 
+## Problem 4 
 
 
 a) $P(\text{draw } X_i) = \frac{1}{n}$ and $P(\text{not draw } X_i) =1-P(\text{draw } X_i) = 1 - \frac{1}{n}$
@@ -115,7 +114,7 @@ abline(h=1-1/exp(1),lty=2)
 ```
 
 
-## Problem 5: Estimate standard deviation and confidence intervals with bootstrapping
+## Problem 5 
 
 We repeat the following for $b = 1,\cdots,B$:
 
@@ -128,7 +127,7 @@ Calculate $\hat{SD}(\hat{\beta}) =\sqrt{\frac{1}{B-1} \sum_{b=1}^B (\hat{\beta_b
 For the $95\%$ CI, we can calculate the 0.025 and 0.975 quantiles of the sample $\hat{\beta_b},$ $b=1,\cdots,B.$
 
 
-## Problem 6: Implement problem 5
+## Problem 6 
 
 
 ```{r,}
