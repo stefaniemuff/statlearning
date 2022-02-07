@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "February 7 and 10, 2022"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -133,7 +133,37 @@ $$\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i) \ .$$
 
 ---
 
+### KNN regression (chapter 3.5 in course book)
+
+\vspace{2mm}
+
+* The KNN regression method provides a prediction at a value $x_0$ by finding the closest $K$ points (Euclidean distance) and calculating the average of the observed $y$ values at the points in the respective neighborhood $\mathcal{N}_0$ 
+
+$$\hat{f}(x_0)=\frac{1}{K}\sum_{i\in \mathcal{N}_0} y_i \ .$$
+
+
+$~$
+
+Illustration: Linear regression with $K=1$ (left) and $K=9$ (right).
+
+\centering
+![](~/Teaching/StatisticalLearning/ISLR/Figures/Chapter3/3.17.png){width=55%}
+
+\tiny
+(Figure 3.17 from @james.etal).
+
+$~$
+
+\normalsize
+\flushleft
+
+What happens for $K=$ number of data points?
+
+---
+
+
 ### Example 
+
 \vspace{2mm}
 
 We aim to do _model selection_ in KNN-regression, where true curve is
@@ -144,19 +174,11 @@ $f(x)=-x+x^2+x^3$ with $x \in [-3,3]$. $n=61$ for the training data.
 \centering
 ![Regression problem: training data and true regression curve](Prob1f1.png){width=50%}
 
----
 
-### KNN regression (chapter 3.5 in course book)
-
-\vspace{2mm}
-
-* The KNN regression method provides a prediction at a value $x_0$ by finding the closest $K$ points (Euclidean distance) and calculating the average of the observed $y$ values at the points in the respective neighborhood $\mathcal{N}_0$ 
-
-$$\hat{f}(x_0)=\frac{1}{K}\sum_{i\in \mathcal{N}_0} y_i \ .$$
-
-\vspace{2mm}
 
 * We have considered $K=1,\ldots,25$, and repeated the experiment $M=1000$ times (that is, $M$ versions of training and test set). 
+
+ 
 
 
 ---
@@ -486,9 +508,9 @@ $~$
 
 $~$
 
-The MSE is then estimated in each of the $k$ iterations ($\text{MSE}_1,\ldots,\text{MSE}_k$), and the the $k$-fold CV is
+The MSE is then estimated in each of the $k$ iterations ($\text{MSE}_1,\ldots,\text{MSE}_k$). The $k$-fold CV is then a (weighted) avearge over the $k$  MSEs.
 
-$$\text{CV}_k = \frac1k \sum_{j=1}^k \text{MSE}_j \ .$$
+<!-- $$\text{CV}_k = \frac1k \sum_{j=1}^k \text{MSE}_j \ .$$ -->
 
 
 ---
@@ -705,9 +727,13 @@ What do we need to change from our regression set-up?
 * For LOOCV $\hat{y}_i$ is the fit for observation $i$ obtained from the data with observations $i$ removed, and ${\text{Err}_i}=I(y_i\neq \hat{y}_i)$ . LOOCV is then 
 $$\text{CV}_{n}=\frac{1}{n} \sum_{i=1}^n {\text{Err}_i}$$
 
+\vspace{2mm}
 
 * The $k$-fold CV is defined analogously.
 
+\vspace{2mm}
+
+* Read chapter 5.1.5 in the course book.
 
 ---
 
