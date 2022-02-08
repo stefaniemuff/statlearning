@@ -322,26 +322,6 @@ In order to define how we measure error, we must first decide for a
 
 \begin{frame}
 
-\begin{block}{Example}
-
-\vspace{2mm}
-
-We aim to do \emph{model selection} in KNN-regression, where true curve
-is \(f(x)=-x+x^2+x^3\) with \(x \in [-3,3]\). \(n=61\) for the training
-data.
-
-\vspace{4mm}
-
-\centering
-
-\includegraphics[width=0.5\textwidth,height=\textheight]{Prob1f1.png}
-
-\end{block}
-
-\end{frame}
-
-\begin{frame}
-
 \begin{block}{KNN regression (chapter 3.5 in course book)}
 
 \vspace{2mm}
@@ -357,7 +337,44 @@ data.
 
 \[\hat{f}(x_0)=\frac{1}{K}\sum_{i\in \mathcal{N}_0} y_i \ .\]
 
+\(~\)
+
+Illustration: Linear regression with \(K=1\) (left) and \(K=9\) (right).
+
+\centering
+
+\includegraphics[width=0.55\textwidth,height=\textheight]{../..//ISLR/Figures/Chapter3/3.17.png}
+
+\tiny
+
+(Figure 3.17 from James et al. (2013)).
+
+\(~\)
+
+\normalsize
+\flushleft
+
+What happens for \(K=\) number of data points?
+
+\end{block}
+
+\end{frame}
+
+\begin{frame}
+
+\begin{block}{Example}
+
 \vspace{2mm}
+
+We aim to do \emph{model selection} in KNN-regression, where true curve
+is \(f(x)=-x+x^2+x^3\) with \(x \in [-3,3]\). \(n=61\) for the training
+data.
+
+\vspace{4mm}
+
+\centering
+
+\includegraphics[width=0.5\textwidth,height=\textheight]{Prob1f1.png}
 
 \begin{itemize}
 \tightlist
@@ -772,9 +789,8 @@ observation in each iteration, but \(1/k\)-th of all data.
 \(~\)
 
 The MSE is then estimated in each of the \(k\) iterations
-(\(\text{MSE}_1,\ldots,\text{MSE}_k\)), and the the \(k\)-fold CV is
-
-\[\text{CV}_k = \frac1k \sum_{j=1}^k \text{MSE}_j \ .\]
+(\(\text{MSE}_1,\ldots,\text{MSE}_k\)). The \(k\)-fold CV is then a
+(weighted) avearge over the \(k\) MSEs.
 
 \end{block}
 
@@ -974,13 +990,28 @@ What do we need to change from our regression set-up?
 \vspace{3mm}
 
 \begin{itemize}
+\tightlist
 \item
   For LOOCV \(\hat{y}_i\) is the fit for observation \(i\) obtained from
   the data with observations \(i\) removed, and
   \({\text{Err}_i}=I(y_i\neq \hat{y}_i)\) . LOOCV is then
   \[\text{CV}_{n}=\frac{1}{n} \sum_{i=1}^n {\text{Err}_i}\]
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
 \item
   The \(k\)-fold CV is defined analogously.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Read chapter 5.1.5 in the course book.
 \end{itemize}
 
 \end{block}
@@ -1655,8 +1686,9 @@ Bagging (\emph{bootstrap aggregation}) is a special case of
   \url{https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/}.
 \item
   You find a template for the exercise sheets on our course website
-  \url{https://wiki.math.ntnu.no/tma4268/2021v/subpage6}. Do not forget
-  to install the packages listed at the beginning of the exercise sheet.
+  \href{https://wiki.math.ntnu.no/tma4268/2021v/subpage6}{https://wiki.math.ntnu.no/tma4268/2022v/subpage6}.
+  Do not forget to install the packages listed at the beginning of the
+  exercise sheet.
 \end{itemize}
 
 \end{frame}
@@ -1907,7 +1939,7 @@ is equal to 4.
 This is what we have done in the YAML-header to include todays date on
 your submission:
 
-` r format(Sys.time(), `\%d \%B, \%Y')` gives 01 Februar, 2022.
+` r format(Sys.time(), `\%d \%B, \%Y')` gives 08 Februar, 2022.
 
 \end{block}
 
