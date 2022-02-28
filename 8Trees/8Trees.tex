@@ -144,9 +144,9 @@
 
 \title{Module 8: Tree-based Methods}
 \providecommand{\subtitle}[1]{}
-\subtitle{TMA4268 Statistical Learning V2021}
+\subtitle{TMA4268 Statistical Learning V2022}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{March 8 and 9, 2021}
+\date{March 7 and 10, 2022}
 
 \begin{document}
 \frame{\titlepage}
@@ -411,9 +411,9 @@ and compute the RSS for each partition.
 \begin{itemize}
 \tightlist
 \item
-  A \emph{greedy} approach is taken (aka top-down) - called
-  \emph{recursive binary splitting}: Find a split that minimizes RSS at
-  each
+  A \emph{\textcolor{red}{greedy}} approach is taken (aka top-down) -
+  called \emph{\textcolor{red}{recursive binary splitting}}: Find a
+  split that minimizes RSS at each
   step\footnote{This does not necessarily give the optimal global solution, but will give the best solution at each split, given what is done previously.}.
 \end{itemize}
 
@@ -422,12 +422,19 @@ and compute the RSS for each partition.
 \begin{itemize}
 \tightlist
 \item
-  We start at the top of the tree and divide the predictor space into
-  two regions, \(R_1\) and \(R_2\) by making a decision rule for one of
-  the predictors \(x_1, x_2,...,x_p\). If we define the two regions by
-  \(R_1(j,s)=\{x \mid x_j<s\}\) and \(R_2(j,s)=\{x \mid x_j\geq s\}\),
-  it means that we need to find the (predictor) \(j\) and (splitting
-  point) \(s\) that minimize
+  Start at the top of the tree and divide the predictor space into two
+  regions \(R_1(j,s)=\{x \mid x_j<s\}\) and
+  \(R_2(j,s)=\{x \mid x_j\geq s\}\), by making a decision rule for one
+  of the predictors \(x_1, x_2,...,x_p\).
+\end{itemize}
+
+\vspace{1mm}
+
+\begin{itemize}
+\tightlist
+\item
+  We thus need to find the (predictor) \(j\) and (splitting point) \(s\)
+  that minimize
   \[\sum_{i: x_i \in R_1(j,s)}(y_i-\hat{y}_{R_1})^2+\sum_{i: x_i \in R_2(j,s)}(y_i -\hat{y}_{R_2})^2 \ ,\]
   where \(\hat{y}_{R_1}\) and \(\hat{y}_{R_2}\) are the mean responses
   for the training observations in \(R_1(j,s)\) and \(R_2(j,s)\)
@@ -893,12 +900,28 @@ Let us start with the tree with many leaves, and then prune it with
 
 \begin{center}\includegraphics[width=0.5\linewidth]{8Trees_files/figure-beamer/ozone.cv-1} \end{center}
 
-\normalsize
+\end{block}
+
+\end{frame}
+
+\begin{frame}[fragile]
 
 Interestingly, a tree with 5 leaves performs best - which corresponds to
-the original choice.
+the original choice:
 
-\end{block}
+\vspace{2mm}
+
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{prune.ozone <-}\StringTok{ }\KeywordTok{prune.tree}\NormalTok{(ozone.tree, }\DataTypeTok{best =} \DecValTok{5}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(prune.ozone)}
+\KeywordTok{text}\NormalTok{(prune.ozone, }\DataTypeTok{pretty =} \DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{center}\includegraphics[width=0.5\linewidth]{8Trees_files/figure-beamer/unnamed-chunk-7-1} \end{center}
 
 \end{frame}
 
@@ -981,7 +1004,7 @@ criterion for a qualitative variable. Instead we can use some
   \textbf{Cross entropy}: \[
   D=-\sum_{k=1}^K \hat{p}_{jk}\log\hat{p}_{jk} \ .
   \] Since \(0\leq\hat{p}_{jk}\leq 1\), it follows that
-  \(0\leq -\hat{p}_{jk}\log\hat{p}_{jk}\), with values near zero of
+  \(0\leq -\hat{p}_{jk}\log\hat{p}_{jk}\), with values near zero if
   \(\hat{p}_{jk}\) is close to 0 or 1.
 \end{itemize}
 
@@ -1323,16 +1346,13 @@ With the Gini-index:
 
 \begin{frame}
 
-\begin{block}{Group discussion / Breakout rooms}
-
-\(~\)
-
-(Make sure you have access to the slides while you are in the breakout
-room).
+\begin{block}{Group discussion}
 
 \(~\)
 
 Study the confusion matrices on the previous slides:
+
+\vspace{2mm}
 
 \begin{itemize}
 \item
@@ -1534,7 +1554,7 @@ the very bushy Gini-grown tree.
 
 \vspace{2mm}
 
-Discuss the bias-variance tradeoff of a regression tree when
+Discuss the \emph{bias-variance tradeoff of a regression tree} when
 increasing/decreasing the number of terminal nodes, i.e:
 
 \vspace{2mm}
@@ -2128,6 +2148,8 @@ automobile desing and performance.
 
 \begin{center}\includegraphics[width=0.7\linewidth]{8Trees_files/figure-beamer/autoImp-1} \end{center}
 
+(Randomization: left, node purity: right)
+
 \end{block}
 
 \end{frame}
@@ -2144,11 +2166,13 @@ automobile desing and performance.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{varImpPlot}\NormalTok{(r.brain.bag, }\DataTypeTok{type =} \DecValTok{2}\NormalTok{, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{)}
+\KeywordTok{varImpPlot}\NormalTok{(r.brain.bag, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{center}\includegraphics[width=0.6\linewidth]{8Trees_files/figure-beamer/brain-1} \end{center}
+
+(Randomization: left, node purity: right)
 
 \end{block}
 
@@ -2337,32 +2361,11 @@ choose \(3\) because we have \(10\) predictors in total and
 
 \begin{frame}[fragile]
 
-We check the predictive performance as before:
+We check the predictive performance as before, using the test set:
+
+\vspace{2mm}
 
 \scriptsize
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{r.brain.rf}\OperatorTok{$}\NormalTok{confusion}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##     0  1 class.error
-## 0 662 29   0.0419682
-## 1  93 66   0.5849057
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
-\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(r.brain.rf}\OperatorTok{$}\NormalTok{confusion[}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{]))}\OperatorTok{/}\NormalTok{(}\KeywordTok{sum}\NormalTok{(r.brain.rf}\OperatorTok{$}\NormalTok{confusion[}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{, }
-    \DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{]))}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## [1] 0.143529
-\end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -2376,8 +2379,8 @@ We check the predictive performance as before:
 \begin{verbatim}
 ##        
 ## yhat.rf   0   1
-##       0 364  47
-##       1  16  44
+##       0 363  47
+##       1  17  44
 \end{verbatim}
 
 \begin{Shaded}
@@ -2387,7 +2390,7 @@ We check the predictive performance as before:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.133758
+## [1] 0.1358811
 \end{verbatim}
 
 \normalsize
@@ -2519,6 +2522,8 @@ Boosting has three tuning parameters which need to be set (\(B\),
 \begin{frame}
 
 \begin{block}{Short quizz poll}
+
+www.menti.com, Code 62 76 78 5
 
 \end{block}
 

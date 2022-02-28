@@ -1,21 +1,21 @@
 ---
-subtitle: "TMA4268 Statistical Learning V2021"
+subtitle: "TMA4268 Statistical Learning V2022"
 title: "Module 8: Tree-based Methods"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "March 8 and 9, 2021"
+date: "March 7 and 10, 2022"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
-  # html_document:
-  #   toc: true
-  #   toc_float: true
-  #   toc_depth: 2
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
 urlcolor: blue
 bibliography: refs.bib
 header-includes: \usepackage{multirow}
@@ -201,11 +201,15 @@ To do this we need to consider every partition of the predictor space, and compu
 
 \vspace{2mm}
 
-* A _greedy_ approach is taken (aka top-down) - called _recursive binary splitting_: Find a split that minimizes RSS at each step\footnote{This does not necessarily give the optimal global solution, but will give the best solution at each split, given what is done previously.}.
+* A _\textcolor{red}{greedy}_ approach is taken (aka top-down) - called _\textcolor{red}{recursive binary splitting}_: Find a split that minimizes RSS at each step\footnote{This does not necessarily give the optimal global solution, but will give the best solution at each split, given what is done previously.}.
 
 \vspace{1mm}
 
-* We start at the top of the tree and divide the predictor space into two regions, $R_1$ and $R_2$ by making a decision rule for one of the predictors $x_1, x_2,...,x_p$. If we define the two regions by $R_1(j,s)=\{x \mid x_j<s\}$ and $R_2(j,s)=\{x \mid x_j\geq s\}$, it means that we need to find the (predictor) $j$ and (splitting point) $s$ that minimize
+* Start at the top of the tree and divide the predictor space into two regions $R_1(j,s)=\{x \mid x_j<s\}$ and $R_2(j,s)=\{x \mid x_j\geq s\}$, by making a decision rule for one of the predictors $x_1, x_2,...,x_p$.
+
+\vspace{1mm}
+
+* We thus need to find the (predictor) $j$ and (splitting point) $s$ that minimize
 $$\sum_{i: x_i \in R_1(j,s)}(y_i-\hat{y}_{R_1})^2+\sum_{i: x_i \in R_2(j,s)}(y_i -\hat{y}_{R_2})^2 \ ,$$
 where $\hat{y}_{R_1}$ and $\hat{y}_{R_2}$ are the mean responses for the training observations in $R_1(j,s)$ and $R_2(j,s)$ respectively. This way we get the two first branches in our decision tree.
 
@@ -541,8 +545,18 @@ cv.ozone <- cv.tree(ozone.tree,K=5)
 plot(cv.ozone$dev ~  cv.ozone$size,type= "b", lwd=2, col="red", xlab="Tree Size", ylab="Deviance")
 ```
 
-\normalsize
-Interestingly, a tree with 5 leaves performs best - which corresponds to the original choice.
+---
+
+Interestingly, a tree with 5 leaves performs best - which corresponds to the original choice:
+
+\vspace{2mm}
+
+\scriptsize
+```{r echo=TRUE, fig.width=6, fig.height=5,fig.align = "center",out.width='50%'}
+prune.ozone <- prune.tree(ozone.tree,best=5)
+plot(prune.ozone)
+text(prune.ozone, pretty =0)
+```
 
 <!-- --- -->
 
@@ -603,7 +617,7 @@ which is small if all of the $\hat{p}_{jk}$'s are close to 0 or 1.
 $$
 D=-\sum_{k=1}^K \hat{p}_{jk}\log\hat{p}_{jk} \ .
 $$
-Since $0\leq\hat{p}_{jk}\leq 1$, it follows that $0\leq -\hat{p}_{jk}\log\hat{p}_{jk}$, with values near zero of $\hat{p}_{jk}$ is close to 0 or 1. 
+Since $0\leq\hat{p}_{jk}\leq 1$, it follows that $0\leq -\hat{p}_{jk}\log\hat{p}_{jk}$, with values near zero if $\hat{p}_{jk}$ is close to 0 or 1. 
 
 
 
@@ -810,16 +824,15 @@ tree.predG=predict(tree.HIClassG,headInjury2[test,],type="class")
 
 ---
 
-## Group discussion / Breakout rooms
+## Group discussion 
 
-$~$
-
-(Make sure you have access to the slides while you are in the breakout room).
 
 
 $~$
 
 Study the confusion matrices on the previous slides:
+
+\vspace{2mm}
 
 * Which algorithm makes more errors?
 
@@ -966,7 +979,7 @@ $\rightarrow$ If you want, you can apply the same pruning procedure to the very 
 
 \vspace{2mm}
 
-Discuss the bias-variance tradeoff of a regression tree when increasing/decreasing the number of terminal nodes, i.e: 
+Discuss the _bias-variance tradeoff of a regression tree_ when increasing/decreasing the number of terminal nodes, i.e: 
 
 \vspace{2mm}
 
@@ -1403,7 +1416,7 @@ mtcars.rf <- randomForest(mpg ~ ., data=mtcars, ntree=1000,
 varImpPlot(mtcars.rf,pch=20,main="")
 ```
 
-
+(Randomization: left, node purity: right)
 
 ---
 
@@ -1416,11 +1429,11 @@ $~$
 \scriptsize
 
 ```{r brain, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='60%'}
-varImpPlot(r.brain.bag,type=2,pch=20)
+varImpPlot(r.brain.bag,pch=20)
 ```
 
 
-
+(Randomization: left, node purity: right)
 
 ---
 
@@ -1548,14 +1561,18 @@ r.brain.rf = randomForest(brain.injury~.,
 
 ---
 
-We check the predictive performance as before:
+We check the predictive performance as before, using the test set:
+
+\vspace{2mm}
 
 \scriptsize
 
-```{r}
-r.brain.rf$confusion
-1-sum(diag(r.brain.rf$confusion[1:2,1:2]))/(sum(r.brain.rf$confusion[1:2,1:2]))
+<!-- ```{r} -->
+<!-- r.brain.rf$confusion -->
+<!-- 1-sum(diag(r.brain.rf$confusion[1:2,1:2]))/(sum(r.brain.rf$confusion[1:2,1:2])) -->
+<!-- ``` -->
 
+```{r}
 yhat.rf=predict(r.brain.rf,newdata=headInjury2[test,])
 
 misclass.rf=table(yhat.rf,headInjury2[test,]$brain.injury)
@@ -1627,7 +1644,7 @@ Boosting has three tuning parameters which need to be set ($B$, $\lambda$, $d$),
 
 ### Short quizz poll 
 
-
+www.menti.com, Code 62 76 78 5 
 
 ---
 
