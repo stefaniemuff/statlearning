@@ -1,45 +1,51 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 %
-\documentclass[]{article}
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
-\else % if luatex or xelatex
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
   \usepackage{unicode-math}
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
 \usepackage{xcolor}
-\usepackage{hyperref}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-            pdftitle={Module 8: Solutions to Recommended Exercises},
-            pdfauthor={Emma Skarstein, Michail Spitieris, Stefanie Muff; Department of Mathematical Sciences, NTNU},
-            colorlinks=true,
-            linkcolor=Maroon,
-            filecolor=Maroon,
-            citecolor=Blue,
-            urlcolor=blue,
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
+  pdftitle={Module 8: Solutions to Recommended Exercises},
+  pdfauthor={Emma Skarstein, Daesoo Lee, Stefanie Muff; Department of Mathematical Sciences, NTNU},
+  colorlinks=true,
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=blue,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
 \usepackage[margin=1in]{geometry}
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -81,7 +87,7 @@
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\usepackage{graphicx,grffile}
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -90,37 +96,29 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{0}
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
-
-% set default figure placement to htbp
+% Set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 
+\title{Module 8: Solutions to Recommended Exercises}
 \usepackage{etoolbox}
 \makeatletter
 \providecommand{\subtitle}[1]{% add subtitle to \maketitle
   \apptocmd{\@title}{\par {\large #1 \par}}{}{}
 }
 \makeatother
-
-\title{Module 8: Solutions to Recommended Exercises}
-\providecommand{\subtitle}[1]{}
-\subtitle{TMA4268 Statistical Learning V2021}
-\author{Emma Skarstein, Michail Spitieris, Stefanie Muff \and Department of Mathematical Sciences, NTNU}
-\date{March 9, 2021}
+\subtitle{TMA4268 Statistical Learning V2022}
+\author{Emma Skarstein, Daesoo Lee, Stefanie Muff \and Department of
+Mathematical Sciences, NTNU}
+\date{March 7, 2022}
 
 \begin{document}
 \maketitle
@@ -132,6 +130,7 @@
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
+\tightlist
 \item
 \end{enumerate}
 
@@ -191,6 +190,7 @@ entropy.
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
 \setcounter{enumi}{1}
+\tightlist
 \item
 \end{enumerate}
 
@@ -219,6 +219,7 @@ entropy.
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
 \setcounter{enumi}{2}
+\tightlist
 \item
 \end{enumerate}
 
@@ -275,33 +276,35 @@ of it. You find a drawing
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
+\tightlist
 \item
 \end{enumerate}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(ISLR)}
-\KeywordTok{data}\NormalTok{(}\StringTok{"Carseats"}\NormalTok{)}
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
-\NormalTok{n =}\StringTok{ }\KeywordTok{nrow}\NormalTok{(Carseats)}
-\NormalTok{train =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{n, }\FloatTok{0.7} \OperatorTok{*}\StringTok{ }\KeywordTok{nrow}\NormalTok{(Carseats), }\DataTypeTok{replace =}\NormalTok{ F)}
-\NormalTok{test =}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{n)[}\OperatorTok{-}\NormalTok{train]}
-\NormalTok{Carseats.train =}\StringTok{ }\NormalTok{Carseats[train, ]}
-\NormalTok{Carseats.test =}\StringTok{ }\NormalTok{Carseats[}\OperatorTok{-}\NormalTok{train, ]}
+\FunctionTok{library}\NormalTok{(ISLR)}
+\FunctionTok{data}\NormalTok{(}\StringTok{"Carseats"}\NormalTok{)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
+\NormalTok{n }\OtherTok{=} \FunctionTok{nrow}\NormalTok{(Carseats)}
+\NormalTok{train }\OtherTok{=} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{n, }\FloatTok{0.7} \SpecialCharTok{*} \FunctionTok{nrow}\NormalTok{(Carseats), }\AttributeTok{replace =}\NormalTok{ F)}
+\NormalTok{test }\OtherTok{=}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{:}\NormalTok{n)[}\SpecialCharTok{{-}}\NormalTok{train]}
+\NormalTok{Carseats.train }\OtherTok{=}\NormalTok{ Carseats[train, ]}
+\NormalTok{Carseats.test }\OtherTok{=}\NormalTok{ Carseats[}\SpecialCharTok{{-}}\NormalTok{train, ]}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
 \setcounter{enumi}{1}
+\tightlist
 \item
 \end{enumerate}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(tree)}
-\NormalTok{tree.mod =}\StringTok{ }\KeywordTok{tree}\NormalTok{(Sales }\OperatorTok{~}\StringTok{ }\NormalTok{., Carseats, }\DataTypeTok{subset =}\NormalTok{ train)}
-\KeywordTok{summary}\NormalTok{(tree.mod)}
+\FunctionTok{library}\NormalTok{(tree)}
+\NormalTok{tree.mod }\OtherTok{=} \FunctionTok{tree}\NormalTok{(Sales }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., Carseats, }\AttributeTok{subset =}\NormalTok{ train)}
+\FunctionTok{summary}\NormalTok{(tree.mod)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -321,8 +324,8 @@ of it. You find a drawing
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(tree.mod)}
-\KeywordTok{text}\NormalTok{(tree.mod, }\DataTypeTok{pretty =} \DecValTok{0}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(tree.mod)}
+\FunctionTok{text}\NormalTok{(tree.mod, }\AttributeTok{pretty =} \DecValTok{0}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -330,8 +333,8 @@ of it. You find a drawing
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{yhat =}\StringTok{ }\KeywordTok{predict}\NormalTok{(tree.mod, }\DataTypeTok{newdata =}\NormalTok{ Carseats.test)}
-\NormalTok{mse =}\StringTok{ }\KeywordTok{mean}\NormalTok{((yhat }\OperatorTok{-}\StringTok{ }\NormalTok{Carseats.test}\OperatorTok{$}\NormalTok{Sales)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{yhat }\OtherTok{=} \FunctionTok{predict}\NormalTok{(tree.mod, }\AttributeTok{newdata =}\NormalTok{ Carseats.test)}
+\NormalTok{mse }\OtherTok{=} \FunctionTok{mean}\NormalTok{((yhat }\SpecialCharTok{{-}}\NormalTok{ Carseats.test}\SpecialCharTok{$}\NormalTok{Sales)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
 \NormalTok{mse}
 \end{Highlighting}
 \end{Shaded}
@@ -343,31 +346,32 @@ of it. You find a drawing
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
 \setcounter{enumi}{2}
+\tightlist
 \item
 \end{enumerate}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
-\NormalTok{cv.Carseats =}\StringTok{ }\KeywordTok{cv.tree}\NormalTok{(tree.mod)}
-\NormalTok{tree.min =}\StringTok{ }\KeywordTok{which.min}\NormalTok{(cv.Carseats}\OperatorTok{$}\NormalTok{dev)}
-\NormalTok{best =}\StringTok{ }\NormalTok{cv.Carseats}\OperatorTok{$}\NormalTok{size[tree.min]}
-\KeywordTok{plot}\NormalTok{(cv.Carseats}\OperatorTok{$}\NormalTok{size, cv.Carseats}\OperatorTok{$}\NormalTok{dev, }\DataTypeTok{type =} \StringTok{"b"}\NormalTok{)}
-\KeywordTok{points}\NormalTok{(cv.Carseats}\OperatorTok{$}\NormalTok{size[tree.min], cv.Carseats}\OperatorTok{$}\NormalTok{dev[tree.min], }\DataTypeTok{col =} \StringTok{"red"}\NormalTok{, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
+\NormalTok{cv.Carseats }\OtherTok{=} \FunctionTok{cv.tree}\NormalTok{(tree.mod)}
+\NormalTok{tree.min }\OtherTok{=} \FunctionTok{which.min}\NormalTok{(cv.Carseats}\SpecialCharTok{$}\NormalTok{dev)}
+\NormalTok{best }\OtherTok{=}\NormalTok{ cv.Carseats}\SpecialCharTok{$}\NormalTok{size[tree.min]}
+\FunctionTok{plot}\NormalTok{(cv.Carseats}\SpecialCharTok{$}\NormalTok{size, cv.Carseats}\SpecialCharTok{$}\NormalTok{dev, }\AttributeTok{type =} \StringTok{"b"}\NormalTok{)}
+\FunctionTok{points}\NormalTok{(cv.Carseats}\SpecialCharTok{$}\NormalTok{size[tree.min], cv.Carseats}\SpecialCharTok{$}\NormalTok{dev[tree.min], }\AttributeTok{col =} \StringTok{"red"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{20}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics{RecEx8-sol_files/figure-latex/unnamed-chunk-4-1.pdf}
 
 We see that trees with sizes 11, 12, 16 and 17 have similar deviance
-values. We should ideally choose the tree of size 11 as it gives the
-simpler tree.
+values. We might choose the tree of size 11 as it gives the simpler
+tree.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{pr.tree =}\StringTok{ }\KeywordTok{prune.tree}\NormalTok{(tree.mod, }\DataTypeTok{best =} \DecValTok{11}\NormalTok{)}
-\KeywordTok{plot}\NormalTok{(pr.tree)}
-\KeywordTok{text}\NormalTok{(pr.tree, }\DataTypeTok{pretty =} \DecValTok{0}\NormalTok{)}
+\NormalTok{pr.tree }\OtherTok{=} \FunctionTok{prune.tree}\NormalTok{(tree.mod, }\AttributeTok{best =} \DecValTok{11}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(pr.tree)}
+\FunctionTok{text}\NormalTok{(pr.tree, }\AttributeTok{pretty =} \DecValTok{0}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -375,8 +379,8 @@ simpler tree.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{yhat =}\StringTok{ }\KeywordTok{predict}\NormalTok{(pr.tree, }\DataTypeTok{newdata =}\NormalTok{ Carseats.test)}
-\NormalTok{mse =}\StringTok{ }\KeywordTok{mean}\NormalTok{((yhat }\OperatorTok{-}\StringTok{ }\NormalTok{Carseats.test}\OperatorTok{$}\NormalTok{Sales)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{yhat }\OtherTok{=} \FunctionTok{predict}\NormalTok{(pr.tree, }\AttributeTok{newdata =}\NormalTok{ Carseats.test)}
+\NormalTok{mse }\OtherTok{=} \FunctionTok{mean}\NormalTok{((yhat }\SpecialCharTok{{-}}\NormalTok{ Carseats.test}\SpecialCharTok{$}\NormalTok{Sales)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
 \NormalTok{mse}
 \end{Highlighting}
 \end{Shaded}
@@ -385,18 +389,19 @@ simpler tree.
 ## [1] 4.378499
 \end{verbatim}
 
-There is a slight reduction in MSE for the pruned tree with 11 leaves.
+There is a slight reducten in MSE for the pruned tree with 11 leaves.
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
 \setcounter{enumi}{3}
+\tightlist
 \item
 \end{enumerate}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(randomForest)}
-\KeywordTok{dim}\NormalTok{(Carseats)}
+\FunctionTok{library}\NormalTok{(randomForest)}
+\FunctionTok{dim}\NormalTok{(Carseats)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -406,10 +411,10 @@ There is a slight reduction in MSE for the pruned tree with 11 leaves.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{bag.Carseats =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(Sales }\OperatorTok{~}\StringTok{ }\NormalTok{., Carseats.train, }\DataTypeTok{mtry =} \KeywordTok{ncol}\NormalTok{(Carseats) }\OperatorTok{-}\StringTok{ }\DecValTok{1}\NormalTok{, }
-    \DataTypeTok{ntree =} \DecValTok{500}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{yhat.bag =}\StringTok{ }\KeywordTok{predict}\NormalTok{(bag.Carseats, }\DataTypeTok{newdata =}\NormalTok{ Carseats.test)}
-\NormalTok{mse.bag =}\StringTok{ }\KeywordTok{mean}\NormalTok{((yhat.bag }\OperatorTok{-}\StringTok{ }\NormalTok{Carseats.test}\OperatorTok{$}\NormalTok{Sales)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{bag.Carseats }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(Sales }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., Carseats.train, }\AttributeTok{mtry =} \FunctionTok{ncol}\NormalTok{(Carseats) }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{,}
+    \AttributeTok{ntree =} \DecValTok{500}\NormalTok{, }\AttributeTok{importance =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{yhat.bag }\OtherTok{=} \FunctionTok{predict}\NormalTok{(bag.Carseats, }\AttributeTok{newdata =}\NormalTok{ Carseats.test)}
+\NormalTok{mse.bag }\OtherTok{=} \FunctionTok{mean}\NormalTok{((yhat.bag }\SpecialCharTok{{-}}\NormalTok{ Carseats.test}\SpecialCharTok{$}\NormalTok{Sales)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
 \NormalTok{mse.bag}
 \end{Highlighting}
 \end{Shaded}
@@ -424,7 +429,7 @@ importance plots we might conclude that \texttt{Price}and
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{importance}\NormalTok{(bag.Carseats)}
+\FunctionTok{importance}\NormalTok{(bag.Carseats)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -444,7 +449,7 @@ importance plots we might conclude that \texttt{Price}and
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{varImpPlot}\NormalTok{(bag.Carseats)}
+\FunctionTok{varImpPlot}\NormalTok{(bag.Carseats)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -453,16 +458,17 @@ importance plots we might conclude that \texttt{Price}and
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
 \setcounter{enumi}{4}
+\tightlist
 \item
 \end{enumerate}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{rf.Carseats =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(Sales }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Carseats.train, }\DataTypeTok{mtry =} \DecValTok{3}\NormalTok{, }\DataTypeTok{ntree =} \DecValTok{500}\NormalTok{, }
-    \DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{yhat.rf =}\StringTok{ }\KeywordTok{predict}\NormalTok{(rf.Carseats, }\DataTypeTok{newdata =}\NormalTok{ Carseats.test)}
-\NormalTok{mse_forest <-}\StringTok{ }\KeywordTok{mean}\NormalTok{((yhat.rf }\OperatorTok{-}\StringTok{ }\NormalTok{Carseats.test}\OperatorTok{$}\NormalTok{Sales)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
-\NormalTok{mse_forest}
+\NormalTok{rf.Carseats }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(Sales }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ Carseats.train, }\AttributeTok{mtry =} \DecValTok{3}\NormalTok{, }\AttributeTok{ntree =} \DecValTok{500}\NormalTok{,}
+    \AttributeTok{importance =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{yhat.rf }\OtherTok{=} \FunctionTok{predict}\NormalTok{(rf.Carseats, }\AttributeTok{newdata =}\NormalTok{ Carseats.test)}
+\NormalTok{mse\_forest }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{((yhat.rf }\SpecialCharTok{{-}}\NormalTok{ Carseats.test}\SpecialCharTok{$}\NormalTok{Sales)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{mse\_forest}
 \end{Highlighting}
 \end{Shaded}
 
@@ -476,7 +482,7 @@ Variables are again \texttt{Price}and \texttt{ShelveLoc}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{importance}\NormalTok{(rf.Carseats)}
+\FunctionTok{importance}\NormalTok{(rf.Carseats)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -496,7 +502,7 @@ Variables are again \texttt{Price}and \texttt{ShelveLoc}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{varImpPlot}\NormalTok{(rf.Carseats)}
+\FunctionTok{varImpPlot}\NormalTok{(rf.Carseats)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -505,17 +511,18 @@ Variables are again \texttt{Price}and \texttt{ShelveLoc}.
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
 \setcounter{enumi}{5}
+\tightlist
 \item
 \end{enumerate}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(gbm)}
-\NormalTok{r.boost =}\StringTok{ }\KeywordTok{gbm}\NormalTok{(Sales }\OperatorTok{~}\StringTok{ }\NormalTok{., Carseats.train, }\DataTypeTok{distribution =} \StringTok{"gaussian"}\NormalTok{, }\DataTypeTok{n.trees =} \DecValTok{500}\NormalTok{, }
-    \DataTypeTok{interaction.depth =} \DecValTok{4}\NormalTok{, }\DataTypeTok{shrinkage =} \FloatTok{0.1}\NormalTok{)}
-\NormalTok{yhat.boost =}\StringTok{ }\KeywordTok{predict}\NormalTok{(r.boost, }\DataTypeTok{newdata =}\NormalTok{ Carseats.test, }\DataTypeTok{n.trees =} \DecValTok{500}\NormalTok{)}
-\NormalTok{mse_boost <-}\StringTok{ }\KeywordTok{mean}\NormalTok{((yhat.boost }\OperatorTok{-}\StringTok{ }\NormalTok{Carseats.test}\OperatorTok{$}\NormalTok{Sales)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
-\NormalTok{mse_boost}
+\FunctionTok{library}\NormalTok{(gbm)}
+\NormalTok{r.boost }\OtherTok{=} \FunctionTok{gbm}\NormalTok{(Sales }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., Carseats.train, }\AttributeTok{distribution =} \StringTok{"gaussian"}\NormalTok{, }\AttributeTok{n.trees =} \DecValTok{500}\NormalTok{,}
+    \AttributeTok{interaction.depth =} \DecValTok{4}\NormalTok{, }\AttributeTok{shrinkage =} \FloatTok{0.1}\NormalTok{)}
+\NormalTok{yhat.boost }\OtherTok{=} \FunctionTok{predict}\NormalTok{(r.boost, }\AttributeTok{newdata =}\NormalTok{ Carseats.test, }\AttributeTok{n.trees =} \DecValTok{500}\NormalTok{)}
+\NormalTok{mse\_boost }\OtherTok{\textless{}{-}} \FunctionTok{mean}\NormalTok{((yhat.boost }\SpecialCharTok{{-}}\NormalTok{ Carseats.test}\SpecialCharTok{$}\NormalTok{Sales)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{mse\_boost}
 \end{Highlighting}
 \end{Shaded}
 
@@ -528,25 +535,26 @@ We see a further decrease in MSE by boosing our trees.
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
 \setcounter{enumi}{6}
+\tightlist
 \item
 \end{enumerate}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{train.predictors =}\StringTok{ }\NormalTok{Carseats.train[, }\DecValTok{-1}\NormalTok{]}
-\NormalTok{test.predictors =}\StringTok{ }\NormalTok{Carseats.test[, }\DecValTok{-1}\NormalTok{]}
-\NormalTok{Y.train =}\StringTok{ }\NormalTok{Carseats.train[, }\DecValTok{1}\NormalTok{]}
-\NormalTok{Y.test =}\StringTok{ }\NormalTok{Carseats.test[, }\DecValTok{1}\NormalTok{]}
+\NormalTok{train.predictors }\OtherTok{=}\NormalTok{ Carseats.train[, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{]}
+\NormalTok{test.predictors }\OtherTok{=}\NormalTok{ Carseats.test[, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{]}
+\NormalTok{Y.train }\OtherTok{=}\NormalTok{ Carseats.train[, }\DecValTok{1}\NormalTok{]}
+\NormalTok{Y.test }\OtherTok{=}\NormalTok{ Carseats.test[, }\DecValTok{1}\NormalTok{]}
 
-\NormalTok{bag.Car =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(train.predictors, }\DataTypeTok{y =}\NormalTok{ Y.train, }\DataTypeTok{xtest =}\NormalTok{ test.predictors, }\DataTypeTok{ytest =}\NormalTok{ Y.test, }
-    \DataTypeTok{mtry =} \DecValTok{10}\NormalTok{, }\DataTypeTok{ntree =} \DecValTok{500}\NormalTok{)}
-\NormalTok{rf.Car =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(train.predictors, }\DataTypeTok{y =}\NormalTok{ Y.train, }\DataTypeTok{xtest =}\NormalTok{ test.predictors, }\DataTypeTok{ytest =}\NormalTok{ Y.test, }
-    \DataTypeTok{mtry =} \DecValTok{3}\NormalTok{, }\DataTypeTok{ntree =} \DecValTok{500}\NormalTok{)}
-\KeywordTok{plot}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{500}\NormalTok{, bag.Car}\OperatorTok{$}\NormalTok{test}\OperatorTok{$}\NormalTok{mse, }\DataTypeTok{col =} \StringTok{"blue"}\NormalTok{, }\DataTypeTok{type =} \StringTok{"l"}\NormalTok{, }\DataTypeTok{xlab =} \StringTok{"Number of Trees"}\NormalTok{, }
-    \DataTypeTok{ylab =} \StringTok{"Test MSE"}\NormalTok{, }\DataTypeTok{ylim =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\FloatTok{2.8}\NormalTok{))}
-\KeywordTok{lines}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{500}\NormalTok{, rf.Car}\OperatorTok{$}\NormalTok{test}\OperatorTok{$}\NormalTok{mse, }\DataTypeTok{col =} \StringTok{"green"}\NormalTok{)}
+\NormalTok{bag.Car }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(train.predictors, }\AttributeTok{y =}\NormalTok{ Y.train, }\AttributeTok{xtest =}\NormalTok{ test.predictors, }\AttributeTok{ytest =}\NormalTok{ Y.test,}
+    \AttributeTok{mtry =} \DecValTok{10}\NormalTok{, }\AttributeTok{ntree =} \DecValTok{500}\NormalTok{)}
+\NormalTok{rf.Car }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(train.predictors, }\AttributeTok{y =}\NormalTok{ Y.train, }\AttributeTok{xtest =}\NormalTok{ test.predictors, }\AttributeTok{ytest =}\NormalTok{ Y.test,}
+    \AttributeTok{mtry =} \DecValTok{3}\NormalTok{, }\AttributeTok{ntree =} \DecValTok{500}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{500}\NormalTok{, bag.Car}\SpecialCharTok{$}\NormalTok{test}\SpecialCharTok{$}\NormalTok{mse, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{type =} \StringTok{"l"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"Number of Trees"}\NormalTok{,}
+    \AttributeTok{ylab =} \StringTok{"Test MSE"}\NormalTok{, }\AttributeTok{ylim =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\FloatTok{2.8}\NormalTok{))}
+\FunctionTok{lines}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{500}\NormalTok{, rf.Car}\SpecialCharTok{$}\NormalTok{test}\SpecialCharTok{$}\NormalTok{mse, }\AttributeTok{col =} \StringTok{"green"}\NormalTok{)}
 
-\KeywordTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\KeywordTok{c}\NormalTok{(}\StringTok{"m = p"}\NormalTok{, }\StringTok{"m = p/3"}\NormalTok{), }\DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"blue"}\NormalTok{, }\StringTok{"green"}\NormalTok{), }\DataTypeTok{cex =} \DecValTok{1}\NormalTok{, }\DataTypeTok{lty =} \DecValTok{1}\NormalTok{)}
+\FunctionTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\FunctionTok{c}\NormalTok{(}\StringTok{"m = p"}\NormalTok{, }\StringTok{"m = p/3"}\NormalTok{), }\AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"blue"}\NormalTok{, }\StringTok{"green"}\NormalTok{), }\AttributeTok{cex =} \DecValTok{1}\NormalTok{, }\AttributeTok{lty =} \DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -558,56 +566,63 @@ Classification}\label{problem-3-classification}}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(kernlab)}
-\KeywordTok{data}\NormalTok{(spam)}
+\FunctionTok{library}\NormalTok{(kernlab)}
+\FunctionTok{data}\NormalTok{(spam)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
-\item
-\end{enumerate}
-
-Do this in R and read the Description.
-
-\begin{enumerate}
-\def\labelenumi{\alph{enumi})}
-\setcounter{enumi}{1}
+\tightlist
 \item
 \end{enumerate}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(ISLR)}
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
-\NormalTok{n =}\StringTok{ }\KeywordTok{nrow}\NormalTok{(spam)}
-\NormalTok{train =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{n, }\FloatTok{0.7} \OperatorTok{*}\StringTok{ }\NormalTok{n, }\DataTypeTok{replace =}\NormalTok{ F)}
-\NormalTok{test =}\StringTok{ }\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{n)[}\OperatorTok{-}\NormalTok{train]}
-\NormalTok{spam.train =}\StringTok{ }\NormalTok{spam[train, ]}
-\NormalTok{spam.test =}\StringTok{ }\NormalTok{spam[}\OperatorTok{-}\NormalTok{train, ]}
+\StringTok{\textasciigrave{}}\AttributeTok{?}\StringTok{\textasciigrave{}}\NormalTok{(spam)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{enumerate}
+\def\labelenumi{\alph{enumi})}
+\setcounter{enumi}{1}
+\tightlist
+\item
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(ISLR)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
+\NormalTok{n }\OtherTok{=} \FunctionTok{nrow}\NormalTok{(spam)}
+\NormalTok{train }\OtherTok{=} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{n, }\FloatTok{0.7} \SpecialCharTok{*}\NormalTok{ n, }\AttributeTok{replace =}\NormalTok{ F)}
+\NormalTok{test }\OtherTok{=}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{:}\NormalTok{n)[}\SpecialCharTok{{-}}\NormalTok{train]}
+\NormalTok{spam.train }\OtherTok{=}\NormalTok{ spam[train, ]}
+\NormalTok{spam.test }\OtherTok{=}\NormalTok{ spam[}\SpecialCharTok{{-}}\NormalTok{train, ]}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
 \setcounter{enumi}{2}
+\tightlist
 \item
 \end{enumerate}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{spam.tree =}\StringTok{ }\KeywordTok{tree}\NormalTok{(type }\OperatorTok{~}\StringTok{ }\NormalTok{., spam, }\DataTypeTok{subset =}\NormalTok{ train)}
+\NormalTok{spam.tree }\OtherTok{=} \FunctionTok{tree}\NormalTok{(type }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., spam, }\AttributeTok{subset =}\NormalTok{ train)}
 
-\KeywordTok{plot}\NormalTok{(spam.tree)}
-\KeywordTok{text}\NormalTok{(spam.tree, }\DataTypeTok{pretty =} \DecValTok{1}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(spam.tree)}
+\FunctionTok{text}\NormalTok{(spam.tree, }\AttributeTok{pretty =} \DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics[width=0.7\linewidth]{RecEx8-sol_files/figure-latex/unnamed-chunk-15-1}
+\includegraphics[width=0.7\linewidth]{RecEx8-sol_files/figure-latex/unnamed-chunk-16-1}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{summary}\NormalTok{(spam.tree)}
+\FunctionTok{summary}\NormalTok{(spam.tree)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -627,15 +642,16 @@ Do this in R and read the Description.
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
 \setcounter{enumi}{3}
+\tightlist
 \item
 \end{enumerate}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{yhat =}\StringTok{ }\KeywordTok{predict}\NormalTok{(spam.tree, spam[test, ], }\DataTypeTok{type =} \StringTok{"class"}\NormalTok{)}
-\NormalTok{response.test =}\StringTok{ }\NormalTok{spam}\OperatorTok{$}\NormalTok{type[test]}
+\NormalTok{yhat }\OtherTok{=} \FunctionTok{predict}\NormalTok{(spam.tree, spam[test, ], }\AttributeTok{type =} \StringTok{"class"}\NormalTok{)}
+\NormalTok{response.test }\OtherTok{=}\NormalTok{ spam}\SpecialCharTok{$}\NormalTok{type[test]}
 
-\NormalTok{misclass =}\StringTok{ }\KeywordTok{table}\NormalTok{(yhat, response.test)}
+\NormalTok{misclass }\OtherTok{=} \FunctionTok{table}\NormalTok{(yhat, response.test)}
 \NormalTok{misclass}
 \end{Highlighting}
 \end{Shaded}
@@ -649,7 +665,7 @@ Do this in R and read the Description.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(misclass))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(misclass)}
+\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(misclass))}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(misclass)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -660,20 +676,21 @@ Do this in R and read the Description.
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
 \setcounter{enumi}{4}
+\tightlist
 \item
 \end{enumerate}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
 
-\NormalTok{cv.spam =}\StringTok{ }\KeywordTok{cv.tree}\NormalTok{(spam.tree, }\DataTypeTok{FUN =}\NormalTok{ prune.misclass)}
+\NormalTok{cv.spam }\OtherTok{=} \FunctionTok{cv.tree}\NormalTok{(spam.tree, }\AttributeTok{FUN =}\NormalTok{ prune.misclass)}
 
-\KeywordTok{plot}\NormalTok{(cv.spam}\OperatorTok{$}\NormalTok{size, cv.spam}\OperatorTok{$}\NormalTok{dev, }\DataTypeTok{type =} \StringTok{"b"}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(cv.spam}\SpecialCharTok{$}\NormalTok{size, cv.spam}\SpecialCharTok{$}\NormalTok{dev, }\AttributeTok{type =} \StringTok{"b"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics[width=0.7\linewidth]{RecEx8-sol_files/figure-latex/unnamed-chunk-17-1}
+\includegraphics[width=0.7\linewidth]{RecEx8-sol_files/figure-latex/unnamed-chunk-18-1}
 
 According to the plot the optimal number of terminal nodes is 6 (or
 larger). We choose 6 as this gives the simplest tree, and prune the tree
@@ -681,22 +698,22 @@ according to this value.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{prune.spam =}\StringTok{ }\KeywordTok{prune.misclass}\NormalTok{(spam.tree, }\DataTypeTok{best =} \DecValTok{6}\NormalTok{)}
+\NormalTok{prune.spam }\OtherTok{=} \FunctionTok{prune.misclass}\NormalTok{(spam.tree, }\AttributeTok{best =} \DecValTok{6}\NormalTok{)}
 
-\KeywordTok{plot}\NormalTok{(prune.spam)}
-\KeywordTok{text}\NormalTok{(prune.spam, }\DataTypeTok{pretty =} \DecValTok{1}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(prune.spam)}
+\FunctionTok{text}\NormalTok{(prune.spam, }\AttributeTok{pretty =} \DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics[width=0.7\linewidth]{RecEx8-sol_files/figure-latex/unnamed-chunk-18-1}
+\includegraphics[width=0.7\linewidth]{RecEx8-sol_files/figure-latex/unnamed-chunk-19-1}
 
 We predict the response for the test data:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{yhat.prune =}\StringTok{ }\KeywordTok{predict}\NormalTok{(prune.spam, spam[test, ], }\DataTypeTok{type =} \StringTok{"class"}\NormalTok{)}
+\NormalTok{yhat.prune }\OtherTok{=} \FunctionTok{predict}\NormalTok{(prune.spam, spam[test, ], }\AttributeTok{type =} \StringTok{"class"}\NormalTok{)}
 
-\NormalTok{misclass.prune =}\StringTok{ }\KeywordTok{table}\NormalTok{(yhat.prune, response.test)}
+\NormalTok{misclass.prune }\OtherTok{=} \FunctionTok{table}\NormalTok{(yhat.prune, response.test)}
 \NormalTok{misclass.prune}
 \end{Highlighting}
 \end{Shaded}
@@ -712,7 +729,7 @@ The misclassification rate is
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(misclass.prune))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(misclass.prune)}
+\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(misclass.prune))}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(misclass.prune)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -723,14 +740,15 @@ The misclassification rate is
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
 \setcounter{enumi}{5}
+\tightlist
 \item
 \end{enumerate}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(randomForest)}
-\NormalTok{bag.spam =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(type }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ spam, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{mtry =} \KeywordTok{ncol}\NormalTok{(spam) }\OperatorTok{-}\StringTok{ }
-\StringTok{    }\DecValTok{1}\NormalTok{, }\DataTypeTok{ntree =} \DecValTok{500}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(randomForest)}
+\NormalTok{bag.spam }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(type }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ spam, }\AttributeTok{subset =}\NormalTok{ train, }\AttributeTok{mtry =} \FunctionTok{ncol}\NormalTok{(spam) }\SpecialCharTok{{-}}
+    \DecValTok{1}\NormalTok{, }\AttributeTok{ntree =} \DecValTok{500}\NormalTok{, }\AttributeTok{importance =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -738,9 +756,9 @@ We predict the response for the test data as before:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{yhat.bag =}\StringTok{ }\KeywordTok{predict}\NormalTok{(bag.spam, }\DataTypeTok{newdata =}\NormalTok{ spam[test, ])}
+\NormalTok{yhat.bag }\OtherTok{=} \FunctionTok{predict}\NormalTok{(bag.spam, }\AttributeTok{newdata =}\NormalTok{ spam[test, ])}
 
-\NormalTok{misclass.bag =}\StringTok{ }\KeywordTok{table}\NormalTok{(yhat.bag, response.test)}
+\NormalTok{misclass.bag }\OtherTok{=} \FunctionTok{table}\NormalTok{(yhat.bag, response.test)}
 \NormalTok{misclass.bag}
 \end{Highlighting}
 \end{Shaded}
@@ -756,7 +774,7 @@ The misclassification rate is
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(misclass.bag))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(misclass.bag)}
+\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(misclass.bag))}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(misclass.bag)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -767,6 +785,7 @@ The misclassification rate is
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
 \setcounter{enumi}{6}
+\tightlist
 \item
 \end{enumerate}
 
@@ -776,9 +795,9 @@ specified in \texttt{mtry}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
-\NormalTok{rf.spam =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(type }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ spam, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{mtry =} \KeywordTok{round}\NormalTok{(}\KeywordTok{sqrt}\NormalTok{(}\KeywordTok{ncol}\NormalTok{(spam) }\OperatorTok{-}\StringTok{ }
-\StringTok{    }\DecValTok{1}\NormalTok{)), }\DataTypeTok{ntree =} \DecValTok{500}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
+\NormalTok{rf.spam }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(type }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ spam, }\AttributeTok{subset =}\NormalTok{ train, }\AttributeTok{mtry =} \FunctionTok{round}\NormalTok{(}\FunctionTok{sqrt}\NormalTok{(}\FunctionTok{ncol}\NormalTok{(spam) }\SpecialCharTok{{-}}
+    \DecValTok{1}\NormalTok{)), }\AttributeTok{ntree =} \DecValTok{500}\NormalTok{, }\AttributeTok{importance =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -786,7 +805,7 @@ We study the importance of each variable
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{importance}\NormalTok{(rf.spam)}
+\FunctionTok{importance}\NormalTok{(rf.spam)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -795,11 +814,11 @@ large, the corresponding covariate is important.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{varImpPlot}\NormalTok{(rf.spam)}
+\FunctionTok{varImpPlot}\NormalTok{(rf.spam)}
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics[width=0.9\linewidth]{RecEx8-sol_files/figure-latex/unnamed-chunk-26-1}
+\includegraphics[width=0.9\linewidth]{RecEx8-sol_files/figure-latex/unnamed-chunk-27-1}
 
 In this plot we see that \texttt{charExclamation} is the most important
 covariate, followed by \texttt{remove} and \texttt{charDollar}. This is
@@ -810,10 +829,10 @@ We now predict the response for the test data.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{yhat.rf =}\StringTok{ }\KeywordTok{predict}\NormalTok{(rf.spam, }\DataTypeTok{newdata =}\NormalTok{ spam[test, ])}
+\NormalTok{yhat.rf }\OtherTok{=} \FunctionTok{predict}\NormalTok{(rf.spam, }\AttributeTok{newdata =}\NormalTok{ spam[test, ])}
 
-\NormalTok{misclass.rf =}\StringTok{ }\KeywordTok{table}\NormalTok{(yhat.rf, response.test)}
-\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(misclass.rf))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(misclass.rf)}
+\NormalTok{misclass.rf }\OtherTok{=} \FunctionTok{table}\NormalTok{(yhat.rf, response.test)}
+\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(misclass.rf))}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(misclass.rf)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -839,6 +858,7 @@ The misclassification rate is given by
 \begin{enumerate}
 \def\labelenumi{\alph{enumi})}
 \setcounter{enumi}{7}
+\tightlist
 \item
 \end{enumerate}
 
@@ -847,16 +867,16 @@ The \texttt{gbm()} function does not allow factors, so we have to use
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(gbm)}
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(gbm)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
 
-\NormalTok{spamboost =}\StringTok{ }\NormalTok{spam}
-\NormalTok{spamboost}\OperatorTok{$}\NormalTok{type =}\StringTok{ }\KeywordTok{c}\NormalTok{()}
-\NormalTok{spamboost}\OperatorTok{$}\NormalTok{type[spam}\OperatorTok{$}\NormalTok{type }\OperatorTok{==}\StringTok{ "spam"}\NormalTok{] =}\StringTok{ }\DecValTok{1}
-\NormalTok{spamboost}\OperatorTok{$}\NormalTok{type[spam}\OperatorTok{$}\NormalTok{type }\OperatorTok{==}\StringTok{ "nonspam"}\NormalTok{] =}\StringTok{ }\DecValTok{0}
+\NormalTok{spamboost }\OtherTok{=}\NormalTok{ spam}
+\NormalTok{spamboost}\SpecialCharTok{$}\NormalTok{type }\OtherTok{=} \FunctionTok{c}\NormalTok{()}
+\NormalTok{spamboost}\SpecialCharTok{$}\NormalTok{type[spam}\SpecialCharTok{$}\NormalTok{type }\SpecialCharTok{==} \StringTok{"spam"}\NormalTok{] }\OtherTok{=} \DecValTok{1}
+\NormalTok{spamboost}\SpecialCharTok{$}\NormalTok{type[spam}\SpecialCharTok{$}\NormalTok{type }\SpecialCharTok{==} \StringTok{"nonspam"}\NormalTok{] }\OtherTok{=} \DecValTok{0}
 
-\NormalTok{boost.spam =}\StringTok{ }\KeywordTok{gbm}\NormalTok{(type }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ spamboost[train, ], }\DataTypeTok{distribution =} \StringTok{"bernoulli"}\NormalTok{, }
-    \DataTypeTok{n.trees =} \DecValTok{5000}\NormalTok{, }\DataTypeTok{interaction.depth =} \DecValTok{3}\NormalTok{, }\DataTypeTok{shrinkage =} \FloatTok{0.001}\NormalTok{)}
+\NormalTok{boost.spam }\OtherTok{=} \FunctionTok{gbm}\NormalTok{(type }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ spamboost[train, ], }\AttributeTok{distribution =} \StringTok{"bernoulli"}\NormalTok{,}
+    \AttributeTok{n.trees =} \DecValTok{5000}\NormalTok{, }\AttributeTok{interaction.depth =} \DecValTok{3}\NormalTok{, }\AttributeTok{shrinkage =} \FloatTok{0.001}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -864,12 +884,12 @@ We predict the response for the test data
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{yhat.boost =}\StringTok{ }\KeywordTok{predict}\NormalTok{(boost.spam, }\DataTypeTok{newdata =}\NormalTok{ spamboost[}\OperatorTok{-}\NormalTok{train, ], }\DataTypeTok{n.trees =} \DecValTok{5000}\NormalTok{, }\DataTypeTok{distribution =} \StringTok{"bernoulli"}\NormalTok{, }
-    \DataTypeTok{type =} \StringTok{"response"}\NormalTok{)}
+\NormalTok{yhat.boost }\OtherTok{=} \FunctionTok{predict}\NormalTok{(boost.spam, }\AttributeTok{newdata =}\NormalTok{ spamboost[}\SpecialCharTok{{-}}\NormalTok{train, ], }\AttributeTok{n.trees =} \DecValTok{5000}\NormalTok{, }\AttributeTok{distribution =} \StringTok{"bernoulli"}\NormalTok{,}
+    \AttributeTok{type =} \StringTok{"response"}\NormalTok{)}
 
-\NormalTok{yhat.boost =}\StringTok{ }\KeywordTok{ifelse}\NormalTok{(yhat.boost }\OperatorTok{>}\StringTok{ }\FloatTok{0.5}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)  }\CommentTok{#Transform to 0 and 1 (nonspam and spam).}
+\NormalTok{yhat.boost }\OtherTok{=} \FunctionTok{ifelse}\NormalTok{(yhat.boost }\SpecialCharTok{\textgreater{}} \FloatTok{0.5}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)  }\CommentTok{\#Transform to 0 and 1 (nonspam and spam).}
 
-\NormalTok{misclass.boost =}\StringTok{ }\KeywordTok{table}\NormalTok{(yhat.boost, spamboost}\OperatorTok{$}\NormalTok{type[test])}
+\NormalTok{misclass.boost }\OtherTok{=} \FunctionTok{table}\NormalTok{(yhat.boost, spamboost}\SpecialCharTok{$}\NormalTok{type[test])}
 
 \NormalTok{misclass.boost}
 \end{Highlighting}
@@ -886,7 +906,7 @@ and the misclassification rate is
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(misclass.boost))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(misclass.boost)}
+\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(misclass.boost))}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(misclass.boost)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -896,6 +916,7 @@ and the misclassification rate is
 
 \begin{enumerate}
 \def\labelenumi{\roman{enumi})}
+\tightlist
 \item
 \end{enumerate}
 

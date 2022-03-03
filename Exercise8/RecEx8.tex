@@ -1,45 +1,51 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
 \PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
 %
-\documentclass[]{article}
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
 \usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
 \ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
-\else % if luatex or xelatex
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
   \usepackage{unicode-math}
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
 \usepackage{xcolor}
-\usepackage{hyperref}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-            pdftitle={Module 8: Recommended Exercises},
-            pdfauthor={Emma Skarstein, Michail Spitieris, Stefanie Muff; Department of Mathematical Sciences, NTNU},
-            colorlinks=true,
-            linkcolor=Maroon,
-            filecolor=Maroon,
-            citecolor=Blue,
-            urlcolor=blue,
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
+  pdftitle={Module 8: Recommended Exercises},
+  pdfauthor={Emma Skarstein, Daesoo Lee, Stefanie Muff; Department of Mathematical Sciences, NTNU},
+  colorlinks=true,
+  linkcolor=Maroon,
+  filecolor=Maroon,
+  citecolor=Blue,
+  urlcolor=blue,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
 \usepackage[margin=1in]{geometry}
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -81,7 +87,7 @@
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\usepackage{graphicx,grffile}
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -90,37 +96,29 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{0}
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
-
-% set default figure placement to htbp
+% Set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifluatex
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
 
+\title{Module 8: Recommended Exercises}
 \usepackage{etoolbox}
 \makeatletter
 \providecommand{\subtitle}[1]{% add subtitle to \maketitle
   \apptocmd{\@title}{\par {\large #1 \par}}{}{}
 }
 \makeatother
-
-\title{Module 8: Recommended Exercises}
-\providecommand{\subtitle}[1]{}
-\subtitle{TMA4268 Statistical Learning V2021}
-\author{Emma Skarstein, Michail Spitieris, Stefanie Muff \and Department of Mathematical Sciences, NTNU}
-\date{March 9, 2021}
+\subtitle{TMA4268 Statistical Learning V2022}
+\author{Emma Skarstein, Daesoo Lee, Stefanie Muff \and Department of
+Mathematical Sciences, NTNU}
+\date{March 7, 2022}
 
 \begin{document}
 \maketitle
@@ -174,14 +172,14 @@ variable.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(ISLR)}
-\KeywordTok{data}\NormalTok{(}\StringTok{"Carseats"}\NormalTok{)}
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
-\NormalTok{n =}\StringTok{ }\KeywordTok{nrow}\NormalTok{(Carseats)}
-\NormalTok{train =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\NormalTok{n, }\FloatTok{0.7} \OperatorTok{*}\StringTok{ }\KeywordTok{nrow}\NormalTok{(Carseats), }\DataTypeTok{replace =}\NormalTok{ F)}
-\NormalTok{test =}\StringTok{ }\NormalTok{...}
-\NormalTok{Carseats.train =}\StringTok{ }\NormalTok{...}
-\NormalTok{Carseats.test =}\StringTok{ }\NormalTok{...}
+\FunctionTok{library}\NormalTok{(ISLR)}
+\FunctionTok{data}\NormalTok{(}\StringTok{"Carseats"}\NormalTok{)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
+\NormalTok{n }\OtherTok{=} \FunctionTok{nrow}\NormalTok{(Carseats)}
+\NormalTok{train }\OtherTok{=} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{n, }\FloatTok{0.7} \SpecialCharTok{*} \FunctionTok{nrow}\NormalTok{(Carseats), }\AttributeTok{replace =}\NormalTok{ F)}
+\NormalTok{test }\OtherTok{=}\NormalTok{ ...}
+\NormalTok{Carseats.train }\OtherTok{=}\NormalTok{ ...}
+\NormalTok{Carseats.test }\OtherTok{=}\NormalTok{ ...}
 \end{Highlighting}
 \end{Shaded}
 
@@ -190,17 +188,16 @@ variable.
 \setcounter{enumi}{1}
 \tightlist
 \item
-  Fit a regression tree to the training set using the default parameters
-  for the stopping criterion. Plot the tree, and interpret the results.
-  What test MSE do you obtain?
+  Fit a regression tree to the training set. Plot the tree, and
+  interpret the results. What test MSE do you obtain?
 \end{enumerate}
 
 \textbf{R-hints}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(tree)}
-\NormalTok{tree.mod =}\StringTok{ }\KeywordTok{tree}\NormalTok{(Sales }\OperatorTok{~}\StringTok{ }\NormalTok{., ..., }\DataTypeTok{data =}\NormalTok{ ...)}
+\FunctionTok{library}\NormalTok{(tree)}
+\NormalTok{tree.mod }\OtherTok{=} \FunctionTok{tree}\NormalTok{(Sales }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., ..., }\AttributeTok{data =}\NormalTok{ ...)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -209,7 +206,7 @@ variable.
 \setcounter{enumi}{2}
 \tightlist
 \item
-  Use cross-validation in order to determine an optimal level of tree
+  Use cross-validation in order to determine the optimal level of tree
   complexity. Does pruning the tree improve the test MSE?
 \end{enumerate}
 
@@ -217,10 +214,10 @@ variable.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
-\NormalTok{cv.Carseats =}\StringTok{ }\KeywordTok{cv.tree}\NormalTok{(...)}
-\NormalTok{tree.min =}\StringTok{ }\KeywordTok{which.min}\NormalTok{(...)}
-\NormalTok{best =}\StringTok{ }\NormalTok{cv.Carseats}\OperatorTok{$}\NormalTok{size[...]}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
+\NormalTok{cv.Carseats }\OtherTok{=} \FunctionTok{cv.tree}\NormalTok{(...)}
+\NormalTok{tree.min }\OtherTok{=} \FunctionTok{which.min}\NormalTok{(...)}
+\NormalTok{best }\OtherTok{=}\NormalTok{ cv.Carseats}\SpecialCharTok{$}\NormalTok{size[...]}
 \end{Highlighting}
 \end{Shaded}
 
@@ -238,9 +235,9 @@ variable.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(randomForest)}
-\KeywordTok{dim}\NormalTok{(Carseats)}
-\NormalTok{bag.Carseats =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(Sales }\OperatorTok{~}\StringTok{ }\NormalTok{., ..., }\DataTypeTok{ntree =} \DecValTok{500}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(randomForest)}
+\FunctionTok{dim}\NormalTok{(Carseats)}
+\NormalTok{bag.Carseats }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(Sales }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., ..., }\AttributeTok{ntree =} \DecValTok{500}\NormalTok{, }\AttributeTok{importance =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -260,7 +257,7 @@ variable.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{rf.Carseats =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(Sales }\OperatorTok{~}\StringTok{ }\NormalTok{., ..., }\DataTypeTok{mtry =} \DecValTok{3}\NormalTok{, }\DataTypeTok{ntree =} \DecValTok{500}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{rf.Carseats }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(Sales }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., ..., }\AttributeTok{mtry =} \DecValTok{3}\NormalTok{, }\AttributeTok{ntree =} \DecValTok{500}\NormalTok{, }\AttributeTok{importance =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -278,9 +275,9 @@ variable.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(gbm)}
-\NormalTok{r.boost =}\StringTok{ }\KeywordTok{gbm}\NormalTok{(Sales }\OperatorTok{~}\StringTok{ }\NormalTok{., Carseats.train, }\DataTypeTok{distribution =}\NormalTok{ ..., }\DataTypeTok{n.trees =}\NormalTok{ ..., }\DataTypeTok{interaction.depth =}\NormalTok{ ..., }
-    \DataTypeTok{shrinkage =}\NormalTok{ ...)}
+\FunctionTok{library}\NormalTok{(gbm)}
+\NormalTok{r.boost }\OtherTok{=} \FunctionTok{gbm}\NormalTok{(Sales }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., Carseats.train, }\AttributeTok{distribution =}\NormalTok{ ..., }\AttributeTok{n.trees =}\NormalTok{ ..., }\AttributeTok{interaction.depth =}\NormalTok{ ...,}
+    \AttributeTok{shrinkage =}\NormalTok{ ...)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -304,8 +301,8 @@ be uploaded from the kernlab library as follows:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(kernlab)}
-\KeywordTok{data}\NormalTok{(spam)}
+\FunctionTok{library}\NormalTok{(kernlab)}
+\FunctionTok{data}\NormalTok{(spam)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -331,7 +328,7 @@ the frequency of different words in the e-mails and orthography
   Predict the response on the test data. What is the misclassification
   rate?
 \item
-  Use the \texttt{cv.tree()} function to find an optimal tree size.
+  Use the \texttt{cv.tree()} function to find the optimal tree size.
   Prune the tree according to the optimal tree size by using the
   \texttt{prune.misclass()} function and plot the result. Predict the
   response on the test data by using the pruned tree. What is the

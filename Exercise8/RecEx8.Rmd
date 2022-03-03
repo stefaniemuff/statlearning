@@ -1,20 +1,20 @@
 ---
 title: 'Module 8: Recommended Exercises'
 author:
-- Emma Skarstein, Michail Spitieris, Stefanie Muff
+- Emma Skarstein, Daesoo Lee, Stefanie Muff
 - Department of Mathematical Sciences, NTNU
-date: "March 9, 2021"
+date: "March 7, 2022"
 output:
-  html_document:
-    df_print: paged
-    toc: no
-    toc_depth: '2'
+  # html_document:
+  #   df_print: paged
+  #   toc: no
+  #   toc_depth: '2'
   pdf_document:
     fig_caption: yes
     keep_tex: yes
     toc: no
     toc_depth: 2
-subtitle: TMA4268 Statistical Learning V2021
+subtitle: TMA4268 Statistical Learning V2022
 urlcolor: blue
 ---
 
@@ -59,7 +59,7 @@ Carseats.train = ...
 Carseats.test = ...
 ```
 
-b) Fit a regression tree to the training set using the default parameters for the stopping criterion. Plot the tree, and interpret the results. What test MSE do you obtain?
+b) Fit a regression tree to the training set. Plot the tree, and interpret the results. What test MSE do you obtain?
 
 **R-hints**
 
@@ -68,7 +68,7 @@ library(tree)
 tree.mod = tree(Sales~., ..., data = ...)
 ```
 
-c) Use cross-validation in order to determine an optimal level of tree complexity. Does pruning the tree improve the test MSE?
+c) Use cross-validation in order to determine the optimal level of tree complexity. Does pruning the tree improve the test MSE?
 
 **R-hints**
 
@@ -129,7 +129,7 @@ c) Fit a tree to the training data with `type` as the response and the rest of t
   
 d) Predict the response on the test data. What is the misclassification rate?
   
-e) Use the `cv.tree()` function to find an optimal tree size. Prune the tree according to the optimal tree size by using the `prune.misclass()` function and plot the result. Predict the response on the test data by using the pruned tree. What is the misclassification rate in this case?
+e) Use the `cv.tree()` function to find the optimal tree size. Prune the tree according to the optimal tree size by using the `prune.misclass()` function and plot the result. Predict the response on the test data by using the pruned tree. What is the misclassification rate in this case?
   
 f) Create a decision tree by using the bagging approach with $B=500$. Use the function `randomForest()` and consider all of the predictors in each split. Predict the response on the test data and report the misclassification rate.
 
