@@ -379,7 +379,7 @@ partition.tree(ozone.tree, add=TRUE,cex=0.8)
 
 \vspace{2mm}
 
-* For example, the default in `tree()`: is given by `mincut=5, minsize=10, mindev=0.01`, thus a minimal number of observations in a node is 5, the smallest nodes that are potentially split is 10, and the minimal reduction in deviance (RSS) equal to 0.01. 
+* For example, the default in `tree()`: is given by `mincut=5, minsize=10, mindev=0.01`, thus a minimal number of observations in a node is 5, the smallest nodes that are potentially split is 10, and the minimal reduction in deviance (RSS) equal to 0.01 times the deviance of the root note. 
 
 \vspace{2mm}
 
@@ -441,10 +441,10 @@ _\textcolor{red}{How do we know if our tree performs good, or if there would be 
 
 # Pruning 
 
-* If we have a data set with many predictors or choose a stringent stopping criterion, we may fit a (too) large tree. Thus, the number of observations from the training set that falls into some of the regions $R_j$ may be small $\rightarrow$ _\textcolor{red}{overfitting}_? 
+* If we have a data set with many predictors or choose a stringent stopping criterion, we may fit a (too) large tree.  $\rightarrow$ _\textcolor{red}{overfitting}_? 
 
 
-* A smaller tree with fewer splits leads to fewer regions $R_1, \ldots, R_J$ with more observations. This might lead to lower variance and better interpretation at the cost of more bias.
+* A smaller tree with fewer splits leads to fewer regions $R_1, \ldots, R_J$ with more observations. $\rightarrow$ Lower variance and better interpretation, but more bias.
 
 * One possible alternative to the process described above is to grow the tree only so long as the decrease in the RSS due to each split exceeds some (high) threshold.
 
@@ -492,7 +492,7 @@ So, which value of $\alpha$ is best?
 
 
 
-Please study this [note from Bo Lindqvist in MA8701 in 2017 - Advanced topics in Statistical Learning and Inference](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/CART1MA87012017BoLindqvist.pdf) for an example of how we perform cost complexity pruning in detail. Alternatively, this method, with proofs, are given in @Ripley, Section 7.2.
+Please study this [note from Bo Lindqvist in MA8701 in 2017 - Advanced topics in Statistical Learning and Inference](https://www.math.ntnu.no/emner/TMA4268/2018v/notes/CART1MA87012017BoLindqvist.pdf) for an example of how we perform cost complexity pruning in detail\footnote{see also link on course website}. Alternatively, this method, with proofs, are given in @Ripley, Section 7.2.
 
 
 ---
@@ -746,7 +746,7 @@ $~$
 
 \normalsize
 
-* With `type="proportional" `, the length of branches are now proportional to the decrease in impurity.
+* With `type="proportional" ` (default), the length of branches are proportional to the decrease in impurity.
 
 * The classification tree has two terminal nodes with factor "0" originating from the same branch. Why do we get this "unnecessary" split? 
 

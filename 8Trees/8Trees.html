@@ -1778,7 +1778,7 @@ ozone.tree = tree(ozone ~ temp + wind, data = ozone.train)</code></pre>
 </ul>
 
 <ul>
-<li>For example, the default in <code>tree()</code>: is given by <code>mincut=5, minsize=10, mindev=0.01</code>, thus a minimal number of observations in a node is 5, the smallest nodes that are potentially split is 10, and the minimal reduction in deviance (RSS) equal to 0.01.</li>
+<li>For example, the default in <code>tree()</code>: is given by <code>mincut=5, minsize=10, mindev=0.01</code>, thus a minimal number of observations in a node is 5, the smallest nodes that are potentially split is 10, and the minimal reduction in deviance (RSS) equal to 0.01 times the deviance of the root note.</li>
 </ul>
 
 <ul>
@@ -1818,8 +1818,8 @@ ozone.tree = tree(ozone ~ temp + wind, data = ozone.train)</code></pre>
 <div id="pruning" class="section level1">
 <h1>Pruning</h1>
 <ul>
-<li><p>If we have a data set with many predictors or choose a stringent stopping criterion, we may fit a (too) large tree. Thus, the number of observations from the training set that falls into some of the regions <span class="math inline">\(R_j\)</span> may be small <span class="math inline">\(\rightarrow\)</span> <em></em>?</p></li>
-<li><p>A smaller tree with fewer splits leads to fewer regions <span class="math inline">\(R_1, \ldots, R_J\)</span> with more observations. This might lead to lower variance and better interpretation at the cost of more bias.</p></li>
+<li><p>If we have a data set with many predictors or choose a stringent stopping criterion, we may fit a (too) large tree. <span class="math inline">\(\rightarrow\)</span> <em></em>?</p></li>
+<li><p>A smaller tree with fewer splits leads to fewer regions <span class="math inline">\(R_1, \ldots, R_J\)</span> with more observations. <span class="math inline">\(\rightarrow\)</span> Lower variance and better interpretation, but more bias.</p></li>
 <li><p>One possible alternative to the process described above is to grow the tree only so long as the decrease in the RSS due to each split exceeds some (high) threshold.</p></li>
 <li><p>This strategy will result in smaller trees, but is <em></em>: a seemingly worthless split early on in the tree might be followed by a very good split — that is, a split that leads to a large reduction in RSS later on.</p></li>
 </ul>
@@ -2030,7 +2030,7 @@ text(tree.HIClass, pretty = 1)</code></pre>
 <p><span class="math inline">\(~\)</span></p>
 
 <ul>
-<li><p>With <code>type=&quot;proportional&quot;</code>, the length of branches are now proportional to the decrease in impurity.</p></li>
+<li><p>With <code>type=&quot;proportional&quot;</code> (default), the length of branches are proportional to the decrease in impurity.</p></li>
 <li><p>The classification tree has two terminal nodes with factor “0” originating from the same branch. Why do we get this “unnecessary” split?</p></li>
 </ul>
 <!-- (Hint: Node purity), this is important because it means that we can be more/less certain about how accurate our classification is.-->

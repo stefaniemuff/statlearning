@@ -659,8 +659,8 @@ Use the default settings in the tree function:
   For example, the default in \texttt{tree()}: is given by
   \texttt{mincut=5,\ minsize=10,\ mindev=0.01}, thus a minimal number of
   observations in a node is 5, the smallest nodes that are potentially
-  split is 10, and the minimal reduction in deviance (RSS) equal to
-  0.01.
+  split is 10, and the minimal reduction in deviance (RSS) equal to 0.01
+  times the deviance of the root note.
 \end{itemize}
 
 \vspace{2mm}
@@ -721,14 +721,12 @@ training and a test set. But:
 \begin{itemize}
 \item
   If we have a data set with many predictors or choose a stringent
-  stopping criterion, we may fit a (too) large tree. Thus, the number of
-  observations from the training set that falls into some of the regions
-  \(R_j\) may be small \(\rightarrow\)
+  stopping criterion, we may fit a (too) large tree. \(\rightarrow\)
   \emph{\textcolor{red}{overfitting}}?
 \item
   A smaller tree with fewer splits leads to fewer regions
-  \(R_1, \ldots, R_J\) with more observations. This might lead to lower
-  variance and better interpretation at the cost of more bias.
+  \(R_1, \ldots, R_J\) with more observations. \(\rightarrow\) Lower
+  variance and better interpretation, but more bias.
 \item
   One possible alternative to the process described above is to grow the
   tree only so long as the decrease in the RSS due to each split exceeds
@@ -810,8 +808,9 @@ Please study this
 \href{https://www.math.ntnu.no/emner/TMA4268/2018v/notes/CART1MA87012017BoLindqvist.pdf}{note
 from Bo Lindqvist in MA8701 in 2017 - Advanced topics in Statistical
 Learning and Inference} for an example of how we perform cost complexity
-pruning in detail. Alternatively, this method, with proofs, are given in
-Ripley (1996), Section 7.2.
+pruning in detail\footnote{see also link on course website}.
+Alternatively, this method, with proofs, are given in Ripley (1996),
+Section 7.2.
 
 \end{frame}
 
@@ -1182,7 +1181,7 @@ entropy criterion.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(tree.HIClass, }\DataTypeTok{type =} \StringTok{"proportional"}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(tree.HIClass)  }\CommentTok{#,type='proportional')}
 \KeywordTok{text}\NormalTok{(tree.HIClass, }\DataTypeTok{pretty =} \DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -1195,8 +1194,8 @@ entropy criterion.
 
 \begin{itemize}
 \item
-  With \texttt{type="proportional"}, the length of branches are now
-  proportional to the decrease in impurity.
+  With \texttt{type="proportional"} (default), the length of branches
+  are proportional to the decrease in impurity.
 \item
   The classification tree has two terminal nodes with factor ``0''
   originating from the same branch. Why do we get this ``unnecessary''
