@@ -5,13 +5,13 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "March 7 and 10, 2022"
 fontsize: 10pt
 output:
-  # beamer_presentation:
-  #   keep_tex: yes
-  #   fig_caption: false
-  #   latex_engine: xelatex
-  #   theme: "Singapore"
-  #   colortheme: "default"
-  #   font: "serif"
+ # beamer_presentation:
+ #    keep_tex: yes
+ #    fig_caption: false
+ #    latex_engine: xelatex
+ #    theme: "Singapore"
+ #    colortheme: "default"
+ #    font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -1610,12 +1610,13 @@ As expected `GCS.15` (GCS=15 at 2h) is a strong predictor along with `bskullf` (
 _Boosting_ is an alternative approach for improving the predictions resulting from a decision tree. 
 We will only consider the description of boosting regression trees (and not classification trees) in this course.
 
-In boosting the trees are grown _sequentially_ so that each tree is grown using information from the previous tree. 
+The trees are grown _sequentially_ so that each tree is grown using information from the previous tree. 
 
-* First build a decision tree with $d$ splits (and $d+1$ terminal notes).
-* Next, improve the model in areas where the model didn't perform well. This is done by fitting a decision tree to the _residuals of the model_. This procedure is called _learning slowly_. 
-* The first decision tree is then updated based on the residual tree, but with a weight. 
-* The procedure is repeated until some stopping criterion is reached. Each of the trees can be very small, with just a few terminal nodes (or just one split).
+1. Build a decision tree with $d$ splits (and $d+1$ terminal notes).
+2. Improve the model in areas where the model didn't perform well. This is done by fitting a decision tree to the _residuals of the model_. This procedure is called _learning slowly_. 
+3. The first decision tree is then updated based on the residual tree, but with a weight. 
+
+The procedure is repeated until some stopping criterion is reached. Each of the trees can be very small, with just a few terminal nodes (or just one split).
 
 ---
 

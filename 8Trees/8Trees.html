@@ -2649,13 +2649,13 @@ print(misclass.rf)</code></pre>
 <div id="boosting" class="section level1">
 <h1>Boosting</h1>
 <p><em>Boosting</em> is an alternative approach for improving the predictions resulting from a decision tree. We will only consider the description of boosting regression trees (and not classification trees) in this course.</p>
-<p>In boosting the trees are grown <em>sequentially</em> so that each tree is grown using information from the previous tree.</p>
-<ul>
-<li>First build a decision tree with <span class="math inline">\(d\)</span> splits (and <span class="math inline">\(d+1\)</span> terminal notes).</li>
-<li>Next, improve the model in areas where the model didn’t perform well. This is done by fitting a decision tree to the <em>residuals of the model</em>. This procedure is called <em>learning slowly</em>.</li>
+<p>The trees are grown <em>sequentially</em> so that each tree is grown using information from the previous tree.</p>
+<ol style="list-style-type: decimal">
+<li>Build a decision tree with <span class="math inline">\(d\)</span> splits (and <span class="math inline">\(d+1\)</span> terminal notes).</li>
+<li>Improve the model in areas where the model didn’t perform well. This is done by fitting a decision tree to the <em>residuals of the model</em>. This procedure is called <em>learning slowly</em>.</li>
 <li>The first decision tree is then updated based on the residual tree, but with a weight.</li>
-<li>The procedure is repeated until some stopping criterion is reached. Each of the trees can be very small, with just a few terminal nodes (or just one split).</li>
-</ul>
+</ol>
+<p>The procedure is repeated until some stopping criterion is reached. Each of the trees can be very small, with just a few terminal nodes (or just one split).</p>
 <hr />
 <p><strong>Algorithm 8.2: Boosting for regression trees</strong></p>
 <ol style="list-style-type: decimal">

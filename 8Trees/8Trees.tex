@@ -1181,7 +1181,7 @@ entropy criterion.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(tree.HIClass)  }\CommentTok{#,type='proportional')}
+\KeywordTok{plot}\NormalTok{(tree.HIClass, }\DataTypeTok{type =} \StringTok{"proportional"}\NormalTok{)}
 \KeywordTok{text}\NormalTok{(tree.HIClass, }\DataTypeTok{pretty =} \DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
@@ -2433,26 +2433,25 @@ that most of the trees will have these predictors in the top split.
 resulting from a decision tree. We will only consider the description of
 boosting regression trees (and not classification trees) in this course.
 
-In boosting the trees are grown \emph{sequentially} so that each tree is
-grown using information from the previous tree.
+The trees are grown \emph{sequentially} so that each tree is grown using
+information from the previous tree.
 
-\begin{itemize}
+\begin{enumerate}
 \tightlist
 \item
-  First build a decision tree with \(d\) splits (and \(d+1\) terminal
-  notes).
+  Build a decision tree with \(d\) splits (and \(d+1\) terminal notes).
 \item
-  Next, improve the model in areas where the model didn't perform well.
-  This is done by fitting a decision tree to the \emph{residuals of the
+  Improve the model in areas where the model didn't perform well. This
+  is done by fitting a decision tree to the \emph{residuals of the
   model}. This procedure is called \emph{learning slowly}.
 \item
   The first decision tree is then updated based on the residual tree,
   but with a weight.
-\item
-  The procedure is repeated until some stopping criterion is reached.
-  Each of the trees can be very small, with just a few terminal nodes
-  (or just one split).
-\end{itemize}
+\end{enumerate}
+
+The procedure is repeated until some stopping criterion is reached. Each
+of the trees can be very small, with just a few terminal nodes (or just
+one split).
 
 \end{frame}
 
