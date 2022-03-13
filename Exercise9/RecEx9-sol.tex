@@ -255,7 +255,7 @@ decision boundary is not linear, though it's linear in terms of
 \NormalTok{x =}\StringTok{ }\KeywordTok{as.matrix}\NormalTok{(dat[, }\KeywordTok{c}\NormalTok{(}\StringTok{"X1"}\NormalTok{, }\StringTok{"X2"}\NormalTok{)])}
 \NormalTok{xgrid =}\StringTok{ }\KeywordTok{make.grid}\NormalTok{(x)}
 \NormalTok{ygrid =}\StringTok{ }\KeywordTok{predict}\NormalTok{(svmfit, xgrid)}
-\KeywordTok{plot}\NormalTok{(xgrid, }\DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{, }\StringTok{"blue"}\NormalTok{)[}\KeywordTok{as.numeric}\NormalTok{(ygrid)], }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{, }\DataTypeTok{cex =} \FloatTok{0.2}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(xgrid, }\DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{, }\StringTok{"blue"}\NormalTok{)[}\KeywordTok{as.numeric}\NormalTok{(ygrid)], }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{, }\DataTypeTok{cex =} \FloatTok{0.5}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -269,7 +269,7 @@ decision boundary is not linear, though it's linear in terms of
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(xgrid, }\DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{, }\StringTok{"blue"}\NormalTok{)[}\KeywordTok{as.numeric}\NormalTok{(ygrid)], }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{, }\DataTypeTok{cex =} \FloatTok{0.2}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(xgrid, }\DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{, }\StringTok{"blue"}\NormalTok{)[}\KeywordTok{as.numeric}\NormalTok{(ygrid)], }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{, }\DataTypeTok{cex =} \FloatTok{0.5}\NormalTok{)}
 \KeywordTok{points}\NormalTok{(x, }\DataTypeTok{col =}\NormalTok{ y }\OperatorTok{+}\StringTok{ }\DecValTok{3}\NormalTok{, }\DataTypeTok{pch =} \DecValTok{19}\NormalTok{)}
 \KeywordTok{points}\NormalTok{(x[svmfit}\OperatorTok{$}\NormalTok{index, ], }\DataTypeTok{pch =} \DecValTok{5}\NormalTok{, }\DataTypeTok{cex =} \DecValTok{2}\NormalTok{)}
 \end{Highlighting}
@@ -287,7 +287,7 @@ decision boundary is not linear, though it's linear in terms of
 \begin{Highlighting}[]
 \NormalTok{beta =}\StringTok{ }\KeywordTok{drop}\NormalTok{(}\KeywordTok{t}\NormalTok{(svmfit}\OperatorTok{$}\NormalTok{coefs) }\OperatorTok{%*%}\StringTok{ }\NormalTok{x[svmfit}\OperatorTok{$}\NormalTok{index, ])}
 \NormalTok{beta0 =}\StringTok{ }\NormalTok{svmfit}\OperatorTok{$}\NormalTok{rho}
-\KeywordTok{plot}\NormalTok{(xgrid, }\DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{, }\StringTok{"blue"}\NormalTok{)[}\KeywordTok{as.numeric}\NormalTok{(ygrid)], }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{, }\DataTypeTok{cex =} \FloatTok{0.2}\NormalTok{)}
+\KeywordTok{plot}\NormalTok{(xgrid, }\DataTypeTok{col =} \KeywordTok{c}\NormalTok{(}\StringTok{"red"}\NormalTok{, }\StringTok{"blue"}\NormalTok{)[}\KeywordTok{as.numeric}\NormalTok{(ygrid)], }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{, }\DataTypeTok{cex =} \FloatTok{0.5}\NormalTok{)}
 \KeywordTok{points}\NormalTok{(x, }\DataTypeTok{col =}\NormalTok{ y }\OperatorTok{+}\StringTok{ }\DecValTok{3}\NormalTok{, }\DataTypeTok{pch =} \DecValTok{19}\NormalTok{)}
 \KeywordTok{points}\NormalTok{(x[svmfit}\OperatorTok{$}\NormalTok{index, ], }\DataTypeTok{pch =} \DecValTok{5}\NormalTok{, }\DataTypeTok{cex =} \DecValTok{2}\NormalTok{)}
 \KeywordTok{abline}\NormalTok{(beta0}\OperatorTok{/}\NormalTok{beta[}\DecValTok{2}\NormalTok{], }\OperatorTok{-}\NormalTok{beta[}\DecValTok{1}\NormalTok{]}\OperatorTok{/}\NormalTok{beta[}\DecValTok{2}\NormalTok{], }\DataTypeTok{lwd =} \DecValTok{2}\NormalTok{)  }\CommentTok{#class boundary}

@@ -5,10 +5,10 @@ author:
 - Department of Mathematical Sciences, NTNU
 date: "March 14, 2022"
 output:
-  # html_document:
-  #   df_print: paged
-  #   toc: no
-  #   toc_depth: '2'
+  html_document:
+    df_print: paged
+    toc: no
+    toc_depth: '2'
   pdf_document:
     fig_caption: yes
     keep_tex: yes
@@ -109,12 +109,12 @@ make.grid = function(x, n =75){
 x = as.matrix(dat[, c("X1", "X2")])
 xgrid=make.grid(x)
 ygrid=predict(svmfit,xgrid)
-plot(xgrid, col=c("red","blue")[as.numeric(ygrid)],pch=20,cex=.2)
+plot(xgrid, col=c("red","blue")[as.numeric(ygrid)], pch=20,cex=0.5)
 ```
 
 (b) 
 ```{r}
-plot(xgrid, col=c("red","blue")[as.numeric(ygrid)],pch=20,cex=.2)
+plot(xgrid, col=c("red","blue")[as.numeric(ygrid)],pch=20,cex=.5)
 points(x,col=y+3,pch=19)
 points(x[svmfit$index,],pch=5,cex=2)
 ```
@@ -123,7 +123,7 @@ points(x[svmfit$index,],pch=5,cex=2)
 ```{r}
 beta=drop(t(svmfit$coefs)%*%x[svmfit$index,])
 beta0=svmfit$rho
-plot(xgrid, col=c("red","blue")[as.numeric(ygrid)],pch=20,cex=.2)
+plot(xgrid, col=c("red","blue")[as.numeric(ygrid)],pch=20,cex=.5)
 points(x,col=y+3,pch=19)
 points(x[svmfit$index,],pch=5,cex=2)
 abline(beta0/beta[2],-beta[1]/beta[2], lwd = 2) #class boundary
@@ -144,7 +144,7 @@ dat=data.frame(y=factor(y),x)
 
 
 ```{r}
-r.cv <- tune(svm,factor(y)~.,data=dat,kernel="radial",ranges=list(cost=c(0.01,0.1,1,5,10,100,1000),gamma=c(0.01,0.1,1,10,100)))
+r.cv <- tune(svm, factor(y)~., data=dat,kernel="radial", ranges=list(cost=c(0.01,0.1,1,5,10,100,1000), gamma=c(0.01,0.1,1,10,100)))
 summary(r.cv)
 fit <- r.cv$best.model
 ```
