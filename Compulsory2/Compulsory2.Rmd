@@ -6,10 +6,10 @@ header-includes:
  - \usepackage{amsmath}
 date: 'Hand out date: March 21, 2022'
 output:
-  html_document:
-    df_print: paged
-    toc: no
-    toc_depth: '2'
+  # html_document:
+  #   df_print: paged
+  #   toc: no
+  #   toc_depth: '2'
   pdf_document:
     toc: no
     toc_depth: '2'
@@ -349,7 +349,7 @@ In the following code, we're importing a [word-happiness-report-2021 dataset](ht
 ```{r}
 # load a synthetic dataset
 id <- "1NJ1SuUBebl5P8rMSIwm_n3S8a7K43yP4" # google file ID
-happiness <- read.csv(sprintf("https://docs.google.com/uc?id=%s&export=download", id))
+happiness <- read.csv(sprintf("https://docs.google.com/uc?id=%s&export=download", id),fileEncoding="UTF-8-BOM")
 
 colnames(happiness)
 cols = c('Country.name', 
