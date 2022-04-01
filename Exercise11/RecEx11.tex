@@ -32,7 +32,7 @@
 \usepackage{hyperref}
 \hypersetup{
             pdftitle={Module 11: Recommended Exercises},
-            pdfauthor={Emma Skarstein, Michail Spitieris, Stefanie Muff; Department of Mathematical Sciences, NTNU},
+            pdfauthor={Emma Skarstein, Daesoo Lee, Stefanie Muff; Department of Mathematical Sciences, NTNU},
             colorlinks=true,
             linkcolor=Maroon,
             filecolor=Maroon,
@@ -118,9 +118,9 @@
 
 \title{Module 11: Recommended Exercises}
 \providecommand{\subtitle}[1]{}
-\subtitle{TMA4268 Statistical Learning V2021}
-\author{Emma Skarstein, Michail Spitieris, Stefanie Muff \and Department of Mathematical Sciences, NTNU}
-\date{April 20, 2021}
+\subtitle{TMA4268 Statistical Learning V2022}
+\author{Emma Skarstein, Daesoo Lee, Stefanie Muff \and Department of Mathematical Sciences, NTNU}
+\date{April 4 and 6, 2022}
 
 \begin{document}
 \maketitle
@@ -226,6 +226,13 @@ The following problem involves classification of handwritten digits from
 \texttt{ElemStatLearn} R package or see Section 11.7 in the Book
 Elements of Statistical Learning.
 
+Note: the \texttt{ElemStatLearn} package has been archived from CRAN, so
+to get ahold of the data, download the archived package from
+\url{https://cran.r-project.org/src/contrib/Archive/ElemStatLearn/ElemStatLearn_2015.6.26.tar.gz},
+and then in RStudio, click the ``Packages'' tab, then click ``Install'',
+select ``Install from: Package Archive File'', and then select the
+\texttt{.tar.gz} file you downloaded above.
+
 We have images of handwritten digits in grayscale of size \(16\times16\)
 which are stored as vectors of size 256. There are 7291 training
 observations and 2007 test observations
@@ -249,11 +256,23 @@ the same variance).
 \hypertarget{b-2}{%
 \subsubsection{b)}\label{b-2}}
 
-Use a feedforward-network with one hidden layer to train and predict
-using the \texttt{nnet()} function from the \texttt{nnet} R package.
-Include 5 hidden nodes plus a bias node in the input and hidden layers.
-What is the number of parameters? Look at the confusion table for the
-test data. How good does the network perfom?
+One of the simplest ways of fitting simple neural networks in R is via
+the \texttt{nnet()} function in the R package \texttt{nnet} (this was
+not discussed in the lecture, but is useful to know anyway). Install the
+package and check the help file typing \texttt{?nnet} into the console.
+
+\begin{enumerate}
+\def\labelenumi{(\roman{enumi})}
+\item
+  What is the main limitation of the \texttt{nnet()} function?
+\item
+  Use a feedforward-network with one hidden layer to train and predict
+  using the \texttt{nnet()} function. Include 5 hidden nodes plus a bias
+  node in the input and hidden layers. What is the number of parameters?
+\item
+  Look at the confusion table for the test data. How good does the
+  network perfom?
+\end{enumerate}
 
 \hypertarget{problem-4-deep-learning-with-keras}{%
 \section{Problem 4: Deep Learning with
@@ -263,7 +282,8 @@ We again work on a handwritten digit recognition problem, but now we use
 the data from the keras library. This dataset consists of 60000 training
 data of \(28\times28\) grayscale images and 10000 test data.
 
-For more info see \href{https://keras.rstudio.com/}{here}
+For more info see \href{https://keras.rstudio.com/}{here:
+https://keras.rstudio.com/}.
 
 If you have already installed \texttt{keras} ignore the following chunk
 of code
@@ -390,8 +410,69 @@ network from b).
 \end{Shaded}
 
 and for dropout you can use
-\texttt{layer\_dropout(0.6)\ \%\textgreater{}\%} after each hidden
+\texttt{layer\_dropout(0.5)\ \%\textgreater{}\%} after each hidden
 layer. For more details see
 \href{https://keras.rstudio.com/articles/tutorial_overfit_underfit.html}{here}.
+
+\hypertarget{d-1}{%
+\subsubsection{d)}\label{d-1}}
+
+Now, let's try using convolutional neural network (CNN) instead of
+densely(fully)-connected neural network (DNN). We're building a CNN
+model that consists of three convolutional layers with the max pooling
+layers. The convolutional layers are followed by the flatten layer and
+dense layer. For more information, you can refer to
+\href{https://tensorflow.rstudio.com/tutorials/advanced/images/cnn/}{here}.
+
+The 2nd following code script builds the CNN model and its number of
+trainable parameters are almost the same as that of the DNN model shown
+in a) so that we can compare the performance difference between the DNN
+model and the CNN model when their model size (i.e., number of trainable
+parameters) are the same. Fill in the missing inputs and run the model.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# re-define `x_train`, ..., `y_test` to keep them as 2-dimensional.}
+\NormalTok{mnist =}\StringTok{ }\KeywordTok{dataset_mnist}\NormalTok{()}
+\NormalTok{x_train =}\StringTok{ }\NormalTok{mnist}\OperatorTok{$}\NormalTok{train}\OperatorTok{$}\NormalTok{x}
+\NormalTok{y_train =}\StringTok{ }\NormalTok{mnist}\OperatorTok{$}\NormalTok{train}\OperatorTok{$}\NormalTok{y}
+\NormalTok{x_test =}\StringTok{ }\NormalTok{mnist}\OperatorTok{$}\NormalTok{test}\OperatorTok{$}\NormalTok{x}
+\NormalTok{y_test =}\StringTok{ }\NormalTok{mnist}\OperatorTok{$}\NormalTok{test}\OperatorTok{$}\NormalTok{y}
+
+\CommentTok{# rescale}
+\NormalTok{x_train =}\StringTok{ }\NormalTok{x_train}\OperatorTok{/}\DecValTok{255}
+\NormalTok{x_test =}\StringTok{ }\NormalTok{x_test}\OperatorTok{/}\DecValTok{255}
+
+\NormalTok{y_train =}\StringTok{ }\KeywordTok{to_categorical}\NormalTok{(y_train, }\DecValTok{10}\NormalTok{)}
+\NormalTok{y_test =}\StringTok{ }\KeywordTok{to_categorical}\NormalTok{(y_test, }\DecValTok{10}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# define a CNN model}
+\NormalTok{model <-}\StringTok{ }\KeywordTok{keras_model_sequential}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }\KeywordTok{layer_conv_2d}\NormalTok{(}\DataTypeTok{filters =} \DecValTok{8}\NormalTok{, }\DataTypeTok{kernel_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }
+    \DecValTok{3}\NormalTok{), }\DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{, }\DataTypeTok{input_shape =} \KeywordTok{c}\NormalTok{(...)) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{layer_max_pooling_2d}\NormalTok{(}\DataTypeTok{pool_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }
+    \DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{layer_conv_2d}\NormalTok{(}\DataTypeTok{filters =} \DecValTok{16}\NormalTok{, }\DataTypeTok{kernel_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }\DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{    }\KeywordTok{layer_max_pooling_2d}\NormalTok{(}\DataTypeTok{pool_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{2}\NormalTok{)) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{layer_conv_2d}\NormalTok{(}\DataTypeTok{filters =} \DecValTok{22}\NormalTok{, }
+    \DataTypeTok{kernel_size =} \KeywordTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{), }\DataTypeTok{activation =} \StringTok{"relu"}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }\KeywordTok{layer_flatten}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{    }\KeywordTok{layer_dense}\NormalTok{(}\DataTypeTok{units =} \DecValTok{10}\NormalTok{, }\DataTypeTok{activation =}\NormalTok{ ...)}
+\KeywordTok{summary}\NormalTok{(model)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# run}
+\NormalTok{model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{compile}\NormalTok{(}\DataTypeTok{optimizer =} \StringTok{"rmsprop"}\NormalTok{, }\DataTypeTok{loss =} \StringTok{"categorical_crossentropy"}\NormalTok{, }
+    \DataTypeTok{metrics =} \KeywordTok{c}\NormalTok{(}\StringTok{"accuracy"}\NormalTok{))}
+
+\NormalTok{history =}\StringTok{ }\NormalTok{model }\OperatorTok{%>%}\StringTok{ }\KeywordTok{fit}\NormalTok{(x_train, y_train, }\DataTypeTok{epochs =} \DecValTok{20}\NormalTok{, }\DataTypeTok{batch_size =} \DecValTok{128}\NormalTok{, }
+    \DataTypeTok{validation_split =} \FloatTok{0.2}\NormalTok{)}
+
+\KeywordTok{str}\NormalTok{(history)}
+\KeywordTok{plot}\NormalTok{(history)}
+\end{Highlighting}
+\end{Shaded}
 
 \end{document}

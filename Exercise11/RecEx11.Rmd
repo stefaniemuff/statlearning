@@ -1,20 +1,20 @@
 ---
 title: 'Module 11: Recommended Exercises'
 author:
-- Emma Skarstein, Michail Spitieris, Stefanie Muff
+- Emma Skarstein, Daesoo Lee, Stefanie Muff
 - Department of Mathematical Sciences, NTNU
-date: "April 20, 2021"
+date: "April 4 and 6, 2022"
 output:
+  # pdf_document:
+  #   fig_caption: yes
+  #   keep_tex: yes
+  #   toc: no
+  #   toc_depth: 2
   html_document:
     df_print: paged
     toc: no
     toc_depth: '2'
-  pdf_document:
-    fig_caption: yes
-    keep_tex: yes
-    toc: no
-    toc_depth: 2
-subtitle: TMA4268 Statistical Learning V2021
+subtitle: TMA4268 Statistical Learning V2022
 urlcolor: blue
 ---
 
@@ -134,13 +134,20 @@ Remember that it is important to decide on the scale based on the training data,
 
 
 ### b) 
-Use a feedforward-network with one hidden layer to train and predict using the `nnet()` function from the `nnet` R package. Include 5 hidden nodes plus a bias node in the input and hidden layers. What is the number of parameters? Look at the confusion table for the test data. How good does the network perfom? 
+
+One of the simplest ways of fitting simple neural networks in R is via the `nnet()` function in the R package `nnet` (this was not discussed in the lecture, but is useful to know anyway). Install the package and check the help file typing `?nnet` into the console. 
+
+(i) What is the main limitation of the `nnet()` function?
+
+(ii) Use a feedforward-network with one hidden layer to train and predict using the `nnet()` function. Include 5 hidden nodes plus a bias node in the input and hidden layers. What is the number of parameters? 
+
+(iii) Look at the confusion table for the test data. How good does the network perfom? 
 
 # Problem 4: Deep Learning with Keras
 
 We again work on a handwritten digit recognition problem, but now we use the data from the keras library. This dataset consists of 60000 training data of $28\times28$ grayscale images and 10000 test data.
 
-For more info see [here](https://keras.rstudio.com/)
+For more info see [here: https://keras.rstudio.com/](https://keras.rstudio.com/).
 
 If you have already installed `keras` ignore the following chunk of code
 
@@ -237,7 +244,57 @@ layer_dense(units = 16, activation = "relu", input_shape = 28*28,
             
             kernel_regularizer = regularizer_l2(l = 0.001))
 ```
-and for dropout you can use  `layer_dropout(0.6) %>%` after each hidden layer. For more details see [here](https://keras.rstudio.com/articles/tutorial_overfit_underfit.html).
+and for dropout you can use  `layer_dropout(0.5) %>%` after each hidden layer. For more details see [here](https://keras.rstudio.com/articles/tutorial_overfit_underfit.html).
 
 
+### d)
 
+Now, let's try using convolutional neural network (CNN) instead of densely(fully)-connected neural network (DNN). We're building a CNN model that consists of three convolutional layers with the max pooling layers. The convolutional layers are followed by the flatten layer and dense layer. For more information, you can refer to [here](https://tensorflow.rstudio.com/tutorials/advanced/images/cnn/).
+
+The 2nd following code script builds the CNN model and its number of trainable parameters are almost the same as that of the DNN model shown in a) so that we can compare the performance difference between the DNN model and the CNN model when their model size (i.e., number of trainable parameters) are the same. Fill in the missing inputs and run the model.
+
+```{r, eval=FALSE}
+# re-define `x_train`, ..., `y_test` to keep them as 2-dimensional.
+mnist = dataset_mnist()
+x_train = mnist$train$x
+y_train = mnist$train$y
+x_test = mnist$test$x
+y_test = mnist$test$y
+
+# rescale
+x_train = x_train / 255
+x_test = x_test / 255
+
+y_train = to_categorical(y_train, 10)
+y_test = to_categorical(y_test, 10)
+```
+
+```{r, eval=FALSE}
+# define a CNN model
+model <- keras_model_sequential() %>% 
+  layer_conv_2d(filters = 8, kernel_size = c(3,3), activation = "relu", 
+                input_shape = c(...)) %>% 
+  layer_max_pooling_2d(pool_size = c(2,2)) %>% 
+  layer_conv_2d(filters = 16, kernel_size = c(3,3), activation = "relu") %>% 
+  layer_max_pooling_2d(pool_size = c(2,2)) %>% 
+  layer_conv_2d(filters = 22, kernel_size = c(3,3), activation = "relu") %>% 
+  layer_flatten() %>% 
+  layer_dense(units = 10, activation = ...)
+summary(model)
+```
+
+```{r, eval=F}
+# run
+model %>% compile(
+optimizer = "rmsprop",
+loss = "categorical_crossentropy", metrics = c("accuracy")
+)
+
+history = model %>% fit(x_train, y_train,
+epochs = 20,
+batch_size = 128,
+validation_split = 0.2)
+
+str(history)
+plot(history)
+```
