@@ -68,6 +68,46 @@ $~$
 
 **And**: you got to be an expert in using the R language and writing R Markdown reports.
 
+---
+
+
+# The exam
+
+$~$
+
+* **Digital home exam** June 3rd, 9-13h, +30' to scan and upload files.
+
+$~$
+
+Tentative plan:
+
+* Warm up section
+* 1-2 examples with real data
+* A conceptual/theoretical section testing your understanding.
+* A section with single/multiple choice questions. 
+
+$~$
+
+Check out the exam from last year (see course website).
+
+
+---
+
+# The course book
+
+$~$
+
+Attention: 
+
+* We are mainly working with the _first edition_:
+https://www.statlearning.com/
+
+* The _second edition_ came out very recently. Chapter 10 is relevant for our Module 11 (Neural networks and deep learning):
+
+\centering
+![](deep_learning.png){width=50%}
+
+
 
 ---
 
@@ -175,43 +215,6 @@ $~$
 
 * ROC curves, AUC, sensitivity and specificity of classification methods.
 
----
-
-```{r,echo=FALSE,eval=TRUE,fig.width=6,fig.height=4.5}
-attach(iris)
-library(class)
-library(MASS)
-library(dplyr)
-library(ggpubr)
-
-testgrid = expand.grid(Sepal.Length = seq(min(iris[,1]-0.2), max(iris[,1]+0.2), 
-              by=0.05), Sepal.Width = seq(min(iris[,2]-0.2), max(iris[,2]+0.2), 
-              by=0.05))
-iris_lda = lda(Species~Sepal.Length+Sepal.Width, data=iris, prior=c(1,1,1)/3)
-res = predict(object = iris_lda, newdata = testgrid)
-Species_lda = res$class
-postprobs=res$posterior
-iris_lda_df = bind_rows(mutate(testgrid, Species_lda))
-iris_lda_df$Species_lda = as.factor(iris_lda_df$Species_lda)
-iris0_plot = ggplot(iris, aes(x=Sepal.Width, y=Sepal.Length, 
-                              color=Species))+geom_point(size=2.5)
-irislda_plot = iris0_plot + geom_point(aes(x = Sepal.Width, y=Sepal.Length, 
-                            colour=Species_lda), data=iris_lda_df, size=0.8)
-iris_qda = qda(Species~Sepal.Length + Sepal.Width, data=iris, prior=c(1,1,1)/3)
-Species_qda = predict(object = iris_qda, newdata = testgrid)$class
-
-iris_qda_df = bind_rows(mutate(testgrid, Species_qda))
-iris_qda_df$Species_qda = as.factor(iris_qda_df$Species_qda)
-
-gridprobs=
-
-irisqda_plot = iris0_plot + geom_point(aes(x = Sepal.Width, y=Sepal.Length, 
-                            colour=Species_qda), data=iris_qda_df, size=0.8)
-```
-
-```{r,echo=FALSE, fig.width=9,fig.height=4}
-ggarrange(irislda_plot,irisqda_plot)
-```
 
 ---
 
@@ -219,6 +222,7 @@ ggarrange(irislda_plot,irisqda_plot)
 library(class)
 library(dplyr)
 library(ggpubr)
+library(mvtnorm)
 set.seed(9)
 
 Sigma = matrix(c(2, 0, 0, 2), 2, 2)
@@ -226,8 +230,8 @@ Sigma = matrix(c(2, 0, 0, 2), 2, 2)
 mu1 = c(1, 1)
 mu2 = c(3, 3)
 
-X1 = mvrnorm(100, mu=mu1, Sigma=Sigma)
-X2 = mvrnorm(100, mu=mu2, Sigma=Sigma)
+X1 = rmvnorm(100, mu1,  Sigma)
+X2 = rmvnorm(100, mu2,  Sigma)
 
 class = c(rep("A",100), rep("B", 100))
 class = as.factor(class)
@@ -294,22 +298,46 @@ ggarrange(gg,gg3,gg10,gg150)
 
 Logistic regression gives a probability, given a certain value of the covariats $P(Y=1 \, | \, \boldsymbol{x})$.
 
-```{r,echo=F,fig.width=6,fig.height=4.5,out.width="90%"}
-library(ggplot2)
-library(AICcmodavg)
-data(beetle)
-xx <- seq(45,80,0.01)
-eta <- -14.578 + 0.2455*xx
-ppi <- exp(eta)/(1+exp(eta))
-dd <- data.frame(xx=xx,ppi=ppi)
-ggplot(beetle, aes(x = Dose, y = Mortality_rate)) + theme_bw() +
-geom_point() +
-xlab("x") + ylab("Pr(Y=1)")  +
-geom_line(aes(xx, ppi,colour = "red"), dd, size=1.2) + 
-  scale_color_discrete(guide = FALSE)
+![](beetles.png){width=90%}
+
+---
+
+```{r,echo=FALSE,eval=TRUE,fig.width=6,fig.height=4.5}
+attach(iris)
+library(class)
+library(MASS)
+library(dplyr)
+library(ggpubr)
+
+testgrid = expand.grid(Sepal.Length = seq(min(iris[,1]-0.2), max(iris[,1]+0.2), 
+              by=0.05), Sepal.Width = seq(min(iris[,2]-0.2), max(iris[,2]+0.2), 
+              by=0.05))
+iris_lda = lda(Species~Sepal.Length+Sepal.Width, data=iris, prior=c(1,1,1)/3)
+res = predict(object = iris_lda, newdata = testgrid)
+Species_lda = res$class
+postprobs=res$posterior
+iris_lda_df = bind_rows(mutate(testgrid, Species_lda))
+iris_lda_df$Species_lda = as.factor(iris_lda_df$Species_lda)
+iris0_plot = ggplot(iris, aes(x=Sepal.Width, y=Sepal.Length, 
+                              color=Species))+geom_point(size=2.5)
+irislda_plot = iris0_plot + geom_point(aes(x = Sepal.Width, y=Sepal.Length, 
+                            colour=Species_lda), data=iris_lda_df, size=0.8)
+iris_qda = qda(Species~Sepal.Length + Sepal.Width, data=iris, prior=c(1,1,1)/3)
+Species_qda = predict(object = iris_qda, newdata = testgrid)$class
+
+iris_qda_df = bind_rows(mutate(testgrid, Species_qda))
+iris_qda_df$Species_qda = as.factor(iris_qda_df$Species_qda)
+
+gridprobs=
+
+irisqda_plot = iris0_plot + geom_point(aes(x = Sepal.Width, y=Sepal.Length, 
+                            colour=Species_qda), data=iris_qda_df, size=0.8)
 ```
 
- 
+```{r,echo=FALSE, fig.width=9,fig.height=4}
+ggarrange(irislda_plot,irisqda_plot)
+```
+
 
 
 ---
@@ -318,7 +346,7 @@ geom_line(aes(xx, ppi,colour = "red"), dd, size=1.2) +
 
 $~$
 
-**Cros-validation**
+**Cross-validation**
 
 \vspace{2mm}
 
@@ -1059,27 +1087,7 @@ $~$
 
 
 
-# The exam
-
-$~$
-
-* **Digital home exam** June 3rd, 9-13h.
-
-$~$
-
-Tentative plan:
-
-* Warm up section
-* Two examples with real data
-* A conceptual/theoretical section testing your understanding.
-* A section with single/multiple choice questions. 
-
-$~$
-
-Check out the exam from last year (see course website).
-
-
----
+ 
 
 Thank you for attending this course  - good luck for the exam!
 
