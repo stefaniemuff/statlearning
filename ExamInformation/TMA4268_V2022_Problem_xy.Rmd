@@ -1,0 +1,87 @@
+---
+title: "Problem xy (use separate files for each problem)"
+author: "Candidate number"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  pdf_document
+# html_document
+---
+  
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
+                      cache=TRUE, size="scriptsize",fig.width=4, fig.height=3)
+
+```
+
+The following packages are probably needed to solve the exam, but there might be other packages that you prefer to use. **Please make sure that you have installed at least the following R packages BEFORE the exam starts**! If you want to be sure that you don't miss any R package, you can also go through all the exercises we did in the course and install all the packages we used. 
+
+
+```{r,eval=FALSE,echo=TRUE}
+install.packages("knitr")
+install.packages("MASS")
+install.packages("caret")
+install.packages("pls")
+install.packages("glmnet")
+install.packages("gam")
+install.packages("gbm")
+install.packages("randomForest")
+intall.packages("ggfortify")
+intall.packages("leaps")
+install.packages("pROC")
+
+```
+
+You can start with an R-chunck where you load some R packages, for example as follows (replace with the R packages you need to solve the task). But replace the chunc option by `echo=FALSE`, because it is not something you need to print in the pdf you upload.
+
+```{r,eval=TRUE,echo=TRUE}
+library(knitr)
+library(MASS)
+library(keras)
+library(caret)
+library(pls)
+library(glmnet)
+library(gam)
+library(gbm)
+library(randomForest)
+library(ggfortify)
+library(leaps)
+library(pROC)
+```
+
+
+
+Here are some examples how to include R code (required) and LaTex formulas (recommended), in the same way we did it during the whole semester. Please install latex on your computer if you would like to include mathematical formulas. The alternative is that you write mathematical things on paper, your iPad or similar, and upload separately.
+
+To prepare for the exam you might also want to go through the bonus part about R Markdown in the online R course:
+
+https://digit.ntnu.no/courses/course-v1:NTNU+IMF001+2020/course/
+
+
+Here is a code chunk taken from Compulsory 1 of 2021 (replace it with the code you need in the exam):
+
+```{r, eval=TRUE}
+id <- "1nLen1ckdnX4P9n8ShZeU7zbXpLc7qiwt" # google file ID
+d.worm <- read.csv(sprintf("https://docs.google.com/uc?id=%s&export=download", id))
+head(d.worm)
+```
+
+
+## a)
+
+R code, results and answers to sub-question a)
+
+
+## b) 
+Below you have to complete the code and then replace `eval=FALSE` by `eval=TRUE` in the chunk options:
+```{r, eval=FALSE, echo=TRUE}
+ggplot(d.worm,aes(x= ... ,y=  ... ,colour= ...)) + geom_point() + theme_bw()
+```
+
+Note that the default figure width and height have been set globally as `fig.width=4, fig.height=3`, but if you would like to change that (e.g., due to space constraints), you can include a different width and height directly into the chunk options, again using `fig.width=..., fig.height=...`.
+
+## c)
+Here is an example with LaTeX code: $y_i = \beta_0 + \beta_1 x_i + \epsilon_i$, where $\beta_0=1$ and $\beta_1= 2$. In display mode you use for example 
+
+$$y_i = \beta_0 + \beta_1 x_i + \epsilon_i \ , \epsilon_i \sim \mathcal{N}(0,\sigma^2) \ .$$
+
