@@ -1,33 +1,37 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
-\documentclass[10pt,ignorenonframetext,]{beamer}
+\documentclass[
+  10pt,
+  ignorenonframetext,
+]{beamer}
 \usepackage{pgfpages}
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
 \setbeamercolor{caption name}{fg=normal text.fg}
 \beamertemplatenavigationsymbolsempty
-% Prevent slide breaks in the middle of a paragraph:
+% Prevent slide breaks in the middle of a paragraph
 \widowpenalties 1 10000
 \raggedbottom
 \setbeamertemplate{part page}{
-\centering
-\begin{beamercolorbox}[sep=16pt,center]{part title}
-  \usebeamerfont{part title}\insertpart\par
-\end{beamercolorbox}
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
 }
 \setbeamertemplate{section page}{
-\centering
-\begin{beamercolorbox}[sep=12pt,center]{part title}
-  \usebeamerfont{section title}\insertsection\par
-\end{beamercolorbox}
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
 }
 \setbeamertemplate{subsection page}{
-\centering
-\begin{beamercolorbox}[sep=8pt,center]{part title}
-  \usebeamerfont{subsection title}\insertsubsection\par
-\end{beamercolorbox}
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
 }
 \AtBeginPart{
   \frame{\partpage}
@@ -41,45 +45,37 @@
 \AtBeginSubsection{
   \frame{\subsectionpage}
 }
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
-\else % if luatex or xelatex
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
   \usepackage{unicode-math}
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usetheme[]{Singapore}
 \usefonttheme{serif}
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
 \usepackage{xcolor}
-\usepackage{hyperref}
-\hypersetup{
-            pdftitle={Module 1: Introduction},
-            pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
-            colorlinks=true,
-            linkcolor=Maroon,
-            filecolor=Maroon,
-            citecolor=Blue,
-            urlcolor=blue,
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
 \newif\ifbibliography
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -121,7 +117,7 @@
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\usepackage{graphicx,grffile}
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -130,30 +126,41 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{0}
-
-% set default figure placement to htbp
+% Set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 \usepackage{multirow}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Module 1: Introduction},
+  pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
 
 \title{Module 1: Introduction}
-\providecommand{\subtitle}[1]{}
-\subtitle{TMA4268 Statistical Learning V2022}
+\subtitle{TMA4268 Statistical Learning V2023}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{10th January, 2022}
+\date{9th January, 2023}
 
 \begin{document}
 \frame{\titlepage}
 
 \begin{frame}{Acknowledgements}
 \protect\hypertarget{acknowledgements}{}
-
 \begin{itemize}
 \tightlist
 \item
@@ -171,12 +178,10 @@
 \item
   Thanks to Julia Debik for contributing to this module page.
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}{Learning outcomes of TMA4268}
 \protect\hypertarget{learning-outcomes-of-tma4268}{}
-
 \begin{enumerate}
 \item
   \textbf{Knowledge.} The student has knowledge about the most popular
@@ -191,25 +196,20 @@
   analyses, and knows which conclusions can be drawn from the analyses,
   and what the caveats are.
 \end{enumerate}
-
 \end{frame}
 
 \begin{frame}{Learning material}
 \protect\hypertarget{learning-material}{}
-
 \begin{enumerate}
 [1)]
 \item
   \textbf{The main learning source} is the textbook by James, Witten,
-  Hastie, Tibshirani (2013): ``An Introduction to Statistical
-  Learning''. The textbook can be downloaded here:
-  \url{https://www-bcf.usc.edu/~gareth/ISL/}
+  Hastie, Tibshirani (2021, 2nd edition): ``An Introduction to
+  Statistical Learning''. The textbook can be downloaded here:
+  \url{https://www.statlearning.com/}
 
   \begin{itemize}
-  \item
-    The ebook an also be downloaded from Springer:
-    \url{https://www.springer.com/gp/book/9781461471370} (NB, need to be
-    on NTNU network or via vpn.)
+  \tightlist
   \item
     There are 15 hours of youtube videos by two of the authors of the
     book, Trevor Hastie an Rob Tibshirani. Links will be added to the
@@ -225,26 +225,22 @@
   \textbf{Additional reading material will be clearly indicated in the
   modules and on the course page.}
 \end{enumerate}
-
 \end{frame}
 
 \begin{frame}{Course page}
 \protect\hypertarget{course-page}{}
-
 All the relevant information for the course can be found here:
 
-\url{https://wiki.math.ntnu.no/tma4268/2022v/start}
+\url{https://wiki.math.ntnu.no/tma4268/2023v/start}
 
 On each module page, all the relevant learning material and exercises
-(incl. solutions) will be provided in due time.
-
+(incl.~solutions) will be provided in due time.
 \end{frame}
 
-\begin{frame}{The Statistical Learning Team 2022}
-\protect\hypertarget{the-statistical-learning-team-2022}{}
-
+\begin{frame}{The Statistical Learning Team 2023}
+\protect\hypertarget{the-statistical-learning-team-2023}{}
 \begin{block}{The TAs:}
-
+\protect\hypertarget{the-tas}{}
 \vspace{2mm}
 
 \begin{itemize}
@@ -253,15 +249,17 @@ On each module page, all the relevant learning material and exercises
   \href{https://www.ntnu.no/ansatte/emma.s.skarstein}{Emma Skarstein};
   PhD student
 \item
+  \href{https://www.ntnu.no/ansatte/kenneth.aase}{Kenneth Aaase}; PhD
+  student
+\item
   \href{https://www.ntnu.no/ansatte/daesoo.lee}{Daesoo Lee}; PhD student
 \end{itemize}
 
 \(~\)
-
 \end{block}
 
 \begin{block}{The Lecturers}
-
+\protect\hypertarget{the-lecturers}{}
 \vspace{2mm}
 
 \begin{itemize}
@@ -270,22 +268,16 @@ On each module page, all the relevant learning material and exercises
   \href{https://www.ntnu.edu/employees/stefanie.muff}{Stefanie Muff};
   Associate Professor
 \item
-  \href{https://www.ntnu.no/ansatte/thiago.guerrera}{Thiago Guerrera
-  Martins}; NTNU/AIAscience (Modules 6, 7, 10)
-\item
-  \href{https://www.ntnu.no/ansatte/david.klindt}{David Klindt};
-  Postdoc/soon Meta (Module 12)
+  \href{https://www.ntnu.no/ansatte/daesoo.lee}{Daesoo Lee} (modules
+  2--4)
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}{Who is this course for?}
 \protect\hypertarget{who-is-this-course-for}{}
-
 \begin{block}{Primary requirements}
-
+\protect\hypertarget{primary-requirements}{}
 \(~\)
 
 \begin{itemize}
@@ -323,15 +315,12 @@ On each module page, all the relevant learning material and exercises
   Advantage with knowledge of computing - for example an introductory
   course in informatics, like TDT4105 or TDT4110.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Overlap}
-
+\protect\hypertarget{overlap}{}
 \vspace{2mm}
 
 \begin{itemize}
@@ -352,16 +341,13 @@ On each module page, all the relevant learning material and exercises
   vectors, covariance matrices and the multivariate normal distribution.
   Overlap only for multiple linear regression (M3).
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}{About the course}
 \protect\hypertarget{about-the-course}{}
-
 \begin{block}{Focus: Statistical theory \textbf{and} doing analyses}
-
+\protect\hypertarget{focus-statistical-theory-and-doing-analyses}{}
 \(~\)
 
 \begin{itemize}
@@ -390,15 +376,12 @@ On each module page, all the relevant learning material and exercises
   And vice versa - the student must also \textbf{understand} the model,
   methods and algorithms used.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Teaching philosophy}
-
+\protect\hypertarget{teaching-philosophy}{}
 ~
 
 \begin{itemize}
@@ -423,15 +406,12 @@ On each module page, all the relevant learning material and exercises
 \item
   Two weeks without lectures, time to work on the compulsory exercises.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Course content: The 12 Modules}
-
+\protect\hypertarget{course-content-the-12-modules}{}
 \vspace{4mm}
 
 \begin{itemize}
@@ -470,7 +450,7 @@ On each module page, all the relevant learning material and exercises
   \item
     Unsupervised methods
   \item
-    Neural networks (not in the course book)
+    Neural networks (new in the course book edition 2)
   \end{enumerate}
 \end{itemize}
 
@@ -481,15 +461,12 @@ On each module page, all the relevant learning material and exercises
 \item
   \textbf{Module 12}: Summing up
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Learning methods, activities and grading}
-
+\protect\hypertarget{learning-methods-activities-and-grading}{}
 \(~\)
 
 \begin{itemize}
@@ -498,56 +475,43 @@ On each module page, all the relevant learning material and exercises
   Lectures, exercises and works (projects).
 \end{itemize}
 
-~
+\(~\)
 
 \begin{itemize}
 \tightlist
 \item
-  Portfolio assessment is the basis for the grade awarded in the course.
-  This portfolio comprises
-
-  \begin{itemize}
-  \tightlist
-  \item
-    a written \textbf{final (school!) examination (80\%)}.
-  \item
-    two projects / compulsory exercises (\(2\times 10\%=20\%\)).
-  \end{itemize}
+  The assessment is a 100\% final school exam.
 \end{itemize}
 
-~
+\(~\)
 
 \begin{itemize}
 \tightlist
 \item
-  The results for the constituent parts are to be given in \%-points,
-  while the grade for the whole portfolio (course grade) is given by the
-  letter grading system. Retake of examination may be given as an oral
-  examination. The lectures are given in English.
+  To be allowed to the exam, you need to reach \textbf{at least 60\% in
+  both compulsory exercises}.
 \end{itemize}
 
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Retake of examination may be given as an oral examination. The
+  lectures are given in English.
+\end{itemize}
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{The lectures}
+\protect\hypertarget{the-lectures}{}
+\vspace{4mm}
 
-\vspace{2mm}
+\textbf{Mondays at 10.15-12.00 in KJL2 and Thursdays at 08.15-10.00 in
+EL3}
 
-\textbf{Mondays at 14.15-16.00 in S3 and Thursdays at 08.15-10.00 in S2}
-
-\vspace{2mm}
-
-\begin{itemize}
-\tightlist
-\item
-  We are starting with online classes due to the current restrictions
-  around Covid.
-\end{itemize}
-
-\vspace{2mm}
+\vspace{4mm}
 
 \begin{itemize}
 \tightlist
@@ -562,7 +526,7 @@ On each module page, all the relevant learning material and exercises
 \tightlist
 \item
   See here
-  \url{https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2022.pdf}
+  \url{https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2023.pdf}
   for a tentative schedule.
 \end{itemize}
 
@@ -574,15 +538,12 @@ On each module page, all the relevant learning material and exercises
   \textbf{I suggest that you always have your laptop handy for the
   lecture.} So you can run code or do an exercise in class.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{The first week: The R course}
-
+\protect\hypertarget{the-first-week-the-r-course}{}
 \(~\)
 
 \begin{itemize}
@@ -608,16 +569,17 @@ On each module page, all the relevant learning material and exercises
 \item
   There is a discussion forum that you can use for the R course.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Recommended exercises}
+\protect\hypertarget{recommended-exercises}{}
+\vspace{4mm}
 
-\vspace{2mm}
+\textbf{Thursdays at 10.15-12.00 in KJL2}
+
+\vspace{4mm}
 
 \begin{itemize}
 \tightlist
@@ -652,50 +614,27 @@ On each module page, all the relevant learning material and exercises
   Solutions will be provided to check yourself (no grading).
 \end{itemize}
 
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  Starting next week.
+\end{itemize}
+
 \(~\)
-
-Currently there are \textbf{three slots} in the schedule:
-
-\begin{itemize}
-\tightlist
-\item
-  Mon 8:15-10:00 (F2)
-\item
-  Wed 12:15-14:00 (F6)
-\item
-  Wed 14:15-16:00 (S4)
-\end{itemize}
-
-\vspace{2mm}
-
-But \textbf{do we need all of those}?
-
-Log into www.menti.com aud use the code 9384 0003.
-
-\vspace{2mm}
-
-\begin{itemize}
-\tightlist
-\item
-  We of course have to start with online supervision. How this works
-  will be communicated (see also course website).
-\end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{The compulsory exercises}
-
+\protect\hypertarget{the-compulsory-exercises}{}
 \vspace{4mm}
 
 \begin{itemize}
 \tightlist
 \item
-  We will have \textbf{two compulsory exercises}, each with a maximal
-  score of 50 points.
+  We will have \textbf{two compulsory exercises/projects}.
 \end{itemize}
 
 \vspace{2mm}
@@ -703,9 +642,18 @@ Log into www.menti.com aud use the code 9384 0003.
 \begin{itemize}
 \tightlist
 \item
-  These are supervised in the weekly exercise slots and there will be
-  one week without lectures (only with supervision) for each compulsory
-  exercise.
+  Both projects need to be completed, where at least \textbf{60\% of the
+  points must be reached in both of them} to be admitted to the exam.
+\end{itemize}
+
+\vspace{2mm}
+
+\begin{itemize}
+\tightlist
+\item
+  The exercises/projects are supervised in the weekly exercise slots and
+  there will be one week without lectures (only with supervision) for
+  each compulsory exercise.
 \end{itemize}
 
 \vspace{2mm}
@@ -722,7 +670,7 @@ Log into www.menti.com aud use the code 9384 0003.
 \tightlist
 \item
   Work in \textbf{groups of maximum 3}; groups are formed in Blackboard
-  (Bb). Also hand-in is via Bb in on Blackboard.
+  (Bb). Also hand-in is via Blackboard.
 \end{itemize}
 
 \vspace{2mm}
@@ -738,15 +686,12 @@ Log into www.menti.com aud use the code 9384 0003.
 \begin{itemize}
 \tightlist
 \item
-  The TAs grade the exercises.
+  The TAs grade the exercises (pass/fail).
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{itemize}
 \item
   The \textbf{\textcolor{red}{first compulsory exercise}} will be held
@@ -755,7 +700,8 @@ Log into www.menti.com aud use the code 9384 0003.
   \hspace{8mm}
 
   Suggested submission deadline:\\
-  \vspace{2mm} \hspace{8mm} \textbf{Monday, 21. Februar 2022, 23:59h}.
+  \vspace{2mm} \hspace{8mm} \textbf{Thursday, 23. February 2023,
+  23:59h}.
 \end{itemize}
 
 \vspace{8mm}
@@ -768,15 +714,13 @@ Log into www.menti.com aud use the code 9384 0003.
   \hspace{8mm}
 
   Suggested submission deadline:\\
-  \vspace{2mm} \hspace{8mm}\textbf{Monday, 4. April 2022, 23:59h}.
+  \vspace{2mm} \hspace{8mm}\textbf{Monday, 24. April 2023, 23:59h}.
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Tentative schedule}
-
+\protect\hypertarget{tentative-schedule}{}
 \(~\)
 
 A tentative schedule (i.e., with continous updates) can be found under
@@ -784,23 +728,20 @@ the following link (als available from our course page):
 
 \vspace{2mm}
 
-\url{https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2022.pdf}
-
+\url{https://github.com/stefaniemuff/statlearning/blob/master/TMA4268_schedule2023.pdf}
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{The lecture material}
-
+\protect\hypertarget{the-lecture-material}{}
 \(~\)
 
 \begin{itemize}
 \tightlist
 \item
   All the material presented in class will be available on our course
-  webpage (\url{https://wiki.math.ntnu.no/tma4268/2022v/start}).
+  webpage (\url{https://wiki.math.ntnu.no/tma4268/2023v/start}).
 \end{itemize}
 
 \vspace{2mm}
@@ -812,22 +753,19 @@ the following link (als available from our course page):
   exercises. This will allow you to check and use the code that is used
   therein.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{The discussion forum on Mattelab}
-
+\protect\hypertarget{the-discussion-forum-on-mattelab}{}
 \(~\)
 
 \begin{itemize}
 \tightlist
 \item
   Use our discussion forum on Mattelab for all course-relevant
-  questions: \url{https://mattelab2022v.math.ntnu.no/c/tma4268/9}
+  questions: \url{https://mattelab2023v.math.ntnu.no/c/tma4268/6}
 \end{itemize}
 
 \(~\)
@@ -838,23 +776,18 @@ the following link (als available from our course page):
   Avoid writing emails to the course staff. By posting your question on
   Mattelab we get the chance to answer the questions to everyone.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}{Who are you - and what are your expectations?}
 \protect\hypertarget{who-are-you---and-what-are-your-expectations}{}
+\(~\)
 
-~
-
-We again use www.menti.com
-
+Log into www.menti.com and use the code 6390 7810.
 \end{frame}
 
 \begin{frame}{Reference group}
 \protect\hypertarget{reference-group}{}
-
 \textbf{At least 3 members, ideally one from different programmes}
 
 \begin{itemize}
@@ -872,22 +805,20 @@ Volunteers?
 \begin{itemize}
 \tightlist
 \item
-  (3 year Bachelor or MSMNFNA)
+  Håkon Kjelland-Mørdre (BMAT)
 \item
-  (Industrial Mathematics)
+  (IndMat or Math/Physcis master, year 4 or 5?)
 \item
   (Other)
 \end{itemize}
 
 Thanks to the three people that volunteer.
-
 \end{frame}
 
 \begin{frame}{Module 1}
 \protect\hypertarget{module-1}{}
-
 \begin{block}{Aims of the first module}
-
+\protect\hypertarget{aims-of-the-first-module}{}
 \(~\)
 
 \begin{itemize}
@@ -911,15 +842,12 @@ Thanks to the three people that volunteer.
 \item
   \textbf{Introduction to R and RStudio }
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Learning material for this module}
-
+\protect\hypertarget{learning-material-for-this-module}{}
 \(~\)
 
 \emph{\textcolor{red}{Required}}:
@@ -929,8 +857,9 @@ Thanks to the three people that volunteer.
 \begin{itemize}
 \tightlist
 \item
-  Our textbook James et al (2013): An Introduction to Statistical
-  Learning - with Applications in R (ISL).
+  Our textbook James et al (2021): An Introduction to Statistical
+  Learning - with Applications in R
+  (ISL)\footnote{I do expect you to read the text book yourself}.
 
   \begin{itemize}
   \tightlist
@@ -959,21 +888,18 @@ Thanks to the three people that volunteer.
 \begin{itemize}
 \item
   Watch the video lecture for Chapter 1 by Hastie and Tibshirani
-  \href{https://wiki.math.ntnu.no/tma4268/2022v/subpage1}{here}.
+  \href{https://wiki.math.ntnu.no/tma4268/2023v/subpage1}{here}.
 \item
   Background on Matrix Algebra:
   \href{https://link.springer.com/chapter/10.1007/978-3-662-45171-7_2}{Härdle
   and Simes (2015) - Chapter 2: A short excursion into Matrix Algebra}
   (on the reading list for TMA4267 Linear statistical models).
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}{What is statistical learning?}
 \protect\hypertarget{what-is-statistical-learning}{}
-
 \begin{itemize}
 \tightlist
 \item
@@ -1007,12 +933,10 @@ Thanks to the three people that volunteer.
   Statistical learning is \textbf{a statistical discipline}, but the
   boarders are becoming more blurred.
 \end{itemize}
-
 \end{frame}
 
-\begin{frame}{Statistical Learning vs. ``Machine Learning''}
+\begin{frame}{Statistical Learning vs.~``Machine Learning'\,'}
 \protect\hypertarget{statistical-learning-vs.-machine-learning}{}
-
 \vspace{2mm}
 
 \begin{itemize}
@@ -1029,12 +953,10 @@ Thanks to the three people that volunteer.
 \item
   But many methods/algorithms are common to both fields.
 \end{itemize}
-
 \end{frame}
 
-\begin{frame}{Statistical Learning vs. ``Data Science''}
-\protect\hypertarget{statistical-learning-vs.-data-science}{}
-
+\begin{frame}{Statistical Learning vs ``Data Science''}
+\protect\hypertarget{statistical-learning-vs-data-science}{}
 Data science
 
 \begin{itemize}
@@ -1075,12 +997,10 @@ In statistical learning we will not work on the two first above
 
 \href{http://r4ds.had.co.nz/}{R for Data Science} is an excellent read
 and relevant for this course!
-
 \end{frame}
 
 \begin{frame}{Problems you will learn to solve}
 \protect\hypertarget{problems-you-will-learn-to-solve}{}
-
 There are \textbf{three main types of problems} discussed in this
 course:
 
@@ -1094,17 +1014,15 @@ course:
 \end{itemize}
 
 using data from science, technology, industry, economy/finance, \ldots{}
-
 \end{frame}
 
 \begin{frame}[fragile]{Example 1: Regression (Etiology of CVD)}
 \protect\hypertarget{example-1-regression-etiology-of-cvd}{}
-
 \begin{itemize}
 \item
   The Framingham Heart Study investigates the underlying causes of
   cardiovascular disease (CVD) (see
-  \url{https://www.framinghamheartstudy.org/}). 
+  \url{https://www.framinghamheartstudy.org/}).
 \item
   Aim: modelling systolic blood pressure (\texttt{SYSBP}) using data
   from \(n=2600\) persons.
@@ -1134,21 +1052,17 @@ using data from science, technology, industry, economy/finance, \ldots{}
   \texttt{BPMEDS} use of anti-hypertensive medication at examination:
   0=not currently using, 1=currently using. \normalsize
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{center}\includegraphics[width=1\linewidth]{1Intro_files/figure-beamer/CVDread-1} \end{center}
 
 What does this plot show?
 
 Red: male; turquoise: female
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{itemize}
 \tightlist
 \item
@@ -1162,13 +1076,11 @@ Red: male; turquoise: female
 \vspace{2mm}
 
 We use \texttt{sex} to color the graph.
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Etiology of CVD}
-
+\protect\hypertarget{etiology-of-cvd}{}
 \vspace{3mm}
 
 The question: \textbf{What are the factors that cause high SBP?}
@@ -1196,21 +1108,17 @@ prediction!
   The results are used to formulate hypotheses about the etiology of CVD
   - to be studied in new trials.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{modelB =}\StringTok{ }\KeywordTok{lm}\NormalTok{(}\OperatorTok{-}\DecValTok{1}\OperatorTok{/}\KeywordTok{sqrt}\NormalTok{(SYSBP) }\OperatorTok{~}\StringTok{ }\NormalTok{SEX }\OperatorTok{+}\StringTok{ }\NormalTok{AGE }\OperatorTok{+}\StringTok{ }\NormalTok{CURSMOKE }\OperatorTok{+}\StringTok{ }\NormalTok{BMI }\OperatorTok{+}\StringTok{ }\NormalTok{TOTCHOL }\OperatorTok{+}\StringTok{ }\NormalTok{BPMEDS, }
-    \DataTypeTok{data =}\NormalTok{ thisds)}
+\NormalTok{modelB }\OtherTok{=} \FunctionTok{lm}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\SpecialCharTok{/}\FunctionTok{sqrt}\NormalTok{(SYSBP) }\SpecialCharTok{\textasciitilde{}}\NormalTok{ SEX }\SpecialCharTok{+}\NormalTok{ AGE }\SpecialCharTok{+}\NormalTok{ CURSMOKE }\SpecialCharTok{+}\NormalTok{ BMI }\SpecialCharTok{+}\NormalTok{ TOTCHOL }\SpecialCharTok{+}\NormalTok{ BPMEDS, }\AttributeTok{data =}\NormalTok{ thisds)}
 
-\KeywordTok{summary}\NormalTok{(modelB)}
+\FunctionTok{summary}\NormalTok{(modelB)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1242,12 +1150,10 @@ prediction!
 \end{verbatim}
 
 \normalsize
-
 \end{frame}
 
 \begin{frame}[fragile]{Example 2: Classification (iris plants)}
 \protect\hypertarget{example-2-classification-iris-plants}{}
-
 The \texttt{iris} flower data set is a very famous multivariate data set
 introduced by the British statistician and biologist Ronald Fisher in
 1936.
@@ -1275,11 +1181,9 @@ The data set contains
     \texttt{Petal.Width}.
   \end{itemize}
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{figure}
 \includegraphics[width=150pt]{iris} \caption{Iris plant with sepal and petal leaves}\label{fig:iris_pic}
 \end{figure}
@@ -1287,16 +1191,14 @@ The data set contains
 \tiny
 
 \url{http://blog.kaggle.com/2015/04/22/scikit-learn-video-3-machine-learning-first-steps-with-the-iris-dataset/}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{head}\NormalTok{(iris)}
+\FunctionTok{head}\NormalTok{(iris)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1311,22 +1213,18 @@ The data set contains
 \end{verbatim}
 
 \normalsize
-
 \end{frame}
 
 \begin{frame}
-
 Aim: correctly classify the species of an iris plant from sepal length
 and sepal width.
 
 \includegraphics{1Intro_files/figure-beamer/iriscont-1.pdf}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Linear boundaries}
-
+\protect\hypertarget{linear-boundaries}{}
 \vspace{2mm}
 
 In this plot the small black dots represent correctly classified iris
@@ -1336,27 +1234,25 @@ dots represent the class means.
 ~
 
 \includegraphics[width=10cm]{1Intro_files/figure-beamer/irislda-1}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Non-linear boundaries}
-
+\protect\hypertarget{non-linear-boundaries}{}
 \vspace{2mm}
 
-Sometimes a non-linear boundary is more suitable. ~
+Sometimes a non-linear boundary is more suitable.
+
+\(~\)
 
 \includegraphics[width=10cm]{1Intro_files/figure-beamer/irisqda-1}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}{Example 3: Unsupervised methods (Gene expression)}
 \protect\hypertarget{example-3-unsupervised-methods-gene-expression}{}
+(Check also the gene expression example in chapter 1 of the course book)
 
 \vspace{2mm}
 
@@ -1372,8 +1268,8 @@ Sometimes a non-linear boundary is more suitable. ~
 \begin{itemize}
 \tightlist
 \item
-  Rats were artificially selected for high- and low running capacity
-  (HCR and LCR, respectively).
+  Rats were artificially selected for high and low running capacity (HCR
+  and LCR, respectively).
 \end{itemize}
 
 \vspace{1mm}
@@ -1381,7 +1277,7 @@ Sometimes a non-linear boundary is more suitable. ~
 \begin{itemize}
 \tightlist
 \item
-  Rats were either kept seditary or trained.
+  Rats were either kept sedentary or trained.
 \end{itemize}
 
 \vspace{1mm}
@@ -1390,7 +1286,7 @@ Sometimes a non-linear boundary is more suitable. ~
 \tightlist
 \item
   Transcripts significantly related to running capacity and training
-  were identified. 
+  were identified.
 \end{itemize}
 
 \vspace{1mm}
@@ -1410,11 +1306,9 @@ Sometimes a non-linear boundary is more suitable. ~
   This is \emph{hierarchical cluster analysis} with pearson correlation
   distance measure (module 10).
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{figure}
 \includegraphics[width=150pt]{heatmap} \caption{Heat map of the most significant transcripts. Transcripts with a high expression are shown in red and transcripts with a low expression are shown in yellow.}\label{fig:heatmap_pic}
 \end{figure}
@@ -1422,23 +1316,19 @@ Sometimes a non-linear boundary is more suitable. ~
 \tiny
 
 More: \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2585023/}
-
 \end{frame}
 
 \begin{frame}{Example 4: Unsupervised methods (Network clustering)}
 \protect\hypertarget{example-4-unsupervised-methods-network-clustering}{}
-
 \vspace{2mm}
 
 Finding clusters in protein-protein-interaction networks. \vspace{2mm}
 
 \includegraphics{muff_etal.png}
-
 \end{frame}
 
 \begin{frame}{Plan for rest of the week}
 \protect\hypertarget{plan-for-rest-of-the-week}{}
-
 \(~\)
 
 \begin{itemize}
@@ -1463,12 +1353,10 @@ Finding clusters in protein-protein-interaction networks. \vspace{2mm}
 \item
   There is a discussion forum (click on the ``Discussion'' tab).
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}{Getting started with R}
 \protect\hypertarget{getting-started-with-r}{}
-
 \vspace{2mm}
 
 \begin{itemize}
@@ -1490,13 +1378,11 @@ Finding clusters in protein-protein-interaction networks. \vspace{2mm}
 
 If you need help on installing R and RStudio on you laptop computer,
 contact \href{mailto:orakel@ntnu.no}{\nolinkurl{orakel@ntnu.no}}.
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Some additional links}
-
+\protect\hypertarget{some-additional-links}{}
 \vspace{4mm}
 
 \begin{enumerate}
@@ -1508,32 +1394,14 @@ contact \href{mailto:orakel@ntnu.no}{\nolinkurl{orakel@ntnu.no}}.
   \vspace{2mm}
 \item
   What is CRAN? \url{https://cran.uib.no/} \vspace{2mm}
-\item
-  What is GitHub and Bitbucket? Do we need GitHub or Bitbucket in our
-  course? \url{https://www.youtube.com/watch?v=w3jLJU7DT5E} and
-  \url{https://techcrunch.com/2012/07/14/what-exactly-is-github-anyway/}
 \end{enumerate}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Additional nice R resources}
-
-\vspace{3mm}
-
-\begin{itemize}
-\tightlist
-\item
-  P. Dalgaard: Introductory statistics with R, 2nd edition, Springer,
-  which is also available freely to NTNU students as an ebook:
-  \href{https://link.springer.com/book/10.1007/978-0-387-79054-1}{Introductory
-  Statistics with R}.
-\end{itemize}
-
-\vspace{1mm}
+\protect\hypertarget{additional-nice-r-resources}{}
+\(~\)
 
 \begin{itemize}
 \tightlist
@@ -1542,7 +1410,7 @@ contact \href{mailto:orakel@ntnu.no}{\nolinkurl{orakel@ntnu.no}}.
   \url{http://r4ds.had.co.nz}
 \end{itemize}
 
-\vspace{1mm}
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -1551,7 +1419,7 @@ contact \href{mailto:orakel@ntnu.no}{\nolinkurl{orakel@ntnu.no}}.
   textbook: \url{https://ggplot2-book.org/}
 \end{itemize}
 
-\vspace{1mm}
+\vspace{2mm}
 
 \begin{itemize}
 \tightlist
@@ -1560,15 +1428,15 @@ contact \href{mailto:orakel@ntnu.no}{\nolinkurl{orakel@ntnu.no}}.
   cheat sheets from RStudio}
 \end{itemize}
 
+\vspace{2mm}
+
 \begin{itemize}
 \tightlist
 \item
   Questions on R: ask the course staff, colleagues, and
   \href{https://stackoverflow.com/}{stackoverflow}.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \end{document}
