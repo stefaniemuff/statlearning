@@ -1,9 +1,9 @@
 ---
 title: 'Module 2: Recommended Exercises - Solution'
 author: 
-  - Emma Skarstein, Daesoo Lee, Stefanie Muff
+  - Emma Skarstein, Daesoo Lee, Kenneth Aase, Stefanie Muff
   - Department of Mathematical Sciences, NTNU
-date: "January 17, 2022"
+date: "January 19, 2023"
 output:
   pdf_document:
     fig_caption: yes
@@ -14,7 +14,7 @@ output:
     df_print: paged
     toc: no
     toc_depth: '2'
-subtitle: TMA4268 Statistical Learning V2022
+subtitle: TMA4268 Statistical Learning V2023
 urlcolor: blue
 ---
 
@@ -23,7 +23,7 @@ urlcolor: blue
 <!-- rmarkdown::render("RecEx2-sol.Rmd","html_document",encoding="UTF-8") -->
 <!-- rmarkdown::render("RecEx2-sol.Rmd","pdf_document",encoding="UTF-8") -->
 
-Last changes: (14.01.2022)
+Last changes: `r Sys.Date()`
 
 ---
 
@@ -223,7 +223,11 @@ for(i in 1:nord){
 library(tidyverse) # The tidyverse contains ggplot2, as well as tidyr and dplyr, 
 # which we can use for dataframe manipulation.
 
-list_of_matrices_with_deg_id <- lapply(1:nord, function(poly_degree) cbind(predictions_list[[poly_degree]], simulation_num = 1:M, poly_degree))
+list_of_matrices_with_deg_id <- 
+  lapply(1:nord, 
+         function(poly_degree){cbind(predictions_list[[poly_degree]], 
+                                     simulation_num = 1:M, poly_degree)}
+         )
 # Now predictions_list is a list with 20 entries, where each entry is a matrix 
 # with 100 rows, where each row is the predicted polynomial of that degree.
 # We also have a column for the simulation number, and a column for polynomial degree.
@@ -237,7 +241,9 @@ for (i in 1:nord) {
 stacked_matrices_df <- as.data.frame(stacked_matrices)
 
 # Convert from wide to long (because that is the best format for ggplot2)
-long_predictions_df <- pivot_longer(stacked_matrices_df, !c(simulation_num, poly_degree), values_to = "y")
+long_predictions_df <- pivot_longer(stacked_matrices_df, 
+                                    !c(simulation_num, poly_degree), 
+                                    values_to = "y")
 
 # Now we can use ggplot2!
 # We just want to plot for degrees 1, 2, 10 and 20.
@@ -279,8 +285,14 @@ for(i in 1:nord){
   }
 }
 
-trainMSE <- lapply(1:nord, function(poly_degree) rowMeans((predictions_list[[poly_degree]] - ymat)^2))
-testMSE <- lapply(1:nord, function(poly_degree) rowMeans((predictions_list[[poly_degree]] - testymat)^2))
+trainMSE <- lapply(1:nord, 
+                   function(poly_degree){
+                     rowMeans((predictions_list[[poly_degree]] - ymat)^2)}
+                   )
+testMSE <- lapply(1:nord, 
+                  function(poly_degree){
+                    rowMeans((predictions_list[[poly_degree]] - testymat)^2)}
+                  )
 
 # Plotting -----
 library(tidyverse) # The tidyverse contains ggplot2, as well as tidyr and dplyr, 
@@ -384,7 +396,7 @@ ggplot(df_select_poly, aes(x = x, y = value, group = type)) +
   theme_bw()
 ```
 
-We see that the irriducible error remains constant with the complexity of the model and the variance (green) increases with the complexity. A linear model gives variance close to zero, while a polynomial of degree 20 gives variance close to 1 (larger at the borders). A more complex model is more flexible as it can turn up and down and change direction fast. This leads to larger variance. (Look at the plot in 2a, there is a larger variety of curves you can make when the degree is 20 compared to if the degree is 1.). 
+We see that the irriducible error remains constant with the complexity of the model and the variance (purple) increases with the complexity. A linear model gives variance close to zero, while a polynomial of degree 20 gives variance close to 1 (larger at the borders). A more complex model is more flexible as it can turn up and down and change direction fast. This leads to larger variance. (Look at the plot in 2a, there is a larger variety of curves you can make when the degree is 20 compared to if the degree is 1.). 
 
 Further, we see that the bias is large for poly1, the linear model. The linear model is quite rigid, so if the true underlying model is non-linear, we typically get large deviations between the fitted line and the training data. If we study the first plot, it seems like the fitted line goes through the training data in $x=-1$ and $x=3$ as the bias is close to zero here (this is confirmed by looking at the upper left plot in 2a).
 
@@ -430,7 +442,7 @@ df <- data.frame(x = rep(x, each = nord), poly_degree = rep(1:nord, length(x)),
                  bias2 = c(bias2mat), variance = c(varmat), 
                  irreducible_error = rep(4, prod(dim(varmat)))) #irr is just 1
 ```
-to get correct plots of the irreducible error. Here, $rep(4,prod(dim(varmat)))$ is replaced by $rep(1,prod(dim(varmat)))$.
+to get correct plots of the irreducible error. Here, `rep(4,prod(dim(varmat)))` is replaced by `rep(1,prod(dim(varmat)))`.
 
 
 # <a id="Rpackages"> R packages</a>
@@ -446,4 +458,6 @@ install.packages("Matrix")
 install.packages("patchwork")
 ```
 
-
+```{r}
+installed.packages()[names(sessionInfo()$otherPkgs), "Version"]
+``` 

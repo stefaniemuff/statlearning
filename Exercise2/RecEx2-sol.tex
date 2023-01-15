@@ -1,14 +1,14 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
 \documentclass[
 ]{article}
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -34,18 +34,6 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\hypersetup{
-  pdftitle={Module 2: Recommended Exercises - Solution},
-  pdfauthor={Emma Skarstein, Daesoo Lee, Stefanie Muff; Department of Mathematical Sciences, NTNU},
-  colorlinks=true,
-  linkcolor=Maroon,
-  filecolor=Maroon,
-  citecolor=Blue,
-  urlcolor=blue,
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
 \usepackage[margin=1in]{geometry}
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -104,9 +92,21 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
-\ifluatex
+\ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Module 2: Recommended Exercises - Solution},
+  pdfauthor={Emma Skarstein, Daesoo Lee, Kenneth Aase, Stefanie Muff; Department of Mathematical Sciences, NTNU},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
 
 \title{Module 2: Recommended Exercises - Solution}
 \usepackage{etoolbox}
@@ -115,15 +115,15 @@
   \apptocmd{\@title}{\par {\large #1 \par}}{}{}
 }
 \makeatother
-\subtitle{TMA4268 Statistical Learning V2022}
-\author{Emma Skarstein, Daesoo Lee, Stefanie Muff \and Department of
-Mathematical Sciences, NTNU}
-\date{January 17, 2022}
+\subtitle{TMA4268 Statistical Learning V2023}
+\author{Emma Skarstein, Daesoo Lee, Kenneth Aase, Stefanie
+Muff \and Department of Mathematical Sciences, NTNU}
+\date{January 19, 2023}
 
 \begin{document}
 \maketitle
 
-Last changes: (14.01.2022)
+Last changes: 2023-01-10
 
 \begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
 
@@ -228,22 +228,22 @@ Last changes: (14.01.2022)
 \end{Shaded}
 
 \begin{verbatim}
-##       mpg          cylinders      displacement     horsepower        weight    
-##  Min.   : 9.00   Min.   :3.000   Min.   : 68.0   Min.   : 46.0   Min.   :1613  
-##  1st Qu.:17.00   1st Qu.:4.000   1st Qu.:105.0   1st Qu.: 75.0   1st Qu.:2225  
-##  Median :22.75   Median :4.000   Median :151.0   Median : 93.5   Median :2804  
-##  Mean   :23.45   Mean   :5.472   Mean   :194.4   Mean   :104.5   Mean   :2978  
-##  3rd Qu.:29.00   3rd Qu.:8.000   3rd Qu.:275.8   3rd Qu.:126.0   3rd Qu.:3615  
-##  Max.   :46.60   Max.   :8.000   Max.   :455.0   Max.   :230.0   Max.   :5140  
-##                                                                                
-##   acceleration        year           origin                      name    
-##  Min.   : 8.00   Min.   :70.00   Min.   :1.000   amc matador       :  5  
-##  1st Qu.:13.78   1st Qu.:73.00   1st Qu.:1.000   ford pinto        :  5  
-##  Median :15.50   Median :76.00   Median :1.000   toyota corolla    :  5  
-##  Mean   :15.54   Mean   :75.98   Mean   :1.577   amc gremlin       :  4  
-##  3rd Qu.:17.02   3rd Qu.:79.00   3rd Qu.:2.000   amc hornet        :  4  
-##  Max.   :24.80   Max.   :82.00   Max.   :3.000   chevrolet chevette:  4  
-##                                                  (Other)           :365
+##       mpg          cylinders      displacement     horsepower        weight      acceleration  
+##  Min.   : 9.00   Min.   :3.000   Min.   : 68.0   Min.   : 46.0   Min.   :1613   Min.   : 8.00  
+##  1st Qu.:17.00   1st Qu.:4.000   1st Qu.:105.0   1st Qu.: 75.0   1st Qu.:2225   1st Qu.:13.78  
+##  Median :22.75   Median :4.000   Median :151.0   Median : 93.5   Median :2804   Median :15.50  
+##  Mean   :23.45   Mean   :5.472   Mean   :194.4   Mean   :104.5   Mean   :2978   Mean   :15.54  
+##  3rd Qu.:29.00   3rd Qu.:8.000   3rd Qu.:275.8   3rd Qu.:126.0   3rd Qu.:3615   3rd Qu.:17.02  
+##  Max.   :46.60   Max.   :8.000   Max.   :455.0   Max.   :230.0   Max.   :5140   Max.   :24.80  
+##                                                                                                
+##       year           origin                      name    
+##  Min.   :70.00   Min.   :1.000   amc matador       :  5  
+##  1st Qu.:73.00   1st Qu.:1.000   ford pinto        :  5  
+##  Median :76.00   Median :1.000   toyota corolla    :  5  
+##  Mean   :75.98   Mean   :1.577   amc gremlin       :  4  
+##  3rd Qu.:79.00   3rd Qu.:2.000   amc hornet        :  4  
+##  Max.   :82.00   Max.   :3.000   chevrolet chevette:  4  
+##                                  (Other)           :365
 \end{verbatim}
 
 The dimensions are 392 observations (rows) of 9 variables (columns). See
@@ -567,24 +567,48 @@ function on the specified columns with a single line of code:
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(GGally)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## Loading required package: ggplot2
-\end{verbatim}
-
-\begin{verbatim}
-## Registered S3 method overwritten by 'GGally':
-##   method from   
-##   +.gg   ggplot2
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \FunctionTok{ggpairs}\NormalTok{(Auto[,quant]) }\SpecialCharTok{+} \FunctionTok{theme\_minimal}\NormalTok{()}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{verbatim}
+## plot: [1,1] [=>-------------------------------------------------------------------------] 3% est: 0s
+## plot: [1,2] [===>-----------------------------------------------------------------------] 6% est: 1s
+## plot: [1,3] [=====>---------------------------------------------------------------------] 8% est: 1s
+## plot: [1,4] [=======>-------------------------------------------------------------------] 11% est: 1s
+## plot: [1,5] [=========>-----------------------------------------------------------------] 14% est: 1s
+## plot: [1,6] [===========>---------------------------------------------------------------] 17% est: 1s
+## plot: [2,1] [==============>------------------------------------------------------------] 19% est: 1s
+## plot: [2,2] [================>----------------------------------------------------------] 22% est: 1s
+## plot: [2,3] [==================>--------------------------------------------------------] 25% est: 1s
+## plot: [2,4] [====================>------------------------------------------------------] 28% est: 1s
+## plot: [2,5] [======================>----------------------------------------------------] 31% est: 1s
+## plot: [2,6] [========================>--------------------------------------------------] 33% est: 1s
+## plot: [3,1] [==========================>------------------------------------------------] 36% est: 1s
+## plot: [3,2] [============================>----------------------------------------------] 39% est: 1s
+## plot: [3,3] [==============================>--------------------------------------------] 42% est: 1s
+## plot: [3,4] [================================>------------------------------------------] 44% est: 1s
+## plot: [3,5] [==================================>----------------------------------------] 47% est: 1s
+## plot: [3,6] [=====================================>-------------------------------------] 50% est: 1s
+## plot: [4,1] [=======================================>-----------------------------------] 53% est: 1s
+## plot: [4,2] [=========================================>---------------------------------] 56% est: 1s
+## plot: [4,3] [===========================================>-------------------------------] 58% est: 1s
+## plot: [4,4] [=============================================>-----------------------------] 61% est: 1s
+## plot: [4,5] [===============================================>---------------------------] 64% est: 1s
+## plot: [4,6] [=================================================>-------------------------] 67% est: 1s
+## plot: [5,1] [===================================================>-----------------------] 69% est: 0s
+## plot: [5,2] [=====================================================>---------------------] 72% est: 0s
+## plot: [5,3] [=======================================================>-------------------] 75% est: 0s
+## plot: [5,4] [=========================================================>-----------------] 78% est: 0s
+## plot: [5,5] [===========================================================>---------------] 81% est: 0s
+## plot: [5,6] [=============================================================>-------------] 83% est: 0s
+## plot: [6,1] [================================================================>----------] 86% est: 0s
+## plot: [6,2] [==================================================================>--------] 89% est: 0s
+## plot: [6,3] [====================================================================>------] 92% est: 0s
+## plot: [6,4] [======================================================================>----] 94% est: 0s
+## plot: [6,5] [========================================================================>--] 97% est: 0s
+## plot: [6,6] [===========================================================================]100% est: 0s
+\end{verbatim}
 
 \includegraphics{RecEx2-sol_files/figure-latex/unnamed-chunk-7-1.pdf}
 
@@ -681,20 +705,13 @@ per gallon (mpg) seems to depend on these two variables.
 \end{Shaded}
 
 \begin{verbatim}
-##                     mpg displacement horsepower     weight acceleration
-## mpg           1.0000000   -0.8051269 -0.7784268 -0.8322442    0.4233285
-## displacement -0.8051269    1.0000000  0.8972570  0.9329944   -0.5438005
-## horsepower   -0.7784268    0.8972570  1.0000000  0.8645377   -0.6891955
-## weight       -0.8322442    0.9329944  0.8645377  1.0000000   -0.4168392
-## acceleration  0.4233285   -0.5438005 -0.6891955 -0.4168392    1.0000000
-## year          0.5805410   -0.3698552 -0.4163615 -0.3091199    0.2903161
-##                    year
-## mpg           0.5805410
-## displacement -0.3698552
-## horsepower   -0.4163615
-## weight       -0.3091199
-## acceleration  0.2903161
-## year          1.0000000
+##                     mpg displacement horsepower     weight acceleration       year
+## mpg           1.0000000   -0.8051269 -0.7784268 -0.8322442    0.4233285  0.5805410
+## displacement -0.8051269    1.0000000  0.8972570  0.9329944   -0.5438005 -0.3698552
+## horsepower   -0.7784268    0.8972570  1.0000000  0.8645377   -0.6891955 -0.4163615
+## weight       -0.8322442    0.9329944  0.8645377  1.0000000   -0.4168392 -0.3091199
+## acceleration  0.4233285   -0.5438005 -0.6891955 -0.4168392    1.0000000  0.2903161
+## year          0.5805410   -0.3698552 -0.4163615 -0.3091199    0.2903161  1.0000000
 \end{verbatim}
 
 We see that the obtained correlations coincide with the given elements
@@ -741,22 +758,6 @@ in the correlation matrix.
 \begin{Highlighting}[]
 \CommentTok{\#install.packages("patchwork")}
 \FunctionTok{library}\NormalTok{(patchwork)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-## 
-## Attaching package: 'patchwork'
-\end{verbatim}
-
-\begin{verbatim}
-## The following object is masked from 'package:MASS':
-## 
-##     area
-\end{verbatim}
-
-\begin{Shaded}
-\begin{Highlighting}[]
 \NormalTok{p1 }\OtherTok{=} \FunctionTok{ggplot}\NormalTok{(set1, }\FunctionTok{aes}\NormalTok{(x1,x2)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"set1"}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{theme\_minimal}\NormalTok{()}
 \NormalTok{p2 }\OtherTok{=} \FunctionTok{ggplot}\NormalTok{(set2, }\FunctionTok{aes}\NormalTok{(x1,x2)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"set2"}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{theme\_minimal}\NormalTok{()}
 \NormalTok{p3 }\OtherTok{=} \FunctionTok{ggplot}\NormalTok{(set3, }\FunctionTok{aes}\NormalTok{(x1,x2)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"set3"}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{theme\_minimal}\NormalTok{()}
@@ -816,7 +817,11 @@ in the correlation matrix.
 \FunctionTok{library}\NormalTok{(tidyverse) }\CommentTok{\# The tidyverse contains ggplot2, as well as tidyr and dplyr, }
 \CommentTok{\# which we can use for dataframe manipulation.}
 
-\NormalTok{list\_of\_matrices\_with\_deg\_id }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{nord, }\ControlFlowTok{function}\NormalTok{(poly\_degree) }\FunctionTok{cbind}\NormalTok{(predictions\_list[[poly\_degree]], }\AttributeTok{simulation\_num =} \DecValTok{1}\SpecialCharTok{:}\NormalTok{M, poly\_degree))}
+\NormalTok{list\_of\_matrices\_with\_deg\_id }\OtherTok{\textless{}{-}} 
+  \FunctionTok{lapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{nord, }
+         \ControlFlowTok{function}\NormalTok{(poly\_degree)\{}\FunctionTok{cbind}\NormalTok{(predictions\_list[[poly\_degree]], }
+                                     \AttributeTok{simulation\_num =} \DecValTok{1}\SpecialCharTok{:}\NormalTok{M, poly\_degree)\}}
+\NormalTok{         )}
 \CommentTok{\# Now predictions\_list is a list with 20 entries, where each entry is a matrix }
 \CommentTok{\# with 100 rows, where each row is the predicted polynomial of that degree.}
 \CommentTok{\# We also have a column for the simulation number, and a column for polynomial degree.}
@@ -830,7 +835,9 @@ in the correlation matrix.
 \NormalTok{stacked\_matrices\_df }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(stacked\_matrices)}
 
 \CommentTok{\# Convert from wide to long (because that is the best format for ggplot2)}
-\NormalTok{long\_predictions\_df }\OtherTok{\textless{}{-}} \FunctionTok{pivot\_longer}\NormalTok{(stacked\_matrices\_df, }\SpecialCharTok{!}\FunctionTok{c}\NormalTok{(simulation\_num, poly\_degree), }\AttributeTok{values\_to =} \StringTok{"y"}\NormalTok{)}
+\NormalTok{long\_predictions\_df }\OtherTok{\textless{}{-}} \FunctionTok{pivot\_longer}\NormalTok{(stacked\_matrices\_df, }
+                                    \SpecialCharTok{!}\FunctionTok{c}\NormalTok{(simulation\_num, poly\_degree), }
+                                    \AttributeTok{values\_to =} \StringTok{"y"}\NormalTok{)}
 
 \CommentTok{\# Now we can use ggplot2!}
 \CommentTok{\# We just want to plot for degrees 1, 2, 10 and 20.}
@@ -888,8 +895,14 @@ predictions when assuming \(y\) is a function of polynomials up to
 \NormalTok{  \}}
 \NormalTok{\}}
 
-\NormalTok{trainMSE }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{nord, }\ControlFlowTok{function}\NormalTok{(poly\_degree) }\FunctionTok{rowMeans}\NormalTok{((predictions\_list[[poly\_degree]] }\SpecialCharTok{{-}}\NormalTok{ ymat)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
-\NormalTok{testMSE }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{nord, }\ControlFlowTok{function}\NormalTok{(poly\_degree) }\FunctionTok{rowMeans}\NormalTok{((predictions\_list[[poly\_degree]] }\SpecialCharTok{{-}}\NormalTok{ testymat)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{))}
+\NormalTok{trainMSE }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{nord, }
+                   \ControlFlowTok{function}\NormalTok{(poly\_degree)\{}
+                     \FunctionTok{rowMeans}\NormalTok{((predictions\_list[[poly\_degree]] }\SpecialCharTok{{-}}\NormalTok{ ymat)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)\}}
+\NormalTok{                   )}
+\NormalTok{testMSE }\OtherTok{\textless{}{-}} \FunctionTok{lapply}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{nord, }
+                  \ControlFlowTok{function}\NormalTok{(poly\_degree)\{}
+                    \FunctionTok{rowMeans}\NormalTok{((predictions\_list[[poly\_degree]] }\SpecialCharTok{{-}}\NormalTok{ testymat)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)\}}
+\NormalTok{                  )}
 
 \CommentTok{\# Plotting {-}{-}{-}{-}{-}}
 \FunctionTok{library}\NormalTok{(tidyverse) }\CommentTok{\# The tidyverse contains ggplot2, as well as tidyr and dplyr, }
@@ -1030,7 +1043,7 @@ overfitted model that performs bad for test data.
 \includegraphics{RecEx2-sol_files/figure-latex/unnamed-chunk-14-1.pdf}
 
 We see that the irriducible error remains constant with the complexity
-of the model and the variance (green) increases with the complexity. A
+of the model and the variance (purple) increases with the complexity. A
 linear model gives variance close to zero, while a polynomial of degree
 20 gives variance close to 1 (larger at the borders). A more complex
 model is more flexible as it can turn up and down and change direction
@@ -1102,9 +1115,11 @@ and rerun the code. Study the results.
 If you want to set the variance to 1 for example, set \(sd=1\) in these
 parts of the code in 2a and 2b:
 
-\begin{verbatim}
-rnorm(length(x)*M, mean=0, sd=1)
-\end{verbatim}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{rnorm(length(x)*M, mean=0, sd=1)}
+\end{Highlighting}
+\end{Shaded}
 
 Also change the following part in 2c:
 
@@ -1117,8 +1132,8 @@ Also change the following part in 2c:
 \end{Shaded}
 
 to get correct plots of the irreducible error. Here,
-\(rep(4,prod(dim(varmat)))\) is replaced by
-\(rep(1,prod(dim(varmat)))\).
+\texttt{rep(4,prod(dim(varmat)))} is replaced by
+\texttt{rep(1,prod(dim(varmat)))}.
 
 \hypertarget{r-packages}{%
 \section{\texorpdfstring{ R packages}{ R packages}}\label{r-packages}}
@@ -1137,5 +1152,17 @@ first install the following packages (only once).
 \end{Highlighting}
 \end{Shaded}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{installed.packages}\NormalTok{()[}\FunctionTok{names}\NormalTok{(}\FunctionTok{sessionInfo}\NormalTok{()}\SpecialCharTok{$}\NormalTok{otherPkgs), }\StringTok{"Version"}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   forcats   stringr     dplyr     purrr     readr     tidyr    tibble tidyverse patchwork      MASS 
+##   "0.5.2"   "1.4.1"  "1.0.10"   "0.3.5"   "2.1.3"   "1.2.1"   "3.1.8"   "1.3.2"   "1.1.2"  "7.3-57" 
+##    GGally   ggplot2      ISLR     knitr 
+##   "2.1.2"   "3.3.6"     "1.4"    "1.40"
+\end{verbatim}
 
 \end{document}

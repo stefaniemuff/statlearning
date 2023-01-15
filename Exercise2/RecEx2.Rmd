@@ -1,9 +1,9 @@
 ---
 title: 'Module 2: Recommended Exercises'
 author: 
-  - Emma Skarstein, Daesoo Lee, Stefanie Muff
+  - Emma Skarstein, Daesoo Lee, Kenneth Aase, Stefanie Muff
   - Department of Mathematical Sciences, NTNU
-date: "January 17, 2022"
+date: "January 19, 2023"
 output:
   html_document:
     df_print: paged
@@ -14,7 +14,7 @@ output:
     keep_tex: yes
     toc: no
     toc_depth: 2
-subtitle: TMA4268 Statistical Learning V2022
+subtitle: TMA4268 Statistical Learning V2023
 urlcolor: blue
 ---
 
@@ -169,7 +169,11 @@ for(i in 1:nord){
 library(tidyverse) # The tidyverse contains ggplot2, as well as tidyr and dplyr, 
 # which we can use for dataframe manipulation.
 
-list_of_matrices_with_deg_id <- lapply(1:nord, function(poly_degree) cbind(predictions_list[[poly_degree]], simulation_num = 1:M, poly_degree))
+list_of_matrices_with_deg_id <- 
+  lapply(1:nord, 
+         function(poly_degree){cbind(predictions_list[[poly_degree]], 
+                                     simulation_num = 1:M, poly_degree)}
+         )
 # Now predictions_list is a list with 20 entries, where each entry is a matrix 
 # with 100 rows, where each row is the predicted polynomial of that degree.
 # We also have a column for the simulation number, and a column for polynomial degree.
@@ -183,12 +187,14 @@ for (i in 1:nord) {
 stacked_matrices_df <- as.data.frame(stacked_matrices)
 
 # Convert from wide to long (because that is the best format for ggplot2)
-long_predictions_df <- pivot_longer(stacked_matrices_df, !c(simulation_num, poly_degree), values_to = "y")
+long_predictions_df <- pivot_longer(stacked_matrices_df, 
+                                    !c(simulation_num, poly_degree), 
+                                    values_to = "y")
 
 # Now we can use ggplot2!
 # We just want to plot for degrees 1, 2, 10 and 20.
 
-plotting_df <- cbind(long_predictions_df, x = x) %>% # adding the x-vector to the dataframe
+plotting_df <- cbind(long_predictions_df, x = x) %>% # adding the x-vector to the dataframe 
   filter(poly_degree %in% c(1, 2, 10, 20)) # Select only the predictions using degree 1, 2, 10 or 20
 
 ggplot(plotting_df, aes(x = x, y = y, group = simulation_num)) +
@@ -231,8 +237,14 @@ for(i in 1:nord){
   }
 }
 
-trainMSE <- lapply(1:nord, function(poly_degree) rowMeans((predictions_list[[poly_degree]] - ymat)^2))
-testMSE <- lapply(1:nord, function(poly_degree) rowMeans((predictions_list[[poly_degree]] - testymat)^2))
+trainMSE <- lapply(1:nord, 
+                   function(poly_degree){
+                     rowMeans((predictions_list[[poly_degree]] - ymat)^2)}
+                   )
+testMSE <- lapply(1:nord, 
+                  function(poly_degree){
+                    rowMeans((predictions_list[[poly_degree]] - testymat)^2)}
+                  )
 ```
 
 Next, we plot the training and test error for each of the 100 data sets we simulated, as well as two different plots that show the means across the simulations.
@@ -271,7 +283,8 @@ stacked_errors_df$error <- as.numeric(stacked_errors_df$error)
 stacked_errors_df$simulation_num <- as.integer(stacked_errors_df$simulation_num)
 stacked_errors_df$poly_degree <- as.integer(stacked_errors_df$poly_degree)
 
-p.all_lines <- ggplot(data = stacked_errors_df, aes(x = poly_degree, y = error, group = simulation_num)) +
+p.all_lines <- ggplot(data = stacked_errors_df, 
+                      aes(x = poly_degree, y = error, group = simulation_num)) +
   geom_line(aes(color = simulation_num)) +
   facet_wrap(~ error_type) +
   xlab("Polynomial degree") +
