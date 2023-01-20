@@ -1,45 +1,39 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
-\documentclass[]{article}
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
-\else % if luatex or xelatex
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
   \usepackage{unicode-math}
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
 \usepackage{xcolor}
-\usepackage{hyperref}
-\hypersetup{
-            pdftitle={Module 3: Recommended Exercises},
-            pdfauthor={Emma Skarstein, Daesoo Lee, Stefanie Muff; Department of Mathematical Sciences, NTNU},
-            colorlinks=true,
-            linkcolor=Maroon,
-            filecolor=Maroon,
-            citecolor=Blue,
-            urlcolor=blue,
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
 \usepackage[margin=1in]{geometry}
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -81,7 +75,7 @@
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\usepackage{graphicx,grffile}
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -90,37 +84,41 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{0}
-% Redefines (sub)paragraphs to behave more like sections
-\ifx\paragraph\undefined\else
-\let\oldparagraph\paragraph
-\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
-\fi
-\ifx\subparagraph\undefined\else
-\let\oldsubparagraph\subparagraph
-\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
-\fi
-
-% set default figure placement to htbp
+% Set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Module 3: Recommended Exercises},
+  pdfauthor={Kenneth Aase, Emma Skarstein, Daesoo Lee, Stefanie Muff; Department of Mathematical Sciences, NTNU},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
 
+\title{Module 3: Recommended Exercises}
 \usepackage{etoolbox}
 \makeatletter
 \providecommand{\subtitle}[1]{% add subtitle to \maketitle
   \apptocmd{\@title}{\par {\large #1 \par}}{}{}
 }
 \makeatother
-
-\title{Module 3: Recommended Exercises}
-\providecommand{\subtitle}[1]{}
-\subtitle{TMA4268 Statistical Learning V2022}
-\author{Emma Skarstein, Daesoo Lee, Stefanie Muff \and Department of Mathematical Sciences, NTNU}
-\date{January 24, 2022}
+\subtitle{TMA4268 Statistical Learning V2023}
+\author{Kenneth Aase, Emma Skarstein, Daesoo Lee, Stefanie
+Muff \and Department of Mathematical Sciences, NTNU}
+\date{January 26, 2023}
 
 \begin{document}
 \maketitle
@@ -144,10 +142,10 @@ structure of the dataset.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(ISLR)}
-\NormalTok{Auto =}\StringTok{ }\KeywordTok{subset}\NormalTok{(Auto, }\DataTypeTok{select =} \OperatorTok{-}\NormalTok{name)}
-\CommentTok{# Auto$origin = factor(Auto$origin)}
-\KeywordTok{summary}\NormalTok{(Auto)}
+\FunctionTok{library}\NormalTok{(ISLR)}
+\NormalTok{Auto }\OtherTok{\textless{}{-}} \FunctionTok{subset}\NormalTok{(Auto, }\AttributeTok{select =} \SpecialCharTok{{-}}\NormalTok{name)}
+\CommentTok{\# Auto$origin \textless{}{-} factor(Auto$origin)}
+\FunctionTok{summary}\NormalTok{(Auto)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -170,7 +168,7 @@ structure of the dataset.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{str}\NormalTok{(Auto)}
+\FunctionTok{str}\NormalTok{(Auto)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -189,19 +187,20 @@ structure of the dataset.
 We obtain a summary and see that all variables are numerical
 (continuous). However, when we check the description of the data (again
 with \texttt{?Auto}) we immediately see that \texttt{origin} is actually
-encoding for either American (origin=1), European (origin=2) or
-Janapense (origin=3) origin of the car, thus the values 1, 2 and 3 do
-not have any actual numerical meaning. We therefore need to first change
-the data type of that variable to let R know that we are dealing with a
+encoding for either American (\texttt{origin\ =\ 1}), European
+(\texttt{origin\ =\ 2}) or Japanese (\texttt{origin\ =\ 3}) origin of
+the car, thus the values \(1\), \(2\) and \(3\) do not have any actual
+numerical meaning. We therefore need to first change the data type of
+that variable to let \texttt{R} know that we are dealing with a
 qualitative (categorical) variable, instead of a continuous one
-(otherwise we will obtain wrong model fits). In R such variables are
-called \emph{factor variables}, and before we continue to do any
-analyses we first need to convert \texttt{origin} into a factor variable
-(a synonymous for ``qualitative predictor''):
+(otherwise we will obtain wrong model fits). In \texttt{R} such
+variables are called \emph{factor variables}, and before we continue to
+do any analyses we first need to convert \texttt{origin} into a factor
+variable (a synonymous for ``qualitative predictor''):
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{Auto}\OperatorTok{$}\NormalTok{origin =}\StringTok{ }\KeywordTok{factor}\NormalTok{(Auto}\OperatorTok{$}\NormalTok{origin)}
+\NormalTok{Auto}\SpecialCharTok{$}\NormalTok{origin }\OtherTok{\textless{}{-}} \FunctionTok{factor}\NormalTok{(Auto}\SpecialCharTok{$}\NormalTok{origin)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -237,15 +236,16 @@ Comment on the output. In particular:
   Interpret the regression coefficient \(\beta_{\text{weight}}\) (what
   happens if a car weights 1000kg more, for example?).
 \item
-  What does the coefficient for the year variable suggest?
+  What does the estimated coefficient for the \texttt{year} variable
+  suggest?
 \end{enumerate}
 
 \hypertarget{d}{%
 \subsection{d)}\label{d}}
 
-Look again at the regression output from question c). Now we want to
-test whether the \texttt{origin} variable is important. How does this
-work for a factor variable with more than only two levels?
+Look again at the regression output from question \textbf{c)}. Now we
+want to test whether the \texttt{origin} variable is important. How does
+this work for a factor variable with more than only two levels?
 
 \hypertarget{e}{%
 \subsection{e)}\label{e}}
@@ -263,20 +263,20 @@ plot identify any observations with unusually high leverage?
 For beginners, it can be difficult to decide whether a certain QQ plot
 looks ``good'' or ``bad'', because we only look at it and do not test
 anything. A way to get a feeling for how ``bad'' a QQ plot may look,
-even when the normality assumption is perfectly ok, we can use
+even when the normality assumption is perfectly OK, we can use
 simulations: We can simply draw from the normal distribution and plot
 the QQ plot. Use the following code to repeat this six times:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{2332}\NormalTok{)}
-\NormalTok{n =}\StringTok{ }\DecValTok{100}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{2332}\NormalTok{)}
+\NormalTok{n }\OtherTok{\textless{}{-}} \DecValTok{100}
 
-\KeywordTok{par}\NormalTok{(}\DataTypeTok{mfrow =} \KeywordTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\DecValTok{6}\NormalTok{) \{}
-\NormalTok{    sim =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(n)}
-    \KeywordTok{qqnorm}\NormalTok{(sim, }\DataTypeTok{pch =} \DecValTok{1}\NormalTok{, }\DataTypeTok{frame =} \OtherTok{FALSE}\NormalTok{)}
-    \KeywordTok{qqline}\NormalTok{(sim, }\DataTypeTok{col =} \StringTok{"blue"}\NormalTok{, }\DataTypeTok{lwd =} \DecValTok{1}\NormalTok{)}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{6}\NormalTok{)\{}
+\NormalTok{  sim }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(n)}
+  \FunctionTok{qqnorm}\NormalTok{(sim, }\AttributeTok{pch =} \DecValTok{1}\NormalTok{, }\AttributeTok{frame =} \ConstantTok{FALSE}\NormalTok{)}
+  \FunctionTok{qqline}\NormalTok{(sim, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{1}\NormalTok{)}
 \NormalTok{\}}
 \end{Highlighting}
 \end{Shaded}
@@ -294,7 +294,7 @@ Fit another model for \texttt{mpg}, including only
 and \texttt{origin} (interactions can be included as
 \texttt{year*origin}; this adds the main effects and the interaction at
 once). Is there evidence that the interactions term is relevant? Give an
-interprentation of the result.
+interpretation of the result.
 
 \hypertarget{h}{%
 \subsection{h)}\label{h}}
@@ -312,7 +312,7 @@ that you got in e)? Comment on your findings.
 
 A core finding for the least-squares estimator
 \(\hat{\boldsymbol\beta}\) of linear regression models is
-\[ \hat{\boldsymbol\beta}=({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y} \ , \]
+\[ \hat{\boldsymbol\beta} = ({\bf X}^T{\bf X})^{-1} {\bf X}^T {\bf Y} \ , \]
 with
 \(\hat{\boldsymbol\beta}\sim N_{p}(\boldsymbol\beta,\sigma^2({\bf X}^T{\bf X})^{-1})\).
 
@@ -335,7 +335,7 @@ with
 
 What is the interpretation of a 95\% confidence interval? Hint: repeat
 experiment (on \(Y\)), on average how many CIs cover the true
-\(\beta_j\)? The following code shows an interpentation of a \(95\%\)
+\(\beta_j\)? The following code shows an interpretation of a \(95\%\)
 confidence interval. Study and fill in the code where is needed
 
 \begin{itemize}
@@ -347,25 +347,30 @@ confidence interval. Study and fill in the code where is needed
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{beta0 =}\StringTok{ }\NormalTok{...}
-\NormalTok{beta1 =}\StringTok{ }\NormalTok{...}
-\NormalTok{true_beta =}\StringTok{ }\KeywordTok{c}\NormalTok{(beta0, beta1)  }\CommentTok{# vector of model coefficients}
-\NormalTok{true_sd =}\StringTok{ }\DecValTok{1}  \CommentTok{# choosing true sd}
-\NormalTok{X =}\StringTok{ }\KeywordTok{runif}\NormalTok{(}\DecValTok{100}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)  }\CommentTok{# simulate the predictor variable X}
-\NormalTok{Xmat =}\StringTok{ }\KeywordTok{model.matrix}\NormalTok{(}\OperatorTok{~}\NormalTok{X, }\DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(X))  }\CommentTok{# create design matrix}
+\NormalTok{beta0 }\OtherTok{\textless{}{-}}\NormalTok{ ...}
+\NormalTok{beta1 }\OtherTok{\textless{}{-}}\NormalTok{ ...}
+\NormalTok{true\_beta }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(beta0, beta1) }\CommentTok{\# vector of model coefficients}
+\NormalTok{true\_sd }\OtherTok{\textless{}{-}} \DecValTok{1} \CommentTok{\# choosing true sd}
+\NormalTok{nobs }\OtherTok{\textless{}{-}} \DecValTok{100}
+\NormalTok{X }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(nobs, }\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{) }\CommentTok{\# simulate the predictor variable X}
+\NormalTok{Xmat }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{X, }\AttributeTok{data =} \FunctionTok{data.frame}\NormalTok{(X)) }\CommentTok{\# create design matrix}
 
+\CommentTok{\# Count how many times the true value is within the confidence interval}
+\NormalTok{ci\_int }\OtherTok{\textless{}{-}}\NormalTok{ ci\_x }\OtherTok{\textless{}{-}} \DecValTok{0}
+\NormalTok{nsim }\OtherTok{\textless{}{-}} \DecValTok{1000}
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{nsim)\{}
+\NormalTok{  y }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(}\AttributeTok{n =}\NormalTok{ nobs, }\AttributeTok{mean =}\NormalTok{ Xmat }\SpecialCharTok{\%*\%}\NormalTok{ true\_beta, }\AttributeTok{sd =} \FunctionTok{rep}\NormalTok{(true\_sd, nobs))}
+\NormalTok{  mod }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ x, }\AttributeTok{data =} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{y =}\NormalTok{ y, }\AttributeTok{x =}\NormalTok{ X))}
+\NormalTok{  ci }\OtherTok{\textless{}{-}} \FunctionTok{confint}\NormalTok{(mod)}
 
-\NormalTok{ci_int =}\StringTok{ }\NormalTok{ci_x =}\StringTok{ }\DecValTok{0}  \CommentTok{# Counts how many times the true value is within the confidence interval}
-\NormalTok{nsim =}\StringTok{ }\DecValTok{1000}
-\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{nsim) \{}
-\NormalTok{    y =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(}\DataTypeTok{n =} \DecValTok{100}\NormalTok{, }\DataTypeTok{mean =}\NormalTok{ Xmat }\OperatorTok{%*%}\StringTok{ }\NormalTok{true_beta, }\DataTypeTok{sd =} \KeywordTok{rep}\NormalTok{(true_sd, }\DecValTok{100}\NormalTok{))}
-\NormalTok{    mod =}\StringTok{ }\KeywordTok{lm}\NormalTok{(y }\OperatorTok{~}\StringTok{ }\NormalTok{x, }\DataTypeTok{data =} \KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{y =}\NormalTok{ y, }\DataTypeTok{x =}\NormalTok{ X))}
-\NormalTok{    ci =}\StringTok{ }\KeywordTok{confint}\NormalTok{(mod)}
-\NormalTok{    ci_int[i] =}\StringTok{ }\KeywordTok{ifelse}\NormalTok{(..., }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)  }\CommentTok{# if true value of beta0 is within the CI then 1 else 0}
-\NormalTok{    ci_x[i] =}\StringTok{ }\KeywordTok{ifelse}\NormalTok{(..., }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)  }\CommentTok{# if true value of beta_1 is within the CI then 1 else 0}
+  \CommentTok{\# if true value of beta0 is within the CI then 1 else 0}
+\NormalTok{  ci\_int[i] }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(..., }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+
+  \CommentTok{\# if true value of beta\_1 is within the CI then 1 else 0}
+\NormalTok{  ci\_x[i] }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(..., }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)}
 \NormalTok{\}}
 
-\KeywordTok{c}\NormalTok{(}\KeywordTok{mean}\NormalTok{(ci_int), }\KeywordTok{mean}\NormalTok{(ci_x))}
+\FunctionTok{c}\NormalTok{(}\FunctionTok{mean}\NormalTok{(ci\_int), }\FunctionTok{mean}\NormalTok{(ci\_x))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -373,16 +378,16 @@ confidence interval. Study and fill in the code where is needed
 \subsection{c)}\label{c-1}}
 
 What is the interpretation of a 95\% prediction interval? Hint: repeat
-experiment (on \(Y\)) for a given \({\boldsymbol x}_0\). Write R code
-that shows the interprentation of a 95\% PI. Hint: In order to produce
-the PIs use the data point \(x_0 = 0.4.\) Furthermore you may use a
-similar code structure as in b).
+experiment (on \(Y\)) for a given \({\boldsymbol x}_0\). Write
+\texttt{R} code that shows the interpretation of a 95\% PI. Hint: In
+order to produce the PIs use the data point \(x_0 = 0.4.\) Furthermore,
+you may use a similar code structure as in b).
 
 \hypertarget{d-1}{%
 \subsection{d)}\label{d-1}}
 
-Construct a 95\% CI for \({\boldsymbol x}_0^T \beta\). Explain what is
-the connections between a CI for \(\beta_j\), a CI for
+Construct a 95\% CI for \({\boldsymbol x}_0^T \beta\). Explain the
+connections between a CI for \(\beta_j\), a CI for
 \({\boldsymbol x}_0^T \beta\) and a PI for \(Y\) at
 \({\boldsymbol x}_0\).
 

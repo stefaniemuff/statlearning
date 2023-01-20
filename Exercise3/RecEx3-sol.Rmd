@@ -1,25 +1,31 @@
 ---
-title: 'Module 2: Recommended Exercises - Solution'
+title: 'Module 3: Recommended Exercises - Solution'
 author:
-- Emma Skarstein, Daesoo Lee, Stefanie Muff
+- Kenneth Aase, Emma Skarstein, Daesoo Lee, Stefanie Muff
 - Department of Mathematical Sciences, NTNU
-date: "January 24, 2022"
+date: "January 26, 2023"
 output:
-  # pdf_document:
-  #   toc: no
-  #   toc_depth: '2'
+  pdf_document:
+    toc: no
+    toc_depth: '2'
   html_document:
     df_print: paged
     toc: no
     toc_depth: '2'
-subtitle: TMA4268 Statistical Learning V2022
+subtitle: TMA4268 Statistical Learning V2023
 urlcolor: blue
 ---
 
 ```{r setup, include=FALSE}
 library(knitr)
-knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
-                      cache=TRUE, size="scriptsize")
+knitr::opts_chunk$set(echo = TRUE,
+                      tidy = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      strip.white = TRUE,
+                      prompt = FALSE,
+                      cache = TRUE,
+                      size = "scriptsize")
 
 ```
 
@@ -34,52 +40,50 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 # Problem 1 
 
 
-
-
-
 ## a)
 
 ```{r}
 library(ISLR)
-Auto = subset(Auto, select = -name)
+Auto <- subset(Auto, select = -name)
 #Auto$origin = factor(Auto$origin)
 summary(Auto)
 str(Auto)
 
-Auto$origin = factor(Auto$origin)
+Auto$origin <- factor(Auto$origin)
 ```
 
 ```{r,warning=FALSE, message=FALSE}
 library(GGally)
-ggpairs(Auto, lower = list(continuous = wrap("points", size=0.1))) + # change points size
+ggpairs(Auto,
+        lower = list(continuous = wrap("points", size = 0.1))) + # resize points
   theme(text = element_text(size = 7)) # change text size
 ```
 
 ## b)
 
-Correlation matrix for the `Auto` data set where we omit column 8:
+Correlation matrix for the `Auto` data set where we omit the column `origin`:
 ```{r}
-cor(Auto[,-c(8)])
+cor(subset(Auto, select = -origin))
 ```
 
 ## c)
 
 ```{r}
-fit.lm = lm(mpg ~ ., data=Auto)
+fit.lm <- lm(mpg ~ ., data = Auto)
 summary(fit.lm)
 #kable(broom::tidy(fit.lm))
 ```
 
-i. The F-statistic in the very last line of the summary output shows that it is extremely unilkely that we would see such a result if none of the variables had any explanatory power -- the $p$-value is $<2.2e-16$! So we can be sure that the set of predictors is explaining the response to a quite large degree. This is also confirmed by both a quite high $R^2$ and $R^2_{\text adjust}$ (both around 0.82).
-ii. Yes, there is very strong evidence for a relationship between the weight of a car and the response. The $p$-value is extremely small. The interpretation is that, if a car weights 1000 kg more, we have a degrease of $1000\cdot(-6.710e-03)=-6.71$ miles per gallon (mpg), that is, the car can drive 6.71 miles less far per gallon of fuel.
-iii. The coefficient $\beta_\text{year}= 0.77$ coefficient suggests that a new model has higher mpg compared to an older one. A one year newer model thus should, in average, be able to drive 0.77 miles longer per gallon fuel compared to the older car.
+i. The F-statistic in the very last line of the summary output shows that it is extremely unlikely that we would see such a result if none of the variables had any explanatory power -- the $p$-value is $<2.2e-16$! So we can be sure that the set of predictors is explaining the response to a quite large degree. This is also confirmed by both a quite high $R^2$ and $R^2_{\text adjust}$ (both around 0.82).
+ii. Yes, there is very strong evidence for a relationship between the weight of a car and the response. The $p$-value is extremely small. The interpretation is that, if a car weights 1000 kg more, we have a decrease of $1000 \cdot (-6.710\cdot 10^{-3}) = -6.71$ miles per gallon (mpg), that is, the car can drive 6.71 miles less far per gallon of fuel.
+iii. The estimated coefficient $\hat{\beta}_\text{year}= 0.77$ suggests that a newer car model has higher `mpg` compared to an older one. A one year newer model should thus, in average, be able to drive $0.77$ miles longer per gallon fuel compared to the older car.
 
 
 ## d)
 
-Remember that if we want to test whether a factor variable with more than two levels should be removed from the model, we actually have to test wheter all slope coefficients that are associated with the respective binary dummy variables are zero simultaneously. Look again at equation (3.30) in the course book (p.85). 
+Remember that if we want to test whether a factor variable with more than two levels should be removed from the model, we actually have to test whether all slope coefficients that are associated with the respective binary dummy variables are zero simultaneously. Look again at equation (3.30) in the course book (p.85). 
 
-Consequently, we have to test here whether $\beta_\text{origin2} = \beta_\text{origin3} =0$ at the same time, and for this we need the $F$-test, which is implemented in the `anova()` function in R:
+Consequently, we have to test here whether $\beta_\text{origin2} = \beta_\text{origin3} = 0$ at the same time, and for this we need the $F$-test, which is implemented in the `anova()` function in R:
 
 ```{r}
 anova(fit.lm)
@@ -89,23 +93,23 @@ The $p$-value associated with `origin` is now the one we can look at. Clearly, $
 
 ## e)
 
-```{r,warning=FALSE, fig.width=5, fig.height=4,fig.align = "center",out.width='60%',cache=FALSE}
+```{r, warning = FALSE, fig.width = 5, fig.height = 4, fig.align = "center", out.width = '60%', cache = FALSE}
 library(ggfortify)
 autoplot(fit.lm, smooth.colour = NA)
 ```
 
 * In the residual vs fitted plot (the so-called Tukey-Anscombe plot) there is evidence of non-linearity.
-* Observation 14 has an unusually high leverage. This does not necessarily need to be a problem, but it would be wise to double-check that this observation is not an outlier.
+* Observation $14$ has an unusually high leverage. This does not necessarily need to be a problem, but it would be wise to double-check that this observation is not an outlier.
 
 ## f)
 
 ```{r}
 set.seed(2332)
-n = 100
+n <- 100
 
-par(mfrow = c(2,3))
-for(i in 1:6){
-  sim = rnorm(n)
+par(mfrow = c(2, 3))
+for (i in 1:6){
+  sim <- rnorm(n)
   qqnorm(sim, pch = 1, frame = FALSE)
   qqline(sim, col = "blue", lwd = 1)
 }
@@ -115,17 +119,17 @@ for(i in 1:6){
 
 
 ```{r}
-fit.lm1 = lm(mpg ~ displacement + weight + year*origin, data=Auto)
+fit.lm1 <- lm(mpg ~ displacement + weight + year * origin, data = Auto)
 summary(fit.lm1)
 ```
 
-Again, if we want to find evidence whether the interaction term between year and origin is needed, we are actually testing whether two slope coefficients are zero at the same time ($\beta_\text{year:origin1}=\beta_\text{year:origin2}=0$). Consequently, we need the $F$-test, which is implemented in the `anova()` funcdtion:
+Again, if we want to find evidence whether the interaction term between `year` and `origin` is needed, we are actually testing whether two slope coefficients are zero at the same time ($\beta_\text{year:origin1} = \beta_\text{year:origin2} = 0$). Consequently, we need the $F$-test, which is implemented in the `anova()` function:
 
 ```{r}
 anova(fit.lm1)
 ```
 
-There is very strong evidence that the year-effect depends on the origin of the car, as can be seen by the $F$-test hat is given by the anova table ($p=0.0001057$). For European (2) and Japanese (3) cars, it seems that the fuel consumption (`mpg`) has a steeper slope for year: $\beta_{year}=0.615$ for the reference category 1 (American), wheras $\beta_{year}=0.615+0.519$ and $\beta_{year}=0.615+0.356$ for category 2 (European) and 3 (Japanese), respectively. This means that the fuel consuption is reduced faster by cars produced outside America (note that `mgp` is "miles per gallon", thus a higher value means that the car consumes less fuel, as it can drive further per gallon).
+There is very strong evidence that the year-effect depends on the origin of the car, as can be seen by the $F$-test that is given by the anova table ($p = 0.0001057$). For European (`2`) and Japanese (`3`) cars, it seems that the fuel consumption (`mpg`) has a steeper slope for `year`: $\hat{\beta}_{year} = 0.615$ for the reference category `1` (American), whereas $\hat{\beta}_\text{year} = 0.615 + 0.519$ and $\hat{\beta}_\text{year} = 0.615 + 0.356$ for category `2` (European) and `3` (Japanese), respectively. This means that the fuel consumption is reduced faster by cars produced outside America (note that `mgp` is "miles per gallon", thus a higher value means that the car consumes less fuel, as it can drive further per gallon).
 
 Note: For a full understanding of interaction terms, you really do need both the `summary()` and the `anova()` tables.
 
@@ -134,19 +138,19 @@ Note: For a full understanding of interaction terms, you really do need both the
 
 We try three different transformations and look at the residual plots:
 
-```{r, fig.width=5, fig.height=4,fig.align = "center",out.width='50%',cache=FALSE}
+```{r, fig.width = 5, fig.height = 4, fig.align = "center", out.width = '50%', cache = FALSE}
 # try 3 predictor transformations
 
 Auto$sqrtmpg <- sqrt(Auto$mpg)
 
-fit.lm3 = lm(sqrtmpg ~ displacement + weight + year + origin, data=Auto)
-autoplot(fit.lm3)
+fit.lm3 <- lm(sqrtmpg ~ displacement + weight + year + origin, data = Auto)
+autoplot(fit.lm3, smooth.colour = NA)
 
-fit.lm4 = lm(mpg ~ displacement + I(log(weight)) + year + origin, data=Auto)
-autoplot(fit.lm4)
+fit.lm4 <- lm(mpg ~ displacement + I(log(weight)) + year + origin, data = Auto)
+autoplot(fit.lm4, smooth.colour = NA)
 
-fit.lm5 = lm(mpg ~ displacement + I(weight^2) + year + origin, data=Auto)
-autoplot(fit.lm5)
+fit.lm5 <- lm(mpg ~ displacement + I(weight^2) + year + origin, data = Auto)
+autoplot(fit.lm5, smooth.colour = NA)
 ```
 
 
@@ -172,7 +176,7 @@ All components of a multivariate normal vector are themselves univariate normal.
 
 ## b) 
 
-Fix covariates X and repeat the following preocedure many times (`nsim = 1000`)
+Fix covariates `X` and repeat the following procedure many times (`nsim = 1000`)
 
 * collect $Y$
 
@@ -182,22 +186,23 @@ Fix covariates X and repeat the following preocedure many times (`nsim = 1000`)
 
 ```{r}
 # CI for beta_j
-beta0 = 1
-beta1 = 3
-true_beta = c(beta0, beta1) # vector of model coefficients
-true_sd = 1 # choosing true sd
-X = runif(100,0,1)
-Xmat = model.matrix(~X, data = data.frame(X)) # Design Matrix
+beta0 <- 1
+beta1 <- 3
+true_beta <- c(beta0, beta1) # vector of model coefficients
+true_sd <- 1 # choosing true sd
+nobs <- 100
+X <- runif(nobs, 0, 1)
+Xmat <- model.matrix(~X, data = data.frame(X)) # Design Matrix
 
-
-ci_int = ci_x = 0 # Counts how many times the true value is within the confidence interval
-nsim = 1000
+# Count how many times the true value is within the confidence interval
+ci_int <- ci_x <- 0
+nsim <- 1000
 for (i in 1:nsim){
-  y = rnorm(n = 100, mean = Xmat%*%true_beta, sd = rep(true_sd, 100))
-  mod = lm(y ~ x, data = data.frame(y = y, x = X))
-  ci = confint(mod)
-  ci_int[i] = ifelse(true_beta[1] >= ci[1,1] && true_beta[1] <= ci[1,2], 1, 0)
-  ci_x[i] = ifelse(true_beta[2] >= ci[2,1] && true_beta[2] <= ci[2,2], 1, 0)
+  y <- rnorm(n = nobs, mean = Xmat %*% true_beta, sd = rep(true_sd, nobs))
+  mod <- lm(y ~ x, data = data.frame(y = y, x = X))
+  ci <- confint(mod)
+  ci_int[i] <- ifelse(true_beta[1] >= ci[1, 1] && true_beta[1] <= ci[1, 2], 1, 0)
+  ci_x[i] <- ifelse(true_beta[2] >= ci[2, 1] && true_beta[2] <= ci[2, 2], 1, 0)
 }
 
 c(mean(ci_int), mean(ci_x))
@@ -217,23 +222,24 @@ We apply the same idea from b), but now we fix X and $x_0$ and
 
 ```{r}
 # PI for Y_0
-beta0 = 1
-beta1 = 3
-true_beta = c(beta0, beta1) # vector of model coefficients
-true_sd = 1 # choosing true sd
-X = runif(100,0,1)
-Xmat = model.matrix(~X, data = data.frame(X)) # Design Matrix
+beta0 <- 1
+beta1 <- 3
+true_beta <- c(beta0, beta1) # vector of model coefficients
+true_sd <- 1 # choosing true sd
+X <- runif(100, 0, 1)
+Xmat <- model.matrix(~X, data = data.frame(X)) # Design Matrix
 
-x0 = c(1,0.4)
+x0 <- c(1, 0.4)
 
 # simulating and fitting models many times
-pi_y0 = 0; nsim = 1000
+pi_y0 <- 0
+nsim <- 1000
 for (i in 1:nsim){
-  y = rnorm(n = 100, mean = Xmat%*%true_beta, sd = rep(true_sd, 100))
-  mod = lm(y ~ x, data = data.frame(y = y, x = X))
-  y0 = rnorm(n = 1, mean = x0%*%true_beta, sd = true_sd)
-  pi = predict(mod, newdata = data.frame(x = x0[2]), interval = "predict")[2:3]
-  pi_y0[i] = ifelse (y0>=pi[1] && y0<=pi[2], 1, 0)
+  y <- rnorm(n = 100, mean = Xmat %*% true_beta, sd = rep(true_sd, 100))
+  mod <- lm(y ~ x, data = data.frame(y = y, x = X))
+  y0 <- rnorm(n = 1, mean = x0 %*% true_beta, sd = true_sd)
+  pi <- predict(mod, newdata = data.frame(x = x0[2]), interval = "predict")[2:3]
+  pi_y0[i] <- ifelse(y0 >= pi[1] && y0 <= pi[2], 1, 0)
 }
 
 mean(pi_y0)
@@ -252,7 +258,7 @@ $E(\boldsymbol{x}_0^T\hat{\boldsymbol{\beta}}) = \boldsymbol{x}_0^T E(\hat{\bold
 
 and
 
-$\operatorname{Var}(\boldsymbol{x}_0^T\hat{\boldsymbol{\beta}}) = \boldsymbol{x}_0^T \operatorname{Var}(\hat{\boldsymbol{\beta}}) \boldsymbol{x}_0= \sigma^2\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0.$
+$\operatorname{Var}(\boldsymbol{x}_0^T\hat{\boldsymbol{\beta}}) = \boldsymbol{x}_0^T \operatorname{Var}(\hat{\boldsymbol{\beta}}) \boldsymbol{x}_0 = \sigma^2\boldsymbol{x}_0^T(X^TX)^{-1} \boldsymbol{x}_0.$
 
 Consequently, 
 
