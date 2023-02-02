@@ -1,31 +1,37 @@
 ---
 title: 'Module 5: Recommended Exercises'
 author:
-- Emma Skarstein, Daesoo Lee, Stefanie Muff
+- Kenneth Aase, Emma Skarstein, Daesoo Lee, Stefanie Muff
 - Department of Mathematical Sciences, NTNU
-date: "February 7, 2022"
+date: "February 9, 2023"
 output:
-  html_document:
-    df_print: paged
-    toc: no
-    toc_depth: '2'
+  # html_document:
+  #   df_print: paged
+  #   toc: no
+  #   toc_depth: '2'
   pdf_document:
     fig_caption: yes
     keep_tex: yes
     toc: no
     toc_depth: 2
-subtitle: TMA4268 Statistical Learning V2022
+subtitle: TMA4268 Statistical Learning V2023
 urlcolor: blue
 ---
 
 
-```{r setup, include=FALSE}
-showsolA<-TRUE
-showsolB<-TRUE
+```{r setup, include = FALSE}
+showsolA <- TRUE
+showsolB <- TRUE
 library(knitr)
-opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE)
-knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
-                      cache=TRUE, size="scriptsize")
+opts_chunk$set(tidy.opts = list(width.cutoff = 68), tidy = TRUE)
+knitr::opts_chunk$set(echo = TRUE,
+                      tidy = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      strip.white = TRUE,
+                      prompt = FALSE,
+                      cache = TRUE,
+                      size = "scriptsize")
 ```
 
 
@@ -37,18 +43,17 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 
 ## Problem 1 
 
-Explain how $k$-fold cross-validation is implemented 
+Explain how $k$-fold cross-validation is implemented.
   
-a) Draw a figure 
+a) Draw a figure.
 
-b) Specify algorithmically what is done, and in particular how the "results" from each fold are aggregated
+b) Specify algorithmically what is done, and in particular how the "results" from each fold are aggregated.
 
 c) Relate to one example from regression. Ideas are the complexity w.r.t. polynomials of increasing degree in multiple linear regression, or $K$ in KNN-regression.
 
 d) Relate to one example from classification. Ideas are the complexity w.r.t. polynomials of increasing degree in logistic regression, or $K$ in KNN-classification.
 
-Hint: the words "loss function", "fold", "training", "validation" are central.
-
+Hint: the words "loss function," "fold," "training," and "validation" are central.
 
 
 ## Problem 2 
@@ -59,13 +64,13 @@ a) The validation set approach
 b) Leave one out cross-validation (LOOCV)
 c) What are recommended values for $k$, and why?
   
-  Hint: the words "bias", "variance" and "computational complexity" should be included.
+  Hint: the words "bias," "variance" and "computational complexity" should be included.
 
 
 
 ## Problem 3
 
-Topic: Selection bias and the "wrong way to do CV".
+Topic: Selection bias and the "wrong way to do CV."
 
 The task here is to devise an algorithm to "prove" that the wrong way is wrong and that the right way is right. 
 
@@ -77,75 +82,75 @@ The task here is to devise an algorithm to "prove" that the wrong way is wrong a
   
   Generate data
 
-* Simulate high dimensional data ($p=5000$ predictors) from independent or correlated normal variables, but with few samples ($n=50$).
+* Simulate high dimensional data ($p = 5000$ predictors) from independent or correlated normal variables, but with few samples ($n = 50$).
 
-* Randomly assign class labels (here only 2). This means that the "truth"" is that the misclassification rate can not get very small. What is the expected misclassification rate (for this random set)?
+* Randomly assign class labels (here only $2$). This means that the "truth" is that the misclassification rate can not get very small. What is the expected misclassification rate (for this random set)?
 
 Classification task:
 
-* We choose a few ($d=25$) of the predictors (how? we just select those with the highest correlation to the outcome).
+* We choose a few (for example $d = 25$) of the predictors (those with the highest correlation to the outcome).
 * Perform a classification rule (here: logistic empirical Bayes) on these predictors.
-* Then we run CV ($k=5$) on either only the $d$ (=wrong way), or on all $c+d$ (=right way) predictors. 
+* Then we run CV ($k = 5$) on either only the $d$ (the wrong way), or on all $c + d$ predictors (the right way). 
 * Report misclassification errors for both situations.
 
 One possible version of this is presented in the R-code below. Go through the code and explain what is done in each step, then run the code and observe if the results are in agreement with what you expected. Make changes to the R-code if you want to test out different strategies.
 
 We start by generating data for $n=50$ observations
-```{r,eval=FALSE}
+```{r,eval = FALSE}
 library(boot)
 # GENERATE DATA; use a seed for reproducibility
 set.seed(4268)
-n=50 #number of observations
-p=5000 #number of predictors
-d=25 #top correlated predictors chosen
+n <- 50 # Number of observations
+p <- 5000 # Number of predictors
+d <- 25 # Top correlated predictors chosen
 
-#generating predictor data
-xs=matrix(rnorm(n*p,0,4),ncol=p,nrow=n) #simple way to to uncorrelated predictors
+# Generating predictor data
+xs <- matrix(rnorm(n * p, 0, 4), ncol <- p, nrow <- n) # Independent predictors
 dim(xs) # n times p
-# generate class labels independent of predictors - so if all classifies as class 1 we expect 50% errors in general
-ys=c(rep(0,n/2),rep(1,n/2)) #now really 50% of each
+# Generate class labels independent of predictors - so if all classifies as
+# class 1 we expect 50% errors in general.
+ys <- c(rep(0, n / 2), rep(1, n / 2)) # now really 50% of each
 table(ys)
 ```
 
 **WRONG CV**: Select the 25 most correlated predictors outside the CV.
-```{r, eval=FALSE}
-corrs=apply(xs,2,cor,y=ys)
+```{r, eval = FALSE}
+corrs <- apply(xs, 2, cor, y = ys)
 hist(corrs)
-selected=order(corrs^2,decreasing = TRUE)[1:d] #top d correlated selected
-data=data.frame(ys,xs[,selected])
+selected <- order(corrs^2, decreasing = TRUE)[1:d] # Top d correlated selected
+data <- data.frame(ys, xs[, selected])
 ```
 
 Then run CV around the fitting of the classifier - use logistic regression and built in `cv.glm()` function
-```{r, eval=FALSE}
-logfit=glm(ys~.,family="binomial",data=data)
-cost <- function(r, pi = 0) mean(abs(r-pi) > 0.5)
-kfold=10
-cvres=cv.glm(data=data,cost=cost,glmfit=logfit,K=kfold)
+```{r, eval = FALSE}
+logfit <- glm(ys ~ ., family = "binomial", data = data)
+cost <- function(r, pi = 0) mean(abs(r - pi) > 0.5)
+kfold <- 10
+cvres <- cv.glm(data = data, cost = cost, glmfit = logfit, K = kfold)
 cvres$delta
 ```
 Observe a zero misclassification rate!
 
 
-**CORRECT CV**: Do not pre-select predictors outside the CV, but as part of the CV. We need to code this ourselves:
-```{r, eval=FALSE}
-reorder=sample(1:n,replace=FALSE)
-validclass=NULL
-for (i in 1:kfold)
-{
-  neach=n/kfold
-  trainids=setdiff(1:n,(((i-1)*neach+1):(i*neach)))
-  traindata=data.frame(xs[reorder[trainids],],ys[reorder[trainids]])
-  validdata=data.frame(xs[reorder[-trainids],],ys[reorder[-trainids]])
-  colnames(traindata)=colnames(validdata)=c(paste("X",1:p),"y")
-  foldcorrs= apply(traindata[,1:p],2,cor,y=traindata[,p+1]) 
-  selected=order(foldcorrs^2,decreasing = TRUE)[1:d] #top d correlated selected
-  data=traindata[,c(selected,p+1)]
-  trainlogfit=glm(y~.,family="binomial",data=data)
-  pred=plogis(predict.glm(trainlogfit,newdata=validdata[,selected]))
-  validclass=c(validclass,ifelse(pred > 0.5, 1, 0))
+**CORRECT CV**: Do not pre-select predictors outside the CV, but as part of the CV. In order words, the entire analysis is done within the CV. We need to code this ourselves:
+```{r, eval = FALSE}
+reorder <- sample(1:n, replace = FALSE)
+validclass <- NULL
+for (i in 1:kfold) {
+  neach <- n / kfold
+  trainids <- setdiff(1:n, (((i - 1) * neach + 1):(i * neach)))
+  traindata <- data.frame(xs[reorder[trainids], ], ys[reorder[trainids]])
+  validdata <- data.frame(xs[reorder[-trainids], ], ys[reorder[-trainids]])
+  colnames(traindata) <- colnames(validdata) <-  c(paste("X", 1:p), "y")
+  foldcorrs <- apply(traindata[, 1:p], 2, cor, y = traindata[, p + 1])
+  selected <- order(foldcorrs^2, decreasing = TRUE)[1:d] # Select top d correlated 
+  data <- traindata[, c(selected, p + 1)]
+  trainlogfit <- glm(y ~ ., family = "binomial", data = data)
+  pred <- plogis(predict.glm(trainlogfit, newdata = validdata[, selected]))
+  validclass <- c(validclass, ifelse(pred > 0.5, 1, 0))
 }
-table(ys[reorder],validclass)
-1-sum(diag(table(ys[reorder],validclass)))/n
+table(ys[reorder], validclass)
+1 - sum(diag(table(ys[reorder], validclass))) / n
 ```
 
 
@@ -156,7 +161,7 @@ table(ys[reorder],validclass)
 <!-- * Maybe you can devise a simulated data set, or use a data set from the `ILSR` library.  -->
 <!-- * To see differences look at a large data set and a small data set (in the number of observations), and  -->
 <!-- * focus on regression and on classification.  -->
-<!-- * What if the optimal (lowest CV error) method has complexity $7$, but the CV error of complexity $2$ is not very different. What should we do then? Hint: rule of parsimony, Occams razor. Later (ch 6) we will look at the "1sd rule". -->
+<!-- * What if the optimal (lowest CV error) method has complexity $7$, but the CV error of complexity $2$ is not very different. What should we do then? Hint: rule of parsimony, Occam's razor. Later (ch 6) we will look at the "1SD rule". -->
 
 <!-- Use Section 5.3 in the ISL book as a starting point. -->
 
@@ -176,16 +181,16 @@ We will calculate the probability that a given observation in our original sampl
 Our sample size is $n$.
 
 a. We draw one observation from our sample. What is the probability of drawing observation $i$ (i.e., $x_i$)? And of not drawing observation $i$?
-b. We make $n$ independent drawing (with replacement). What is the probability of not drawing observation $i$ in any of the $n$ drawings? What is then the probability that data point $i$ is in our bootstrap sample (that is, more than 0 times)?
+b. We make $n$ independent draws (with replacement). What is the probability of not drawing observation $i$ in any of the $n$ drawings? What is then the probability that data point $i$ is in our bootstrap sample (that is, more than $0$ times)?
 c. When $n$ is large $(1-\frac{1}{n})^n \approx \frac{1}{e}$. Use this to give a numerical value for the probability that a specific observation $i$ is in our bootstrap sample.
 d. Write a short R code chunk to check your result. (Hint: An example on how to this is on page 198 in our ISLR book.) You may also study the result in c. How good is the approximation as a function of $n$?
 
-```{r,echo=FALSE,eval=FALSE}
-n=100
-B=10000
-j=1
-res=rep(NA,B)
-for (b in 1:B) res[b]=(sum(sample(1:n,replace=TRUE)==j)>0)
+```{r, echo = FALSE, eval = FALSE}
+n <- 100
+B <- 10000
+j <- 1
+res <- rep(NA, B)
+for (b in 1:B) res[b] <- (sum(sample(1:n, replace = TRUE) == j) > 0)
 mean(res)
 ```
 
@@ -193,22 +198,22 @@ mean(res)
 
 ## Problem 5
 
-Explain with words and an algorithm how you would proceed to use bootstrapping to estimate the standard deviation and the 95% confidence interval of one of the regression parameters in multiple linear regression. Comment on which assumptions you make for your regression model.
+Explain with words and an algorithm how you would proceed to use bootstrapping to estimate the standard deviation and the $95\%$ confidence interval of one of the regression parameters in multiple linear regression. Comment on which assumptions you make for your regression model.
 
 ## Problem 6
 
-Implement your algorithm from 5 both using for-loop and using the `boot` function. Hint: see page 195 of our ISLR book. Use our SLID data set and provide standard errors for the coefficient for age. Compare with the theoretical value $({\bf X}^T{\bf X})^{-1}\hat{\sigma}^2$ that you find in the output from the regression model.
+Implement your algorithm from 5 both using for-loop and using the `boot` function. Hint: see page 195 of our ISLR book. Use our SLID data set and provide standard errors for the coefficient for age. Compare with the theoretical value $({\bf X}^\top{\bf X})^{-1}\hat{\sigma}^2$ that you find in the output from the regression model.
 
 ```{r,eval=FALSE}
 library(car)
 library(boot)
-SLID = na.omit(SLID)
-n = dim(SLID)[1]
-SLID.lm = lm(wages~., data = SLID)
-summary(SLID.lm)$coeff["age",]
+SLID <- na.omit(SLID)
+n <- dim(SLID)[1]
+SLID.lm <- lm(wages ~ ., data = SLID)
+summary(SLID.lm)$coeff["age", ]
 ```
 
-Now go ahead and use bootstrap to estimate the 95\% CI. Compare your result to 
+Now go ahead and use bootstrap to estimate the $95\%$ CI. Compare your result to 
 ```{r, eval=FALSE}
 confint(SLID.lm)
 ```

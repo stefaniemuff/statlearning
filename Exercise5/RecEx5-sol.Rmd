@@ -1,9 +1,9 @@
 ---
 title: 'Module 5: Solutions to Recommended Exercises'
 author:
-- Emma Skarstein, Daesoo Lee, Stefanie Muff
+- Kenneth Aase, Emma Skarstein, Daesoo Lee, Stefanie Muff
 - Department of Mathematical Sciences, NTNU
-date: "February 7, 2022"
+date: "February 9, 2023"
 output:
   # html_document:
   #   df_print: paged
@@ -12,14 +12,20 @@ output:
   pdf_document:
     toc: no
     toc_depth: '2'
-subtitle: TMA4268 Statistical Learning V2022
+subtitle: TMA4268 Statistical Learning V2023
 urlcolor: blue
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include = FALSE}
 library(knitr)
-knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
-                      cache=TRUE, size="scriptsize")
+knitr::opts_chunk$set(echo = TRUE,
+                      tidy = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      strip.white = TRUE,
+                      prompt = FALSE,
+                      cache = TRUE,
+                      size = "scriptsize")
 ```
 
 <!-- rmarkdown::render("5CVandBoot-sol.Rmd","all",encoding="UTF-8") -->
@@ -33,11 +39,10 @@ a)  See Figure 1
 ![ ](cv.jpeg){#id .class width=50% height=50%}
 
 
-b) In run 1 fold 1 is kept aside and folds 2 - 5 are used to train the method. The error is calculated on fold 1 ($\text{MSE}_1$).
-We do this for the remaining 4 runs. The cross-validation error is given by
+b) In run $1$, fold $1$ is kept aside and folds $2$ to $k$ are used to train the method. The error is calculated on fold $1$ ($\text{MSE}_1$). We do this for the remaining $k - 1$ runs. The cross-validation error is given by
 
 $$
-CV_5 = \frac{1}{n} \sum_{j=1}^5 n_j\cdot \text{MSE}_j \ ,
+CV_k = \frac{1}{n} \sum_{j=1}^k n_j\cdot \text{MSE}_j \ ,
 $$
 where $n_j$ is the size of the $j^\text{th}$ fold.
 
@@ -45,9 +50,9 @@ For a regression problem $\text{MSE}_j = \frac{1}{n_j}\sum_{i \in V_j} (y_i - \h
 For a binary classification problem the error might be the average of correctly classified observations.
 
 
-c) Find the optimal number of neighbours $k$ in KNN or the optimal polynoimial degree in polynomial regression.
+c) Find the optimal number of neighbors $K$ in $K$NN or the optimal polynomial degree in polynomial regression.
 
-d) For a calssification problem we can use CV to choose between QDA or LDA.
+d) For a classification problem we can use CV to choose between QDA or LDA.
 
 
 ## Problem 2
@@ -58,10 +63,10 @@ a) The validation set approach:
 
 D: The $k$-fold cross validation is computationally more expensive.
 
-A: The advandge is that it has less variance and less bias (the validation set approach unifies the bad things of two worlds, so to say).
+A: The advantage is that it has less variance and less bias (the validation set approach unifies the worst of both worlds, so to say).
 
 
-b) In LOOCV there is no radomness in the splits. 
+b) In LOOCV there is no randomness in the splits. 
 
 A: $k$-fold-CV is computationally less expensive, as we run the model $k$ times where $k \ll n$
 
@@ -74,15 +79,12 @@ c) We know that if $k=n=$ LOOCV the estimator of test error will have small bias
 
 If $k$ is too small (for example 2), the estimator will have larger bias but lower variance.
 
-Experimental research (simulations) has found that $k = 5$ or $k=10$ to be good choice.
-
+Experimental research (simulations) has found that $k = 5$ or $k=10$ to be good choices.
 
 
 ## Problem 3 
 
 No solution is provided on top of the guidelines in the exercise sheet.
-
-
 
  
 ## Problem 4 
@@ -98,33 +100,38 @@ c) $P(X_i \text{ in bootstrap sample}) = 1 - (1 - \frac{1}{n})^n \approx 1-\exp(
 
 d)
 
-```{r,echo=T,eval=T}
-n=100
-B=10000
-j=1
-res=rep(NA,B)
-for (b in 1:B) res[b]=(sum(sample(1:n,replace=TRUE)==j)>0)
+```{r, echo = T, eval = T}
+n <- 100
+B <- 10000
+j <- 1
+res <- rep(NA, B)
+for (b in 1:B) res[b] <- (sum(sample(1:n, replace = TRUE) == j) > 0)
 mean(res)
 ```
 
 The approximation becomes quickly very good as $n$ increases, as the following graph shows:
-```{r,fig.width=5, fig.height=4,fig.align="center"}
-curve(1-(1-1/x)^x,1,100,ylim=c(0.6,1),xlab="n",ylab="1-(1-1/n)^n")
-abline(h=1-1/exp(1),lty=2)
+```{r, fig.width = 5, fig.height = 4, fig.align = "center"}
+curve(expr = 1 - (1 - 1 / x)^x,
+      from = 1,
+      to = 100,
+      ylim = c(0.6, 1),
+      xlab = "n",
+      ylab = "1-(1-1/n)^n")
+abline(h = 1 - 1 / exp(1), lty = 2)
 ```
 
 
 ## Problem 5 
 
-We repeat the following for $b = 1,\cdots,B$:
+We repeat the following for $b = 1, \dots, B$:
 
-* Draw with replacement a bootstrap sample
-* Fit the model 
-* Store $\hat{\beta_b}$
+* Draw with replacement a bootstrap sample.
+* Fit the model.
+* Store $\hat{\beta_b}$.
 
-Calculate $\hat{SD}(\hat{\beta}) =\sqrt{\frac{1}{B-1} \sum_{b=1}^B (\hat{\beta_b} - \frac{1}{B}\sum_{b=1}^B \hat{\beta_b})^2}.$
+Calculate $\hat{SD}(\hat{\beta}) =\sqrt{\frac{1}{B-1} \sum_{b=1}^B (\hat{\beta_b} - \frac{1}{B}\sum_{b=1}^B \hat{\beta_b})^2}$.
 
-For the $95\%$ CI, we can calculate the 0.025 and 0.975 quantiles of the sample $\hat{\beta_b},$ $b=1,\cdots,B.$
+For the $95\%$ CI, we can calculate the $0.025$ and $0.975$ quantiles of the sample $\hat{\beta_b}$, $b=1,\dots,B$.
 
 
 ## Problem 6 
@@ -132,40 +139,46 @@ For the $95\%$ CI, we can calculate the 0.025 and 0.975 quantiles of the sample 
 
 ```{r,}
 library(carData)
-boot.fn = function(data, index){
-  return(coef(lm(wages~., data = SLID, subset = index)))
+boot.fn <- function(data, index) {
+  return(coef(lm(wages ~ ., data = SLID, subset = index)))
 }
 
-beta_hat = c()
-B = 1000
-for(i in 1:B){
-  beta_hat[i] = boot.fn(SLID, sample(nrow(SLID), nrow(SLID), replace = T))["age"]
+beta_hat <- c()
+B <- 1000
+for (i in 1:B) {
+  beta_hat[i] <- boot.fn(data = SLID,
+                         index = sample(nrow(SLID),
+                                        nrow(SLID),
+                                        replace = TRUE))["age"]
 }
 
 ```
 
 We can for example look at the histogram of the samples of $\hat\beta$ to get an idea of the distribution:
-```{r,fig.width=5, fig.height=4}
+```{r, fig.width = 5, fig.height = 4}
 library(ggplot2)
-data = data.frame(beta_hat = beta_hat, norm_den = dnorm(beta_hat, mean(beta_hat), sd(beta_hat)))
-ggplot(data)+
-  geom_histogram(aes(x = beta_hat, y = ..density..),  fill = "grey80", color = "black") +
-  geom_line(aes(x = beta_hat, y = norm_den), color = "red")+
+data <- data.frame(beta_hat = beta_hat,
+                   norm_den = dnorm(beta_hat, mean(beta_hat), sd(beta_hat)))
+ggplot(data) +
+  geom_histogram(aes(x = beta_hat, y = ..density..),
+                 fill = "grey80",
+                 color = "black") +
+  geom_line(aes(x = beta_hat, y = norm_den), color = "red") +
   theme_minimal()
 ```
 
-The $95\%$ CI for $\hat{\beta}_{age}$ can now be derived by either using the 2.5\% and 97.5\% quantiles of the samples, or by using the $\hat\beta \pm 1.96\cdot \text{SD}(\hat\beta)$ idea:
+The $95\%$ CI for $\hat{\beta}_{age}$ can now be derived by either using the $2.5\%$ and $97.5\%$ quantiles of the samples, or by using the $\hat\beta \pm 1.96\cdot \text{SD}(\hat\beta)$ idea:
 
 ```{r}
 sd(beta_hat)
 quantile(beta_hat, c(0.025, 0.975))
-c(mean(beta_hat) - 1.96*sd(beta_hat), mean(beta_hat) + 1.96*sd(beta_hat))
+c(mean(beta_hat) - 1.96 * sd(beta_hat), mean(beta_hat) + 1.96 * sd(beta_hat))
 ```
 
-We can compare these results to what we would obtain directly from fitting the model and calcualating the confidence interval
+We can compare these results to what we would obtain directly from fitting the model and calculating the confidence interval
 ```{r}
-SLID.lm = lm(wages ~ ., data = SLID)
-confint(SLID.lm )
+SLID.lm <- lm(wages ~ ., data = SLID)
+confint(SLID.lm)
 ```
 As expected, the 95\% CI for `age` is essentially the same as the one we obtained from bootstrapping.
 
@@ -177,7 +190,7 @@ If you prefer to use the built in function `boot()`
 
 ```{r}
 library(boot)
-bo = boot(SLID, boot.fn, 1000)
+bo <- boot(SLID, boot.fn, 1000)
 bo
 ```
 
