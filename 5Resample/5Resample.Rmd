@@ -1,17 +1,17 @@
 ---
-subtitle: "TMA4268 Statistical Learning V2022"
+subtitle: "TMA4268 Statistical Learning V2023"
 title: "Module 5: Resampling"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "February 7 and 10, 2022"
+date: "February 6 and 9, 2023"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    latex_engine: xelatex
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   latex_engine: xelatex
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -48,7 +48,7 @@ whichformat="latex"
 
 \vspace{2mm}
 
-* James et al (2013): An Introduction to Statistical Learning, Chapter 5.  
+* James et al (2021): An Introduction to Statistical Learning, Chapter 5.  
 
 * All the material presented on these module slides.
 
@@ -147,7 +147,7 @@ $~$
 Illustration: Linear regression with $K=1$ (left) and $K=9$ (right).
 
 \centering
-![](../..//ISLR/Figures/Chapter3/3.17.png){width=55%}
+![](../../ISLR/Figures/Chapter3/317.png){width=55%}
 
 \tiny
 (Figure 3.17 from @james.etal).
@@ -284,7 +284,7 @@ This can be done by:
 
 \vspace{4mm}
 
-![ISLR Figure 5.1](../../ISLR/Figures/Chapter5/5.1.png){width=70%,centering}
+![ISLR Figure 5.1](../../ISLR/Figures/Chapter5/51.png){width=70%,centering}
 
 
 
@@ -481,6 +481,8 @@ $\rightarrow$ Need to fit the model only once!
 
 $~$
 
+$~$
+
 See Compulsory exercise 1.
 
 ---
@@ -520,11 +522,11 @@ The MSE is then estimated in each of the $k$ iterations ($\text{MSE}_1,\ldots,\t
 \centering
 LOOCV: 
 
-![ISLR Figure 5.3](../../ISLR/Figures/Chapter5/5.3.png){width=70%}
+![ISLR Figure 5.3](../../ISLR/Figures/Chapter5/53.png){width=70%}
 
 $k$-fold: 
 
-![ISLR Figure 5.5](../../ISLR/Figures/Chapter5/5.5.png){width=70%}
+![ISLR Figure 5.5](../../ISLR/Figures/Chapter5/55.png){width=70%}
 
 
 <!-- See class notes for drawing. -->
@@ -731,9 +733,44 @@ $$\text{CV}_{n}=\frac{1}{n} \sum_{i=1}^n {\text{Err}_i}$$
 
 * The $k$-fold CV is defined analogously.
 
-\vspace{2mm}
+\vspace{3mm}
 
-* Read chapter 5.1.5 in the course book.
+* Chapter 5.1.5 in the course book.
+
+---
+
+Let us look at a data set from Chapter 2: 
+
+\centering
+![](213.png){width=80%}
+
+---
+
+We can fit logistic regression and look at the decision boundary, depending on the degree of of the regression model:
+
+\centering
+![](../../ISLR/Figures/Chapter5/57.png){width=50%}
+
+\flushleft
+
+* Error rates: 0.201, 0.197, 0.160, 0.162, respectively
+* Bayes error rate: 0.133
+
+
+---
+
+Which degree of the logistic regression polynomial is best? 
+
+$\rightarrow$ Cross-validation!
+
+\centering
+![](58.png){width=60%}
+
+\flushleft
+
+* Orange: True test error.
+* Black: 10-fold CV error. 
+* Blue: Training error.
 
 ---
 

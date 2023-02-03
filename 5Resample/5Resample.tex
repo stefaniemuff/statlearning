@@ -1,33 +1,37 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
-\documentclass[10pt,ignorenonframetext,]{beamer}
+\documentclass[
+  10pt,
+  ignorenonframetext,
+]{beamer}
 \usepackage{pgfpages}
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
 \setbeamercolor{caption name}{fg=normal text.fg}
 \beamertemplatenavigationsymbolsempty
-% Prevent slide breaks in the middle of a paragraph:
+% Prevent slide breaks in the middle of a paragraph
 \widowpenalties 1 10000
 \raggedbottom
 \setbeamertemplate{part page}{
-\centering
-\begin{beamercolorbox}[sep=16pt,center]{part title}
-  \usebeamerfont{part title}\insertpart\par
-\end{beamercolorbox}
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
 }
 \setbeamertemplate{section page}{
-\centering
-\begin{beamercolorbox}[sep=12pt,center]{part title}
-  \usebeamerfont{section title}\insertsection\par
-\end{beamercolorbox}
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
 }
 \setbeamertemplate{subsection page}{
-\centering
-\begin{beamercolorbox}[sep=8pt,center]{part title}
-  \usebeamerfont{subsection title}\insertsubsection\par
-\end{beamercolorbox}
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
 }
 \AtBeginPart{
   \frame{\partpage}
@@ -41,45 +45,37 @@
 \AtBeginSubsection{
   \frame{\subsectionpage}
 }
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
-\else % if luatex or xelatex
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
   \usepackage{unicode-math}
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usetheme[]{Singapore}
 \usefonttheme{serif}
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
 \usepackage{xcolor}
-\usepackage{hyperref}
-\hypersetup{
-            pdftitle={Module 5: Resampling},
-            pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
-            colorlinks=true,
-            linkcolor=Maroon,
-            filecolor=Maroon,
-            citecolor=Blue,
-            urlcolor=blue,
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
 \newif\ifbibliography
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -121,7 +117,7 @@
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\usepackage{graphicx,grffile}
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -130,51 +126,83 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{0}
-
-% set default figure placement to htbp
+% Set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 \usepackage{multirow}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Module 5: Resampling},
+  pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
 
 \title{Module 5: Resampling}
-\providecommand{\subtitle}[1]{}
-\subtitle{TMA4268 Statistical Learning V2022}
+\subtitle{TMA4268 Statistical Learning V2023}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{February 7 and 10, 2022}
+\date{February 6 and 9, 2023}
 
 \begin{document}
 \frame{\titlepage}
 
 \begin{frame}{Acknowledgements}
 \protect\hypertarget{acknowledgements}{}
-
 \begin{itemize}
 \item
   A lot of this material stems from Mette Langaas and her TAs. I would
   like to thank Mette for the permission to use her material!
 \item
   Some of the figures and slides in this presentation are taken (or are
-  inspired) from James et al. (2013).
+  inspired) from James et al. (2021).
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}{Introduction}
 \protect\hypertarget{introduction}{}
-
 \begin{block}{Learning material for this module}
-
+\protect\hypertarget{learning-material-for-this-module}{}
 \vspace{2mm}
 
 \begin{itemize}
 \item
-  James et al (2013): An Introduction to Statistical Learning, Chapter
+  James et al (2021): An Introduction to Statistical Learning, Chapter
   5.
 \item
   All the material presented on these module slides.
@@ -184,15 +212,12 @@
 
 Additional material for the interested reader: Chapter 7 (in particular
 7.10) in Friedman et al (2001): Elements of Statistical learning.
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{What will you learn?}
-
+\protect\hypertarget{what-will-you-learn}{}
 \(~\)
 
 \begin{itemize}
@@ -234,14 +259,11 @@ Additional material for the interested reader: Chapter 7 (in particular
 \item
   Bootstrapping - how and why.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}{Performance of a learning method}
 \protect\hypertarget{performance-of-a-learning-method}{}
-
 \begin{itemize}
 \item
   Our models are ``good'' when they can generalize.
@@ -266,27 +288,22 @@ best model}.
 
 Estimating the performance (prediction error) of the final model, on new
 data.
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Training vs Test Error}
-
+\protect\hypertarget{training-vs-test-error}{}
 \(~\)
 
 \centering
 
 \includegraphics[width=0.8\textwidth,height=\textheight]{training_test.png}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Loss functions}
-
+\protect\hypertarget{loss-functions}{}
 \(~\)
 
 In order to define how we measure error, we must first decide for a
@@ -315,15 +332,12 @@ In order to define how we measure error, we must first decide for a
   \(j=1,\ldots,K\):
   \[\frac{1}{n}\sum_{i=1}^n \text{I}(y_i \neq \hat{y}_i) \ .\]
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{KNN regression (chapter 3.5 in course book)}
-
+\protect\hypertarget{knn-regression-chapter-3.5-in-course-book}{}
 \vspace{2mm}
 
 \begin{itemize}
@@ -343,11 +357,11 @@ Illustration: Linear regression with \(K=1\) (left) and \(K=9\) (right).
 
 \centering
 
-\includegraphics[width=0.55\textwidth,height=\textheight]{../..//ISLR/Figures/Chapter3/3.17.png}
+\includegraphics[width=0.55\textwidth,height=\textheight]{../../ISLR/Figures/Chapter3/317.png}
 
 \tiny
 
-(Figure 3.17 from James et al. (2013)).
+(Figure 3.17 from James et al. (2021)).
 
 \(~\)
 
@@ -355,15 +369,12 @@ Illustration: Linear regression with \(K=1\) (left) and \(K=9\) (right).
 \flushleft
 
 What happens for \(K=\) number of data points?
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Example}
-
+\protect\hypertarget{example}{}
 \vspace{2mm}
 
 We aim to do \emph{model selection} in KNN-regression, where true curve
@@ -382,15 +393,12 @@ data.
   We have considered \(K=1,\ldots,25\), and repeated the experiment
   \(M=1000\) times (that is, \(M\) versions of training and test set).
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Remember: The bias-variance trade-off}
-
+\protect\hypertarget{remember-the-bias-variance-trade-off}{}
 \vspace{2mm}
 
 For KNN: \(K\) small = high complexity; \(K\) large = low complexity.
@@ -400,15 +408,12 @@ For KNN: \(K\) small = high complexity; \(K\) large = low complexity.
 \centering
 
 \includegraphics[width=0.75\textwidth,height=\textheight]{Prob1f4.png}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{The challenge}
-
+\protect\hypertarget{the-challenge}{}
 \(~\)
 
 \begin{itemize}
@@ -433,15 +438,12 @@ For KNN: \(K\) small = high complexity; \(K\) large = low complexity.
 \item
   We need approaches that work with real data!
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{The data-rich situation (often unrealistic)}
-
+\protect\hypertarget{the-data-rich-situation-often-unrealistic}{}
 \vspace{2mm}
 
 If we had a large amount of data we could divide our data into three
@@ -473,13 +475,10 @@ then the test set both for model selection and for model evaluation?
 
 \textbf{A}: We will be too optimistic if we report the error on the test
 set when we have already used the test set to choose the best model.
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{itemize}
 \item
   If you have a lot of data -- great -- then you do not need Module 5.
@@ -492,12 +491,10 @@ set when we have already used the test set to choose the best model.
 \end{itemize}
 
 We will look at \emph{cross-validation} and the \emph{bootstrap}.
-
 \end{frame}
 
 \begin{frame}{Cross-validation (CV)}
 \protect\hypertarget{cross-validation-cv}{}
-
 \(~\)
 
 ``Model selection'' situation: We assume that test data is available
@@ -519,13 +516,11 @@ This can be done by:
 \item
   \(k\)-fold cross-validation (CV), typically \(k=5\) or \(10\).
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{The validation set approach}
-
+\protect\hypertarget{the-validation-set-approach}{}
 \vspace{2mm}
 
 \begin{itemize}
@@ -548,16 +543,13 @@ This can be done by:
 
 \vspace{4mm}
 
-\includegraphics{../../ISLR/Figures/Chapter5/5.1.png}
-
+\includegraphics{../../ISLR/Figures/Chapter5/51.png}
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Example of validation set approach}
-
+\protect\hypertarget{example-of-validation-set-approach}{}
 \vspace{2mm}
 
 Auto data set (library \texttt{ISLR}): predict \texttt{mpg} (miles pr
@@ -565,13 +557,10 @@ gallon) using polynomial function of \texttt{horsepower} (of engine),
 \(n=392\). What do you see?
 
 \begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/chunkName-1} \end{center}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 But what if we select another split into two parts? Many splits:
 
 \begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/auto2-1} \end{center}
@@ -580,13 +569,11 @@ But what if we select another split into two parts? Many splits:
 
 \(\rightarrow\) No consensus which model really gives the lowest
 validation set MSE.
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Drawbacks with the validation set approach}
-
+\protect\hypertarget{drawbacks-with-the-validation-set-approach}{}
 \vspace{2mm}
 
 \begin{itemize}
@@ -608,21 +595,16 @@ validation set MSE.
   observations for a model that is fit on the full data set (the more
   data, the lower the error).
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 Better ideas?
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Leave-one-out cross-validation (LOOCV)}
-
+\protect\hypertarget{leave-one-out-cross-validation-loocv}{}
 \(~\)
 
 Leave-one-out cross-validation (LOOCV) addresses the limitations of the
@@ -654,29 +636,23 @@ validation set approach.
 \end{itemize}
 
 \[\text{CV}_{n}=\frac{1}{n}\sum_{i=1}^n \text{MSE}_i \ .\]
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Regression example: LOOCV}
-
+\protect\hypertarget{regression-example-loocv}{}
 \begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/auto_loocv-1} \end{center}
 
 \tiny
 
 \normalsize
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Issues with leave-one-out cross-validation}
-
+\protect\hypertarget{issues-with-leave-one-out-cross-validation}{}
 \(~\)
 
 \begin{itemize}
@@ -719,15 +695,12 @@ validation set approach.
 \[\text{Var}(\sum_{i=1}^na_iX_i)=\sum_{i=1}^n\sum_{j=1}^n a_ia_j\text{Cov}(X_i,X_j)\]
 \[=\sum_{i=1}^na_i^2\text{Var}(X_i)+2\sum_{i=2}^n \sum_{j=1}^{i-1}
 a_ia_j\text{Cov}(X_i,X_j).\]
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{LOOCV for multiple linear regression}
-
+\protect\hypertarget{loocv-for-multiple-linear-regression}{}
 \vspace{2mm}
 
 There is a nice shortcut for LOOCV in the case of linear regression:
@@ -745,16 +718,15 @@ squares fit.
 
 \(~\)
 
+\(~\)
+
 See Compulsory exercise 1.
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{\(k\)-fold cross-validation}
-
+\protect\hypertarget{k-fold-cross-validation}{}
 \(~\)
 
 To address the drawbacks of LOOCV, we can leave out not just one single
@@ -791,31 +763,26 @@ observation in each iteration, but \(1/k\)-th of all data.
 The MSE is then estimated in each of the \(k\) iterations
 (\(\text{MSE}_1,\ldots,\text{MSE}_k\)). The \(k\)-fold CV is then a
 (weighted) avearge over the \(k\) MSEs.
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \textbf{Comparison of LOOCV and \(k\)-fold CV}:
 
 \centering
 
 LOOCV:
 
-\includegraphics[width=0.7\textwidth,height=\textheight]{../../ISLR/Figures/Chapter5/5.3.png}
+\includegraphics[width=0.7\textwidth,height=\textheight]{../../ISLR/Figures/Chapter5/53.png}
 
 \(k\)-fold:
 
-\includegraphics[width=0.7\textwidth,height=\textheight]{../../ISLR/Figures/Chapter5/5.5.png}
-
+\includegraphics[width=0.7\textwidth,height=\textheight]{../../ISLR/Figures/Chapter5/55.png}
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Formally}
-
+\protect\hypertarget{formally}{}
 \begin{itemize}
 \tightlist
 \item
@@ -833,41 +800,33 @@ with part \(j\) removed.
 \[\text{CV}_{k}=\frac{1}{n} \sum_{j=1}^k n_j \text{MSE}_j\]
 
 Observe: setting \(k=n\) gives LOOCV.
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Regression example: \(5\) and \(10\)-fold
 cross-validation}
-
+\protect\hypertarget{regression-example-5-and-10-fold-cross-validation}{}
 \(~\)
 
 \begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/auto_510fold-1} \end{center}
 
 \normalsize
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 10 reruns (different splits) of the 10-CV method - to see variability:
 
 \begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/auto_510fold_10-1} \end{center}
 
 There still \emph{is} variability, but \emph{much less} than for
 validation set approach.
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Issues with \(k\)-fold cross-validation}
-
+\protect\hypertarget{issues-with-k-fold-cross-validation}{}
 \(~\)
 
 \begin{enumerate}
@@ -917,15 +876,12 @@ validation set approach.
   more accurate estimates of the test error rate than does LOOCV.\\
   \(\rightarrow\) \(k=5\) or \(k=10\) is used as a compromise.
 \end{enumerate}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Choosing the best model}
-
+\protect\hypertarget{choosing-the-best-model}{}
 \(~\)
 
 \begin{itemize}
@@ -954,13 +910,10 @@ validation set approach.
   that is still kept away), and evaluate the performance on the test
   set.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \textbf{One standard error rule:}
 
 Denote by \(\text{MSE}_j(\theta)\), \(j=1,\ldots, k\) the \(k\) parts of
@@ -976,13 +929,11 @@ for each value of the complexity parameter
 The \emph{one standard error rule} is to choose the simplest model
 (\emph{e.g.}, with lowest polynomial degree) within one standard error
 of the minimal error.
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{\(k\)-fold cross-validation in classification}
-
+\protect\hypertarget{k-fold-cross-validation-in-classification}{}
 \vspace{3mm}
 
 What do we need to change from our regression set-up?
@@ -1006,22 +957,68 @@ What do we need to change from our regression set-up?
   The \(k\)-fold CV is defined analogously.
 \end{itemize}
 
-\vspace{2mm}
+\vspace{3mm}
 
 \begin{itemize}
 \tightlist
 \item
-  Read chapter 5.1.5 in the course book.
+  Chapter 5.1.5 in the course book.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
+Let us look at a data set from Chapter 2:
 
+\centering
+
+\includegraphics[width=0.8\textwidth,height=\textheight]{213.png}
+\end{frame}
+
+\begin{frame}
+We can fit logistic regression and look at the decision boundary,
+depending on the degree of of the regression model:
+
+\centering
+
+\includegraphics[width=0.5\textwidth,height=\textheight]{../../ISLR/Figures/Chapter5/57.png}
+
+\flushleft
+
+\begin{itemize}
+\tightlist
+\item
+  Error rates: 0.201, 0.197, 0.160, 0.162, respectively
+\item
+  Bayes error rate: 0.133
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+Which degree of the logistic regression polynomial is best?
+
+\(\rightarrow\) Cross-validation!
+
+\centering
+
+\includegraphics[width=0.6\textwidth,height=\textheight]{58.png}
+
+\flushleft
+
+\begin{itemize}
+\tightlist
+\item
+  Orange: True test error.
+\item
+  Black: 10-fold CV error.
+\item
+  Blue: Training error.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
 \begin{block}{Can we use CV for model assessment?}
-
+\protect\hypertarget{can-we-use-cv-for-model-assessment}{}
 \vspace{2mm}
 
 \begin{itemize}
@@ -1036,12 +1033,11 @@ What do we need to change from our regression set-up?
 \end{itemize}
 
 \vspace{2mm}
-
 \end{block}
 
 \begin{block}{Can we use CV both for model selection and model
 assessment?}
-
+\protect\hypertarget{can-we-use-cv-both-for-model-selection-and-model-assessment}{}
 \vspace{2mm}
 
 \begin{itemize}
@@ -1052,15 +1048,12 @@ assessment?}
   Solution: you can use two layers of CV - also called \emph{nested CV}.
   See drawing in class.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{The right and the wrong way to do cross-validation}
-
+\protect\hypertarget{the-right-and-the-wrong-way-to-do-cross-validation}{}
 \(~\)
 
 Example from the online lecture by Hastie and Tibshirain (slide 17 for
@@ -1095,13 +1088,10 @@ part 5):
 
 How can we use cross-validation to produce an estimate of the
 performance of this classifier?
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \textbf{Q}: Can we apply cross-validation only to step 2? Why (not)?
 
 \textbf{A:} No, \textbf{step 1 is part of the training procedure} (the
@@ -1123,14 +1113,12 @@ an honest estimate of the performance of the classifier.
 Note: We will see in the Recommended Exercises that doing the wrong
 thing can give a misclassification error approximately 0 - even if the
 ``true'' rate is 50\%.
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Selection bias in gene extraction on the basis of
 microarray gene-expression data}
-
+\protect\hypertarget{selection-bias-in-gene-extraction-on-the-basis-of-microarray-gene-expression-data}{}
 \vspace{2mm}
 
 Article by \href{http://www.pnas.org/content/99/10/6562}{Christophe
@@ -1143,20 +1131,15 @@ Ambroise and Geoffrey J. McLachlan, PNAS 2002}.
 See also this nice
 \href{https://www.youtube.com/watch?v=r64tRyHFAJ8\&list=PLAOUn-KLSAVNz3lv4a957qRpfPWH2EOg4\&index=3}{anecdote
 at about 7min 15 in the video}.
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 We are looking together at Problem 3 of the recommended exercises 5.
-
 \end{frame}
 
 \begin{frame}{The Bootstrap}
 \protect\hypertarget{the-bootstrap}{}
-
 \vspace{2mm}
 
 \begin{itemize}
@@ -1184,11 +1167,9 @@ We are looking together at Problem 3 of the recommended exercises 5.
   We will look at getting an estimate for the standard error of a sample
   median and of a regression coefficient.
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{itemize}
 \item
   The inventor: Bradley Efron in 1979 -
@@ -1213,13 +1194,11 @@ like all was lost, he thought to pick himself up by his own bootstraps.
   \textbf{Idea: Use the data itself to get more information about a
   statistic (an estimator).}
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Example: the standard deviation of the sample median?}
-
+\protect\hypertarget{example-the-standard-deviation-of-the-sample-median}{}
 \(~\)
 
 \begin{itemize}
@@ -1258,13 +1237,10 @@ like all was lost, he thought to pick himself up by his own bootstraps.
 \item
   That's where the bootstrap method comes into play.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 Let's first assume we would know \(f\), for example \(X\sim N(0,1)\).
 Then we can repeatedly take samples and calculate the standard deviation
 of all medians to obtain an estimate:
@@ -1275,34 +1251,30 @@ of all medians to obtain an estimate:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
-\NormalTok{n =}\StringTok{ }\DecValTok{101}
-\NormalTok{B =}\StringTok{ }\DecValTok{1000}
-\NormalTok{estimator =}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\OtherTok{NA}\NormalTok{, B)}
-\ControlFlowTok{for}\NormalTok{ (b }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{B) \{}
-\NormalTok{    xs =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(n)}
-\NormalTok{    estimator[b] =}\StringTok{ }\KeywordTok{median}\NormalTok{(xs)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{n }\OtherTok{=} \DecValTok{101}
+\NormalTok{B }\OtherTok{=} \DecValTok{1000}
+\NormalTok{estimator }\OtherTok{=} \FunctionTok{rep}\NormalTok{(}\ConstantTok{NA}\NormalTok{, B)}
+\ControlFlowTok{for}\NormalTok{ (b }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{B) \{}
+\NormalTok{    xs }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(n)}
+\NormalTok{    estimator[b] }\OtherTok{=} \FunctionTok{median}\NormalTok{(xs)}
 \NormalTok{\}}
-\KeywordTok{sd}\NormalTok{(estimator)}
+\FunctionTok{sd}\NormalTok{(estimator)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## [1] 0.1259035
 \end{verbatim}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/boot1-1} \end{center}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Moving from simulation to bootstrapping (\(f\) unknown)}
-
+\protect\hypertarget{moving-from-simulation-to-bootstrapping-f-unknown}{}
 \(~\)
 
 \begin{itemize}
@@ -1340,13 +1312,10 @@ of all medians to obtain an estimate:
   \(X_1, X_2, \ldots, X_n\) - some appearing more than once, other not
   appearing at all.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 Compare the sample median
 
 \(~\)
@@ -1355,10 +1324,10 @@ Compare the sample median
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
-\NormalTok{n =}\StringTok{ }\DecValTok{101}
-\NormalTok{original =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(n)}
-\KeywordTok{median}\NormalTok{(original)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{n }\OtherTok{=} \DecValTok{101}
+\NormalTok{original }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(n)}
+\FunctionTok{median}\NormalTok{(original)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1372,8 +1341,8 @@ to the median from \textbf{one bootstrap-sample}: \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{boot1 =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ original, }\DataTypeTok{size =}\NormalTok{ n, }\DataTypeTok{replace =} \OtherTok{TRUE}\NormalTok{)}
-\KeywordTok{median}\NormalTok{(boot1)}
+\NormalTok{boot1 }\OtherTok{=} \FunctionTok{sample}\NormalTok{(}\AttributeTok{x =}\NormalTok{ original, }\AttributeTok{size =}\NormalTok{ n, }\AttributeTok{replace =} \ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{median}\NormalTok{(boot1)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1384,13 +1353,11 @@ to the median from \textbf{one bootstrap-sample}: \scriptsize
 \normalsize
 
 However, drawing only \emph{one} such sample does not help much.
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{The bootstrap algorithm for estimating standard errors}
-
+\protect\hypertarget{the-bootstrap-algorithm-for-estimating-standard-errors}{}
 \(~\)
 
 \begin{enumerate}
@@ -1422,16 +1389,13 @@ However, drawing only \emph{one} such sample does not help much.
   which is the empirical standard deviation from the \(B\) estimates
   \(\tilde{X}^*_b\), \(b=1,\ldots,B\).
 \end{enumerate}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Illustration for the median example (with a for-loop in
 R)}
-
+\protect\hypertarget{illustration-for-the-median-example-with-a-for-loop-in-r}{}
 \(~\)
 
 Simulate data:
@@ -1442,10 +1406,10 @@ Simulate data:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
-\NormalTok{n =}\StringTok{ }\DecValTok{101}
-\NormalTok{original =}\StringTok{ }\KeywordTok{rnorm}\NormalTok{(n)}
-\KeywordTok{median}\NormalTok{(original)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123}\NormalTok{)}
+\NormalTok{n }\OtherTok{=} \DecValTok{101}
+\NormalTok{original }\OtherTok{=} \FunctionTok{rnorm}\NormalTok{(n)}
+\FunctionTok{median}\NormalTok{(original)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1466,49 +1430,44 @@ get a standard deviation:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{B =}\StringTok{ }\DecValTok{1000}
-\NormalTok{estimator =}\StringTok{ }\KeywordTok{rep}\NormalTok{(}\OtherTok{NA}\NormalTok{, B)}
-\ControlFlowTok{for}\NormalTok{ (b }\ControlFlowTok{in} \DecValTok{1}\OperatorTok{:}\NormalTok{B) \{}
-\NormalTok{    thisboot =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DataTypeTok{x =}\NormalTok{ original, }\DataTypeTok{size =}\NormalTok{ n, }\DataTypeTok{replace =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{    estimator[b] =}\StringTok{ }\KeywordTok{median}\NormalTok{(thisboot)}
+\NormalTok{B }\OtherTok{=} \DecValTok{1000}
+\NormalTok{estimator }\OtherTok{=} \FunctionTok{rep}\NormalTok{(}\ConstantTok{NA}\NormalTok{, B)}
+\ControlFlowTok{for}\NormalTok{ (b }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{B) \{}
+\NormalTok{    thisboot }\OtherTok{=} \FunctionTok{sample}\NormalTok{(}\AttributeTok{x =}\NormalTok{ original, }\AttributeTok{size =}\NormalTok{ n, }\AttributeTok{replace =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{    estimator[b] }\OtherTok{=} \FunctionTok{median}\NormalTok{(thisboot)}
 \NormalTok{\}}
-\KeywordTok{sd}\NormalTok{(estimator)}
+\FunctionTok{sd}\NormalTok{(estimator)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## [1] 0.1365448
 \end{verbatim}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 The distribution of the 1000 sampled estimates:
 
 \(~\)
 
 \begin{center}\includegraphics[width=0.7\linewidth]{5Resample_files/figure-beamer/boot2-1} \end{center}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Alternative: the built-in \texttt{boot} function from
 library \texttt{boot}}
-
+\protect\hypertarget{alternative-the-built-in-boot-function-from-library-boot}{}
 \(~\)
 
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(boot)}
-\NormalTok{boot.median =}\StringTok{ }\ControlFlowTok{function}\NormalTok{(data, index) }\KeywordTok{return}\NormalTok{(}\KeywordTok{median}\NormalTok{(data[index]))}
-\NormalTok{B =}\StringTok{ }\DecValTok{1000}
-\KeywordTok{boot}\NormalTok{(original, boot.median, }\DataTypeTok{R =}\NormalTok{ B)}
+\FunctionTok{library}\NormalTok{(boot)}
+\NormalTok{boot.median }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(data, index) }\FunctionTok{return}\NormalTok{(}\FunctionTok{median}\NormalTok{(data[index]))}
+\NormalTok{B }\OtherTok{=} \DecValTok{1000}
+\FunctionTok{boot}\NormalTok{(original, boot.median, }\AttributeTok{R =}\NormalTok{ B)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1525,15 +1484,12 @@ library \texttt{boot}}
 ##       original      bias    std. error
 ## t1* 0.05300423 -0.01602688   0.1310411
 \end{verbatim}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{With or without replacement?}
-
+\protect\hypertarget{with-or-without-replacement}{}
 \vspace{2mm}
 
 In bootstrapping we sample \emph{with replacement} from our
@@ -1546,15 +1502,12 @@ observations.
 \vspace{2mm}
 
 \vspace{4mm}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Example: multiple linear regression}
-
+\protect\hypertarget{example-multiple-linear-regression}{}
 We assume, for observation \(i\):
 \[Y_i= \beta_0 + \beta_{1}  x_{i1} + \beta_2 x_{i2} + ... + \beta_p x_{ip} + \varepsilon_i,\]
 where \(i=1,2,...,n\). The model can be written in matrix form:
@@ -1574,15 +1527,12 @@ Why is that "needed" if we already know the mathematical formula for the standar
 \textbf{Note}: Our bootstrap samples can also be used to make confidence
 intervals for the regression coefficients or prediction intervals for
 new observations.
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{A related method: Bagging}
-
+\protect\hypertarget{a-related-method-bagging}{}
 \vspace{2mm}
 
 Bagging (\emph{bootstrap aggregation}) is a special case of
@@ -1624,13 +1574,10 @@ Bagging (\emph{bootstrap aggregation}) is a special case of
     \[\hat{f}_{bag}(x) = \frac{1}{B} \sum_{b=1}^B \hat{f}^{\star b}(x) \ .\]
   \end{itemize}
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{itemize}
 \tightlist
 \item
@@ -1658,12 +1605,10 @@ Bagging (\emph{bootstrap aggregation}) is a special case of
   with regression and classification trees) might benefit greatly from
   bagging. More in Module 8.
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}{Further reading}
 \protect\hypertarget{further-reading}{}
-
 \begin{itemize}
 \tightlist
 \item
@@ -1674,12 +1619,10 @@ Bagging (\emph{bootstrap aggregation}) is a special case of
   \href{https://rstudio-pubs-static.s3.amazonaws.com/65561_43c0eaaa8565414eae333b47038f716c.html}{Solutions
   to exercises in the book, chapter 5}
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}{Excursion: R Markdown and \texttt{knitr}}
 \protect\hypertarget{excursion-r-markdown-and-knitr}{}
-
 \begin{itemize}
 \item
   You can work through the Bonus part about R Markdown in the R course
@@ -1690,13 +1633,11 @@ Bagging (\emph{bootstrap aggregation}) is a special case of
   Do not forget to install the packages listed at the beginning of the
   exercise sheet.
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{How to render a document?}
-
+\protect\hypertarget{how-to-render-a-document}{}
 \vspace{2mm}
 
 You do this by pressing \texttt{knit}.
@@ -1721,13 +1662,10 @@ Knitting is also done by: Ctrl+Shift+K (Windows) or Cmd+Shift+K (MacOS).
   PDF, MS Word document, slide show, handout, book, dashboard, package
   vignette or other format.
 \end{enumerate}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{itemize}
 \item
   More: \href{https://pandoc.org/}{About pandoc - the swiss army knife
@@ -1741,13 +1679,11 @@ Knitting is also done by: Ctrl+Shift+K (Windows) or Cmd+Shift+K (MacOS).
   Options-RMarkdown and check what is your value of ``show output
   preview in''.
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{What output type do you want to produce?}
-
+\protect\hypertarget{what-output-type-do-you-want-to-produce}{}
 \vspace{2mm}
 
 \begin{itemize}
@@ -1773,16 +1709,13 @@ Knitting is also done by: Ctrl+Shift+K (Windows) or Cmd+Shift+K (MacOS).
   During rendering we use the location of the .Rmd file as the working
   directory, and the rendering is done in a \emph{new session}.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]{Formatting your R Markdown file}
 \protect\hypertarget{formatting-your-r-markdown-file}{}
-
 \begin{block}{Text, mathematics}
-
+\protect\hypertarget{text-mathematics}{}
 \begin{itemize}
 \tightlist
 \item
@@ -1797,25 +1730,20 @@ Knitting is also done by: Ctrl+Shift+K (Windows) or Cmd+Shift+K (MacOS).
   footnotes, rulers,\ldots{} see
   \url{https://github.com/rstudio/cheatsheets/raw/master/rmarkdown-2.0.pdf}
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \textbf{Hands-on}: go the the Compulsory exercise 1 template, and just
 write and press \texttt{knitr} to see!
 
 Check how a nice formula using latex is generated for
 \(Y_i=\beta_0+\beta_1 x_{i1} +\varepsilon_i\).
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Code Chunks}
-
+\protect\hypertarget{code-chunks}{}
 \(~\)
 
 \begin{itemize}
@@ -1870,15 +1798,12 @@ Check how a nice formula using latex is generated for
 \end{itemize}
 
 \texttt{\{r\ auto,\ echo=FALSE,\ fig.width=4,\ fig.height=3,fig.align\ =\ "center",out.width=\textquotesingle{}70\%\textquotesingle{}\}}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Set-up chunk}
-
+\protect\hypertarget{set-up-chunk}{}
 \(~\)
 
 \begin{itemize}
@@ -1902,21 +1827,18 @@ Check how a nice formula using latex is generated for
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(knitr)}
-\NormalTok{knitr}\OperatorTok{::}\NormalTok{opts_chunk}\OperatorTok{$}\KeywordTok{set}\NormalTok{(}\DataTypeTok{echo =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{tidy =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{message =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{warning =} \OtherTok{FALSE}\NormalTok{, }
-    \DataTypeTok{strip.white =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{prompt =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{cache =} \OtherTok{TRUE}\NormalTok{, }\DataTypeTok{size =} \StringTok{"scriptsize"}\NormalTok{, }
-    \DataTypeTok{fig.width =} \DecValTok{4}\NormalTok{, }\DataTypeTok{fig.height =} \DecValTok{3}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(knitr)}
+\NormalTok{knitr}\SpecialCharTok{::}\NormalTok{opts\_chunk}\SpecialCharTok{$}\FunctionTok{set}\NormalTok{(}\AttributeTok{echo =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{tidy =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{message =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{warning =} \ConstantTok{FALSE}\NormalTok{,}
+    \AttributeTok{strip.white =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{prompt =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{cache =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{size =} \StringTok{"scriptsize"}\NormalTok{,}
+    \AttributeTok{fig.width =} \DecValTok{4}\NormalTok{, }\AttributeTok{fig.height =} \DecValTok{3}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Calling R outside of the code chunks}
-
+\protect\hypertarget{calling-r-outside-of-the-code-chunks}{}
 \(~\)
 
 Use the ` r before and ` after an R command to integrate into the text.
@@ -1924,7 +1846,7 @@ For example,
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\DecValTok{2} \OperatorTok{+}\StringTok{ }\DecValTok{2}
+\DecValTok{2} \SpecialCharTok{+} \DecValTok{2}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1939,18 +1861,15 @@ is equal to 4.
 This is what we have done in the YAML-header to include todays date on
 your submission:
 
-` r format(Sys.time(), `\%d \%B, \%Y')` gives 08 Februar, 2022.
-
+` r format(Sys.time(), `\%d \%B, \%Y')` gives 03 Februar, 2023.
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]{Problems}
 \protect\hypertarget{problems}{}
-
 \begin{block}{When I \texttt{knit} with output: pdf\_document no
 pdf-file is produced. Why?}
-
+\protect\hypertarget{when-i-knit-with-output-pdf_document-no-pdf-file-is-produced.-why}{}
 \begin{itemize}
 \tightlist
 \item
@@ -1977,14 +1896,11 @@ My solution
 \item
   and then go back to the Rmd and fix the error.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}{Handing in Compulsory exercise 1}
 \protect\hypertarget{handing-in-compulsory-exercise-1}{}
-
 \begin{itemize}
 \item
   I hope you have already joined a group from Bb (front page -- users
@@ -1998,17 +1914,17 @@ My solution
 \item
   Scores and comments will be given on Bb.
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \hypertarget{refs}{}
-\leavevmode\hypertarget{ref-james.etal}{}%
-James, G., D. Witten, T. Hastie, and R. Tibshirani. 2013. \emph{An
-Introduction to Statistical Learning with Applications in R}. New York:
-Springer.
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-james.etal}{}}%
+James, G., D. Witten, T. Hastie, and R. Tibshirani. 2021. \emph{An
+Introduction to Statistical Learning with Applications in r}. 2nd ed.
+New York: Springer.
 
+\end{CSLReferences}
 \end{frame}
 
 \end{document}
