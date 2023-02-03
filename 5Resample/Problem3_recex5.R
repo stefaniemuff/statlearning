@@ -1,11 +1,11 @@
-#'---
-#'title: Problem 3 of recommended exercise 5 
-#'author: "S. Muff"
-#'date: "`r format(Sys.time(), '%d %B, %Y')`"
-#'output:
-#'  html_document:
-#'    toc: yes
-#'---
+# ---
+# title: "Problem 3 of recommended exercise 5"
+# author: "S. Muff"
+# date: "`r format(Sys.time(), '%d %B, %Y')`"
+# output:
+#  html_document:
+#    toc: yes
+# ---
 
 #+ include = FALSE
 knitr::opts_chunk$set(warning = FALSE, message = FALSE, cache = TRUE)
@@ -39,13 +39,13 @@ library(boot)
 
 #' GENERATE DATA; use a seed for reproducibility
 set.seed(4268)
-n=50 #number of observations
+n=100 #number of observations
 p=5000 #number of predictors
-d=25 #top correlated predictors chosen
+d=10 #top correlated predictors chosen
 #' 
 #' 
 #' Generating predictor data
-xs=matrix(rnorm(n*p,0,4),ncol=p,nrow=n) #simple way to to uncorrelated predictors
+xs=matrix(rnorm(n*p,0,1),ncol=p,nrow=n) #simple way to to uncorrelated predictors
 dim(xs) # n times p
 xs[1:10,1:10]
 
@@ -74,7 +74,7 @@ data=data.frame(ys,xs[,selected])
 
 #'Then run CV around the fitting of the classifier - use logistic regression and built in `cv.glm()` function
  
-logfit=glm(ys~.,family="binomial",data=data)
+logfit=glm(ys~ . ,family="binomial",data=data)
 
 cost <- function(r, pi = 0) mean(abs(r-pi) > 0.5)
 kfold=10
