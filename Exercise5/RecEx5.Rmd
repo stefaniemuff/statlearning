@@ -5,10 +5,10 @@ author:
 - Department of Mathematical Sciences, NTNU
 date: "February 9, 2023"
 output:
-  # html_document:
-  #   df_print: paged
-  #   toc: no
-  #   toc_depth: '2'
+  html_document:
+    df_print: paged
+    toc: no
+    toc_depth: '2'
   pdf_document:
     fig_caption: yes
     keep_tex: yes
@@ -82,13 +82,13 @@ The task here is to devise an algorithm to "prove" that the wrong way is wrong a
   
   Generate data
 
-* Simulate high dimensional data ($p = 5000$ predictors) from independent or correlated normal variables, but with few samples ($n = 50$).
+* Simulate high dimensional data ($p = 5000$ predictors) from independent or correlated normal variables, but with few samples ($n = 100$).
 
 * Randomly assign class labels (here only $2$). This means that the "truth" is that the misclassification rate can not get very small. What is the expected misclassification rate (for this random set)?
 
 Classification task:
 
-* We choose a few (for example $d = 25$) of the predictors (those with the highest correlation to the outcome).
+* We choose a few (for example $d = 10$) of the predictors (those with the highest correlation to the outcome).
 * Perform a classification rule (here: logistic empirical Bayes) on these predictors.
 * Then we run CV ($k = 5$) on either only the $d$ (the wrong way), or on all $c + d$ predictors (the right way). 
 * Report misclassification errors for both situations.
@@ -100,25 +100,29 @@ We start by generating data for $n=50$ observations
 library(boot)
 # GENERATE DATA; use a seed for reproducibility
 set.seed(4268)
-n <- 50 # Number of observations
-p <- 5000 # Number of predictors
-d <- 25 # Top correlated predictors chosen
+n=100 #number of observations
+p=5000 #number of predictors
+d=10 #top correlated predictors chosen
 
 # Generating predictor data
-xs <- matrix(rnorm(n * p, 0, 4), ncol <- p, nrow <- n) # Independent predictors
+xs=matrix(rnorm(n*p,0,1),ncol=p,nrow=n) #simple way to to uncorrelated predictors
 dim(xs) # n times p
-# Generate class labels independent of predictors - so if all classifies as
-# class 1 we expect 50% errors in general.
-ys <- c(rep(0, n / 2), rep(1, n / 2)) # now really 50% of each
+xs[1:10,1:10]
+
+# Generate class labels independent of predictors - so if all classifies as class 1 we expect 50% errors in general
+ys=c(rep(0,n/2),rep(1,n/2)) #now really 50% of each
 table(ys)
 ```
 
 **WRONG CV**: Select the 25 most correlated predictors outside the CV.
 ```{r, eval = FALSE}
-corrs <- apply(xs, 2, cor, y = ys)
+corrs=apply(xs,2,cor,y=ys)
 hist(corrs)
-selected <- order(corrs^2, decreasing = TRUE)[1:d] # Top d correlated selected
-data <- data.frame(ys, xs[, selected])
+
+
+selected=order(corrs^2,decreasing = TRUE)[1:d]  
+
+data=data.frame(ys,xs[,selected])
 ```
 
 Then run CV around the fitting of the classifier - use logistic regression and built in `cv.glm()` function
@@ -129,7 +133,7 @@ kfold <- 10
 cvres <- cv.glm(data = data, cost = cost, glmfit = logfit, K = kfold)
 cvres$delta
 ```
-Observe a zero misclassification rate!
+Observe a misclassification rate of about 20\%.
 
 
 **CORRECT CV**: Do not pre-select predictors outside the CV, but as part of the CV. In order words, the entire analysis is done within the CV. We need to code this ourselves:
@@ -202,7 +206,7 @@ Explain with words and an algorithm how you would proceed to use bootstrapping t
 
 ## Problem 6
 
-Implement your algorithm from 5 both using for-loop and using the `boot` function. Hint: see page 195 of our ISLR book. Use our SLID data set and provide standard errors for the coefficient for age. Compare with the theoretical value $({\bf X}^\top{\bf X})^{-1}\hat{\sigma}^2$ that you find in the output from the regression model.
+Implement your algorithm from 5 both using for-loop and using the `boot` function. Hint: See section 5.3.4 (the Lab on the bootstrap) in our ISLR book. Use our SLID data set from the `car` R package and provide standard errors for the coefficient for age. Compare with the theoretical value $({\bf X}^\top{\bf X})^{-1}\hat{\sigma}^2$ that you find in the output from the regression model.
 
 ```{r,eval=FALSE}
 library(car)

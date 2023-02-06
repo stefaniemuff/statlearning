@@ -1571,17 +1571,23 @@ overflow-y: auto;
 border: 1px solid #ddd;
 border-radius: 4px;
 }
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-content: "\e259";
+.tabset-dropdown > .nav-tabs > li.active:before {
+content: "";
 font-family: 'Glyphicons Halflings';
 display: inline-block;
 padding: 10px;
 border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-content: "\e258";
-font-family: 'Glyphicons Halflings';
+content: "";
 border: none;
+}
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+content: "";
+font-family: 'Glyphicons Halflings';
+display: inline-block;
+padding: 10px;
+border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs > li.active {
 display: block;
@@ -1686,22 +1692,22 @@ problem in CV, when it is applied the wrong way. Here is what we are
 <li><p>Simulate high dimensional data (<span class="math inline">\(p =
 5000\)</span> predictors) from independent or correlated normal
 variables, but with few samples (<span class="math inline">\(n =
-50\)</span>).</p></li>
+100\)</span>).</p></li>
 <li><p>Randomly assign class labels (here only <span class="math inline">\(2\)</span>). This means that the “truth” is that
 the misclassification rate can not get very small. What is the expected
 misclassification rate (for this random set)?</p></li>
 </ul>
 <p>Classification task:</p>
 <ul>
-<li>We choose a few (<span class="math inline">\(d = 25\)</span>) of the
-predictors (how? we just select those with the highest correlation to
+<li>We choose a few (for example <span class="math inline">\(d =
+10\)</span>) of the predictors (those with the highest correlation to
 the outcome).</li>
 <li>Perform a classification rule (here: logistic empirical Bayes) on
 these predictors.</li>
 <li>Then we run CV (<span class="math inline">\(k = 5\)</span>) on
-either only the <span class="math inline">\(d\)</span> (=wrong way), or
-on all <span class="math inline">\(c + d\)</span> (=right way)
-predictors.</li>
+either only the <span class="math inline">\(d\)</span> (the wrong way),
+or on all <span class="math inline">\(c + d\)</span> predictors (the
+right way).</li>
 <li>Report misclassification errors for both situations.</li>
 </ul>
 <p>One possible version of this is presented in the R-code below. Go
@@ -1713,23 +1719,28 @@ strategies.</p>
 <pre class="r"><code>library(boot)
 # GENERATE DATA; use a seed for reproducibility
 set.seed(4268)
-n &lt;- 50  # Number of observations
-p &lt;- 5000  # Number of predictors
-d &lt;- 25  # Top correlated predictors chosen
+n = 100  #number of observations
+p = 5000  #number of predictors
+d = 10  #top correlated predictors chosen
 
 # Generating predictor data
-xs &lt;- matrix(rnorm(n * p, 0, 4), ncol &lt;- p, nrow &lt;- n)  # Independent predictors
+xs = matrix(rnorm(n * p, 0, 1), ncol = p, nrow = n)  #simple way to to uncorrelated predictors
 dim(xs)  # n times p
+xs[1:10, 1:10]
+
 # Generate class labels independent of predictors - so if all
-# classifies as class 1 we expect 50% errors in general.
-ys &lt;- c(rep(0, n/2), rep(1, n/2))  # now really 50% of each
+# classifies as class 1 we expect 50% errors in general
+ys = c(rep(0, n/2), rep(1, n/2))  #now really 50% of each
 table(ys)</code></pre>
 <p><strong>WRONG CV</strong>: Select the 25 most correlated predictors
 outside the CV.</p>
-<pre class="r"><code>corrs &lt;- apply(xs, 2, cor, y = ys)
+<pre class="r"><code>corrs = apply(xs, 2, cor, y = ys)
 hist(corrs)
-selected &lt;- order(corrs^2, decreasing = TRUE)[1:d]  # Top d correlated selected
-data &lt;- data.frame(ys, xs[, selected])</code></pre>
+
+
+selected = order(corrs^2, decreasing = TRUE)[1:d]
+
+data = data.frame(ys, xs[, selected])</code></pre>
 <p>Then run CV around the fitting of the classifier - use logistic
 regression and built in <code>cv.glm()</code> function</p>
 <pre class="r"><code>logfit &lt;- glm(ys ~ ., family = &quot;binomial&quot;, data = data)
@@ -1737,9 +1748,10 @@ cost &lt;- function(r, pi = 0) mean(abs(r - pi) &gt; 0.5)
 kfold &lt;- 10
 cvres &lt;- cv.glm(data = data, cost = cost, glmfit = logfit, K = kfold)
 cvres$delta</code></pre>
-<p>Observe a zero misclassification rate!</p>
+<p>Observe a misclassification rate of about 20%.</p>
 <p><strong>CORRECT CV</strong>: Do not pre-select predictors outside the
-CV, but as part of the CV. We need to code this ourselves:</p>
+CV, but as part of the CV. In order words, the entire analysis is done
+within the CV. We need to code this ourselves:</p>
 <pre class="r"><code>reorder &lt;- sample(1:n, replace = FALSE)
 validclass &lt;- NULL
 for (i in 1:kfold) {
@@ -1805,11 +1817,11 @@ assumptions you make for your regression model.</p>
 <div id="problem-6" class="section level2">
 <h2>Problem 6</h2>
 <p>Implement your algorithm from 5 both using for-loop and using the
-<code>boot</code> function. Hint: see page 195 of our ISLR book. Use our
-SLID data set and provide standard errors for the coefficient for age.
-Compare with the theoretical value <span class="math inline">\(({\bf
-X}^\top{\bf X})^{-1}\hat{\sigma}^2\)</span> that you find in the output
-from the regression model.</p>
+<code>boot</code> function. Hint: See section 5.3.4 (the Lab on the
+bootstrap) in our ISLR book. Use our SLID data set from the
+<code>car</code> R package and provide standard errors for the
+coefficient for age. Compare with the theoretical value <span class="math inline">\(({\bf X}^\top{\bf X})^{-1}\hat{\sigma}^2\)</span>
+that you find in the output from the regression model.</p>
 <pre class="r"><code>library(car)
 library(boot)
 SLID &lt;- na.omit(SLID)
