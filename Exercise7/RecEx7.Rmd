@@ -1,22 +1,25 @@
 ---
 title: 'Module 7: Recommended Exercises'
 author:
-- Emma Skarstein, Daesoo Lee, Stefanie Muff
+- Emma Skarstein, Daesoo Lee, Kenneth Aase, Stefanie Muff
 - Department of Mathematical Sciences, NTNU
-date: "Feb 28, 2022"
+date: "Mar 02, 2023"
 output:
-  html_document:
-    toc: no
-    toc_depth: '2'
-    df_print: paged
+  # html_document:
+  #   toc: no
+  #   toc_depth: '2'
+  #   df_print: paged
   pdf_document:
     fig_caption: yes
     keep_tex: yes
     toc: no
     toc_depth: 2
-subtitle: TMA4268 Statistical Learning V2022
+subtitle: TMA4268 Statistical Learning V2023
 urlcolor: blue
 ---
+
+<!-- rmarkdown::render("RecEx7.Rmd","all",encoding="UTF-8") -->
+
 
 The original version of this exercise sheet was developed in 2019 by Andreas Strand and colleagues. Thanks for the permission to build on it.
 
@@ -60,7 +63,7 @@ We will continue working with the `Auto` data set. The variable `origin` is 1,2 
 
 ## Problem 3
 
-Now, let us look at the `Wage` data set. The section on Additive Models [(slides 28-34 in the pdf)](https://github.com/stefaniemuff/statlearning/blob/master/7BeyondLinear/7slides.pdf) explains how we can create an AM by adding components together. One component we saw is a natural spline in `year` with one knot. Derive the expression for the design matrix $\mathbf X_2$ from the natural spline basis:
+Now, let us look at the `Wage` data set. The section on Additive Models [(slides 28-34 in the pdf)](https://github.com/stefaniemuff/statlearning/blob/master/7BeyondLinear/7BeyondLinear.pdf) explains how we can create an AM by adding components together. One component we saw is a natural spline in `year` with one knot. Derive the expression for the design matrix $\mathbf X_2$ from the natural spline basis:
 $$
 b_1(x_i) = x_i, \quad b_{k+2}(x_i) = d_k(x_i)-d_K(x_i),\; k = 0, \ldots, K - 1,\\
 $$
@@ -96,7 +99,7 @@ If the code is valid, the predicted response $\hat{\mathbf y} = \mathbf X(\mathb
 
 **R-hints**: 
 ```{r, eval = F}
-#install.packages("gam"")
+#install.packages("gam")
 library(gam)
 library(ISLR)
 # Figure out how to define your X-matrix (this is perhaps a bit tricky!)

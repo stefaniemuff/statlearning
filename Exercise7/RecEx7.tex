@@ -5,18 +5,6 @@
 %
 \documentclass[
 ]{article}
-\title{Module 7: Recommended Exercises}
-\usepackage{etoolbox}
-\makeatletter
-\providecommand{\subtitle}[1]{% add subtitle to \maketitle
-  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
-}
-\makeatother
-\subtitle{TMA4268 Statistical Learning V2022}
-\author{Emma Skarstein, Daesoo Lee, Stefanie Muff \and Department of
-Mathematical Sciences, NTNU}
-\date{Feb 28, 2022}
-
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
 \usepackage{iftex}
@@ -46,18 +34,6 @@ Mathematical Sciences, NTNU}
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\hypersetup{
-  pdftitle={Module 7: Recommended Exercises},
-  pdfauthor={Emma Skarstein, Daesoo Lee, Stefanie Muff; Department of Mathematical Sciences, NTNU},
-  colorlinks=true,
-  linkcolor={Maroon},
-  filecolor={Maroon},
-  citecolor={Blue},
-  urlcolor={blue},
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
 \usepackage[margin=1in]{geometry}
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -119,6 +95,30 @@ Mathematical Sciences, NTNU}
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Module 7: Recommended Exercises},
+  pdfauthor={Emma Skarstein, Daesoo Lee, Kenneth Aase, Stefanie Muff; Department of Mathematical Sciences, NTNU},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Module 7: Recommended Exercises}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{TMA4268 Statistical Learning V2023}
+\author{Emma Skarstein, Daesoo Lee, Kenneth Aase, Stefanie
+Muff \and Department of Mathematical Sciences, NTNU}
+\date{Mar 02, 2023}
 
 \begin{document}
 \maketitle
@@ -143,15 +143,15 @@ Also plot the test error depending on polynomial degree.
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(ISLR)}
 \CommentTok{\# extract only the two variables from Auto}
-\NormalTok{ds }\OtherTok{=}\NormalTok{ Auto[}\FunctionTok{c}\NormalTok{(}\StringTok{"horsepower"}\NormalTok{,}\StringTok{"mpg"}\NormalTok{)]}
+\NormalTok{ds }\OtherTok{=}\NormalTok{ Auto[}\FunctionTok{c}\NormalTok{(}\StringTok{"horsepower"}\NormalTok{, }\StringTok{"mpg"}\NormalTok{)]}
 \NormalTok{n }\OtherTok{=} \FunctionTok{nrow}\NormalTok{(ds)}
-\CommentTok{\#which degrees we will look at}
+\CommentTok{\# which degrees we will look at}
 \NormalTok{deg }\OtherTok{=} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}
 \FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\CommentTok{\#training ids for training set}
+\CommentTok{\# training ids for training set}
 \NormalTok{tr }\OtherTok{=} \FunctionTok{sample.int}\NormalTok{(n, n}\SpecialCharTok{/}\DecValTok{2}\NormalTok{)}
 \CommentTok{\# plot of training data}
-\FunctionTok{plot}\NormalTok{(ds[tr,], }\AttributeTok{col =} \StringTok{"darkgrey"}\NormalTok{, }\AttributeTok{main =} \StringTok{"Polynomial regression"}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(ds[tr, ], }\AttributeTok{col =} \StringTok{"darkgrey"}\NormalTok{, }\AttributeTok{main =} \StringTok{"Polynomial regression"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -185,7 +185,7 @@ of the prediction.
 
 Now, let us look at the \texttt{Wage} data set. The section on Additive
 Models
-\href{https://github.com/stefaniemuff/statlearning/blob/master/7BeyondLinear/7slides.pdf}{(slides
+\href{https://github.com/stefaniemuff/statlearning/blob/master/7BeyondLinear/7BeyondLinear.pdf}{(slides
 28-34 in the pdf)} explains how we can create an AM by adding components
 together. One component we saw is a natural spline in \texttt{year} with
 one knot. Derive the expression for the design matrix \(\mathbf X_2\)
@@ -209,21 +209,21 @@ Write code that produces \(\mathbf X\). The code below may be useful.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\#X\_1}
-\NormalTok{mybs }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(x,knots)\{}
-  \FunctionTok{cbind}\NormalTok{(x,x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{,x}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{,}\FunctionTok{sapply}\NormalTok{(knots,}\ControlFlowTok{function}\NormalTok{(y) }\FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{,x}\SpecialCharTok{{-}}\NormalTok{y)}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{))}
+\CommentTok{\# X\_1}
+\NormalTok{mybs }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(x, knots) \{}
+    \FunctionTok{cbind}\NormalTok{(x, x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, x}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{, }\FunctionTok{sapply}\NormalTok{(knots, }\ControlFlowTok{function}\NormalTok{(y) }\FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{, x }\SpecialCharTok{{-}}\NormalTok{ y)}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{))}
 \NormalTok{\}}
 
-\NormalTok{d }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(c, cK, x) (}\FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{,x}\SpecialCharTok{{-}}\NormalTok{c)}\SpecialCharTok{\^{}}\DecValTok{3}\SpecialCharTok{{-}}\FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{,x}\SpecialCharTok{{-}}\NormalTok{cK)}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{)}\SpecialCharTok{/}\NormalTok{(cK}\SpecialCharTok{{-}}\NormalTok{c)}
-\CommentTok{\#X\_2}
-\NormalTok{myns }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(x,knots)\{}
-\NormalTok{  kn }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\FunctionTok{min}\NormalTok{(x), knots, }\FunctionTok{max}\NormalTok{(x))}
-\NormalTok{  K }\OtherTok{=} \FunctionTok{length}\NormalTok{(kn)}
-\NormalTok{  sub }\OtherTok{=} \FunctionTok{d}\NormalTok{(kn[K}\DecValTok{{-}1}\NormalTok{],kn[K],x)}
-  \FunctionTok{cbind}\NormalTok{(x,}\FunctionTok{sapply}\NormalTok{(kn[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{(K}\DecValTok{{-}2}\NormalTok{)],d,kn[K],x)}\SpecialCharTok{{-}}\NormalTok{sub)}
+\NormalTok{d }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(c, cK, x) (}\FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{, x }\SpecialCharTok{{-}}\NormalTok{ c)}\SpecialCharTok{\^{}}\DecValTok{3} \SpecialCharTok{{-}} \FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{, x }\SpecialCharTok{{-}}\NormalTok{ cK)}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{)}\SpecialCharTok{/}\NormalTok{(cK }\SpecialCharTok{{-}}\NormalTok{ c)}
+\CommentTok{\# X\_2}
+\NormalTok{myns }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(x, knots) \{}
+\NormalTok{    kn }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\FunctionTok{min}\NormalTok{(x), knots, }\FunctionTok{max}\NormalTok{(x))}
+\NormalTok{    K }\OtherTok{=} \FunctionTok{length}\NormalTok{(kn)}
+\NormalTok{    sub }\OtherTok{=} \FunctionTok{d}\NormalTok{(kn[K }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{], kn[K], x)}
+    \FunctionTok{cbind}\NormalTok{(x, }\FunctionTok{sapply}\NormalTok{(kn[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{(K }\SpecialCharTok{{-}} \DecValTok{2}\NormalTok{)], d, kn[K], x) }\SpecialCharTok{{-}}\NormalTok{ sub)}
 \NormalTok{\}}
-\CommentTok{\#X\_3}
-\NormalTok{myfactor }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{x)[,}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{]}
+\CommentTok{\# X\_3}
+\NormalTok{myfactor }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{x)[, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{]}
 \end{Highlighting}
 \end{Shaded}
 
@@ -235,7 +235,7 @@ should be the same as when using the built-in R function \texttt{gam()}.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\#install.packages("gam"")}
+\CommentTok{\# install.packages(\textquotesingle{}gam\textquotesingle{})}
 \FunctionTok{library}\NormalTok{(gam)}
 \FunctionTok{library}\NormalTok{(ISLR)}
 \CommentTok{\# Figure out how to define your X{-}matrix (this is perhaps a bit tricky!)}
@@ -243,9 +243,9 @@ should be the same as when using the built-in R function \texttt{gam()}.
 \CommentTok{\# fitted model with our X}
 \NormalTok{myhat }\OtherTok{=} \FunctionTok{lm}\NormalTok{(wage }\SpecialCharTok{\textasciitilde{}}\NormalTok{ X }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}\SpecialCharTok{$}\NormalTok{fit}
 \CommentTok{\# fitted model with gam}
-\NormalTok{yhat }\OtherTok{=} \FunctionTok{gam}\NormalTok{(wage }\SpecialCharTok{\textasciitilde{}} \FunctionTok{bs}\NormalTok{(age, }\AttributeTok{knots =} \FunctionTok{c}\NormalTok{(}\DecValTok{40}\NormalTok{,}\DecValTok{60}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{ns}\NormalTok{(year, }\AttributeTok{knots =} \DecValTok{2006}\NormalTok{) }\SpecialCharTok{+}\NormalTok{ education)}\SpecialCharTok{$}\NormalTok{fit}
+\NormalTok{yhat }\OtherTok{=} \FunctionTok{gam}\NormalTok{(wage }\SpecialCharTok{\textasciitilde{}} \FunctionTok{bs}\NormalTok{(age, }\AttributeTok{knots =} \FunctionTok{c}\NormalTok{(}\DecValTok{40}\NormalTok{, }\DecValTok{60}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{ns}\NormalTok{(year, }\AttributeTok{knots =} \DecValTok{2006}\NormalTok{) }\SpecialCharTok{+}\NormalTok{ education)}\SpecialCharTok{$}\NormalTok{fit}
 \CommentTok{\# are they equal?}
-\FunctionTok{all.equal}\NormalTok{(myhat,yhat)}
+\FunctionTok{all.equal}\NormalTok{(myhat, yhat)}
 \end{Highlighting}
 \end{Shaded}
 
