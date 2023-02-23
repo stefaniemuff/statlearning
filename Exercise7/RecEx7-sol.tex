@@ -135,29 +135,29 @@ Finally we plot the test error for each polynomial degree.
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(ISLR)}
 \CommentTok{\# extract only the two variables from Auto}
-\NormalTok{ds }\OtherTok{=}\NormalTok{ Auto[}\FunctionTok{c}\NormalTok{(}\StringTok{"horsepower"}\NormalTok{, }\StringTok{"mpg"}\NormalTok{)]}
+\NormalTok{ds }\OtherTok{=}\NormalTok{ Auto[}\FunctionTok{c}\NormalTok{(}\StringTok{"horsepower"}\NormalTok{,}\StringTok{"mpg"}\NormalTok{)]}
 \NormalTok{n }\OtherTok{=} \FunctionTok{nrow}\NormalTok{(ds)}
-\CommentTok{\# which degrees we will look at}
+\CommentTok{\#which degrees we will look at}
 \NormalTok{deg }\OtherTok{=} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}
 \FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\CommentTok{\# training ids for training set}
+\CommentTok{\#training ids for training set}
 \NormalTok{tr }\OtherTok{=} \FunctionTok{sample.int}\NormalTok{(n, n}\SpecialCharTok{/}\DecValTok{2}\NormalTok{)}
 \CommentTok{\# plot of training data}
-\FunctionTok{plot}\NormalTok{(ds[tr, ], }\AttributeTok{col =} \StringTok{"darkgrey"}\NormalTok{, }\AttributeTok{main =} \StringTok{"Polynomial regression"}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(ds[tr,], }\AttributeTok{col =} \StringTok{"darkgrey"}\NormalTok{, }\AttributeTok{main =} \StringTok{"Polynomial regression"}\NormalTok{)}
 
 \CommentTok{\# which colors we will plot the lines with}
 \NormalTok{co }\OtherTok{=} \FunctionTok{rainbow}\NormalTok{(}\FunctionTok{length}\NormalTok{(deg))}
 \CommentTok{\# iterate over all degrees (1:4) {-} could also use a for{-}loop here}
-\NormalTok{MSE }\OtherTok{=} \FunctionTok{sapply}\NormalTok{(deg, }\ControlFlowTok{function}\NormalTok{(d) \{}
-    \CommentTok{\# fit model with this degree}
-\NormalTok{    mod }\OtherTok{=} \FunctionTok{lm}\NormalTok{(mpg }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(horsepower, d), ds[tr, ])}
-    \CommentTok{\# add lines to the plot {-} use fitted values (for mpg) and horsepower from training set}
-    \FunctionTok{lines}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(ds[tr, }\DecValTok{1}\NormalTok{], mod}\SpecialCharTok{$}\NormalTok{fit)[}\FunctionTok{order}\NormalTok{(ds[tr, }\DecValTok{1}\NormalTok{]), ], }\AttributeTok{col =}\NormalTok{ co[d])}
-    \CommentTok{\# calculate mean MSE {-} this is returned in the MSE variable}
-    \FunctionTok{mean}\NormalTok{((}\FunctionTok{predict}\NormalTok{(mod, ds[}\SpecialCharTok{{-}}\NormalTok{tr, ]) }\SpecialCharTok{{-}}\NormalTok{ ds[}\SpecialCharTok{{-}}\NormalTok{tr, }\DecValTok{2}\NormalTok{])}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{MSE }\OtherTok{=} \FunctionTok{sapply}\NormalTok{(deg, }\ControlFlowTok{function}\NormalTok{(d)\{}
+  \CommentTok{\#fit model with this degree}
+\NormalTok{  mod }\OtherTok{=} \FunctionTok{lm}\NormalTok{(mpg }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(horsepower,d),ds[tr,])}
+  \CommentTok{\#add lines to the plot {-} use fitted values (for mpg) and horsepower from training set}
+  \FunctionTok{lines}\NormalTok{(}\FunctionTok{cbind}\NormalTok{(ds[tr,}\DecValTok{1}\NormalTok{],mod}\SpecialCharTok{$}\NormalTok{fit)[}\FunctionTok{order}\NormalTok{(ds[tr,}\DecValTok{1}\NormalTok{]),], }\AttributeTok{col =}\NormalTok{ co[d])}
+  \CommentTok{\#calculate mean MSE {-} this is returned in the MSE variable}
+  \FunctionTok{mean}\NormalTok{((}\FunctionTok{predict}\NormalTok{(mod,ds[}\SpecialCharTok{{-}}\NormalTok{tr,])}\SpecialCharTok{{-}}\NormalTok{ ds[}\SpecialCharTok{{-}}\NormalTok{tr,}\DecValTok{2}\NormalTok{])}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
 \NormalTok{\})}
-\CommentTok{\# add legend to see which color corresponds to which line}
-\FunctionTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\AttributeTok{legend =} \FunctionTok{paste}\NormalTok{(}\StringTok{"d ="}\NormalTok{, deg), }\AttributeTok{lty =} \DecValTok{1}\NormalTok{, }\AttributeTok{col =}\NormalTok{ co)}
+\CommentTok{\#add legend to see which color corresponds to which line}
+\FunctionTok{legend}\NormalTok{(}\StringTok{"topright"}\NormalTok{, }\AttributeTok{legend =} \FunctionTok{paste}\NormalTok{(}\StringTok{"d ="}\NormalTok{,deg), }\AttributeTok{lty =} \DecValTok{1}\NormalTok{, }\AttributeTok{col =}\NormalTok{ co)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -165,8 +165,8 @@ Finally we plot the test error for each polynomial degree.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# plot MSE}
-\FunctionTok{plot}\NormalTok{(MSE, }\AttributeTok{type =} \StringTok{"o"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{16}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"degree"}\NormalTok{, }\AttributeTok{main =} \StringTok{"Test error"}\NormalTok{)}
+\CommentTok{\#plot MSE}
+\FunctionTok{plot}\NormalTok{(MSE, }\AttributeTok{type=}\StringTok{"o"}\NormalTok{, }\AttributeTok{pch =} \DecValTok{16}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"degree"}\NormalTok{, }\AttributeTok{main =} \StringTok{"Test error"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -180,15 +180,17 @@ The same solution using \texttt{ggplot} is shown below.
 \FunctionTok{library}\NormalTok{(ISLR)}
 \FunctionTok{library}\NormalTok{(ggplot2)}
 \CommentTok{\# extract only the two variables from Auto}
-\NormalTok{ds }\OtherTok{=}\NormalTok{ Auto[}\FunctionTok{c}\NormalTok{(}\StringTok{"horsepower"}\NormalTok{, }\StringTok{"mpg"}\NormalTok{)]}
+\NormalTok{ds }\OtherTok{=}\NormalTok{ Auto[}\FunctionTok{c}\NormalTok{(}\StringTok{"horsepower"}\NormalTok{,}\StringTok{"mpg"}\NormalTok{)]}
 \NormalTok{n }\OtherTok{=} \FunctionTok{nrow}\NormalTok{(ds)}
-\CommentTok{\# which degrees we will look at}
+\CommentTok{\#which degrees we will look at}
 \NormalTok{deg }\OtherTok{=} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}
 \FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\CommentTok{\# training ids for training set}
+\CommentTok{\#training ids for training set}
 \NormalTok{tr }\OtherTok{=} \FunctionTok{sample.int}\NormalTok{(n, n}\SpecialCharTok{/}\DecValTok{2}\NormalTok{)}
 \CommentTok{\# plot of training data}
-\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ds[tr, ], }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ horsepower, }\AttributeTok{y =}\NormalTok{ mpg)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{color =} \StringTok{"darkgrey"}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Polynomial regression"}\NormalTok{)}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ds[tr,], }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{horsepower, }\AttributeTok{y=}\NormalTok{mpg)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{color =} \StringTok{"darkgrey"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Polynomial regression"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -197,18 +199,22 @@ The same solution using \texttt{ggplot} is shown below.
 \begin{Shaded}
 \begin{Highlighting}[]
 \CommentTok{\# iterate over all degrees (1:4) {-} could also use a for{-}loop here}
-\NormalTok{dat }\OtherTok{=} \FunctionTok{c}\NormalTok{()  }\CommentTok{\#make a empty variable to store predicted values}
-\ControlFlowTok{for}\NormalTok{ (d }\ControlFlowTok{in}\NormalTok{ deg) \{}
-    \CommentTok{\# fit model with this degree}
-\NormalTok{    mod }\OtherTok{=} \FunctionTok{lm}\NormalTok{(mpg }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(horsepower, d), ds[tr, ])}
-    \CommentTok{\# dataframe of predicted values {-} use fitted values (for mpg) and horsepower from training set and add column (factor) for degree}
-\NormalTok{    dat }\OtherTok{=} \FunctionTok{rbind}\NormalTok{(dat, }\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{horsepower =}\NormalTok{ ds[tr, }\DecValTok{1}\NormalTok{], }\AttributeTok{mpg =}\NormalTok{ mod}\SpecialCharTok{$}\NormalTok{fit, }\AttributeTok{degree =} \FunctionTok{as.factor}\NormalTok{(}\FunctionTok{rep}\NormalTok{(d, }\FunctionTok{length}\NormalTok{(mod}\SpecialCharTok{$}\NormalTok{fit)))))}
-    \CommentTok{\# calculate mean MSE {-} this is returned in the MSE variable}
-\NormalTok{    MSE[d] }\OtherTok{=} \FunctionTok{mean}\NormalTok{((}\FunctionTok{predict}\NormalTok{(mod, ds[}\SpecialCharTok{{-}}\NormalTok{tr, ]) }\SpecialCharTok{{-}}\NormalTok{ ds[}\SpecialCharTok{{-}}\NormalTok{tr, }\DecValTok{2}\NormalTok{])}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\NormalTok{dat }\OtherTok{=} \FunctionTok{c}\NormalTok{() }\CommentTok{\#make a empty variable to store predicted values}
+\ControlFlowTok{for}\NormalTok{(d }\ControlFlowTok{in}\NormalTok{ deg)\{}
+  \CommentTok{\#fit model with this degree}
+\NormalTok{  mod }\OtherTok{=} \FunctionTok{lm}\NormalTok{(mpg }\SpecialCharTok{\textasciitilde{}} \FunctionTok{poly}\NormalTok{(horsepower,d),ds[tr,])}
+  \CommentTok{\#dataframe of predicted values {-} use fitted values (for mpg) and horsepower from}
+  \CommentTok{\#training set and add column (factor) for degree}
+\NormalTok{  dat }\OtherTok{=} \FunctionTok{rbind}\NormalTok{(dat, }\FunctionTok{data.frame}\NormalTok{(}\AttributeTok{horsepower =}\NormalTok{ ds[tr,}\DecValTok{1}\NormalTok{], }\AttributeTok{mpg =}\NormalTok{ mod}\SpecialCharTok{$}\NormalTok{fit, }
+                              \AttributeTok{degree =} \FunctionTok{as.factor}\NormalTok{(}\FunctionTok{rep}\NormalTok{(d, }\FunctionTok{length}\NormalTok{(mod}\SpecialCharTok{$}\NormalTok{fit)))))}
+  \CommentTok{\#calculate mean MSE {-} this is returned in the MSE variable}
+\NormalTok{  MSE[d] }\OtherTok{=} \FunctionTok{mean}\NormalTok{((}\FunctionTok{predict}\NormalTok{(mod,ds[}\SpecialCharTok{{-}}\NormalTok{tr,])}\SpecialCharTok{{-}}\NormalTok{ ds[}\SpecialCharTok{{-}}\NormalTok{tr,}\DecValTok{2}\NormalTok{])}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
 \NormalTok{\}}
 \CommentTok{\# plot fitted values for different degrees}
-\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ds[tr, ], }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ horsepower, }\AttributeTok{y =}\NormalTok{ mpg)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{color =} \StringTok{"darkgrey"}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Polynomial regression"}\NormalTok{) }\SpecialCharTok{+} \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data =}\NormalTok{ dat,}
-    \FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ horsepower, }\AttributeTok{y =}\NormalTok{ mpg, }\AttributeTok{color =}\NormalTok{ degree))}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ ds[tr,], }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{horsepower, }\AttributeTok{y=}\NormalTok{mpg)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{(}\AttributeTok{color =} \StringTok{"darkgrey"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Polynomial regression"}\NormalTok{) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_line}\NormalTok{(}\AttributeTok{data =}\NormalTok{ dat, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{horsepower, }\AttributeTok{y=}\NormalTok{mpg, }\AttributeTok{color =}\NormalTok{ degree))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -216,9 +222,12 @@ The same solution using \texttt{ggplot} is shown below.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# plot MSE}
+\CommentTok{\#plot MSE}
 \NormalTok{MSEdata }\OtherTok{=} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{MSE =}\NormalTok{ MSE, }\AttributeTok{degree =} \DecValTok{1}\SpecialCharTok{:}\DecValTok{4}\NormalTok{)}
-\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ MSEdata, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ degree, }\AttributeTok{y =}\NormalTok{ MSE)) }\SpecialCharTok{+} \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Test error"}\NormalTok{)}
+\FunctionTok{ggplot}\NormalTok{(}\AttributeTok{data =}\NormalTok{ MSEdata, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ degree, }\AttributeTok{y =}\NormalTok{ MSE)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_line}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Test error"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -234,17 +243,21 @@ standard errors.
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{attach}\NormalTok{(Auto)}
-\CommentTok{\# fit model}
+\CommentTok{\#fit model}
 \NormalTok{fit }\OtherTok{=} \FunctionTok{lm}\NormalTok{(mpg }\SpecialCharTok{\textasciitilde{}} \FunctionTok{factor}\NormalTok{(origin))}
-\CommentTok{\# make a new dataset of the origins to predict the mpg for the different origins}
+\CommentTok{\#make a new dataset of the origins to predict the mpg for the different origins}
 \NormalTok{new }\OtherTok{=} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{origin =} \FunctionTok{as.factor}\NormalTok{(}\FunctionTok{sort}\NormalTok{(}\FunctionTok{unique}\NormalTok{(origin))))}
 \CommentTok{\# predicted values and standard errors}
-\NormalTok{pred }\OtherTok{=} \FunctionTok{predict}\NormalTok{(fit, new, }\AttributeTok{se =}\NormalTok{ T)}
+\NormalTok{pred }\OtherTok{=} \FunctionTok{predict}\NormalTok{(fit, new, }\AttributeTok{se=}\NormalTok{T)}
 \CommentTok{\# dataframe including CI (z\_alpha/2 = 1.96)}
-\NormalTok{dat }\OtherTok{=} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{origin =}\NormalTok{ new, }\AttributeTok{mpg =}\NormalTok{ pred}\SpecialCharTok{$}\NormalTok{fit, }\AttributeTok{lwr =}\NormalTok{ pred}\SpecialCharTok{$}\NormalTok{fit }\SpecialCharTok{{-}} \FloatTok{1.96} \SpecialCharTok{*}\NormalTok{ pred}\SpecialCharTok{$}\NormalTok{se.fit, }\AttributeTok{upr =}\NormalTok{ pred}\SpecialCharTok{$}\NormalTok{fit }\SpecialCharTok{+} \FloatTok{1.96} \SpecialCharTok{*}\NormalTok{ pred}\SpecialCharTok{$}\NormalTok{se.fit)}
+\NormalTok{dat }\OtherTok{=} \FunctionTok{data.frame}\NormalTok{(}\AttributeTok{origin =}\NormalTok{ new, }\AttributeTok{mpg =}\NormalTok{ pred}\SpecialCharTok{$}\NormalTok{fit, }
+                 \AttributeTok{lwr =}\NormalTok{ pred}\SpecialCharTok{$}\NormalTok{fit }\SpecialCharTok{{-}} \FloatTok{1.96}\SpecialCharTok{*}\NormalTok{pred}\SpecialCharTok{$}\NormalTok{se.fit, }
+                 \AttributeTok{upr =}\NormalTok{ pred}\SpecialCharTok{$}\NormalTok{fit }\SpecialCharTok{+} \FloatTok{1.96}\SpecialCharTok{*}\NormalTok{pred}\SpecialCharTok{$}\NormalTok{se.fit)}
 \CommentTok{\# plot the fitted/predicted values and CI}
-\FunctionTok{ggplot}\NormalTok{(dat, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ origin, }\AttributeTok{y =}\NormalTok{ mpg)) }\SpecialCharTok{+} \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} \FunctionTok{geom\_segment}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ origin, }\AttributeTok{y =}\NormalTok{ lwr, }\AttributeTok{xend =}\NormalTok{ origin, }\AttributeTok{yend =}\NormalTok{ upr)) }\SpecialCharTok{+} \FunctionTok{scale\_x\_discrete}\NormalTok{(}\AttributeTok{labels =} \FunctionTok{c}\NormalTok{(}\StringTok{\textasciigrave{}}\AttributeTok{1}\StringTok{\textasciigrave{}} \OtherTok{=} \StringTok{"1.American"}\NormalTok{,}
-    \StringTok{\textasciigrave{}}\AttributeTok{2}\StringTok{\textasciigrave{}} \OtherTok{=} \StringTok{"2.European"}\NormalTok{, }\StringTok{\textasciigrave{}}\AttributeTok{3}\StringTok{\textasciigrave{}} \OtherTok{=} \StringTok{"3.Japanese"}\NormalTok{))}
+\FunctionTok{ggplot}\NormalTok{(dat, }\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{origin, }\AttributeTok{y=}\NormalTok{mpg)) }\SpecialCharTok{+} 
+  \FunctionTok{geom\_point}\NormalTok{() }\SpecialCharTok{+} 
+  \FunctionTok{geom\_segment}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{origin, }\AttributeTok{y=}\NormalTok{lwr, }\AttributeTok{xend =}\NormalTok{ origin, }\AttributeTok{yend=}\NormalTok{upr)) }\SpecialCharTok{+} 
+  \FunctionTok{scale\_x\_discrete}\NormalTok{(}\AttributeTok{labels=}\FunctionTok{c}\NormalTok{(}\StringTok{"1"} \OtherTok{=} \StringTok{"1.American"}\NormalTok{, }\StringTok{"2"} \OtherTok{=} \StringTok{"2.European"}\NormalTok{,}\StringTok{"3"} \OtherTok{=} \StringTok{"3.Japanese"}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -291,27 +304,33 @@ an intercept, a cubic spline, a natural cubic spline and a factor.
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(ISLR)}
 \FunctionTok{attach}\NormalTok{(Wage)}
-\CommentTok{\# install.packages(\textquotesingle{}gam\textquotesingle{})}
+\CommentTok{\#install.packages("gam")}
 \FunctionTok{library}\NormalTok{(gam)}
 
-\CommentTok{\# Write a couple of functions first, which will be used to produce the components of the design matrix We write separate functions to}
-\CommentTok{\# generate X\_1, X\_2 and X\_3 (the three components of the model) X\_1: The function mybs() generates basis functions for the cubic spline}
-\NormalTok{mybs }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(x, knots) }\FunctionTok{cbind}\NormalTok{(x, x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{, x}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{, }\FunctionTok{sapply}\NormalTok{(knots, }\ControlFlowTok{function}\NormalTok{(y) }\FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{, x }\SpecialCharTok{{-}}\NormalTok{ y)}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{))}
+\CommentTok{\# Write a couple of functions first, which will be used to produce the components }
+\CommentTok{\# of the design matrix}
+\CommentTok{\# We write separate functions to generate X\_1, X\_2 and X\_3 (the three components }
+\CommentTok{\# of the model)}
+\CommentTok{\# X\_1: The function mybs() generates basis functions for the cubic spline}
+\NormalTok{mybs }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(x,knots) }\FunctionTok{cbind}\NormalTok{(x,x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{,x}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{,}\FunctionTok{sapply}\NormalTok{(knots,}\ControlFlowTok{function}\NormalTok{(y) }\FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{,x}\SpecialCharTok{{-}}\NormalTok{y)}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{))}
 
-\CommentTok{\# X\_2: The function myns() generates basis functions for the natural cubic spline; d() is a helper function}
-\NormalTok{d }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(c, cK, x) (}\FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{, x }\SpecialCharTok{{-}}\NormalTok{ c)}\SpecialCharTok{\^{}}\DecValTok{3} \SpecialCharTok{{-}} \FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{, x }\SpecialCharTok{{-}}\NormalTok{ cK)}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{)}\SpecialCharTok{/}\NormalTok{(cK }\SpecialCharTok{{-}}\NormalTok{ c)}
-\NormalTok{myns }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(x, knots) \{}
-\NormalTok{    kn }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\FunctionTok{min}\NormalTok{(x), knots, }\FunctionTok{max}\NormalTok{(x))}
-\NormalTok{    K }\OtherTok{=} \FunctionTok{length}\NormalTok{(kn)}
-\NormalTok{    sub }\OtherTok{=} \FunctionTok{d}\NormalTok{(kn[K }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{], kn[K], x)}
-    \FunctionTok{cbind}\NormalTok{(x, }\FunctionTok{sapply}\NormalTok{(kn[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{(K }\SpecialCharTok{{-}} \DecValTok{2}\NormalTok{)], d, kn[K], x) }\SpecialCharTok{{-}}\NormalTok{ sub)}
+\CommentTok{\#X\_2: The function myns() generates basis functions for the natural cubic spline;}
+\CommentTok{\# d() is a helper function}
+\NormalTok{d }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(c, cK, x) (}\FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{,x}\SpecialCharTok{{-}}\NormalTok{c)}\SpecialCharTok{\^{}}\DecValTok{3}\SpecialCharTok{{-}}\FunctionTok{pmax}\NormalTok{(}\DecValTok{0}\NormalTok{,x}\SpecialCharTok{{-}}\NormalTok{cK)}\SpecialCharTok{\^{}}\DecValTok{3}\NormalTok{)}\SpecialCharTok{/}\NormalTok{(cK}\SpecialCharTok{{-}}\NormalTok{c)}
+\NormalTok{myns }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(x,knots)\{}
+\NormalTok{  kn }\OtherTok{=} \FunctionTok{c}\NormalTok{(}\FunctionTok{min}\NormalTok{(x), knots, }\FunctionTok{max}\NormalTok{(x))}
+\NormalTok{  K }\OtherTok{=} \FunctionTok{length}\NormalTok{(kn)}
+\NormalTok{  sub }\OtherTok{=} \FunctionTok{d}\NormalTok{(kn[K}\DecValTok{{-}1}\NormalTok{],kn[K],x)}
+  \FunctionTok{cbind}\NormalTok{(x,}\FunctionTok{sapply}\NormalTok{(kn[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{(K}\DecValTok{{-}2}\NormalTok{)],d,kn[K],x)}\SpecialCharTok{{-}}\NormalTok{sub)}
 \NormalTok{\}}
 
-\CommentTok{\# X\_3: The function myfactor() generates the dummy{-}basis functions for a factor covariate, building on the R{-}function model.matrix()}
-\NormalTok{myfactor }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{x)[, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{]}
+\CommentTok{\#X\_3: The function myfactor() generates the dummy{-}basis functions for a factor }
+\CommentTok{\# covariate, building on the R{-}function model.matrix()}
+\NormalTok{myfactor }\OtherTok{=} \ControlFlowTok{function}\NormalTok{(x) }\FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{x)[,}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{]}
 
-\CommentTok{\# Once these functions are prepared, we can generate the model matrix X = (1,X\_1, X\_2, X\_3) as a one{-}liner}
-\NormalTok{X }\OtherTok{=} \FunctionTok{cbind}\NormalTok{(}\DecValTok{1}\NormalTok{, }\FunctionTok{mybs}\NormalTok{(age, }\FunctionTok{c}\NormalTok{(}\DecValTok{40}\NormalTok{, }\DecValTok{60}\NormalTok{)), }\FunctionTok{myns}\NormalTok{(year, }\DecValTok{2006}\NormalTok{), }\FunctionTok{myfactor}\NormalTok{(education))}
+\CommentTok{\# Once these functions are prepared, we can generate the model matrix }
+\CommentTok{\# X = (1,X\_1, X\_2, X\_3) as a one{-}liner }
+\NormalTok{X }\OtherTok{=} \FunctionTok{cbind}\NormalTok{(}\DecValTok{1}\NormalTok{,}\FunctionTok{mybs}\NormalTok{(age,}\FunctionTok{c}\NormalTok{(}\DecValTok{40}\NormalTok{,}\DecValTok{60}\NormalTok{)), }\FunctionTok{myns}\NormalTok{(year, }\DecValTok{2006}\NormalTok{), }\FunctionTok{myfactor}\NormalTok{(education))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -322,19 +341,21 @@ that we would direclty get using the \texttt{gam()} function:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{X\_gam }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\FunctionTok{bs}\NormalTok{(age, }\AttributeTok{knots =} \FunctionTok{c}\NormalTok{(}\DecValTok{40}\NormalTok{, }\DecValTok{60}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{ns}\NormalTok{(year, }\AttributeTok{knots =} \DecValTok{2006}\NormalTok{) }\SpecialCharTok{+}\NormalTok{ education)}
+\NormalTok{X\_gam }\OtherTok{\textless{}{-}} \FunctionTok{model.matrix}\NormalTok{(}\SpecialCharTok{\textasciitilde{}} \FunctionTok{bs}\NormalTok{(age,}\AttributeTok{knots=}\FunctionTok{c}\NormalTok{(}\DecValTok{40}\NormalTok{,}\DecValTok{60}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{ns}\NormalTok{(year,}\AttributeTok{knots=}\DecValTok{2006}\NormalTok{) }\SpecialCharTok{+}\NormalTok{ education)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\CommentTok{\# Anyway, if we now use our model matrix to fit a linear regression model (excluding the intercept {-}1, because the first column of X}
-\CommentTok{\# already contains only 1\textquotesingle{}s and thus encodes for an intercept), we can obtain predicted values for yhat}
-\NormalTok{myhat }\OtherTok{=} \FunctionTok{lm}\NormalTok{(wage }\SpecialCharTok{\textasciitilde{}}\NormalTok{ X }\SpecialCharTok{{-}} \DecValTok{1}\NormalTok{)}\SpecialCharTok{$}\NormalTok{fit}
+\CommentTok{\# Anyway, if we now use our model matrix to fit a linear regression model }
+\CommentTok{\# (excluding the intercept {-}1, because the first column of X already contains }
+\CommentTok{\# only 1\textquotesingle{}s and thus encodes for an intercept), we can obtain predicted values for yhat}
+\NormalTok{myhat }\OtherTok{=} \FunctionTok{lm}\NormalTok{(wage}\SpecialCharTok{\textasciitilde{}}\NormalTok{X}\DecValTok{{-}1}\NormalTok{)}\SpecialCharTok{$}\NormalTok{fit}
 
-\CommentTok{\# Comparing to the fitted values with gam shows that they are all equal (all.equal() will indicate TRUE)}
-\NormalTok{yhat }\OtherTok{=} \FunctionTok{gam}\NormalTok{(wage }\SpecialCharTok{\textasciitilde{}} \FunctionTok{bs}\NormalTok{(age, }\AttributeTok{knots =} \FunctionTok{c}\NormalTok{(}\DecValTok{40}\NormalTok{, }\DecValTok{60}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{ns}\NormalTok{(year, }\AttributeTok{knots =} \DecValTok{2006}\NormalTok{) }\SpecialCharTok{+}\NormalTok{ education)}\SpecialCharTok{$}\NormalTok{fit}
-\FunctionTok{all.equal}\NormalTok{(myhat, yhat)}
+\CommentTok{\# Comparing to the fitted values with gam shows that they are all equal }
+\CommentTok{\# (all.equal() will indicate TRUE)}
+\NormalTok{yhat }\OtherTok{=} \FunctionTok{gam}\NormalTok{(wage }\SpecialCharTok{\textasciitilde{}} \FunctionTok{bs}\NormalTok{(age, }\AttributeTok{knots =} \FunctionTok{c}\NormalTok{(}\DecValTok{40}\NormalTok{,}\DecValTok{60}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{ns}\NormalTok{(year, }\AttributeTok{knots =} \DecValTok{2006}\NormalTok{) }\SpecialCharTok{+}\NormalTok{ education)}\SpecialCharTok{$}\NormalTok{fit}
+\FunctionTok{all.equal}\NormalTok{(myhat,yhat)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -357,14 +378,16 @@ Fit additive model and commenting:
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(gam)}
-\CommentTok{\# first set origin as a factor variable}
+\CommentTok{\#first set origin as a factor variable}
 \NormalTok{Auto}\SpecialCharTok{$}\NormalTok{origin }\OtherTok{=} \FunctionTok{as.factor}\NormalTok{(Auto}\SpecialCharTok{$}\NormalTok{origin)}
-\CommentTok{\# gam model}
-\NormalTok{fitgam }\OtherTok{=} \FunctionTok{gam}\NormalTok{(mpg }\SpecialCharTok{\textasciitilde{}} \FunctionTok{bs}\NormalTok{(displacement, }\AttributeTok{knots =} \FunctionTok{c}\NormalTok{(}\DecValTok{290}\NormalTok{)) }\SpecialCharTok{+} \FunctionTok{poly}\NormalTok{(horsepower, }\DecValTok{2}\NormalTok{) }\SpecialCharTok{+}\NormalTok{ weight }\SpecialCharTok{+} \FunctionTok{s}\NormalTok{(acceleration, }\AttributeTok{df =} \DecValTok{3}\NormalTok{) }\SpecialCharTok{+}\NormalTok{ origin, }\AttributeTok{data =}\NormalTok{ Auto)}
-\CommentTok{\# plot covariates}
-\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow =} \FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{, }\DecValTok{3}\NormalTok{))}
-\FunctionTok{plot}\NormalTok{(fitgam, }\AttributeTok{se =} \ConstantTok{TRUE}\NormalTok{, }\AttributeTok{col =} \StringTok{"blue"}\NormalTok{)}
-\CommentTok{\# summary of fitted model}
+\CommentTok{\#gam model}
+\NormalTok{fitgam}\OtherTok{=}\FunctionTok{gam}\NormalTok{(mpg}\SpecialCharTok{\textasciitilde{}}\FunctionTok{bs}\NormalTok{(displacement, }\AttributeTok{knots=}\FunctionTok{c}\NormalTok{(}\DecValTok{290}\NormalTok{))}\SpecialCharTok{+}
+\FunctionTok{poly}\NormalTok{(horsepower,}\DecValTok{2}\NormalTok{)}\SpecialCharTok{+}\NormalTok{weight}\SpecialCharTok{+}\FunctionTok{s}\NormalTok{(acceleration,}\AttributeTok{df=}\DecValTok{3}\NormalTok{)}\SpecialCharTok{+}
+\NormalTok{origin,}\AttributeTok{data=}\NormalTok{Auto)}
+\CommentTok{\#plot covariates}
+\FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{2}\NormalTok{,}\DecValTok{3}\NormalTok{))}
+\FunctionTok{plot}\NormalTok{(fitgam,}\AttributeTok{se=}\ConstantTok{TRUE}\NormalTok{,}\AttributeTok{col=}\StringTok{"blue"}\NormalTok{)}
+\CommentTok{\#summary of fitted model}
 \FunctionTok{summary}\NormalTok{(fitgam)}
 \end{Highlighting}
 \end{Shaded}

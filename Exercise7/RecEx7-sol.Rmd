@@ -22,7 +22,7 @@ urlcolor: blue
 
 ```{r setup, include=FALSE}
 library(knitr)
-knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
+knitr::opts_chunk$set(echo = TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
                       cache=TRUE, size="scriptsize",fig.width=5.5, fig.height=3.5)
 
 ```
@@ -75,7 +75,8 @@ set.seed(1)
 #training ids for training set
 tr = sample.int(n, n/2)
 # plot of training data
-ggplot(data = ds[tr,], aes(x=horsepower, y=mpg)) + geom_point(color = "darkgrey") + 
+ggplot(data = ds[tr,], aes(x=horsepower, y=mpg)) + 
+  geom_point(color = "darkgrey") + 
   labs(title = "Polynomial regression")
 
 # iterate over all degrees (1:4) - could also use a for-loop here
@@ -91,14 +92,17 @@ for(d in deg){
   MSE[d] = mean((predict(mod,ds[-tr,])- ds[-tr,2])^2)
 }
 # plot fitted values for different degrees
-ggplot(data = ds[tr,], aes(x=horsepower, y=mpg)) + geom_point(color = "darkgrey") +
+ggplot(data = ds[tr,], aes(x=horsepower, y=mpg)) + 
+  geom_point(color = "darkgrey") +
   labs(title = "Polynomial regression") + 
   geom_line(data = dat, aes(x=horsepower, y=mpg, color = degree))
 
 #plot MSE
 MSEdata = data.frame(MSE = MSE, degree = 1:4)
-ggplot(data = MSEdata, aes(x = degree, y = MSE)) + geom_line() + 
-  geom_point() + labs(title = "Test error")
+ggplot(data = MSEdata, aes(x = degree, y = MSE)) + 
+  geom_line() + 
+  geom_point() + 
+  labs(title = "Test error")
 
 
 ```
@@ -120,7 +124,8 @@ dat = data.frame(origin = new, mpg = pred$fit,
                  lwr = pred$fit - 1.96*pred$se.fit, 
                  upr = pred$fit + 1.96*pred$se.fit)
 # plot the fitted/predicted values and CI
-ggplot(dat, aes(x=origin, y=mpg)) + geom_point() + 
+ggplot(dat, aes(x=origin, y=mpg)) + 
+  geom_point() + 
   geom_segment(aes(x=origin, y=lwr, xend = origin, yend=upr)) + 
   scale_x_discrete(labels=c("1" = "1.American", "2" = "2.European","3" = "3.Japanese"))
 ```
@@ -160,12 +165,15 @@ attach(Wage)
 #install.packages("gam")
 library(gam)
 
-# Write a couple of functions first, which will be used to produce the components of the design matrix
-# We write separate functions to generate X_1, X_2 and X_3 (the three components of the model)
+# Write a couple of functions first, which will be used to produce the components 
+# of the design matrix
+# We write separate functions to generate X_1, X_2 and X_3 (the three components 
+# of the model)
 # X_1: The function mybs() generates basis functions for the cubic spline
 mybs = function(x,knots) cbind(x,x^2,x^3,sapply(knots,function(y) pmax(0,x-y)^3))
 
-#X_2: The function myns() generates basis functions for the natural cubic spline; d() is a helper function
+#X_2: The function myns() generates basis functions for the natural cubic spline;
+# d() is a helper function
 d = function(c, cK, x) (pmax(0,x-c)^3-pmax(0,x-cK)^3)/(cK-c)
 myns = function(x,knots){
   kn = c(min(x), knots, max(x))
@@ -174,10 +182,12 @@ myns = function(x,knots){
   cbind(x,sapply(kn[1:(K-2)],d,kn[K],x)-sub)
 }
 
-#X_3: The function myfactor() generates the dummy-basis functions for a factor covariate, building on the R-function model.matrix()
+#X_3: The function myfactor() generates the dummy-basis functions for a factor 
+# covariate, building on the R-function model.matrix()
 myfactor = function(x) model.matrix(~x)[,-1]
 
-# Once these functions are prepared, we can generate the model matrix X = (1,X_1, X_2, X_3) as a one-liner 
+# Once these functions are prepared, we can generate the model matrix 
+# X = (1,X_1, X_2, X_3) as a one-liner 
 X = cbind(1,mybs(age,c(40,60)), myns(year, 2006), myfactor(education))
 ```
 
@@ -188,10 +198,13 @@ X_gam <- model.matrix(~ bs(age,knots=c(40,60)) + ns(year,knots=2006) + education
 ```
 
 ```{r eval = T, message=FALSE, warning=FALSE}
-# Anyway, if we now use our model matrix to fit a linear regression model (excluding the intercept -1, because the first column of X already contains only 1's and thus encodes for an intercept), we can obtain predicted values for yhat
+# Anyway, if we now use our model matrix to fit a linear regression model 
+# (excluding the intercept -1, because the first column of X already contains 
+# only 1's and thus encodes for an intercept), we can obtain predicted values for yhat
 myhat = lm(wage~X-1)$fit
 
-# Comparing to the fitted values with gam shows that they are all equal (all.equal() will indicate TRUE)
+# Comparing to the fitted values with gam shows that they are all equal 
+# (all.equal() will indicate TRUE)
 yhat = gam(wage ~ bs(age, knots = c(40,60)) + ns(year, knots = 2006) + education)$fit
 all.equal(myhat,yhat)
 ```
@@ -221,26 +234,5 @@ summary(fitgam)
 ```
 
 We see `displacement` has two peaks, `horsepower` has the smallest CI for low values, the linear function in `weight` is very variable for small and high values, `acceleration` looks rather like a cubic function and there is a clear effect of `origin`.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
