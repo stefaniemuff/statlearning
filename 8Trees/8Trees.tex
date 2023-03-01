@@ -1,33 +1,37 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
-\documentclass[10pt,ignorenonframetext,]{beamer}
+\documentclass[
+  10pt,
+  ignorenonframetext,
+]{beamer}
 \usepackage{pgfpages}
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
 \setbeamercolor{caption name}{fg=normal text.fg}
 \beamertemplatenavigationsymbolsempty
-% Prevent slide breaks in the middle of a paragraph:
+% Prevent slide breaks in the middle of a paragraph
 \widowpenalties 1 10000
 \raggedbottom
 \setbeamertemplate{part page}{
-\centering
-\begin{beamercolorbox}[sep=16pt,center]{part title}
-  \usebeamerfont{part title}\insertpart\par
-\end{beamercolorbox}
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
 }
 \setbeamertemplate{section page}{
-\centering
-\begin{beamercolorbox}[sep=12pt,center]{part title}
-  \usebeamerfont{section title}\insertsection\par
-\end{beamercolorbox}
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
 }
 \setbeamertemplate{subsection page}{
-\centering
-\begin{beamercolorbox}[sep=8pt,center]{part title}
-  \usebeamerfont{subsection title}\insertsubsection\par
-\end{beamercolorbox}
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
 }
 \AtBeginPart{
   \frame{\partpage}
@@ -41,45 +45,37 @@
 \AtBeginSubsection{
   \frame{\subsectionpage}
 }
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
-\else % if luatex or xelatex
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
   \usepackage{unicode-math}
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usetheme[]{Singapore}
 \usefonttheme{serif}
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
 \usepackage{xcolor}
-\usepackage{hyperref}
-\hypersetup{
-            pdftitle={Module 8: Tree-based Methods},
-            pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
-            colorlinks=true,
-            linkcolor=Maroon,
-            filecolor=Maroon,
-            citecolor=Blue,
-            urlcolor=blue,
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
 \newif\ifbibliography
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -121,7 +117,7 @@
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\usepackage{graphicx,grffile}
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -130,68 +126,82 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{0}
-
-% set default figure placement to htbp
+% Set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 \usepackage{multirow}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Module 8: Tree-based Methods},
+  pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
 
 \title{Module 8: Tree-based Methods}
-\providecommand{\subtitle}[1]{}
-\subtitle{TMA4268 Statistical Learning V2022}
+\subtitle{TMA4268 Statistical Learning V2023}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{March 7 and 10, 2022}
+\date{March 6 and 9, 2023}
 
 \begin{document}
 \frame{\titlepage}
 
-\begin{frame}{Acknowledgements}
-\protect\hypertarget{acknowledgements}{}
-
-\begin{itemize}
-\item
-  The course was originally developed by Mette Langaas (original
-  material:
-  \url{https://github.com/mettelang/StatisticalLearningSpring2019}).
-  Mette did a fantastic job and I am very thankful that I was allowed to
-  modify and use her material.
-\item
-  Some of the figures and slides in this presentation are taken (or are
-  inspired) from James et al. (2013).
-\end{itemize}
-
-\end{frame}
-
 \begin{frame}{Introduction}
 \protect\hypertarget{introduction}{}
-
 \begin{block}{Learning material for this module}
-
+\protect\hypertarget{learning-material-for-this-module}{}
 \vspace{2mm}
 
 \begin{itemize}
 \tightlist
 \item
-  James et al (2013): An Introduction to Statistical Learning. Chapter
+  James et al (2021): An Introduction to Statistical Learning. Chapter
   8.\\
 \item
   All the material presented on these module slides.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{What will you learn?}
-
+\protect\hypertarget{what-will-you-learn}{}
 \vspace{2mm}
 
 You will get to know
@@ -223,15 +233,12 @@ You will get to know
 \(~\)
 
 and learn how to apply all that.
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Example 1 (from chapter 8.1; \texttt{Hitters} data)}
-
+\protect\hypertarget{example-1-from-chapter-8.1-hitters-data}{}
 \vspace{1mm}
 
 \begin{itemize}
@@ -247,15 +254,12 @@ and learn how to apply all that.
 \centering
 
 \includegraphics[width=0.6\textwidth,height=\textheight]{hits.png}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Main idea of tree-based methods}
-
+\protect\hypertarget{main-idea-of-tree-based-methods}{}
 \vspace{2mm}
 
 \begin{itemize}
@@ -275,14 +279,11 @@ Visualisaztion in two dimensions:
 
 \centering
 
-\includegraphics[width=0.5\textwidth,height=\textheight]{../../ISLR/Figures/Chapter8/8.2.png}
-
+\includegraphics[width=0.5\textwidth,height=\textheight]{../../ISLR/Figures/Chapter8/82.png}
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{itemize}
 \item
   CARTs (Classification and regression trees) are usually drawn upside
@@ -300,14 +301,12 @@ Visualisaztion in two dimensions:
 
 \centering
 
-\includegraphics[width=0.45\textwidth,height=\textheight]{../../ISLR/Figures/Chapter8/8.1.png}
-
+\includegraphics[width=0.45\textwidth,height=\textheight]{../../ISLR/Figures/Chapter8/81.png}
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Interpretation}
-
+\protect\hypertarget{interpretation}{}
 \(~\)
 
 \begin{itemize}
@@ -346,14 +345,11 @@ Visualisaztion in two dimensions:
   Compared to a regression model, it is easy to display, interpret and
   explain.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}{Regression tree (continous outcome)}
 \protect\hypertarget{regression-tree-continous-outcome}{}
-
 Assume that we have a dataset consisting of \(n\) pairs
 \((\boldsymbol{x}_i,y_i)\), \(i=1,\ldots,n\), and each predictor is
 \({\boldsymbol{x}}_i=(x_{i1},x_{i2},...,x_{ip})\). The aim is to predict
@@ -377,11 +373,9 @@ Two steps:
 
 \textbf{But}: How to divide the predictor space into non-overlapping
 regions \(R_1,R_2,\ldots,R_J\)?
-
 \end{frame}
 
 \begin{frame}
-
 We could try to minimize the RSS (residual sums of squares) on the
 training set given by
 
@@ -399,13 +393,11 @@ and compute the RSS for each partition.
 \textbf{But}: An exhaustive search over possible splits is
 \emph{computationally infeasible}!
 \footnote{In fact, constructing optimal binary decision trees is an NP-complete problem (Hyafil and Rivest, 1976).}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Recursive binary splitting}
-
+\protect\hypertarget{recursive-binary-splitting}{}
 \vspace{2mm}
 
 \begin{itemize}
@@ -441,13 +433,10 @@ and compute the RSS for each partition.
   respectively. This way we get the two first branches in our decision
   tree.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{itemize}
 \item
   We repeat the process to make branches further down in the tree.
@@ -473,13 +462,11 @@ and compute the RSS for each partition.
 \vspace{1mm}
 
 \textbf{Q}: Why is this algorithm called \emph{greedy}?
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Regression tree: ozone example}
-
+\protect\hypertarget{regression-tree-ozone-example}{}
 \vspace{2mm}
 
 Consider the \texttt{ozone} data set from the \texttt{ElemStatLearn}
@@ -504,7 +491,7 @@ variables:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{head}\NormalTok{(myozone)}
+\FunctionTok{head}\NormalTok{(myozone)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -517,13 +504,10 @@ variables:
 ## 5    23  299   65  8.6
 ## 6    19   99   59 13.8
 \end{verbatim}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 Let's fit a regression tree with \texttt{ozone} as our response variable
 and \texttt{temperature} and \texttt{wind} as predictors.
 
@@ -531,9 +515,9 @@ and \texttt{temperature} and \texttt{wind} as predictors.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{ozone.trainID =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\DecValTok{111}\NormalTok{, }\DecValTok{75}\NormalTok{)}
-\NormalTok{ozone.train =}\StringTok{ }\NormalTok{myozone[ozone.trainID, ]}
-\NormalTok{ozone.test =}\StringTok{ }\NormalTok{myozone[}\OperatorTok{-}\NormalTok{ozone.trainID, ]}
+\NormalTok{ozone.trainID }\OtherTok{=} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\DecValTok{111}\NormalTok{, }\DecValTok{75}\NormalTok{)}
+\NormalTok{ozone.train }\OtherTok{=}\NormalTok{ myozone[ozone.trainID, ]}
+\NormalTok{ozone.test }\OtherTok{=}\NormalTok{ myozone[}\SpecialCharTok{{-}}\NormalTok{ozone.trainID, ]}
 \end{Highlighting}
 \end{Shaded}
 
@@ -545,17 +529,15 @@ Use the default settings in the tree function:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(tree)}
-\NormalTok{ozone.tree =}\StringTok{ }\KeywordTok{tree}\NormalTok{(ozone }\OperatorTok{~}\StringTok{ }\NormalTok{temp }\OperatorTok{+}\StringTok{ }\NormalTok{wind, }\DataTypeTok{data =}\NormalTok{ ozone.train)}
+\FunctionTok{library}\NormalTok{(tree)}
+\NormalTok{ozone.tree }\OtherTok{=} \FunctionTok{tree}\NormalTok{(ozone }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temp }\SpecialCharTok{+}\NormalTok{ wind, }\AttributeTok{data =}\NormalTok{ ozone.train)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{center}\includegraphics[width=0.6\linewidth]{8Trees_files/figure-beamer/ozone1-1} \end{center}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{itemize}
 \item
   We see that \texttt{temperature} is the ``most important'' predictor
@@ -564,13 +546,11 @@ Use the default settings in the tree function:
 \item
   Focus on the regions \(R_j\), \(j=1,\ldots, J\). What is \(J\) here?
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Tree- vs region plot}
-
+\protect\hypertarget{tree--vs-region-plot}{}
 \vspace{2mm}
 
 \includegraphics{8Trees_files/figure-beamer/unnamed-chunk-5-1.pdf}
@@ -589,21 +569,18 @@ Use the default settings in the tree function:
 \item
   Does our tree include interactions between variables?
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{R: function \texttt{tree} in library \texttt{tree}}
-
+\protect\hypertarget{r-function-tree-in-library-tree}{}
 \vspace{2mm}
 
 \begin{itemize}
 \tightlist
 \item
-  R package \texttt{tree} by Brian D. Ripley (Ripley 2019).
+  R package \texttt{tree} by Brian D. Ripley (B. Ripley 2019).
 \end{itemize}
 
 \vspace{2mm}
@@ -624,15 +601,12 @@ Use the default settings in the tree function:
   A competing R function is \texttt{rpart}, explained in
   \url{https://cran.r-project.org/web/packages/rpart/vignettes/longintro.pdf}
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Stopping criterion}
-
+\protect\hypertarget{stopping-criterion}{}
 \vspace{2mm}
 
 \begin{itemize}
@@ -677,27 +651,22 @@ Use the default settings in the tree function:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{ozone.tree2 =}\StringTok{ }\KeywordTok{tree}\NormalTok{(ozone }\OperatorTok{~}\StringTok{ }\NormalTok{temp }\OperatorTok{+}\StringTok{ }\NormalTok{wind, }\DataTypeTok{data =}\NormalTok{ ozone.train, }\DataTypeTok{control =} \KeywordTok{tree.control}\NormalTok{(}\DecValTok{75}\NormalTok{, }
-    \DataTypeTok{mincut =} \DecValTok{2}\NormalTok{, }\DataTypeTok{minsize =} \DecValTok{4}\NormalTok{, }\DataTypeTok{mindev =} \FloatTok{0.001}\NormalTok{))}
+\NormalTok{ozone.tree2 }\OtherTok{=} \FunctionTok{tree}\NormalTok{(ozone }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temp }\SpecialCharTok{+}\NormalTok{ wind, }\AttributeTok{data =}\NormalTok{ ozone.train, }\AttributeTok{control =} \FunctionTok{tree.control}\NormalTok{(}\DecValTok{75}\NormalTok{,}
+    \AttributeTok{mincut =} \DecValTok{2}\NormalTok{, }\AttributeTok{minsize =} \DecValTok{4}\NormalTok{, }\AttributeTok{mindev =} \FloatTok{0.001}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 With the above command, the tree would become very fine. Overfitting?
 
 \begin{center}\includegraphics[width=0.7\linewidth]{8Trees_files/figure-beamer/ozone2-1} \end{center}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Tree performance}
-
+\protect\hypertarget{tree-performance}{}
 \(~\)
 
 Test the predictive performance of our regression tree by using a
@@ -710,14 +679,11 @@ training and a test set. But:
 \normalsize
 
 \emph{\textcolor{red}{How do we know if our tree performs good, or if there would be trees with a better predictive performance?}}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}{Pruning}
 \protect\hypertarget{pruning}{}
-
 \begin{itemize}
 \item
   If we have a data set with many predictors or choose a stringent
@@ -737,13 +703,11 @@ training and a test set. But:
   early on in the tree might be followed by a very good split --- that
   is, a split that leads to a large reduction in RSS later on.
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Cost complexity pruning}
-
+\protect\hypertarget{cost-complexity-pruning}{}
 \(~\)
 
 \begin{itemize}
@@ -777,13 +741,10 @@ training and a test set. But:
   For regression trees (continous outcome) we choose
   \[Q(T)=\sum_{m=1}^{|T|}\sum_{x_i\in R_m}(y_i - \hat{y}_{R_m})^2 \ .\]
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{itemize}
 \item
   For \(\alpha>0\) we get a pruned tree (note: the same pruned tree
@@ -809,15 +770,13 @@ Please study this
 from Bo Lindqvist in MA8701 in 2017 - Advanced topics in Statistical
 Learning and Inference} for an example of how we perform cost complexity
 pruning in detail\footnote{see also link on course website}.
-Alternatively, this method, with proofs, are given in Ripley (1996),
-Section 7.2.
-
+Alternatively, this method, with proofs, are given in B. D. Ripley
+(1996), Section 7.2.
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Building a regression tree: Algorithm 8.1}
-
+\protect\hypertarget{building-a-regression-tree-algorithm-8.1}{}
 \(~\)
 
 \begin{enumerate}
@@ -871,15 +830,12 @@ Section 7.2.
   Return the subtree from Step 2 that corresponds to the chosen value of
   \(\alpha\).
 \end{enumerate}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Pruning the ozone tree}
-
+\protect\hypertarget{pruning-the-ozone-tree}{}
 Let us start with the tree with many leaves, and then prune it with
 5-fold CV. We can then plot the CV error as a function of tree size
 (instead of \(\alpha\) -- why?):
@@ -888,23 +844,20 @@ Let us start with the tree with many leaves, and then prune it with
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{563}\NormalTok{)}
-\NormalTok{ozone.tree <-}\StringTok{ }\KeywordTok{tree}\NormalTok{(ozone }\OperatorTok{~}\StringTok{ }\NormalTok{temp }\OperatorTok{+}\StringTok{ }\NormalTok{wind, }\DataTypeTok{data =}\NormalTok{ ozone.train, }\DataTypeTok{control =} \KeywordTok{tree.control}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(myozone), }
-    \DataTypeTok{mincut =} \DecValTok{2}\NormalTok{, }\DataTypeTok{minsize =} \DecValTok{4}\NormalTok{, }\DataTypeTok{mindev =} \FloatTok{0.001}\NormalTok{))}
-\NormalTok{cv.ozone <-}\StringTok{ }\KeywordTok{cv.tree}\NormalTok{(ozone.tree, }\DataTypeTok{K =} \DecValTok{5}\NormalTok{)}
-\KeywordTok{plot}\NormalTok{(cv.ozone}\OperatorTok{$}\NormalTok{dev }\OperatorTok{~}\StringTok{ }\NormalTok{cv.ozone}\OperatorTok{$}\NormalTok{size, }\DataTypeTok{type =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{lwd =} \DecValTok{2}\NormalTok{, }\DataTypeTok{col =} \StringTok{"red"}\NormalTok{, }
-    \DataTypeTok{xlab =} \StringTok{"Tree Size"}\NormalTok{, }\DataTypeTok{ylab =} \StringTok{"Deviance"}\NormalTok{)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{563}\NormalTok{)}
+\NormalTok{ozone.tree }\OtherTok{\textless{}{-}} \FunctionTok{tree}\NormalTok{(ozone }\SpecialCharTok{\textasciitilde{}}\NormalTok{ temp }\SpecialCharTok{+}\NormalTok{ wind, }\AttributeTok{data =}\NormalTok{ ozone.train, }\AttributeTok{control =} \FunctionTok{tree.control}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(myozone),}
+    \AttributeTok{mincut =} \DecValTok{2}\NormalTok{, }\AttributeTok{minsize =} \DecValTok{4}\NormalTok{, }\AttributeTok{mindev =} \FloatTok{0.001}\NormalTok{))}
+\NormalTok{cv.ozone }\OtherTok{\textless{}{-}} \FunctionTok{cv.tree}\NormalTok{(ozone.tree, }\AttributeTok{K =} \DecValTok{5}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(cv.ozone}\SpecialCharTok{$}\NormalTok{dev }\SpecialCharTok{\textasciitilde{}}\NormalTok{ cv.ozone}\SpecialCharTok{$}\NormalTok{size, }\AttributeTok{type =} \StringTok{"b"}\NormalTok{, }\AttributeTok{lwd =} \DecValTok{2}\NormalTok{, }\AttributeTok{col =} \StringTok{"red"}\NormalTok{,}
+    \AttributeTok{xlab =} \StringTok{"Tree Size"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"Deviance"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{center}\includegraphics[width=0.5\linewidth]{8Trees_files/figure-beamer/ozone.cv-1} \end{center}
-
+\begin{center}\includegraphics[width=0.5\linewidth]{8Trees_files/figure-beamer/ozonecv-1} \end{center}
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 Interestingly, a tree with 5 leaves performs best - which corresponds to
 the original choice:
 
@@ -914,19 +867,17 @@ the original choice:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{prune.ozone <-}\StringTok{ }\KeywordTok{prune.tree}\NormalTok{(ozone.tree, }\DataTypeTok{best =} \DecValTok{5}\NormalTok{)}
-\KeywordTok{plot}\NormalTok{(prune.ozone)}
-\KeywordTok{text}\NormalTok{(prune.ozone, }\DataTypeTok{pretty =} \DecValTok{0}\NormalTok{)}
+\NormalTok{prune.ozone }\OtherTok{\textless{}{-}} \FunctionTok{prune.tree}\NormalTok{(ozone.tree, }\AttributeTok{best =} \DecValTok{5}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(prune.ozone)}
+\FunctionTok{text}\NormalTok{(prune.ozone, }\AttributeTok{pretty =} \DecValTok{0}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{center}\includegraphics[width=0.5\linewidth]{8Trees_files/figure-beamer/unnamed-chunk-7-1} \end{center}
-
 \end{frame}
 
 \begin{frame}{Classification trees (binary or categorical outcome)}
 \protect\hypertarget{classification-trees-binary-or-categorical-outcome}{}
-
 \vspace{2mm}
 
 \begin{itemize}
@@ -944,11 +895,9 @@ the original choice:
   regression tree for a quantitative response, but there are two main
   differences: \emph{the prediction} and \emph{the splitting criterion}.
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \textbf{1) The prediction:}
 
 \begin{itemize}
@@ -976,11 +925,9 @@ the original choice:
 
   \[\hat{p}_{jk} = \frac{1}{N_j} \sum_{i:x_i \in R_j} I(y_i = k)=\frac{n_{jk}}{N_j}.\]
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \textbf{2) The splitting criterion:} We do not use RSS as a splitting
 criterion for a qualitative variable. Instead we can use some
 \emph{measure of impurity} of the node. For leaf node \(j\) and class
@@ -1009,11 +956,9 @@ criterion for a qualitative variable. Instead we can use some
 
 When making a split in our classification tree, we want to minimize the
 Gini index or the cross-entropy.
-
 \end{frame}
 
 \begin{frame}
-
 Why don't we just minimize the misclassification error
 \[E= 1- \max_k{\hat{p}_{jk}} \ ?\]
 
@@ -1038,11 +983,9 @@ Why don't we just minimize the misclassification error
 
 Both splits result in 25\% misclassification. Which of these splits is
 better? Probably the second one, because it produces a \emph{pure node}.
-
 \end{frame}
 
 \begin{frame}
-
 \begin{itemize}
 \tightlist
 \item
@@ -1051,13 +994,11 @@ better? Probably the second one, because it produces a \emph{pure node}.
 \end{itemize}
 
 \begin{center}\includegraphics[width=0.6\linewidth]{8Trees_files/figure-beamer/purity-1} \end{center}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Example: Detection of Minor Head Injury}
-
+\protect\hypertarget{example-detection-of-minor-head-injury}{}
 \tiny
 
 (Artificial data) \vspace{2mm}
@@ -1096,13 +1037,10 @@ better? Probably the second one, because it produces a \emph{pure node}.
     a patient that needs treatment.
   \end{itemize}
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 The dataset includes data about 1321 patients and is a modified and
 smaller version of the (simulated) dataset \texttt{headInjury} from the
 \texttt{DAAG} library.
@@ -1127,13 +1065,11 @@ smaller version of the (simulated) dataset \texttt{headInjury} from the
 \end{verbatim}
 
 \normalsize
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Split with cross-entropy}
-
+\protect\hypertarget{split-with-cross-entropy}{}
 \(~\)
 
 We use the 850 training samples to get a tree using cross-entropy
@@ -1145,9 +1081,9 @@ We use the 850 training samples to get a tree using cross-entropy
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tree.HIClass =}\StringTok{ }\KeywordTok{tree}\NormalTok{(brain.injury }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ headInjury2, }\DataTypeTok{subset =}\NormalTok{ train, }
-    \DataTypeTok{split =} \StringTok{"deviance"}\NormalTok{)}
-\KeywordTok{summary}\NormalTok{(tree.HIClass)}
+\NormalTok{tree.HIClass }\OtherTok{=} \FunctionTok{tree}\NormalTok{(brain.injury }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ headInjury2, }\AttributeTok{subset =}\NormalTok{ train,}
+    \AttributeTok{split =} \StringTok{"deviance"}\NormalTok{)}
+\FunctionTok{summary}\NormalTok{(tree.HIClass)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1170,19 +1106,16 @@ cross entropy:
 \[-2\sum_{k=1}^K n_{jk} \log\hat{p}_{jk}\ , \text{where} \quad   \hat{p}_{jk}=\frac{n_{jk}}{N_j}\ , \]
 thus \texttt{split="deviance"} implies that we split according to the
 entropy criterion.
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(tree.HIClass, }\DataTypeTok{type =} \StringTok{"proportional"}\NormalTok{)}
-\KeywordTok{text}\NormalTok{(tree.HIClass, }\DataTypeTok{pretty =} \DecValTok{1}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(tree.HIClass, }\AttributeTok{type =} \StringTok{"proportional"}\NormalTok{)}
+\FunctionTok{text}\NormalTok{(tree.HIClass, }\AttributeTok{pretty =} \DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1201,13 +1134,11 @@ entropy criterion.
   originating from the same branch. Why do we get this ``unnecessary''
   split?
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Split with Gini index}
-
+\protect\hypertarget{split-with-gini-index}{}
 \(~\)
 
 The same analysis with the Gini index:
@@ -1218,8 +1149,8 @@ The same analysis with the Gini index:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tree.HIClassG =}\StringTok{ }\KeywordTok{tree}\NormalTok{(brain.injury }\OperatorTok{~}\StringTok{ }\NormalTok{., headInjury2, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{split =} \StringTok{"gini"}\NormalTok{)}
-\KeywordTok{summary}\NormalTok{(tree.HIClassG)}
+\NormalTok{tree.HIClassG }\OtherTok{=} \FunctionTok{tree}\NormalTok{(brain.injury }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., headInjury2, }\AttributeTok{subset =}\NormalTok{ train, }\AttributeTok{split =} \StringTok{"gini"}\NormalTok{)}
+\FunctionTok{summary}\NormalTok{(tree.HIClassG)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1235,19 +1166,16 @@ The same analysis with the Gini index:
 ## Residual mean deviance:  0.52 = 403 / 775 
 ## Misclassification error rate: 0.109 = 93 / 850
 \end{verbatim}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(tree.HIClassG, }\DataTypeTok{type =} \StringTok{"proportional"}\NormalTok{)}
-\KeywordTok{text}\NormalTok{(tree.HIClassG, }\DataTypeTok{pretty =} \DecValTok{1}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(tree.HIClassG, }\AttributeTok{type =} \StringTok{"proportional"}\NormalTok{)}
+\FunctionTok{text}\NormalTok{(tree.HIClassG, }\AttributeTok{pretty =} \DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1256,13 +1184,11 @@ The same analysis with the Gini index:
 \normalsize
 
 This is a very bushy tree!
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Checking predictions}
-
+\protect\hypertarget{checking-predictions}{}
 \vspace{2mm}
 
 We also use the classification tree to predict the status of the
@@ -1278,10 +1204,10 @@ With the deviance:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(caret)}
-\NormalTok{tree.pred =}\StringTok{ }\KeywordTok{predict}\NormalTok{(tree.HIClass, headInjury2[test, ], }\DataTypeTok{type =} \StringTok{"class"}\NormalTok{)}
-\NormalTok{(confMat <-}\StringTok{ }\KeywordTok{confusionMatrix}\NormalTok{(tree.pred, }\DataTypeTok{reference =}\NormalTok{ headInjury2[test, }
-\NormalTok{    ]}\OperatorTok{$}\NormalTok{brain.injury)}\OperatorTok{$}\NormalTok{table)}
+\FunctionTok{library}\NormalTok{(caret)}
+\NormalTok{tree.pred }\OtherTok{=} \FunctionTok{predict}\NormalTok{(tree.HIClass, headInjury2[test, ], }\AttributeTok{type =} \StringTok{"class"}\NormalTok{)}
+\NormalTok{(confMat }\OtherTok{\textless{}{-}} \FunctionTok{confusionMatrix}\NormalTok{(tree.pred, }\AttributeTok{reference =}\NormalTok{ headInjury2[test,}
+\NormalTok{    ]}\SpecialCharTok{$}\NormalTok{brain.injury)}\SpecialCharTok{$}\NormalTok{table)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1294,20 +1220,17 @@ With the deviance:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(confMat))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(confMat[}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{])}
+\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(confMat))}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(confMat[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{])}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## [1] 0.140127
 \end{verbatim}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \normalsize
 
 With the Gini-index:
@@ -1318,9 +1241,9 @@ With the Gini-index:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tree.predG =}\StringTok{ }\KeywordTok{predict}\NormalTok{(tree.HIClassG, headInjury2[test, ], }\DataTypeTok{type =} \StringTok{"class"}\NormalTok{)}
-\NormalTok{(confMatG <-}\StringTok{ }\KeywordTok{confusionMatrix}\NormalTok{(tree.predG, }\DataTypeTok{reference =}\NormalTok{ headInjury2[test, }
-\NormalTok{    ]}\OperatorTok{$}\NormalTok{brain.injury)}\OperatorTok{$}\NormalTok{table)}
+\NormalTok{tree.predG }\OtherTok{=} \FunctionTok{predict}\NormalTok{(tree.HIClassG, headInjury2[test, ], }\AttributeTok{type =} \StringTok{"class"}\NormalTok{)}
+\NormalTok{(confMatG }\OtherTok{\textless{}{-}} \FunctionTok{confusionMatrix}\NormalTok{(tree.predG, }\AttributeTok{reference =}\NormalTok{ headInjury2[test,}
+\NormalTok{    ]}\SpecialCharTok{$}\NormalTok{brain.injury)}\SpecialCharTok{$}\NormalTok{table)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1333,20 +1256,18 @@ With the Gini-index:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(confMatG))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(confMatG[}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{])}
+\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(confMatG))}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(confMatG[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{])}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## [1] 0.154989
 \end{verbatim}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Group discussion}
-
+\protect\hypertarget{group-discussion}{}
 \(~\)
 
 Study the confusion matrices on the previous slides:
@@ -1362,15 +1283,12 @@ Study the confusion matrices on the previous slides:
   Discuss if/how it is possible to change the algorithm in order to
   decrease the number of severe mistakes.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Building a classification tree: Algorithm 8.1}
-
+\protect\hypertarget{building-a-classification-tree-algorithm-8.1}{}
 \(~\)
 
 \begin{itemize}
@@ -1388,15 +1306,12 @@ Study the confusion matrices on the previous slides:
   Algorithm 8.1 can be used with misclassification, the Gini index, or
   cross-entropy instead of the RSS as quality measure.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Finding an optimal classification tree}
-
+\protect\hypertarget{finding-an-optimal-classification-tree}{}
 \vspace{2mm}
 
 We prune the classification tree that was built with the deviance
@@ -1409,21 +1324,18 @@ so\footnote{While trees should be built using the deviance or the Gini index, pr
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{cv.head =}\StringTok{ }\KeywordTok{cv.tree}\NormalTok{(tree.HIClass, }\DataTypeTok{FUN =}\NormalTok{ prune.misclass)}
-\KeywordTok{plot}\NormalTok{(cv.head}\OperatorTok{$}\NormalTok{size, cv.head}\OperatorTok{$}\NormalTok{dev, }\DataTypeTok{type =} \StringTok{"b"}\NormalTok{, }\DataTypeTok{xlab =} \StringTok{"Terminal nodes"}\NormalTok{, }
-    \DataTypeTok{ylab =} \StringTok{"Misclassifications"}\NormalTok{)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{cv.head }\OtherTok{=} \FunctionTok{cv.tree}\NormalTok{(tree.HIClass, }\AttributeTok{FUN =}\NormalTok{ prune.misclass)}
+\FunctionTok{plot}\NormalTok{(cv.head}\SpecialCharTok{$}\NormalTok{size, cv.head}\SpecialCharTok{$}\NormalTok{dev, }\AttributeTok{type =} \StringTok{"b"}\NormalTok{, }\AttributeTok{xlab =} \StringTok{"Terminal nodes"}\NormalTok{,}
+    \AttributeTok{ylab =} \StringTok{"Misclassifications"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{center}\includegraphics[width=0.5\linewidth]{8Trees_files/figure-beamer/headInjury3-1} \end{center}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 The function \texttt{cv.tree} automatically does \(10\)-fold
 cross-validation. \texttt{dev} is here the number of misclassifications.
 
@@ -1433,7 +1345,7 @@ cross-validation. \texttt{dev} is here the number of misclassifications.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{print}\NormalTok{(cv.head)}
+\FunctionTok{print}\NormalTok{(cv.head)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1453,11 +1365,9 @@ cross-validation. \texttt{dev} is here the number of misclassifications.
 ## attr(,"class")
 ## [1] "prune"         "tree.sequence"
 \end{verbatim}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{itemize}
 \item
   We have done cross-validation on our training set of 850 observations.
@@ -1474,20 +1384,18 @@ cross-validation. \texttt{dev} is here the number of misclassifications.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{prune.HIClass =}\StringTok{ }\KeywordTok{prune.misclass}\NormalTok{(tree.HIClass, }\DataTypeTok{best =} \DecValTok{7}\NormalTok{)}
+\NormalTok{prune.HIClass }\OtherTok{=} \FunctionTok{prune.misclass}\NormalTok{(tree.HIClass, }\AttributeTok{best =} \DecValTok{7}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(prune.HIClass)}
-\KeywordTok{text}\NormalTok{(prune.HIClass, }\DataTypeTok{pretty =} \DecValTok{1}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(prune.HIClass)}
+\FunctionTok{text}\NormalTok{(prune.HIClass, }\AttributeTok{pretty =} \DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1499,17 +1407,15 @@ cross-validation. \texttt{dev} is here the number of misclassifications.
 interpretable decision tree.
 
 How is the predictive performance of the model affected?
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tree.pred.prune <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(prune.HIClass, headInjury2[test, ], }\DataTypeTok{type =} \StringTok{"class"}\NormalTok{)}
-\NormalTok{(confMat <-}\StringTok{ }\KeywordTok{confusionMatrix}\NormalTok{(tree.pred.prune, headInjury2[test, ]}\OperatorTok{$}\NormalTok{brain.injury)}\OperatorTok{$}\NormalTok{table)}
+\NormalTok{tree.pred.prune }\OtherTok{\textless{}{-}} \FunctionTok{predict}\NormalTok{(prune.HIClass, headInjury2[test, ], }\AttributeTok{type =} \StringTok{"class"}\NormalTok{)}
+\NormalTok{(confMat }\OtherTok{\textless{}{-}} \FunctionTok{confusionMatrix}\NormalTok{(tree.pred.prune, headInjury2[test, ]}\SpecialCharTok{$}\NormalTok{brain.injury)}\SpecialCharTok{$}\NormalTok{table)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1522,7 +1428,7 @@ How is the predictive performance of the model affected?
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\DecValTok{1} \OperatorTok{-}\StringTok{ }\NormalTok{(}\KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(confMat))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(confMat[}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{]))}
+\DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ (}\FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(confMat))}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(confMat[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{]))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1542,15 +1448,13 @@ test data.
 
 \(\rightarrow\) If you want, you can apply the same pruning procedure to
 the very bushy Gini-grown tree.
-
 \end{frame}
 
 \begin{frame}
-
 \vspace{2mm}
 
 \begin{block}{Questions:}
-
+\protect\hypertarget{questions}{}
 \vspace{2mm}
 
 Discuss the \emph{bias-variance tradeoff of a regression tree} when
@@ -1566,14 +1470,11 @@ increasing/decreasing the number of terminal nodes, i.e:
   What happens to the variance of a prediction if we reduce the tree
   size?
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}{Trees versus linear models}
 \protect\hypertarget{trees-versus-linear-models}{}
-
 \begin{itemize}
 \item
   What if we have \(x_1\) and \(x_2\) and the true class boundary (two
@@ -1585,13 +1486,11 @@ increasing/decreasing the number of terminal nodes, i.e:
 
 \centering
 
-\includegraphics[width=0.5\textwidth,height=\textheight]{../../ISLR/Figures/Chapter8/8.7.png}
-
+\includegraphics[width=0.5\textwidth,height=\textheight]{../../ISLR/Figures/Chapter8/87.png}
 \end{frame}
 
 \begin{frame}{From trees to forests}
 \protect\hypertarget{from-trees-to-forests}{}
-
 \textbf{Advantages (+)}
 
 \begin{itemize}
@@ -1625,13 +1524,11 @@ increasing/decreasing the number of terminal nodes, i.e:
   Trees are not very robust, a small change in the data may cause a
   large change in the final estimated tree.
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{What is next?}
-
+\protect\hypertarget{what-is-next}{}
 \vspace{2mm}
 
 Several of the above listed disadvantages can be addressed by
@@ -1663,16 +1560,13 @@ In addition:
   \textbf{Variable importance} - to see which variables make a
   difference (now that we have many trees).
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Leo Breiman - the inventor of CART, bagging and random
 forests}
-
+\protect\hypertarget{leo-breiman---the-inventor-of-cart-bagging-and-random-forests}{}
 \(~\)
 
 \vspace{1mm}
@@ -1686,14 +1580,11 @@ See Wikipedia entry: \url{https://en.wikipedia.org/wiki/Leo_Breiman}
 \begin{quote}
 Breiman's work helped to bridge the gap between statistics and computer science, particularly in the field of machine learning. His most important contributions were his work on classification and regression trees and ensembles of trees fit to bootstrap samples. Bootstrap aggregation was given the name bagging by Breiman. Another of Breiman's ensemble approaches is the random forest. 
 \end{quote}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}{Bagging}
 \protect\hypertarget{bagging}{}
-
 \vspace{2mm}
 
 \begin{itemize}
@@ -1714,13 +1605,11 @@ Breiman's work helped to bridge the gap between statistics and computer science,
   aggregating} (\emph{bagging}), invented by Leo Breiman in 1996
   (Breiman 1996).
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{High variance in decision trees -- Illustration}
-
+\protect\hypertarget{high-variance-in-decision-trees-illustration}{}
 \(~\)
 
 \begin{itemize}
@@ -1745,15 +1634,12 @@ Breiman's work helped to bridge the gap between statistics and computer science,
 \end{itemize}
 
 \vspace{2mm}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Recall: Variance for independent datasets}
-
+\protect\hypertarget{recall-variance-for-independent-datasets}{}
 \vspace{2mm}
 
 \begin{itemize}
@@ -1780,15 +1666,12 @@ Breiman's work helped to bridge the gap between statistics and computer science,
 
 However, we do not have many independent data set - so we use
 \emph{bootstrapping} to construct \(B\) data sets.
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Bagging = Bootstrap aggregating}
-
+\protect\hypertarget{bagging-bootstrap-aggregating}{}
 \vspace{2mm}
 
 \begin{itemize}
@@ -1838,15 +1721,12 @@ However, we do not have many independent data set - so we use
   occurring classification (\emph{majority vote}) as the final
   prediction.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Out-of-bag error estimation}
-
+\protect\hypertarget{out-of-bag-error-estimation}{}
 \(~\)
 
 \begin{itemize}
@@ -1891,15 +1771,12 @@ However, we do not have many independent data set - so we use
   The measured error of the \(B/3\) predictions is called the
   \emph{\textcolor{red}{out-of-bag error}}.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Example}
-
+\protect\hypertarget{example}{}
 \(~\)
 
 We can do bagging by using the function \texttt{randomForest()} in the
@@ -1911,11 +1788,11 @@ We can do bagging by using the function \texttt{randomForest()} in the
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(randomForest)}
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{r.brain.bag <-}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(brain.injury }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ headInjury2, }\DataTypeTok{subset =}\NormalTok{ train, }
-    \DataTypeTok{mtry =} \DecValTok{10}\NormalTok{, }\DataTypeTok{ntree =} \DecValTok{500}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{r.brain.bag}\OperatorTok{$}\NormalTok{confusion}
+\FunctionTok{library}\NormalTok{(randomForest)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{r.brain.bag }\OtherTok{\textless{}{-}} \FunctionTok{randomForest}\NormalTok{(brain.injury }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ headInjury2, }\AttributeTok{subset =}\NormalTok{ train,}
+    \AttributeTok{mtry =} \DecValTok{10}\NormalTok{, }\AttributeTok{ntree =} \DecValTok{500}\NormalTok{, }\AttributeTok{importance =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{r.brain.bag}\SpecialCharTok{$}\NormalTok{confusion}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1927,7 +1804,7 @@ We can do bagging by using the function \texttt{randomForest()} in the
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(r.brain.bag}\OperatorTok{$}\NormalTok{confusion))}\OperatorTok{/}\KeywordTok{sum}\NormalTok{(r.brain.bag}\OperatorTok{$}\NormalTok{confusion[}\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{, }\DecValTok{1}\OperatorTok{:}\DecValTok{2}\NormalTok{])}
+\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(r.brain.bag}\SpecialCharTok{$}\NormalTok{confusion))}\SpecialCharTok{/}\FunctionTok{sum}\NormalTok{(r.brain.bag}\SpecialCharTok{$}\NormalTok{confusion[}\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{, }\DecValTok{1}\SpecialCharTok{:}\DecValTok{2}\NormalTok{])}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1942,13 +1819,10 @@ We can do bagging by using the function \texttt{randomForest()} in the
 The variable \texttt{mtry=10} because we want to consider all \(10\)
 predictors in each split of the tree. The variable \texttt{ntree=500}
 because we want to average over \(500\) trees.
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 Predictive performance of the bagged tree on unseen test data:
 
 \vspace{2mm}
@@ -1957,9 +1831,9 @@ Predictive performance of the bagged tree on unseen test data:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{yhat.bag =}\StringTok{ }\KeywordTok{predict}\NormalTok{(r.brain.bag, }\DataTypeTok{newdata =}\NormalTok{ headInjury2[test, ])}
-\NormalTok{misclass.bag =}\StringTok{ }\KeywordTok{table}\NormalTok{(yhat.bag, headInjury2[test, ]}\OperatorTok{$}\NormalTok{brain.injury)}
-\KeywordTok{print}\NormalTok{(misclass.bag)}
+\NormalTok{yhat.bag }\OtherTok{=} \FunctionTok{predict}\NormalTok{(r.brain.bag, }\AttributeTok{newdata =}\NormalTok{ headInjury2[test, ])}
+\NormalTok{misclass.bag }\OtherTok{=} \FunctionTok{table}\NormalTok{(yhat.bag, headInjury2[test, ]}\SpecialCharTok{$}\NormalTok{brain.injury)}
+\FunctionTok{print}\NormalTok{(misclass.bag)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1972,7 +1846,7 @@ Predictive performance of the bagged tree on unseen test data:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(misclass.bag))}\OperatorTok{/}\NormalTok{(}\KeywordTok{sum}\NormalTok{(misclass.bag))}
+\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(misclass.bag))}\SpecialCharTok{/}\NormalTok{(}\FunctionTok{sum}\NormalTok{(misclass.bag))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1985,13 +1859,11 @@ Predictive performance of the bagged tree on unseen test data:
 Note: The misclassification rate has increased slightly for the bagged
 tree (as compared to our previous full and pruned tree).
 \textbf{Typically, we would expect an improvement!}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Variable importance plots}
-
+\protect\hypertarget{variable-importance-plots}{}
 \(~\)
 
 \begin{itemize}
@@ -2027,15 +1899,12 @@ tree (as compared to our previous full and pruned tree).
     variable importance based on randomization.
   \end{itemize}
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Variable importance based on node impurity}
-
+\protect\hypertarget{variable-importance-based-on-node-impurity}{}
 \vspace{1mm}
 
 \emph{Importance} relates to \emph{total decrease in the node impurity,
@@ -2074,15 +1943,12 @@ over splits for a predictor}.
 
 \textbf{R-hint}: \texttt{varImpPlot()} function (or \texttt{importance})
 in \texttt{randomForest} with \texttt{type=2}.
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Variable importance based on randomization}
-
+\protect\hypertarget{variable-importance-based-on-randomization}{}
 \vspace{2mm}
 
 Variable importance based on randomization is calculated using the OOB
@@ -2116,15 +1982,12 @@ sample. \vspace{1mm}
 
 \textbf{R-hint}: \texttt{varImpPlot()} (or \texttt{importance()})
 function with \texttt{type=1}.
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Example 1: Auto data (regression tree)}
-
+\protect\hypertarget{example-1-auto-data-regression-tree}{}
 \vspace{1mm}
 
 The data relates fuel consumption (\texttt{mpg}) to 10 aspects of
@@ -2138,25 +2001,22 @@ automobile desing and performance.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{data}\NormalTok{(mtcars)}
-\NormalTok{mtcars.rf <-}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(mpg }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ mtcars, }\DataTypeTok{ntree =} \DecValTok{1000}\NormalTok{, }\DataTypeTok{keep.forest =} \OtherTok{FALSE}\NormalTok{, }
-    \DataTypeTok{mtry =} \DecValTok{10}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
-\KeywordTok{varImpPlot}\NormalTok{(mtcars.rf, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{, }\DataTypeTok{main =} \StringTok{""}\NormalTok{)}
+\FunctionTok{data}\NormalTok{(mtcars)}
+\NormalTok{mtcars.rf }\OtherTok{\textless{}{-}} \FunctionTok{randomForest}\NormalTok{(mpg }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ mtcars, }\AttributeTok{ntree =} \DecValTok{1000}\NormalTok{, }\AttributeTok{keep.forest =} \ConstantTok{FALSE}\NormalTok{,}
+    \AttributeTok{mtry =} \DecValTok{10}\NormalTok{, }\AttributeTok{importance =} \ConstantTok{TRUE}\NormalTok{)}
+\FunctionTok{varImpPlot}\NormalTok{(mtcars.rf, }\AttributeTok{pch =} \DecValTok{20}\NormalTok{, }\AttributeTok{main =} \StringTok{""}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{center}\includegraphics[width=0.7\linewidth]{8Trees_files/figure-beamer/autoImp-1} \end{center}
 
 (Randomization: left, node purity: right)
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Example 2: Head injury (classification tree)}
-
+\protect\hypertarget{example-2-head-injury-classification-tree}{}
 \vspace{1mm}
 
 \(~\)
@@ -2165,21 +2025,18 @@ automobile desing and performance.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{varImpPlot}\NormalTok{(r.brain.bag, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{)}
+\FunctionTok{varImpPlot}\NormalTok{(r.brain.bag, }\AttributeTok{pch =} \DecValTok{20}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{center}\includegraphics[width=0.6\linewidth]{8Trees_files/figure-beamer/brain-1} \end{center}
 
 (Randomization: left, node purity: right)
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]{Random Forests}
 \protect\hypertarget{random-forests}{}
-
 \(~\)
 
 \begin{itemize}
@@ -2211,13 +2068,11 @@ automobile desing and performance.
   \(\rightarrow\) No large reduction in variance by averaging
   \(\hat{f}^{*b}(x)\) when the correlation between the trees is high.
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{The effect of correlation on the variance of the mean}
-
+\protect\hypertarget{the-effect-of-correlation-on-the-variance-of-the-mean}{}
 \vspace{3mm}
 
 \begin{itemize}
@@ -2241,13 +2096,10 @@ automobile desing and performance.
 \vspace{1mm}
 
 Check: \(\rho=0\) and \(\rho=1\)?
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{itemize}
 \item
   \emph{Random forests} provide an improvement over bagged trees by a
@@ -2278,13 +2130,11 @@ Check: \(\rho=0\) and \(\rho=1\)?
 
 The general idea is that for very correlated predictors \(m\) is chosen
 to be small.
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{How many trees?}
-
+\protect\hypertarget{how-many-trees}{}
 \vspace{2mm}
 
 \begin{itemize}
@@ -2312,26 +2162,21 @@ to be small.
   run cross-validation, but can again use the OOB error (works best for
   bagging and random forests).
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 ISLR Figure 8.10, gene expression data set with 15 classes and 500
 predictors: \vspace{-3mm}
 
 \centering
 
-\includegraphics[width=0.8\textwidth,height=\textheight]{../../ISLR/Figures/Chapter8/8.10.png}
-
+\includegraphics[width=0.8\textwidth,height=\textheight]{../../ISLR/Figures/Chapter8/810.png}
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Example}
-
+\protect\hypertarget{example-1}{}
 \vspace{2mm}
 
 We decorrelate the brain injury classification trees by using the
@@ -2347,19 +2192,16 @@ choose \(3\) because we have \(10\) predictors in total and
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
 
-\NormalTok{r.brain.rf =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(brain.injury }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ headInjury2, }\DataTypeTok{subset =}\NormalTok{ train, }
-    \DataTypeTok{mtry =} \DecValTok{3}\NormalTok{, }\DataTypeTok{ntree =} \DecValTok{500}\NormalTok{, }\DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
+\NormalTok{r.brain.rf }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(brain.injury }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ headInjury2, }\AttributeTok{subset =}\NormalTok{ train,}
+    \AttributeTok{mtry =} \DecValTok{3}\NormalTok{, }\AttributeTok{ntree =} \DecValTok{500}\NormalTok{, }\AttributeTok{importance =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 We check the predictive performance as before, using the test set:
 
 \vspace{2mm}
@@ -2368,39 +2210,37 @@ We check the predictive performance as before, using the test set:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{yhat.rf =}\StringTok{ }\KeywordTok{predict}\NormalTok{(r.brain.rf, }\DataTypeTok{newdata =}\NormalTok{ headInjury2[test, ])}
+\NormalTok{yhat.rf }\OtherTok{=} \FunctionTok{predict}\NormalTok{(r.brain.rf, }\AttributeTok{newdata =}\NormalTok{ headInjury2[test, ])}
 
-\NormalTok{misclass.rf =}\StringTok{ }\KeywordTok{table}\NormalTok{(yhat.rf, headInjury2[test, ]}\OperatorTok{$}\NormalTok{brain.injury)}
-\KeywordTok{print}\NormalTok{(misclass.rf)}
+\NormalTok{misclass.rf }\OtherTok{=} \FunctionTok{table}\NormalTok{(yhat.rf, headInjury2[test, ]}\SpecialCharTok{$}\NormalTok{brain.injury)}
+\FunctionTok{print}\NormalTok{(misclass.rf)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ##        
 ## yhat.rf   0   1
-##       0 363  47
-##       1  17  44
+##       0 364  47
+##       1  16  44
 \end{verbatim}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\DecValTok{1} \OperatorTok{-}\StringTok{ }\KeywordTok{sum}\NormalTok{(}\KeywordTok{diag}\NormalTok{(misclass.rf))}\OperatorTok{/}\NormalTok{(}\KeywordTok{sum}\NormalTok{(misclass.rf))}
+\DecValTok{1} \SpecialCharTok{{-}} \FunctionTok{sum}\NormalTok{(}\FunctionTok{diag}\NormalTok{(misclass.rf))}\SpecialCharTok{/}\NormalTok{(}\FunctionTok{sum}\NormalTok{(misclass.rf))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 0.1358811
+## [1] 0.133758
 \end{verbatim}
 
 \normalsize
 
 The misclassification rate is slightly decreased compared to the bagged
 tree (and to the pruned tree).
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 By using the \texttt{varImpPlot()} function we can study the importance
 of each predictor.
 
@@ -2410,7 +2250,7 @@ of each predictor.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{varImpPlot}\NormalTok{(r.brain.rf, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{, }\DataTypeTok{main =} \StringTok{""}\NormalTok{)}
+\FunctionTok{varImpPlot}\NormalTok{(r.brain.rf, }\AttributeTok{pch =} \DecValTok{20}\NormalTok{, }\AttributeTok{main =} \StringTok{""}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2423,12 +2263,10 @@ of each predictor.
 As expected \texttt{GCS.15} (GCS=15 at 2h) is a strong predictor along
 with \texttt{bskullf} (basal skull facture) and \texttt{age}. This means
 that most of the trees will have these predictors in the top split.
-
 \end{frame}
 
 \begin{frame}{Boosting}
 \protect\hypertarget{boosting}{}
-
 \emph{Boosting} is an alternative approach for improving the predictions
 resulting from a decision tree. We will only consider the description of
 boosting regression trees (and not classification trees) in this course.
@@ -2452,11 +2290,9 @@ information from the previous tree.
 The procedure is repeated until some stopping criterion is reached. Each
 of the trees can be very small, with just a few terminal nodes (or just
 one split).
-
 \end{frame}
 
 \begin{frame}
-
 \textbf{Algorithm 8.2: Boosting for regression trees}
 
 \begin{enumerate}
@@ -2487,11 +2323,9 @@ one split).
 
 Boosting has three tuning parameters which need to be set (\(B\),
 \(\lambda\), \(d\)), and can be found using cross-validation.
-
 \end{frame}
 
 \begin{frame}
-
 \textbf{Tuning parameters}
 
 \begin{itemize}
@@ -2514,22 +2348,17 @@ Boosting has three tuning parameters which need to be set (\(B\),
   choosing \(d=1\) a tree stump will be fitted at each step and this
   gives an additive model.
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Short quizz poll}
-
+\protect\hypertarget{short-quizz-poll}{}
 www.menti.com, Code 3776 8997
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]{Example: Boston data set}
 \protect\hypertarget{example-boston-data-set}{}
-
 \tiny
 
 (ISLR book, Sections 8.3.2 to 8.3.4.)
@@ -2546,10 +2375,10 @@ at boosting.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(MASS)}
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{train =}\StringTok{ }\KeywordTok{sample}\NormalTok{(}\DecValTok{1}\OperatorTok{:}\KeywordTok{nrow}\NormalTok{(Boston), }\KeywordTok{nrow}\NormalTok{(Boston)}\OperatorTok{/}\DecValTok{2}\NormalTok{)}
-\KeywordTok{head}\NormalTok{(Boston)}
+\FunctionTok{library}\NormalTok{(MASS)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{train }\OtherTok{=} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\FunctionTok{nrow}\NormalTok{(Boston), }\FunctionTok{nrow}\NormalTok{(Boston)}\SpecialCharTok{/}\DecValTok{2}\NormalTok{)}
+\FunctionTok{head}\NormalTok{(Boston)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2569,22 +2398,20 @@ at boosting.
 ## 5 36.2
 ## 6 28.7
 \end{verbatim}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Regression tree}
-
+\protect\hypertarget{regression-tree}{}
 \(~\)
 
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{tree.boston =}\StringTok{ }\KeywordTok{tree}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., Boston, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{control =} \KeywordTok{tree.control}\NormalTok{(}\KeywordTok{nrow}\NormalTok{(Boston), }
-    \DataTypeTok{mindev =} \FloatTok{0.005}\NormalTok{))}
-\KeywordTok{summary}\NormalTok{(tree.boston)}
+\NormalTok{tree.boston }\OtherTok{=} \FunctionTok{tree}\NormalTok{(medv }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., Boston, }\AttributeTok{subset =}\NormalTok{ train, }\AttributeTok{control =} \FunctionTok{tree.control}\NormalTok{(}\FunctionTok{nrow}\NormalTok{(Boston),}
+    \AttributeTok{mindev =} \FloatTok{0.005}\NormalTok{))}
+\FunctionTok{summary}\NormalTok{(tree.boston)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2601,19 +2428,16 @@ at boosting.
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##  -8.140  -1.440  -0.162   0.000   1.460  12.900
 \end{verbatim}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(tree.boston)}
-\KeywordTok{text}\NormalTok{(tree.boston, }\DataTypeTok{pretty =} \DecValTok{0}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(tree.boston)}
+\FunctionTok{text}\NormalTok{(tree.boston, }\AttributeTok{pretty =} \DecValTok{0}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2634,21 +2458,19 @@ Remember:
   \texttt{control\ =\ tree.control(mincut\ =\ 2,\ minsize\ =\ 4,\ mindev\ =\ 0.001)}.
   Here we used \texttt{mindev=0.005}.
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Need to prune?}
-
+\protect\hypertarget{need-to-prune}{}
 \(~\)
 
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{cv.boston =}\StringTok{ }\KeywordTok{cv.tree}\NormalTok{(tree.boston)}
-\KeywordTok{plot}\NormalTok{(cv.boston}\OperatorTok{$}\NormalTok{size, cv.boston}\OperatorTok{$}\NormalTok{dev, }\DataTypeTok{type =} \StringTok{"b"}\NormalTok{)}
+\NormalTok{cv.boston }\OtherTok{=} \FunctionTok{cv.tree}\NormalTok{(tree.boston)}
+\FunctionTok{plot}\NormalTok{(cv.boston}\SpecialCharTok{$}\NormalTok{size, cv.boston}\SpecialCharTok{$}\NormalTok{dev, }\AttributeTok{type =} \StringTok{"b"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2659,15 +2481,12 @@ Remember:
 \vspace{2mm}
 
 It looks like a tree with 6 leaves would work well.
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Pruning}
-
+\protect\hypertarget{pruning-1}{}
 \vspace{1mm}
 
 So we are pruning to a 6-node tree here:
@@ -2676,22 +2495,19 @@ So we are pruning to a 6-node tree here:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{prune.boston =}\StringTok{ }\KeywordTok{prune.tree}\NormalTok{(tree.boston, }\DataTypeTok{best =} \DecValTok{6}\NormalTok{)}
-\KeywordTok{plot}\NormalTok{(prune.boston)}
-\KeywordTok{text}\NormalTok{(prune.boston, }\DataTypeTok{pretty =} \DecValTok{0}\NormalTok{)}
+\NormalTok{prune.boston }\OtherTok{=} \FunctionTok{prune.tree}\NormalTok{(tree.boston, }\AttributeTok{best =} \DecValTok{6}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(prune.boston)}
+\FunctionTok{text}\NormalTok{(prune.boston, }\AttributeTok{pretty =} \DecValTok{0}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{center}\includegraphics[width=0.7\linewidth]{8Trees_files/figure-beamer/boston3-1} \end{center}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Test error for full tree}
-
+\protect\hypertarget{test-error-for-full-tree}{}
 \(~\)
 
 We calculate the test error for the pruned tree:
@@ -2702,10 +2518,10 @@ We calculate the test error for the pruned tree:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{yhat =}\StringTok{ }\KeywordTok{predict}\NormalTok{(prune.boston, }\DataTypeTok{newdata =}\NormalTok{ Boston[}\OperatorTok{-}\NormalTok{train, ])}
-\NormalTok{boston.test =}\StringTok{ }\NormalTok{Boston[}\OperatorTok{-}\NormalTok{train, }\StringTok{"medv"}\NormalTok{]}
-\KeywordTok{plot}\NormalTok{(yhat, boston.test, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{)}
-\KeywordTok{abline}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{yhat }\OtherTok{=} \FunctionTok{predict}\NormalTok{(prune.boston, }\AttributeTok{newdata =}\NormalTok{ Boston[}\SpecialCharTok{{-}}\NormalTok{train, ])}
+\NormalTok{boston.test }\OtherTok{=}\NormalTok{ Boston[}\SpecialCharTok{{-}}\NormalTok{train, }\StringTok{"medv"}\NormalTok{]}
+\FunctionTok{plot}\NormalTok{(yhat, boston.test, }\AttributeTok{pch =} \DecValTok{20}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2713,22 +2529,19 @@ We calculate the test error for the pruned tree:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{mean}\NormalTok{((yhat }\OperatorTok{-}\StringTok{ }\NormalTok{boston.test)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\FunctionTok{mean}\NormalTok{((yhat }\SpecialCharTok{{-}}\NormalTok{ boston.test)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## [1] 35.1644
 \end{verbatim}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Bagging}
-
+\protect\hypertarget{bagging-1}{}
 \(~\)
 
 \small
@@ -2742,10 +2555,10 @@ but include all variables (here \texttt{mtry=13}).
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(randomForest)}
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{bag.boston =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Boston, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{mtry =} \DecValTok{13}\NormalTok{, }
-    \DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(randomForest)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{bag.boston }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(medv }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ Boston, }\AttributeTok{subset =}\NormalTok{ train, }\AttributeTok{mtry =} \DecValTok{13}\NormalTok{,}
+    \AttributeTok{importance =} \ConstantTok{TRUE}\NormalTok{)}
 \NormalTok{bag.boston}
 \end{Highlighting}
 \end{Shaded}
@@ -2761,24 +2574,21 @@ but include all variables (here \texttt{mtry=13}).
 ##           Mean of squared residuals: 11.396
 ##                     % Var explained: 85.17
 \end{verbatim}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Test error for bagged tree}
-
+\protect\hypertarget{test-error-for-bagged-tree}{}
 \(~\)
 
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{yhat.bag =}\StringTok{ }\KeywordTok{predict}\NormalTok{(bag.boston, }\DataTypeTok{newdata =}\NormalTok{ Boston[}\OperatorTok{-}\NormalTok{train, ])}
-\KeywordTok{plot}\NormalTok{(yhat.bag, boston.test, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{)}
-\KeywordTok{abline}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\NormalTok{yhat.bag }\OtherTok{=} \FunctionTok{predict}\NormalTok{(bag.boston, }\AttributeTok{newdata =}\NormalTok{ Boston[}\SpecialCharTok{{-}}\NormalTok{train, ])}
+\FunctionTok{plot}\NormalTok{(yhat.bag, boston.test, }\AttributeTok{pch =} \DecValTok{20}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2790,25 +2600,22 @@ but include all variables (here \texttt{mtry=13}).
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{bag.boston =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Boston, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{mtry =} \DecValTok{13}\NormalTok{, }
-    \DataTypeTok{ntree =} \DecValTok{25}\NormalTok{)}
-\NormalTok{yhat.bag =}\StringTok{ }\KeywordTok{predict}\NormalTok{(bag.boston, }\DataTypeTok{newdata =}\NormalTok{ Boston[}\OperatorTok{-}\NormalTok{train, ])}
-\KeywordTok{mean}\NormalTok{((yhat.bag }\OperatorTok{-}\StringTok{ }\NormalTok{boston.test)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{bag.boston }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(medv }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ Boston, }\AttributeTok{subset =}\NormalTok{ train, }\AttributeTok{mtry =} \DecValTok{13}\NormalTok{,}
+    \AttributeTok{ntree =} \DecValTok{25}\NormalTok{)}
+\NormalTok{yhat.bag }\OtherTok{=} \FunctionTok{predict}\NormalTok{(bag.boston, }\AttributeTok{newdata =}\NormalTok{ Boston[}\SpecialCharTok{{-}}\NormalTok{train, ])}
+\FunctionTok{mean}\NormalTok{((yhat.bag }\SpecialCharTok{{-}}\NormalTok{ boston.test)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## [1] 23.6672
 \end{verbatim}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Random forest}
-
+\protect\hypertarget{random-forest}{}
 \(~\)
 
 Let's go from bagging to a random
@@ -2821,11 +2628,11 @@ using 6 randomly selected predictors for each tree:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{rf.boston =}\StringTok{ }\KeywordTok{randomForest}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Boston, }\DataTypeTok{subset =}\NormalTok{ train, }\DataTypeTok{mtry =} \DecValTok{6}\NormalTok{, }
-    \DataTypeTok{importance =} \OtherTok{TRUE}\NormalTok{)}
-\NormalTok{yhat.rf =}\StringTok{ }\KeywordTok{predict}\NormalTok{(rf.boston, }\DataTypeTok{newdata =}\NormalTok{ Boston[}\OperatorTok{-}\NormalTok{train, ])}
-\KeywordTok{mean}\NormalTok{((yhat.rf }\OperatorTok{-}\StringTok{ }\NormalTok{boston.test)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{rf.boston }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(medv }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ Boston, }\AttributeTok{subset =}\NormalTok{ train, }\AttributeTok{mtry =} \DecValTok{6}\NormalTok{,}
+    \AttributeTok{importance =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{yhat.rf }\OtherTok{=} \FunctionTok{predict}\NormalTok{(rf.boston, }\AttributeTok{newdata =}\NormalTok{ Boston[}\SpecialCharTok{{-}}\NormalTok{train, ])}
+\FunctionTok{mean}\NormalTok{((yhat.rf }\SpecialCharTok{{-}}\NormalTok{ boston.test)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2838,22 +2645,19 @@ using 6 randomly selected predictors for each tree:
 
 It's interesting to see how the prediction error further decreased with
 respect to simple bagging.
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Variable importance}
-
+\protect\hypertarget{variable-importance}{}
 \(~\)
 
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{importance}\NormalTok{(rf.boston)}
+\FunctionTok{importance}\NormalTok{(rf.boston)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2877,20 +2681,17 @@ respect to simple bagging.
 \normalsize
 
 Interpretation?
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 And the variable importance plots
 
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{varImpPlot}\NormalTok{(rf.boston, }\DataTypeTok{main =} \StringTok{""}\NormalTok{)}
+\FunctionTok{varImpPlot}\NormalTok{(rf.boston, }\AttributeTok{main =} \StringTok{""}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2900,13 +2701,11 @@ And the variable importance plots
 
 To understand what this means, please check again the meaning of the
 variables by typing \texttt{?Boston}.
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Boosting}
-
+\protect\hypertarget{boosting-1}{}
 \vspace{2mm}
 
 And finally, we are boosing the Boston trees! We boost with 5000 trees
@@ -2919,11 +2718,11 @@ degree 4:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(gbm)}
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{boost.boston =}\StringTok{ }\KeywordTok{gbm}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Boston[train, ], }\DataTypeTok{distribution =} \StringTok{"gaussian"}\NormalTok{, }
-    \DataTypeTok{n.trees =} \DecValTok{5000}\NormalTok{, }\DataTypeTok{interaction.depth =} \DecValTok{4}\NormalTok{)}
-\KeywordTok{summary}\NormalTok{(boost.boston, }\DataTypeTok{plotit =} \OtherTok{FALSE}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(gbm)}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+\NormalTok{boost.boston }\OtherTok{=} \FunctionTok{gbm}\NormalTok{(medv }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ Boston[train, ], }\AttributeTok{distribution =} \StringTok{"gaussian"}\NormalTok{,}
+    \AttributeTok{n.trees =} \DecValTok{5000}\NormalTok{, }\AttributeTok{interaction.depth =} \DecValTok{4}\NormalTok{)}
+\FunctionTok{summary}\NormalTok{(boost.boston, }\AttributeTok{plotit =} \ConstantTok{FALSE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2943,13 +2742,10 @@ degree 4:
 ## zn           zn  0.144615
 ## chas       chas  0.144399
 \end{verbatim}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \textbf{Partial dependency plots - integrating out other variables }
 
 \small
@@ -2965,7 +2761,7 @@ predictors see Hastie, Tibshirani, and Friedman (2009), Section 10.13.2.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(boost.boston, }\DataTypeTok{i =} \StringTok{"rm"}\NormalTok{, }\DataTypeTok{ylab =} \StringTok{"medv"}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(boost.boston, }\AttributeTok{i =} \StringTok{"rm"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"medv"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -2973,16 +2769,14 @@ predictors see Hastie, Tibshirani, and Friedman (2009), Section 10.13.2.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(boost.boston, }\DataTypeTok{i =} \StringTok{"lstat"}\NormalTok{, }\DataTypeTok{ylab =} \StringTok{"medv"}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(boost.boston, }\AttributeTok{i =} \StringTok{"lstat"}\NormalTok{, }\AttributeTok{ylab =} \StringTok{"medv"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{center}\includegraphics[width=0.4\linewidth]{8Trees_files/figure-beamer/boston7-2} \end{center}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \textbf{Prediction on test set}
 
 \begin{itemize}
@@ -3000,8 +2794,8 @@ predictors see Hastie, Tibshirani, and Friedman (2009), Section 10.13.2.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{yhat.boost =}\StringTok{ }\KeywordTok{predict}\NormalTok{(boost.boston, }\DataTypeTok{newdata =}\NormalTok{ Boston[}\OperatorTok{-}\NormalTok{train, ], }\DataTypeTok{n.trees =} \DecValTok{5000}\NormalTok{)}
-\KeywordTok{mean}\NormalTok{((yhat.boost }\OperatorTok{-}\StringTok{ }\NormalTok{boston.test)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{yhat.boost }\OtherTok{=} \FunctionTok{predict}\NormalTok{(boost.boston, }\AttributeTok{newdata =}\NormalTok{ Boston[}\SpecialCharTok{{-}}\NormalTok{train, ], }\AttributeTok{n.trees =} \DecValTok{5000}\NormalTok{)}
+\FunctionTok{mean}\NormalTok{((yhat.boost }\SpecialCharTok{{-}}\NormalTok{ boston.test)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -3013,37 +2807,33 @@ predictors see Hastie, Tibshirani, and Friedman (2009), Section 10.13.2.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{boost.boston =}\StringTok{ }\KeywordTok{gbm}\NormalTok{(medv }\OperatorTok{~}\StringTok{ }\NormalTok{., }\DataTypeTok{data =}\NormalTok{ Boston[train, ], }\DataTypeTok{distribution =} \StringTok{"gaussian"}\NormalTok{, }
-    \DataTypeTok{n.trees =} \DecValTok{5000}\NormalTok{, }\DataTypeTok{interaction.depth =} \DecValTok{4}\NormalTok{, }\DataTypeTok{shrinkage =} \FloatTok{0.2}\NormalTok{, }\DataTypeTok{verbose =}\NormalTok{ F)}
-\NormalTok{yhat.boost =}\StringTok{ }\KeywordTok{predict}\NormalTok{(boost.boston, }\DataTypeTok{newdata =}\NormalTok{ Boston[}\OperatorTok{-}\NormalTok{train, ], }\DataTypeTok{n.trees =} \DecValTok{5000}\NormalTok{)}
-\KeywordTok{mean}\NormalTok{((yhat.boost }\OperatorTok{-}\StringTok{ }\NormalTok{boston.test)}\OperatorTok{^}\DecValTok{2}\NormalTok{)}
+\NormalTok{boost.boston }\OtherTok{=} \FunctionTok{gbm}\NormalTok{(medv }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ Boston[train, ], }\AttributeTok{distribution =} \StringTok{"gaussian"}\NormalTok{,}
+    \AttributeTok{n.trees =} \DecValTok{5000}\NormalTok{, }\AttributeTok{interaction.depth =} \DecValTok{4}\NormalTok{, }\AttributeTok{shrinkage =} \FloatTok{0.2}\NormalTok{, }\AttributeTok{verbose =}\NormalTok{ F)}
+\NormalTok{yhat.boost }\OtherTok{=} \FunctionTok{predict}\NormalTok{(boost.boston, }\AttributeTok{newdata =}\NormalTok{ Boston[}\SpecialCharTok{{-}}\NormalTok{train, ], }\AttributeTok{n.trees =} \DecValTok{5000}\NormalTok{)}
+\FunctionTok{mean}\NormalTok{((yhat.boost }\SpecialCharTok{{-}}\NormalTok{ boston.test)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{verbatim}
 ## [1] 18.3345
 \end{verbatim}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \scriptsize
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{plot}\NormalTok{(yhat.boost, boston.test, }\DataTypeTok{pch =} \DecValTok{20}\NormalTok{)}
-\KeywordTok{abline}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\FunctionTok{plot}\NormalTok{(yhat.boost, boston.test, }\AttributeTok{pch =} \DecValTok{20}\NormalTok{)}
+\FunctionTok{abline}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{center}\includegraphics[width=0.6\linewidth]{8Trees_files/figure-beamer/boston8-1} \end{center}
-
 \end{frame}
 
 \begin{frame}{Further reading}
 \protect\hypertarget{further-reading}{}
-
 \begin{itemize}
 \item
   \href{https://www.youtube.com/playlist?list=PL5-da3qGB5IB23TLuA8ZgVGC8hV8ZAdGh}{Videoes
@@ -3053,37 +2843,32 @@ predictors see Hastie, Tibshirani, and Friedman (2009), Section 10.13.2.
   \href{https://rstudio-pubs-static.s3.amazonaws.com/65564_925dfde884e14ef9b5735eddd16c263e.html}{Solutions
   to exercises in the book, chapter 8}
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}{References}
 \protect\hypertarget{references}{}
-
 \tiny
 
 \hypertarget{refs}{}
-\leavevmode\hypertarget{ref-Breiman1996}{}%
-Breiman, Leo. 1996. ``Bagging Predictors.'' \emph{Machine Learning} 24:
-123--40.
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-Breiman1996}{}}%
+Breiman, Leo. 1996. {``Bagging Predictors.''} \emph{Machine Learning}
+24: 123--40.
 
-\leavevmode\hypertarget{ref-hastie_etal2009}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-hastie_etal2009}{}}%
 Hastie, Trevor, Robert Tibshirani, and Jerome Friedman. 2009. \emph{The
 Elements of Statistical Learning}. Vol. 2. Springer series in statistics
 New York.
 
-\leavevmode\hypertarget{ref-james.etal}{}%
-James, G., D. Witten, T. Hastie, and R. Tibshirani. 2013. \emph{An
-Introduction to Statistical Learning with Applications in R}. New York:
-Springer.
-
-\leavevmode\hypertarget{ref-tree2019}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-tree2019}{}}%
 Ripley, Brian. 2019. \emph{Tree: Classification and Regression Trees}.
 \url{https://CRAN.R-project.org/package=tree}.
 
-\leavevmode\hypertarget{ref-Ripley}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-Ripley}{}}%
 Ripley, Brian D. 1996. \emph{Pattern Recognicion and Neural Networks}.
 Cambridge University Press.
 
+\end{CSLReferences}
 \end{frame}
 
 \end{document}
