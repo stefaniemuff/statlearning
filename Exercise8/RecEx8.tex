@@ -1,14 +1,14 @@
 % Options for packages loaded elsewhere
 \PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
 \documentclass[
 ]{article}
 \usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
@@ -34,18 +34,6 @@
   \KOMAoptions{parskip=half}}
 \makeatother
 \usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\hypersetup{
-  pdftitle={Module 8: Recommended Exercises},
-  pdfauthor={Emma Skarstein, Daesoo Lee, Stefanie Muff; Department of Mathematical Sciences, NTNU},
-  colorlinks=true,
-  linkcolor=Maroon,
-  filecolor=Maroon,
-  citecolor=Blue,
-  urlcolor=blue,
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
 \usepackage[margin=1in]{geometry}
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -104,9 +92,21 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
-\ifluatex
+\ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Module 8: Recommended Exercises},
+  pdfauthor={Daesoo Lee, Emma Skarstein, Kenneth Aase, Stefanie Muff; Department of Mathematical Sciences, NTNU},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
 
 \title{Module 8: Recommended Exercises}
 \usepackage{etoolbox}
@@ -115,10 +115,10 @@
   \apptocmd{\@title}{\par {\large #1 \par}}{}{}
 }
 \makeatother
-\subtitle{TMA4268 Statistical Learning V2022}
-\author{Emma Skarstein, Daesoo Lee, Stefanie Muff \and Department of
-Mathematical Sciences, NTNU}
-\date{March 7, 2022}
+\subtitle{TMA4268 Statistical Learning V2023}
+\author{Daesoo Lee, Emma Skarstein, Kenneth Aase, Stefanie
+Muff \and Department of Mathematical Sciences, NTNU}
+\date{March 9, 2023}
 
 \begin{document}
 \maketitle
@@ -176,7 +176,7 @@ variable.
 \FunctionTok{data}\NormalTok{(}\StringTok{"Carseats"}\NormalTok{)}
 \FunctionTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
 \NormalTok{n }\OtherTok{=} \FunctionTok{nrow}\NormalTok{(Carseats)}
-\NormalTok{train }\OtherTok{=} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{n, }\FloatTok{0.7} \SpecialCharTok{*} \FunctionTok{nrow}\NormalTok{(Carseats), }\AttributeTok{replace =}\NormalTok{ F)}
+\NormalTok{train }\OtherTok{=} \FunctionTok{sample}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{n, }\FloatTok{0.7}\SpecialCharTok{*}\FunctionTok{nrow}\NormalTok{(Carseats), }\AttributeTok{replace =}\NormalTok{ F)}
 \NormalTok{test }\OtherTok{=}\NormalTok{ ...}
 \NormalTok{Carseats.train }\OtherTok{=}\NormalTok{ ...}
 \NormalTok{Carseats.test }\OtherTok{=}\NormalTok{ ...}
@@ -197,7 +197,7 @@ variable.
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(tree)}
-\NormalTok{tree.mod }\OtherTok{=} \FunctionTok{tree}\NormalTok{(Sales }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., ..., }\AttributeTok{data =}\NormalTok{ ...)}
+\NormalTok{tree.mod }\OtherTok{=} \FunctionTok{tree}\NormalTok{(Sales}\SpecialCharTok{\textasciitilde{}}\NormalTok{., ..., }\AttributeTok{data =}\NormalTok{ ...)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -215,8 +215,8 @@ variable.
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{set.seed}\NormalTok{(}\DecValTok{4268}\NormalTok{)}
-\NormalTok{cv.Carseats }\OtherTok{=} \FunctionTok{cv.tree}\NormalTok{(...)}
-\NormalTok{tree.min }\OtherTok{=} \FunctionTok{which.min}\NormalTok{(...)}
+\NormalTok{cv.Carseats  }\OtherTok{=} \FunctionTok{cv.tree}\NormalTok{(...) }
+\NormalTok{tree.min }\OtherTok{=}  \FunctionTok{which.min}\NormalTok{(...)}
 \NormalTok{best }\OtherTok{=}\NormalTok{ cv.Carseats}\SpecialCharTok{$}\NormalTok{size[...]}
 \end{Highlighting}
 \end{Shaded}
@@ -237,7 +237,7 @@ variable.
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(randomForest)}
 \FunctionTok{dim}\NormalTok{(Carseats)}
-\NormalTok{bag.Carseats }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(Sales }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., ..., }\AttributeTok{ntree =} \DecValTok{500}\NormalTok{, }\AttributeTok{importance =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{bag.Carseats }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(Sales}\SpecialCharTok{\textasciitilde{}}\NormalTok{., ... , }\AttributeTok{ntree =} \DecValTok{500}\NormalTok{, }\AttributeTok{importance =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -257,7 +257,7 @@ variable.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{rf.Carseats }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(Sales }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., ..., }\AttributeTok{mtry =} \DecValTok{3}\NormalTok{, }\AttributeTok{ntree =} \DecValTok{500}\NormalTok{, }\AttributeTok{importance =} \ConstantTok{TRUE}\NormalTok{)}
+\NormalTok{rf.Carseats }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(Sales}\SpecialCharTok{\textasciitilde{}}\NormalTok{., ... , }\AttributeTok{mtry =} \DecValTok{3}\NormalTok{, }\AttributeTok{ntree =} \DecValTok{500}\NormalTok{, }\AttributeTok{importance =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -276,8 +276,9 @@ variable.
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{library}\NormalTok{(gbm)}
-\NormalTok{r.boost }\OtherTok{=} \FunctionTok{gbm}\NormalTok{(Sales }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., Carseats.train, }\AttributeTok{distribution =}\NormalTok{ ..., }\AttributeTok{n.trees =}\NormalTok{ ..., }\AttributeTok{interaction.depth =}\NormalTok{ ...,}
-    \AttributeTok{shrinkage =}\NormalTok{ ...)}
+\NormalTok{r.boost}\OtherTok{=}\FunctionTok{gbm}\NormalTok{(Sales}\SpecialCharTok{\textasciitilde{}}\NormalTok{., Carseats.train,}
+                 \AttributeTok{distribution=}\NormalTok{...,}
+                 \AttributeTok{n.trees=}\NormalTok{ ... ,}\AttributeTok{interaction.depth=}\NormalTok{ ..., }\AttributeTok{shrinkage =}\NormalTok{ ...)}
 \end{Highlighting}
 \end{Shaded}
 
