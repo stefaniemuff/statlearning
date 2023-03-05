@@ -2625,7 +2625,7 @@ but include all variables (here \texttt{mtry=13}).
 
 Let's go from bagging to a random
 forest\footnote{n.b., why are we now speaking of a forest and no longer of a tree?},
-using 6 randomly selected predictors for each tree:
+using 4 (\(\approx p/3\)) randomly selected predictors for each tree:
 
 \vspace{2mm}
 
@@ -2634,7 +2634,7 @@ using 6 randomly selected predictors for each tree:
 \begin{Shaded}
 \begin{Highlighting}[]
 \FunctionTok{set.seed}\NormalTok{(}\DecValTok{1}\NormalTok{)}
-\NormalTok{rf.boston }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(medv }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ Boston, }\AttributeTok{subset =}\NormalTok{ train, }\AttributeTok{mtry =} \DecValTok{6}\NormalTok{,}
+\NormalTok{rf.boston }\OtherTok{=} \FunctionTok{randomForest}\NormalTok{(medv }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., }\AttributeTok{data =}\NormalTok{ Boston, }\AttributeTok{subset =}\NormalTok{ train, }\AttributeTok{mtry =} \DecValTok{4}\NormalTok{,}
     \AttributeTok{importance =} \ConstantTok{TRUE}\NormalTok{)}
 \NormalTok{yhat.rf }\OtherTok{=} \FunctionTok{predict}\NormalTok{(rf.boston, }\AttributeTok{newdata =}\NormalTok{ Boston[}\SpecialCharTok{{-}}\NormalTok{train, ])}
 \FunctionTok{mean}\NormalTok{((yhat.rf }\SpecialCharTok{{-}}\NormalTok{ boston.test)}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
@@ -2642,7 +2642,7 @@ using 6 randomly selected predictors for each tree:
 \end{Shaded}
 
 \begin{verbatim}
-## [1] 19.6202
+## [1] 18.1169
 \end{verbatim}
 
 \vspace{2mm}
@@ -2668,19 +2668,19 @@ respect to simple bagging.
 
 \begin{verbatim}
 ##          %IncMSE IncNodePurity
-## crim    16.69702     1076.0879
-## zn       3.62578       88.3534
-## indus    4.96862      609.5336
-## chas     1.06143       52.2179
-## nox     13.51818      709.8734
-## rm      32.34330     7857.6545
-## age     13.27250      612.2142
-## dis      9.03248      714.9467
-## rad      2.87843       95.8060
-## tax      9.11880      364.9248
-## ptratio  8.46706      823.9334
-## black    7.57948      275.6227
-## lstat   27.12982     6027.6374
+## crim    15.37233      1220.149
+## zn       3.33543       194.859
+## indus    6.96456      1021.948
+## chas     2.05930        69.681
+## nox     14.00976      1005.147
+## rm      28.69390      6162.307
+## age     13.83214       708.551
+## dis     10.31773       852.337
+## rad      4.39062       162.226
+## tax      7.53656       564.604
+## ptratio  9.33372      1163.396
+## black    8.34132       355.624
+## lstat   27.13245      5549.251
 \end{verbatim}
 
 \normalsize

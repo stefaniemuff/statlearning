@@ -1800,7 +1800,7 @@ mean((yhat.bag-boston.test)^2)
 
 $~$
 
-Let's go from bagging to a random forest\footnote{n.b., why are we now speaking of a forest and no longer of a tree?}, using 6 randomly selected predictors for each tree:
+Let's go from bagging to a random forest\footnote{n.b., why are we now speaking of a forest and no longer of a tree?}, using 4 ($\approx p/3$) randomly selected predictors for each tree:
 
 \vspace{2mm}
 
@@ -1808,7 +1808,7 @@ Let's go from bagging to a random forest\footnote{n.b., why are we now speaking 
 \scriptsize
 ```{r}
 set.seed(1)
-rf.boston=randomForest(medv~.,data=Boston,subset=train,mtry=6,importance=TRUE)
+rf.boston=randomForest(medv~.,data=Boston,subset=train,mtry=4,importance=TRUE)
 yhat.rf = predict(rf.boston,newdata=Boston[-train,])
 mean((yhat.rf-boston.test)^2)
 ```
