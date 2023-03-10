@@ -1,8 +1,8 @@
 ---
-subtitle: "TMA4268 Statistical Learning V2022"
+subtitle: "TMA4268 Statistical Learning V2023"
 title: "Module 9: Support Vector Machines"
 author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
-date: "March 14 and 17, 2022"
+date: "March 13 and 16, 2023"
 fontsize: 10pt
 output:
   beamer_presentation:
@@ -48,7 +48,7 @@ whichformat="latex"
 
 \vspace{2mm}
 
-* James et al (2013): An Introduction to Statistical Learning. Chapter 9.  
+* James et al (2021): An Introduction to Statistical Learning. Chapter 9.  
 
 * All the material presented on these module slides and in class.
 
@@ -236,7 +236,7 @@ $\rightarrow$ We want to use it for classification.
 \vspace{4mm}
 
 
-````{r trees2, echo=FALSE, fig.width=6, fig.height=4,fig.align = "center",out.width='90%'}
+```{r trees2, echo=FALSE, fig.width=6, fig.height=4,fig.align = "center",out.width='90%'}
 forest1=read.table(file="forest1.txt"); seeds1=read.table(file="seeds1.txt")
 forest2=read.table(file="forest2.txt");seeds2=read.table(file="seeds2.txt")
 forest3=read.table(file="forest3.txt");seeds3=read.table(file="seeds3.txt")
@@ -337,7 +337,7 @@ $~$
 \vspace{2mm}
 Which is "best"?
 
-```{r forest1.1, echo=FALSE, fig.width=5, fig.height=5,fig.align = "center",out.width='60%'}
+```{r forest1_1, echo=FALSE, fig.width=5, fig.height=5,fig.align = "center",out.width='60%'}
 linje=function(x){return(1.2-1.1*x)}
 linje2=function(x){return(1.15-1*x)}
 linje3=function(x){return(1.2-1.16*x)}
@@ -423,7 +423,7 @@ $$ y^*  f({\boldsymbol x}^*) > 0 \ . $$
 \vspace{3mm}
 
 \centering
-![ISLR Figure 9.3](../../ISLR/Figures/Chapter9/9.3.png){width=40%}
+![ISLR Figure 9.3](../../ISLR/Figures/Chapter9/93.png){width=40%}
 \small
 
 ISLR Figure 9.3 
@@ -497,7 +497,7 @@ lines(xx,linje(xx),lwd=1.5,lty=1)
 <!-- Mainly when $p$ is large. -->
 
 \centering
-![Figure 9.5 from ISRL](../../ISLR/Figures/Chapter9/9.5.png){width=80%}
+![Figure 9.5 from ISRL](../../ISLR/Figures/Chapter9/95.png){width=80%}
 \small
 
 ISLR Figure 9.5
@@ -527,7 +527,7 @@ ISLR Figure 9.5
 For some data sets a separating hyperplane does not exist, the data set is *non-separable*. What then? Forest 2:
 
 
-```{r forest2.1, echo=FALSE, fig.width=5, fig.height=5,fig.align = "center",out.width='45%'}
+```{r forest2_1, echo=FALSE, fig.width=5, fig.height=5,fig.align = "center",out.width='45%'}
 par(pty="s");par(mfrow=c(1,1))
 plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));
 points(forest2[forest2[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
@@ -578,7 +578,7 @@ $$\epsilon_i\geq 0, \quad \sum_{i=1}^n \epsilon_i \leq C.$$
 Figure 19.3 in @casi gives a nice graphical representation of the soft margin classifier idea, where the violations (estimates of $\epsilon_i$) are shown in green:
 
 \centering
-![casi Figure 19.3](../../casi/19.3.png){width=80%}
+![casi Figure 19.3](../../casi/193.png){width=80%}
 
 ---
 
@@ -641,7 +641,7 @@ www.menti.com;  5260 7837
 ISLR Figure 9.7: From large $C$ (top left) to small $C$ (bottom right). As C decreases the tolerance for observations being on the wrong side of the margin decreases and the margin narrows.
 
 \centering
-![ISLR Figure 9.7: Top left=large C, smaller top right, bottom left and bottom right. As C decreases the tolerance for observations being on the wrong side of the margin decreases, and the margin narrows.](../../ISLR/Figures/Chapter9/9.7.png){width=60%}
+![ISLR Figure 9.7: Top left=large C, smaller top right, bottom left and bottom right. As C decreases the tolerance for observations being on the wrong side of the margin decreases, and the margin narrows.](../../ISLR/Figures/Chapter9/97.png){width=60%}
 
 
 ---
@@ -692,7 +692,7 @@ svmfit_linear1=svm(y ~ ., data=train2, kernel='linear', cost=1, scale=FALSE)
 ---
 
 \footnotesize
-```{r forest2.2, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='80%'}
+```{r forest2_2, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='80%'}
 plot(svmfit_linear1,train2,col=c("lightcoral","lightgreen"))
 ```
 
@@ -737,7 +737,7 @@ Next, we set `cost=100`:
 \vspace{2mm}
 
 \scriptsize
-```{r forest2.3, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
+```{r forest2_3, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
 svmfit_linear2=svm(y ~ ., data=train2, kernel='linear', cost=100, scale=FALSE)
 plot(svmfit_linear2,train2,col=c("lightcoral","lightgreen"))
 ```
@@ -804,7 +804,7 @@ Thus two of the seeds are misclassified, the other 18 are ok.
 
 \footnotesize
 
-```{r forest2.4, echo=FALSE, fig.width=8, fig.height=5,fig.align = "center",out.width='90%'}
+```{r forest2_4, echo=FALSE, fig.width=8, fig.height=5,fig.align = "center",out.width='90%'}
 par(mfrow=c(1,2)); par(pty="s")
 plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("True class")
 points(seeds2[seeds2[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
@@ -833,7 +833,7 @@ The two misclassified observations are marked with a black circle.
 
 * In such cases you can use a **Support Vector Machine** (SVM). This is an extension of the support vector classifier. 
 
-````{r forest3.1, echo=FALSE, fig.width=6, fig.height=5,fig.align = "center",out.width='40%'}
+```{r forest3_1, echo=FALSE, fig.width=6, fig.height=5,fig.align = "center",out.width='40%'}
 par(pty="s");par(mfrow=c(1,1))
 plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1), main="Forest 3");
 points(forest3[forest3[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
@@ -873,7 +873,7 @@ $$\beta_0 + \beta_1 X_1 + \beta_2 X_2 + \beta_3 X_1X_2 + \beta_4 X_1^2 + \beta_5
 (ISRL Figure 9.9)
 
 \centering
-![ISLR Figure 9.9](../../ISLR/Figures/Chapter9/9.9.png){width=80%}
+![ISLR Figure 9.9](../../ISLR/Figures/Chapter9/99.png){width=80%}
 
 
 \flushleft
@@ -949,7 +949,7 @@ where $\alpha_i$ is some parameter and $i=1,...,n$.
 
 ---
 
-* This implies that to estimate the parameters $\beta_0,\alpha_1,...,\alpha_n$ we only need to know the ${n \choose 2}$ inner products $\langle {\boldsymbol x}_i,{\boldsymbol x}_i' \rangle$ between all pair of training observations (and their correct class)\footnote{For the interested reader: See Section 12.2.1 in James et al (2013), or Eq. 19.22 and 19.23 of Efron and Hastie (2016).}.
+* This implies that to estimate the parameters $\beta_0,\alpha_1,...,\alpha_n$ we only need to know the ${n \choose 2}$ inner products $\langle {\boldsymbol x}_i,{\boldsymbol x}_i' \rangle$ between all pair of training observations (and their correct class)\footnote{For the interested reader: See Section 12.2.1 in the Elements of Statistical Learning, or Eq. 19.22 and 19.23 of Efron and Hastie (2016).}.
 
 * Even better,  $\alpha_i \neq 0$ for the support vectors $x_i$ ($i \in \mathcal{S}$), while $\alpha_i=0$ for all the rest.
 
@@ -971,7 +971,7 @@ This will bring us to another idea:
 
 **Q:** Find the support vectors
 
-![ISLR Figure 9.6](../../ISLR/Figures/Chapter9/9.6.png)
+![ISLR Figure 9.6](../../ISLR/Figures/Chapter9/96.png)
 
 * **Q**: So why don't we just directly only use the support vectors?
 * **A**: 
@@ -1047,7 +1047,7 @@ where $\gamma$ is a positive constant (a tuning parameter).
 * The radial kernel is convenient if we want a circular decision boundary. See Figure 19.5 in @casi:
 \vspace{2mm}
 
-![](casi19.5.png)
+![](casi195.png)
 
 * $\gamma$ and our budget $C$ can be chosen by cross-validation.
 
@@ -1060,7 +1060,7 @@ where $\gamma$ is a positive constant (a tuning parameter).
 Study Figures 19.5 and 19.6 (page 383) in @casi to see how the radial kernel can make smooth functions.
 
 \centering
-![casi Figure 19.6](../../casi/19.6.png){width=70%}
+![casi Figure 19.6](../../casi/196.png){width=70%}
 
 \flushleft
 \small
@@ -1109,7 +1109,7 @@ test3=data.frame(x=seeds3[,1:2], y=as.factor(seeds3[,3]))
 ---
 
 \scriptsize
-```{r forest3.3, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
+```{r forest3_3, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
 svmfit_kernel1=svm(y ~ ., data=train3, kernel='radial', cost=10, scale=FALSE)
 plot(svmfit_kernel1,train3,col=c("lightcoral","lightgreen"))
 ```
@@ -1132,7 +1132,7 @@ $~$
 
 \scriptsize
 
-```{r forest3.4, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
+```{r forest3_4, echo=TRUE, fig.width=7, fig.height=5,fig.align = "center",out.width='70%'}
 svmfit_kernel2=svm(y ~ ., data=train3, kernel='polynomial', degree=4, cost=10000, scale=FALSE)
 plot(svmfit_kernel2,train3,col=c("lightcoral","lightgreen"))
 ```
@@ -1176,7 +1176,7 @@ ypred_kernel=predict(bestmod_kernel,test3)
 
 $~$
 
-```{r forest3.5, echo=FALSE, fig.width=7, fig.height=5,fig.align = "center",out.width='90%'}
+```{r forest3_5, echo=FALSE, fig.width=7, fig.height=5,fig.align = "center",out.width='90%'}
 par(mfrow=c(1,2),pty="s",mar=c(1,4,1,1),oma=c(0,2,0,0))
 plot(NA,xlab="x1",ylab="x2",xlim=c(0,1),ylim=c(0,1));title("True class")
 points(seeds3[seeds3[,3]==-1,1:2],pch=19,col="lightcoral",cex=0.9)
@@ -1215,7 +1215,7 @@ Training errors as ROC and AUC.
 $~$
 \centering
 
-![ISLR Figure 9.10](../../ISLR/Figures/Chapter9/9.10.png){width=80%}
+![ISLR Figure 9.10](../../ISLR/Figures/Chapter9/910.png){width=80%}
 
 $~$
 
@@ -1228,7 +1228,7 @@ $~$
 Heart data - test error.
 
 \centering
-![ISLR Figure 9.11](../../ISLR/Figures/Chapter9/9.11.png){width=80%}
+![ISLR Figure 9.11](../../ISLR/Figures/Chapter9/911.png){width=80%}
 
 
 ---
@@ -1271,7 +1271,7 @@ Interestingly, the loss functions for a support-vector classifier with $f(X)=\be
 \vspace{-2mm}
  
 \centering
-![ISLR Figure 9.12: hinge loss - loss 0 for observations on the correct side of the margin](../../ISLR/Figures/Chapter9/9.12.png){width=60%}
+![ISLR Figure 9.12: hinge loss - loss 0 for observations on the correct side of the margin](../../ISLR/Figures/Chapter9/912.png){width=60%}
 
 ---
 
