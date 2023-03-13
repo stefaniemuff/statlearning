@@ -1,9 +1,9 @@
 ---
 title: 'Module 9: Solutions to Recommended Exercises'
 author:
-- Emma Skarstein, Daesoo Lee, Stefanie Muff
+- Kenneth Aase, Emma Skarstein, Daesoo Lee, Stefanie Muff
 - Department of Mathematical Sciences, NTNU
-date: "March 14, 2022"
+date: "March 16, 2023"
 output:
   html_document:
     df_print: paged
@@ -20,47 +20,75 @@ urlcolor: blue
 
 ```{r setup, include=FALSE}
 library(knitr)
-knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
-                      cache=TRUE, size="scriptsize",fig.width=5.5, fig.height=5.5)
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE,
+                      strip.white = TRUE,
+                      prompt = FALSE,
+                      cache = TRUE,
+                      size = "scriptsize",
+                      fig.width = 5.5,
+                      fig.height = 5.5)
 ```
 
 ---
 
 ## Problem 2 
 
+### a)
 
-a) The curve is a circle with center (-1,2) and radius 2. You can sketch the curve by hand. If you want to do it in R, you can use the function `symbols()` (this is a bit advanced, though):
+The curve is a circle with center $(-1,2)$ and radius $2$. You can sketch the curve by hand. If you want to do it in R, you can use the function `symbols()` (this is a bit advanced, though):
 
-```{r,out.width='50%'}
-plot(NA,NA, # initialize a plot
+```{r, out.width = '50%'}
+# initialize a plot
+plot(NA,
+     NA,
      type = "n", # does not produce any points or lines
-     xlim = c(-4,2),ylim = c(-1,5), xlab = expression(X[1]), ylab = expression(X[2]),
+     xlim = c(-4, 2),
+     ylim = c(-1, 5),
+     xlab = expression(X[1]),
+     ylab = expression(X[2]),
      asp = 1)
-symbols(c(-1), c(2), circles = c(2), add = TRUE,  inches = FALSE)
+symbols(c(-1), c(2), circles = c(2), add = TRUE, inches = FALSE)
 ```
 
-b) Again, feel free to do this by hand. A simple R solution could look like this:
+### b)
+
+Again, feel free to do this by hand. A simple R solution could look like this:
 
 ```{r,out.width='50%'}
-plot(NA,NA, # initialize a plot
+# initialize a plot
+plot(NA,
+     NA,
      type = "n", # does not produce any points or lines
-     xlim = c(-4,2),ylim = c(-1,5), xlab = expression(X[1]), ylab = expression(X[2]),
+     xlim = c(-4, 2),
+     ylim = c(-1, 5),
+     xlab = expression(X[1]),
+     ylab = expression(X[2]),
      asp = 1)
 symbols(c(-1), c(2), circles = c(2), add = TRUE, inches = FALSE)
 text(c(-1), c(2), "< 4")
 text(c(-4), c(2), "> 4")
 ```
 
-c) You can do this by hand. Here we again use R and color the points according to the class they belong to:
+### c)
+
+You can do this by hand. Here we again use R and color the points according to the class they belong to:
 
 ```{r,out.width='50%'}
-plot(c(0, -1, 2, 3), c(0, 1, 2, 8), col = c("blue", "red", "blue", "blue"), 
-    type = "p",pch = 19, asp = 1, xlab = "X1", ylab = "X2")
+plot(c(0, -1, 2, 3),
+     c(0, 1, 2, 8),
+     col = c("blue", "red", "blue", "blue"),
+     type = "p",
+     pch = 19,
+     asp = 1,
+     xlab = "X1",
+     ylab = "X2")
 symbols(c(-1), c(2), circles = c(2), add = TRUE, inches = FALSE)
 ```
 
+### d)
 
-d) 
 Since equation 
 $$(1 + X_1)^2 + (2 - X_2)^2 = 4.$$ 
 or
@@ -68,83 +96,88 @@ or
 $$ X_1^2 + X_2^2 + 2X_1 - 4X_2 +1 = 0$$
 includes quadratic terms, the decision boundary is not linear, though it's linear in terms of $X_1^2,$  $X_2^2,$ $X_1,$ and $X_2.$
 
-
-
-
-
-
-
 ## Problem 3
 
-```{r,eval=TRUE, echo=TRUE}
+```{r, eval = TRUE, echo = TRUE}
 # code taken from video by Trevor Hastie
 set.seed(10111)
-x <- matrix(rnorm(40),20,2)
-y <- rep(c(-1,1),c(10,10))
-x[y==1,] <- x[y==1,]+1
-plot(x,col=y+3,pch=19, xlab = expression(X[1]), ylab = expression(X[2]))
-dat=data.frame(x,y=as.factor(y))
+x <- matrix(rnorm(40), 20, 2)
+y <- rep(c(-1, 1), c(10, 10))
+x[y == 1, ] <- x[y == 1, ] + 1
+plot(x, col = y + 3, pch = 19, xlab = expression(X[1]), ylab = expression(X[2]))
+dat <- data.frame(x, y = as.factor(y))
 ```
 
-(a) 
+### a)
+
 ```{r}
 library(e1071)
-svmfit=svm(y~.,data=dat, kernel="linear",cost=10,scale=FALSE)
+svmfit <- svm(y ~ ., data = dat, kernel = "linear", cost = 10, scale = FALSE)
 
 # grid for plotting
-make.grid = function(x, n =75){
+make.grid <- function(x, n = 75) {
   # takes as input the data matrix x
   # and number of grid points n in each direction
   # the default value will generate a 75x75 grid
-  
-  grange = apply(x,2,range) # range for x1 and x2
-  x1 = seq(from = grange[1,1], to = grange[2,1], length.out = n) # sequence from the lowest to the upper value of x1
-  x2 = seq(from = grange[1,2], to = grange[2,2], length.out = n) # sequence from the lowest to the upper value of x2
-  expand.grid(X1=x1, X2=x2) #create a uniform grid according to x1 and x2 values
+
+  grange <- apply(x, 2, range) # range for x1 and x2
+  # Sequence from the lowest to the upper value of x1
+  x1 <- seq(from = grange[1, 1], to = grange[2, 1], length.out = n)
+  # Sequence from the lowest to the upper value of x2
+  x2 <- seq(from = grange[1, 2], to = grange[2, 2], length.out = n)
+  # Create a uniform grid according to x1 and x2 values
+  expand.grid(X1 = x1, X2 = x2)
 }
 ```
 
 
 ```{r}
-x = as.matrix(dat[, c("X1", "X2")])
-xgrid=make.grid(x)
-ygrid=predict(svmfit,xgrid)
-plot(xgrid, col=c("red","blue")[as.numeric(ygrid)], pch=20,cex=0.5)
+x <- as.matrix(dat[, c("X1", "X2")])
+xgrid <- make.grid(x)
+ygrid <- predict(svmfit, xgrid)
+plot(xgrid, col = c("red", "blue")[as.numeric(ygrid)], pch = 20, cex = 0.5)
 ```
 
-(b) 
+### b)
+
 ```{r}
-plot(xgrid, col=c("red","blue")[as.numeric(ygrid)],pch=20,cex=.5)
-points(x,col=y+3,pch=19)
-points(x[svmfit$index,],pch=5,cex=2)
+plot(xgrid, col = c("red", "blue")[as.numeric(ygrid)], pch = 20, cex = 0.5)
+points(x, col = y + 3, pch = 19)
+points(x[svmfit$index, ], pch = 5, cex = 2)
 ```
 
-(c) 
+### c)
+
 ```{r}
-beta=drop(t(svmfit$coefs)%*%x[svmfit$index,])
-beta0=svmfit$rho
-plot(xgrid, col=c("red","blue")[as.numeric(ygrid)],pch=20,cex=.5)
-points(x,col=y+3,pch=19)
-points(x[svmfit$index,],pch=5,cex=2)
-abline(beta0/beta[2],-beta[1]/beta[2], lwd = 2) #class boundary
-abline((beta0-1)/beta[2],-beta[1]/beta[2], lty = 2) #class boundary-margin
-abline((beta0+1)/beta[2],-beta[1]/beta[2], lty = 2) #class boundary+margin
+beta <- drop(t(svmfit$coefs) %*% x[svmfit$index, ])
+beta0 <- svmfit$rho
+plot(xgrid, col = c("red", "blue")[as.numeric(ygrid)], pch = 20, cex = 0.5)
+points(x, col = y + 3, pch = 19)
+points(x[svmfit$index, ], pch = 5, cex = 2)
+abline(beta0 / beta[2], -beta[1] / beta[2], lwd = 2) # Class boundary
+abline((beta0 - 1) / beta[2], -beta[1] / beta[2], lty = 2) # Class boundary-margin
+abline((beta0 + 1) / beta[2], -beta[1] / beta[2], lty = 2) # Class boundary+margin
 ```
 
 
 ## Problem 4
-```{r,eval=TRUE, echo=TRUE, out.width='55%'}
+```{r, eval = TRUE, echo = TRUE, out.width='55%'}
 load(url("https://web.stanford.edu/~hastie/ElemStatLearn/datasets/ESL.mixture.rda"))
 #names(ESL.mixture)
-rm(x,y)
+rm(x, y)
 attach(ESL.mixture)
-plot(x,col=y+1, pch = 19,  xlab = expression(X[1]), ylab = expression(X[2]))
-dat=data.frame(y=factor(y),x)
+plot(x, col = y + 1, pch = 19, xlab = expression(X[1]), ylab = expression(X[2]))
+dat <- data.frame(y = factor(y), x)
 ```
 
 
 ```{r}
-r.cv <- tune(svm, factor(y)~., data=dat,kernel="radial", ranges=list(cost=c(0.01,0.1,1,5,10,100,1000), gamma=c(0.01,0.1,1,10,100)))
+r.cv <- tune(svm,
+             factor(y) ~ .,
+             data = dat,
+             kernel = "radial",
+             ranges = list(cost = c(0.01, 0.1, 1, 5, 10, 100, 1000),
+                           gamma = c(0.01, 0.1, 1, 10, 100)))
 summary(r.cv)
 fit <- r.cv$best.model
 ```
@@ -152,106 +185,123 @@ fit <- r.cv$best.model
 Now we plot the non-linear decision boundary, and add the training points.
 
 ```{r}
-xgrid = make.grid(x)
-ygrid=predict(fit,xgrid)
-plot(xgrid,col=as.numeric(ygrid),pch=20,cex=.2)
-points(x,col=y+1,pch=19)
+xgrid <- make.grid(x)
+ygrid <- predict(fit, xgrid)
+plot(xgrid, col = as.numeric(ygrid), pch = 20, cex = 0.2)
+points(x, col = y + 1, pch = 19)
 
 # decision boundary
-func=predict(fit,xgrid,decision.values=TRUE)
-func=attributes(func)$decision
-contour(unique(xgrid[,1]),unique(xgrid[,2]),matrix(func,75,75),
-        level=0,add=TRUE) #svm boundary
+func <- predict(fit, xgrid, decision.values = TRUE)
+func <- attributes(func)$decision
+contour(unique(xgrid[, 1]),
+        unique(xgrid[, 2]),
+        matrix(func, 75, 75),
+        level = 0,
+        add = TRUE) #svm boundary
 ```
 
 ## Problem 5 
 
-(a)
+### a)
+
 ```{r}
 library(ISLR)
 data(OJ)
 #head(OJ)
-n = nrow(OJ)
+n <- nrow(OJ)
 set.seed(4268)
-train = sample(1:n, 800)
-OJ.train = OJ[train,]
-OJ.test = OJ[-train,]
+train <- sample(1:n, 800)
+OJ.train <- OJ[train, ]
+OJ.test <- OJ[-train, ]
 ```
 
-(b) 
+### b)
+
 ```{r}
 library(e1071)
-linear = svm(Purchase~., data = OJ, subset = train, kernel = "linear", cost = 0.01)
+linear <- svm(Purchase ~ .,
+              data = OJ,
+              subset = train,
+              kernel = "linear",
+              cost = 0.01)
 summary(linear)
 ```
 
-We have 431 Support vectors, where 217 belong to the class CH (Citrus Hill) and 214 belong to the class MM (Minute Maid Orange Juice).
+We have $431$ Support vectors, where $217$ belong to the class CH (Citrus Hill) and $214$ belong to the class MM (Minute Maid Orange Juice).
 
-(c) 
+### c)
+
 ```{r}
-pred.train = predict(linear, OJ.train)
-(ta = table(OJ.train$Purchase,  pred.train))
-msrate = 1- sum(diag(ta))/sum(ta)
+pred.train <- predict(linear, OJ.train)
+(ta <- table(OJ.train$Purchase, pred.train))
+msrate <- 1 - sum(diag(ta)) / sum(ta)
 msrate
 ```
 
 ```{r}
-pred.test = predict(linear, OJ.test)
-(ta = table(OJ.test$Purchase,  pred.test))
-msrate = 1- sum(diag(ta))/sum(ta)
+pred.test <- predict(linear, OJ.test)
+(ta <- table(OJ.test$Purchase,  pred.test))
+msrate <- 1 - sum(diag(ta)) / sum(ta)
 msrate
 ```
 
-(d) 
+### d)
+
 ```{r}
 set.seed(4268)
-cost.val = 10^seq(-2, 1, by = 0.25)
-tune.cost = tune(svm, Purchase~., data = OJ.train, kernel = "linear", 
-                 ranges = list(cost = cost.val))
+cost.val <- 10^seq(-2, 1, by = 0.25)
+tune.cost <- tune(svm,
+                  Purchase ~ .,
+                  data = OJ.train,
+                  kernel = "linear",
+                  ranges = list(cost = cost.val))
 #summary(tune.cost)
 ```
 
-(e) 
+### e)
+
 ```{r}
-svm.linear = svm(Purchase ~ ., kernel = "linear", data = OJ.train, 
-                 cost = tune.cost$best.parameter$cost)
-train.pred = predict(svm.linear, OJ.train)
+svm.linear <- svm(Purchase ~ .,
+                  kernel = "linear",
+                  data = OJ.train,
+                  cost = tune.cost$best.parameter$cost)
+train.pred <- predict(svm.linear, OJ.train)
 ```
 
 ```{r}
-(ta = table(OJ.train$Purchase,  train.pred))
-msrate.train.linear = 1- sum(diag(ta))/sum(ta)
+(ta <- table(OJ.train$Purchase, train.pred))
+msrate.train.linear <- 1 - sum(diag(ta)) / sum(ta)
 msrate.train.linear
 ```
 
 ```{r}
-test.pred = predict(svm.linear, OJ.test)
-(ta = table(OJ.test$Purchase, test.pred))
-msrate.test.linear = 1- sum(diag(ta))/sum(ta)
+test.pred <- predict(svm.linear, OJ.test)
+(ta <- table(OJ.test$Purchase, test.pred))
+msrate.test.linear <- 1 - sum(diag(ta)) / sum(ta)
 msrate.test.linear
-
 ```
 
-(f) 
+### f)
+
 Radial Kernel Model
 
 ```{r}
-svm.radial = svm(Purchase ~ ., kernel = "radial", data = OJ.train)
+svm.radial <- svm(Purchase ~ ., kernel = "radial", data = OJ.train)
 #summary(svm.radial)
 ```
 
 Train and test error rate
 ```{r}
-pred.train = predict(svm.radial, OJ.train)
-(ta = table(OJ.train$Purchase,  pred.train))
-msrate.train.radial = 1- sum(diag(ta))/sum(ta)
+pred.train <- predict(svm.radial, OJ.train)
+(ta <- table(OJ.train$Purchase, pred.train))
+msrate.train.radial <- 1 - sum(diag(ta)) / sum(ta)
 msrate.train.radial
 ```
 
 ```{r}
-pred.test = predict(svm.radial, OJ.test)
-(ta = table(OJ.test$Purchase,  pred.test))
-msrate.test.radial = 1- sum(diag(ta))/sum(ta)
+pred.test <- predict(svm.radial, OJ.test)
+(ta <- table(OJ.test$Purchase,  pred.test))
+msrate.test.radial <- 1 - sum(diag(ta)) / sum(ta)
 msrate.test.radial
 ```
 
@@ -259,54 +309,62 @@ Optimal cost
 
 ```{r}
 set.seed(4268)
-cost.val = 10^seq(-2, 1, by = 0.25)
-tune.cost = tune(svm, Purchase~., data = OJ.train, kernel = "radial",
-                 ranges = list(cost = cost.val))
+cost.val <- 10^seq(-2, 1, by = 0.25)
+tune.cost <- tune(svm,
+                  Purchase ~ .,
+                  data = OJ.train,
+                  kernel = "radial",
+                  ranges = list(cost = cost.val))
 #summary(tune.cost)
 ```
 
 ```{r}
-svm.radial = svm(Purchase ~ ., kernel = "radial", data = OJ.train, 
-                 cost = tune.cost$best.parameter$cost)
-train.pred = predict(svm.radial, OJ.train)
+svm.radial <- svm(Purchase ~ .,
+                  kernel = "radial",
+                  data = OJ.train,
+                  cost = tune.cost$best.parameter$cost)
+train.pred <- predict(svm.radial, OJ.train)
 ```
 
 Train and test error for optimal cost
 
 ```{r}
-(ta = table(OJ.train$Purchase,  train.pred))
-msrate.train.linear = 1- sum(diag(ta))/sum(ta)
+(ta <- table(OJ.train$Purchase,  train.pred))
+msrate.train.linear <- 1 - sum(diag(ta)) / sum(ta)
 msrate.train.linear
 ```
 
 ```{r}
-test.pred = predict(svm.radial, OJ.test)
-(ta = table(OJ.test$Purchase, test.pred))
-msrate.test.linear = 1- sum(diag(ta))/sum(ta)
+test.pred <- predict(svm.radial, OJ.test)
+(ta <- table(OJ.test$Purchase, test.pred))
+msrate.test.linear <- 1 - sum(diag(ta)) / sum(ta)
 msrate.test.linear
 ```
 
-(g)
+### g)
+
 Polynomial Kernel Model of degree 2
 
 ```{r}
-svm.poly = svm(Purchase ~ ., kernel = "polynomial", degree = 2,
-               data = OJ.train)
+svm.poly <- svm(Purchase ~ .,
+                kernel = "polynomial",
+                degree = 2,
+                data = OJ.train)
 #summary(svm.poly)
 ```
 
 Train and test error rate
 ```{r}
-pred.train = predict(svm.poly, OJ.train)
-(ta = table(OJ.train$Purchase,  pred.train))
-msrate.train.poly = 1- sum(diag(ta))/sum(ta)
+pred.train <- predict(svm.poly, OJ.train)
+(ta <- table(OJ.train$Purchase, pred.train))
+msrate.train.poly <- 1 - sum(diag(ta)) / sum(ta)
 msrate.train.poly
 ```
 
 ```{r}
-pred.test = predict(svm.poly, OJ.test)
-(ta = table(OJ.test$Purchase,  pred.test))
-msrate.test.poly = 1- sum(diag(ta))/sum(ta)
+pred.test <- predict(svm.poly, OJ.test)
+(ta <- table(OJ.test$Purchase, pred.test))
+msrate.test.poly <- 1 - sum(diag(ta)) / sum(ta)
 msrate.test.poly
 ```
 
@@ -314,39 +372,48 @@ Optimal cost
 
 ```{r}
 set.seed(4268)
-cost.val = 10^seq(-2, 1, by = 0.25)
-tune.cost = tune(svm, Purchase~., data = OJ.train, kernel = "poly", degree = 2,
-                 ranges = list(cost = cost.val))
+cost.val <- 10^seq(-2, 1, by = 0.25)
+tune.cost <- tune(svm,
+                  Purchase ~ .,
+                  data = OJ.train,
+                  kernel = "poly",
+                  degree = 2,
+                  ranges = list(cost = cost.val))
 #summary(tune.cost)
 ```
 
 ```{r}
-svm.poly = svm(Purchase ~ ., kernel = "poly", degree = 2, data = OJ.train, 
-               cost = tune.cost$best.parameter$cost)
-train.pred = predict(svm.poly, OJ.train)
+svm.poly <- svm(Purchase ~ .,
+                kernel = "poly",
+                degree = 2,
+                data = OJ.train,
+                cost = tune.cost$best.parameter$cost)
+train.pred <- predict(svm.poly, OJ.train)
 ```
 
 Train and test error for optimal cost
 
 ```{r}
-(ta = table(OJ.train$Purchase,  train.pred))
-msrate.train.poly = 1- sum(diag(ta))/sum(ta)
+(ta <- table(OJ.train$Purchase, train.pred))
+msrate.train.poly <- 1 - sum(diag(ta)) / sum(ta)
 msrate.train.poly
 ```
 
 ```{r}
-test.pred = predict(svm.poly, OJ.test)
-(ta = table(OJ.test$Purchase, test.pred))
-msrate.test.poly = 1- sum(diag(ta))/sum(ta)
+test.pred <- predict(svm.poly, OJ.test)
+(ta <- table(OJ.test$Purchase, test.pred))
+msrate.test.poly <- 1 - sum(diag(ta)) / sum(ta)
 msrate.test.poly
 ```
 
-(h) For the three choices of kernels and for the optimal cost we have
+### h)
+
+For the three choices of kernels and for the optimal cost we have
 
 ```{r}
-msrate = cbind(c(msrate.train.linear, msrate.train.radial,msrate.train.poly),
-               c(msrate.test.linear, msrate.test.radial,msrate.test.poly))
-rownames(msrate) = c("linear", "radial", "polynomial")
-colnames(msrate) = c("msrate.train", "msrate.test")
+msrate <- cbind(c(msrate.train.linear, msrate.train.radial, msrate.train.poly),
+                c(msrate.test.linear, msrate.test.radial, msrate.test.poly))
+rownames(msrate) <- c("linear", "radial", "polynomial")
+colnames(msrate) <- c("msrate.train", "msrate.test")
 msrate
 ```
