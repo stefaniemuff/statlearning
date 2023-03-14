@@ -1,28 +1,30 @@
 ---
 title: 'Module 10: Recommended Exercises - Solutions'
-author: Emma Skarstein, Daesoo Lee, Stefanie Muff, Department of Mathematical Sciences,
-  NTNU
-date: "March 14, 2022"
+author: 
+  - Emma Skarstein, Kenneth Aase, Daesoo Lee, Stefanie Muff, 
+  - Department of Mathematical Sciences, NTNU
+date: "March 23, 2023"
 output:
-  pdf_document:
-    toc: no
-    toc_depth: '2'
   html_document:
     df_print: paged
     toc: no
     toc_depth: '2'
-subtitle: TMA4268 Statistical Learning V2022
+  pdf_document:
+    toc: no
+    toc_depth: '2'
+subtitle: TMA4268 Statistical Learning V2023
 urlcolor: blue
 ---
 
 ```{r setup, include=FALSE}
 library(knitr)
-knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
-                      cache=TRUE, size="scriptsize",fig.width=6, fig.height=4,fig.align = "center")
+knitr::opts_chunk$set(echo = TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,
+                      prompt=FALSE, size="scriptsize",
+                      fig.width=6, fig.height=4,fig.align = "center")
 
 ```
 
-# Recommended exercise 1
+# Problem 1
 
 Get the data by loading it
 ```{r, message=FALSE, warning=FALSE, eval = T}
@@ -49,11 +51,13 @@ biplot(nyt_pca, scale=0)
 
 Lets pick some words with high PC1 weight and some words with high PC2 weight. Only looking at the graph we can see that PC1 is associated with music and PC2 with art.
 
+Remember that when selecting the high weights, we need to take the absulute value, since we don't care if they are negative or positive.
+
 ```{r,fig.height=5.5,fig.width=5.5}
 nyt_loading = nyt_pca$rotation[, 1:2]
 informative_loadings = rbind(
-  head(nyt_loading[order(nyt_loading[,1], decreasing = TRUE),]),
-  head(nyt_loading[order(nyt_loading[,2], decreasing = TRUE),])
+  head(nyt_loading[order(abs(nyt_loading[,1]), decreasing = TRUE),]),
+  head(nyt_loading[order(abs(nyt_loading[,2]), decreasing = TRUE),])
 )
 
 biplot(x = nyt_pca$x[,1:2], y= informative_loadings, scale=0)
@@ -91,11 +95,11 @@ plot(cumsum(pve),
      type='b')
 ```
 
-# Recommended exercise 2
+# Problem 2
 
-The answer is on page 388 of the book, with the explanation around Equation (10.12).
+The answer is on page 519 of the book (Second edition), with the explanation around Equation (12.18). (In the First edition, it is on page 388, Equation (10.12)).
 
-# Recommended exercise 3
+# Problem 3
 
 $k$-means clustering:
 
@@ -124,11 +128,13 @@ points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],pch="M")
 PCA with true labels but colored by $k$-means clustering
 ```{r, message=FALSE, warning=FALSE,fig.height=6}
 plot(nyt_pca$x[,1:2],type="n")
-points(nyt_pca$x[nyt_data[,"class.labels"]=="art",1:2],pch="A",col=(km.out$cluster+1)[nyt_data[,"class.labels"]=="art"])
-points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],pch="M",col=(km.out$cluster+1)[nyt_data[,"class.labels"]=="music"])
+points(nyt_pca$x[nyt_data[,"class.labels"]=="art",1:2],
+       pch="A",col=(km.out$cluster+1)[nyt_data[,"class.labels"]=="art"])
+points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],
+       pch="M",col=(km.out$cluster+1)[nyt_data[,"class.labels"]=="music"])
 ```
 
-# Recommended exercise 4
+# Problem 4
 
 ## Perform hierarchical clustering
 
@@ -142,7 +148,8 @@ str(hc.complete)
 ## Plot dendograms
 
 ```{r, message=FALSE, warning=FALSE,fig.height=6}
-plot(hc.complete,main="Complete Linkage", labels=as.character(nyt_data[,1]), xlab="", sub="", cex=.9)
+plot(hc.complete,main="Complete Linkage", labels=as.character(nyt_data[,1]), 
+     xlab="", sub="", cex=.9)
 ```
 
 ## Cluster assignment
@@ -167,8 +174,10 @@ points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],pch="M")
 PCA with true labels but colored by $k$-means clustering
 ```{r, message=FALSE, warning=FALSE,fig.height=6}
 plot(nyt_pca$x[,1:2],type="n")
-points(nyt_pca$x[nyt_data[,"class.labels"]=="art",1:2],pch="A",col=(hc.clusters+1)[nyt_data[,"class.labels"]=="art"])
-points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],pch="M",col=(hc.clusters+1)[nyt_data[,"class.labels"]=="music"])
+points(nyt_pca$x[nyt_data[,"class.labels"]=="art",1:2],
+       pch="A",col=(hc.clusters+1)[nyt_data[,"class.labels"]=="art"])
+points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],
+       pch="M",col=(hc.clusters+1)[nyt_data[,"class.labels"]=="music"])
 ```
 
 Lets see if single linkage or average linkage performs better.
@@ -180,11 +189,14 @@ hc.average=hclust(dist(nyt_data[,-1]), method="average")
 ```
 
 
-#plot dendogram
+# Plot dendogram
+
 ```{r, message=FALSE, warning=FALSE,fig.height=6}
 par(mfrow=c(1,2))
-plot(hc.single,main="Single Linkage", labels=as.character(nyt_data[,1]), xlab="", sub="", cex=.9)
-plot(hc.average,main="Average Linkage", labels=as.character(nyt_data[,1]), xlab="", sub="", cex=.9)
+plot(hc.single,main="Single Linkage", 
+     labels=as.character(nyt_data[,1]), xlab="", sub="", cex=.9)
+plot(hc.average,main="Average Linkage", 
+     labels=as.character(nyt_data[,1]), xlab="", sub="", cex=.9)
 
 #divide into clusters
 hc.clustersSingle=cutree(hc.single, 2)
@@ -195,11 +207,16 @@ Plot clusters in PC1 and PC2-dimension
 ```{r, message=FALSE, warning=FALSE,fig.height=8}
 par(mfrow=c(2,1))
 plot(nyt_pca$x[,1:2],type="n")
-points(nyt_pca$x[nyt_data[,"class.labels"]=="art",1:2],pch="A",col=(hc.clustersSingle+1)[nyt_data[,"class.labels"]=="art"])
-points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],pch="M",col=(hc.clustersSingle+1)[nyt_data[,"class.labels"]=="music"])
+points(nyt_pca$x[nyt_data[,"class.labels"]=="art",1:2],
+       pch="A",col=(hc.clustersSingle+1)[nyt_data[,"class.labels"]=="art"])
+points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],
+       pch="M",col=(hc.clustersSingle+1)[nyt_data[,"class.labels"]=="music"])
 plot(nyt_pca$x[,1:2],type="n")
-points(nyt_pca$x[nyt_data[,"class.labels"]=="art",1:2],pch="A",col=(hc.clustersAverage+1)[nyt_data[,"class.labels"]=="art"])
-points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],pch="M",col=(hc.clustersAverage+1)[nyt_data[,"class.labels"]=="music"])
+points(nyt_pca$x[nyt_data[,"class.labels"]=="art",1:2],
+       pch="A",col=(hc.clustersAverage+1)[nyt_data[,"class.labels"]=="art"])
+points(nyt_pca$x[nyt_data[,"class.labels"]=="music",1:2],
+       pch="M",col=(hc.clustersAverage+1)[nyt_data[,"class.labels"]=="music"])
 ```
 
 Doesn't seem to provide a better fit than complete. 
+
