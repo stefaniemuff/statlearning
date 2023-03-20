@@ -1,0 +1,242 @@
+---
+subtitle: "TMA4268 Statistical Learning V2023"
+title: "Module 10: Unsupervised learning (Overview/quizz lecture)"
+author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
+date: "March 23, 2023"
+fontsize: 10pt
+output:
+  beamer_presentation:
+    keep_tex: yes
+    fig_caption: false
+    latex_engine: xelatex
+    theme: "Singapore"
+    colortheme: "default"
+    font: "serif"
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 2
+urlcolor: blue
+bibliography: refs.bib
+header-includes: \usepackage{multirow}
+
+---
+
+```{r setup, include=FALSE}
+showsol<-TRUE
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=68),tidy=TRUE)
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
+                      cache=TRUE, size="scriptsize")
+whichformat="latex"
+```
+
+---
+
+### The biplot
+
+$~$
+
+\centering
+![](figure121.png){width=75%}
+
+---
+
+### PC loadings vectors $\Phi$
+
+$~$
+
+\centering
+![](table121.png){width=85%}
+\flushleft
+(Table 2.1)
+
+$~$
+
+Loadings vectors $\Phi_i=(\Phi_{1j} , \Phi_{2j},\ldots, \Phi_{pj})^\top$: How much does the respective covariate contribute to PC$_j$? 
+
+--- 
+
+### Example from Compulsory 3, 2020
+
+$~$
+
+* We study the `decathlon2` dataset from the `factoextra` package in R, where Athletes' performance during a sporting meeting was recorded. 
+
+* We look at 23 athletes and the results from the 10 disciplines in two competitions.
+
+```{r,eval=T,echo=F}
+library(factoextra)
+library(FactoMineR)
+data("decathlon2")
+decathlon2.active <- decathlon2[1:23, 1:10]
+names(decathlon2.active) <- c("100m","long_jump","shot_put","high_jump","400m","110.hurdle","discus","pole_vault","javeline","1500m")
+```
+
+$~$
+
+\scriptsize
+```{r}
+decathlon2.active[c(1,3,4),]
+```
+
+---
+
+```{r biplot,eval=T,echo=F,fig.width=7,fig.height=7,out.width="55%",fig.cap=""}
+r.prcomp <- prcomp(decathlon2.active, scale=T)
+
+biplot(r.prcomp)
+```
+
+---
+
+### Scree plot
+
+$~$
+
+A graphical description of the **proportion of variance explained (PVE)** by a certain number of PCs (see Fig 12.3 from @ISL):
+
+\centering
+![](123.png){width=90%}
+
+---
+
+### Proportion of varianced explained (PVE)
+
+$~$
+
+**Recap:** The PVE by PC $m$ is given by 
+
+$$
+\frac{\sum_{i=1}^m z_{im}^2} {\sum_{j=1}^p\sum_{i=1}^n x_{ij}^2}
+$$
+
+---
+
+# Clustering
+
+$~$
+
+* The aim is to find _clusters_ or _subgroups_.
+
+* Clustering looks for homogeneous subgroups in the data.
+
+
+
+$~$
+
+Difference to PCA?
+
+\pause
+
+$\rightarrow$ PCA looks for low-dimensional representation of the data.
+
+---
+
+### K-means vs. hierarchical clustering
+
+$~$
+
+See menti.com
+
+
+
+---
+
+### K-means clustering
+
+$~$
+
+* Fix the number of clusters $K$.
+
+$~$
+
+* Find groups such that the sum of the within-cluster variation is minimized.
+
+$~$
+
+* Algorithm?
+
+---
+
+\centering
+![](fig12_8.png){width=75%}
+\flushleft
+\small
+(Fig 12.8 from course book)
+
+---
+
+### Hierarchical clustering
+
+$~$
+
+Bottom-up agglomerative clustering that results in a _\textcolor{red}{dendogram}_.
+
+$~$
+
+![](hierclust.png){width=90%}
+
+---
+
+### Important in hierarchical clustering
+
+$~$
+
+* _\textcolor{red}{Linkage:}_ Complete, single, average centroid.
+
+$~$
+
+* _\textcolor{red}{Dissimilarity measure:}_ Euclidian distance, correlation. _Other similarity/distance measures?_ \footnote{ Note: Correlation is actually a similarity measure, not a distance measure. Implication?}
+
+
+---
+
+### Hierarchical clustering -- example
+
+$~$
+
+![](fig12_12.png)
+
+Note: The representation on the right is not possible in high-dimensional space (i.e., if we have $X_1, X_2, X_3, ...., X_p$).
+
+---
+
+### Hierarchical clustering -- example
+
+$~$
+
+An exam question from 2022:
+
+![](exam_question3b_2023.png){with=110%}
+
+---
+
+## Pros and cons of clusterization methods / practical issues
+
+$~$
+
+$~$
+
+$~$
+
+$~$
+
+$~$
+
+$~$
+
+$~$
+
+$~$
+
+$~$
+
+$~$
+
+
+
+
+---
+
+# References

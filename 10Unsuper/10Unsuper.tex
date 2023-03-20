@@ -1,0 +1,449 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  10pt,
+  ignorenonframetext,
+]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usetheme[]{Singapore}
+\usefonttheme{serif}
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\newif\ifbibliography
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+\usepackage{multirow}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Module 10: Unsupervised learning (Overview/quizz lecture)},
+  pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Module 10: Unsupervised learning (Overview/quizz lecture)}
+\subtitle{TMA4268 Statistical Learning V2023}
+\author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
+\date{March 23, 2023}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}
+\begin{block}{The biplot}
+\protect\hypertarget{the-biplot}{}
+\(~\)
+
+\centering
+
+\includegraphics[width=0.75\textwidth,height=\textheight]{figure121.png}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{PC loadings vectors \(\Phi\)}
+\protect\hypertarget{pc-loadings-vectors-phi}{}
+\(~\)
+
+\centering
+
+\includegraphics[width=0.85\textwidth,height=\textheight]{table121.png}
+\flushleft (Table 2.1)
+
+\(~\)
+
+Loadings vectors
+\(\Phi_i=(\Phi_{1j} , \Phi_{2j},\ldots, \Phi_{pj})^\top\): How much does
+the respective covariate contribute to PC\(_j\)?
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{block}{Example from Compulsory 3, 2020}
+\protect\hypertarget{example-from-compulsory-3-2020}{}
+\(~\)
+
+\begin{itemize}
+\item
+  We study the \texttt{decathlon2} dataset from the \texttt{factoextra}
+  package in R, where Athletes' performance during a sporting meeting
+  was recorded.
+\item
+  We look at 23 athletes and the results from the 10 disciplines in two
+  competitions.
+\end{itemize}
+
+\(~\)
+
+\scriptsize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{decathlon2.active[}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{, }\DecValTok{3}\NormalTok{, }\DecValTok{4}\NormalTok{), ]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##          100m long_jump shot_put high_jump  400m 110.hurdle discus pole_vault
+## SEBRLE  11.04      7.58    14.83      2.07 49.81      14.69  43.75       5.02
+## BERNARD 11.02      7.23    14.25      1.92 48.93      14.99  40.87       5.32
+## YURKOV  11.34      7.09    15.19      2.10 50.42      15.31  46.26       4.72
+##         javeline 1500m
+## SEBRLE     63.19 291.7
+## BERNARD    62.77 280.1
+## YURKOV     63.44 276.4
+\end{verbatim}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{figure}
+\includegraphics[width=0.55\linewidth]{10Unsuper_files/figure-beamer/biplot-1} \end{figure}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Scree plot}
+\protect\hypertarget{scree-plot}{}
+\(~\)
+
+A graphical description of the \textbf{proportion of variance explained
+(PVE)} by a certain number of PCs (see Fig 12.3 from James et al.
+(2021)):
+
+\centering
+
+\includegraphics[width=0.9\textwidth,height=\textheight]{123.png}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Proportion of varianced explained (PVE)}
+\protect\hypertarget{proportion-of-varianced-explained-pve}{}
+\(~\)
+
+\textbf{Recap:} The PVE by PC \(m\) is given by
+
+\[
+\frac{\sum_{i=1}^m z_{im}^2} {\sum_{j=1}^p\sum_{i=1}^n x_{ij}^2}
+\]
+\end{block}
+\end{frame}
+
+\begin{frame}{Clustering}
+\protect\hypertarget{clustering}{}
+\(~\)
+
+\begin{itemize}
+\item
+  The aim is to find \emph{clusters} or \emph{subgroups}.
+\item
+  Clustering looks for homogeneous subgroups in the data.
+\end{itemize}
+
+\(~\)
+
+Difference to PCA?
+
+\pause
+
+\(\rightarrow\) PCA looks for low-dimensional representation of the
+data.
+\end{frame}
+
+\begin{frame}
+\begin{block}{K-means vs.~hierarchical clustering}
+\protect\hypertarget{k-means-vs.-hierarchical-clustering}{}
+\(~\)
+
+See menti.com
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{K-means clustering}
+\protect\hypertarget{k-means-clustering}{}
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Fix the number of clusters \(K\).
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Find groups such that the sum of the within-cluster variation is
+  minimized.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  Algorithm?
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\centering
+
+\includegraphics[width=0.75\textwidth,height=\textheight]{fig12_8.png}
+\flushleft \small (Fig 12.8 from course book)
+\end{frame}
+
+\begin{frame}
+\begin{block}{Hierarchical clustering}
+\protect\hypertarget{hierarchical-clustering}{}
+\(~\)
+
+Bottom-up agglomerative clustering that results in a
+\emph{\textcolor{red}{dendogram}}.
+
+\(~\)
+
+\includegraphics[width=0.9\textwidth,height=\textheight]{hierclust.png}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Important in hierarchical clustering}
+\protect\hypertarget{important-in-hierarchical-clustering}{}
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{\textcolor{red}{Linkage:}} Complete, single, average centroid.
+\end{itemize}
+
+\(~\)
+
+\begin{itemize}
+\tightlist
+\item
+  \emph{\textcolor{red}{Dissimilarity measure:}} Euclidian distance,
+  correlation. \emph{Other similarity/distance measures?}
+  \footnote{ Note: Correlation is actually a similarity measure, not a distance measure. Implication?}
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Hierarchical clustering -- example}
+\protect\hypertarget{hierarchical-clustering-example}{}
+\(~\)
+
+\includegraphics{fig12_12.png}
+
+Note: The representation on the right is not possible in
+high-dimensional space (i.e., if we have \(X_1, X_2, X_3, ...., X_p\)).
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Hierarchical clustering -- example}
+\protect\hypertarget{hierarchical-clustering-example-1}{}
+\(~\)
+
+An exam question from 2022:
+
+\includegraphics{exam_question3b_2023.png}
+\end{block}
+\end{frame}
+
+\begin{frame}
+\begin{block}{Pros and cons of clusterization methods / practical
+issues}
+\protect\hypertarget{pros-and-cons-of-clusterization-methods-practical-issues}{}
+\(~\)
+
+\(~\)
+
+\(~\)
+
+\(~\)
+
+\(~\)
+
+\(~\)
+
+\(~\)
+
+\(~\)
+
+\(~\)
+
+\(~\)
+\end{block}
+\end{frame}
+
+\begin{frame}{References}
+\protect\hypertarget{references}{}
+\hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-ISL}{}}%
+James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani.
+2021. \emph{An Introduction to Statistical Learning}. Springer.
+
+\end{CSLReferences}
+\end{frame}
+
+\end{document}
