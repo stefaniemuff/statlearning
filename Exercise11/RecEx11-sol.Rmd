@@ -1,9 +1,9 @@
 ---
 title: 'Module 11: Solutions to Recommended Exercises'
 author:
-- Emma Skarstein, Daesoo Lee, Stefanie Muff
+- Daesoo Lee, Emma Skarstein, Kenneth Aase, Stefanie Muff
 - Department of Mathematical Sciences, NTNU
-date: "April 4, 2021"
+date: "April 27, 2023"
 output:
   html_document:
     toc: no
@@ -14,7 +14,7 @@ output:
     keep_tex: yes
     toc: no
     toc_depth: 2
-subtitle: TMA4268 Statistical Learning V2022
+subtitle: TMA4268 Statistical Learning V2023
 urlcolor: blue
 ---
 
@@ -32,6 +32,10 @@ library(NeuralNetTools)
 library(caret)
 library(dplyr)
 #library(keras)
+library(ggplot2)
+library(keras)
+library(TSrepr)
+library(ramify)
 ```
 
 
@@ -42,7 +46,7 @@ library(dplyr)
 
 ### a) 
 
-It is a 4-4-4-3 feedforard neural network with an extra bias node in both the input and the two hidden layers. It can be written in the following form
+It is a 4-4-4-3 feedforward neural network with an extra bias node in both the input and the two hidden layers. It can be written in the following form
 
 $$
 y_c({\bf x})=\phi_o(\beta_{0c}+\sum_{m=1}^4 \beta_{mc}z_{m})=\phi_o(\beta_{0c}+\sum_{m=1}^4 \beta_{mc}\phi_{h*}(\gamma_{0m}+\sum_{l=1}^4 \gamma_{lm}\phi_h(\alpha_{0l}+\sum_{j=1}^4 \alpha_{jl}x_{j}))).
@@ -85,279 +89,446 @@ For neural nets we know that with one hidden layer and squashing type activation
 
 
 
+
+
+
 ## Problem 3
 
-#### a)
+##### 1. Load and preprocess data
+```{r}
+# load
+boston_housing <- dataset_boston_housing()
+x_train <- boston_housing$train$x
+y_train <- boston_housing$train$y
+x_test <- boston_housing$test$x
+y_test <- boston_housing$test$y
 
-```{r,eval=TRUE}
-library(ElemStatLearn)
-train_data=zip.train[,-1]
-train_labels=factor(zip.train[,1])
-test_data=zip.test[,-1]
-test_labels=factor(zip.test[,1])
-mean <- apply(train_data, 2, mean)                                
-std <- apply(train_data, 2, sd)
-train_data <- scale(train_data, center = mean, scale = std)       
-test_data <- scale(test_data, center = mean, scale = std)
+# preprocess
+mean <- apply(x_train, 2, mean)
+std <- apply(x_train, 2, sd)
+x_train <- scale(x_train, center = mean, scale = std)
+x_test <- scale(x_test, center = mean, scale = std)
 ```
 
-
-### b)
-
-(i) The main limitation is that the `nnet()` function can only handle one hidden layer.
-
-(ii) 5 hidden nodes: $257*5+6*10$=`r 257*5+6*10` parameters
-
-```{r,eval=FALSE}
-library(nnet)
-zipnnet5<- nnet(train_labels~., data=train_data,size=5,MaxNWts=3000,maxit=5000)
-summary(zipnnet5)
-pred=predict(zipnnet5,newdata=test_data,type="class")
-library(caret)
-confusionMatrix(factor(pred),test_labels)
-```
-
----
-
-The above took some time to run, the results were:
-
-```{r,eval=FALSE,tidy=FALSE}
-zipnnet5<- nnet(train_labels~., data=train_data,size=5,MaxNWts=3000,maxit=5000)
-iter2960 value 864.566658
-final  value 864.561810 
-converged
-summary(zipnnet5)
-a 256-5-10 network with 1345 weights
-options were - softmax modelling 
-   b->h1   i1->h1   i2->h1   i3->h1   i4->h1   i5->h1   i6->h1   i7->h1   i8->h1   i9->h1  i10->h1  i11->h1  i12->h1  i13->h1  i14->h1  i15->h1  i16->h1  i17->h1  i18->h1 
-  -49.27     9.15     1.24    21.03    -2.82    17.97     4.63    11.60    -4.31     2.28    -4.57    -6.89    -8.19     1.94   -27.05    -0.83    -8.40   -13.40    -8.07 
- i19->h1  i20->h1  i21->h1  i22->h1  i23->h1  i24->h1  i25->h1  i26->h1  i27->h1  i28->h1  i29->h1  i30->h1  i31->h1  i32->h1  i33->h1  i34->h1  i35->h1  i36->h1  i37->h1 
-```
-
-(iii)
-
-```{r,eval=FALSE,tidy=FALSE}
-> confusionMatrix(factor(pred),test_labels)
-Confusion Matrix and Statistics
-          Reference
-Prediction   0   1   2   3   4   5   6   7   8   9
-         0 324   0   6   5   3   9   7   0   3   0
-         1   1 245   7   0   1   0   0   0   7   5
-         2   4   7 148   8  12   5  11   0   3   0
-         3   2   0   6 128   4  10   0   4   5   3
-         4   4   1   4   0 152   1   1   9   2   4
-         5   1   0   2  18   1 117   5   0   7   1
-         6  21   3  11   0   6   1 146   0   3   0
-         7   0   1   6   4   5   1   0 122   9   5
-         8   2   2   7   3   6  15   0   1 113   3
-         9   0   5   1   0  10   1   0  11  14 156
-Overall Statistics
-                                          
-               Accuracy : 0.8226          
-                 95% CI : (0.8052, 0.8391)
-```
-
-# Problem 4: Deep Learning with Keras
 
 ### a)
 
+##### 2. Define the model
 ```{r}
-library(keras)
-mnist = dataset_mnist()
-x_train = mnist$train$x
-y_train = mnist$train$y
-x_test = mnist$test$x
-y_test = mnist$test$y
+model_r <- keras_model_sequential() %>%
+  layer_dense(units = 64, activation = "relu", input_shape = 13) %>%
+  layer_dense(units = 32, activation = "relu") %>%
+  layer_dense(units = 1)
 
-
-# reshape
-x_train = array_reshape(x_train, c(nrow(x_train), 28*28))
-x_test = array_reshape(x_test, c(nrow(x_test), 28*28))
-# rescale
-x_train = x_train / 255
-x_test = x_test / 255
-
-y_train = to_categorical(y_train, 10)
-y_test = to_categorical(y_test, 10)
-dim(x_test)
+summary(model_r)
 ```
 
-#### 1. Define the model
-
+##### 3. Compile
 ```{r}
-model = keras_model_sequential() %>% 
-  layer_dense(units = 8, activation = 'relu', input_shape = c(28*28)) %>% 
-  layer_dense(units = 8, activation = 'relu') %>%
-  layer_dense(units = 10, activation = 'softmax')
-```
-
-The identity function is used for regression problems.
-
-#### 2. Compile 
-
-```{r}
-model %>% compile(
-optimizer = "rmsprop",
-loss = "categorical_crossentropy", metrics = c("accuracy")
+model_r %>% compile(
+  loss = "mean_squared_error",
+  optimizer = optimizer_adam(learning_rate = 0.001),  # adam is the most common optimizer for its robustness.
+  metrics = c("mean_absolute_error")
 )
 ```
 
 
-#### 3. Train 
-
+##### 4. Train the model
 ```{r}
-history = model %>% fit(x_train, y_train,
-epochs = 20,
-batch_size = 128,
-validation_split = 0.2)
+history <- model_r %>% fit(
+  x_train, y_train,
+  epochs = 100,
+  batch_size = 32,
+  validation_data = list(x_test, y_test)
+)
+```
 
-str(history)
+
+##### 5. Test
+```{r}
+scores <- model_r %>% evaluate(x_test, y_test, verbose = 0)
+
+cat("Test loss (MSE):", scores[[1]], "\n",
+    "Test mean absolute error (MAE):", scores[[2]], "\n")
+```
+
+##### Plot training history
+```{r}
 plot(history)
 ```
 
-```{r}
-model %>% evaluate(x_test,y_test)
-```
 
-Number of parameters
-
+##### Additional plot: confusion matrix
 ```{r}
-str(model)
+predictions <- model_r %>% predict(x_test)
+plot_df <- data.frame(Predicted = predictions, Actual = y_test)
+ggplot(plot_df, aes(x = Actual, y = Predicted)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  theme_bw() +
+  xlab("Actual Values") +
+  ylab("Predicted Values") +
+  ggtitle("Predicted vs. Actual Values (Feedforward NN)") +
+  xlim(0, 55) +
+  ylim(0, 55)
 ```
 
 ### b)
 
-```{r}
-model = keras_model_sequential() %>% 
-  layer_dense(units = 128, activation = 'relu', input_shape = c(28*28)) %>% 
-  layer_dense(units = 128, activation = 'relu') %>%
-  layer_dense(units = 10, activation = 'softmax')
-
-model %>% compile(
-optimizer = "rmsprop",
-loss = "categorical_crossentropy", metrics = c("accuracy")
-)
-
-history = model %>% fit(x_train, y_train,
-epochs = 20,
-batch_size = 128,
-validation_split = 0.2)
-
-str(history)
-plot(history)
-```
+##### Comparison to a Linear Regression Model
 
 ```{r}
-model %>% evaluate(x_test,y_test)
-```
+# Fit a linear regression model
+linear_model <- lm(y_train ~ ., data = as.data.frame(cbind(x_train, y_train)))
 
-We see that the validation loss reach its minimum after 5-10 epochs and raises again afterwards. This larger network thus begins overfitting after the first few epochs.
+# Make predictions on the test set
+predictions <- predict(linear_model, as.data.frame(x_test))
 
-### c)
+# Calculate the mean squared error and mean absolute error
+mse <- mean((y_test - predictions)^2)
+mae <- mean(abs(y_test - predictions))
 
-```{r}
-model = keras_model_sequential() %>% 
-  layer_dense(units = 128, activation = 'relu', input_shape = c(28*28)) %>% 
-  layer_dropout(rate = 0.4) %>% 
-  layer_dense(units = 128, activation = 'relu') %>%
-  layer_dropout(rate = 0.3) %>%
-  layer_dense(units = 10, activation = 'softmax')
-
-model %>% compile(
-optimizer = "rmsprop",
-loss = "categorical_crossentropy", metrics = c("accuracy")
-)
-
-history = model %>% fit(x_train, y_train,
-epochs = 20,
-batch_size = 128,
-validation_split = 0.2)
-
-str(history)
-plot(history)
-```
-
-```{r}
-model %>% evaluate(x_test,y_test)
-```
-Here the validation curve looks better and we might increase the number of epochs.
-
-```{r}
-model = keras_model_sequential() %>% 
-  layer_dense(units = 128, activation = 'relu',
-              input_shape = c(28*28),kernel_regularizer = regularizer_l2(l = 0.001)) %>% 
-  layer_dense(units = 128, activation = 'relu',
-              kernel_regularizer = regularizer_l2(l = 0.001)) %>%
-  layer_dense(units = 10, activation = 'softmax')
-
-model %>% compile(
-optimizer = "rmsprop",
-loss = "categorical_crossentropy", metrics = c("accuracy")
-)
-
-history = model %>% fit(x_train, y_train,
-epochs = 20,
-batch_size = 128,
-validation_split = 0.2)
-
-str(history)
-plot(history)
-```
-```{r}
-model %>% evaluate(x_test,y_test)
+cat("=== [Feedforward Neural Network] === \n", "Test loss (MSE):", scores[[1]], 
+    "\n",
+    "Test mean absolute error (MAE):", scores[[2]], 
+    "\n",
+    "==================================== \n\n",
+    "=== [Linear Regression] === \n",
+    "Test loss (MSE):", mse, "\n",
+    "Test mean absolute error (MAE):", mae, "\n",
+    "===========================\n\n")
 ```
 
 
-### d)
-
 ```{r}
-# re-define `x_train`, ..., `y_test` to keep them as 2-dimensional.
-mnist = dataset_mnist()
-x_train = mnist$train$x
-y_train = mnist$train$y
-x_test = mnist$test$x
-y_test = mnist$test$y
-
-# rescale
-x_train = x_train / 255
-x_test = x_test / 255
-
-y_train = to_categorical(y_train, 10)
-y_test = to_categorical(y_test, 10)
+plot_df <- data.frame(Predicted = predictions, Actual = y_test)
+ggplot(plot_df, aes(x = Actual, y = Predicted)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  theme_bw() +
+  xlab("Actual Values") +
+  ylab("Predicted Values") +
+  ggtitle("Predicted vs. Actual Values (Linear Regression)") +
+  xlim(0, 55) +
+  ylim(0, 55)
 ```
 
-```{r}
-# define a CNN model
 
-model <- keras_model_sequential() %>% 
-  layer_conv_2d(filters = 8, kernel_size = c(3,3), activation = "relu", 
-                input_shape = c(28,28,1)) %>% 
-  layer_max_pooling_2d(pool_size = c(2,2)) %>% 
-  layer_conv_2d(filters = 16, kernel_size = c(3,3), activation = "relu") %>% 
-  layer_max_pooling_2d(pool_size = c(2,2)) %>% 
-  layer_conv_2d(filters = 22, kernel_size = c(3,3), activation = "relu") %>% 
-  layer_flatten() %>% 
+### c) 
+
+* The feedforward neural network (FNN) demonstrates superior performance compared to the linear model. However, the FNN comes with reduced interpretability and increased complexity. As a result, some may prefer the simpler and more interpretable linear model.
+
+
+
+
+
+
+
+
+
+## Problem 4: Convolutional Neural Network (CNN)
+
+
+### Problem 4.1: Image Classification with CNN
+
+
+##### 1. Load and preprocess data
+```{r}
+cifar10 <- dataset_cifar10()
+x_train <- cifar10$train$x / 255
+y_train <- to_categorical(cifar10$train$y, num_classes = 10)
+x_test <- cifar10$test$x / 255
+y_test <- to_categorical(cifar10$test$y, num_classes = 10)
+```
+
+
+### a)
+
+##### 2. Define the model
+```{r}
+model_c <- keras_model_sequential() %>%
+  layer_conv_2d(filters = 32, kernel_size = c(3, 3), activation = "relu", input_shape = c(32, 32, 3)) %>%
+  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+  layer_conv_2d(filters = 64, kernel_size = c(3, 3), activation = "relu") %>%
+  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+  layer_flatten() %>%
+  layer_dense(units = 64, activation = "relu") %>%
   layer_dense(units = 10, activation = "softmax")
-summary(model)
+  
+summary(model_c)
 ```
+
+
+##### 3. Compile
 ```{r}
-model %>% compile(
-optimizer = "rmsprop",
-loss = "categorical_crossentropy", metrics = c("accuracy")
+model_c %>% compile(
+  loss = "categorical_crossentropy",
+  optimizer = optimizer_adam(learning_rate = 0.001),  # adam is the most common optimizer for its robustness.
+  metrics = c("accuracy")
+)
+```
+
+
+##### 4. Train the model
+```{r}
+history <- model_c %>% fit(
+  x_train, y_train,
+  epochs = 20,
+  batch_size = 64,
+  validation_data = list(x_test, y_test)
+)
+```
+
+
+##### 5. Test
+```{r}
+scores <- model_c %>% evaluate(x_test, y_test, verbose = 0)
+
+cat("Test loss:", scores[[1]], "\n",
+    "Test accuracy:", scores[[2]], "\n")
+```
+
+
+##### Plot training history
+```{r}
+plot(history)
+```
+
+
+##### Additional plot: confusion matrix
+```{r}
+library(caret)
+predictions <- model_c %>% predict(x_test)%>% k_argmax()
+y_true <- cifar10$test$y
+confusion_matrix <- confusionMatrix(factor(as.vector(predictions)), factor(y_true))
+print(confusion_matrix$table)
+```
+
+
+### b)
+
+The exact misclassification rate should be slightly different for each run. 
+A misclassification rate is calculated as (number of misclassified samples / total number of samples).
+
+
+
+
+### Problem 4.2: Improving the test accuarcy with data augmentation techniques
+
+
+```{r}
+# 1) Load and preprocess data
+cifar10 <- dataset_cifar10()
+x_train <- cifar10$train$x / 255
+y_train <- to_categorical(cifar10$train$y, num_classes = 10)
+x_test <- cifar10$test$x / 255
+y_test <- to_categorical(cifar10$test$y, num_classes = 10)
+
+# 2) Define the model
+model_ca <- keras_model_sequential() %>%
+  layer_conv_2d(filters = 32, kernel_size = c(3, 3), activation = "relu", input_shape = c(32, 32, 3)) %>%
+  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+  layer_conv_2d(filters = 64, kernel_size = c(3, 3), activation = "relu") %>%
+  layer_max_pooling_2d(pool_size = c(2, 2)) %>%
+  layer_flatten() %>%
+  layer_dense(units = 64, activation = "relu") %>%
+  layer_dense(units = 10, activation = "softmax")
+
+# 3) Compile
+model_ca %>% compile(
+  loss = "categorical_crossentropy",
+  optimizer = optimizer_adam(learning_rate = 0.001),
+  metrics = c("accuracy")
 )
 
-history = model %>% fit(x_train, y_train,
-epochs = 20,
-batch_size = 128,
-validation_split = 0.2)
+# 4) Data augmentation
+datagen <- image_data_generator(
+  rotation_range = 10,
+  width_shift_range = 0.1,
+  height_shift_range = 0.1,
+  horizontal_flip = TRUE
+)
 
-str(history)
+# Compute the data generator internal statistics
+datagen %>% fit_image_data_generator(x_train)
+
+# 5) Train the model with data augmentation
+batch_size = 64
+train_generator <- flow_images_from_data(x = x_train, y = y_train, generator = datagen, batch_size = batch_size)
+
+history <- model_ca %>% fit_generator(
+  generator = train_generator,
+  steps_per_epoch = as.integer(nrow(x_train) / batch_size),
+  epochs = 20,
+  validation_data = list(x_test, y_test)
+)
+
+```
+
+
+```{r}
+# Test
+scores <- model_ca %>% evaluate(x_test, y_test, verbose = 0)
+
+cat("Test loss:", scores[[1]], "\n",
+    "Test accuracy:", scores[[2]], "\n")
+```
+
+```{r}
+# Plot training history
 plot(history)
 ```
 
 ```{r}
-model %>% evaluate(x_test,y_test)
+# Additional plot: confusion matrix
+
+predictions <- model_ca %>% predict(x_test)%>% k_argmax()
+y_true <- cifar10$test$y
+confusion_matrix <- confusionMatrix(factor(as.vector(predictions)), factor(y_true))
+print(confusion_matrix$table)
 ```
 
-The CNN model results in 98.7% test accuracy while the DNN model with the same model size results in 92.4% test accuracy. Hence, the CNN model is shown to be more effective in processing the image data.
+### a)
+1. Increased size of the training dataset: Data augmentation allows for the creation of new training examples from the existing ones, which increases the size of the training dataset. A larger dataset helps in building more robust machine learning models that are less likely to overfit to the training data.
+
+2. Improved generalization: By augmenting the training data, the model is exposed to more diverse examples, which helps it to generalize better to new, unseen data.
+
+3. Increased model performance: Data augmentation can improve the performance of the model by reducing overfitting, especially in cases where the original dataset is small.
+
+4. Cost-effectiveness: Data augmentation can be a cost-effective way of creating new training data, especially when collecting new data is expensive or time-consuming.
+
+5. Reduced bias: Data augmentation can help to reduce bias in the dataset by balancing the class distribution, which is particularly important in cases where the original dataset is imbalanced.
+
+6. Robustness to input variations: Data augmentation can make the model more robust to input variations such as rotation, scaling, and translation, which is useful in applications such as object recognition and natural language processing.
+
+
+
+## Problem 5: Univariate Time Series Classification with CNN
+
+
+##### 1. Load and preprocess data
+```{r}
+# load the Wafer dataset
+train <- read.delim("dataset/Wafer/Wafer_TRAIN.tsv", header = FALSE, sep = "\t")
+test <- read.delim("dataset/Wafer/Wafer_TEST.tsv", header = FALSE, sep = "\t")
+
+# the first column in `train` and `test` contains label info.
+# therefore we separate them into `x` and `y`.
+x_train <- train[,2:dim(train)[2]]
+y_train <- clip(train[,1], 0, 1) #- 1
+y_train <- to_categorical(y_train)
+x_test <- test[,2:dim(test)[2]]
+y_test <- clip(test[,1], 0, 1) #- 1
+y_test <- to_categorical(y_test)
+
+# create a channel dimension so that `x` has dimension of (batch, channel, length)
+x_train <- array(as.matrix(x_train), dim = c(nrow(x_train), ncol(x_train), 1))
+x_test <- array(as.matrix(x_test), dim = c(nrow(x_test), ncol(x_test), 1))
+
+# preprocess
+# The provided dataset has already been preprocessed, therefore no need for it.
+
+```
+
+
+### a)
+
+
+##### 2. Define the model
+```{r}
+# Define the model
+model_1dc <- keras_model_sequential() %>%
+    layer_conv_1d(filters = 16, kernel_size = 8, activation = "relu", input_shape = c(dim(x_train)[2], 1)) %>%
+    layer_max_pooling_1d(pool_size = 2) %>%
+    layer_conv_1d(filters = 32, kernel_size = 5, activation = "relu") %>%
+    layer_max_pooling_1d(pool_size = 2) %>%
+    layer_conv_1d(filters = 64, kernel_size = 3, activation = "relu") %>%
+    layer_max_pooling_1d(pool_size = 2) %>%
+    layer_flatten() %>%
+    layer_dense(units = 2, activation = "softmax")
+
+summary(model_1dc)
+```
+
+
+##### 3. Compile
+```{r}
+model_1dc %>% compile(
+  loss = "categorical_crossentropy",
+  optimizer = optimizer_adam(learning_rate = 0.001),
+  metrics = c("accuracy")
+)
+```
+
+##### 4. Train the model
+```{r}
+history <- model_1dc %>% fit(
+  x_train, y_train,
+  epochs = 100,
+  batch_size = 64,
+  validation_data = list(x_test, y_test)
+)
+```
+
+
+```{r}
+# Test
+scores <- model_1dc %>% evaluate(x_test, y_test, verbose = 0)
+
+cat("Test loss:", scores[[1]], "\n",
+    "Test accuracy:", scores[[2]], "\n")
+```
+
+```{r}
+# Plot training history
+plot(history)
+```
+
+
+### b)
+
+##### Comparison to a Logistic Regression Model
+
+```{r}
+# dataset
+x_train <- train[,2:dim(train)[2]]
+y_train <- clip(train[,1], 0, 1)
+x_test <- test[,2:dim(test)[2]]
+y_test <- clip(test[,1], 0, 1)
+
+# Fit a linear regression model
+#linear_model <- lm(y_train ~ ., data = as.data.frame(cbind(x_train, y_train)))
+logit_reg <- glm(y_train ~ ., data = as.data.frame(cbind(x_train, y_train)), family = "binomial")
+
+# Make predictions on the test set
+predictions <- predict(logit_reg, newdata = x_test, type = "response")
+predictions <- as.integer(predictions > 0.5)  # cutoff = 0.5
+predictions <- as.factor(predictions)
+
+result <- confusionMatrix(predictions, as.factor(y_test))
+
+cat("=== [1D CNN] === \n", "Test accuracy:", scores[[2]], 
+    "\n",
+    "============================ \n\n",
+    "=== [Logistic Regression] === \n",
+    "Test accuracy:", result$overall["Accuracy"], "\n",
+    "=============================\n\n")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
