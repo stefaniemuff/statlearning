@@ -81,8 +81,6 @@ See also _References and further reading_ (last slide), for further reading mate
 
 ## What will you learn?
 
-Todo: Update
- 
 
 <!-- * Translating from statistical to neural networks language -->
 <!--     + linear regression -->
@@ -92,18 +90,23 @@ Todo: Update
 $~$    
 
 * Deep learning: The timeline
+
+\vspace{2mm}    
     
-* Single and multilayer neural networks
+* Single and multilayer feed-forward networks
 
-* Convolutional neural networks 
+\vspace{2mm} 
 
-* Recurrent neural networks
+* Convolutional neural networks (CNNs)
+
+\vspace{2mm} 
+
+* Recurrent neural networks (RNNs)
+
+\vspace{2mm} 
 
 * Interpolation and double descent
  
-$~$
-
-* Neural network parts: model -- method -- algorithm -- recent developents
 
 
  
@@ -194,9 +197,6 @@ $~$
 
 * With the field of _machine learning_ the shift is that a system is _trained_ rather than explicitly programmed.
 
-$~$
-
-* Machine learning is related to mathematical statistics, but differs in many ways.
 
 $~$
 
@@ -211,7 +211,7 @@ $~$
 According to @kerasR (page 19): 
 \vspace{2mm}
 
-_Machine learning isn't mathematics or physics, where major advancements can be done with a pen and a piece of paper. It's an engineering science._
+_Machine learning isn't mathematics or physics, [...] it's an engineering science._
 
 
 ---
@@ -245,7 +245,7 @@ $~$
 
 ---
 
-* In 2011 neural networks with many layers (and trained with GPUs) were performing well on image classification tasks.
+* In 2011 neural networks with many layers were performing well on image classification tasks.
 
 \vspace{2mm}
 
@@ -257,55 +257,38 @@ $~$
 
 ---
 
-## Deep?
-
-$~$
-
-* Deep learning does not mean a deeper understanding, but refers to sucessive layers of representations - where the number of layers gives the _depth_ of the model. Often tens to hundreds of layers are used.
-
-\vspace{2mm}
-
-* Deep neural networks are not seen as models of the brain, and are not related to neurobiology.
-
-\vspace{2mm}
-
-* A deep network can be seen as many stages of _information-destillation_, where each stage performes a simple data transformation. These transformations are not curated by the data analyst, but is estimated in the network.
-
-\vspace{2mm}
-
-* In contrast, in statistics we first select a set of inputs, then look at how these inputs should be transformed, before we apply some statistical methods (_feature engineering_).
-
-
-
----
 
 <!-- In addition, this built-in feature engineering of the deep network is not performed in a greedy fashion, but _jointly_ with estimating/learning the full model. -->
 
-* The success of deep learning is dependent upon the breakthroughts 
-    + in _hardware_ development, expecially with faster CPUs and massively parallell graphical processing units (GPUs). 
-    +  _datasets_ and benchmarks (internet/tech data).
-    + improvemets of the  _algorithms_.
+The success of deep learning is dependent upon the breakthroughts in
+
+  * _hardware_ development, expecially with faster CPUs and massively parallell graphical processing units (GPUs). 
+  * _datasets_ and benchmarks (internet/tech data).
+  * improvemets of the  _algorithms_.
 
 $~$
 
-* Achievements of deep learning includes high quality (near-human to super human) image classification, speech recognition, handwriting transcription, machine translation, digital assistants, autonomous driving, advertise targeting, web searches, playing Go and chess.
+Achievements of deep learning includes 
+
+  * high quality (near-human to super human) image classification, 
+  * speech recognition, 
+  * handwriting transcription,
+  * autonomous driving, and more!
 
 ---
 
 
 # Feedforward networks
 
-* Connections are only forward in the network, but no feedback connections that sends the output of the model back into the network.  
+<!-- * Connections are only forward in the network, but no feedback connections that sends the output of the model back into the network.   -->
 
-* Examples: Linear, logistic and multinomial regression with or without any _hidden layers_ (between the input and output layers).
+<!-- * Examples: Linear, logistic and multinomial regression with or without any _hidden layers_ (between the input and output layers). -->
 
-* We may have between zero and very many hidden layers.
+<!-- * We may have between zero and very many hidden layers. -->
 
-* Adding _hidden layers_ with _non-linear activation functions_ between the input and output layer will make nonlinear statistical models.
+<!-- * Adding _hidden layers_ with _non-linear activation functions_ between the input and output layer will make nonlinear statistical models. -->
 
-* The number of hidden layers is called the _depth_ of the network, and the number of nodes in a layer is called the _width_ of the layer.
-
----
+<!-- * The number of hidden layers is called the _depth_ of the network, and the number of nodes in a layer is called the _width_ of the layer. -->
 
 
 \centering
@@ -402,7 +385,7 @@ $~$
 ## Multilayer neural networks
 $~$
 
-Alternative: networks with more than one hidden layer, but fewer total number of nodes but more layers. A network with _many hidden layers_ is called a _deep network_.
+Alternative: networks with more than one hidden layer. A network with _many hidden layers_ is called a _deep network_.
 
 \centering
 ![](fig10_4.png){width=70%}
@@ -453,13 +436,13 @@ $~$
 
 $~$
 
-* This data is based on <https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/8-neural_networks_mnist.html> and the `R keras` cheat sheet.
+* This data has been analysed with a single-layer feed-forward network in a previous version of the course: <https://www.math.ntnu.no/emner/TMA4268/2018v/11NN/8-neural_networks_mnist.html>.
 
 
 
 ---
 
-Objective: classify the digit contained in an image (128 $\times$ 128 greyscale).
+Objective: classify the digit contained in an image (28 $\times$ 28 greyscale).
 
 ![](mnist.png)
 
@@ -545,7 +528,7 @@ $~$
 * _\textcolor{red}{Linear activation}_: for _continuous outcome_ (regression problems) $$f(X)=X \ .$$
 
 
-* _\textcolor{red}{Sigmoid activation}_: for _binary outcome_ (two-class classification problems) $$f(X)=\frac{1}{1+\exp(-X)} \ .$$
+* _\textcolor{red}{Sigmoid activation}_: for _binary outcome_ (two-class classification problems) $$f(X)=\frac{1}{1+\exp(-X)} = \frac{\exp(X)}{1+\exp(X)} \ .$$
  
 
 * _\textcolor{red}{Softmax}_: for _multinomial/categorical outcome_  (multi-class classification problems) 
@@ -620,38 +603,12 @@ $~$
 $~$
 
 * Replacing sigmoid with ReLU is reported to be one of the major changes that have improved the performance of the feedforward networks\footnote{Goodfellow et al, Section 6.6}.
- 
-
----
-
-
-ReLU can also be motivated from biology.
-
-* For some inputs a biological neuron can be completely inactive
-* For some inputs a biological neuron output can be proportional to the input
-* But, most of the time a biological neuron is inactive.
-
-According to @goodfellow (Section 6.3), hidden unit design is an _active area of research._
-
- \centering
-![ ](Action_potential.png){width=45%}
-\small
-<https://commons.wikimedia.org/wiki/File:Action_potential.svg>
 
 
 ---
 
-**Q:** Why can we not just use linear activation function in all hidden layers?
 
-\pause 
 
-**A:** 
-
-* Then each layer would only be able to do linear transformations of the input data and a deep stack of linear layers would still implement a linear operation. 
-
-* The universial approximation property is dependent on a squashing type activation function.
-
----
 
 ## Universal approximation property
 
@@ -676,6 +633,17 @@ The _universal approximation theorem_\footnote{Goodfellow et al 2016, Section 6.
 
 can approximate any (Borel measurable) function from one finite-dimensional space (our input layer) to another (our output layer) with any desired non-zero amount of error.
 
+---
+
+**Q:** Why can we not just use linear activation function in all hidden layers?
+
+\pause 
+
+**A:** 
+
+* Then each layer would only be able to do linear transformations of the input data and a deep stack of linear layers would still implement a linear operation. 
+
+* The universial approximation property is dependent on a squashing type activation function.
 
 ---
 
@@ -747,18 +715,19 @@ $~$
 
 ---
 
-* Regression: _\textcolor{red}{MSE}_
+* Regression: Loss function _\textcolor{red}{MSE}_ for a given set of parameters $\boldsymbol{\theta}$:
 
-$$\sum_{i=1}^n (y_i- f(x_i))^2$$
-
-$~$
+$$J({\boldsymbol \theta}) = \sum_{i=1}^n (y_i- f(x_i))^2$$
 
 $~$
+
  
 * Classification: _\textcolor{red}{Cross-entropy}_
 
-$$-\sum_{i=1}^n \sum_{m=1}^C y_i \log f_m(x_i) \ ,$$ with special case for $C=2$ (binomial cross-entropy loss):
-$$-\sum_{i=1}^n  y_i \log f_m(x_i) + (1-y_i) \log (1-f_m(x_i)) \ .$$
+$$J({\boldsymbol \theta}) = -\sum_{i=1}^n \sum_{m=1}^C y_i \log f_m(x_i) \ ,$$ 
+
+* with special case for $C=2$ (_\textcolor{red}{binary cross-entropy loss}_):
+$$J({\boldsymbol \theta}) = -\sum_{i=1}^n  y_i \log f_m(x_i) + (1-y_i) \log (1-f_m(x_i)) \ .$$
 
 
 
@@ -768,7 +737,7 @@ $$-\sum_{i=1}^n  y_i \log f_m(x_i) + (1-y_i) \log (1-f_m(x_i)) \ .$$
 
 $~$
 
-Let the unknown parameters be denoted ${\boldsymbol \theta}$ (what we have previously denotes as $\alpha$s and $\beta$s), and the loss function to be minimized $J({\boldsymbol \theta})$.
+Let the unknown parameters be denoted ${\boldsymbol \theta}$ (what we have previously denoted as $\alpha$s and $\beta$s), and the loss function to be minimized $J({\boldsymbol \theta})$.
 
 $~$
 
@@ -780,11 +749,12 @@ $~$
 
 ---
 
-Here comes more thoery on the optimization
+### Gradient descent
 
-But use the structure in the book (Chapter 10.7)
+$~$
 
-Start with a general overview slide here
+* We minimize a _cost function_ by iteratively tweaking the parameters along the negative gradient.
+
 
 $~$
 
@@ -794,29 +764,70 @@ $~$
 
 \tiny (https://github.com/SoojungHong/MachineLearning/wiki/Gradient-Descent)
 
-
----
-
-## Backpropagation
-
----
-
-##  Regularization
-
-
----
-
-### Stochastic gradient descent (SGD) 
+$~$
 
 $~$
 
-Another form of regularization ($\rightarrow$ protection from over-fitting).
+\normalsize
+\flushleft
+
+* In practice this happens in a _high-dimensional_ parameters space, along the partial derivatives for each parameter.
+
+
+---
+
+## Finding optimal weights: Gradient descent algorithm
+
+\vspace{2mm}
+
+1. Let $t=0$ and denote the given initial values for the parameters ${\boldsymbol \theta}^{(t)}$.
+\vspace{2mm}
+2. Until finding a (local) optimum, repeat a) to e)
+    a) Calculate the predictions ${\hat{y}_1({\boldsymbol x}_i)}$.
+    b) Calculate the loss function $J({\boldsymbol \theta}^{(t)})$.
+    c) Find the gradient (direction) in the $(p+1)$-dimensional space of the weights, and evaluate this at the current weight values $\nabla J({\boldsymbol \theta}^{(t)})={\frac{\partial J}{\partial {\boldsymbol \theta}}}({\boldsymbol \theta}^{(t)})$.
+    d) Go with a given step length (learning rate) $\lambda$ in the direction of the negative of the gradient of the loss function to get 
+$${\boldsymbol \theta}^{(t+1)}={\boldsymbol \theta}^{(t)} - \lambda \nabla J({\boldsymbol \theta}^{(t)}) \ .$$
+    e) Set $t=t+1$.
+\vspace{2mm}
+3. The final values of the weights in that $(p+1)$ dimensional space are our parameter estimates and your network is _trained_.
+
+
+---
+
+
+**Q**: Why are we moving in the direction of the negative of the gradient? Why not the positive?
+
+**A**: 
+
+---
+
+### Full vs. stochastic gradient descent (SGD)
+
+$~$
+
+* Note that in _full gradient descent_, the loss function is computed as a mean over all training examples.
+$$
+J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n J({\boldsymbol x}_i, y_i) \ .
+$$
+
+* The gradient is _an average over many individual gradients_ from the training example. You can think of this as an estimator for an expectation. 
+
+$$
+\nabla_{\boldsymbol \theta} J({\boldsymbol \theta})=\frac{1}{n}\sum_{i=1}^n \nabla_{\boldsymbol \theta} J({\boldsymbol x}_i, y_i) \ .
+$$
+
+* To build a network that generalizes well, it is important to have many training examples, but that would make us spend a lot of time and computer resources at calculating each gradient descent step.
+
+---
+
+### Mini-batch stochastic gradient descent (SGD) 
 
 $~$
  
 **Crucial idea**: 
 
-The expectation can be approximated by the average gradient over just a _mini-batch_ (random sample) of the observations.
+The expectation can be approximated by the average gradient over just a _\textcolor{red}{mini-batch}_ (random sample) of the observations.
 
 
 $~$
@@ -825,19 +836,224 @@ $~$
 
 \vspace{1mm}
 
-* The optimizer will converge much faster if it can rapidly compute approximate estimates of the gradient, instead of slowly computing the exact gradient (using all training data).
+* The optimizer will converge much faster if it can rapidly compute approximate estimates of the gradient.
+
+\vspace{1mm}
 
 * Mini-batches may be processed _in parallel_, and the batch size is often a power of 2 (32 or 256).
 
-* Small batches also bring in a _regularization effect_, maybe due to the variability they bring to the optimization process.
+\vspace{1mm}
+
+* Small batches also bring in a _\textcolor{red}{regularization effect}_, maybe due to the variability they bring to the optimization process.
+
+---
+
+
+
+**Mini-batch stochastic gradient descent** 
+
+\vspace{1mm}
+
+1. Divide all the training samples randomly into _mini-batches_.
+
+\vspace{1mm}
+
+2. Until convergence, repeat a) to d)
+    a) For each mini-batch: Make predictions of the reponses in the mini-batch in a _forward pass_.
+    b) Compute the loss for the training data in this batch.
+    c) Compute the gradient $\nabla_{\boldsymbol \theta}^* J({\boldsymbol \theta}^{(t)})$ of the loss with regard to the model's parameters (_backward pass_) based on the training data in the batch. 
+    d) Update all weighs, but just using the _average gradient_ from the mini-batch ${\boldsymbol \theta}^{(t+1)}={\boldsymbol \theta}^{(t)} - \lambda \nabla_{\boldsymbol \theta} ^* J({\boldsymbol \theta}^{(t)})$
+ 
+\vspace{1mm}
+
+3. Network is _trained_; return parameter estimates.
+
+\vspace{6mm}
+
+
+  **Special case**: _\textcolor{red}{True SGD}_ involves only _\textcolor{red}{one sample}_ (mini-batch size 1). $\rightarrow$ Mini-batch SGD is a compromise between SGD (one sample per iteration) and full gradient descent (full dataset per iteration)
+
+
+--- 
+
+In the 3rd video (on backpropagation) from 3Blue1Brown there is nice example of one trajectory from gradient decent and one from SGD (10:10 minutes into the video):
+<https://www.youtube.com/watch?v=Ilg3gGewQ5U&list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi&index=3>
+
+
+---
+
+### Backpropagation algorithm
+
+$~$
+
+* _Backpropagation_ is a simple and inexpensive way _to calculate the gradient_.
+
+\vspace{2mm}
+
+* Computing the analytical expression for the gradient $\nabla J$ is not difficult, but _the numerical evaluation may be expensive_.  
+
+\vspace{2mm}
+
+
+\vspace{2mm}
+
+* The _chain rule_ is used to compute derivatives of functions of other functions where the derivatives are known. This is efficiently done with backpropagation.
+
+
+
+---
+
+More background:
+
+$~$
+
+* @ISL Chapter 10.7.
+
+$~$
+
+* Mathematical details: @goodfellow Section 6.5.  
+<!-- (pages 204-238). -->
+
+$~$
+
+* 3Blue1Brown videos: <https://www.youtube.com/watch?v=Ilg3gGewQ5U> and <https://www.youtube.com/watch?v=tIeHLnjs5U8>
+
+---
+
+##  Regularization
+
+$~$
+
+* Often: more weights than data samples $\rightarrow$ danger for over-fitting.
+
+\vspace{2mm}
+
+* @goodfellow, Chapter 7, define regularization as _any modification we make to a learning algorithm that is intended to reduce its generalization error but not its training error_.
+
+\vspace{2mm}
+
+* Remember (module 6): The aim of regularization was to trade _increased bias_ for _reduced variance_.  The ideas was to add a penalty to the loss function. 
+
+\vspace{2mm}
+
+* The penalties we looked at were of type absolute value of parameter ($L_1$, lasso, where we looked at this as model selection) and square value of parameter ($L_2$, ridge regression). This can also done for neural networks.
+
+
+---
+
+### Regularization in neural networks
+
+$~$
+
+* _\textcolor{red}{Weight decay}_: In neural networks this means adding a $L_2$-penalty to the loss function to _penalize large weights_ \footnote{see chapter 7.1.1 in Goodfellow et al}:
+
+$$ \tilde{J}({\boldsymbol w})= \frac{\alpha}{2}{{\boldsymbol w}^\top{\boldsymbol w}} + J({\boldsymbol w}) \ .$$
+
+\vspace{2mm}
+
+* _\textcolor{red}{Data augmentation}_: Adding "fake data" to the dataset, in order that the trained model will generalize better. For example: rotating and scaling images.
+
+\vspace{2mm}
+
+* _\textcolor{red}{Label smoothing}_: Motivated by the fact that the training data may contain errors in the reponses recorded, and replaced the one-hot coding for $C$ classes with $\epsilon/(C-1)$ and $1-\epsilon$ for some small $\epsilon$.
+
+\vspace{2mm}
+
+* _\textcolor{red}{Early stopping}_
+
+\vspace{2mm}
+
+* _\textcolor{red}{Dropout}_ 
+
+\vspace{2mm}
+
+* SGD is also a form of regularization (prevents over-fitting).
+
+---
+
+### Early stopping
+ \tiny
+Based on @goodfellow, Section 7.8
+
+\normalsize
+$~$
+
+* The most commonly used for of regularization is _early stopping_.
+
+\vspace{2mm}
+
+* If we have chosen a sufficiently large model with the capacity to overfit the training data, we would observe that the training error decreases steadily during training, but the error on the validation set at some point begins to increase.
+
+\vspace{2mm}
+
+* The idea: Return the parameters that (earlier) gave the best performance on the validation set, before convergence on the training data. 
+
+
+\vspace{2mm}
+
+* It is possible to think of the number of _training steps_ as a hyperparameter. 
+
+---
+
+### Dropout
+
+\tiny
+Based on @goodfellow, Section 7.12, and @kerasR 4.4.3
+
+\normalsize
+$~$
+
+
+Dropout was developed by Geoff Hinton and his students.
+
+$~$
+
+* During training: randomly _dropout_ (set to zero) some outputs in a given layer at each iteration. Drop-out rates may be chosen between 0.2 and 0.5.
+\vspace{1mm}
+
+* During test: no dropout, but scale down the layer output values by a factor equal to the drop-out rate (since now more units are active than we had during training).
+\vspace{1mm}
+
+* Alternatively, the drop-out and scaling (now upscaling) can be done during training.
+\vspace{1mm}
 
 ---
 
 ## Dropout
 
+![](fig10_19.png)
+\scriptsize
+Fig 10.19, @ISL
+
 ---
 
-## Tuning the network's architechture
+## Ways to avoid overfitting
+
+$~$
+
+Many **hyperparameters** when building and fitting a neural network, like the network architecture, the number of batches to run before terminating the optimization, the drop-out rate, etc.
+
+$~$
+
+To avoid overfit, we have some strategies:
+
+\vspace{2mm}
+
+* Reduce network size.
+\vspace{2mm}
+
+* Collect more observations.
+\vspace{2mm}
+
+* Regularization.
+
+$~$
+
+It is important that the hyperparameters are chosen on a validation set or by cross-validation.
+
+\vspace{2mm}
+
+However, we may run into _validation-set overfitting_: when using the validation set to decide many hyperparameters, so many that you may effectively overfit the validation set.
 
 ---
 
@@ -855,9 +1071,8 @@ $~$
 <!-- The function `nnetHess`can be used to check if a local minimum has been found. -->
 
 * Type `?nnet()` into your R-console to see the arguments of `nnet()`.
-\vspace{2mm}
 
-* If the response in formula is a factor, an appropriate classification network is constructed; this has one output, sigmoid activation and binary entropy loss for a binary response, and a number of outputs equal to the number of classes, softmax activation and categorical cross-entropy loss for more levels.
+\vspace{2mm}
 
 ---
 
@@ -873,13 +1088,13 @@ This data set is both available in the `MASS` and `keras` R package.
 
 $~$
 
-### Preparing the data
+<!-- ### Preparing the data -->
 
-\vspace{2mm}
+<!-- \vspace{2mm} -->
 
-* Only 506, split between 404 training samples and 102 test samples.
+<!-- * Splitting the data into 404 training samples and 102 test samples. -->
 
-* Each feature in the input data (for example, the crime rate) has a different scale, some values are proportions, which take values between 0 and 1; others take values between 1 and 12, others between 0 and 100, and so on.
+<!-- * Standardize the variables: Each feature in the input data (for example, the crime rate) has a different scale, some values are proportions $\in (0,1)$; others take values between 0 and 100, etc. -->
 
 ---
 
@@ -895,7 +1110,7 @@ head(dataset)
 ```
 
 \normalsize
-Split into training and test data
+Preparation: Split into training and test data:
 
 \scriptsize
 
@@ -977,10 +1192,7 @@ $~$
 
 See recommended exercise.
 
-$~$
 
-
-It can serve as an excellent example to illustrate that _simple_ linear regression can do a pretty good job in short time.
 
 ---
 
@@ -1331,7 +1543,49 @@ $~$
 
 ---
 
-# Interpolation and double descent
+# When to use deep learning?
+
+$~$
+
+* We have learned about many new "fancy" and trendy methods. But is it always worth using the most advanced ones?
+
+$~$
+
+* Important: Try the simple methods as well. Sometimes they perform quite well. 
+
+$~$
+
+* Advantage of e.g. simple linear regression? 
+
+---
+
+### Example: The Hitters data set
+
+$~$
+
+* Remember from Chapter 6: Prediction of `Salary` for 263 baseball players.
+
+$~$
+
+We compare
+
+\vspace{2mm}
+
+* Linear model with 20 parameters.
+* Lasso with CV, where 12 variables remain in the model
+* A NN with one hidden layer and 64 units. The model has 1049 parameters.
+
+
+---
+
+![](Table10_2.png)
+$~$
+
+Conclusions?
+
+* ...
+* ...
+* ...
 
 
 ---
