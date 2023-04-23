@@ -105,7 +105,7 @@ $~$
 
 \vspace{2mm} 
 
-* Interpolation and double descent
+* When to use deep learning?
  
 
 
@@ -126,7 +126,7 @@ $~$
 
 * 2000s: After the first hype, NNs were pushed aside by boosting and support vector machines in the 2000s.
 
-* Since 2010: Revival! The emergence of _Deep learning_ as a consequence of improved computer resources, some innovations, and applications to image and video classification, and speech and text processing
+* Since 2010: Revival! The emergence of _Deep learning_ as a consequence of improved computer resources, some innovations, and applications to image and video classification, and speech and text processing.
 
 $~$
 
@@ -221,7 +221,9 @@ _Machine learning isn't mathematics or physics, [...] it's an engineering scienc
 $~$
 
 \begin{quote}
-Deep Learning is an algorithm which has no theoretical limitations of what it can learn; the more data you give and the more computational time you provide, the better it is. Geoffrey Hinton (Google)
+Deep Learning is an algorithm which has no theoretical limitations of what it can learn; the more data you give and the more computational time you provide, the better it is. 
+
+Geoffrey Hinton (Google)
 \end{quote}
 
 
@@ -249,11 +251,11 @@ $~$
 
 \vspace{2mm}
 
-* The [_ImageNet_](http://www.image-net.org/) classification challenge (classify high resolution colour images into 1k different categories after training on 1.4M images) was won by solutions with deep convolutional neural networks (convnets). In 2011 the accuracy was 74.3%, in 2012 83.6% and in 2015 96.4%.
+* The [_ImageNet_](http://www.image-net.org/) classification challenge (classify high resolution colour images into 1k different categories after training on 1.4M images) was won by solutions with deep convolutional neural networks (CNNs). In 2011 the accuracy was 74.3%, in 2012 83.6% and in 2015 96.4%.
 
 \vspace{2mm}
 
-* From 2012, convnets is the general solution for computer vision tasks. Other application areas are natural language processing.
+* Since 2012, CNNs are the general solution for computer vision tasks. Other application area: natural language processing.
 
 ---
 
@@ -528,7 +530,7 @@ $~$
 * _\textcolor{red}{Linear activation}_: for _continuous outcome_ (regression problems) $$f(X)=X \ .$$
 
 
-* _\textcolor{red}{Sigmoid activation}_: for _binary outcome_ (two-class classification problems) $$f(X)=\frac{1}{1+\exp(-X)} = \frac{\exp(X)}{1+\exp(X)} \ .$$
+* _\textcolor{red}{Sigmoid activation}_: for _binary outcome_ (two-class classification problems) $$f(X)=\text{Pr}(Y=1 | X ) = \frac{1}{1+\exp(-X)} = \frac{\exp(X)}{1+\exp(X)} \ .$$
  
 
 * _\textcolor{red}{Softmax}_: for _multinomial/categorical outcome_  (multi-class classification problems) 
@@ -635,17 +637,6 @@ can approximate any (Borel measurable) function from one finite-dimensional spac
 
 ---
 
-**Q:** Why can we not just use linear activation function in all hidden layers?
-
-\pause 
-
-**A:** 
-
-* Then each layer would only be able to do linear transformations of the input data and a deep stack of linear layers would still implement a linear operation. 
-
-* The universial approximation property is dependent on a squashing type activation function.
-
----
 
 ## 3) Network architecture
 
@@ -786,7 +777,7 @@ $~$
     a) Calculate the predictions ${\hat{y}_1({\boldsymbol x}_i)}$.
     b) Calculate the loss function $J({\boldsymbol \theta}^{(t)})$.
     c) Find the gradient (direction) in the $(p+1)$-dimensional space of the weights, and evaluate this at the current weight values $\nabla J({\boldsymbol \theta}^{(t)})={\frac{\partial J}{\partial {\boldsymbol \theta}}}({\boldsymbol \theta}^{(t)})$.
-    d) Go with a given step length (learning rate) $\lambda$ in the direction of the negative of the gradient of the loss function to get 
+    d) Go with a given step length (_\textcolor{red}{learning rate}_) $\lambda$ in the direction of the negative of the gradient of the loss function to get 
 $${\boldsymbol \theta}^{(t+1)}={\boldsymbol \theta}^{(t)} - \lambda \nabla J({\boldsymbol \theta}^{(t)}) \ .$$
     e) Set $t=t+1$.
 \vspace{2mm}
@@ -928,7 +919,7 @@ $~$
 
 \vspace{2mm}
 
-* @goodfellow, Chapter 7, define regularization as _any modification we make to a learning algorithm that is intended to reduce its generalization error but not its training error_.
+* Regularization: _any modification we make to a learning algorithm that is intended to reduce its generalization error but not its training error_ \footnote{Goodfellow et al, Chapter 7}.
 
 \vspace{2mm}
 
@@ -936,7 +927,8 @@ $~$
 
 \vspace{2mm}
 
-* The penalties we looked at were of type absolute value of parameter ($L_1$, lasso, where we looked at this as model selection) and square value of parameter ($L_2$, ridge regression). This can also done for neural networks.
+* Penalties: absolute value of parameter ($L_1$, lasso, where we looked at this as model selection) and square value of parameter ($L_2$, ridge regression).  
+$\rightarrow$ This can also done for neural networks.
 
 
 ---
@@ -976,22 +968,23 @@ $$ \tilde{J}({\boldsymbol w})= \frac{\alpha}{2}{{\boldsymbol w}^\top{\boldsymbol
 Based on @goodfellow, Section 7.8
 
 \normalsize
+
 $~$
 
-* The most commonly used for of regularization is _early stopping_.
+* The most commonly used for of regularization.
 
 \vspace{2mm}
 
-* If we have chosen a sufficiently large model with the capacity to overfit the training data, we would observe that the training error decreases steadily during training, but the error on the validation set at some point begins to increase.
+* For a sufficiently large model with the capacity to over-fit the training data, we observe that the training error decreases steadily during training, but the error on the validation set at some point begins to increase.
 
 \vspace{2mm}
 
 * The idea: Return the parameters that (earlier) gave the best performance on the validation set, before convergence on the training data. 
 
 
-\vspace{2mm}
+<!-- \vspace{2mm} -->
 
-* It is possible to think of the number of _training steps_ as a hyperparameter. 
+<!-- * It is possible to think of the number of _training steps_ as a hyperparameter.  -->
 
 ---
 
@@ -1587,6 +1580,19 @@ Conclusions?
 * ...
 * ...
 
+---
+
+Lots of papers like those, e.g. in medicine:
+
+\centering
+
+![](ML_logreg1.png){width=80%}
+
+$~$
+
+![](ML_logreg2.png){width=100%}
+
+![](ML_logreg3.png){width=100%}
 
 ---
 

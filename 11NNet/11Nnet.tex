@@ -291,7 +291,7 @@ reading material.
 \begin{itemize}
 \tightlist
 \item
-  Interpolation and double descent
+  When to use deep learning?
 \end{itemize}
 \end{block}
 \end{frame}
@@ -315,7 +315,7 @@ reading material.
   Since 2010: Revival! The emergence of \emph{Deep learning} as a
   consequence of improved computer resources, some innovations, and
   applications to image and video classification, and speech and text
-  processing
+  processing.
 \end{itemize}
 
 \(~\)
@@ -452,7 +452,9 @@ an engineering science.}
 \(~\)
 
 \begin{quote}
-Deep Learning is an algorithm which has no theoretical limitations of what it can learn; the more data you give and the more computational time you provide, the better it is. Geoffrey Hinton (Google)
+Deep Learning is an algorithm which has no theoretical limitations of what it can learn; the more data you give and the more computational time you provide, the better it is. 
+
+Geoffrey Hinton (Google)
 \end{quote}
 
 \(~\)
@@ -496,8 +498,8 @@ Deep Learning is an algorithm which has no theoretical limitations of what it ca
   The \href{http://www.image-net.org/}{\emph{ImageNet}} classification
   challenge (classify high resolution colour images into 1k different
   categories after training on 1.4M images) was won by solutions with
-  deep convolutional neural networks (convnets). In 2011 the accuracy
-  was 74.3\%, in 2012 83.6\% and in 2015 96.4\%.
+  deep convolutional neural networks (CNNs). In 2011 the accuracy was
+  74.3\%, in 2012 83.6\% and in 2015 96.4\%.
 \end{itemize}
 
 \vspace{2mm}
@@ -505,8 +507,8 @@ Deep Learning is an algorithm which has no theoretical limitations of what it ca
 \begin{itemize}
 \tightlist
 \item
-  From 2012, convnets is the general solution for computer vision tasks.
-  Other application areas are natural language processing.
+  Since 2012, CNNs are the general solution for computer vision tasks.
+  Other application area: natural language processing.
 \end{itemize}
 \end{frame}
 
@@ -843,7 +845,7 @@ linear regression, logistic regression, multiclass regression)
 \item
   \emph{\textcolor{red}{Sigmoid activation}}: for \emph{binary outcome}
   (two-class classification problems)
-  \[f(X)=\frac{1}{1+\exp(-X)} = \frac{\exp(X)}{1+\exp(X)} \ .\]
+  \[f(X)=\text{Pr}(Y=1 | X ) = \frac{1}{1+\exp(-X)} = \frac{\exp(X)}{1+\exp(X)} \ .\]
 \item
   \emph{\textcolor{red}{Softmax}}: for \emph{multinomial/categorical
   outcome} (multi-class classification problems) \[
@@ -984,25 +986,6 @@ can approximate any (Borel measurable) function from one
 finite-dimensional space (our input layer) to another (our output layer)
 with any desired non-zero amount of error.
 \end{block}
-\end{frame}
-
-\begin{frame}
-\textbf{Q:} Why can we not just use linear activation function in all
-hidden layers?
-
-\pause
-
-\textbf{A:}
-
-\begin{itemize}
-\item
-  Then each layer would only be able to do linear transformations of the
-  input data and a deep stack of linear layers would still implement a
-  linear operation.
-\item
-  The universial approximation property is dependent on a squashing type
-  activation function.
-\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -1220,9 +1203,9 @@ function to be minimized \(J({\boldsymbol \theta})\).
     the weights, and evaluate this at the current weight values
     \(\nabla J({\boldsymbol \theta}^{(t)})={\frac{\partial J}{\partial {\boldsymbol \theta}}}({\boldsymbol \theta}^{(t)})\).
   \item
-    Go with a given step length (learning rate) \(\lambda\) in the
-    direction of the negative of the gradient of the loss function to
-    get
+    Go with a given step length (\emph{\textcolor{red}{learning rate}})
+    \(\lambda\) in the direction of the negative of the gradient of the
+    loss function to get
     \[{\boldsymbol \theta}^{(t+1)}={\boldsymbol \theta}^{(t)} - \lambda \nabla J({\boldsymbol \theta}^{(t)}) \ .\]
   \item
     Set \(t=t+1\). \vspace{2mm}
@@ -1461,10 +1444,9 @@ More background:
 \begin{itemize}
 \tightlist
 \item
-  Goodfellow, Bengio, and Courville (2016), Chapter 7, define
-  regularization as \emph{any modification we make to a learning
-  algorithm that is intended to reduce its generalization error but not
-  its training error}.
+  Regularization: \emph{any modification we make to a learning algorithm
+  that is intended to reduce its generalization error but not its
+  training error} \footnote{Goodfellow, Chapter 7}.
 \end{itemize}
 
 \vspace{2mm}
@@ -1482,10 +1464,10 @@ More background:
 \begin{itemize}
 \tightlist
 \item
-  The penalties we looked at were of type absolute value of parameter
-  (\(L_1\), lasso, where we looked at this as model selection) and
-  square value of parameter (\(L_2\), ridge regression). This can also
-  done for neural networks.
+  Penalties: absolute value of parameter (\(L_1\), lasso, where we
+  looked at this as model selection) and square value of parameter
+  (\(L_2\), ridge regression).\\
+  \(\rightarrow\) This can also done for neural networks.
 \end{itemize}
 \end{block}
 \end{frame}
@@ -1564,7 +1546,7 @@ More background:
 \begin{itemize}
 \tightlist
 \item
-  The most commonly used for of regularization is \emph{early stopping}.
+  The most commonly used for of regularization.
 \end{itemize}
 
 \vspace{2mm}
@@ -1572,10 +1554,10 @@ More background:
 \begin{itemize}
 \tightlist
 \item
-  If we have chosen a sufficiently large model with the capacity to
-  overfit the training data, we would observe that the training error
-  decreases steadily during training, but the error on the validation
-  set at some point begins to increase.
+  For a sufficiently large model with the capacity to over-fit the
+  training data, we observe that the training error decreases steadily
+  during training, but the error on the validation set at some point
+  begins to increase.
 \end{itemize}
 
 \vspace{2mm}
@@ -2469,6 +2451,20 @@ Conclusions?
 \item
   \ldots{}
 \end{itemize}
+\end{frame}
+
+\begin{frame}
+Lots of papers like those, e.g.~in medicine:
+
+\centering
+
+\includegraphics[width=0.8\textwidth,height=\textheight]{ML_logreg1.png}
+
+\(~\)
+
+\includegraphics[width=1\textwidth,height=\textheight]{ML_logreg2.png}
+
+\includegraphics[width=1\textwidth,height=\textheight]{ML_logreg3.png}
 \end{frame}
 
 \begin{frame}{References and further reading}
