@@ -1,33 +1,37 @@
-\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
 \PassOptionsToPackage{hyphens}{url}
-\PassOptionsToPackage{dvipsnames,svgnames*,x11names*}{xcolor}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
 %
-\documentclass[10pt,ignorenonframetext,]{beamer}
+\documentclass[
+  10pt,
+  ignorenonframetext,
+]{beamer}
 \usepackage{pgfpages}
 \setbeamertemplate{caption}[numbered]
 \setbeamertemplate{caption label separator}{: }
 \setbeamercolor{caption name}{fg=normal text.fg}
 \beamertemplatenavigationsymbolsempty
-% Prevent slide breaks in the middle of a paragraph:
+% Prevent slide breaks in the middle of a paragraph
 \widowpenalties 1 10000
 \raggedbottom
 \setbeamertemplate{part page}{
-\centering
-\begin{beamercolorbox}[sep=16pt,center]{part title}
-  \usebeamerfont{part title}\insertpart\par
-\end{beamercolorbox}
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
 }
 \setbeamertemplate{section page}{
-\centering
-\begin{beamercolorbox}[sep=12pt,center]{part title}
-  \usebeamerfont{section title}\insertsection\par
-\end{beamercolorbox}
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
 }
 \setbeamertemplate{subsection page}{
-\centering
-\begin{beamercolorbox}[sep=8pt,center]{part title}
-  \usebeamerfont{subsection title}\insertsubsection\par
-\end{beamercolorbox}
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{part title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
 }
 \AtBeginPart{
   \frame{\partpage}
@@ -41,45 +45,37 @@
 \AtBeginSubsection{
   \frame{\subsectionpage}
 }
+\usepackage{amsmath,amssymb}
 \usepackage{lmodern}
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
-\usepackage{fixltx2e} % provides \textsubscript
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+\usepackage{iftex}
+\ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provides euro and other symbols
-\else % if luatex or xelatex
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
   \usepackage{unicode-math}
-  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
 \usetheme[]{Singapore}
 \usefonttheme{serif}
-% use upquote if available, for straight quotes in verbatim environments
+% Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-% use microtype if available
-\IfFileExists{microtype.sty}{%
-\usepackage[]{microtype}
-\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
 }{}
-\IfFileExists{parskip.sty}{%
-\usepackage{parskip}
-}{% else
-\setlength{\parindent}{0pt}
-\setlength{\parskip}{6pt plus 2pt minus 1pt}
-}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
 \usepackage{xcolor}
-\usepackage{hyperref}
-\hypersetup{
-            pdftitle={Module 12: Summing up and some cautionary notes},
-            pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
-            colorlinks=true,
-            linkcolor=Maroon,
-            filecolor=Maroon,
-            citecolor=Blue,
-            urlcolor=blue,
-            breaklinks=true}
-\urlstyle{same}  % don't use monospace font for urls
 \newif\ifbibliography
 \usepackage{color}
 \usepackage{fancyvrb}
@@ -121,7 +117,7 @@
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
-\usepackage{graphicx,grffile}
+\usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
 \def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
@@ -130,30 +126,64 @@
 % margins by default, and it is still possible to overwrite the defaults
 % using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
-\setlength{\emergencystretch}{3em}  % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{0}
-
-% set default figure placement to htbp
+% Set default figure placement to htbp
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
-
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 \usepackage{multirow}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Module 12: Summing up and some cautionary notes},
+  pdfauthor={Stefanie Muff, Department of Mathematical Sciences, NTNU},
+  colorlinks=true,
+  linkcolor={Maroon},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
 
 \title{Module 12: Summing up and some cautionary notes}
-\providecommand{\subtitle}[1]{}
 \subtitle{TMA4268 Statistical Learning V2022}
 \author{Stefanie Muff, Department of Mathematical Sciences, NTNU}
-\date{April 21, 2022}
+\date{May 04, 2023}
 
 \begin{document}
 \frame{\titlepage}
 
 \begin{frame}{Overview}
 \protect\hypertarget{overview}{}
-
 \(~\)
 
 \begin{itemize}
@@ -164,19 +194,15 @@
 \item
   Some cautionary notes
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 Some of the figures and slides in this presentation are taken (or are
-inspired) from G. James et al. (2013).
-
+inspired) from G. James et al. (2021) .
 \end{frame}
 
 \begin{frame}{Learning outcomes of TMA4268}
 \protect\hypertarget{learning-outcomes-of-tma4268}{}
-
 \begin{enumerate}
 \item
   \textbf{Knowledge.} The student has knowledge about the most popular
@@ -196,19 +222,16 @@ inspired) from G. James et al. (2013).
 
 \textbf{And}: you got to be an expert in using the R language and
 writing R Markdown reports.
-
 \end{frame}
 
 \begin{frame}{The exam}
 \protect\hypertarget{the-exam}{}
-
 \(~\)
 
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Digital home exam} June 3rd, 9-13h, +30' to scan and upload
-  files.
+  \textbf{School exam} June 1st, 15-19h.
 \end{itemize}
 
 \(~\)
@@ -229,35 +252,34 @@ Tentative plan:
 
 \(~\)
 
-Check out the exam from last year (see course website).
+\textbf{Check out the exam from 2022 and additional information on the
+course website:}
 
+\url{https://wiki.math.ntnu.no/tma4268/2023v/subpage16}
 \end{frame}
 
 \begin{frame}{The course book}
 \protect\hypertarget{the-course-book}{}
-
 \(~\)
 
 Attention:
 
 \begin{itemize}
 \item
-  We are mainly working with the \emph{first edition}:
+  We have now worked with the \emph{second edition} this year:
   \url{https://www.statlearning.com/}
 \item
-  The \emph{second edition} came out very recently. Chapter 10 is
-  relevant for our Module 11 (Neural networks and deep learning):
+  This edition included a new chapter on Deep Learning, which we
+  discussed in module 11.
 \end{itemize}
 
 \centering
 
 \includegraphics[width=0.5\textwidth,height=\textheight]{deep_learning.png}
-
 \end{frame}
 
 \begin{frame}{Core of the course}
 \protect\hypertarget{core-of-the-course}{}
-
 Supervised and unsupervised learning:
 
 \begin{itemize}
@@ -297,23 +319,19 @@ Supervised and unsupervised learning:
 
 and of course all \textbf{the methods} (with underlying models) to
 perform regression, classification and unsupervised learning.
-
 \end{frame}
 
 \begin{frame}
-
 \centering
 
 \includegraphics{../../ISLR/Figures/Chapter2/2.7.png} Figure 2.7 from
 Gareth James et al. (2013)
-
 \end{frame}
 
 \begin{frame}{The modules}
 \protect\hypertarget{the-modules}{}
-
 \begin{block}{1. Introduction}
-
+\protect\hypertarget{introduction}{}
 \(~\)
 
 \begin{itemize}
@@ -323,15 +341,12 @@ Gareth James et al. (2013)
 \item
   Introduction to R and RStudio via the online R-course
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{2. Statistical learning}
-
+\protect\hypertarget{statistical-learning}{}
 \(~\)
 
 \begin{itemize}
@@ -363,15 +378,12 @@ Gareth James et al. (2013)
   Vectors and matrices, rules for mean and covariances, the multivariate
   normal distribution.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{3. Linear regression}
-
+\protect\hypertarget{linear-regression}{}
 \(~\)
 
 \begin{itemize}
@@ -389,15 +401,12 @@ Gareth James et al. (2013)
   This module is a stepping stone for all subsequent uses of regression
   in Modules 6, 7, 8, and 11.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{4. Classification (Mainly two-class problems)}
-
+\protect\hypertarget{classification-mainly-two-class-problems}{}
 \(~\)
 
 \begin{itemize}
@@ -439,36 +448,27 @@ Gareth James et al. (2013)
   ROC curves, AUC, sensitivity and specificity of classification
   methods.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \includegraphics{12Final_files/figure-beamer/unnamed-chunk-1-1.pdf}
-
 \end{frame}
 
 \begin{frame}
-
 Logistic regression gives a probability, given a certain value of the
 covariats \(P(Y=1 \, | \, \boldsymbol{x})\).
 
 \includegraphics[width=0.9\textwidth,height=\textheight]{beetles.png}
-
 \end{frame}
 
 \begin{frame}
-
 \includegraphics{12Final_files/figure-beamer/unnamed-chunk-3-1.pdf}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{5. Resampling methods}
-
+\protect\hypertarget{resampling-methods}{}
 \(~\)
 
 \textbf{Cross-validation}
@@ -506,15 +506,12 @@ covariats \(P(Y=1 \, | \, \boldsymbol{x})\).
   Idea: Re-use the same data to estimate a statistic of interest by
   \emph{sampling with replacement}.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{6. Linear model selection and regularization:}
-
+\protect\hypertarget{linear-model-selection-and-regularization}{}
 \(~\)
 
 Subset-selection. Discriminate: \vspace{2mm}
@@ -564,15 +561,12 @@ How?
     Cross-validation.
   \end{itemize}
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Model selection}
-
+\protect\hypertarget{model-selection}{}
 \(~\)
 
 \begin{itemize}
@@ -609,33 +603,24 @@ How?
 \item
   High dimensionality issues: multicollinearity, interpretation.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \includegraphics{../../ISLR/Figures/Chapter6/6.7.png}
-
 \end{frame}
 
 \begin{frame}
-
 \includegraphics{../../ISLR/Figures/Chapter6/6.4.png}
-
 \end{frame}
 
 \begin{frame}
-
 \includegraphics{../../ISLR/Figures/Chapter6/6.6.png}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{7. Moving beyond linearity}
-
+\protect\hypertarget{moving-beyond-linearity}{}
 \(~\)
 
 \begin{itemize}
@@ -655,13 +640,10 @@ How?
   Regression splines: regional polynomials joined smoothly - neat use of
   basis functions. Cubic splines very popular.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{itemize}
 \item
   Smoothing splines: smooth functions - minimizing the RSS with an
@@ -676,19 +658,15 @@ How?
   (Generalized) additive models (GAMs): combine the above. Sum of
   (possibly) non-linear instead of linear functions.
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \includegraphics{../../ISLR/Figures/Chapter7/7.3.png}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{8. Tree-based methods}
-
+\protect\hypertarget{tree-based-methods}{}
 \(~\)
 
 \begin{itemize}
@@ -720,13 +698,10 @@ How?
     Classification: Majority vote or cut-off on probabiity.
   \end{itemize}
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{itemize}
 \tightlist
 \item
@@ -754,13 +729,11 @@ To improve prediction (but worse interpretation):
   \emph{Boosting}: fit one tree with \(d\) splits, make residuals and
   fit a new tree, adjust residuals partly with new tree - repeat.
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{9. Support vector machines}
-
+\protect\hypertarget{support-vector-machines}{}
 \(~\)
 
 \begin{itemize}
@@ -782,13 +755,10 @@ To improve prediction (but worse interpretation):
 \end{itemize}
 
 \vspace{2mm}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{itemize}
 \item
   Maximizing the distance (on both sides) from the class boundary to the
@@ -809,12 +779,10 @@ To improve prediction (but worse interpretation):
 
 \centering
 
-\includegraphics[width=0.8\textwidth,height=\textheight]{../../casi/19.3.png}
-
+\includegraphics[width=0.8\textwidth,height=\textheight]{../../casi/193.png}
 \end{frame}
 
 \begin{frame}
-
 \begin{itemize}
 \item
   Kernels: generalization of an inner product to allow for non-linear
@@ -842,13 +810,11 @@ To improve prediction (but worse interpretation):
 \item
   \emph{\textcolor{red}{SVMs have been overtaken largely by neural networks and tree-based methods.}}
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{10. Unsupervised learning}
-
+\protect\hypertarget{unsupervised-learning}{}
 \(~\)
 
 \begin{itemize}
@@ -885,41 +851,45 @@ To improve prediction (but worse interpretation):
     linkage method (single, average, complete),
   \end{itemize}
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \centering
 
 \includegraphics[width=0.7\linewidth]{12Final_files/figure-beamer/unnamed-chunk-4-1}
-
 \end{frame}
 
 \begin{frame}
-
 Hierarchical clustering for visualization
 
 \centering
 
 \includegraphics[width=0.7\textwidth,height=\textheight]{../1Intro/heatmap.png}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{11. Neural networks}
-
+\protect\hypertarget{neural-networks}{}
 \(~\)
 
 \begin{itemize}
+\tightlist
 \item
   Feedforward network architecture: mathematical formula - layers of
   multivariate transformed (\texttt{relu}, \texttt{linear},
   \texttt{sigmoid}) inner products - sequentially connected.
   \vspace{2mm}
+\end{itemize}
+
+\centering
+
+\includegraphics[width=0.7\textwidth,height=\textheight]{../11Nnet/fig10_4.png}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]
+\begin{itemize}
 \item
   Loss function to minimize (on output layer): regression (mean
   squared), classification binary (binary crossentropy), classification
@@ -929,35 +899,31 @@ Hierarchical clustering for visualization
   squared loss goes with linear activation, binary crossentropy with
   sigmoid, categorical crossentropy with softmax. \vspace{2mm}
 \item
-  Gradient based (chain rule) back-propagation - many variants.
-  \vspace{2mm}
+  Gradient based (chain rule) back-propagation. \vspace{2mm}
 \item
-  The phenomenon of \emph{double descent}. \vspace{2mm}
+  Over-fitting \(\rightarrow\) Regularization. \vspace{2mm}
+\item
+  Convolutional neural networks (CNNs), recursive neural networks (RNNs)
+  and transformers (Daesoo's lecture). \vspace{2mm}
 \item
   \texttt{keras} in R. Use of tensors: Piping sequential layers, piping
   to estimation and then to evaluation (metrics).
 \end{itemize}
-
-\end{block}
-
 \end{frame}
 
 \begin{frame}{Mentimeter poll}
 \protect\hypertarget{mentimeter-poll}{}
-
 \(~\)
 
 \centering
 
 www.menti.com
 
-Code 6547 7433
-
+Code 16 18 55 1
 \end{frame}
 
 \begin{frame}{Some cautionary words}
 \protect\hypertarget{some-cautionary-words}{}
-
 \(~\)
 
 \begin{itemize}
@@ -986,11 +952,9 @@ It is important to make the following distinction:
   regressors. In this case, the ultimate aim is to find \emph{causal
   relationships}.
 \end{itemize}
-
 \end{frame}
 
 \begin{frame}
-
 \(\rightarrow\) Even among statisticians there is no real consensus
 about how, if, or when to select a model:
 
@@ -1000,14 +964,12 @@ about how, if, or when to select a model:
 \includegraphics[width=0.9\textwidth,height=\textheight]{graphics/brewer.png}
 
 Note: The first sentence of a paper in \emph{Methods in Ecology and
-Evolution} from 2016 is: ``Model selection is difficult.''
-
+Evolution} from 2016 is: ``Model selection is difficult.'\,'
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Why is finding a model so hard?}
-
+\protect\hypertarget{why-is-finding-a-model-so-hard}{}
 \(~\)
 
 A model is an approximation of the reality. The aim of statistics and
@@ -1028,15 +990,12 @@ but there are more and less useful ones.
 
 \(\rightarrow\) Finding a model or the appropriate method with good
 properties is sometimes an art\ldots{}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Predictive and explanatory models}
-
+\protect\hypertarget{predictive-and-explanatory-models}{}
 \(~\)
 
 When choosing a method or a model, you need to be clear about the scope:
@@ -1069,22 +1028,19 @@ When choosing a method or a model, you need to be clear about the scope:
 
 \(\rightarrow\) \textbf{The model selection strategy depends on this
 distinction.}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Prediction vs explanation}
-
+\protect\hypertarget{prediction-vs-explanation}{}
 \(~\)
 
 When the aim is \textbf{\emph{prediction}}, the best model is the one
 that best predicts the fate of a future subject (smallest test error
-rate). This is a well defined task and ``objective'' variable selection
-strategies to find the model which is best in this sense are potentially
-useful.
+rate). This is a well defined task and ``objective'\,' variable
+selection strategies to find the model which is best in this sense are
+potentially useful.
 
 \(~\)
 
@@ -1097,16 +1053,13 @@ variable selection strategies have no place}.
 \scriptsize
 
 Chapters 27.1 and 27.2 in Clayton and Hills (1993)
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Model selection with AIC, AIC\(_c\), BIC, \(C_p\),
 adjusted \(R^2\)}
-
+\protect\hypertarget{model-selection-with-aic-aic_c-bic-c_p-adjusted-r2}{}
 \(~\)
 
 Given \(m\) potential variables to be included in a model. Remember from
@@ -1124,8 +1077,8 @@ Module 6: \vspace{2mm}
 
 \textbf{Cautionary Note}:
 
-The coefficients of such an optimized ``best'' model should \emph{not be
-interpreted} in a causal sense! Why?
+The coefficients of such an optimized ``best'\,' model should \emph{not
+be interpreted} in a causal sense! Why?
 
 \(~\)
 
@@ -1140,15 +1093,12 @@ interpreted} in a causal sense! Why?
 
 \vspace{2mm}
 \normalsize
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{block}{Illustration: Model selection bias}
-
+\protect\hypertarget{illustration-model-selection-bias}{}
 \(~\)
 
 \textbf{Aim of the example:} To illustrate how model selection purely
@@ -1169,9 +1119,9 @@ based on AIC can lead to biased parameters and overestimated effects.
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{set.seed}\NormalTok{(}\DecValTok{123456}\NormalTok{)}
-\NormalTok{data_aic <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\KeywordTok{matrix}\NormalTok{(}\KeywordTok{rnorm}\NormalTok{(}\DecValTok{51} \OperatorTok{*}\StringTok{ }\DecValTok{100}\NormalTok{), }\DataTypeTok{ncol =} \DecValTok{51}\NormalTok{))}
-\KeywordTok{names}\NormalTok{(data_aic)[}\DecValTok{51}\NormalTok{] <-}\StringTok{ "Y"}
+\FunctionTok{set.seed}\NormalTok{(}\DecValTok{123456}\NormalTok{)}
+\NormalTok{data\_aic }\OtherTok{\textless{}{-}} \FunctionTok{data.frame}\NormalTok{(}\FunctionTok{matrix}\NormalTok{(}\FunctionTok{rnorm}\NormalTok{(}\DecValTok{51} \SpecialCharTok{*} \DecValTok{100}\NormalTok{), }\AttributeTok{ncol =} \DecValTok{51}\NormalTok{))}
+\FunctionTok{names}\NormalTok{(data\_aic)[}\DecValTok{51}\NormalTok{] }\OtherTok{\textless{}{-}} \StringTok{"Y"}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1182,13 +1132,10 @@ based on AIC can lead to biased parameters and overestimated effects.
 \texttt{data} is a 100\(\times\) 51 matrix, where the last column is the
 response. The \textbf{data were generated completely independently}, the
 covariates do not have any explanatory power for the response!
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{enumerate}
 \setcounter{enumi}{1}
 \tightlist
@@ -1203,7 +1150,7 @@ covariates do not have any explanatory power for the response!
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{r.lm.aic <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(Y }\OperatorTok{~}\StringTok{ }\NormalTok{., data_aic)}
+\NormalTok{r.lm.aic }\OtherTok{\textless{}{-}} \FunctionTok{lm}\NormalTok{(Y }\SpecialCharTok{\textasciitilde{}}\NormalTok{ ., data\_aic)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1213,21 +1160,20 @@ As expected, the distribution of the \(p\)-values is (more or less)
 uniform between 0 and 1, with none below 0.05:
 
 \scriptsize
-\center
+
+\centering
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{hist}\NormalTok{(}\KeywordTok{summary}\NormalTok{(r.lm.aic)}\OperatorTok{$}\NormalTok{coef[}\OperatorTok{-}\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{], }\DataTypeTok{freq =}\NormalTok{ T, }\DataTypeTok{main =} \StringTok{"50 variables"}\NormalTok{, }
-    \DataTypeTok{xlab =} \StringTok{"p-values"}\NormalTok{)}
+\FunctionTok{hist}\NormalTok{(}\FunctionTok{summary}\NormalTok{(r.lm.aic)}\SpecialCharTok{$}\NormalTok{coef[}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{], }\AttributeTok{freq =}\NormalTok{ T, }\AttributeTok{main =} \StringTok{"50 variables"}\NormalTok{,}
+    \AttributeTok{xlab =} \StringTok{"p{-}values"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics[width=4cm]{12Final_files/figure-beamer/unnamed-chunk-7-1}
-
 \end{frame}
 
 \begin{frame}[fragile]
-
 \begin{enumerate}
 \setcounter{enumi}{2}
 \tightlist
@@ -1241,8 +1187,8 @@ uniform between 0 and 1, with none below 0.05:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{library}\NormalTok{(MASS)}
-\NormalTok{r.AICmin <-}\StringTok{ }\KeywordTok{stepAIC}\NormalTok{(r.lm.aic, }\DataTypeTok{direction =} \KeywordTok{c}\NormalTok{(}\StringTok{"both"}\NormalTok{), }\DataTypeTok{trace =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{AICc =} \OtherTok{TRUE}\NormalTok{)}
+\FunctionTok{library}\NormalTok{(MASS)}
+\NormalTok{r.AICmin }\OtherTok{\textless{}{-}} \FunctionTok{stepAIC}\NormalTok{(r.lm.aic, }\AttributeTok{direction =} \FunctionTok{c}\NormalTok{(}\StringTok{"both"}\NormalTok{), }\AttributeTok{trace =} \ConstantTok{FALSE}\NormalTok{, }\AttributeTok{AICc =} \ConstantTok{TRUE}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1250,8 +1196,8 @@ uniform between 0 and 1, with none below 0.05:
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\KeywordTok{hist}\NormalTok{(}\KeywordTok{summary}\NormalTok{(r.AICmin)}\OperatorTok{$}\NormalTok{coef[}\OperatorTok{-}\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{], }\DataTypeTok{freq =}\NormalTok{ T, }\DataTypeTok{main =} \StringTok{"18 variables of minimal AICc model"}\NormalTok{, }
-    \DataTypeTok{xlab =} \StringTok{"p-values"}\NormalTok{)}
+\FunctionTok{hist}\NormalTok{(}\FunctionTok{summary}\NormalTok{(r.AICmin)}\SpecialCharTok{$}\NormalTok{coef[}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{4}\NormalTok{], }\AttributeTok{freq =}\NormalTok{ T, }\AttributeTok{main =} \StringTok{"18 variables of minimal AICc model"}\NormalTok{,}
+    \AttributeTok{xlab =} \StringTok{"p{-}values"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1263,13 +1209,11 @@ uniform between 0 and 1, with none below 0.05:
 The distribution of the \(p\)-values is now skewed: many of them reach
 rather small values (7 have \(p<0.05\)). This happened \emph{although
 none of the variables has any explanatory power!}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Summary: Main problem with model selection}
-
+\protect\hypertarget{summary-main-problem-with-model-selection}{}
 \(~\)
 
 \colorbox{lightgray}{\begin{minipage}{10cm}
@@ -1281,25 +1225,20 @@ When model selection is carried out based on objective criteria, the effect size
 \(~\)
 
 \textbf{Exception}: Shrinkage methods!
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 Which methods are suitable for explanation (inference)? \vspace{-2mm}
 
 \centering
 
 \includegraphics{../../ISLR/Figures/Chapter2/2.7.png}
-
 \end{frame}
 
 \begin{frame}
-
 \begin{block}{Bottomline}
-
+\protect\hypertarget{bottomline}{}
 \(~\)
 
 \begin{itemize}
@@ -1328,46 +1267,43 @@ Which methods are suitable for explanation (inference)? \vspace{-2mm}
   the approach how to build the model (e.g., how to select variables)
   should still depend on the aim.
 \end{itemize}
-
 \end{block}
-
 \end{frame}
 
 \begin{frame}
-
 \(~\)
 
 Thank you for attending this course - good luck for the exam!
-
 \end{frame}
 
 \begin{frame}{References}
 \protect\hypertarget{references}{}
-
 \hypertarget{refs}{}
-\leavevmode\hypertarget{ref-clayton.hills1993}{}%
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-clayton.hills1993}{}}%
 Clayton, D., and M. Hills. 1993. \emph{Statistical Models in
 Epidemiology}. Oxford: Oxford University Press.
 
-\leavevmode\hypertarget{ref-copas1983}{}%
-Copas, J. B. 1983. ``Regression, Prediction and Shrinkage.''
+\leavevmode\vadjust pre{\hypertarget{ref-copas1983}{}}%
+Copas, J. B. 1983. {``Regression, Prediction and Shrinkage.''}
 \emph{Journal of the Royal Statistical Society. Series B (Statistical
 Methodology)} 45: 311--54.
 
-\leavevmode\hypertarget{ref-freedman1983}{}%
-Freedman, D. A. 1983. ``A Note on Screening Regression Equations.''
+\leavevmode\vadjust pre{\hypertarget{ref-freedman1983}{}}%
+Freedman, D. A. 1983. {``A Note on Screening Regression Equations.''}
 \emph{The American Statistician} 37: 152--55.
 
-\leavevmode\hypertarget{ref-ISL}{}%
+\leavevmode\vadjust pre{\hypertarget{ref-ISL}{}}%
 James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani.
 2013. \emph{An Introduction to Statistical Learning}. Vol. 112.
 Springer.
 
-\leavevmode\hypertarget{ref-james.etal}{}%
-James, G., D. Witten, T. Hastie, and R. Tibshirani. 2013. \emph{An
-Introduction to Statistical Learning with Applications in R}. New York:
-Springer.
+\leavevmode\vadjust pre{\hypertarget{ref-james.etal2}{}}%
+James, G., D. Witten, T. Hastie, and R. Tibshirani. 2021. \emph{An
+Introduction to Statistical Learning with Applications in r}. 2nd ed.
+New York: Springer.
 
+\end{CSLReferences}
 \end{frame}
 
 \end{document}

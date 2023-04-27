@@ -5,12 +5,12 @@ author: "Stefanie Muff, Department of Mathematical Sciences, NTNU"
 date: "May 04, 2023"
 fontsize: 10pt
 output:
-  beamer_presentation:
-    keep_tex: yes
-    fig_caption: false
-    theme: "Singapore"
-    colortheme: "default"
-    font: "serif"
+  # beamer_presentation:
+  #   keep_tex: yes
+  #   fig_caption: false
+  #   theme: "Singapore"
+  #   colortheme: "default"
+  #   font: "serif"
   html_document:
     toc: true
     toc_float: true
@@ -606,12 +606,18 @@ Hierarchical clustering for visualization
 
 ---
 
-## 11. Neural networks (todo: adapt this slide with new content)
+## 11. Neural networks
  
  $~$
 
 * Feedforward network architecture: mathematical formula - layers of multivariate transformed (`relu`, `linear`, `sigmoid`) inner products - sequentially connected. 
  \vspace{2mm}
+ 
+ 
+\centering
+![](../11Nnet/fig10_4.png){width=70%} 
+ 
+--- 
  
 * Loss function to minimize (on output layer): regression (mean squared), classification binary (binary crossentropy), classification multiple classes (categorical crossentropy).
 \vspace{2mm}
@@ -619,10 +625,13 @@ Hierarchical clustering for visualization
 * Remember the correct choice of output activiation function: mean squared loss goes with linear activation, binary crossentropy with sigmoid, categorical crossentropy with softmax.
 \vspace{2mm}
 
-* Gradient based (chain rule) back-propagation - many variants.
+* Gradient based (chain rule) back-propagation.
 \vspace{2mm}
 
-* The phenomenon of _double descent_.
+* Over-fitting $\rightarrow$ Regularization.
+\vspace{2mm}
+
+* Convolutional neural networks (CNNs), recursive neural networks (RNNs) and transformers (Daesoo's lecture).
 \vspace{2mm}
 
 * `keras` in R. Use of tensors: Piping sequential layers, piping to estimation and then to evaluation (metrics).
@@ -637,7 +646,7 @@ $~$
 
 www.menti.com
 
-Code 6547 7433
+Code 16 18 55 1
 
 
 ---
@@ -887,7 +896,9 @@ r.lm.aic <- lm(Y~.,data_aic)
 As expected, the distribution of the $p$-values is (more or less) uniform between 0 and 1, with none below 0.05: 
 
 \scriptsize
-\center
+
+\centering
+
 ```{r, fig.width=4, fig.height=4.5,out.width="4cm"}
 hist(summary(r.lm.aic)$coef[-1,4],freq=T,main="50 variables",xlab="p-values")
 ```
