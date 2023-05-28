@@ -415,10 +415,10 @@ test <- read.delim("dataset/Wafer/Wafer_TEST.tsv", header = FALSE, sep = "\t")
 # the first column in `train` and `test` contains label info.
 # therefore we separate them into `x` and `y`.
 x_train <- train[,2:dim(train)[2]]
-y_train <- clip(train[,1], 0, 1) #- 1
+y_train <- pmax(train[,1], 0)  #clip(train[,1], 0, 1) #- 1
 y_train <- to_categorical(y_train)
 x_test <- test[,2:dim(test)[2]]
-y_test <- clip(test[,1], 0, 1) #- 1
+y_test <- pmax(test[,1], 0)  #clip(test[,1], 0, 1) #- 1
 y_test <- to_categorical(y_test)
 
 # create a channel dimension so that `x` has dimension of (batch, channel, length)
@@ -492,9 +492,9 @@ plot(history)
 ```{r}
 # dataset
 x_train <- train[,2:dim(train)[2]]
-y_train <- clip(train[,1], 0, 1)
+y_train <- pmax(train[,1], 0)   #clip(train[,1], 0, 1)
 x_test <- test[,2:dim(test)[2]]
-y_test <- clip(test[,1], 0, 1)
+y_test <- pmax(test[,1], 0)  #clip(test[,1], 0, 1)
 
 # Fit a linear regression model
 #linear_model <- lm(y_train ~ ., data = as.data.frame(cbind(x_train, y_train)))
