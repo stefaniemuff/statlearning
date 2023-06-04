@@ -252,9 +252,9 @@ Alternatively, with `lambda.1se`:
 
 ```{r, echo=T}
 cv.lasso$lambda.1se
-bw.lasso <- glmnet(x.train, y.train, alpha = 1, lambda = cv.lasso$lambda.1se)
+bw.lasso.1se <- glmnet(x.train, y.train, alpha = 1, lambda = cv.lasso$lambda.1se)
 
-coef(bw.lasso)
+coef(bw.lasso.1se)
 ```
 
 (ii) There are two patterns to notice: The coefficients are shrunken (0.5P) and some are zero (0.5P). For ridge we would also have expected to see shrinkage (0.5P), but none of the coefficients had gone to zero (0.5P).
@@ -278,10 +278,14 @@ mse.b <- mean((r.pred.lm2-d.bw.test$bwt)^2)
 r.lasso <- predict(bw.lasso,newx =x.test)
 mse.c <- mean((r.lasso-d.bw.test$bwt)^2)
 
-c(mse.a,mse.b,mse.c)
+# Also for the case where the larger lambda is used in d):
+r.lasso.1se <- predict(bw.lasso.1se,newx =x.test)
+mse.c.1se <- mean((r.lasso.1se-d.bw.test$bwt)^2)
+
+c(mse.a,mse.b,mse.c,mse.c.1se)
 ```
 
-Lasso performs best.
+Lasso performs best if lambda.min was used, otherwise standard regression performs best.
 
 
 ## e) (4P)
