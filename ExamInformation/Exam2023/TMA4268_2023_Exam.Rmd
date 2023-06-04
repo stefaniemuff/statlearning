@@ -37,12 +37,14 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.wh
 ```
 
 
+Maximum number of points: 55.5
+
 ###################################
 # Warming up
 ###################################
 
 
-# Problem 1 (Fill-in-the-blank text, 5P)
+# Problem 1 (Fill-in-the-blank text, 4.5P)
 
 Read the whole text and fill in the blanks such that the whole text makes sense (you might only understand which answer is correct after you continued reading):
 
@@ -50,7 +52,11 @@ We have discussed a lot of methods and models in our course, and the methods are
 
 In supervised statistical learning methods there are two main purposes: _\textcolor{red}{prediction}_ ( _inference_, _bias reduction_, _variance reduction_, _supervised learning_, _unsupervised learning_) and _\textcolor{red}{inference}_ ( _prediction_, _bias reduction_, _variance reduction_, _unsupervised learning_, _supervised learning_). In both cases we want to learn from data and build a model that relates a set of variables to an outcome, but in the first case we do not interpret the actual model parameters. Some of the methods we learned about were _\textcolor{red}{parametric}_ ( _non-parameteric_, _supervised_, _unsupervised_) and others were _\textcolor{red}{non-parametric}_ ( _parameteric_, _supervised_, _unsupervised_), whereas the latter tend to be more more flexible -- and thus possibly less biased -- than the former ones, but at the cost of _\textcolor{red}{higher variance}_ (_curse of dimensionality_, _higher test MSE_ , _lower accuracy_). This phenomenon is denoted as _\textcolor{red}{bias-variance trade-off}_ (_overfitting_, _underfitting_, _bias_, _variance_, _model selection bias_, _regularization_). 
 
-In the course we learned about models with different levels of complexity. For complex models, or in the presence of many variables, we have to be careful that we do not over-fit the data. We learned about several techniques that help prevent over-fitting via _\textcolor{red}{regularization}_ (_model selection_, _scaling_, _transformation of variables_, _bias-variance trade-off_), for example shrinkage methods, dimension reduction or dropout in neural networks. These approaches increase the robustness of the fitted models, where the main aim is to find the function that minimizes the expected test error, that is, the _\textcolor{red}{irreducible error}_ (_reducible error_, _bias_, _variance_, _signal-to-noise ratio_).
+In the course we learned about models with different levels of complexity. For complex models, or in the presence of many variables, we have to be careful that we do not over-fit the data. We learned about several techniques that help prevent over-fitting via _\textcolor{red}{regularization}_ (_model selection_, _scaling_, _transformation of variables_, _bias-variance trade-off_), for example shrinkage methods, dimension reduction or dropout in neural networks. 
+
+**Note**: The last sentence was taken out of the grading, because none of the answers are correct:
+
+These approaches increase the robustness of the fitted models, where the main aim is to find the function that minimizes the expected test error, that is, the _\textcolor{red}{irreducible error}_ (_reducible error_, _bias_, _variance_, _signal-to-noise ratio_).
 
 
 
@@ -110,8 +116,8 @@ Given that $\pi_0=\pi_1=0.5$, and the knowledge about the class-specific distrib
 
 **Solution**:
 
-(i) The Bayes decision boundary will classify each observation to _the most probable class_ (the class with the highest posterior
-probability) and thus gives _the minimum expected 0/1 loss_ (1P for the full argument). The actual boundary can only be derived in situations where we know the true underlying distributions and thus the posterior probability, which we usually don’t know - except for situations when we have simulated data ourselves.
+(i) Say either: The Bayes decision boundary is where the probabilities for the two classes are equal (0.5P for this), or: observations are classified to _the most probable class_ (the class with the highest posterior
+probability; 0.5P for this alternative argument). Using this boundary thus gives _the minimum expected 0/1 loss_ (0.5P for the last part, max 1P in total). 
 
 (ii) Here we need to find the equation where
 
@@ -238,6 +244,15 @@ cv.lasso <- cv.glmnet(x.train, y.train, alpha=1)
 plot(cv.lasso)
 cv.lasso$lambda.min
 bw.lasso <- glmnet(x.train, y.train, alpha = 1, lambda = cv.lasso$lambda.min)
+
+coef(bw.lasso)
+```
+
+Alternatively, with `lambda.1se`: 
+
+```{r, echo=T}
+cv.lasso$lambda.1se
+bw.lasso <- glmnet(x.train, y.train, alpha = 1, lambda = cv.lasso$lambda.1se)
 
 coef(bw.lasso)
 ```
@@ -547,7 +562,7 @@ Which statement is true?
 (iv) There is not enough information to tell which fusion is higher.
 
 
-**Solution**: (ii)
+**Solution**: (iv)
 
 
 
@@ -622,7 +637,7 @@ Choose all the statements that are true:
 **Solution**
 
 (i) False
-(ii) True
+(ii) True/False (both correct due to ambiguity)
 (iii) False: The penalty term is $\int g^{\prime \prime}(t)^2 dt$. 
 (iv) True: because the local regression is based on k-nearest neighbor algorithm.
 
