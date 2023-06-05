@@ -209,7 +209,7 @@ summary(r.lm2)
 
 Interpretation: Yes, the effect of smoking changes with age. Older women have an even higher risk of low birth weight when they smoke than younger women. The $R^2=0.30$ has clearly improved, underlining that the interaction term is relevant. 
 
-(ii) The overall effect of age is given by $\beta_{age} + \beta_{age:smoking}$, thus we have to multiply the interaction coefficient by 10 to obtain the expected reduction in birth weight: `r round((coef(r.lm2)[2] + coef(r.lm2)[11])*10,1)`. Here there is an all-or-nothing grading (1P for correct value, 0P otherwise).
+(ii) The overall effect of age is given by $\beta_{age} + \beta_{age:smoking}$, thus we have to multiply this term by 10 to obtain the expected reduction in birth weight: `r round((coef(r.lm2)[2] + coef(r.lm2)[11])*10,1)`. Here there is an all-or-nothing grading (1P for correct value, 0P otherwise).
 
 ##  c) (3P)
 
@@ -236,7 +236,7 @@ bw.lasso <- glmnet(..., ..., alpha = ..., lambda = ...)
 
 **Solution**
 
-(i)
+(i) 
 ```{r,echo=T}
 library(glmnet)
 set.seed(10)
@@ -256,6 +256,8 @@ bw.lasso.1se <- glmnet(x.train, y.train, alpha = 1, lambda = cv.lasso$lambda.1se
 
 coef(bw.lasso.1se)
 ```
+
+$\lambda$ is chosen using cross-validation (0.5P).
 
 (ii) There are two patterns to notice: The coefficients are shrunken (0.5P) and some are zero (0.5P). For ridge we would also have expected to see shrinkage (0.5P), but none of the coefficients had gone to zero (0.5P).
 
@@ -301,7 +303,10 @@ library(randomForest)
 
 **Solution: **
 
-Here there is a lot of freedom. The students will probably use a GAM or a regression tree.
+Here there is a lot of freedom. The students will probably use a GAM or a regression tree. 
+
+In a regression tree, the students must explain the choice for the number of trees and mtry (if either is lacking, -1P for each). It's not enough to say "I choose the default no of trees from the lecture/function" or "I chose ntree=500", for example -- ntrees should be chosen _large enough_ (i.e., it is no tuning parameter), and that should be made clear. Note that ntrees is not a tuning parameter, so the students should not optimize it. 
+If students choose a GAM, they also need to explain each term and the choices they made.
 
 Here is one solution: The idea is to use only variables that are left from the Lasso and then apply a cubic spline on the only continuous variable `lwt`:
 
