@@ -192,7 +192,7 @@ anova(r.lm1)
 ```
 The p-value is small (<0.05), thus yes, there is evidence.
 
-(iv) The two values should be reported here: $R^2=0.267$ and $R^2_{adj}=0.216$. The difference in the two $R^2$ values indicates that there are some unneccesary variables in the model.
+(iv) The two values should be reported here: $R^2=0.267$ and $R^2_{adj}=0.216$. The difference in the two $R^2$ values indicates that there are some unneccesary variables in the model. Note: Students don't need to interpret the $R^2$ itself, only the differnces. 
 
 ##  b) (3P)
 
@@ -203,11 +203,11 @@ The p-value is small (<0.05), thus yes, there is evidence.
 
 (i) The model and its output are as follows (1P for the correct model, no point if the interaction is lacking and -0.5P for other mistakes):
 ```{r}
-r.lm2 <- lm(bwt ~ age + lwt + race + smoke*age + ptl + ht + ui + ftv, d.bw.train)
+r.lm2 <- lm(bwt ~ age + lwt + race  + ptl + ht + ui + ftv + smoke*age, d.bw.train)
 summary(r.lm2)
 ```
 
-Interpretation: Yes, the effect of smoking changes with age. Older women have an even higher risk of low birth weight when they smoke than younger women. The $R^2=0.30$ has clearly improved, underlining that the interaction term is relevant. 
+Interpretation: Yes, the effect of smoking changes with age (0.5P). Older women have an even higher risk of low birth weight when they smoke than younger women. The $R^2=0.30$ has clearly improved, underlining that the interaction term is relevant (0.5P). 
 
 (ii) The overall effect of age is given by $\beta_{age} + \beta_{age:smoking}$, thus we have to multiply this term by 10 to obtain the expected reduction in birth weight: `r round((coef(r.lm2)[2] + coef(r.lm2)[11])*10,1)`. Here there is an all-or-nothing grading (1P for correct value, 0P otherwise).
 
@@ -259,7 +259,7 @@ coef(bw.lasso.1se)
 
 $\lambda$ is chosen using cross-validation (0.5P).
 
-(ii) There are two patterns to notice: The coefficients are shrunken (0.5P) and some are zero (0.5P). For ridge we would also have expected to see shrinkage (0.5P), but none of the coefficients had gone to zero (0.5P).
+(ii) There are two patterns to notice: The coefficients are shrunken (0.5P) and some are zero (0.5P). For ridge we would also have expected to see shrinkage (0.5P), but none of the coefficients had gone to zero (0.5P). Here I expect to explicitly hint that the coefficients are getting smaller/shurunken (not just that some are close to zero for ridge, for example).
 
 
 ## d) (3P)
@@ -316,6 +316,16 @@ r.gam <- gam(bwt ~  bs(lwt,4) + race + smoke + ptl + ht + ui , data=d.bw.train)
 r.pred.gam <- predict(r.gam, newdata=d.bw.test)
 mean((r.pred.gam-d.bw.test$bwt)^2)
 ```
+
+Here is a solution with random forests. Note that the students then need to explain `mtry` (usually p/3 for regression problems) and say that number of trees must be "large enough".
+
+```{r}
+library(randomForest)
+rf.model <- randomForest(x.train, y.train, mtry = 3, ntree = 500)
+yhat.rf <- predict(rf.model, newdata = x.test)
+(mean((yhat.rf - y.test)^2))
+```
+
 
 
 \clearpage
