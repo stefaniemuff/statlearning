@@ -46,19 +46,22 @@
   \frame{\subsectionpage}
 }
 \usepackage{amsmath,amssymb}
-\usepackage{lmodern}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math}
+  \usepackage{unicode-math} % this also loads fontspec
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
+\usepackage{lmodern}
 \usetheme[]{Singapore}
 \usefonttheme{serif}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \IfFileExists{microtype.sty}{% use microtype if available
@@ -125,7 +128,7 @@
 \fi
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same} % disable monospaced font for URLs
+\urlstyle{same}
 \hypersetup{
   pdftitle={Best practices in data analysis},
   pdfauthor={Stefanie Muff},
@@ -139,7 +142,7 @@
 \title{Best practices in data analysis}
 \subtitle{Selecting a model}
 \author{Stefanie Muff}
-\date{Open Science course, Finse, November 2022}
+\date{Open Science course, Hjerkinn, November 2023}
 
 \begin{document}
 \frame{\titlepage}
@@ -240,13 +243,18 @@ art\ldots{}
 \tightlist
 \item
   \textbf{Understanding the effect of mercury (Hg) in the soil}
-  \emph{Research question:} Is the Hg level in the environment (soil) of
-  people's homes associated to the Hg levels in their bodies (urin,
-  hair)?\\
-  \emph{Method:} Measurements of Hg concentrations on people's
-  properties, as well as measurements and survey of children and their
-  mothers living on these properties.
 \end{enumerate}
+
+\vspace{1mm}
+
+\emph{Research question:} Is the Hg level in the environment (soil) of
+people's homes associated to the Hg levels in their bodies (urin, hair)?
+
+\vspace{1mm}
+
+\emph{Method:} Measurements of Hg concentrations on people's properties,
+as well as measurements and survey of children and their mothers living
+on these properties.
 
 \(~\)
 
@@ -254,13 +262,19 @@ art\ldots{}
 \setcounter{enumi}{1}
 \tightlist
 \item
-  \textbf{Prognostic factors for body fat}\\
-  \emph{Research question:} Which factors allow for precise estimation
-  (prediction) of body fat?\\
-  \emph{Method:} Study with 241 male participants. Measured variable
-  were, among others, body fat (\%), age, weight, body size, BMI, neck
-  thickness and abdominal girth.
+  \textbf{Prognostic factors for body fat}
 \end{enumerate}
+
+\vspace{1mm}
+
+\emph{Research question:} Which factors allow for precise estimation
+(prediction) of body fat?
+
+\vspace{1mm}
+
+\emph{Method:} Study with 241 male participants. Measured variable were,
+among others, body fat (\%), age, weight, body size, BMI, neck thickness
+and abdominal girth.
 \end{block}
 \end{frame}
 
@@ -279,9 +293,9 @@ clear about the scope of the model:
 \item
   \textcolor{red}{Predictive models}: These are models that aim to
   predict the outcome of future subjects.\\
-  \textbf{Example:} In the bodyfat example the aim is to predict
-  people's bodyfat from factors that are easy to measure (age, BMI,
-  weight,..).
+  \vspace{1mm} \textbf{Example:} In the bodyfat example the aim is to
+  predict people's bodyfat from factors that are easy to measure (age,
+  BMI, weight,..).
 \end{itemize}
 
 \(~\)
@@ -292,7 +306,7 @@ clear about the scope of the model:
   \textcolor{red}{Explanatory models}: These are models that aim at
   understanding the (causal) relationship between covariates and the
   response.\\
-  \textbf{Example}: The mercury study aims to understand if
+  \vspace{1mm} \textbf{Example}: The mercury study aims to understand if
   Hg-concentrations in the soil (covariable) influence the
   Hg-concentrations in humans (response).
 \end{itemize}
@@ -376,7 +390,8 @@ variable selection strategies have no place}.
 Model selection may lead to biased parameter estimates, thus do not draw (biological, medical,..) conclusions from models that were optimized for prediction, for example by AIC/AICc/BIC minimization!
 \end{tcolorbox}
 
-\(~\) \scriptsize See, e.g., (Freedman 1983) and (Copas 1983).
+\(~\) \scriptsize See, e.g., (Freedman 1983), (Copas 1983), (Berk et al.
+2013).
 \end{block}
 \end{frame}
 
@@ -497,6 +512,11 @@ have the character of \emph{exploratory models}.
 
 \hypertarget{refs}{}
 \begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-berk.etal2013}{}}%
+Berk, Richard, Lawrence Brown, Andreas Buja, Kai Zhang, and Linda Zhao.
+2013. {``{Valid post-selection inference}.''} \emph{The Annals of
+Statistics} 41 (2): 802--37. \url{https://doi.org/10.1214/12-AOS1077}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-clayton.hills1993}{}}%
 Clayton, D., and M. Hills. 1993. \emph{Statistical Models in
 Epidemiology}. Oxford: Oxford University Press.

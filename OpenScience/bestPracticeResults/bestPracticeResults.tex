@@ -46,19 +46,22 @@
   \frame{\subsectionpage}
 }
 \usepackage{amsmath,amssymb}
-\usepackage{lmodern}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
   \usepackage[utf8]{inputenc}
   \usepackage{textcomp} % provide euro and other symbols
 \else % if luatex or xetex
-  \usepackage{unicode-math}
+  \usepackage{unicode-math} % this also loads fontspec
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
 \fi
+\usepackage{lmodern}
 \usetheme[]{Singapore}
 \usefonttheme{serif}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \IfFileExists{microtype.sty}{% use microtype if available
@@ -124,7 +127,7 @@
 \fi
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\urlstyle{same} % disable monospaced font for URLs
+\urlstyle{same}
 \hypersetup{
   pdftitle={Best practices for reporting scientific results},
   pdfauthor={Stefanie Muff},
@@ -138,7 +141,7 @@
 \title{Best practices for reporting scientific results}
 \subtitle{Navigating the minefield around \(P\)-values and significance}
 \author{Stefanie Muff}
-\date{Open Science course, Finse, November 2022}
+\date{Open Science course, Hjerkinn, November 2023}
 
 \begin{document}
 \frame{\titlepage}
@@ -209,7 +212,7 @@ significance testing (1920s!). Issues:
 \tightlist
 \item
   Publication bias: Studies with \(p<0.05\) are more likely to be
-  published than ``non-significant'\,' results.
+  published than ``non-significant'' results.
 \end{itemize}
 
 \(~\)
@@ -263,7 +266,7 @@ significance.
 \protect\hypertarget{right-or-wrong}{}
 \(~\)
 
-Go to www.menti.com and use code 3944 9342.
+Go to www.menti.com and use indicated code.
 
 Which of these statements are right or wrong?
 
@@ -439,7 +442,7 @@ scientists need to look beyond \(p\) values and effect sizes and
 \begin{itemize}
 \tightlist
 \item
-  ``Is there an effect?'\,' v.s. `'How much of an effect is there?''.
+  ``Is there an effect?'' vs.~``How much of an effect is there?''
 \end{itemize}
 
 \(~\)
@@ -728,7 +731,7 @@ requirements -- since decades.
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Preregistration} of study protocols and analysis plans.
+  \textbf{Pre-registration} of study protocols and analysis plans.
 \end{itemize}
 
 \vspace{2mm}
